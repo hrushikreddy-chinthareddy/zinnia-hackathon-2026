@@ -13,6 +13,7 @@ import {
     Statuses,
 } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
+import { CaseTimePredictOutput } from '@zinnia/api-types/types/analytics';
 
 import { CaseSideNavProps } from './CaseSideNav';
 import { PartiesProps, PartyInfo } from './CaseSideNavParties';
@@ -315,4 +316,17 @@ export const getStartAndEndDates = (timeframe: AgingTimeRangesKeysExtended) => {
                 ),
             };
     }
+};
+export const getEstimatedCompletionAt = (
+    caseTimePrediction: CaseTimePredictOutput | undefined,
+    createdAt: string | undefined
+): string | null => {
+    if (!caseTimePrediction?.secondsIGO || !createdAt) {
+        return null;
+    }
+
+    const createdTime = new Date(createdAt).getTime();
+    const estimatedTime = createdTime + caseTimePrediction.secondsIGO * 1000;
+
+    return new Date(estimatedTime).toISOString();
 };

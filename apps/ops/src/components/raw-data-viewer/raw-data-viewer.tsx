@@ -1,5 +1,4 @@
-import { Accordion } from '@xd/xd-components/src/components/Accordion/Accordion';
-import { Label } from '@zinnia/bloom/components';
+import { Label, Accordion } from '@zinnia/bloom/components';
 
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 

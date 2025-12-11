@@ -1,4 +1,3 @@
-import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import {
     FieldData,
     FieldSize,
@@ -14,6 +13,10 @@ import {
 } from '@zinnia/bloom/components';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
 import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-filters';
@@ -24,16 +27,13 @@ import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import {
     SortOrder,
     useTableOptions,
 } from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 enum SortByOptions {
     NAME = 'name',
@@ -105,27 +105,9 @@ export const CaseTimingTable = () => {
             <div className={sharedStyles.tableContainer}>
                 <BlurOverlayLoader loading={caseTimingDataFetching}>
                     {caseTimingDataError ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {
-                                    'Something went wrong fetching the application types, please try again by refreshing the page'
-                                }
-                            </Typography>
-                        </div>
+                        <ErrorMessage />
                     ) : searchedData?.length === 0 ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        <NoDataMessage />
                     ) : (
                         <Table>
                             <TableHeader>

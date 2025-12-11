@@ -1,13 +1,5 @@
 import { Skeleton } from '@radix-ui/themes';
 import { isObject } from '@rjsf/utils';
-import { SubStandardRating } from '@xd/api-types/dist/generated-types/sor';
-import { formatTimestamp } from '@xd/utils/src/dates';
-import {
-    PartyStatus,
-    PolicyFeature,
-    FeatureType,
-    Rider,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction, I18n, i18n } from 'next-i18next';
 import React, { ReactElement } from 'react';
@@ -52,6 +44,14 @@ import {
     CoverageToBenefitId,
     RiderBenefit,
 } from '@deps/types/product-rate';
+import { formatTimestamp } from '@deps/utils/dates';
+import {
+    PartyStatus,
+    PolicyFeature,
+    FeatureType,
+    Rider,
+    SubStandardRating,
+} from '@zinnia/api-types/types/sor';
 
 import { RIDER_NOT_ELECTED } from './consts';
 import { ExtrasCardType } from './policy-extras-cards';
@@ -647,10 +647,19 @@ export const getTranslationValues = (basePath: string) => (value: string) => {
     return t(`${basePath}.${value}`) || value;
 };
 
+const convertElectionStatus = (value: 'NOTELECTED' | 'ELECTED') => {
+    const { t } = i18n as I18n;
+    if (value === 'NOTELECTED') {
+        return t(`general.false`);
+    }
+
+    return t(`general.true`);
+};
+
 const RiderFormatConfig = {
     type: convertToString,
     riderName: convertToString,
-    riderElected: formatBooleanToString,
+    riderElected: convertElectionStatus,
     underwritingStatus: getTranslationValues(
         'policy.extras.riders.underwritingStatusValues'
     ), //enum

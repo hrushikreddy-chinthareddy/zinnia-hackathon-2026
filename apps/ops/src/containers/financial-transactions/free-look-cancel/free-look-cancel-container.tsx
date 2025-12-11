@@ -1,4 +1,4 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -12,6 +12,7 @@ import { PaymentStepSetState } from '@deps/components/workflows/payment-step/typ
 import StartStep, {
     StartStepSetState,
 } from '@deps/components/workflows/start-step/start-step';
+import { TransactionName } from '@deps/constants/policy';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -19,6 +20,7 @@ import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import Confirm from './confirm/confirm';
 import Summary from './summary/summary';
@@ -38,13 +40,18 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const summaryLabel = t('withdrawals.summary.label');
     const confirmLabel = t('withdrawals.confirm.label');
 
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
+
     const steps: Step[] = [
         {
             component: (
                 <StartStep
                     parentPage={ParentPage.Withdrawals}
                     policy={policy}
-                    processType={Processes.NewBusiness}
+                    processType={Processes.Withdrawal}
                     setState={setWithdrawal as StartStepSetState}
                     state={withdrawal}
                     title={t('cancelFreeLook.start.title') as string}
@@ -52,6 +59,8 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                         type: TransactionType.FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Start,
                     }}
+                    processSubType={[Processes.FreeLookCancellation]}
+                    correlationId={correlationIdFromRoute}
                 />
             ),
             screenReaderLabel: startLabel,
@@ -96,6 +105,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     policy={policy}
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
+                    transactionName={TransactionName.Freelook}
                 />
             ) : (
                 <PaymentStep

@@ -1,33 +1,43 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { generateNewColor } from '@xd/utils/dist';
-import { SeriesOptionsType } from 'highcharts';
-import { useMemo } from 'react';
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import { StackedColumnChart } from '@deps/components/dashboard/charts/bar-charts/stacked-column-chart';
+import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
-import { Legend } from '@deps/components/dashboard/legend/legend';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
+import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
-import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import SelectComponent from '@deps/components/select/select';
+import { getUserTransactionCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserTransactionGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
-    PrepareTransactionsByRoleCSV,
-    TimeframeFilterOptions,
-    generateChartSeries,
-    getCategories,
-    startDates,
-} from './utlis';
-import { TotalCount } from '../total-count';
+    aggregateByCategory,
+    getTransactionTypesByCategory,
+    PrepareTransactionActivityCSV,
+    buildTopLevelSeries,
+    buildDrilldownSeries,
+} from './utils';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName } from '../utils';
+import {
+    ApiRoles,
+    colors,
+    generateCSVFileName,
+    ROLE_OPTIONS,
+    TimeframeFilterOptions,
+    startDates,
+} from '../utils';
+import { ActivityTooltip, activityTooltipFormatter } from './activity-tooltip';
 
 export const Activity = () => {
+    const [role, setRole] = useState('All');
+    const { t } = useTranslation();
     const {
         timeframeRadio,
         timerange,
@@ -38,77 +48,101 @@ export const Activity = () => {
         defaultOption: TimeframeFilterOptions.Last1Month,
         dateFormat: defaultDateFormat,
     });
+    const roleFilter =
+        role === 'All'
+            ? [
+                  ApiRoles.Agent,
+                  ApiRoles.ZinniaCallCenter,
+                  ApiRoles.ZinniaOperations,
+              ]
+            : [role];
 
     const filter = {
-        pageType: ['Cases'],
         dateStart: timerange.from,
-        dateEnd: timerange.to,
+        dateEnd: startOfTomorrowLocalIso(timerange.to),
+        userRole: roleFilter,
     };
 
     const {
-        data: zinniaSubmittedTransactionByRoleData,
-        isFetching: zinniaSubmittedTransactionByRoleDataFetching,
-        isError: zinniaSubmittedTransactionByRoleDataError,
+        data: transactionData,
+        isFetching: transactionDataFetching,
+        isError: transactionDataError,
     } = useQuery({
-        queryKey: ['zinniaSubmittedTransactionByRoleData', filter],
+        queryKey: ['selfServeTransactionActivity', filter],
         placeholderData: (previousData) => previousData,
         queryFn: () =>
-            getUserViewsCountsQuery(filter, [
-                UserViewsGroupByEnum.USER_ROLE,
-                UserViewsGroupByEnum.PROCESS,
+            getUserTransactionCountsQuery(filter, [
+                UserTransactionGroupByEnum.CARRIER,
+                UserTransactionGroupByEnum.TRANSACTION_CATEGORY,
+                UserTransactionGroupByEnum.TRANSACTION_TYPE,
             ]),
     });
 
-    const categories = getCategories(
-        zinniaSubmittedTransactionByRoleData?.data || []
-    );
-    const chartSeries = generateChartSeries(
-        zinniaSubmittedTransactionByRoleData?.data || [],
-        categories
-    );
+    const categories = aggregateByCategory(transactionData?.data || [], colors);
 
-    const legendItemsNew = useMemo(() => {
-        return (
-            chartSeries?.map((item, index) => {
-                const color = colors[index] ?? generateNewColor(colors);
-                if (!colors.includes(color)) {
-                    colors.push(color);
-                }
-                return {
-                    label: item.name,
-                    color,
-                };
-            }) || []
+    const topSeries = buildTopLevelSeries(categories);
+
+    const dataByCategory: Record<
+        string,
+        { type: string; displayName: string; count: number }[]
+    > = {};
+    for (const cat of categories) {
+        dataByCategory[cat.category] = getTransactionTypesByCategory(
+            transactionData?.data || [],
+            cat.category
         );
-    }, [chartSeries]);
+    }
+
+    const ddSeries = buildDrilldownSeries(dataByCategory);
+
+    const hasNoCategories = !categories || categories.length === 0;
+    const hasNoSeries = !topSeries || topSeries.length === 0;
 
     const chartNotRenderable =
-        zinniaSubmittedTransactionByRoleDataError || !chartSeries?.length;
+        transactionDataError || hasNoCategories || hasNoSeries;
+
+    const xCats = categories.map((c) => c.displayName);
+    const chartKey = `${timerange.from}__${timerange.to}__${role}`;
+
     return (
         <div className="flex gap-4 m-4">
             <div className="flex w-full flex-col gap-4 px-8 py-8 rounded bg-white border border-gray-200 min-h justify-between">
                 <UsageHeaderLayout
-                    title={'Submitted Transaction by Role'}
-                    data={zinniaSubmittedTransactionByRoleData?.data || []}
-                    csvFileName={generateCSVFileName(
-                        'Submitted Transactions by Role',
-                        timerange
+                    title={String(
+                        t(
+                            'usage.activity.zinniaLiveTransactionActivity.title'
+                        ) ?? ''
                     )}
-                    csvFunction={PrepareTransactionsByRoleCSV}
+                    description={String(
+                        t(
+                            'usage.activity.zinniaLiveTransactionActivity.description'
+                        ) ?? ''
+                    )}
+                    titleToolTip={<ActivityTooltip />}
+                    data={transactionData?.data || []}
+                    csvFileName={generateCSVFileName({
+                        title: `${role} ${
+                            t(
+                                'usage.activity.zinniaLiveTransactionActivity.title'
+                            ) ?? ''
+                        }`,
+                        timerange,
+                        role,
+                        optionaltitle: '',
+                    })}
+                    csvFunction={PrepareTransactionActivityCSV}
                 />
-                <div className="flex items-center justify-end gap-4">
-                    <TotalCount
-                        isDataFetching={
-                            zinniaSubmittedTransactionByRoleDataFetching
-                        }
-                        data={
-                            zinniaSubmittedTransactionByRoleData ?? {
-                                data: [],
-                                totalElements: 0,
-                            }
-                        }
-                    />
-
+                <div className="flex items-center justify-between gap-4 w-full">
+                    <div className="mb-4 md:mb-0 md:w-1/5">
+                        <SelectComponent
+                            label="Role"
+                            options={ROLE_OPTIONS}
+                            size={FieldSize.XS}
+                            name="role-type-dropdown-btn"
+                            onChange={setRole}
+                            value={role}
+                        />
+                    </div>
                     <TimeFilter
                         defaultValue={timeframeRadio}
                         onRadioChange={(val) =>
@@ -122,34 +156,30 @@ export const Activity = () => {
                         timeframeOptions={TimeframeFilterOptions}
                     />
                 </div>
-                <BlurOverlayLoader
-                    loading={zinniaSubmittedTransactionByRoleDataFetching}
-                >
-                    {chartNotRenderable ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {zinniaSubmittedTransactionByRoleDataError
-                                    ? 'Something went wrong fetching submitted transaction by role, please try again by refreshing the page'
-                                    : 'There is no data for this selection'}
-                            </Typography>
-                        </div>
-                    ) : (
-                        <>
-                            <StackedColumnChart
-                                series={chartSeries as SeriesOptionsType[]}
-                                categories={categories}
-                                colors={colors}
-                                yAxisTitle="Submitted transaction count"
-                                xAxisTitle="Transaction type"
-                                xAxisLabelRoatationRequired
+                <BlurOverlayLoader loading={transactionDataFetching}>
+                    <div className="w-full flex-grow min-h-[400px]">
+                        {chartNotRenderable ? (
+                            transactionDataError ? (
+                                <ErrorMessage />
+                            ) : (
+                                <NoDataMessage />
+                            )
+                        ) : (
+                            <GroupedColumnsChart
+                                key={chartKey}
+                                categories={xCats}
+                                series={topSeries}
+                                xAxisTitle="All transactions"
+                                yAxisTitle="Total transactions"
+                                height={495}
+                                pointWidth={60}
+                                groupPadding={0.5}
+                                tooltipFormatter={activityTooltipFormatter}
+                                enableDrilldown
+                                drilldownSeries={ddSeries}
                             />
-                            <Legend items={legendItemsNew} title="" />
-                        </>
-                    )}
+                        )}
+                    </div>
                 </BlurOverlayLoader>
             </div>
         </div>

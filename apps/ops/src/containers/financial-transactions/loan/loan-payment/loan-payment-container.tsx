@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -17,11 +16,13 @@ import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { Processes } from '@deps/models/case/case';
 import { validateLoanPayment } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
 import { buildLoanPaymentRequestBody } from './loan-payment.helpers';
 import Summary from './summary/summary';
+import { getProcessSubTypes } from '../../autopay/autopay.helpers';
 
 export type LoanPaymentContainerProps = {
     policy: Policy;
@@ -65,6 +66,7 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                         type: TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
                         step: TransactionStep.Start,
                     }}
+                    processSubType={getProcessSubTypes(ParentPage.Loans)}
                 />
             ),
             screenReaderLabel: startLabel,

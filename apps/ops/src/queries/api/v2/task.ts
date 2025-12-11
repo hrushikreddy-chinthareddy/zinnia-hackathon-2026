@@ -1,4 +1,3 @@
-import { datadogLogs } from '@datadog/browser-logs';
 import { AxiosResponse } from 'axios';
 
 import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
@@ -7,7 +6,11 @@ import {
     RenewalsFormData,
     TaskV2Payload,
 } from '@deps/models/case/task';
-import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import {
+    ManagementTask,
+    TaskLabel,
+    TaskStatus,
+} from '@deps/models/case/task-instance';
 import { ActiveWithdrawalCaseData } from '@deps/models/case/withdrawal/case';
 import {
     baseAppUrl,
@@ -46,8 +49,7 @@ export const getCaseTaskByIdSSR = async (
         url,
     };
     try {
-        logInfo('getCaseTaskByIdSSR::Fetching task by id', logCtx);
-        const { data } = await serverApi.get<any>(
+        const data = await serverApi.get<any>(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -60,8 +62,21 @@ export const getCaseTaskByIdSSR = async (
             },
             logCtx
         );
-        logInfo('getCaseTaskByIdSSR::Successfully retrived task by id', logCtx);
-        return data;
+        if (data?.status === 500) {
+            logError('getCaseTaskByIdSSR::Failed to retrieve task', {
+                status: data?.status,
+                ...logCtx,
+            });
+            throw new Error('getCaseTaskByIdSSR::Failed to retrieve task');
+        }
+        logInfo('getCaseTaskByIdSSR::Successfully retrived task by id', {
+            caseId: data?.data?.caseId,
+            taskType: data?.data?.taskType,
+            process: data?.data?.process,
+            carrier: data?.data?.carrier,
+            ...logCtx,
+        });
+        return data?.data;
     } catch (error: any) {
         logError('getCaseTaskByIdSSR::Failed to retrieve task by id', {
             ...parseErrorInformation(error),
@@ -70,7 +85,6 @@ export const getCaseTaskByIdSSR = async (
         return null;
     }
 };
-
 export const getTaskInstance = async (
     query: any
 ): Promise<ManagementTask | null> => {
@@ -203,31 +217,32 @@ export const createTask = async (
             >,
             AxiosResponse
         >(url, payload);
-        browserLogInfo('Successfully created task using v2', {
-            caseId,
-            url,
-            function: 'tasks.createTask',
-        });
 
-        datadogLogs.logger.info('CreateTask::Form Entry time', {
-            timeElapsedSinceLoad: timeInSeconds,
-            documentType: payload?.taskType,
-            contractId: payload?.data?.contractNum,
-            documentNumber: payload?.data?.documentNumber,
-            caseId,
-            carrier: payload?.carrier,
-            url,
-            taskStatus: payload?.status,
-            function: 'tasks.createTask',
-        });
+        browserLogInfo(
+            'v2/task:createTask:: Successfully created task using v2',
+            {
+                timeElapsedSinceLoad: timeInSeconds,
+                documentType: payload?.taskType,
+                contractId: payload?.data?.contractNum,
+                documentNumber: payload?.data?.documentNumber,
+                caseId,
+                carrier: payload?.carrier,
+                url,
+                taskStatus: payload?.status,
+                function: 'tasks.createTask',
+            }
+        );
 
         return data;
     } catch (error: any) {
-        browserLogError('An error occurred during create task using v2', {
-            error,
-            caseId,
-            function: 'tasks.createTask',
-        });
+        browserLogError(
+            'v2/task:createTask::An error occurred during create task using v2',
+            {
+                ...parseErrorInformation(error),
+                caseId,
+                function: 'tasks.createTask',
+            }
+        );
         return null;
     }
 };
@@ -235,44 +250,48 @@ export const createTask = async (
 export const updateTask = async (
     caseId: string,
     taskId: string,
-    payload: CreateTaskBody<TaskStatus, TaskV2Payload>,
-    entryDuration?: number
+    payload: CreateTaskBody<TaskStatus, TaskV2Payload>
 ): Promise<any> => {
+    const status = payload?.status;
+    const statusLabel =
+        status == TaskStatus.InProgress
+            ? TaskLabel.InProgress
+            : status == TaskStatus.Scheduled
+            ? TaskLabel.Scheduled
+            : TaskLabel.Completed;
+
     try {
-        const logTime = entryDuration ? performance.now() - entryDuration : 0;
-        const timeInSeconds = ((logTime % 60000) / 1000).toFixed(0);
         const url = `${baseCasesV2Url}/${caseId}/tasks/${taskId}`;
         const { data } = await client.put<
             CreateTaskBody<TaskStatus, TaskV2Payload>,
             AxiosResponse
         >(url, payload);
-        browserLogInfo('Successfully updated task using v2', {
-            caseId,
-            taskId,
-            url,
-            function: 'tasks.updateTask',
-        });
 
-        datadogLogs.logger.info('updateTask::Successfully updated a task', {
-            timeElapsedSinceLoad: timeInSeconds,
-            documentType: payload?.taskType,
-            contractId: payload?.data?.contractNum,
-            documentNumber: payload?.data?.documentNumber,
-            caseId,
-            carrier: payload?.carrier,
-            url,
-            taskStatus: payload?.status,
-            function: 'tasks.updateTask',
-        });
+        browserLogInfo(
+            `v2/task:updateTask::Successfully updated task to ${statusLabel} `,
+            {
+                documentType: payload?.taskType,
+                contractId: payload?.data?.contractNum,
+                documentNumber: payload?.data?.documentNumber,
+                caseId,
+                carrier: payload?.carrier,
+                url,
+                taskStatus: payload?.status,
+                function: 'tasks.updateTask',
+            }
+        );
 
         return data;
     } catch (error: any) {
-        browserLogError('An error occurred during update task using v2', {
-            error,
-            caseId,
-            taskId,
-            function: 'tasks.updateTask',
-        });
+        browserLogError(
+            `v2/task:updateTask::An error occurred while updating task using v2 to ${statusLabel}`,
+            {
+                ...parseErrorInformation(error),
+                caseId,
+                taskId,
+                function: 'tasks.updateTask',
+            }
+        );
         return null;
     }
 };

@@ -1,16 +1,17 @@
+import React, { createContext } from 'react';
+
+import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
+import { PeopleState } from '@deps/containers/people-sub-page';
+import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { SorSystem } from '@deps/models/policy/enums';
+import { TransactionResponse } from '@deps/queries/api/bpm';
 import {
     Address,
     Email,
     Party,
     PartyType,
     Phone,
-} from '@xd/api-types/dist/generated-types/sor';
-import React, { createContext } from 'react';
-
-import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
-import { PeopleState } from '@deps/containers/people-sub-page';
-import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { TransactionResponse } from '@deps/queries/api/bpm';
+} from '@zinnia/api-types/types/sor';
 
 //TODO: Update all any with the types, we get from api response
 export type BeneChangeFormState = {
@@ -112,4 +113,40 @@ export interface ExtendedParty extends Party {
     isPerStirpes?: boolean;
     isIrrevocable?: boolean;
     beneficiaryPercentage?: number;
+}
+
+export interface SignatureInfo {
+    signatures: {
+        signType: string | null | undefined;
+        isSignedPresent: boolean;
+        signDate: string | null;
+        signPrintName: string | null;
+        signGurantee: string | null | undefined;
+        signDesignation: string | null;
+    }[];
+    isSpousePresent: boolean | null;
+    isIrrevocableBene: boolean;
+}
+
+export interface BeneChangePayload {
+    businessKey?: string;
+    correlationid?: string;
+    policyNumber: string;
+    planCode: string;
+    carrierId?: string;
+    sorSystem: SorSystem;
+    actionData: Array<{
+        party: ExtendedParty;
+    }>;
+    contractInfo?: {
+        parties: ExtendedParty;
+    };
+    onbaseCaseId?: string;
+    caseId?: string;
+    documentDate?: string | null;
+    channel?: string;
+    policyStatus?: string;
+    isPrimaryBeneInfoOnFile?: boolean;
+    isContingentBeneInfoOnFile?: boolean;
+    signatureData: SignatureInfo;
 }

@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useContext } from 'react';
+import { useContext, useMemo } from 'react';
 
 import BadgeWithTooltip from '@deps/components/badge/badge-with-tooltip/badge-with-tooltip';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
@@ -13,9 +11,7 @@ import NavElement, {
     NavElementSize,
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
-import TempNavInactive, {
-    isStillInactive,
-} from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PageHeader } from '@deps/components/page-header/page-header';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -30,7 +26,9 @@ import {
     checkPartialWithdrawalOneTimeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';
 
 interface WithdrawalsPageHeaderContainerProps {
     isNavDrawerOpen?: boolean;
@@ -48,6 +46,12 @@ const WithdrawalsPageHeaderContainer = ({
 
     const freeLookEnabled =
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
+
+    const isFreeLookPeriodExpired = useMemo(() => {
+        return policyDetails.freeLookPeriodDetails?.endDate
+            ? new Date() > new Date(policyDetails.freeLookPeriodDetails.endDate)
+            : false;
+    }, [policyDetails.freeLookPeriodDetails?.endDate]);
 
     const {
         data: partialWithdrawalOneTimeEligibility,
@@ -92,7 +96,6 @@ const WithdrawalsPageHeaderContainer = ({
     const {
         amountEligibleForWithdrawal,
         netSurrenderValue,
-        maximumWithdrawalAmount,
         freeWithdrawalAmount,
         annualWithdrawalsRemaining,
         annualWithdrawalsTaken,
@@ -445,6 +448,7 @@ const WithdrawalsPageHeaderContainer = ({
                 )}
                 {freeLookEnabled &&
                 policyDetails.freeLookPeriodDetails.isInFreeLookPeriod &&
+                !isFreeLookPeriodExpired &&
                 isUserPermissionedToWithdraw ? (
                     <NavElement
                         href={
@@ -460,8 +464,7 @@ const WithdrawalsPageHeaderContainer = ({
                         {t('withdrawals.freeLookCancel')}
                     </NavElement>
                 ) : (
-                    freeLookEnabled &&
-                    policyDetails.freeLookPeriodDetails.isInFreeLookPeriod && (
+                    freeLookEnabled && (
                         <TempNavInactive
                             tooltipBody={t(
                                 'withdrawals.rules.permissionDeniedTooltip',

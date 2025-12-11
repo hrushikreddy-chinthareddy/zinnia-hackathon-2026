@@ -1,12 +1,8 @@
-import {
-    FollowUpChainResponse,
-    FollowUpResponse,
-    UserResponse,
-} from '@xd/api-types/dist/generated-types/knowledgebase';
 import axios, { AxiosResponse } from 'axios';
 
 import {
     ClientDetailsResponse,
+    COMMON_CLIENT_NAME,
     DislikeReasonsPayload,
     DocumentsDisplayType,
     FeedbackType,
@@ -14,17 +10,54 @@ import {
     SortBy,
     SortDirection,
 } from '@deps/types/knowledge-base';
-import { browserLogError, browserLogTrace } from '@deps/utils/browser-logging';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogTrace,
+} from '@deps/utils/browser-logging';
 import {
     logError,
     LoggingContext,
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    FollowUpChainResponse,
+    FollowUpResponse,
+    UserResponse,
+    ClientDetailsDto,
+    QuizSubmissionResponse,
+} from '@zinnia/api-types/types/knowledgebase';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 import { serverApi } from '../api-utils/serverApiClient';
+
+export const getCommonClientId = async () => {
+    const url = `${apiServerBaseUrl}/api/v1/clients`;
+    try {
+        const { data } = await axios.get<any, AxiosResponse>(url);
+        if (data.length > 1) {
+            const commonClient = data.find((clientDetail: ClientDetailsDto) => {
+                const name =
+                    clientDetail.client?.clientName?.toLowerCase().trim() ||
+                    clientDetail.client?.title?.toLowerCase().trim() ||
+                    clientDetail.client?.acronym?.toLowerCase().trim() ||
+                    clientDetail.client?.name?.toLowerCase().trim();
+                return name?.startsWith(COMMON_CLIENT_NAME);
+            });
+            return commonClient?.client?.pageId ?? null;
+        }
+        return null;
+    } catch (error) {
+        browserLogError('knowledge-base::Failed to fetch common client id', {
+            ...parseErrorInformation(error),
+            url,
+            function: 'knowledgeBase.getCommonClientId',
+        });
+        return null;
+    }
+};
 
 export const getOpsUserDetailsSSR = async (
     email: string,
@@ -501,6 +534,56 @@ export const searchUser = async (
             ...parseErrorInformation(error),
             url,
             function: 'knowledgeBase.searchUser',
+        });
+        return null;
+    }
+};
+
+export const getQuizQuestions = async (clientId: string) => {
+    if (!clientId) {
+        browserLogError('Error getting quiz questions:: missing clientId');
+        return null;
+    }
+    const url = `${baseAppUrl}/api/knowledge-base/quiz/get-quiz-questions?clientId=${clientId}`;
+    browserLogInfo(`Loading quiz questions...`);
+    try {
+        const { data } = await client.get(url);
+        return data ?? null;
+    } catch (error) {
+        browserLogError('knowledge-base::Failed to get quiz questions', {
+            ...parseErrorInformation(error),
+            url,
+            function: 'knowledgeBase.getQuizQuestions',
+        });
+        return null;
+    }
+};
+
+export const submitQuizAnswers = async (
+    clientId: string,
+    userId: string,
+    answers: { questionId: string; selectedAnswerIndex: number }[]
+): Promise<QuizSubmissionResponse | null> => {
+    if (!clientId || !userId || !answers || answers.length === 0) {
+        browserLogError(
+            'Error submitting quiz answers:: missing clientId, userId or answers'
+        );
+        return null;
+    }
+    const url = `${baseAppUrl}/api/knowledge-base/quiz/submit-quiz-questions`;
+    browserLogInfo(`Submitting quiz questions...`);
+    try {
+        const { data } = await client.post(url, {
+            clientId,
+            userId,
+            answers,
+        });
+        return (data as QuizSubmissionResponse) ?? null;
+    } catch (error) {
+        browserLogError('knowledge-base::Failed to submit quiz answers', {
+            ...parseErrorInformation(error),
+            url,
+            function: 'knowledgeBase.submitQuizAnswers',
         });
         return null;
     }

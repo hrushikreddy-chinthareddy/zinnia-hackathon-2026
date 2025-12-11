@@ -1,9 +1,9 @@
-import { Address, PaymentForm, Policy } from '@zinnia/api-types/types/sor';
 import { Dispatch, SetStateAction } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
+import { Address, PaymentForm, Policy } from '@zinnia/api-types/types/sor';
 
 export type PaymentMethodType = {
     paymentForm?: PaymentForm;
@@ -33,4 +33,5 @@ export interface PaymentStepProps extends TransactionClickProps {
     state: PaymentState;
     subtitle?: string;
     validateTransaction?: () => Promise<TransactionResponse>;
+    transactionName?: string;
 }

@@ -21,6 +21,7 @@ const defaultProps = {
     submittedFeedbackType: null,
     submittedFeedbackComment: null,
     isCompleted: true,
+    isStreaming: false,
 };
 
 const mockBrowserLogError = jest.fn();
@@ -61,6 +62,15 @@ jest.mock('dompurify', () => ({
 jest.mock('@deps/hooks/knowledge-base/useChatStream', () => ({
     useChatStream: () => ({
         isStreaming: false,
+    }),
+}));
+
+const mockChangeContent = jest.fn();
+
+jest.mock('@deps/contexts/SideSheetContext', () => ({
+    useSideSheetContext: () => ({
+        changeSideSheetContent: mockChangeContent,
+        handleOpen: jest.fn(),
     }),
 }));
 
@@ -289,23 +299,16 @@ describe('ChatResponse', () => {
         expect(textbox).not.toBeVisible();
     });
 
-    it('opens the followup modal when clicking on ask follow up questions button', async () => {
-        const { getByRole, getByText } = render(
-            <ChatResponse {...defaultProps} />
-        );
+    it('opens the followup sidesheet when clicking on ask follow up questions button', async () => {
+        const { getByRole } = render(<ChatResponse {...defaultProps} />);
         const followUpButton = getByRole('button', {
             name: /followup-button/i,
         });
         fireEvent.click(followUpButton);
 
-        await waitFor(() => {
-            const modalContent = document.querySelector(
-                '[data-testid="followup-modal"]'
-            );
-            expect(modalContent).toBeVisible();
-        });
-
-        const closeButton = getByText('X');
-        fireEvent.click(closeButton);
+        expect(mockChangeContent).toHaveBeenCalled();
+        const element = mockChangeContent.mock.calls[0][1];
+        const { getByTestId } = render(element);
+        expect(getByTestId('followup-modal')).toBeVisible();
     });
 });

@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -23,6 +22,7 @@ import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDiaryNotes } from '@deps/hooks/useDiaryNotes';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 type TabGroupContainerProps = {
     steps: Step[];
@@ -87,13 +87,16 @@ const TabGroupContent = ({
     );
 
     const sideSheet = useSideSheetContext();
-    const { diaryNotes } = useDiaryNotes(
-        policy.policyNumber as string,
-        policy.carrierId as string,
-        0,
-        10,
-        showDiaryNotes
-    );
+    const { diaryNotes } = useDiaryNotes({
+        policyNumber: policy?.policyNumber as string,
+        clientCode: policy?.carrierId as string,
+        offset: 0,
+        limit: 10,
+        showDiaryNotes: showDiaryNotes,
+        planCode: '',
+        isLC: true,
+    });
+
     const openSideSheet = () => {
         const content = (
             <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />
@@ -172,7 +175,7 @@ const ConditionalDiaryNotesProvider = ({
     children,
 }: ConditionalDiaryNotesProviderProps) => {
     return condition ? (
-        <DiaryNotesProvider caseDetails={caseDetails}>
+        <DiaryNotesProvider caseDetails={caseDetails} isLC={true}>
             {children}
         </DiaryNotesProvider>
     ) : (

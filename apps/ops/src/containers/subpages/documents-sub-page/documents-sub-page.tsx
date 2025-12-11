@@ -1,10 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
-import {
-    SearchRequest,
-    TaxformResponse,
-} from '@zinnia/api-types/types/documents-v3';
-import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -18,6 +13,7 @@ import { SimpleOption } from '@deps/components/select/select.helpers';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
     PolicyDocument,
@@ -33,6 +29,11 @@ import {
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
+import {
+    SearchRequest,
+    TaxformResponse,
+} from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
@@ -73,6 +74,8 @@ const NormalDocs = ({
     isFirstYearSelected: boolean;
 }) => {
     const { t } = useTranslation();
+    const { isZinniaInternalProcessor } = usePermissionsContext();
+
     const limit = 25;
     const [offset, setOffset] = useState(0);
 
@@ -119,13 +122,20 @@ const NormalDocs = ({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            includeDocumentTypeForInboundSearch(policy?.carrierId)
+            includeDocumentTypeForInboundSearch(policy?.carrierId) &&
+            !isZinniaInternalProcessor // IMH-85894
         ) {
             params.documentType = includeDocumentTypesInbound.join(',');
         }
 
         return params;
-    }, [documentType, policy, isFirstYearSelected, yearSelection]);
+    }, [
+        documentType,
+        policy,
+        isFirstYearSelected,
+        yearSelection,
+        isZinniaInternalProcessor,
+    ]);
 
     const goToPage = useCallback(
         (pageNumber: number) => {
@@ -177,6 +187,8 @@ const NormalDocs = ({
                     documentType={documentType as DocumentTypeView}
                     policyNumber={policy.policyNumber ?? ''}
                     results={policyDocuments ?? []}
+                    planCode={policy.product?.planCode}
+                    policyDeliveryDate={policy.policyDates?.policyDeliveryDate}
                 />
             )}
             <DocumentResultsPagination

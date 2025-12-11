@@ -1,13 +1,5 @@
-import {
-    FullSurrenderQuoteResponse,
-    PartialWithdrawalOneTimeQuoteResponse,
-    Policy,
-    Transaction,
-    TransactionStatus,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 
 import { PaginationParams } from '@deps/components/pagination/pagination';
 import { PolicySortBy } from '@deps/components/policy-index/types';
@@ -34,11 +26,7 @@ import {
     PolicySearchResult,
     SearchViewQuery,
 } from '@deps/types/search';
-import {
-    browserLogError,
-    browserLogInfo,
-    browserLogWarn,
-} from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import {
     fullyMaskPolicyResponse,
     lcPartyResponseSanitizer,
@@ -52,6 +40,14 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    FullSurrenderQuoteResponse,
+    PartialWithdrawalOneTimeQuoteResponse,
+    Policy,
+    Transaction,
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
 import { serverApi } from '../api-utils/serverApiClient';
@@ -384,7 +380,7 @@ export const getPolicyPartiesSSR = async (
             policyNumber,
             clientCode,
         });
-        const { data } = await serverApi.get<
+        const data = await serverApi.get<
             LifeCadParty[],
             AxiosResponse<LifeCadParty[]>
         >(
@@ -401,9 +397,18 @@ export const getPolicyPartiesSSR = async (
             loggingContext
         );
 
-        return lcPartyResponseSanitizer(data);
+        if (data?.status === 500) {
+            browserLogError(
+                'getPolicyPartiesSSR:: Error fetching parties from policies'
+            );
+            throw new Error(
+                'getPolicyPartiesSSR:: Error fetching parties from policies'
+            );
+        }
+        return lcPartyResponseSanitizer(data?.data);
     } catch (error: any) {
-        logWarn('getPolicyPartiesSSR', {
+        console.error('getPolicyPartiesSSR::error getting policy info', error);
+        logError('getPolicyPartiesSSR', {
             ...parseErrorInformation(error),
             policyNumber,
             clientCode,
@@ -510,23 +515,58 @@ type PolicyNotesQuery = {
     limit?: number;
     offset?: number;
     policyNumber: string;
+    planCode: string;
+    isLC?: boolean;
 };
 export const getPolicyNotesInfo = async ({
     policyNumber,
     clientCode,
     offset = 0,
     limit = 10,
+    planCode,
+    isLC,
 }: PolicyNotesQuery): Promise<PolicyNotesInfoResponse | null> => {
     try {
-        const { data } = await client.get<
+        const fastEndPoint = `${baseUrl}/${planCode}/${policyNumber}/notes`;
+        const lcEndPoint = `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`;
+        const endpoint = isLC ? lcEndPoint : fastEndPoint;
+
+        if (!isLC && !planCode) {
+            browserLogError(
+                'getPolicyNotesInfo::planCode is required for FAST policies'
+            );
+
+            throw new Error(
+                'getPolicyNotesInfo::planCode is required for FAST policies'
+            );
+        }
+
+        browserLogInfo('getPolicyNotesInfo::Fetching Diary Notes Data');
+
+        const data = await client.get<
             PolicyNotesInfoResponse,
             AxiosResponse<PolicyNotesInfoResponse>
-        >(
-            `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`
-        );
-        return data;
+        >(endpoint);
+
+        if (data?.status === 500) {
+            browserLogError('getPolicyNotesInfo:: Diary Notes API failed');
+
+            throw new Error(
+                'getPolicyNotesInfo::Error fetching Dairy Notes Data'
+            );
+        }
+
+        browserLogInfo('getPolicyNotesInfo Diary Notes Data fetched', {
+            data,
+        });
+
+        return data?.data;
     } catch (e) {
         console.error('getPolicyNotesInfo::error getting notesInfo', e);
+        browserLogError('getPolicyNotesInfo::error getting Diary Notes data', {
+            ...parseErrorInformation(e),
+        });
+
         return null;
     }
 };
@@ -618,14 +658,24 @@ export const getPolicyTransactionHistory = async (
             transactionType,
             ...loggingContext,
         });
-        const { data } = await client.get<
+        const data = await client.get<
             TransactionHistory,
             AxiosResponse<TransactionHistory>
         >(url);
 
-        return data;
+        if (data?.status === 500) {
+            browserLogError(
+                'getPolicyTransactionHistory:: Failed to fetch transaction history'
+            );
+
+            throw new Error(
+                'getPolicyTransactionHistory:: Failed to fetch transaction history'
+            );
+        }
+
+        return data?.data;
     } catch (error: any) {
-        browserLogWarn('getPolicyTransactionHistory', {
+        browserLogError('getPolicyTransactionHistory', {
             ...parseErrorInformation(error),
             policyNumber,
             clientCode,
@@ -737,9 +787,11 @@ interface PolicyTransactionQuery {
     sortField?: 'EFFECTIVEDATE' | 'PROCESSDATE' | 'REVERSALDATE';
     sortOrder?: 'ASC' | 'DESC';
     status?: TransactionStatus | TransactionStatus[];
-    transactionTypes?: string[];
+    transactionTypes?: readonly string[];
     year?: string;
     reverseInitiatorOnly?: boolean;
+    from?: Dayjs;
+    to?: Dayjs;
 }
 
 // Get policy transactions by transactionType
@@ -754,6 +806,8 @@ export const getPolicyTransactions = async ({
     transactionTypes,
     year,
     reverseInitiatorOnly,
+    from,
+    to,
 }: PolicyTransactionQuery): Promise<Transaction[]> => {
     try {
         const params = new URLSearchParams();
@@ -767,6 +821,8 @@ export const getPolicyTransactions = async ({
             status,
             transactionTypes,
             year: year && dayjs(year).format('YYYY-01-01'),
+            startDate: from && dayjs(from).format('YYYY-MM-DD'),
+            endDate: to && dayjs(to).format('YYYY-MM-DD'),
         })) {
             if (value) params.append(key, `${value}`);
         }

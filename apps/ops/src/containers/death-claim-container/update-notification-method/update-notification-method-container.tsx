@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
 
@@ -6,9 +5,12 @@ import { NotificationsTransactionData } from '@deps/components/side-sheet/side-s
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
+import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import ConfirmStep from './confirm-step';
+import ContactEstablishedStep from './contact-established-step';
 import UpdateNotificationMethodStep from './update-notification-method-step';
 
 type UpdateNotificationMethodContainerProps = {
@@ -24,11 +26,26 @@ const UpdateNotificationMethodContainer = ({
         keyPrefix: 'updateNotificationMethodForBeneficiary',
     });
 
+    const { contactEstablished } = useUpdateNotificationMethod();
+
     const steps = useMemo(
         () => [
             {
-                ariaLabel: t('tabs.updateNotificationMethod'),
+                ariaLabel: t('tabs.contactEstablished'),
                 isVisible: () => true,
+                screenReaderLabel: t('tabs.contactEstablished'),
+                component: (
+                    <ContactEstablishedStep
+                        policy={policy}
+                        transactionData={transactionData}
+                    />
+                ),
+                index: 0,
+                text: t('tabs.contactEstablished'),
+            },
+            {
+                ariaLabel: t('tabs.updateNotificationMethod'),
+                isVisible: () => !contactEstablished,
                 screenReaderLabel: t('tabs.updateNotificationMethod'),
                 component: (
                     <UpdateNotificationMethodStep
@@ -36,7 +53,7 @@ const UpdateNotificationMethodContainer = ({
                         transactionData={transactionData}
                     />
                 ),
-                index: 0,
+                index: 1,
                 text: t('tabs.updateNotificationMethod'),
             },
             {
@@ -49,11 +66,11 @@ const UpdateNotificationMethodContainer = ({
                     />
                 ),
                 screenReaderLabel: t('tabs.confirm'),
-                index: 1,
+                index: 2,
                 text: t('tabs.confirm'),
             },
         ],
-        [policy, t, transactionData]
+        [contactEstablished, policy, t, transactionData]
     );
 
     const filteredSteps: Step[] = useMemo(

@@ -10,7 +10,13 @@ const postIssueReviewHandler: TaskHandler<
     api: NigoSearch,
 
     getPayload: (task: any) => ({
-        category: ['Form', 'Signature', 'Account Information', 'Data Entry'],
+        category: [
+            'Form',
+            'Signature',
+            'Account Information',
+            'Data Entry',
+            'Free Look Cancellation',
+        ],
         businessProcess: task?.process,
         carrier: task?.carrier,
     }),

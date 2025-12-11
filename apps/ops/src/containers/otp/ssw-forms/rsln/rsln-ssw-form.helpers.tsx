@@ -1,5 +1,4 @@
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
@@ -38,6 +37,7 @@ import {
     AccountType,
     RestrictionOption,
     FundWithdrawnMethod,
+    SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -49,85 +49,20 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getRslnConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({
-            formSignature,
-            formDisbursement,
-        }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
-
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            if (
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !==
-                        formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t(
-                        'formValidation.accountNumberDoesNotMatch'
-                    );
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !==
-                        formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                        'formValidation.routingNumberDoesNotMatch'
-                    );
-                }
-            }
-
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
-
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                errors[BankingFields.AccountType] = t(
-                    'formValidation.accountTypeMustBeSelected'
-                );
-            }
-            return errors;
-        },
-        [t]
-    );
-
-    const sswFormValidation = ({
-        formParty,
+    const formValidation = ({
         formSignature,
+        formDisbursement,
         formProgram,
         formDistribution,
-        formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
+        const errors = {} as FormValidationErrors;
+
         const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds.filter(
+        const funds = formDistribution?.funds?.filter(
             (fund) => !!fund.amount.text
         );
 
@@ -136,7 +71,132 @@ export default function getRslnConfig(t: TFunction) {
                 'sswProgram.warnings.specifyFundsRequired'
             );
         }
-        return errors;
+
+        const jointOwnerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.JointOwner
+        );
+
+        const beneficiarySignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+        );
+
+        const spouseSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Spouse
+        );
+
+        if (
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSigned &&
+            !jointOwnerSignature?.isSignatureValid &&
+            jointOwnerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSigned &&
+            !beneficiarySignature?.isSignatureValid &&
+            beneficiarySignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            spouseSignature &&
+            spouseSignature?.isSigned &&
+            !spouseSignature?.isSignatureValid &&
+            spouseSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSignatureValid &&
+            !jointOwnerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSignatureValid &&
+            !beneficiarySignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            spouseSignature &&
+            spouseSignature?.isSignatureValid &&
+            !spouseSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+            validateComment: true,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -484,6 +544,7 @@ export default function getRslnConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -544,6 +605,18 @@ export default function getRslnConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'owner-date',
                 },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'owner-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'owner-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
+                },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
         },
@@ -562,6 +635,18 @@ export default function getRslnConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'joint-date',
+                },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'joint-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'joint-sign-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
@@ -587,6 +672,18 @@ export default function getRslnConfig(t: TFunction) {
                     component: SignatureFields.SignatureDate,
                     key: 'beneficiary-date',
                 },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'beneficiary-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'beneficiary-sign-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
+                },
             ],
             signatureType:
                 SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
@@ -611,6 +708,18 @@ export default function getRslnConfig(t: TFunction) {
                 {
                     component: SignatureFields.SignatureDate,
                     key: 'spouse-date',
+                },
+                {
+                    component: SignatureFields.SignatureValid,
+                    key: 'spouse-sign-valid',
+                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                },
+                {
+                    component: SignatureFields.SignatureComment,
+                    key: 'spouse-sign-comment',
+                    label: 'signatureCommentLabel',
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             shouldDisplay: ({
@@ -662,7 +771,7 @@ export default function getRslnConfig(t: TFunction) {
 
     return {
         reasonOptions,
-        formValidation: sswFormValidation,
+        formValidation,
         formPartyConfigs,
         systematicWithdrawalOptions,
         disbursementOptions,

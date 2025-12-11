@@ -1,4 +1,4 @@
-import { Policy } from '@zinnia/api-types/types/sor';
+import { Loader } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useState } from 'react';
@@ -9,15 +9,13 @@ import NavElement, {
     NavElementType,
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
-import PageLoader, {
-    PageLoaderVariant,
-} from '@deps/components/page-loader/page-loader';
 import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';
 import { updateNotificationMethod } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { buildUpdateNotificationMethodPayload } from './update-notification-method-helper';
 
@@ -40,6 +38,7 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
         faxData,
         addressData,
         notificationMethodSelected,
+        contactEstablished,
     } = useUpdateNotificationMethod();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -51,7 +50,8 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
             emailData,
             faxData,
             addressData,
-            notificationMethodSelected
+            notificationMethodSelected,
+            contactEstablished
         );
 
         const successfulSubmit = await updateNotificationMethod(payload);
@@ -71,17 +71,10 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
         faxData,
         addressData,
         notificationMethodSelected,
+        contactEstablished,
         setCaseId,
         setSubmitFailed,
     ]);
-
-    if (isLoading) {
-        return (
-            <div className="responsive-padding flex h-[300px] w-full grow">
-                <PageLoader variant={PageLoaderVariant.Center} />
-            </div>
-        );
-    }
 
     if (submitFailed) {
         return (
@@ -97,6 +90,11 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
 
     return (
         <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
+            {isLoading && (
+                <div className="fixed left-0 top-0 z-10 flex h-screen w-screen justify-center bg-gray-800 opacity-80">
+                    <Loader />
+                </div>
+            )}
             <CardInfo
                 icon={
                     <CircleCheckIcon

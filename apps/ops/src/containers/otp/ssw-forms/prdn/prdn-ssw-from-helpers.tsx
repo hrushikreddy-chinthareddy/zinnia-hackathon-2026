@@ -1,5 +1,4 @@
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
@@ -12,7 +11,6 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
 import {
-    SignatureFieldNames,
     SignatureBonusFields,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
@@ -47,91 +45,20 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getPrdnConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({
-            formSignature,
-            formDisbursement,
-        }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
-
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
-
-            if (
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !==
-                        formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t(
-                        'formValidation.accountNumberDoesNotMatch'
-                    );
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !==
-                        formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                        'formValidation.routingNumberDoesNotMatch'
-                    );
-                }
-            }
-
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
-
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                errors[BankingFields.AccountType] = t(
-                    'formValidation.accountTypeMustBeSelected'
-                );
-            }
-
-            if (ownerSignature?.isDesignationPresent === null) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-                ] = t('formValidation.signatureDesignationMustBeSelected');
-            }
-            return errors;
-        },
-        [t]
-    );
-
-    const sswFormValidation = ({
-        formParty,
+    const formValidation = ({
         formSignature,
         formProgram,
         formDistribution,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
+        const errors = {} as FormValidationErrors;
+
         const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds.filter(
+        const funds = formDistribution?.funds?.filter(
             (fund) => !!fund.amount.text
         );
         if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
@@ -139,7 +66,50 @@ export default function getPrdnConfig(t: TFunction) {
                 'sswProgram.warnings.specifyFundsRequired'
             );
         }
-        return errors;
+
+        if (
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: true,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -474,6 +444,7 @@ export default function getPrdnConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -635,7 +606,7 @@ export default function getPrdnConfig(t: TFunction) {
 
     return {
         reasonOptions,
-        formValidation: sswFormValidation,
+        formValidation,
         formPartyConfigs,
         systematicWithdrawalOptions,
         disbursementOptions,

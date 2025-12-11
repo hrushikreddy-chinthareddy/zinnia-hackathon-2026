@@ -1,18 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
-import { PartyReferenceDataModel } from '@xd/api-types/dist/generated-types/partyreference';
-import {
-    BulkCheckTuple,
-    checkIfUserHasAdvisorsExcel,
-    checkIfUserHasCaseInsightsAccess,
-    checkIfUserHasDashboardAccess,
-    checkIfUserHasPolicyIndexAccess,
-    checkIfUserHasUsageAccess,
-    checkIfUserIsSuperAdmin,
-    checkRelation,
-    createBulkCheckBodyRequest,
-    FgaRoles,
-} from '@zinnia/utils';
 import { createContext, ReactNode, useContext } from 'react';
 
 import { UserPermission } from '@deps/models/user-profile';
@@ -26,7 +13,21 @@ import {
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import { FgaRelation, FgaUiEntity } from '@deps/types/fga';
 import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
+import {
+    BulkCheckTuple,
+    checkIfUserHasAdvisorsExcel,
+    checkIfUserHasCaseInsightsAccess,
+    checkIfUserHasDashboardAccess,
+    checkIfUserHasPolicyIndexAccess,
+    checkIfUserHasUsageAccess,
+    checkIfUserIsSuperAdmin,
+    checkRelation,
+    createBulkCheckBodyRequest,
+    FgaRoles,
+} from '@deps/utils/auth';
+import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { PartyReferenceDataModel } from '@zinnia/api-types/types/partyreference';
 
 import { useOptimizely } from './OptimizelyContext';
 
@@ -59,7 +60,10 @@ export interface PermissionsContextProps {
     hasNotesAccess: boolean;
     hasTestHarnessAccess: boolean;
     isZinniaInternalViewer: boolean;
+    isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
+    hasPermissionToPrioritizeCases: boolean;
+    hasMarketConnectContacts: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -75,6 +79,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { featureFlags } = useOptimizely();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
+
+    const hasMarketConnectContacts =
+        !!featureFlags[FEATURE_FLAGS.MARKET_CONNECT_ENABLED];
 
     const { data: homeCheck, isLoading: homeCheckLoading } = useQuery({
         queryKey: ['isAllowHomeExperience', partyId],
@@ -101,7 +108,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
-
+    // IMH-87188-87186 (186 is the IMH you can view in JIRA)
+    const isCaseManagementFgaEnabled =
+        featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT];
     const {
         data: isAllowReadCaseManagement,
         isLoading: caseManagementLoading,
@@ -110,8 +119,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             'isAllowReadCaseManagement',
             partyId,
             featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE],
+            isCaseManagementFgaEnabled,
         ],
         queryFn: async () => {
+            if (!isCaseManagementFgaEnabled) {
+                return true;
+            }
             if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE]) {
                 const res = await checkTuple(
                     partyId,
@@ -128,15 +141,21 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         enabled: !!partyId,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
-
+    const isPolicyManagementFgaEnabled =
+        featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT];
     const { data: isAllowReadPolicyAdmin, isLoading: policyAdminLoading } =
         useQuery({
             queryKey: [
                 'isAllowReadPolicyAdmin',
                 partyId,
                 featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY],
+                isPolicyManagementFgaEnabled,
             ],
             queryFn: async () => {
+                if (!isPolicyManagementFgaEnabled) {
+                    return true;
+                }
+
                 if (featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY]) {
                     const res = await checkTuple(
                         partyId,
@@ -203,37 +222,67 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
     });
 
+    const { data: writeCasePriority } = useQuery({
+        queryKey: ['writeCasePriority', partyId],
+        queryFn: () =>
+            doesUserHavePagePermissionQuery(
+                UserPermission.AllowWriteCasePriority,
+                partyId
+            ),
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
+
     const {
         data: fgaRoleData,
         isLoading: bulkCheckLoading,
         isFetching: _rolesFetching,
         isError: _rolesError,
     } = useQuery({
-        queryKey: ['fgaRoles', partyId],
+        queryKey: [
+            'fgaRoles',
+            partyId,
+            featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS],
+        ],
         queryFn: async () => {
             const tuples = [
                 ...createBulkCheckBodyRequest(partyId).tuples,
-                {
-                    user: `party:${partyId}`,
-                    relation: FgaRelation.UiAccess,
-                    object: 'entity:zinnia_live_test_harness',
-                },
+
                 {
                     user: `party:${partyId}`,
                     relation: FgaRelation.Party,
                     object: FgaRoles.ZINNIA_INTERNAL_VIEWER,
                 },
                 {
+                    // IMH-85894
                     user: `party:${partyId}`,
-                    relation: FgaRelation.UiAccess,
-                    object: FgaRoles.WELB_SALES_MATERIALS,
+                    relation: FgaRelation.Party,
+                    object: FgaRoles.ZINNIA_INTERNAL_PROCESSOR,
                 },
+
                 {
                     user: `party:${partyId}`,
                     relation: FgaRelation.UiAccess,
                     object: FgaRoles.ILLUSTRATIONS_CREATE_CLIENT_CASE_EXPERIENCE,
                 },
             ];
+
+            if (isDemo()) {
+                tuples.push({
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.UiAccess,
+                    object: FgaRoles.TEST_HARNESS_ACCESS,
+                });
+            }
+
+            if (featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS]) {
+                tuples.push({
+                    user: `party:${partyId}`,
+                    relation: FgaRelation.UiAccess,
+                    object: FgaRoles.WELB_SALES_MATERIALS,
+                });
+            }
+
             const data = await bulkCheckPermissionsQuery({ tuples });
             const superAdmin = checkIfUserIsSuperAdmin(data);
             const hasDashboard = checkIfUserHasDashboardAccess(data);
@@ -267,22 +316,32 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRoles.NOTES_ACCESS,
                 FgaRelation.UiAccess
             );
-            const hasTestHarnessAccess = !!checkRelation(
-                data,
-                FgaRoles.TEST_HARNESS_ACCESS,
-                FgaRelation.UiAccess
-            );
+            let hasTestHarnessAccess = false;
+            if (isDemo()) {
+                hasTestHarnessAccess = !!checkRelation(
+                    data,
+                    FgaRoles.TEST_HARNESS_ACCESS,
+                    FgaRelation.UiAccess
+                );
+            }
             const isZinniaInternalViewer = !!checkRelation(
                 data,
                 FgaRoles.ZINNIA_INTERNAL_VIEWER,
                 FgaRelation.Party
             );
-
-            const hasWelbSalesMaterials = !!checkRelation(
+            const isZinniaInternalProcessor = !!checkRelation(
                 data,
-                FgaRoles.WELB_SALES_MATERIALS,
-                FgaRelation.UiAccess
+                FgaRoles.ZINNIA_INTERNAL_PROCESSOR,
+                FgaRelation.Party
             );
+            let hasWelbSalesMaterials = false;
+            if (featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS]) {
+                hasWelbSalesMaterials = !!checkRelation(
+                    data,
+                    FgaRoles.WELB_SALES_MATERIALS,
+                    FgaRelation.UiAccess
+                );
+            }
 
             const hasCreateClientAccess = !!checkRelation(
                 data,
@@ -305,6 +364,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasNotesAccess,
                 hasTestHarnessAccess,
                 isZinniaInternalViewer,
+                isZinniaInternalProcessor,
                 hasWelbSalesMaterials,
                 hasCreateClientAccess,
             };
@@ -362,7 +422,11 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 hasCallLogsAccess: !!fgaRoleData?.hasCallLogsAccess,
                 hasNotesAccess: !!fgaRoleData?.hasNotesAccess,
                 isZinniaInternalViewer: !!fgaRoleData?.isZinniaInternalViewer,
+                hasPermissionToPrioritizeCases: !!writeCasePriority,
+                isZinniaInternalProcessor:
+                    !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
+                hasMarketConnectContacts,
             }}
         >
             {children}

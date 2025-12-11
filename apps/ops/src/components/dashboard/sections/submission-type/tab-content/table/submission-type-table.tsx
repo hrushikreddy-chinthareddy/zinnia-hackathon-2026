@@ -1,5 +1,3 @@
-import { toSentenceCase } from '@xd/utils/dist';
-import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import {
     FieldData,
     FieldSize,
@@ -15,18 +13,20 @@ import {
 } from '@zinnia/bloom/components';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
 import { SubmissionTypeFilters } from '@deps/components/dashboard/sections/submission-type/tab-content/shared/submission-type-filters';
 import { friendlyGroupByName } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { toSentenceCase } from '@deps/utils/strings';
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import { SubmissionMethodTooltip } from '../../submission-type';
 
@@ -73,13 +73,10 @@ export const SubmissionTypeTable = () => {
 
     const {
         graphStats,
-        timerange,
         submissionVs,
-        selectedProcess,
         graphStatsLoading,
         graphStatsFetching,
         graphStatsError,
-        filter,
     } = useContext(SubmissionTypeContext);
 
     // Transform the data by flattening it
@@ -157,27 +154,9 @@ export const SubmissionTypeTable = () => {
                     loading={graphStatsFetching || graphStatsLoading}
                 >
                     {graphStatsError ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {
-                                    'Something went wrong fetching the application types, please try again by refreshing the page'
-                                }
-                            </Typography>
-                        </div>
+                        <ErrorMessage />
                     ) : searchedData?.length === 0 ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        <NoDataMessage />
                     ) : (
                         <Table>
                             <TableHeader>

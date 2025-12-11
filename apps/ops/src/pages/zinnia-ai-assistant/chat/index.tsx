@@ -1,9 +1,8 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import AiLogo from '@deps/components/knowledge-base/chat/ai-logo/ai-logo';
 import ChatInput from '@deps/components/knowledge-base/chat/chat-input/chat-input';
 import ChatQuestion from '@deps/components/knowledge-base/chat/chat-question/chat-question';
 import ChatResponse from '@deps/components/knowledge-base/chat/chat-response/chat-response';
@@ -17,6 +16,8 @@ import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { DEFAULT_LOCALE, ALL_LOCALES } from '@deps/helpers/routing.helpers';
+import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
+import { useScroll } from '@deps/hooks/useScroll';
 import { UserProfile } from '@deps/models/user-profile';
 import { getOpsUserDetailsSSR } from '@deps/queries/api/knowledge-base';
 import { BOT_ERROR_MESSAGE_ID, MessageRole } from '@deps/types/knowledge-base';
@@ -26,6 +27,7 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import { logWarn, withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 import nextI18nextConfig from 'next-i18next.config';
 
 type additionalDataProps = {
@@ -45,10 +47,15 @@ export default function AiAssistant({
 }: AiAssistantPageProps) {
     return (
         <KnowledgeBaseContainer opsUserData={opsUserData} sessionId={sessionId}>
+            <CommonHeader />
             <ChatPage opsUserData={opsUserData} />
         </KnowledgeBaseContainer>
     );
 }
+
+export const getUserDisplayName = (name: string) => {
+    return name.split(',').pop()?.trim() || '';
+};
 
 export const getServerSideProps = withPageAuthAndLogging(
     {
@@ -156,69 +163,111 @@ const ChatPage = ({ opsUserData }: ChatPageProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
-    const { currentMessages } = useKnowledgeBaseContext();
-    const endref = useRef<HTMLDivElement | null>(null);
-    const [isCompleted, setIsCompleted] = useState(false);
-
-    useEffect(() => {
-        endref.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [currentMessages]);
+    const { currentMessages, selectedClientId, commonClientId } =
+        useKnowledgeBaseContext();
+    const { isStreaming, sendMessage, stopStreaming, getCommonClientResponse } =
+        useChatStream(selectedClientId, commonClientId || '');
+    const { handleContainerScroll, scrollContainerRef, endref } =
+        useScroll(currentMessages);
 
     return (
-        <div className="px-6 h-full flex flex-col justify-between">
-            <CommonHeader />
-            <div className=" flex flex-col gap-2 justify-end">
-                <div className=" flex-1 flex flex-col gap-2">
-                    {currentMessages.length > 0 ? (
-                        <div className="flex flex-col gap-4 my-4 max-h-[65vh] overflow-y-auto ">
-                            {currentMessages.map((message, index) => {
-                                return message.role === MessageRole.User ? (
-                                    <ChatQuestion
-                                        key={message.id}
-                                        question={message.content}
-                                    />
-                                ) : (
-                                    <ChatResponse
-                                        key={message.id}
-                                        email={opsUserData?.email || ''}
-                                        questionId={message.questionId ?? ''}
-                                        responseId={message.id}
-                                        response={message.content}
-                                        sourceDocuments={
-                                            message.sourceDocuments
-                                        }
-                                        submittedFeedbackType={
-                                            message.feedbackType
-                                        }
-                                        submittedFeedbackComment={
-                                            message.feedbackComment
-                                        }
-                                        showFeedbackControls={
-                                            message.id !== BOT_ERROR_MESSAGE_ID
-                                        }
-                                        isCompleted={
-                                            index !== currentMessages.length - 1
-                                                ? true
-                                                : isCompleted
-                                        }
-                                    />
-                                );
-                            })}
-                            <div ref={endref} />
-                        </div>
-                    ) : (
-                        <Typography
-                            variant={TypographyVariant.H3}
-                            className="whitespace-pre-line text-center my-8"
-                        >
-                            {t('chat.startingMessage')}
-                        </Typography>
-                    )}
+        <div className="h-full flex items-center justify-center overflow-hidden">
+            <div className="w-full h-full inset-0 flex flex-col gap-2 justify-center">
+                <div className="h-full flex flex-col">
+                    <div className="flex-1 flex flex-col gap-2 justify-end items-center">
+                        {currentMessages.length > 0 ? (
+                            <div
+                                ref={scrollContainerRef}
+                                onScroll={handleContainerScroll}
+                                className="flex flex-col gap-4 pt-4 max-h-[calc(100vh-20rem+24px)] p-2 overflow-y-auto w-full"
+                            >
+                                {currentMessages.map((message, index) => {
+                                    return message.role === MessageRole.User ? (
+                                        <ChatQuestion
+                                            key={message.id}
+                                            question={message.content}
+                                        />
+                                    ) : (
+                                        <ChatResponse
+                                            key={message.id}
+                                            email={opsUserData?.email || ''}
+                                            questionId={
+                                                message.questionId ?? ''
+                                            }
+                                            responseId={message.id}
+                                            response={message.content}
+                                            sourceDocuments={
+                                                message.sourceDocuments
+                                            }
+                                            submittedFeedbackType={
+                                                message.feedbackType
+                                            }
+                                            submittedFeedbackComment={
+                                                message.feedbackComment
+                                            }
+                                            showFeedbackControls={
+                                                message.id !==
+                                                BOT_ERROR_MESSAGE_ID
+                                            }
+                                            definitiveAnswerFound={
+                                                message.definitiveAnswerFound ??
+                                                null
+                                            }
+                                            isStreaming={
+                                                index !==
+                                                currentMessages.length - 1
+                                                    ? false
+                                                    : isStreaming
+                                            }
+                                            getCommonClientResponse={
+                                                getCommonClientResponse
+                                            }
+                                        />
+                                    );
+                                })}
+                                <div ref={endref} />
+                            </div>
+                        ) : (
+                            <AiLogo
+                                width="100px"
+                                height="100px"
+                                autoPlay={true}
+                                loop={false}
+                            />
+                        )}
+                    </div>
+                    <div className="flex-col justify-end flex">
+                        {currentMessages.length == 0 && (
+                            <>
+                                <Typography
+                                    variant={TypographyVariant.H3}
+                                    className="whitespace-pre-line text-center my-8"
+                                >
+                                    <h5 className="text-5xl font-bold text-transparent bg-clip-text bg-[linear-gradient(180deg,#ffc600_-12.77%,#ec6c00_39.25%,#ff1822_124.05%)]">
+                                        {opsUserData?.name &&
+                                            t(
+                                                'chat.startingMessageBetaPrefix',
+                                                {
+                                                    name: getUserDisplayName(
+                                                        opsUserData.name
+                                                    ),
+                                                }
+                                            )}
+                                    </h5>
+                                    <h5 className="text-xl mt-4">
+                                        {t('chat.startingMessageBetaSuffix')}
+                                    </h5>
+                                </Typography>
+                            </>
+                        )}
+                        <ChatInput
+                            opsUserData={opsUserData}
+                            sendMessage={sendMessage}
+                            stopStreaming={stopStreaming}
+                            isStreaming={isStreaming}
+                        />
+                    </div>
                 </div>
-                <ChatInput
-                    opsUserData={opsUserData}
-                    setIsCompleted={setIsCompleted}
-                />
             </div>
         </div>
     );

@@ -1,7 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils/dist';
-import { Party, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useMemo } from 'react';
@@ -24,9 +22,12 @@ import PolicyDetailsContainer from '@deps/containers/policy-details/policy-detai
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
 import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
+import CallLogs from '@deps/containers/subpages/activity-sub-page/call-logs';
+import { FilterTransactions } from '@deps/containers/subpages/activity-sub-page/filter-transactions';
 import DocumentsSubPage from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import FundsSubPage from '@deps/containers/subpages/funds-sub-page';
 import WithdrawalsSubPage from '@deps/containers/withdrawals-sub-page/withdrawals-sub-page';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PeopleRolesFilterProvider } from '@deps/contexts/PeopleRolesFilter';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
@@ -47,11 +48,11 @@ import {
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
-import { FgaRelation } from '@deps/types/fga';
 import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRelation, FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -63,6 +64,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Party, Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
@@ -105,6 +107,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     const { query } = router;
     const { id, slug, planCode } = query;
     const { partyId } = usePermissionsContext();
+    const { featureFlags } = useOptimizely();
 
     const {
         data: policy,
@@ -224,7 +227,13 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 }
                 break;
             case 'activity':
-                subPageContent = <ActivitySubPage />;
+                if (featureFlags[FEATURE_FLAGS.REVISED_HISTORY_TABLE]) {
+                    if (slug[1] === 'transactions')
+                        subPageContent = <FilterTransactions />;
+                    if (slug[1] === 'call-logs') subPageContent = <CallLogs />;
+                } else {
+                    subPageContent = <ActivitySubPage />;
+                }
                 break;
             case 'documents':
                 subPageContent = <DocumentsSubPage policy={policy} />;
@@ -274,39 +283,48 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
+            // IMH-87188-87186 (186 is the IMH you can view in JIRA)
             const featureFlagDecisions: FeatureFlags =
                 await optimizelyService.getFeatureFlagDecisions(
                     user.sub,
                     loggingContext
                 );
-            const hasPermissionToReadPolicyManagement = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadPolicyAdmin,
-                      loggingContext
-                  );
-            const isAdvisorsExcel = await checkTuplePage(
-                context,
-                FgaRelation.Party,
-                AE_FGA_ROLE,
-                loggingContext
-            );
 
-            if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
+            if (
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT
+                ]
+            ) {
+                const hasPermissionToReadPolicyManagement =
+                    featureFlagDecisions?.[
+                        FEATURE_FLAGS.ENTERPRISE_SEARCH_POLICY
+                    ]
+                        ? await checkTuplePage(
+                              context,
+                              FgaRelation.UiAccess,
+                              FgaRoles.POLICY_MANAGEMENT_ZL_ENTITY,
+                              loggingContext
+                          )
+                        : await doesUserHavePagePermissions(
+                              context,
+                              UserPermission.AllowReadPolicyAdmin,
+                              loggingContext
+                          );
+                const isAdvisorsExcel = await checkTuplePage(
+                    context,
+                    FgaRelation.Party,
+                    AE_FGA_ROLE,
+                    loggingContext
+                );
+
+                if (!isAdvisorsExcel && !hasPermissionToReadPolicyManagement) {
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
             }
 
             try {

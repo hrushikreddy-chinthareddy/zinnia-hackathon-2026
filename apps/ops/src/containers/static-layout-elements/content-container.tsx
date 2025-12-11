@@ -1,9 +1,8 @@
 import { Skeleton } from '@radix-ui/themes';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren } from 'react';
 
-import { FindAllKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-sidesheet';
+import { FindAllKeyValuesPolicySidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-policy-sidesheet';
 import { FindKeyValuesSidesheet } from '@deps/components/find-key-values-sidesheet/find-key-values-sidesheet';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import PageLoader, {
@@ -15,7 +14,9 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
+import { CarrierCode } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import styles from './content-container.module.css';
 import QuickLinks from '../quick-links/quick-links';
@@ -41,7 +42,12 @@ const ContentContainer = ({
     const { t } = useTranslation();
     const { globalValuesData } = useContentContext();
     const { featureFlags } = useOptimizely();
-    const showAllKeyValues = featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL];
+    const SBGC: CarrierCode = 'SBGC'; // typed to prevent typos
+    const showAllKeyValues = policy.carrierId
+        ? policy.carrierId === SBGC
+            ? featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL_SB]
+            : featureFlags[FEATURE_FLAGS.FKV_SHOW_ALL]
+        : false;
 
     const {
         highlight,
@@ -89,7 +95,7 @@ const ContentContainer = ({
 
     return (
         <>
-            {loading ? (
+            {loading || !planCode || !policyNumber ? (
                 <PageLoader variant={PageLoaderVariant.Center} />
             ) : (
                 <>
@@ -114,7 +120,7 @@ const ContentContainer = ({
                     >
                         {hideSearch ||
                         !policyDetails.isTPA ? null : showAllKeyValues ? (
-                            <FindAllKeyValuesSidesheet
+                            <FindAllKeyValuesPolicySidesheet
                                 planCode={planCode}
                                 policyNumber={policyNumber}
                             />

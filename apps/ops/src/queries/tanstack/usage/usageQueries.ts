@@ -1,16 +1,18 @@
 import {
-    UserActivityGroupByEnum,
-    UserActivityInputFilter,
-    UserViewsGroupByEnum,
-    UserViewsInputFilter,
-} from '@xd/api-types/dist/generated-types/analytics';
-
-import {
     friendlyGroupByName,
     friendlyGroupByNameForUserViews,
 } from '@deps/components/usage/utils';
 import { getUserActivityCounts } from '@deps/queries/api/user-actvity-count';
+import { getUserTransactionCounts } from '@deps/queries/api/user-transaction-count';
 import { getUserViewsCounts } from '@deps/queries/api/user-views-count';
+import {
+    UserActivityGroupByEnum,
+    UserActivityInputFilter,
+    UserTransactionGroupByEnum,
+    UserTransactionInputFilter,
+    UserViewsGroupByEnum,
+    UserViewsInputFilter,
+} from '@zinnia/api-types/types/analytics';
 
 export const getUserActivityCountsQuery = async (
     filter: UserActivityInputFilter,
@@ -46,7 +48,6 @@ export const getUserViewsCountsQuery = async (
         filter,
         groupBy,
     });
-
     if (
         !userViewsResponse ||
         'detail' in userViewsResponse ||
@@ -62,4 +63,30 @@ export const getUserViewsCountsQuery = async (
         return item;
     });
     return userViewsResponse;
+};
+
+export const getUserTransactionCountsQuery = async (
+    filter: UserTransactionInputFilter,
+    groupBy: UserTransactionGroupByEnum[]
+) => {
+    const userTransactionResponse = await getUserTransactionCounts({
+        filter,
+        groupBy,
+    });
+    if (
+        !userTransactionResponse ||
+        'detail' in userTransactionResponse ||
+        !('data' in userTransactionResponse)
+    ) {
+        throw userTransactionResponse;
+    }
+
+    userTransactionResponse.data = userTransactionResponse.data.map((item) => {
+        if (item.name === '') {
+            item.name = 'Unknown';
+        }
+        return item;
+    });
+
+    return userTransactionResponse;
 };

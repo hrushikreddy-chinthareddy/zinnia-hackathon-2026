@@ -47,6 +47,7 @@ import {
 } from '@deps/queries/api/v1/task-admin';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
+import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
@@ -64,7 +65,6 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 import AssigneePopover from './table-elements/assignee-popover';
 import styles from './task-management-queue.module.css';
 import TaskQueueDrawer from './task-queue-drawer';
-
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
     featureFlagDecisions: FeatureFlags;
@@ -93,7 +93,7 @@ export const Assignee = ({
     const [assigneeLoading, setAssigneeLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
-    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = async () => {
         if (task.status === TaskStatus.Completed) {
             return;
         }
@@ -201,22 +201,16 @@ export const Assignee = ({
 const TaskQueueTableRow = ({
     task,
     featureFlagDecisions,
-    tabIndex,
     getTasks,
     setErrorMessage,
     isOpsManagerView,
     manageTableAfterAction,
-    setTaskDetails,
 }: TaskQueueTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagementQueue',
     });
     const router = useRouter();
     const [_timer] = useState(performance.now());
-    const policyNumber = getCaseIdentifierValue(
-        task.identifiers,
-        CaseIdentifier.PolicyNumber
-    );
     const _documentNumber = getCaseIdentifierValue(
         task.identifiers,
         CaseIdentifier.DocumentNumber
@@ -224,15 +218,7 @@ const TaskQueueTableRow = ({
     const [actionLoader, setActionLoader] = useState(false);
 
     const [_loader, setLoader] = useState(false);
-    const {
-        taskName,
-        taskType: _taskType,
-        createdAt,
-        status: _status,
-        carrier,
-        assignee,
-        queue,
-    } = task;
+    const { taskType: _taskType, status: _status, carrier } = task;
     const carrierName =
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
 
@@ -402,7 +388,7 @@ const TaskQueueTableRow = ({
 
     const statuses = [
         {
-            label: 'Pending',
+            label: 'Scheduled',
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
                 openSideSheet();
@@ -431,10 +417,10 @@ const TaskQueueTableRow = ({
             badgeVariant = BadgeVariant.Urgent;
             badgeLabel = 'Closed';
             break;
-        case TaskStatus.Pending:
+        case TaskStatus.Scheduled:
             (badgeIcon = <Pause width={16} height={16} />),
                 (badgeVariant = BadgeVariant.Error);
-            badgeLabel = 'Pending';
+            badgeLabel = 'Scheduled';
             break;
         default:
             badgeIcon = <ToDo width={16} height={16} />;
@@ -476,6 +462,10 @@ const TaskQueueTableRow = ({
             handleLinkClick(undefined);
         }
     };
+    const showBadge =
+        task.escalated &&
+        task.status !== TaskStatus.Canceled &&
+        task.status !== TaskStatus.Completed;
 
     return (
         <TableRow className={styles.row} key={`task_queue_row_${task.id}`}>
@@ -581,6 +571,26 @@ const TaskQueueTableRow = ({
                                     details={'-'}
                                     variant={ContentVariant.BodySm}
                                 />
+                            )}
+                            {showBadge && (
+                                <div>
+                                    <Tooltip
+                                        placement={TooltipPlacement.TopRight}
+                                        tooltipClassName="!w-auto"
+                                        triggerClassName="!z-10  justify-end"
+                                        trigger={
+                                            <Warning
+                                                height={16}
+                                                width={16}
+                                                className="ml-2"
+                                            />
+                                        }
+                                    >
+                                        <span className="text-md">
+                                            {t('prioritized')}
+                                        </span>
+                                    </Tooltip>
+                                </div>
                             )}
                         </div>
                     </div>

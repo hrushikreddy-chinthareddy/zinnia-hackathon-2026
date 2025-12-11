@@ -105,22 +105,16 @@ describe('SBGC withdrawal form config', () => {
                     bank: [
                         {
                             ...DEFAULT_BANK_DETAILS,
-                            accountNumber: disbursementMockData.accountNumber,
+                            accountNumber: '',
                             accountType: {
-                                text: disbursementMockData.accountType,
+                                text: undefined,
                             },
-                            bankName: disbursementMockData.bankName,
-                            nameOnBankAccount:
-                                disbursementMockData.accountHolder ?? '',
-                            routingNumber:
-                                disbursementMockData.bankRoutingNumber,
-                            reEnterAccountNumber: '',
-                            reEnterBankRoutingNumber: '',
+                            bankName: '',
+                            nameOnBankAccount: '',
+                            routingNumber: '',
                         },
                     ],
-                    voidCheck: disbursementMockData.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt:
-                        disbursementMockData.doesCheckMeetSecurityRequirements,
+                    bankVerification: null,
                 });
             });
             it('should generate a correct payload for a wire selection', () => {
@@ -138,22 +132,18 @@ describe('SBGC withdrawal form config', () => {
                     bank: [
                         {
                             ...DEFAULT_BANK_DETAILS,
-                            accountNumber: disbursementMockData.accountNumber,
+                            accountNumber: '',
                             accountType: {
-                                text: disbursementMockData.accountType,
+                                text: undefined,
                             },
-                            bankName: disbursementMockData.bankName,
-                            nameOnBankAccount:
-                                disbursementMockData.accountHolder ?? '',
-                            routingNumber:
-                                disbursementMockData.bankRoutingNumber,
-                            reEnterAccountNumber: '',
-                            reEnterBankRoutingNumber: '',
+                            bankName: '',
+                            nameOnBankAccount: '',
+                            routingNumber: undefined,
+                            reEnterAccountNumber: undefined,
+                            reEnterBankRoutingNumber: undefined,
                         },
                     ],
-                    voidCheck: disbursementMockData.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt:
-                        disbursementMockData.doesCheckMeetSecurityRequirements,
+                    bankVerification: null,
                 });
             });
             it('should generate a correct payload for a check selection', () => {
@@ -165,7 +155,6 @@ describe('SBGC withdrawal form config', () => {
                         disbursementMockData
                     )
                 ).toEqual({
-                    thisIsMocked: true,
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: null },
                 });

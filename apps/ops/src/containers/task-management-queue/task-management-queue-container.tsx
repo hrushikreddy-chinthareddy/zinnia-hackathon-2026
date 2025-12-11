@@ -8,16 +8,20 @@ import Button, {
     ButtonType,
     ButtonVariant,
 } from '@deps/components/button/button';
+import Content, { ContentVariant } from '@deps/components/content/content';
 import SearchBar from '@deps/components/search/search-bar';
 import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskManagerActiveFilters from '@deps/containers/task-manager-active-filters/';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import useTaskManagementQueue from '@deps/hooks/useTaskManagementQueue';
-import { MessageType } from '@deps/models/case/task';
+import { FilterKeys, MessageType } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
-import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/icons_outlined/add.svg';
+import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_outlined/filter.svg';
+import { LabelValue } from '@deps/types/data';
+import { PolicySearchKeys } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import TaskQueueTable from './task-queue-table';
@@ -27,10 +31,6 @@ const SideSheetTasksResults = dynamic(
             '@deps/containers/side-sheet-tasks-filters/side-sheet-tasks-filters'
         )
 );
-
-import { PolicySearchKeys } from '@deps/types/search';
-import { LabelValue } from '@deps/types/data';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 const fieldKeyMapping: Record<string, string> = {
     taskName: 'taskName',
@@ -45,6 +45,7 @@ type TaskManagementQueueProps = {
         authorizedCarriers?: string[];
         taskListingParams?: TaskListingParams;
         assigneeList?: string[];
+        escalated?: boolean;
     };
     isOpsManagerView?: boolean;
 };
@@ -55,6 +56,7 @@ type SearchParamsPayload = {
     carriers?: string[];
     queues?: string[];
     statuses?: string[];
+    escalated?: boolean | null | undefined;
 };
 
 // type TaskSearchKeys = 'caseId' | 'taskName';
@@ -110,11 +112,11 @@ const TaskManagementQueue = ({
     };
 
     const enableClaimTask = taskDetails.every(
-        (task) => task.status === TaskStatus.Pending
+        (task) => task.status === TaskStatus.Scheduled
     );
 
     const getSafeSearchParams = (searchParams: SearchParamsPayload) => {
-        const { carriers, queues } = searchParams;
+        const { carriers, queues, escalated } = searchParams;
         const safeSearchParams = {
             ...searchParams,
             ...(carriers && carriers.length > 0
@@ -123,6 +125,7 @@ const TaskManagementQueue = ({
             ...(queues && queues.length > 0
                 ? { queues }
                 : { queues: additionalData?.taskListingParams?.queues }),
+            ...(escalated !== undefined && { escalated }),
         };
 
         return safeSearchParams;
@@ -164,6 +167,7 @@ const TaskManagementQueue = ({
                 ),
                 statuses: additionalFilters.taskStatus,
                 queues: additionalFilters.group,
+                escalated: additionalFilters.escalated,
             };
 
             const copy = { ...searchValue };
@@ -176,32 +180,34 @@ const TaskManagementQueue = ({
     );
 
     const handleFilterRemove = useCallback(
-        (filterName: string, filterValueToRemove: string) => {
-            if (!searchValue?.additionalFilters?.[filterName]) return;
+        (filterName: string, value: string) => {
+            const updated = { ...searchValue.additionalFilters };
 
-            const updatedFilterValues = searchValue.additionalFilters[
-                filterName
-            ].filter((value: string) => value !== filterValueToRemove);
+            if (filterName === FilterKeys.escalated) {
+                updated[filterName] = undefined;
+            } else {
+                const current = updated[filterName];
+                if (!current) return;
+                updated[filterName] = current.filter(
+                    (v: string) => v !== value
+                );
+            }
 
             const newSearchValue = {
                 ...searchValue,
-                additionalFilters: {
-                    ...searchValue.additionalFilters,
-                    [filterName]: updatedFilterValues,
-                },
+                additionalFilters: updated,
             };
 
             const payload = {
                 ...newSearchValue,
-                ...newSearchValue.additionalFilters,
+                ...updated,
             };
-
             delete payload.additionalFilters;
 
             setSearchValue(newSearchValue);
             getTasks(true, getSafeSearchParams(payload));
         },
-        [searchValue, setSearchValue]
+        [searchValue]
     );
 
     const handleReset = useCallback(() => {
@@ -209,7 +215,11 @@ const TaskManagementQueue = ({
 
         if (newSearchValue.additionalFilters) {
             Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                newSearchValue.additionalFilters[key] = [];
+                if (key === FilterKeys.escalated) {
+                    newSearchValue.additionalFilters[key] = undefined;
+                } else {
+                    newSearchValue.additionalFilters[key] = [];
+                }
             });
         }
 
@@ -227,7 +237,6 @@ const TaskManagementQueue = ({
         const newSearchValue = {
             ...searchValue,
         };
-        // remove old toggle key
         delete newSearchValue[toggleValue];
 
         setToggleValue(newToggleValue);
@@ -255,16 +264,24 @@ const TaskManagementQueue = ({
 
         delete searchParams?.additionalFilters;
 
-        Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-            newSearchValue.additionalFilters[key] = [];
-        });
+        if (newSearchValue?.additionalFilters) {
+            Object.keys(newSearchValue.additionalFilters).forEach((key) => {
+                if (key === FilterKeys.escalated) {
+                    newSearchValue.additionalFilters[key] = undefined;
+                } else {
+                    newSearchValue.additionalFilters[key] = [];
+                }
+            });
 
-        setSearchValue(newSearchValue);
+            setSearchValue(newSearchValue);
 
-        getTasks(true, {
-            ...searchParams,
-            ...additionalData?.taskListingParams,
-        });
+            getTasks(true, {
+                ...searchParams,
+                ...additionalData?.taskListingParams,
+            });
+        } else {
+            return;
+        }
     }, [handleApplyFilters, handleClear]);
 
     const handleCloseSideSheet = useCallback(() => {
@@ -297,7 +314,6 @@ const TaskManagementQueue = ({
         },
         [openRefineResultsSidesheet]
     );
-
     return (
         <>
             {isOpsManagerView && (
@@ -314,14 +330,27 @@ const TaskManagementQueue = ({
                     <Button
                         onClick={openRefineResultsSidesheet}
                         data-testid="search-btn"
+                        aria-label="Add filters"
                         type={ButtonType.Secondary}
                         size={ButtonSize.Small}
-                        className="flex items-center whitespace-nowrap mt-5 mb-5"
+                        className="flex items-center whitespace-nowrap mt-5 mb-5 !border-none !bg-white"
                         onKeyDown={handleKeyDownToOpenRefineResultsSidesheeet}
                         disabled={isLoading}
                     >
-                        <AddIcon width={12} height={12} />
-                        {tTaskView('filters.buttons.addFilter')}
+                        <FilterIcon
+                            className="text-secondary"
+                            width={16}
+                            height={16}
+                        />
+                        <Content
+                            contentClassName="text-secondary"
+                            variant={ContentVariant.BodyBold}
+                            details={
+                                tTaskView(
+                                    'filters.buttons.addFilters'
+                                ) as string
+                            }
+                        />
                     </Button>
                     <TaskManagerActiveFilters
                         authorizedCarriers={

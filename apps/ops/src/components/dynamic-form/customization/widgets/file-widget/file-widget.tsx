@@ -8,12 +8,12 @@ import {
     UIOptionsType,
     WidgetProps,
 } from '@rjsf/utils';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Toast, ToastVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { ChangeEvent, useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -26,7 +26,7 @@ import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import { ReactComponent as UploadIcon } from '@deps/styles/elements/icons/files/upload.svg';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import FileAttachmentComponent from './file-attachment.component';
@@ -119,29 +119,6 @@ export function FilesInfo<
     );
 }
 
-function extractFileInfo(dataURLs: string[]): FileInfoType[] {
-    return dataURLs.reduce((acc, dataURL) => {
-        if (!dataURL) {
-            return acc;
-        }
-        try {
-            const { blob, name } = dataURItoBlob(dataURL);
-            return [
-                ...acc,
-                {
-                    dataURL,
-                    name: name,
-                    size: blob.size,
-                    type: blob.type,
-                },
-            ];
-        } catch (e) {
-            // Invalid dataURI, so just ignore it.
-            return acc;
-        }
-    }, [] as FileInfoType[]);
-}
-
 function FileWidget(widgetProps: WidgetProps) {
     const { multiple, onChange, value, formContext } = widgetProps;
 
@@ -182,6 +159,7 @@ function FileUploadComponent({
     setAttachments,
     widgetProps,
 }: FileAttachmentProps) {
+    const correlationId = uuidv4();
     const {
         disabled,
         readonly,
@@ -192,6 +170,7 @@ function FileUploadComponent({
         registry,
         formContext,
     } = widgetProps;
+
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'general',
     });
@@ -224,14 +203,17 @@ function FileUploadComponent({
                         sourceFileName: name,
                         documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                         fileType: getFileSubtype(blob),
-                        docClassification:
-                            SearchRequest.documentClassification.INBOUND,
                         sourceSystem: SourceSystem.ZL,
                         zinniaLiveCaseId: formContext?.customData?.caseId,
                         parentCarrierCode:
                             formContext?.customData?.carrier ?? '',
-                        correlationId: formContext?.correlationId || '',
+                        correlationId:
+                            formContext?.correlationId || correlationId,
                     };
+                    browserLogInfo('FileWidget: Uploading document:', {
+                        ...metaData,
+                        fileName: name,
+                    });
                     try {
                         const response = await uploadDocumentV2(
                             metaData,
@@ -243,6 +225,7 @@ function FileUploadComponent({
                                 documentId: response.documentId,
                                 documentCategory: metaData?.docCategory,
                                 documentType: metaData?.documentType,
+                                docClassification: metaData?.docClassification,
                                 documentExt: metaData?.fileType,
                                 documentName:
                                     metaData?.documentTypeDescription ||
@@ -259,6 +242,7 @@ function FileUploadComponent({
                             'FileWidget: Error uploading document:',
                             {
                                 ...parseErrorInformation(error),
+                                fileName: name,
                             }
                         );
                         failedUploads.push(name); // Add the file name to the failed uploads list

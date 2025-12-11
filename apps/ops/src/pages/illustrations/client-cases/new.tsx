@@ -16,9 +16,11 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
 import { postIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import { SegmentPageName } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -26,6 +28,7 @@ import {
 } from '@deps/utils/optimizely/optimizely';
 import {
     LoggingContext,
+    logInfo,
     logWarn,
     parseErrorInformation,
     withPageAuthAndLogging,
@@ -46,6 +49,10 @@ export default function NewClientCase(
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const sideSheet = useSideSheetContext();
     const searchParams = useSearchParams();
+    useSegmentPageTracker(
+        props.additionalData.user,
+        SegmentPageName.IllustrationsNewClientCase
+    );
 
     const closeSideSheet = useCallback(() => {
         const params = toLowerCaseSearchParams(searchParams);
@@ -142,9 +149,24 @@ const getAuthToken = async (
     }
 };
 
+/**
+ * Server-side entry point for the Sureify flow.
+ *
+ * This page requires:
+ *  - User authentication (wrapped by `withPageAuthAndLogging`)
+ *  - Access to the Illustrations feature (feature flag)
+ *  - Permission to create client cases when an eAppId is present
+ *
+ * Behavior summary:
+ *  - If Illustrations flag disabled → redirect to /cases
+ *  - If user is not allowed to create cases → render client cases page with error message
+ *  - If `eAppId` is provided → attempt to bootstrap a client case from Sureify
+ *  - Otherwise → load translations + common props and render normally
+ */
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
+            const logPrefix = 'ClientCases:New';
             const user = await getUserData(context);
             const featureFlagDecisions: FeatureFlags =
                 await optimizelyService.getFeatureFlagDecisions(
@@ -180,6 +202,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 additionalData,
             };
 
+            /**
+             * Normalize query params to lowercase keys
+             * Important because Sureify uses `eAppId` → we map to `eappid`
+             */
             const normalizedQuery = Object.fromEntries(
                 Object.entries(context.query).map(([key, value]) => [
                     key.toLocaleLowerCase(),
@@ -201,10 +227,20 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            /**
+             * If an eAppId is provided → attempt to import a Sureify application
+             * Only applies in direct links from Sureify → not standard navigation
+             */
             if (hasSingleEappId) {
                 const accessToken = await getAuthToken(context, loggingContext);
 
+                logInfo(`${logPrefix} Got eAppId`, {
+                    ...loggingContext,
+                    eAppId,
+                });
+
                 if (!accessToken) {
+                    logWarn(`${logPrefix} Invalid token`, loggingContext);
                     return serverSidePropsLogout();
                 }
 

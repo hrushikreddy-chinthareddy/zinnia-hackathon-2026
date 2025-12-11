@@ -1,10 +1,5 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-    PartyRole,
-    PolicyStatus,
-} from '@xd/api-types/dist/generated-types/sor';
-import { toSentenceCase } from '@xd/utils/dist';
-import {
     Icon,
     IconType,
     TableCell,
@@ -28,6 +23,7 @@ import { PolicyBadgeStatus } from '@deps/components/global-values/policy-info/po
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import { formatSSN } from '@deps/helpers/string.helpers';
@@ -40,6 +36,7 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import {
     DEFAULT_DATE_FORMAT,
+    DEFAULT_ERROR_STRING,
     FIFTEEN_MINUTES_IN_MS,
     FIVE_MINUTES_IN_MS,
 } from '@deps/types/constants';
@@ -48,6 +45,8 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { toSentenceCase } from '@deps/utils/strings';
+import { PartyRole, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { PolicyActionCell } from './policy-action-cell';
 import styles from './policy-row.module.css';
@@ -94,19 +93,24 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
     const policyOwner = useMemo(() => {
         // get policy owner id
         const policyOwnerId = policyData?.partyRoles?.find(
-            (pr) => pr.partyRole === PartyRole.OWNER
+            (pr) => pr.partyRole === PartyRole.OWNER && !isEndDated(pr.endDate)
         )?.partyId;
 
         //use ID to find the policy owner data
         const policyOwner = policyData?.parties?.find(
             (party) => party.partyId === policyOwnerId
         );
-        if (policyOwner?.fullName) {
-            return toSentenceCase(policyOwner.fullName);
+
+        if (policyOwner) {
+            if (policyOwner?.fullName) {
+                return toSentenceCase(policyOwner.fullName);
+            } else {
+                return `${toSentenceCase(item.firstName)} ${toSentenceCase(
+                    item.lastName
+                )}`;
+            }
         } else {
-            return `${toSentenceCase(item.firstName)} ${toSentenceCase(
-                item.lastName
-            )}`;
+            return undefined;
         }
     }, [item.firstName, item.lastName, policyData]);
 
@@ -138,8 +142,8 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                                     src={imageSrc}
                                     alt={`${carrierName} icon`}
                                     role="presentation"
-                                    height={24}
-                                    width={24}
+                                    height={14}
+                                    width={14}
                                 />
                                 <span className="sr-only">
                                     {carrierName} icon
@@ -171,12 +175,20 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                 />
             </TableCell>
             <TableCell>
-                <PiiWrapper className={styles.ownerCell}>
-                    {policyOwner}
-                </PiiWrapper>
-                <PiiWrapper className="typography-content-body-sm text-[--color-base-text-text-secondary] block">
-                    {formatSSN(item.ssn)}
-                </PiiWrapper>
+                {policyOwner ? (
+                    <>
+                        <PiiWrapper className={styles.ownerCell}>
+                            {policyOwner}
+                        </PiiWrapper>
+                        <PiiWrapper className="typography-content-body-sm text-[--color-base-text-text-secondary] block">
+                            {formatSSN(item.ssn)}
+                        </PiiWrapper>
+                    </>
+                ) : (
+                    <span className={styles.noCases}>
+                        {DEFAULT_ERROR_STRING}
+                    </span>
+                )}
             </TableCell>
             {/* Case Table Cell */}
             <TableCell
@@ -188,20 +200,22 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                 {hasCases ? (
                     <Link
                         aria-label={`View Cases for policy ${item.policyNumber}`}
-                        className={styles.warningColor}
+                        className={styles.casesCount}
                         href={`/cases${convertToQueryString({
                             policyNumber: item.policyNumber || '',
                         })}`}
                         target="_blank"
                     >
                         <Icon
-                            type={IconType.ALERT_EXCLAMATION}
-                            className={styles.warningColor}
+                            type={IconType.CIRCLE_INFO}
+                            className={styles.infoIcon}
                         />
                         {caseData && 'total' in caseData && caseData?.total}
                     </Link>
                 ) : (
-                    '--'
+                    <span className={styles.noCases}>
+                        {DEFAULT_ERROR_STRING}
+                    </span>
                 )}
             </TableCell>
             {/* End Case Table Cell */}

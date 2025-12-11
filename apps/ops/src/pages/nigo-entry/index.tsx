@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { buildTaskLink } from '@deps/components/tasks-listing/task-listing.helpers';
@@ -62,6 +61,7 @@ import {
     logInfo,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
@@ -160,7 +160,10 @@ const NigoEntry = ({
                     featureFlagDecisions={featureFlagDecisions as FeatureFlags}
                     isLC={isLC}
                 >
-                    <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
+                    <NigoEntryProvider
+                        relatedDocCount={relatedDoc?.length}
+                        isLC={isLC}
+                    >
                         <NigoEntryContainer
                             documentNumber={documentNumber}
                             policyNumber={document?.contract}
@@ -187,7 +190,10 @@ const NigoEntry = ({
                     systematicPrograms={systematicPrograms}
                     isLC={isLC}
                 >
-                    <NigoEntryProvider relatedDocCount={relatedDoc?.length}>
+                    <NigoEntryProvider
+                        relatedDocCount={relatedDoc?.length}
+                        isLC={isLC}
+                    >
                         <NigoEntryContainer
                             documentNumber={documentNumber}
                             policyNumber={policyNumber}

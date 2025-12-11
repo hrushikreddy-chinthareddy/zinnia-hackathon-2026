@@ -1,10 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
 import {
-    CaseCountGroupByEnum,
-    CaseCountInputFilter,
-    CaseCountOutput,
-} from '@zinnia/api-types/types/analytics';
-import {
     createContext,
     FC,
     PropsWithChildren,
@@ -24,6 +19,12 @@ import {
 } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutput,
+} from '@zinnia/api-types/types/analytics';
 
 interface SubmissionTypeContextTypes {
     timeframeRadio: TimeframeFilterOptions | undefined;
@@ -106,7 +107,6 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         createdDateStart: timerange.from,
-        createdDateEnd: timerange.to || undefined,
         process: formatProcessFilter(selectedProcess),
     };
 
@@ -117,6 +117,7 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         error: pieChartStatsError,
     } = useQuery({
         queryKey: ['submissionTypePieChartStats', filter],
+
         queryFn: () =>
             createBaseQuery(filter, [CaseCountGroupByEnum.APPLICATION_TYPE]),
         placeholderData: (previousData) => previousData,
@@ -144,9 +145,19 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
         select: (response) => {
             const { data } = response;
             const updatedData = combineSubmissionTypes(data || []);
+            const transformedData = updatedData.map((item) => {
+                // Check if we're grouping by carrier (submissionVs state)
+                if (submissionVs === CaseCountGroupByEnum.CARRIER) {
+                    return {
+                        ...item,
+                        name: getCarrierNameByClientId(item.name) || item.name,
+                    };
+                }
+                return item;
+            });
             return {
                 ...response,
-                data: updatedData,
+                data: transformedData,
             };
         },
     });

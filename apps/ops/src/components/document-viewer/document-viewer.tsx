@@ -1,6 +1,5 @@
 // TODO: This files is obsolete at the moment. Keeping it for a short period until we determine if we want to restrict downloads again
 
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
 
@@ -24,8 +23,9 @@ import {
 } from '@deps/models/case/document';
 import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/preview';
 import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 

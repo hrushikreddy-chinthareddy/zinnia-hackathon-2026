@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Address as SorAddress } from '@zinnia/api-types/types/sor';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -27,6 +26,7 @@ import {
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { Address as SorAddress } from '@zinnia/api-types/types/sor';
 
 import {
     DeathNotificationData,
@@ -74,7 +74,7 @@ const DeathNotificationSidesheet = ({
             owners:
                 entity.owners?.map((owner: any) => ({
                     party: {
-                        fullName: owner.party?.fullName,
+                        fullName: owner.party?.fullName || getName(owner.party),
                         partyRole: owner.party?.partyRole,
                     },
                     dateOfDeath: parseAndFormatDate(
@@ -406,6 +406,7 @@ const DeathNotificationSidesheet = ({
                                         <Typography
                                             variant={TypographyVariant.BodySm}
                                             className="col-span-3"
+                                            asTag="div"
                                         >
                                             {bene.notificationMethod ===
                                                 ClaimCommunicationTypes.Email &&

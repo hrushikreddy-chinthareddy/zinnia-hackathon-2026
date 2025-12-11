@@ -1,4 +1,4 @@
-import { toTitleCase } from '@zinnia/utils';
+import { toTitleCase } from '@deps/utils/strings';
 
 export const sortAlphabetically = (a: any, b: any, key?: string) => {
     let aa: string = '';
@@ -27,7 +27,7 @@ export const sortAlphabetically = (a: any, b: any, key?: string) => {
 
 export const DASHBOARD_REPLACE_LABELS = ['', null, undefined, 'NULL_VALUE'];
 
-export const DASHBOARD_DEFAULT_LABEL = '[UNKNOWN]';
+export const DASHBOARD_DEFAULT_LABEL = 'UNKNOWN';
 
 export const dashboardChartTitleFormat = (
     label: string,

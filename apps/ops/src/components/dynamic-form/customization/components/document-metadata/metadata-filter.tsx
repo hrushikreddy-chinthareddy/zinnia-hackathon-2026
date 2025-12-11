@@ -16,6 +16,7 @@ import {
 } from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 export type DocumentMetadataFilterProps = {
     carrier: string;
@@ -49,10 +50,26 @@ const DocumentMetadataFilter = memo(
             SimpleOption[]
         >([]);
 
+        const [docClassification, setDocClassification] = useState(
+            currentMetaData.docClassification ||
+                SearchRequest.documentClassification.INBOUND
+        );
+
         const [restricted, setRestricted] = useState<boolean>(false);
         const [error, setError] = useState<string | null>(null);
         const limit = 100;
         const offset = 0;
+
+        const documentClassificationOptions = [
+            {
+                label: t('sent') as string,
+                value: SearchRequest.documentClassification.OUTBOUND,
+            },
+            {
+                label: t('received') as string,
+                value: SearchRequest.documentClassification.INBOUND,
+            },
+        ];
 
         useEffect(() => {
             const seen = new Set();
@@ -63,7 +80,7 @@ const DocumentMetadataFilter = memo(
                 }))
                 .filter((option) => {
                     const key = option.value;
-                    if (seen.has(key)) return false;
+                    if (!key || seen.has(key)) return false;
                     seen.add(key);
                     return true;
                 });
@@ -134,6 +151,14 @@ const DocumentMetadataFilter = memo(
             setRestricted(currentSelection);
         };
 
+        const handleDocumentClasasificationSelection = (value: string) => {
+            setDocClassification(value);
+            setCurrentMetaData({
+                ...currentMetaData,
+                docClassification: value,
+            });
+        };
+
         useEffect(() => {
             const getDocumentMetadata = async () => {
                 try {
@@ -155,6 +180,16 @@ const DocumentMetadataFilter = memo(
             };
             getDocumentMetadata();
         }, [carrier, t]);
+
+        useEffect(() => {
+            if (!currentMetaData.docClassification) {
+                setCurrentMetaData({
+                    ...currentMetaData,
+                    docClassification:
+                        SearchRequest.documentClassification.INBOUND,
+                });
+            }
+        }, []);
 
         return (
             <div
@@ -208,6 +243,15 @@ const DocumentMetadataFilter = memo(
                             aria-label={t('formNumber') as string}
                         />
                     ) : null}
+
+                    <Select
+                        label={t('documentClassification') as string}
+                        options={documentClassificationOptions}
+                        value={docClassification}
+                        onChange={handleDocumentClasasificationSelection}
+                        placeholder={t('select') as string}
+                        required={true}
+                    />
 
                     {showRestricted && (
                         <Checkbox

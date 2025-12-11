@@ -1,12 +1,10 @@
 import { useTranslation } from 'next-i18next';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import {
     getYearOptions,
     hasFilter,
-    removeYearFilter,
-    setYearFilter,
 } from '@deps/components/history/filters/filter.helpers';
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
@@ -20,9 +18,7 @@ export default function TransactionsYearFilter() {
     });
     const { policy } = useContext(PolicyData);
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
-
     const { yearFilter } = historyFilters;
-
     const yearOptions = getYearOptions(policy?.policyDates?.issueDate);
 
     return (
@@ -31,9 +27,15 @@ export default function TransactionsYearFilter() {
             label={t('byYear') as string}
             onChange={(year) => {
                 if (year === DEFAULT_ERROR_STRING) {
-                    removeYearFilter(setHistoryFilters);
+                    setHistoryFilters((prevState) => {
+                        const { yearFilter, ...updatedState } = prevState;
+                        return updatedState;
+                    });
                 } else {
-                    setYearFilter(setHistoryFilters, year);
+                    setHistoryFilters((prevState) => ({
+                        ...prevState,
+                        yearFilter: year,
+                    }));
                 }
             }}
             options={yearOptions}

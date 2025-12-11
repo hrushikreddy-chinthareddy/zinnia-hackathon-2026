@@ -39,6 +39,7 @@ import {
     ProgramSubType,
     AddressTypes,
     RestrictionOption,
+    FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -48,8 +49,8 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { commonOftFormValidation } from '../../oft-forms/oft-form-helpers';
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../utils/form-validator.helpers';
 
 export enum FormSubtype {
     FullWithdrawal = 'Full',
@@ -74,7 +75,59 @@ export const spousalSignatureStateCodes = [
     statesAndTerritories.WISCONSIN,
 ];
 
-export default function getUlpcConfig(t: TFunction, isLC: boolean) {
+export default function getUlpcConfig(t: TFunction) {
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: true,
+            validateCityProvided: true,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
     ): {
@@ -304,11 +357,6 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
             ],
             signatureType:
                 SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-            /*shouldDisplay: ({ parties, partyRoles }: OtpWithdrawalFormState): boolean => {
-                return isLC
-                ? isIrrevocableBeneficiaryExistsLC(parties as LifeCadParty[])
-                : isIrrevocableBeneficiaryExists(parties as Party[], partyRoles as PolicyPartyRoles[]);
-            },*/
         },
         {
             key: `sig-val-spouse`,
@@ -877,8 +925,7 @@ export default function getUlpcConfig(t: TFunction, isLC: boolean) {
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,
-        formValidation: (values: Partial<FormParts> = {}) =>
-            commonOftFormValidation(t, values),
+        formValidation,
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         irsSignatureConfig,

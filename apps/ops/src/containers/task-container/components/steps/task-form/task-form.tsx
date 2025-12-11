@@ -7,6 +7,7 @@ import React, {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 
@@ -27,7 +28,8 @@ import {
 import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
-import { browserLogWarn } from '@deps/utils/browser-logging';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
 import {
     buildTaskPayload,
@@ -42,6 +44,7 @@ type TaskFormProps = {
     isSubmit?: boolean;
     taskMetadata: FormMetadata;
     setSubmitEnabled: (enabled: boolean) => void;
+    setValidationSummary?: (summary: any) => void;
 };
 
 const getPaymentCards = (
@@ -53,8 +56,12 @@ const getPaymentCards = (
         value: transaction.entity.paymentRecordId,
         subElement: {
             ...transaction,
-            firstName: task?.data?.details?.payerDetails?.firstName || '',
-            lastName: task?.data?.details?.payerDetails?.lastName || '',
+            firstName:
+                task?.data?.details?.payerDetails?.firstName ||
+                DEFAULT_ERROR_STRING,
+            lastName:
+                task?.data?.details?.payerDetails?.lastName ||
+                DEFAULT_ERROR_STRING,
             title: transaction?.entity?.payment?.companyName,
         },
     }));
@@ -67,6 +74,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         isSubmit,
         taskMetadata,
         setSubmitEnabled,
+        setValidationSummary,
     }: TaskFormProps,
     forwardedRef: ForwardedRef<Form>
 ) {
@@ -84,13 +92,24 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         setMappedDocuments,
     } = formState;
     const [formSchema, setFormSchema] = useState(taskMetadata);
+    const prevFormDataRef = useRef<any>(null);
 
-    const formContext = {
+    const [customData, setCustomData] = useState({
         carrier: task.carrier,
         caseId: task.caseId,
+        correlationId,
         taskType: task.taskType,
-        correlationId: correlationId,
-    };
+        ...task.data,
+        task,
+    });
+
+    useEffect(() => {
+        setCustomData((prev: any) => ({
+            ...prev,
+            ...task.data,
+        }));
+    }, [task.data]);
+
     const fetchData = async () => {
         const correlationId = task.data.matchingResult;
 
@@ -154,7 +173,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         },
                     }));
                 } catch (e) {
-                    console.log(e);
+                    browserLogError('task-form::fetching transactions', {
+                        error: e,
+                        payload: {
+                            correlationId,
+                            taskType: task.taskType,
+                            carrier: task.carrier,
+                            processType: task.process,
+                            taskId: task.id,
+                        },
+                    });
                     return;
                 }
             }
@@ -183,7 +211,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         };
                     });
                 } catch (e) {
-                    console.log(e);
+                    browserLogError('task-form::fetching transactions', {
+                        error: e,
+                        payload: {
+                            correlationId,
+                            taskType: task.taskType,
+                            carrier: task.carrier,
+                            processType: task.process,
+                            taskId: task.id,
+                        },
+                    });
                 }
             }
         }
@@ -210,15 +247,46 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         onSubmit('');
     }, [readonly, isSubmit, correlationId, onSubmit, setSubmitFailed, task]);
 
+    const formOnChangeUpdater: {
+        [key in TaskType]?: (formData: any) => any;
+    } = {
+        [TaskType.Claims_Ops_To_Finance_Escheatment_Trigger]: (
+            formData: any
+        ) => {
+            const updatedFormData = structuredClone(formData);
+            const eschDetail =
+                updatedFormData.details?.beneOpsEscheatment?.escheatmentDetail;
+            const prevEschDetail =
+                prevFormDataRef.current?.details?.beneOpsEscheatment
+                    ?.escheatmentDetail;
+            if (
+                prevFormDataRef?.current !== null &&
+                (eschDetail?.netDeathBenefit !==
+                    prevEschDetail?.netDeathBenefit ||
+                    eschDetail?.beneficiary?.beneficiaryPercentage !==
+                        prevEschDetail?.beneficiary?.beneficiaryPercentage)
+            ) {
+                updatedFormData.details.beneOpsEscheatment.escheatmentDetail.beneficiary.beneficiaryDueAmount =
+                    undefined;
+            }
+            prevFormDataRef.current = updatedFormData;
+            return updatedFormData;
+        },
+    };
+
     const handleChange = useCallback(
         (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
             const { formData } = event;
             const { uiSchema } = formSchema;
 
-            const updatedFormData = applyHiddenFieldPopulation(
-                formData,
+            const updatedFormData =
+                formOnChangeUpdater[task.taskType as TaskType]?.(formData) ||
+                formData;
+            const finalFormData = applyHiddenFieldPopulation(
+                updatedFormData,
                 uiSchema
             );
+
             const hasDataPathFields = Object.keys(uiSchema).some(
                 (field) => uiSchema[field]?.['ui:dataPath']
             );
@@ -226,7 +294,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             if (!hasDataPathFields) {
                 setTask((ogTask) => ({
                     ...ogTask,
-                    data: updatedFormData,
+                    data: finalFormData,
                 }));
                 return;
             }
@@ -235,7 +303,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             setTask((prevTask) => {
                 const updatedTask = getUpdatedTaskFromFormData(
                     prevTask,
-                    updatedFormData,
+                    finalFormData,
                     uiSchema
                 );
                 return updatedTask;
@@ -243,15 +311,6 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         },
         [setTask, formSchema]
     );
-    const setFormContext = (dynamicData: any) => {
-        setTask((ogTask: any) => ({
-            ...ogTask,
-            data: {
-                ...ogTask.data,
-                ...dynamicData,
-            },
-        }));
-    };
 
     const updateSchemaHandler = (dynamicData: any) => {
         Object.keys(dynamicData).forEach((key) => {
@@ -341,6 +400,32 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         setMappedDocuments(documents);
     };
 
+    const mergedFormContext = useMemo(
+        () => ({
+            customData,
+            setCustomData: (patch: any) => {
+                setCustomData((prev: any) => ({
+                    ...prev,
+                    ...patch,
+                }));
+            },
+            updateSchema: updateSchemaHandler,
+            isReadOnlyOverride: readonly,
+            mappedDocuments,
+            setMappedDocuments: handleSetMappedDocuments,
+            setSubmitEnabled,
+            setValidationSummary,
+        }),
+        [
+            customData,
+            mappedDocuments,
+            readonly,
+            updateSchemaHandler,
+            setSubmitEnabled,
+            setValidationSummary,
+        ]
+    );
+
     return (
         <DynamicForm
             ref={forwardedRef}
@@ -353,15 +438,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             onChange={handleChange}
             onSubmit={handleSubmit}
             readonly={readonly}
-            formContext={{
-                customData: { ...formContext, ...task.data, task },
-                setCustomData: setFormContext,
-                updateSchema: updateSchemaHandler,
-                isReadOnlyOverride: readonly,
-                mappedDocuments,
-                setMappedDocuments: handleSetMappedDocuments,
-                setSubmitEnabled: setSubmitEnabled,
-            }}
+            formContext={mergedFormContext}
         ></DynamicForm>
     );
 });

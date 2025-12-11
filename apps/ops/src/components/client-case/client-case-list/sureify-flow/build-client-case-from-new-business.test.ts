@@ -1,4 +1,3 @@
-import { createClientCase } from '@deps/queries/api/server/v1/client-cases';
 import {
     NewBusiness,
     party,
@@ -24,7 +23,6 @@ const getAgencyIdFromHierarchyMock = jest.mocked(getAgencyIdFromHierarchy);
 const getSellingcodeFromPartyReferenceMock = jest.mocked(
     getSellingcodeFromPartyReference
 );
-const createClientCaseMock = jest.mocked(createClientCase);
 
 describe('isAgentBusinessLabel', () => {
     it('returns false for an invalid business label', () => {
@@ -323,6 +321,125 @@ describe('buildClientCaseFromNewBusiness', () => {
                 sellingCode: 'agentSellingCode',
             },
             agencyId: 'agencyId',
+        });
+    });
+
+    it('Returns the conversion data', async () => {
+        getAgencyIdFromHierarchyMock.mockResolvedValue('agencyId');
+
+        const clientCasePayload = await buildClientCaseFromNewBusiness(
+            {
+                caseId: 'case-id',
+                application: {
+                    startDate: '',
+                    submissionType: 'ELECTRONIC',
+                    policyHistory: [
+                        {
+                            type: 'CONVERSION',
+                            carrier: 'Farmers New World Life',
+                            policyNumber: '002267124',
+                            mecIndicator: true,
+                        },
+                    ],
+                },
+                policy: {
+                    planCode: 'IU0101',
+                    productType: 'INDEXEDUNIVERSALLIFE',
+                    issueState: 'CA',
+                    issueCountry: 'US',
+                    policyHoldingForm: 'INDIVIDUAL',
+                    coverage: {
+                        faceAmount: 50000,
+                    },
+                },
+                parties: [
+                    {
+                        partyId: 'insured-party',
+                        partyRole: 'INSURED',
+                        partyType: 'INDIVIDUAL',
+                        partyCommunication: 'REGULARMAIL',
+                        personalInformation: {
+                            firstName: 'John',
+                            lastName: 'Doe',
+                            dateOfBirth: '1980-06-10',
+                            birthSex: 'MALE',
+                        },
+                        email: {
+                            preferredEmailId: 'insured-email-id',
+                            emails: [
+                                {
+                                    type: 'PERSONAL',
+                                    address: 'insured-email@example.com',
+                                    id: 'insured-email-id',
+                                },
+                            ],
+                        },
+                    },
+                    {
+                        partyId: 'agent-party',
+                        partyRole: 'PRIMARYSERVICINGAGENT',
+                        partyType: 'INDIVIDUAL',
+                        partyCommunication: 'REGULARMAIL',
+                        personalInformation: {
+                            firstName: 'Jane',
+                            lastName: 'Dane',
+                        },
+                        identifiers: [
+                            {
+                                type: 'EXTERNAL',
+                                value: 'agent',
+                                key: 'AOR',
+                            },
+                            {
+                                type: 'EXTERNAL',
+                                value: 'SellingCode',
+                                key: 'UPN',
+                            },
+                        ],
+                        email: {
+                            preferredEmailId: 'agent-email-id',
+                            emails: [
+                                {
+                                    type: 'PERSONAL',
+                                    address: 'agent@example.com',
+                                    id: 'agent-email-id',
+                                },
+                            ],
+                        },
+                    },
+                ] as party[],
+                underwriting: {
+                    underwritingRiskClass: 'PREFERREDTOBACCO',
+                    decisionRiskClass: 'PREFERREDTOBACCO',
+                },
+            } as NewBusiness,
+            'some-eapp-id',
+            loggingContext
+        );
+
+        expect(clientCasePayload).toEqual({
+            eAppId: 'some-eapp-id',
+            title: 'Untitled Client Case',
+            caseManagementCaseId: 'case-id',
+            insuredDetails: {
+                firstName: 'John',
+                lastName: 'Doe',
+                sexAtBirth: 'Male',
+                dateOfBirth: new Date('1980-06-10T00:00:00.000Z'),
+                state: 'CA',
+                nicotineUser: true,
+                underwritingClass: 'PREFERREDTOBACCO',
+            },
+            agentDetails: {
+                firstName: 'Jane',
+                lastName: 'Dane',
+                email: 'agent@example.com',
+                sellingCode: 'agentSellingCode',
+            },
+            agencyId: 'agencyId',
+            isMec: true,
+            transactionType: 'CONVERSION',
+            originalFaceAmount: 50000,
         });
     });
 });

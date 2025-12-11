@@ -11,13 +11,10 @@ import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import {
     SignatureBonusFields,
-    SignatureFieldNames,
     SignatureFields,
 } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
-import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     PartyRoles,
@@ -41,6 +38,7 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getGdmnRmdConfig(t: TFunction) {
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -87,31 +85,7 @@ export default function getGdmnRmdConfig(t: TFunction) {
                 );
             },
         },
-        {
-            key: `sig-val-beneficiary`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
-                },
 
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
-                },
-            ],
-            signatureType:
-                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-            shouldDisplay: ({ parties }: OtpWithdrawalFormState): boolean => {
-                return isIrrevocableBeneficiaryExistsLC(
-                    parties as LifeCadParty[]
-                );
-            },
-        },
         {
             key: `sig-val-spouse`,
             bonusField: SignatureBonusFields.SpousalConsent,
@@ -147,6 +121,7 @@ export default function getGdmnRmdConfig(t: TFunction) {
         formSignature,
         formDisbursement,
         formProgram,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
@@ -174,11 +149,6 @@ export default function getGdmnRmdConfig(t: TFunction) {
                 );
             }
         }
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
 
         const rmds = formProgram?.rmd?.rmdPrograms;
 
@@ -188,18 +158,14 @@ export default function getGdmnRmdConfig(t: TFunction) {
             );
         }
 
-        // No choice made for signature
-        if (
-            ownerSignature &&
-            ownerSignature?.isSigned !== false &&
-            !ownerSignature?.isSigned
-        ) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
 
-        return errors;
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [

@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Party } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
@@ -97,6 +96,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Party } from '@zinnia/api-types/types/sor';
 
 import { ERROR_CODES } from '../../error';
 
@@ -233,7 +233,7 @@ export default function OftCase({
             router.push('/create-case');
             return;
         }
-    }, [document]);
+    }, [document, router]);
 
     // If the user has manually opened or closed the nav drawer, we want to override the default behavior
     const isNavDrawerOpen = useMemo(() => {
@@ -271,7 +271,11 @@ export default function OftCase({
     return (
         <>
             <PageHead titleKey="createCaseOft" />
-            <DiaryNotesProvider caseDetails={caseDetailsData}>
+            <DiaryNotesProvider
+                caseDetails={caseDetailsData}
+                planCode={planCode}
+                isLC={isLC}
+            >
                 <OtpLayout
                     contractNumber={document.contract}
                     clientId={clientId as string}

@@ -43,6 +43,7 @@ export const dateFields = new Set([
     'coverageChangeEffectiveDate',
     'coverageTerminationDate',
     'effectiveDate',
+    'terminationDate',
     'exerciseDate',
     'nextEvaluationDate',
     'riderPaymentDate',
@@ -66,5 +67,9 @@ export const dateFields = new Set([
     'matchVestingDate',
     'dob',
     'timestamp',
-    'timestamp',
+    'requestDate',
+    'processDate',
+    'reversalDate',
+    'exchangeDate',
+    'lifecycleDate',
 ]);

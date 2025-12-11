@@ -1,8 +1,3 @@
-import {
-    FullSurrenderRequest,
-    PartialWithdrawalOneTimeRequest,
-} from '@zinnia/api-types/types/bpm';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
@@ -35,6 +30,11 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    FullSurrenderRequest,
+    PartialWithdrawalOneTimeRequest,
+} from '@zinnia/api-types/types/bpm';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalType } from '../amount/types';
 
@@ -91,7 +91,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: isSurrender
                     ? TransactionType.FULL_SURRENDER

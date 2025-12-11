@@ -30,6 +30,15 @@ jest.mock('next-i18next', () => ({
     }),
 }));
 
+const mockChangeContent = jest.fn();
+
+jest.mock('@deps/contexts/SideSheetContext', () => ({
+    useSideSheetContext: () => ({
+        changeSideSheetContent: mockChangeContent,
+        handleOpen: jest.fn(),
+    }),
+}));
+
 describe('DislikeReasons', () => {
     let onDislikeReasonChange: jest.Mock;
 
@@ -133,8 +142,8 @@ describe('DislikeReasons', () => {
         expect(linksInput).toBeInTheDocument();
     });
 
-    it('opens OpsIntakeForm modal when infoMissing radio is selected and button is clicked', async () => {
-        const { getByLabelText, getByText } = render(
+    it('opens OpsIntakeForm when infoMissing radio is selected and button is clicked', async () => {
+        const { getByLabelText } = render(
             <DislikeReasons
                 dislikeReason={defaultDislikeReason}
                 onDislikeReasonChange={onDislikeReasonChange}
@@ -149,36 +158,6 @@ describe('DislikeReasons', () => {
         const opsFormButton = getByLabelText('ops-intake-form-btn');
         fireEvent.click(opsFormButton);
 
-        await waitFor(() => {
-            expect(getByText(/X/)).toBeVisible();
-        });
-    });
-
-    it('closes OpsIntakeForm modal when modal close button is clicked', async () => {
-        const { getByLabelText, getByText, queryByText } = render(
-            <DislikeReasons
-                dislikeReason={defaultDislikeReason}
-                onDislikeReasonChange={onDislikeReasonChange}
-            />
-        );
-
-        const radio = getByLabelText(
-            'chat.feedback.dislikeReasons.infoMissing'
-        );
-        fireEvent.click(radio);
-
-        const opsFormButton = getByLabelText('ops-intake-form-btn');
-        fireEvent.click(opsFormButton);
-
-        await waitFor(() => {
-            expect(getByText(/X/)).toBeVisible();
-        });
-
-        const closeButton = getByText('X');
-        fireEvent.click(closeButton);
-
-        await waitFor(() => {
-            expect(queryByText('X')).not.toBeInTheDocument();
-        });
+        expect(mockChangeContent).toHaveBeenCalled();
     });
 });

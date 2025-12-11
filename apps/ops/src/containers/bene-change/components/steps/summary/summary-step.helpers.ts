@@ -1,9 +1,3 @@
-import {
-    IdentificationType,
-    Party,
-    PartyType,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { TagVariant } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 
@@ -14,6 +8,12 @@ import {
 import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    IdentificationType,
+    Party,
+    PartyType,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import { getFormattedAddress, getFormattedPhone } from './beneficiary-summary';
 import { ENTERPRISE_ADDRESS_TYPE } from '../../beneficiary-details/address-details/address-details.helpers';
@@ -96,6 +96,10 @@ export const hasBeneficiaryChanged = (
         (id: any) => id.identificationType === IdentificationType.SSN
     );
 
+    const entityChanged =
+        partyType === PartyType.ORGANIZATION &&
+        existingParty?.entityType !== (partyInfo as Party)?.entityType;
+
     const identificationChanged =
         existingIdentification?.identificationValue !== item?.party?.info?.ssn;
 
@@ -136,6 +140,7 @@ export const hasBeneficiaryChanged = (
         phoneChanged ||
         emailChanged ||
         designationChanged ||
-        relationshipChanged
+        relationshipChanged ||
+        entityChanged
     );
 };

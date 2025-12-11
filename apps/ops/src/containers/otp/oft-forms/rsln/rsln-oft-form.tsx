@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import CedingCompanySignature from '@deps/components/ceding-company-signature/ceding-company-signature';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
@@ -98,16 +98,8 @@ export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
                 selectionIdentifier={identifySelectedFormProgramOption}
                 selectOneOptions={selectOneOptions}
             />
-            {is403b && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
-            <CedingCompanyDistribution
+
+            <CedingCompanySignature
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
@@ -119,6 +111,10 @@ export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
                 }
                 defaultValue={defaultValues.disbursementOption}
             />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -128,6 +124,11 @@ export default function RSLNOftWithdrawalForm({ qualType }: OftRSLNFormProps) {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {is403b && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

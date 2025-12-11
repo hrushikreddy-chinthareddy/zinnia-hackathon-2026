@@ -1,5 +1,4 @@
 import { Loader } from '@zinnia/bloom/components';
-import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
@@ -19,7 +18,6 @@ import { NotificationItem } from './notification-item';
 import { ScheduledNotification } from './scheduled-notification';
 
 export function BeneSideSheetStep({ step }: { step: TransformedStep }) {
-    const { t } = useTranslation();
     const [notifications, setNotifications] = useState<INotification[]>([]);
     const [loading, setLoading] = useState(true);
     const [identifier, setIdentifier] = useState('');

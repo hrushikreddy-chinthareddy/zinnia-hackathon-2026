@@ -1,0 +1,248 @@
+{
+    "process": "Matching",
+    "carrier": "FLIC",
+    "formId": "c5667ec9-5582-4f24-bbda-72a12ec406b",
+    "taskType": "CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Match Death Case",
+                "formSchema": {
+                    "type": "object",
+                    "definitions": {
+                        "clientFullName": {
+                            "const": ""
+                        }
+                    },
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Verify if an existing case is present in OnBase for the contract and if owner info, plan code and policy are correct-if all valid and no case exists, manually create a new case in OnBase."
+                        },
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "auditQualCaseMatch": {
+                                    "properties": {
+                                        "fileRowData": {
+                                            "properties": {
+                                                "contractNumber": {
+                                                    "type": "string",
+                                                    "title": "Contract number"
+                                                },
+                                                "clientFullName": {
+                                                    "type": "string",
+                                                    "title": "Deceased owner name",
+                                                    "$ref": "#/definitions/clientFullName"
+                                                },
+                                                "clientSSN": {
+                                                    "type": "string",
+                                                    "title": "Deceased SSN"
+                                                },
+                                                "clientDOB": {
+                                                    "type": "string",
+                                                    "title": "Deceased birth date"
+                                                },
+                                                "pbiDOD": {
+                                                    "type": "string",
+                                                    "title": "Deceased death date"
+                                                },
+                                                "source": {
+                                                    "type": "string",
+                                                    "title": "Source"
+                                                }
+                                            }
+                                        },
+                                        "response": {
+                                            "properties": {
+                                                "decision": {
+                                                    "type": "string",
+                                                    "title": "Please select one of the following"
+                                                }
+                                            },
+                                            "required": ["decision"],
+                                            "allOf": [
+                                                {
+                                                    "if": {
+                                                        "properties": {
+                                                            "decision": {
+                                                                "const": ""
+                                                            }
+                                                        }
+                                                    },
+                                                    "then": {},
+                                                    "else": {
+                                                        "if": {
+                                                            "properties": {
+                                                                "decision": {
+                                                                    "const": "EXISTING_ONBASE_CASE"
+                                                                }
+                                                            }
+                                                        },
+                                                        "then": {
+                                                            "properties": {
+                                                                "existingOnbaseDocumentId": {
+                                                                    "type": "string",
+                                                                    "title": "OnBase Document ID"
+                                                                }
+                                                            },
+                                                            "required": [
+                                                                "existingOnbaseDocumentId"
+                                                            ]
+                                                        },
+                                                        "else": {
+                                                            "if": {
+                                                                "properties": {
+                                                                    "decision": {
+                                                                        "const": "NEW_ONBASE_DOCUMENT_CREATED"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "properties": {
+                                                                    "newOnbaseDocumentId": {
+                                                                        "type": "string",
+                                                                        "title": "OnBase Document ID"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "newOnbaseDocumentId"
+                                                                ]
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "required": ["response"]
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:order": ["sectionHeader", "details"],
+                    "ui:submitButtonOptions": {
+                        "norender": true,
+                        "props": {
+                            "noValidate": false
+                        }
+                    },
+                    "sectionHeader": {
+                        "ui:title": "",
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "auditQualCaseMatch": {
+                            "ui:options": {
+                                "label": false
+                            },
+                            "fileRowData": {
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "contractNumber": {
+                                    "ui:options": {
+                                        "inline": true,
+                                        "label": false,
+                                        "dataType": "string"
+                                    }
+                                },
+                                "clientFullName": {
+                                    "ui:options": {
+                                        "inline": true,
+                                        "label": false,
+                                        "dataType": "string",
+                                        "omitValue": true
+                                    }
+                                },
+                                "clientSSN": {
+                                    "ui:options": {
+                                        "inline": true,
+                                        "label": false,
+                                        "dataType": "string"
+                                    }
+                                },
+                                "clientDOB": {
+                                    "ui:options": {
+                                        "inline": true,
+                                        "label": false,
+                                        "dataType": "date"
+                                    }
+                                },
+                                "pbiDOD": {
+                                    "ui:options": {
+                                        "inline": true,
+                                        "label": false,
+                                        "dataType": "date"
+                                    }
+                                },
+                                "source": {
+                                    "ui:options": {
+                                        "inline": true,
+                                        "label": false,
+                                        "dataType": "string"
+                                    }
+                                }
+                            },
+                            "response": {
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "decision": {
+                                    "ui:widget": "radio",
+                                    "ui:options": {
+                                        "cardType": "Hyperlink",
+                                        "label": true,
+                                        "dataType": "string",
+                                        "showReadOnlyCardView": true,
+                                        "customOptions": [
+                                            {
+                                                "value": "EXISTING_ONBASE_CASE",
+                                                "subElement": {
+                                                    "label": "I have checked and there is an existing manual OnBase Case created and entered the OnBase Case ID below:",
+                                                    "value": "",
+                                                    "url": ""
+                                                }
+                                            },
+                                            {
+                                                "value": "NEW_ONBASE_DOCUMENT_CREATED",
+                                                "subElement": {
+                                                    "label": "I have manually created a Death Audit case in OnBase to document the death audit and entered the OnBase Case ID below:",
+                                                    "value": "",
+                                                    "url": ""
+                                                }
+                                            },
+                                            {
+                                                "value": "POLICY_STATUS",
+                                                "subElement": {
+                                                    "label": "I have checked the status of the policy and no further action is needed:",
+                                                    "value": "",
+                                                    "url": ""
+                                                }
+                                            }
+                                        ]
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

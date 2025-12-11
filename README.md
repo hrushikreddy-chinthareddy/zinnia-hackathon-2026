@@ -1,25 +1,13 @@
 # Digital Experience Monorepo
 
-This repo contains the necessary apps and packages used to build and maintain Zinnia Live.
+This repo contains the Ops application and SSO-MPV service for Zinnia Live. The repository is transitioning to a single-app structure as applications are being moved to separate repositories.
 
 ## What's inside?
 
 ### Apps
 
-These are consumer-facing end products that are deployable or deliverable in some form. Apps are typically configured to be started or deployed, like web frontends, backend services, mobile applications, desktop applications, etc. They are the final artifacts that end users interact with.
-
-- [Consumer Experience](apps/consumer-experience/README.md)
-
-### Packages
-
-These consist of shared libraries, components, utilities, or any common code that is used by multiple apps within the monorepo. Packages are not meant to be deployed independently; instead, they are included as dependencies in apps or other packages.
-
-- [API Types](packages/utils/README.md)
-- [ESlint Config](packages/eslint-config/README.md)
-- [Prettier Config](packages/prettier-config/README.md)
-- [Jest Presets](packages/jest-presets/README.md)
-- [Typescript Config](packages/typescript-config/README.md)
-- [Utils](packages/utils/README.md)
+- **[Ops](apps/ops/README.md)** - Internal operations portal for managing Zinnia Live policies and operations
+- **[SSO-MPV](apps/sso-mpv/README.md)** - Single Sign-On service for MyPolicyView authentication via Auth0 IDP connections
 
 ## Getting Started
 
@@ -27,9 +15,7 @@ These consist of shared libraries, components, utilities, or any common code tha
 
 - For MacOS: XCode developer tools
 - Node.js 20+
-- [pnpm](https://pnpm.io/) - We use `pnpm` because it has better support for monorepos. It has a lot of built in tools that make it easier to filter on the app or package you want to build and deploy. You will want to install version `9.4.0`.
-- Mac users will need to run the following command to use the canvas package that is required by `pnpm`
-  - `brew install pkg-config cairo pango libpng jpeg giflib librsvg` Refer to [this article](https://flaviocopes.com/fix-node-canvas-error-pre-gyp-macos/) for more details
+- [pnpm](https://pnpm.io/) - Package manager for the repository. You will want to install version `10.20.0` (see `packageManager` field in `package.json`).
 - Personal Access Token
   - GitHub packages hosts our shared packages
   - Create a [personal access token](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry#authenticating-to-github-packages)
@@ -58,15 +44,9 @@ pnpm install
 
 ### Building the monorepo
 
-Each project in the monorepo should be built with `pnpm run build`. The `build` command is also a [`task`](https://turbo.build/repo/docs/crafting-your-repository/configuring-tasks) in the monorepo. Turbo will run `pnpm run build` for each project in the monorepo. The `build` is also setup to only build projects that have changes since the last commit.
+Each project in the monorepo should be built with `pnpm run build`. The `build` command is also a [`task`](https://turbo.build/repo/docs/crafting-your-repository/configuring-tasks) in the monorepo. Turbo will run `pnpm run build` for each project in the monorepo.
 
 To force build all projects in the monorepo ensure you are at the root of the monorepo:
-
-```bash
-pnpm run build:all
-```
-
-To build all projects in the monorepo that have changes since the last commit:
 
 ```bash
 pnpm run build
@@ -74,7 +54,7 @@ pnpm run build
 
 ### Running the projects
 
-To simplify the development process, we have created two helper scripts to run either Ops or Consumer Experience.
+To simplify the development process, we have created a helper script to run either Ops.
 
 #### Setting up env variables
 
@@ -92,13 +72,23 @@ To run Ops, use the following command:
 pnpm run dev:ops
 ```
 
-#### Running Consumer Experience
-
-To run Consumer Experience, use the following command:
+or you can run it directly:
 
 ```bash
-pnpm run dev:consumer-experience
+cd apps/ops
+pnpm run dev
 ```
+
+#### Running SSO-MPV
+
+To run SSO-MPV, use the following command:
+
+```bash
+cd apps/sso-mpv
+pnpm run dev
+```
+
+Note: SSO-MPV requires additional setup. See the [SSO-MPV README](apps/sso-mpv/README.md) for details.
 
 #### Setting up Remote Cache
 
@@ -134,70 +124,103 @@ You should see a success message!
 
 - PRs should be opened off of dev and branches must use
 
-### Troubleshooting
+### Deploying
 
-#### Error running tests due to `Cannot find module '../build/Release/canvas.node'`
+Each app has its own GitHub workflow for deployment. Workflows are triggered based on changes to specific apps.
 
-You may see this error when running tests (either independently or part of the git push). In order to fix you'll need to install some packages. Refer to [this article](https://flaviocopes.com/fix-node-canvas-error-pre-gyp-macos/) for steps to fix.
+### Repository Structure Changes
 
-### Deploying the monorepo
-
-Each `app` and `package` will have their own github workflow. This will allow us to deploy only the `apps` and `packages` that have changes since the last commit.
-
-### Adding a new local package
-
-To add a new package to the monorepo create a new directory in the `packages` folder and add a `package.json` file. The package name should be prefixed with `@zinnia/`. The package directory name should be the name of the package without the `@zinnia` prefix.
-
-Once you have created the package update the package.json file of the `app` you want to add the package to. For example, to add the `utils` package to the `consumer-experience` app:
-
-// packages/consumer-experience/package.json
-
-```bash
-{
-  "dependencies": {
-    "@zinnia/utils": "workspace:*"
-  }
-}
-```
+This repository previously contained multiple apps and shared packages. As part of a restructuring effort, applications are being moved to separate repositories. The `packages` directory and `consumer-experience` app have been removed. Shared code has been moved directly into the `ops` application.
 
 ### Adding a new NPM Package
 
-This repo uses PNPM to manage packages as it supports monorepos better than NPM.
+This repo uses PNPM to manage packages.
 
-To add a package ensure you are in the root of the monorepo, use:
+To add a package to an app, use:
 
-```
+```bash
 pnpm add --filter <app> <package>
 ```
 
-So for consumer-experience, it would be:
-
-```
-pnpm add --filter consumer-experience <package>
-```
-
-OR if you prefer you can `cd` into the specific `app` and add it there:
+For example, to add a package to ops:
 
 ```bash
-cd apps/consumer-experience
+pnpm add --filter ops <package>
+```
+
+OR you can `cd` into the specific app and add it there:
+
+```bash
+cd apps/ops
 pnpm add <package>
 ```
 
-## Examples
+## Development Workflow
 
-Below are some examples of how you would make an update to a `package` and see it reflected in an `app`.
+To work on the Ops application:
 
-- Making an update to `@zinnia/utils`
-  1. Run the following command at the `root` of the monorepo:
+```bash
+pnpm run dev:ops
+```
 
-  ```bash
-    pnpm run dev --filter @zinnia/utils
-    pnpm run dev --filter APP_NAME (example consumer-experience)
-  ```
-  2. Make the necessary changes
-  - You should see the `utils` package reflected in the `consumer-experience` app.
+This will start the Ops application on [http://localhost:3000](http://localhost:3000).
 
-  > NOTE: We don't want to run `pnpm run dev` without filtering because it will run the `dev` script for all `apps` and `packages` in the monorepo.
+For SSO-MPV, see the [SSO-MPV README](apps/sso-mpv/README.md) for specific setup instructions.
+
+## Testing GitHub Workflows Locally
+
+Testing GitHub workflows on GitHub is a big hurdle in development efficiency. Luckily, there's already a solution!
+
+[act](https://nektosact.com/introduction.html) allows you to simulate a GitHub event, such a push to a branch or pull request, and execute all the related GitHub workflows in a Docker VM, on your local machine.
+
+### Installation
+
+You will need to install [Docker](https://www.docker.com/) on your local machine. If you already have [Homebrew](https://brew.sh/) installed, run this in your terminal:
+
+```bash
+  brew install --cask docker
+```
+
+Launch Docker Desktop. You don't need to log into any accounts, just press the "skip" button when it prompts you.
+
+Next, install Act. If using Homebrew,
+
+```bash
+  brew install act
+```
+
+And you're done!
+
+### Prerequisites
+
+In order to execute GitHub workflows locally via Act, you will need
+
+- Your Zinnia GitHub token. You probably already have this in your `~/.npmrc`; it should start with `//npm.pkg.github.com/:_authToken=`.
+- A mock event file. There's already a mock created for PR events in `.github/workflows/mock_events/pull_request.json`. You can add other events if needed.
+
+### Running a GitHub workflow
+
+Act can be pre-configured, or it you can just supply everything it needs via command line args:
+
+```bash
+act \
+  pull_request \
+  -e .github/workflows/mock_events/pull_request.json \
+  -P ubuntu-latest=catthehacker/ubuntu:act-latest \
+  --reuse \
+  -j prettier-typecheck-lint \
+  -s GITHUB_TOKEN=<your_gh_token_here>
+```
+
+- **act** Act executable
+- **pull_request** GitHub event name, and should match your "on" descriptor in the workflow
+- **-e .github/workflows/mock_events/pull_request.json** Path to mock event file that supplies metadata for your GH event
+- **-P ubuntu-latest=catthehacker/ubuntu:act-latest** Use the "micro" Ubuntu image, same as our actual GH actions
+- **--reuse** Reuse the same Docker image from the previous run, instead of building it from scratch
+- **-j prettier-lint-typecheck** Specify the action execute; this can be omitted to run all actions responding to the event
+- **-s GITHUB_TOKEN=<your_gh_token>** Your GH token
+
+This first time Act runs your workflow, it will need to build the Docker image, which takes a long time. It will skip this step as long as you use the `--reuse` arg in the command line, and all subsequent runs should be pretty fast.
 
 ## Useful Links about Turborepo
 

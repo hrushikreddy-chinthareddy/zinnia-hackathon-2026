@@ -1,4 +1,3 @@
-import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useState } from 'react';
 
@@ -13,6 +12,7 @@ import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { convertToCamelCase } from '@deps/utils/strings';
 
 import { TaskReview } from './task-review';
 
@@ -83,7 +83,7 @@ export const TaskReviewStep = ({
 
     return (
         <WorkflowCard
-            title={t('title')}
+            title={task.taskName || t('title')}
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons

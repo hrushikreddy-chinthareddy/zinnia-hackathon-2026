@@ -1,4 +1,3 @@
-import { Policy } from '@xd/api-types/dist/generated-types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -14,6 +13,7 @@ import { useState } from 'react';
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import CorrespondenceError from './error';
 import styles from './styles.module.css';

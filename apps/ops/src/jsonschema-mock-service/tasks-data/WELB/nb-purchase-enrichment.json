@@ -3,7 +3,7 @@
     "caseId": "CA0000428532",
     "source": "BPM.IndexationOrkestr",
     "templateId": "24b53531-5dd1-4056-9f20-8ab76c45513c",
-    "process": "Qualification",
+    "process": "Matching",
     "carrier": "WELB",
     "taskType": "NB_PURCHASE_ENRICHMENT",
     "taskName": "Purchase Enrichment",

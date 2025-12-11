@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,6 +8,10 @@ import {
 } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import {
@@ -19,23 +21,21 @@ import {
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import { tooltipFormatter } from './page-views-tooltip';
-import {
-    generateSeries,
-    PrepareUserViewsCSV,
-    roles,
-    startDates,
-    TimeframeFilterOptions,
-} from './utils';
+import { generateSeries, PrepareUserViewsCSV, roles } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName } from '../utils';
+import {
+    colors,
+    generateCSVFileName,
+    PageType,
+    startDates,
+    TimeframeFilterOptions,
+} from '../utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const { t } = useTranslation();
@@ -55,7 +55,7 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     });
 
     const filter = {
-        pageType: ['Cases', 'Policies'],
+        pageType: [PageType.Cases, PageType.Illustrations, PageType.Policies],
         dateStart: timerange.from,
         dateEnd: startOfTomorrowLocalIso(timerange.to) || undefined,
         userRole: rolesToPass,
@@ -91,12 +91,12 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
                     t('usage.pageViews.zinniaLivePageViews.description') ?? ''
                 )}
                 data={zinniaLivePageViewsData?.data || []}
-                csvFileName={generateCSVFileName(
-                    'Zinnia Live',
+                csvFileName={generateCSVFileName({
+                    title: 'Zinnia Live',
                     timerange,
                     role,
-                    'usage.tabs.pageViews'
-                )}
+                    optionaltitle: t('usage.tabs.pageViews') ?? '',
+                })}
                 csvFunction={PrepareUserViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">
@@ -139,17 +139,11 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
             <BlurOverlayLoader loading={zinniaLivePageViewsDataFetching}>
                 <div className="w-full flex-grow">
                     {chartNotRenderable ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {zinniaLivePageViewsDataError
-                                    ? 'Something went wrong fetching the zinnia live unique logins, please try again by refreshing the page'
-                                    : 'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        zinniaLivePageViewsDataError ? (
+                            <ErrorMessage />
+                        ) : (
+                            <NoDataMessage />
+                        )
                     ) : (
                         <DateTimeLineChart
                             series={series}

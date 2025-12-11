@@ -1,6 +1,4 @@
 import 'react-pdf/dist/Page/TextLayer.css';
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
-import { Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -18,6 +16,8 @@ import {
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import { MultiselectOption } from '../autocomplete/autocomplete.types';

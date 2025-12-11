@@ -10,9 +10,9 @@ import {
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
-import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { usePolicyDataContext } from '@deps/contexts/PolicyDataContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Case } from '@deps/models/case/case';
@@ -51,7 +51,7 @@ export default function CaseSubPage({
         hasNotesAccess,
         isZinniaInternalViewer,
     } = usePermissionsContext();
-    const { policy } = useCaseActivityContext();
+    const { policy } = usePolicyDataContext();
     const { featureFlags } = useOptimizely();
     const canViewRawData =
         isZinniaInternalViewer && featureFlags[FEATURE_FLAGS.SHOW_RAW_DATA];
@@ -62,7 +62,7 @@ export default function CaseSubPage({
             SegmentTrackedEventName.CaseDetailsTabClicked,
             {
                 caseId: caseDetails.id,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 tabName: tab,
             }

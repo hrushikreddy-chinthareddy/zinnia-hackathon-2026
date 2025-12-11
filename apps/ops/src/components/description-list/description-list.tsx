@@ -1,10 +1,3 @@
-import {
-    Phone,
-    Email,
-    Policy,
-    PartyRole,
-    Address,
-} from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dynamic from 'next/dynamic';
 import { useTranslation } from 'next-i18next';
@@ -23,6 +16,13 @@ import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card'
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { SPLITTER } from '@deps/types/constants';
+import {
+    Phone,
+    Email,
+    Policy,
+    PartyRole,
+    Address,
+} from '@zinnia/api-types/types/sor';
 
 // Lazy Loaded Components
 const Popover = dynamic(() => import('@deps/components/popover/popover'));
@@ -191,13 +191,6 @@ const DescriptionList = ({
                     <span className={popoverClasses} aria-hidden="true">
                         {amountAndDate}
                     </span>
-                    <NavElement
-                        size={NavElementSize.Small}
-                        type={NavElementType.Link}
-                        href={`/policies/${textSections[4]}/premiums`}
-                    >
-                        {t('policySummary.makePayment')}
-                    </NavElement>
                 </>
             );
         } else {
@@ -248,7 +241,7 @@ const DescriptionList = ({
                             <CircleInfoIcon
                                 height={16}
                                 width={16}
-                                className="text-primary"
+                                className="tooltip-primary"
                             />
                         </Popover>
                     )}

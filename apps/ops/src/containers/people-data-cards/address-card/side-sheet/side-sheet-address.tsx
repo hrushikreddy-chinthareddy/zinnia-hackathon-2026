@@ -1,13 +1,4 @@
 import { Transition } from '@headlessui/react';
-import {
-    Address,
-    AddressType,
-    Country,
-    Party,
-    Policy,
-    State,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -76,6 +67,15 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import {
+    Address,
+    AddressType,
+    Country,
+    Party,
+    Policy,
+    State,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 export interface SideSheetAddressProps {
     isCurrentMailingAddress: boolean;
@@ -119,7 +119,7 @@ const SideSheetAddress = ({
     };
 
     const INITIAL_BODY: NonFinancialTransactionBody = {
-        correlationId: correlationIdFromRoute || uuidV4(),
+        correlationId: uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         preferredAddressIndicator: isCurrentMailingAddress
             ? PreferredAddressIndicator.Yes
@@ -251,7 +251,6 @@ const SideSheetAddress = ({
                 body: {
                     ...body,
                     address,
-                    correlationId: body.caseId ? body.correlationId : uuidV4(),
                 },
                 partyId,
                 planCode,
@@ -263,7 +262,6 @@ const SideSheetAddress = ({
                 body: {
                     ...body,
                     address,
-                    correlationId: body.caseId ? body.correlationId : uuidV4(),
                 },
                 itemId: updateAddress?.addressId,
                 partyId,
@@ -373,6 +371,9 @@ const SideSheetAddress = ({
                 setCaseDocumentOptions={setCaseDocumentOptions}
                 setCurrentErrors={setCurrentErrors}
                 setViewState={setViewState}
+                processSubType={[Processes.AddressChange]}
+                correlationId={correlationIdFromRoute}
+                body={body}
             />
 
             {isAdd && (

@@ -11,10 +11,7 @@ import {
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers';
 import { SSWProgramOptions } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
@@ -48,45 +45,20 @@ import {
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
     const formValidation = ({
         formSignature,
-    }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = {} as FormValidationErrors;
-
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
-
-        // No choice made for signature
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
-
-        return errors;
-    };
-
-    const sswFormValidation = ({
-        formParty,
-        formSignature,
         formProgram,
         formDistribution,
-        formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
+        const errors = {} as FormValidationErrors;
         const sswProgramStartDate =
             formProgram?.programFrequency?.beginDate?.text || null;
         const sswType = formProgram?.programSubType?.text || '';
-        const funds = formDistribution?.funds.filter(
+        const funds = formDistribution?.funds?.filter(
             (fund) => !!fund.amount.text
         );
 
@@ -112,7 +84,14 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
                 'sswProgram.warnings.specifyFundsRequired'
             );
         }
-        return errors;
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -493,6 +472,7 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({
@@ -648,7 +628,7 @@ export default function getDlicConfig(t: TFunction, isLC: boolean = true) {
     ];
 
     return {
-        formValidation: sswFormValidation,
+        formValidation,
         formPartyConfigs,
         systematicWithdrawalOptions,
         fundWithdrawnMethodOptions,

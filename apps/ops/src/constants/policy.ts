@@ -192,3 +192,8 @@ export enum CarrierCode {
 }
 
 export const FarmersPlanCodes = ['TR0101', 'TL0101'];
+
+export enum TransactionName {
+    Freelook = 'Freelook',
+    Withdrawal = 'Withdrawal',
+}

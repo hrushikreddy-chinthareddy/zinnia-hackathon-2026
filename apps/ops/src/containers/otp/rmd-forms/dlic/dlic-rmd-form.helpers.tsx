@@ -1,5 +1,4 @@
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import { DisbursementToggleType } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
@@ -11,10 +10,7 @@ import {
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -40,32 +36,25 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getDlicRmdWithdrawalConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({ formSignature }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
+    const formValidation = ({
+        formSignature,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
 
-            const ownerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Owner
-            );
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
 
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('formValidation.signaturePresentOptionMustBeSelected');
-            }
+        return { ...errors, ...signESignValidate };
+    };
 
-            return errors;
-        },
-        [t]
-    );
     const additionalWithholdingAmountConfig = {
         [TaxWithholdingPlace.Federal]: { amountType: AmountType.Percent },
     };
@@ -253,6 +242,7 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
                     fieldLabel: '',
                     classNames: 'col-span-3',
                     component: DisbursementFields.BankAddress,
+                    isAddressLine2Required: true,
                 },
             ],
             getDefaultPayload: ({

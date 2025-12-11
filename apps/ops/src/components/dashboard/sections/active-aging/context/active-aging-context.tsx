@@ -1,9 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    CaseCountGroupByEnum,
-    CaseCountInputFilter,
-    CaseCountOutput,
-} from '@zinnia/api-types/types/analytics';
 import { createContext, FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
@@ -21,6 +16,12 @@ import {
 } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutput,
+} from '@zinnia/api-types/types/analytics';
 
 export type CaseStatusType = { [key: string]: string };
 
@@ -133,7 +134,21 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
                 CaseCountGroupByEnum.CREATED_DAY,
             ]),
         enabled: Object.keys(filter).length > 0,
-        select: filterNullData,
+        select: (response) => {
+            const filtered = filterNullData(response);
+            // Transform carrier IDs to names when groupBy is CARRIER
+            if (
+                groupBy === CaseCountGroupByEnum.CARRIER &&
+                filtered?.data?.length
+            ) {
+                filtered.data = filtered.data.map((item) => ({
+                    ...item,
+                    name: getCarrierNameByClientId(item.name) || item.name,
+                }));
+            }
+
+            return filtered;
+        },
     });
 
     const timeRangeData = useMemo(

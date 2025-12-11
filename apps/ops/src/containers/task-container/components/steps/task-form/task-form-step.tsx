@@ -36,6 +36,7 @@ type TaskFormStepProps = {
     isSaveAsDraftEnabled?: boolean;
     isContinueButtonEnabled?: boolean;
     stepIndex?: number;
+    overrideTitle?: boolean;
 };
 
 const TaskFormStep = ({
@@ -46,30 +47,37 @@ const TaskFormStep = ({
     isSaveAsDraftEnabled = false,
     isContinueButtonEnabled,
     stepIndex,
+    overrideTitle = true,
 }: TaskFormStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `taskManagement.taskForm`,
     });
     const { goToNext, setCurrentStepIndex, currentStepIndex } = useWorkflow();
     const formState = useContext(TaskDataContext);
-    const { task, correlationId, formErrors } = formState;
+    const { task, correlationId } = formState;
     const formRef = createRef<Form>();
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [isValidForm, setIsValidForm] = useState(false);
     const [submitEnabled, setSubmitEnabled] = useState(true);
+    const [validationSummary, setValidationSummary] = useState<any>(null);
 
     const handleStepContinue = useCallback(async () => {
         if (formRef.current) {
-            setIsValidForm(formRef?.current?.validateForm() || false);
-            if (isValidForm) {
+            const valid = formRef.current.validateForm() || false;
+            setIsValidForm(valid);
+            const hasValidationErrors =
+                validationSummary && validationSummary.status !== 'success';
+            if (valid && !hasValidationErrors) {
                 formRef.current.submit();
+            } else if (hasValidationErrors) {
+                setError(t('summaryNigoError') as string);
             }
         }
         if (readonly && !isSubmit) {
             goToNext();
         }
-    }, [formRef]);
+    }, [formRef, readonly, isSubmit, goToNext, validationSummary]);
 
     useEffect(() => {
         if (!isContinueButtonEnabled) {
@@ -108,7 +116,12 @@ const TaskFormStep = ({
     return (
         <WorkflowCard
             className="!gap-0"
-            title={(taskMetadata?.title as string) ?? (t('title') as string)}
+            title={
+                overrideTitle
+                    ? taskMetadata?.title ?? (t('title') as string)
+                    : (task.taskName || taskMetadata?.title) ??
+                      (t('title') as string)
+            }
             subtitle={taskMetadata?.description as string}
             footerContent={
                 <TransactionNavigationButtons
@@ -132,7 +145,7 @@ const TaskFormStep = ({
                 />
             }
         >
-            <div className="relative">
+            <div className="relative pt-6">
                 {loading && (
                     <div className="fixed inset-0 z-50 grid place-content-center bg-white/50">
                         <PageLoader />
@@ -143,6 +156,7 @@ const TaskFormStep = ({
                         readonly={readonly}
                         ref={formRef}
                         onSubmit={handleSubmit}
+                        setValidationSummary={setValidationSummary}
                         isSubmit={isSubmit}
                         taskMetadata={taskMetadata}
                         setSubmitEnabled={setSubmitEnabled}

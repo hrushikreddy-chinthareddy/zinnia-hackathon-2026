@@ -1,10 +1,3 @@
-import {
-    Address as PolicyAddress,
-    Policy,
-    Transaction,
-    TransactionType,
-    FeatureType,
-} from '@zinnia/api-types/types/sor';
 import { Address, AddressProps, Tag } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
@@ -33,6 +26,13 @@ import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DAY_DATE_FORMAT,
 } from '@deps/types/constants';
+import {
+    Address as PolicyAddress,
+    Policy,
+    Transaction,
+    TransactionType,
+    FeatureType,
+} from '@zinnia/api-types/types/sor';
 
 import { SideSheetTransactionProps } from '../types';
 import { getNonFinancialTransactionSideSheetValues } from './side-sheet-non-financial-transactions.helpers';
@@ -376,10 +376,10 @@ const getPhoneChanges = (
         return null;
     }
 
-    const newPhone = party.phones.find(
+    const newPhone = party.phones?.find(
         (a) => a.phoneId === transaction.partyPolicyNewReferenceId
     );
-    const oldPhone = party.phones.find(
+    const oldPhone = party.phones?.find(
         (a) => a.phoneId === transaction.partyPolicyChangeReferenceId
     );
 

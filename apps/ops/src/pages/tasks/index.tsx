@@ -1,6 +1,5 @@
 /* eslint-disable import/no-unresolved */
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { FgaRelation } from '@xd/utils/dist';
 import { GetServerSidePropsContext } from 'next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +19,7 @@ import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
 import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 import { FgaUiEntity } from '@deps/types/fga';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { FgaRelation } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -58,10 +57,6 @@ type UserTuple = {
     };
 };
 
-type AssigneeUser = {
-    email: string;
-};
-
 type FGATuple = {
     key: {
         object: string;
@@ -90,17 +85,15 @@ export default function TasksPage({
             <Typography variant={TypographyVariant.H1} className="md:mb-5 mb-4">
                 {t('header.title')}
             </Typography>
-            <div className="bg-white rounded-md shadow-md w-100 p-8 pb-4">
-                <TaskManagementQueue
-                    featureFlagDecisions={featureFlagDecisions}
-                    additionalData={{
-                        ...additionalData,
-                        authorizedCarriers: filteredCarriers,
-                    }}
-                    showClaimTask={false}
-                    isOpsManagerView={isOpsManagerView}
-                />
-            </div>
+            <TaskManagementQueue
+                featureFlagDecisions={featureFlagDecisions}
+                additionalData={{
+                    ...additionalData,
+                    authorizedCarriers: filteredCarriers,
+                }}
+                showClaimTask={false}
+                isOpsManagerView={isOpsManagerView}
+            />
         </>
     );
 }
@@ -145,23 +138,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             const { locale = DEFAULT_LOCALE, res, req } = context;
             const user = await getUserData(context);
 
-            const hasPagePermissions = await checkTuplePage(
-                context,
-                UserPermission.AllowReadOtpRenewals,
-                `role_template:${UserPermission.AllowReadOtpRenewals}`,
-                loggingContext
-            );
-
-            const taskManagementAccess = await checkTuplePage(
-                context,
-                FgaRelation.UiAccess,
-                FgaUiEntity.ZinniaLiveTaskManagment,
-                loggingContext
-            );
-
             let accessToken;
-            let isOpsManagerView = false;
-
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
@@ -175,6 +152,20 @@ export const getServerSideProps = withPageAuthAndLogging(
             if (!accessToken) {
                 return serverSidePropsLogout();
             }
+
+            const hasPagePermissions = await checkTuplePage(
+                context,
+                UserPermission.AllowReadOtpRenewals,
+                `role_template:${UserPermission.AllowReadOtpRenewals}`,
+                loggingContext
+            );
+
+            const taskManagementAccess = await checkTuplePage(
+                context,
+                FgaRelation.UiAccess,
+                FgaUiEntity.ZinniaLiveTaskManagment,
+                loggingContext
+            );
 
             const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
             const userTuplesData: any = await readUserTuplesPage(
@@ -192,9 +183,12 @@ export const getServerSideProps = withPageAuthAndLogging(
                 queues: [],
             };
 
+            let isOpsManagerView = false;
             if (!isAdmin || !taskManagementAccess) {
-                browserLogError('tasks:: Permission not available');
-
+                logWarn('tasks:: Permission not available', {
+                    ...{ isAdmin, taskManagementAccess },
+                    ...loggingContext,
+                });
                 return {
                     redirect: {
                         destination: '/403',
@@ -210,10 +204,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     userTuplesData?.tuples
                 );
             }
-
-            const selectedCarrier =
-                taskListingParams.carriers[1]?.toLowerCase();
-            const selectedQueue = taskListingParams.queues[1]?.toLowerCase();
 
             //needed to generate assignee list for sidesheet
             // const searchUsersFromQueue =
@@ -245,8 +235,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 featureFlagDecisions?.[FEATURE_FLAGS.OPS_MANAGER_FEATURE];
 
             if (!enableTaskView || !hasPagePermissions) {
-                browserLogError('tasks:: Ops-Manager feature not enabled');
-
+                logWarn('tasks:: Ops-Manager feature not enabled', {
+                    ...{ enableTaskView, hasPagePermissions },
+                    ...loggingContext,
+                });
                 return {
                     redirect: {
                         destination: '/403',

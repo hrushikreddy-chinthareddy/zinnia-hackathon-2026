@@ -44,7 +44,7 @@ const defaultFilters: ClientCaseSearchInputs = {
 
 export function IllustrationsClientCaseProvider({
     children,
-}: PropsWithChildren<{}>) {
+}: PropsWithChildren<object>) {
     // const [searchParams, setSearchParams] = useState<URLSearchParams>(new URLSearchParams());
     const searchParams = useSearchParams();
     const router = useRouter();

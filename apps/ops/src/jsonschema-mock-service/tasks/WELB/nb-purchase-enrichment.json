@@ -1,6 +1,6 @@
 {
     "formId": "0017516c-b7a7-4cf5-a098-c4cc2f1da5ea",
-    "process": "Qualification",
+    "process": "Matching",
     "taskType": "NB_PURCHASE_ENRICHMENT",
     "formSchema": {
         "type": "object"
@@ -110,7 +110,7 @@
                             "enum": ["Check", "Wire"]
                         },
                         "processCompanyCodeEnum": {
-                            "enum": ["WELB"]
+                            "enum": ["WELB", "SBL", "GILI"]
                         }
                     }
                 },

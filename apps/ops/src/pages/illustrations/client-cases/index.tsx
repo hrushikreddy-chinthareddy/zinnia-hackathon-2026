@@ -11,16 +11,23 @@ import { ClientCaseTable } from '@deps/components/client-case/client-case-list/t
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import { PageHead } from '@deps/components/page-title';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { IllustrationsClientCaseProvider } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    SegmentPageName,
+    SegmentTrackedPageProps,
+} from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -44,34 +51,50 @@ export enum ErrorOrigin {
     Internal = 'internal-error',
 }
 
-type IllustrationsPageProps = {
+interface IllustrationsPageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     additionalData: additionalDataProps;
     fetchingErrorMessage: string;
     fetchingErrorOrigin: ErrorOrigin;
     clientCase?: IllustrationsClientCase;
-};
+}
 
 const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
+const NEW_QUICK_QUOTE_URL = '/illustrations/client-cases/quick-quote';
 const INTERNAL_ERROR_LABEL = 'We were unable to create this client case.';
 const EXTERNAL_ERROR_LABEL =
     'We were unable to create the required client case due to external issues';
-//This should be  just a red    ict page or maybe a redirect with urk params read and user/permision validation
+
 export default function Illustrations({
     fetchingErrorMessage,
     fetchingErrorOrigin,
+    additionalData,
 }: IllustrationsPageProps) {
+    const [bannerText, setBannerText] = useState('');
+
+    const { featureFlags } = useOptimizely();
     const searchParams = useSearchParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const [bannerText, setBannerText] = useState('');
-    const { isAllowWriteClientCase, partyReferenceData } =
-        usePermissionsContext();
+    const {
+        isAllowWriteClientCase,
+        partyReferenceData,
+        isAllowReadIllustrations,
+    } = usePermissionsContext();
     const { sendNewClientCaseClicked } = useIllustrationAnalytics();
-
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
+    useSegmentPageTracker(
+        additionalData.user,
+        SegmentPageName.IllustrationsClientCase
+    );
+
     const isAgent = aliases?.length ?? 0 > 0;
+    const illustrationsQuickQuoteEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_QUICK_QUOTE];
 
     const allowCreateCase = isAgent || isAllowWriteClientCase;
+    const allowQuickQuote =
+        (isAgent && isAllowReadIllustrations && isAllowWriteClientCase) ||
+        isAllowReadIllustrations;
 
     const bannerBodyText = (
         <Typography
@@ -109,9 +132,59 @@ export default function Illustrations({
 
     const createClientCaseSearchParams = toLowerCaseSearchParams(searchParams);
     createClientCaseSearchParams.delete('eappid');
+    const renderQuickQuote = () => {
+        if (!illustrationsQuickQuoteEnabled) {
+            return <></>;
+        }
+        return (
+            <>
+                {allowQuickQuote ? (
+                    <Link
+                        href={{
+                            pathname: NEW_QUICK_QUOTE_URL,
+                        }}
+                        passHref
+                        className="flex items-center gap-2"
+                    >
+                        {/* <Icon
+                                    width={24}
+                                    height={24}
+                                    type={IconType.AUTOPAY}
+                                /> */}
+                        <Button
+                            mode="link"
+                            data-testid="quick-quote-btn"
+                            aria-label={t('ariaLabel.search') as string}
+                            type="button"
+                            size="small"
+                        >
+                            {t('clientCase.quickQuote')}
+                        </Button>
+                    </Link>
+                ) : (
+                    <TempNavInactive
+                        tooltipBody={t('clientCase.quickQuotePermissions')}
+                        navElementClassName="!bg-transparent"
+                    >
+                        <Button
+                            disabled={!allowCreateCase}
+                            mode="link"
+                            data-testid="quick-quote-btn"
+                            aria-label={t('ariaLabel.search') as string}
+                            type="button"
+                            size="small"
+                        >
+                            {t('clientCase.quickQuote')}
+                        </Button>
+                    </TempNavInactive>
+                )}
+            </>
+        );
+    };
 
     return (
         <>
+            <PageHead titleKey="clientCases" />
             <IllustrationsClientCaseProvider>
                 {bannerText !== '' && (
                     <BannerAlert
@@ -130,42 +203,50 @@ export default function Illustrations({
                     >
                         {t('illustrations')}
                     </Typography>
-                    {allowCreateCase ? (
-                        <Link
-                            href={{
-                                pathname: NEW_CLIENT_CASE_URL,
-                                query: createClientCaseSearchParams.toString(),
-                            }}
-                            passHref
-                            onClick={sendNewClientCaseClicked}
-                        >
-                            <Button
-                                mode="link"
-                                data-testid="new-client-case-btn"
-                                aria-label={t('ariaLabel.search') as string}
-                                type="button"
-                                size="small"
+                    <div
+                        className="flex gap-4 justify-center"
+                        data-testid="quick-quote-cta"
+                    >
+                        {renderQuickQuote()}
+                        {allowCreateCase ? (
+                            <Link
+                                href={{
+                                    pathname: NEW_CLIENT_CASE_URL,
+                                    query: createClientCaseSearchParams.toString(),
+                                }}
+                                passHref
+                                onClick={sendNewClientCaseClicked}
                             >
-                                {t('clientCase.newClientCase')}
-                            </Button>
-                        </Link>
-                    ) : (
-                        <TempNavInactive
-                            tooltipBody={t('clientCase.clientCasePermissions')}
-                            navElementClassName="!bg-transparent"
-                        >
-                            <Button
-                                disabled={!allowCreateCase}
-                                mode="link"
-                                data-testid="new-client-case-btn"
-                                aria-label={t('ariaLabel.search') as string}
-                                type="button"
-                                size="small"
+                                <Button
+                                    mode="link"
+                                    data-testid="new-client-case-btn"
+                                    aria-label={t('ariaLabel.search') as string}
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.newClientCase')}
+                                </Button>
+                            </Link>
+                        ) : (
+                            <TempNavInactive
+                                tooltipBody={t(
+                                    'clientCase.clientCasePermissions'
+                                )}
+                                navElementClassName="!bg-transparent"
                             >
-                                {t('clientCase.newClientCase')}
-                            </Button>
-                        </TempNavInactive>
-                    )}
+                                <Button
+                                    disabled={!allowCreateCase}
+                                    mode="link"
+                                    data-testid="new-client-case-btn"
+                                    aria-label={t('ariaLabel.search') as string}
+                                    type="button"
+                                    size="small"
+                                >
+                                    {t('clientCase.newClientCase')}
+                                </Button>
+                            </TempNavInactive>
+                        )}
+                    </div>
                 </div>
 
                 <div className="mb-8">

@@ -1,11 +1,10 @@
+import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     Party,
     PartyRole,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { Parties, PolicyParty } from './Parties';
 

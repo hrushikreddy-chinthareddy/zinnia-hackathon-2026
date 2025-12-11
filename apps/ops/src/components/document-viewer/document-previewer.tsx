@@ -39,7 +39,7 @@ export default function DocumentPreviewer({
         segmentAnalyticsTrackEvent<CaseDocumentClickedEvent>(
             SegmentTrackedEventName.CaseDocumentClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: 'Preview',
                 documentId: documentId || '',

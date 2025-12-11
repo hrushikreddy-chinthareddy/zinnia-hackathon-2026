@@ -1,6 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useMemo, useState } from 'react';
 
@@ -14,7 +13,7 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
 import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { Case } from '@deps/models/case/case';
 import {
     includeDocumentTypeForInboundSearch,
@@ -23,6 +22,8 @@ import {
 } from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 // try to get any documentIds associated with this case.
 // As we find more ways to associate documents with a case, we can add the ways to retrieve them here.
@@ -45,9 +46,10 @@ export default function DocumentsTab({
     policy,
 }: {
     caseDetails: Case;
-    policy: PolicyDetails | null;
+    policy: Policy | null;
 }) {
     const { t } = useTranslation();
+    const { isZinniaInternalProcessor } = usePermissionsContext();
     const knownCaseDocIds = getKnownCaseDocIds(caseDetails);
     const [docSource, setDocSource] = useState(
         DocumentTypeView.Policy as string
@@ -55,6 +57,7 @@ export default function DocumentsTab({
     const limit = 25;
     const [caseOffset, setCaseOffset] = useState(0);
     const [policyOffset, setPolicyOffset] = useState(0);
+
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!caseDetails?.id || !caseDetails?.carrier) {
             return null;
@@ -75,16 +78,17 @@ export default function DocumentsTab({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            includeDocumentTypeForInboundSearch(caseDetails?.carrier)
+            includeDocumentTypeForInboundSearch(caseDetails?.carrier) &&
+            !isZinniaInternalProcessor // IMH-85894
         ) {
             searchBody.documentType = includeDocumentTypesInbound.join(',');
         }
 
         return searchBody;
-    }, [caseDetails, docSource]);
+    }, [caseDetails, docSource, isZinniaInternalProcessor]);
 
     const policyDocumentSearchBody = useMemo<SearchRequest | null>(() => {
-        if (!caseDetails?.policyNumber || !policy?.carrierId) {
+        if (!caseDetails?.policyNumber || !caseDetails?.carrier) {
             return null;
         }
         const documentClassification =
@@ -100,7 +104,7 @@ export default function DocumentsTab({
             planCode:
                 caseDetails?.planCode ||
                 caseDetails?.additionalData?.planCode ||
-                policy?.planCode,
+                policy?.product?.planCode,
             // TODO MG: ticket to fix spec/types
             // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
             excludeDocumentTypes,
@@ -109,12 +113,14 @@ export default function DocumentsTab({
         if (
             documentClassification ===
                 SearchRequest.documentClassification.INBOUND &&
-            includeDocumentTypeForInboundSearch(policy?.carrierId)
+            includeDocumentTypeForInboundSearch(caseDetails?.carrier) &&
+            !isZinniaInternalProcessor // IMH-85894
         ) {
             body.documentType = includeDocumentTypesInbound.join(',');
         }
+
         return body;
-    }, [caseDetails, policy, docSource]);
+    }, [caseDetails, policy, docSource, isZinniaInternalProcessor]);
 
     const handleDocSourceChange = (value: string) => {
         setCaseOffset(0);
@@ -256,6 +262,11 @@ export default function DocumentsTab({
                                         }
                                         results={caseDocuments ?? []}
                                         policyNumber={caseDetails.policyNumber}
+                                        planCode={caseDetails.planCode}
+                                        policyDeliveryDate={
+                                            policy?.policyDates
+                                                ?.policyDeliveryDate
+                                        }
                                     />
                                 )}
 
@@ -303,6 +314,11 @@ export default function DocumentsTab({
                                         }
                                         results={policyDocuments ?? []}
                                         policyNumber={caseDetails.policyNumber}
+                                        planCode={caseDetails.planCode}
+                                        policyDeliveryDate={
+                                            policy?.policyDates
+                                                ?.policyDeliveryDate
+                                        }
                                     />
                                 )}
                                 <DocumentResultsPagination

@@ -5,7 +5,9 @@ import { SignatureFieldNames } from '@deps/components/otp-withdrawal-form/signat
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     FormParts,
+    FormParty,
     FormValidationErrors,
+    PartyRoles,
     PaymentMethod,
     QualTypes,
 } from '@deps/models/case/withdrawal/case';
@@ -158,17 +160,6 @@ export const commonOftFormValidation = (
             );
         }
     }
-    const ownerSignature = formSignature?.signatures?.find(
-        (sigInfo) =>
-            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
-    );
-
-    // No choice made for signature
-    if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-        ] = t('formValidation.signaturePresentOptionMustBeSelected');
-    }
 
     if (
         formDisbursement?.bank[0].accountType?.text === '' &&
@@ -181,5 +172,36 @@ export const commonOftFormValidation = (
         );
     }
 
+    const ownerSignature = formSignature?.signatures?.find(
+        (sigInfo) =>
+            sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
+    );
+
+    // No choice made for signature
+    if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
+        errors[
+            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+        ] = t('formValidation.signaturePresentOptionMustBeSelected');
+    }
+
     return errors;
+};
+
+export enum MorganStanleyFirm {
+    FULLNAME = 'MSSB',
+    TAX_ID = '510116113',
+}
+
+export const isMorganStanleyFirm = (formParty: FormParty): boolean => {
+    const ownerInfo = formParty?.parties?.find(
+        (party) => party.partyRoleType === PartyRoles.OWNER
+    );
+    const ownerFullName = ownerInfo?.fullName?.toUpperCase();
+    if (
+        ownerFullName?.includes(MorganStanleyFirm.FULLNAME) ||
+        ownerInfo?.taxId === MorganStanleyFirm.TAX_ID
+    )
+        return true;
+
+    return false;
 };

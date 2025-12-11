@@ -32,11 +32,11 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import getFlicConfig from '../../withdrawal-forms/flic-withdrawal-form.helpers';
+import getUlpcConfig from '../../withdrawal-forms/ulpc/ulpc-withdrawal-form.helpers';
 
 export default function getUlpcRmdConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
-    const { irsSignatureConfig, formValidation } = getFlicConfig(t);
+    const { irsSignatureConfig, formValidation } = getUlpcConfig(t);
 
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -259,30 +259,6 @@ export default function getUlpcRmdConfig(t: TFunction) {
             formDisbursement,
         });
         const rmds = formProgram?.rmd?.rmdPrograms;
-        if (
-            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
-                formDisbursement?.paymentMethod?.text as PaymentMethod
-            )
-        ) {
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].accountNumber !==
-                    formDisbursement?.bank[0].reEnterAccountNumber
-            ) {
-                errors[BankingFields.ReEnterAccountNumber] = t(
-                    'formValidation.accountNumberDoesNotMatch'
-                );
-            }
-            if (
-                formDisbursement?.bank[0].bankName === '' &&
-                formDisbursement?.bank[0].routingNumber !==
-                    formDisbursement?.bank[0].reEnterBankRoutingNumber
-            ) {
-                errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                    'formValidation.routingNumberDoesNotMatch'
-                );
-            }
-        }
 
         if (rmds && rmds?.length === 0) {
             errors['rmdMinimumRequiredProgram'] = t(

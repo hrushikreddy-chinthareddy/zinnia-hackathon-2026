@@ -1,5 +1,3 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
-import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -30,8 +28,8 @@ import {
     NEW_BUSINESS,
     NO,
 } from '@deps/containers/role-change/role-change-helper';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
+import { formatSSN } from '@deps/helpers/string.helpers';
 import { uploadDocumentV2 } from '@deps/queries/api/documents';
 import {
     EDS_DATE_DISPLAY_FORMAT,
@@ -39,9 +37,10 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 import {
     Errors,
@@ -50,7 +49,6 @@ import {
     newTrustOptions,
     prefixOption,
     suffixOptions,
-    trustOption,
     TrustType,
     rolePartyCheck,
 } from './bene-identification.helpers';
@@ -108,9 +106,7 @@ const BeneficiaryIdentification = ({
     const [currentErrors, setCurrentErrors] = useState<Errors>();
 
     const isRolePartyCheck = !rolePartyCheck(party?.partyType as PartyType);
-    const { featureFlags } = useOptimizely();
 
-    const trustEnumFlag = featureFlags[FEATURE_FLAGS.BENE_TRUST_TYPE_ENUM];
     const [uploadedFiles, setUploadedFiles] = useState<File[]>(
         updateParty.documents || []
     );
@@ -293,6 +289,13 @@ const BeneficiaryIdentification = ({
                     documentType: '',
                 };
 
+                browserLogInfo(
+                    `BeneIdentification: Uploading document: correlationID=${metaData.correlationId}`,
+                    {
+                        metaData,
+                    }
+                );
+
                 try {
                     const response = await uploadDocumentV2(
                         metaData,
@@ -314,9 +317,10 @@ const BeneficiaryIdentification = ({
                 } catch (error) {
                     setUploadError('Failed to upload file. Please try again.');
                     browserLogError(
-                        'sidesheet-name-change: Error uploading document:',
+                        `BeneIdentification: Error uploading document: correlationID=${metaData.correlationId}`,
                         {
                             ...parseErrorInformation(error),
+                            metaData,
                         }
                     );
                 }
@@ -475,11 +479,7 @@ const BeneficiaryIdentification = ({
                                     />
                                     <SelectSimple
                                         label={t('trustType') as string}
-                                        options={
-                                            trustEnumFlag
-                                                ? trustOption(t)
-                                                : newTrustOptions(t)
-                                        }
+                                        options={newTrustOptions(t)}
                                         onChange={(value) =>
                                             setParty((prevState: any) => ({
                                                 ...prevState,
@@ -593,13 +593,18 @@ const BeneficiaryIdentification = ({
                                     formatOptions={{ format: '#########' }}
                                     size={FieldSize.Small}
                                     type={FieldType.BaseActive}
-                                    value={party?.ssn || ''}
+                                    value={
+                                        existingBene
+                                            ? formatSSN(party?.ssn || '')
+                                            : party?.ssn || ''
+                                    }
                                     maxLength={9}
                                     variant={
-                                        isReadOnly
+                                        isReadOnly || existingBene
                                             ? FieldVariant.Inactive
                                             : FieldVariant.Default
                                     }
+                                    disabled={isReadOnly || existingBene}
                                 />
                             </div>
                             {isRolePartyCheck && (

@@ -1,4 +1,5 @@
 import IconButton from '@deps/components/icon-button/icon-button';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -27,15 +28,19 @@ export const AgentInactiveField = ({
     return (
         <div className={styles.agentReadStateContainer}>
             <div className={styles.agentInfo}>
-                <Typography variant={TypographyVariant.BodySm}>
-                    {agentName || DEFAULT_ERROR_STRING}
-                </Typography>
-                <Typography
-                    variant={TypographyVariant.BodySm}
-                    className={styles.agentEmail}
-                >
-                    {email || ''}
-                </Typography>
+                <PiiWrapper>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {agentName || DEFAULT_ERROR_STRING}
+                    </Typography>
+                </PiiWrapper>
+                <PiiWrapper>
+                    <Typography
+                        variant={TypographyVariant.BodySm}
+                        className={styles.agentEmail}
+                    >
+                        {email || ''}
+                    </Typography>
+                </PiiWrapper>
             </div>
             {editable && (
                 <IconButton onClick={onEdit}>

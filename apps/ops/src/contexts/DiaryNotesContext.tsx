@@ -11,6 +11,8 @@ export interface DiaryNotesProviderProps {
         policyNumber?: string;
         carrierId?: string;
     };
+    planCode?: string;
+    isLC?: boolean;
 }
 
 export interface DiaryNotesContextProps {
@@ -34,15 +36,21 @@ export const DiaryNotesContext = createContext<DiaryNotesContextProps>(
 export const DiaryNotesProvider = ({
     children,
     caseDetails,
+    planCode,
+    isLC,
 }: DiaryNotesProviderProps) => {
     const [areDiaryNotesViewed, setAreDiaryNotesViewed] = useState(true);
     const { diaryNotes, setDiaryNotes, isLoading, setIsLoading, totalLogs } =
-        useDiaryNotes(
-            caseDetails?.policyNum || caseDetails?.policyNumber || '',
-            caseDetails?.clientId || caseDetails?.carrierId || '',
-            0,
-            10
-        );
+        useDiaryNotes({
+            policyNumber:
+                caseDetails?.policyNum || caseDetails?.policyNumber || '',
+            clientCode: caseDetails?.clientId || caseDetails?.carrierId || '',
+            offset: 0,
+            limit: 10,
+            showDiaryNotes: true,
+            planCode: planCode,
+            isLC: isLC,
+        });
 
     useEffect(() => {
         if (Array.isArray(diaryNotes) && diaryNotes.length >= 1) {

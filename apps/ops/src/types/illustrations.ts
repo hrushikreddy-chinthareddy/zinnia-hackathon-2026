@@ -1,3 +1,7 @@
+import { LiteralUnion, ValueOf } from 'type-fest';
+
+import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
+
 import { ProductTypes } from './product';
 
 export interface IllustraionsClientCaseSearchResponse {
@@ -6,6 +10,12 @@ export interface IllustraionsClientCaseSearchResponse {
     results: IllustrationsClientCase[];
     total: number;
     count: number;
+}
+
+export enum TransactionType {
+    REPLACEMENT = 'REPLACEMENT',
+    NONREPLACEMENT = 'NONREPLACEMENT',
+    CONVERSION = 'CONVERSION',
 }
 
 export interface IllustrationsClientCase {
@@ -21,6 +31,9 @@ export interface IllustrationsClientCase {
     productTypes: string[];
     agencyId: string;
     agencyName: string;
+    originalFaceAmount?: number;
+    isMec?: boolean;
+    transactionType?: TransactionType;
 }
 
 export interface IllustrationSummary {
@@ -40,17 +53,18 @@ export interface IllustrationAgentDetails {
     email?: string;
 }
 
+export type SexAtBirthType = LiteralUnion<'MALE' | 'FEMALE', string>;
+
 export interface IllustrationInsuredDetails {
     firstName?: string;
     lastName?: string;
-    sexAtBirth?: string;
+    sexAtBirth?: SexAtBirthType;
     dateOfBirth?: Date;
     nicotineUser?: boolean;
     state?: string;
     illustrateAtOlderAge?: boolean;
     issueAge?: number;
-    riskClass?: string;
-    riskClassCode?: number;
+    underwritingClass?: UnderwritingClass;
 }
 
 export interface ClientCaseSearchInputs {
@@ -67,17 +81,6 @@ export interface ClientCaseSearchInputs {
 }
 
 export type SexAtBirth = 'Male' | 'Female'; /// this willchange to a a full upper case on enum for BE.
-export type RiskClass =
-    | 'platinum'
-    | 'platinumChoice'
-    | 'platinumPlus'
-    | 'platinumElite'
-    | 'platinumSubstandard'
-    | 'gold'
-    | 'goldPlus'
-    | 'goldSubstandard'
-    | 'juvenile'
-    | 'juvenileSubstandard';
 
 export enum IllustrationStatuses {
     SUBMITTED = 'SUBMITTED',
@@ -110,3 +113,21 @@ export interface searchClientCaseQuery {
     eAppId?: string;
     caseManagementCaseId?: string;
 }
+
+export const RIDER_NAMES = {
+    ACCIDENTAL_DEATH_BENEFIT: 'accidentalDeathBenefit',
+    ACCELERATED_DEATH_BENEFIT: 'acceleratedDeathBenefit',
+    ACCELERATED_DEATH_BENEFIT_FOR_TERMINAL_ILLNESS:
+        'acceleratedDeathBenefitForTerminalIllness',
+    ACCELERATED_DEATH_BENEFIT_FOR_CHRONIC_ILLNESS:
+        'acceleratedDeathBenefitForChronicIllness',
+    CHARITABLE_GIVING: 'charitableGiving',
+    CHILDRENS_TERM: 'childrensTerm',
+    OVERLOAN_PROTECTION: 'overloanProtection',
+    WAIVER_OF_DEDUCTION: 'waiverOfDeduction',
+    WAIVER_OF_PREMIUM: 'waiverOfPremium',
+    GUARANTEED_INSURABILITY_BENEFIT: 'guaranteedInsurabilityBenefit',
+    OWNER_WAIVER_OF_DEDUCTION: 'ownerWaiverOfDeduction',
+} as const;
+
+export type RiderName = ValueOf<typeof RIDER_NAMES>;

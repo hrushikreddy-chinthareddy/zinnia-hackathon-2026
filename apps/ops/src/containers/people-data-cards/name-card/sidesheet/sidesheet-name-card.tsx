@@ -1,10 +1,3 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
-import {
-    Party,
-    PartyType,
-    Prefix,
-    Suffix,
-} from '@xd/api-types/dist/generated-types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -17,12 +10,14 @@ import CaseDocumentSelect, {
     CaseDocumentOption,
     SetStateCaseId,
 } from '@deps/components/case-document-select/case-document-select';
+import { CustomYesDatePicker } from '@deps/components/custom-date-picker/custom-date-picker';
 import Field, {
     FieldSize,
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
+import FileUpload from '@deps/components/file-upload/file-upload';
 import Radio, {
     RadioOrientation,
     RadioVariant,
@@ -65,8 +60,10 @@ import {
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { Party, PartyType, Prefix, Suffix } from '@zinnia/api-types/types/sor';
 
 import {
     convertToBase64,
@@ -75,8 +72,6 @@ import {
     NameDetails,
 } from './sidesheet-name-card.helpers';
 import SuccessState from './success-state';
-import { CustomYesDatePicker } from '../../../../components/custom-date-picker/custom-date-picker';
-import FileUpload from '../../../../components/file-upload/file-upload';
 
 interface ISidesheetNameCard {
     planCode?: string;
@@ -95,7 +90,6 @@ dayjs.extend(utc);
 
 export const SidesheetNameCard = ({
     policyDetails,
-    planCode,
     onCancel,
     selectedPolicyParty,
 }: ISidesheetNameCard) => {
@@ -110,7 +104,7 @@ export const SidesheetNameCard = ({
             : undefined;
     const { sessionId, partyId: userId } = usePermissionsContext();
     const INITIAL_BODY: NonFinancialTransactionBody = {
-        correlationId: correlationIdFromRoute || uuidV4(),
+        correlationId: uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: false,
     };
@@ -163,8 +157,8 @@ export const SidesheetNameCard = ({
         Prefix.MR,
         Prefix.MS,
         Prefix.MISS,
-        Prefix.DR_,
-        Prefix.MRS_,
+        Prefix.DR,
+        Prefix.MRS,
     ].map((option) => ({ label: option, value: option }));
 
     const [dateOfSignature, setDateOfSignature] = useState('');
@@ -277,6 +271,13 @@ export const SidesheetNameCard = ({
                     documentType: '',
                 };
 
+                browserLogInfo(
+                    `sidesheetNameChange: Uploading document: correlationID=${metaData.correlationId}`,
+                    {
+                        metaData,
+                    }
+                );
+
                 try {
                     const response = await uploadDocumentV2(
                         metaData,
@@ -297,9 +298,10 @@ export const SidesheetNameCard = ({
                 } catch (error) {
                     setUploadError('Failed to upload file. Please try again.');
                     browserLogError(
-                        'sidesheet-name-change: Error uploading document:',
+                        `sidesheetNameChange: Error uploading document: correlationID=${metaData.correlationId}`,
                         {
                             ...parseErrorInformation(error),
+                            metaData,
                         }
                     );
                 }
@@ -369,7 +371,7 @@ export const SidesheetNameCard = ({
         }
 
         const nameChangePayload = {
-            correlationId: caseId ? INITIAL_BODY.correlationId : uuidV4(),
+            correlationId: body.correlationId,
             effectiveDate: INITIAL_BODY.effectiveDate,
             partyName: {
                 firstName,
@@ -655,6 +657,9 @@ export const SidesheetNameCard = ({
                         setCurrentErrors={setCurrentErrors}
                         setViewState={setViewState}
                         required={true}
+                        processSubType={[Processes.ExistingNameChange]}
+                        correlationId={correlationIdFromRoute}
+                        body={body}
                     />
 
                     {getContent()}

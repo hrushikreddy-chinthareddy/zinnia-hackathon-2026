@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { convertToCamelCase } from '@zinnia/utils';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
@@ -32,6 +31,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { convertToCamelCase } from '@deps/utils/strings';
 import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helpers';
 import nextI18nextConfig from 'next-i18next.config';
 
@@ -100,6 +100,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                     loggingContext
                 );
             if (!hasPermissionToReadCaseManagement) {
+                logError('Task:: access denied', {
+                    ...loggingContext,
+                    taskId,
+                });
                 return {
                     redirect: {
                         destination: '/403',
@@ -121,7 +125,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
 
                 if (!task) {
-                    logError('Task::Error getting task by id', loggingContext);
+                    logError('Task::Error getting task by id', {
+                        ...loggingContext,
+                        taskId,
+                    });
                     return {
                         redirect: {
                             destination: `task/:id/error?errorCode=${ERROR_CODES.SUITABILITY_REVIEW_TASK_INITIALIZATION}`,
@@ -176,26 +183,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                                 },
                             };
                         }
-                    }
-                    const enabledTask = await getFeatureFlagByKey(
-                        FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
-                        carrier?.toLowerCase(),
-                        flag,
-                        user.sub,
-                        loggingContext
-                    );
-
-                    if (!enabledTask) {
-                        logWarn('task/:id::feature flag not enabled', {
-                            ...loggingContext,
-                            carrier,
-                        });
-                        return {
-                            redirect: {
-                                destination: '/403',
-                                permanent: false,
-                            },
-                        };
                     }
                 }
 

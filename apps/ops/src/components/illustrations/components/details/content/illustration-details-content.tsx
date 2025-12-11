@@ -7,15 +7,12 @@ import { ProductTypes } from '@deps/types/product';
 import styles from './details-content.module.css';
 import ContentCashValue from './illustration-details-content-cash-value';
 import CoverageSection from './illustration-details-content-coverage';
+import ContentInsured from './illustration-details-content-insured';
 import IulContentCoverage from './illustration-details-content-iul-coverage';
 import ContentPremium from './illustration-details-content-premium';
 import ContentRiders from './riders-section';
-type IllustrationDetailsContentProps = {
-    isLoading: boolean;
-};
-export default function IllustrationDetailsContent({
-    isLoading,
-}: IllustrationDetailsContentProps) {
+
+export default function IllustrationDetailsContent() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
     const illustration = useIllustrationDetail();
@@ -23,6 +20,7 @@ export default function IllustrationDetailsContent({
     if (illustration?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE) {
         return (
             <div className={styles.detailsContent}>
+                <ContentInsured />
                 <IulContentCoverage />
                 <ContentPremium />
                 <ContentRiders />
@@ -33,6 +31,7 @@ export default function IllustrationDetailsContent({
 
     return (
         <div className={styles.detailsContent}>
+            <ContentInsured />
             <CoverageSection />
             <ContentPremium />
             <ContentRiders />

@@ -1,4 +1,3 @@
-import { AllocationOption } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -8,6 +7,7 @@ import {
     NUMERIC_DATE_FORMAT,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
+import { AllocationOption } from '@zinnia/api-types/types/sor';
 
 export const buildfundTransferRequestBody = (
     fundTransfer: FundTransfer
@@ -18,11 +18,12 @@ export const buildfundTransferRequestBody = (
         effectiveDate,
         reverseInitiator,
         transactionAmounts,
+        correlationId,
     } = fundTransfer;
 
     return {
         caseId,
-        correlationId: uuidV4(),
+        correlationId: correlationId || uuidV4(),
         effectiveDate: dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(
             ZAHARA_API_DATE_FORMAT
         ),

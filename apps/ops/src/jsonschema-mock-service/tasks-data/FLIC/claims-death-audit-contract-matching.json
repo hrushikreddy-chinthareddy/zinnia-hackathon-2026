@@ -1,0 +1,66 @@
+{
+    "taskType": "CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING",
+    "caseId": "CA0000392079",
+    "carrier": "FLIC",
+    "status": "NEW",
+    "externalId": "d70df390-ac81-4b12-a1f5-e4473a05bb72",
+    "taskName": "Match Death Case",
+    "process": "Matching",
+    "source": "BPM.ClaimProcessing",
+    "data": {
+        "details": {
+            "auditQualCaseMatch": {
+                "recordId": "ca9123e3-f56a-4c18-b1ed-28d6aa829a04",
+                "recordType": "IDN_CLAIM_AUDIT_RECORD",
+                "fileRowData": {
+                    "fileBatchId": "6900c06578a1cb07ca508f6d",
+                    "source": "OBT",
+                    "contractNumber": "554000749",
+                    "city": "WHITEHOUSE STATION",
+                    "state": "NJ",
+                    "account": "17688",
+                    "clientSSN": "313-30-0307",
+                    "clientLast": "PITERSON",
+                    "clientFirst": "PATRICK",
+                    "clientDOB": "1975-01-02",
+                    "group": "SecureFore",
+                    "cu2": "Male",
+                    "cu3": "Death Claim Pen",
+                    "cu4": "903948230",
+                    "pbiLast": "PITERSON",
+                    "pbiFirst": "PATRICK",
+                    "pbiDOB": "01-02-1975",
+                    "pbiDOD": "2025-09-24",
+                    "pbiCity": "WHITEHOUSE STATION",
+                    "pbiState": "NJ",
+                    "url1": "https://cloud.pbinfo.com/pbiresearch/obit/v2/43060937/A7C0FAB377C2F2361DDDDF4D6A972A13",
+                    "url2": "None",
+                    "url3": "None",
+                    "url4": "None",
+                    "url5": "None",
+                    "correlationid": "4c370202-34ab-4343-a763-251028000001"
+                }
+            }
+        },
+        "uploadRequired": false
+    },
+    "contextData": {
+        "entityId": "ca9123e3-f56a-4c18-b1ed-28d6aa829a04",
+        "entityType": "IDN_CLAIM_AUDIT_RECORD",
+        "attributes": [
+            {
+                "attribute": "contractNumber",
+                "value": "554000749"
+            },
+            {
+                "attribute": "correlationId",
+                "value": "4c370202-34ab-4343-a763-251028000001"
+            },
+            {
+                "attribute": "policyNumber",
+                "value": "554000749"
+            }
+        ]
+    },
+    "mappedDocuments": []
+}

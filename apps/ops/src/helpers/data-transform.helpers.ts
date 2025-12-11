@@ -1,7 +1,7 @@
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
 import { TFunction } from 'next-i18next';
 
 import { DataDefinition, KeyObjectDef } from '@deps/types/data';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { percentFormatify } from './numbers.helpers';
 import { getObjDeepValue } from './objects.helpers';

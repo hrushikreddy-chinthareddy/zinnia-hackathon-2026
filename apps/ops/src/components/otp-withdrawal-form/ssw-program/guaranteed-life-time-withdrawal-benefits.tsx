@@ -122,6 +122,11 @@ const GuaranteedWithdrawalBenefits = ({
                     type={FieldType.BaseActive}
                     value={formDob}
                     disabled={isFormStateReadOnly}
+                    variant={
+                        isFormStateReadOnly
+                            ? FieldVariant.Inactive
+                            : FieldVariant.Default
+                    }
                 />
             </div>
         </div>

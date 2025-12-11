@@ -17,22 +17,38 @@ import {
     AddressTypes,
     FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
+import { Address } from '@zinnia/api-types/types/sor';
 
-type EditAddressProps = {
+type CommonEditAddressProps = {
     carrierId: string;
     handleClose: (selectedAddress: any) => void;
-    partyCardData: PartyAddressCard;
+    isCancel?: boolean;
+    isContainerClass?: boolean;
 };
 
-const EditAddress = ({
-    carrierId,
-    handleClose,
-    partyCardData,
-}: EditAddressProps) => {
+type EditAddressProps =
+    | (CommonEditAddressProps & {
+          partyCardData: PartyAddressCard;
+          address?: never;
+      })
+    | (CommonEditAddressProps & {
+          address: Address;
+          partyCardData?: never;
+      });
+
+const EditAddress = (props: EditAddressProps) => {
+    const {
+        carrierId,
+        handleClose,
+        isCancel = true,
+        isContainerClass = true,
+    } = props;
     const { t } = useTranslation(undefined, {
         keyPrefix: 'deathClaims.notificationMethod',
     });
-    const { address } = partyCardData;
+    const address =
+        'partyCardData' in props ? props.partyCardData?.address : props.address;
+
     const [enteredAddress, setEnteredAddress] = useState<any>(address || {});
     const [isValidAddress, setIsValidAddress] = useState<boolean | null>(null);
     const [selectedId, setSelectedId] = useState<string | undefined>('');
@@ -103,7 +119,9 @@ const EditAddress = ({
     return (
         <CardContainer
             classNames={'w-full'}
-            containerClassNames="w-full content-divider"
+            containerClassNames={
+                isContainerClass ? 'w-full content-divider' : 'w-full'
+            }
         >
             <div className="col-span-4 py-4">
                 <AddressEntry
@@ -136,7 +154,7 @@ const EditAddress = ({
                 />
             )}
 
-            <div className="mt-4 flex ">
+            <div className="mt-4 flex">
                 <Button
                     className="mr-4"
                     onClick={handleContinue}
@@ -145,15 +163,17 @@ const EditAddress = ({
                 >
                     {t('formActions.continue')}
                 </Button>
-                <NavElement
-                    aria-label={t('cancel') as string}
-                    onClick={handleCancelClick}
-                    size={NavElementSize.Small}
-                    type={NavElementType.Button}
-                    variant={NavElementVariant.Default}
-                >
-                    {t('formActions.cancel')}
-                </NavElement>
+                {isCancel && (
+                    <NavElement
+                        aria-label={t('cancel') as string}
+                        onClick={handleCancelClick}
+                        size={NavElementSize.Small}
+                        type={NavElementType.Button}
+                        variant={NavElementVariant.Default}
+                    >
+                        {t('formActions.cancel')}
+                    </NavElement>
+                )}
             </div>
         </CardContainer>
     );

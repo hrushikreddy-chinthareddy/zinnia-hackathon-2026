@@ -204,7 +204,7 @@ const ComparisonContract = ({
                                     <CircleInfoIcon
                                         height={'16px'}
                                         width={'16px'}
-                                        className="text-primary"
+                                        className="tooltip-primary"
                                     />
                                 </span>
                             </Popover>

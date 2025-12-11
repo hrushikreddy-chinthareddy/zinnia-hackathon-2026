@@ -1,14 +1,6 @@
-import {
-    AccountStatus,
-    AccountType,
-    BankAccount,
-    BankAccountPurpose,
-    Party,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -69,6 +61,15 @@ import {
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    AccountStatus,
+    AccountType,
+    BankAccount,
+    BankAccountPurpose,
+    Party,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
 
@@ -88,13 +89,17 @@ const SideSheetBank = ({
     policy,
     policyNumber,
     onCancel,
-    setCurrentBankAccounts,
     updatedBank,
 }: SideSheetBankProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.sideSheet.bank',
     });
     const { t: defaultT } = useTranslation();
+    const router = useRouter();
+    const correlationIdFromRoute =
+        typeof router?.query?.correlationId === 'string'
+            ? router?.query?.correlationId
+            : undefined;
     const { featureFlags } = useOptimizely();
     const { partyId: userId, sessionId } = usePermissionsContext();
     const shouldShowBankDelete =
@@ -381,6 +386,9 @@ const SideSheetBank = ({
                     setCaseDocumentOptions={setCaseDocumentOptions}
                     setCurrentErrors={setCurrentErrors}
                     setViewState={setViewState}
+                    processSubType={[Processes.BankChange]}
+                    correlationId={correlationIdFromRoute}
+                    body={body}
                 />
                 <Radio
                     aria-label={t('labels.accountType') as string}

@@ -10,7 +10,7 @@ import {
 } from '@deps/queries/api/v1/task';
 import { getCaseTaskByIdSSR, updateTask } from '@deps/queries/api/v2/task';
 import { isProd } from '@deps/utils/environment.helpers';
-import { LoggingContext } from '@deps/utils/server-logging';
+import { logError, LoggingContext, logInfo } from '@deps/utils/server-logging';
 
 interface TaskItem {
     id: string;
@@ -22,15 +22,15 @@ interface TaskItem {
 }
 
 // Function to dynamically import mockService in development
-const loadMockService = async () => {
+const loadMockService = async (logCtx: LoggingContext) => {
     if (!isProd()) {
         try {
-            const {
-                mockService,
-            } = require('@deps/jsonschema-mock-service/mock-service');
+            const { mockService } = await import(
+                '@deps/jsonschema-mock-service/mock-service'
+            );
             return mockService;
         } catch (error) {
-            console.error('Error loading mockService:', error);
+            logError('Error loading mockService:', { ...logCtx, error });
             return null;
         }
     }
@@ -71,7 +71,7 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
     } else {
         tasks = await getCaseTasks({ caseId: caseId });
         const filteredTasks = tasks?.filter((task: any) => {
-            return task.status !== 'CANCELLED';
+            return task.status !== TaskStatus.Canceled;
         });
 
         formattedList = filteredTasks?.map((task: any) => {
@@ -101,8 +101,12 @@ export const getTaskFormMetadata = async (
     logCtx: LoggingContext,
     taskSchemaOverride: boolean = false
 ) => {
+    logInfo('getTaskFormMetadata::Fetching task schema', {
+        ...logCtx,
+        payload: { taskType, carrier: clientId, processType },
+    });
     if (taskSchemaOverride) {
-        const mockService = await loadMockService();
+        const mockService = await loadMockService(logCtx);
         if (mockService) {
             return mockService.getTaskFormMetadataSSRMock(clientId, taskType);
         }
@@ -122,8 +126,9 @@ export const getCaseTaskById = async (
     taskType?: TaskType,
     clientId?: string
 ): Promise<ManagementTask<TaskStatus> | null> => {
+    logInfo('getCaseTaskById::Fetching task by id', logCtx);
     if (taskType) {
-        const mockService = await loadMockService();
+        const mockService = await loadMockService(logCtx);
         if (mockService) {
             return mockService.getCaseTaskByIdSSRMock(taskType, clientId);
         }

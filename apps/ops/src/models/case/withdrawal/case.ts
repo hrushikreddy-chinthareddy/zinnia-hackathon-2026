@@ -1,11 +1,11 @@
-import { PartyType } from '@zinnia/api-types/types/sor';
-
+import { FormSurrenderingSignature } from '@deps/components/ceding-company-signature/ceding-company-signature';
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/maritial-status-allowance-withholdings';
 import { TrustType } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person.helpers';
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import {
     DesignationPresent,
@@ -85,7 +85,7 @@ export interface FormParts {
     formFullSurrenderAck: FormFullSurrenderAck;
     formSignature: FormSignature;
     formESignatureData?: FormEsignatureData | null;
-    formSurrenderingCompany: FormSurrenderingCompany | null;
+    formSurrenderingCompany: FormSurrenderingSignature | null;
     formTaxWithholding: FormTaxWithholding;
     formAdditionalWaivers: FormAdditionalWaiver[];
     formTaxIdCertificate?: {
@@ -245,6 +245,35 @@ export interface FormDisbursement {
         text: boolean | null;
     };
     disbursmentConsent?: DisbursmentConsentInfo;
+    ChooseBankingType?: string;
+    bankVerification: {
+        selectedBankingType: string;
+        validationsMap: {
+            VOIDED_CHECK: {
+                fraudRedFlagsCheck: boolean | null;
+                isBlankVoidedCheck: boolean | null;
+                hasHandwrittenVOID: boolean | null;
+                securityFeaturesPresent: boolean | null;
+                ownerNameMatch: boolean | null;
+                ownerAddressMatch: boolean | null;
+            } | null;
+            BANK_LETTERHEAD: {
+                isValidBankLetterhead: boolean | null;
+                hasBankAddress: boolean | null;
+                hasBankOfficialSignature: boolean | null;
+                containsHandwrittenBankDetails: boolean | null;
+            } | null;
+            DIRECT_DEPOSIT_FORM: {
+                noAdditionalValidationRequired: boolean | null;
+            } | null;
+            STARTER_CHECK: {
+                noAdditionalValidationRequired: boolean | null;
+            } | null;
+            NO_BANK_PROOF: {
+                noAdditionalValidationRequired: boolean | null;
+            } | null;
+        };
+    } | null;
 }
 export interface FormDistribution {
     moneyType: {
@@ -393,6 +422,7 @@ export enum SSWType {
     GMWB = 'GMWB',
     SingleLifetimeIncomeOption = 'SingleLifetime',
     JointLifetimeIncomeOption = 'JointLifetime',
+    VariableAnnuity = 'Variable Annuity',
 }
 
 export interface RMD {
@@ -410,6 +440,7 @@ export interface RMD {
     isOneTimeWithdrawal?: boolean;
     rmdPrograms: RMDProgram[];
     taxId: { text: string | null };
+    rmdMethod: RMDType | null;
 }
 
 export interface QCD {
@@ -911,6 +942,7 @@ export enum ProgramSubType {
 
 export enum Program {
     OFT = 'Outgoing Transfer',
+    WITHDRAWAL = 'Withdrawal',
 }
 
 // FormProgram
@@ -1323,6 +1355,42 @@ export enum SignVerificationReason {
 export enum SortOrder {
     Asc = 'ASC',
     Desc = 'DESC',
+}
+
+export enum DairyNoteType {
+    ADMINISTRATIVE = 'Administrative',
+    BANKRUPTCY = 'Bankruptcy',
+    CONTRACTINQUIRY = 'Contract Inquiry',
+    CARRIERAPPOINTMENTCOMPLETED = 'Carrier Appointment Completed',
+    CARRIERAPPOINTMENTREQUESTED = 'Carrier Appointment Requested',
+    CARRIERAPPOINTMENTTERMINATED = 'Carrier Appointment Terminated',
+    CARRIERAPPROVALRECEIVED = 'Carrier Approval Received',
+    CARRIEROFFERRECEIVED = 'Carrier Offer Received',
+    CARRIERQUOTEREQUESTED = 'Carrier Quote Requested',
+    CONTRACTEXECUTED = 'Contract Executed',
+    CONTRACTTERMINATED = 'Contract Terminated',
+    DELIVERY = 'Delivery',
+    FORMALAPPLICATIONRECIVED = 'Formal Application Received',
+    GARNISHMENTS = 'Garnishments',
+    HOMEOFFICEEMPLOYEE = 'Home Office Employee',
+    ILLUSTRATIONREQUESTED = 'Illustration Requested',
+    INCOMINGREPLACEMENT = 'Incoming Replacement',
+    INFORMALINQUIRYRECEIVED = 'Informal Inquiry Received',
+    LEGAL = 'Legal',
+    LICENSEEXPIRED = 'License Expired',
+    LICENSETERMINATED = 'License Terminated',
+    NEWBUSINESS = 'New Business',
+    NEWLICENSERECEIVED = 'New License Received',
+    ORIGINALDEPOSITDATE = 'Original Deposit Date',
+    OUTGOINGREPLACEMENT = 'Outgoing Replacement',
+    POLICYADMIN = 'Policy Admin',
+    POLICYISSUED = 'Policy Issued',
+    RECRUITCANDIDATE = 'Recruit Candidate',
+    REFERREDTOUNDERWRITING = 'Referred To Underwriting',
+    REQUIREMENT = 'Requirement',
+    SEMINAR = 'Seminar',
+    SPECIALMARKETCODE = 'Special Market Code',
+    UNDERWRITING = 'Underwriting',
 }
 
 export interface FormNigos {

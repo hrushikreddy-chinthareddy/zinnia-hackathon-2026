@@ -23,11 +23,15 @@ export const TextWidget = function (props: WidgetProps) {
 
     const { inline, prefix, inlinetext, dataType, type } =
         getUiOptions(uiSchema);
+
     if (inline) {
         return (
             <div className="grid grid-cols-2 text-md  max-w-screen-sm">
                 <div
-                    className={clsx('text-gray-500', cardStyle[type as string])}
+                    className={clsx(
+                        'text-gray-500 pr-2',
+                        cardStyle[type as string]
+                    )}
                 >
                     {label}
                 </div>
@@ -59,7 +63,7 @@ export const TextWidget = function (props: WidgetProps) {
     }
 
     return readonly ? (
-        value
+        <>{formatValueByDataType((dataType as string) || 'text', value)}</>
     ) : (
         <div className="max-w-sm flex w-full flex-col pl-1">
             <TextField

@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { ExceptionCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { Point, Series } from 'highcharts';
@@ -9,6 +8,7 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import { Statuses } from '@deps/models/case/case';
 import { getExceptionCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
+import { ExceptionCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import styles from './nigo-overview.module.css';
 import { ComparisonColumnChart } from '../../charts/bar-charts/comparison-column-chart';

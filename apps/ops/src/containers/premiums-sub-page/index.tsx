@@ -1,12 +1,4 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import {
-    ArrangementType,
-    FeatureType,
-    ProductType,
-    Reason,
-    Status,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -28,6 +20,7 @@ import {
     getFlatExtra,
     getParty,
 } from '@deps/helpers/payments.helpers';
+import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
@@ -35,7 +28,15 @@ import {
     checkSystematicProgramsEligibilityQuery,
     checkSystematicProgramEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    ArrangementType,
+    FeatureType,
+    ProductType,
+    Reason,
+    Status,
+} from '@zinnia/api-types/types/sor';
 
 import PremiumsPageHeaderContainer from '../page-header/premiums-page-header';
 import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
@@ -289,9 +290,9 @@ export const PremiumsSubPage = () => {
                 }
                 paymentFrequencyText={
                     t('paymentFrequencyText', {
-                        paymentMode: tRoot(
-                            `systematicProgram.frequency.${upcomingPayment?.frequency?.toLowerCase()}`
-                        ),
+                        paymentMode: upcomingPayment?.frequency
+                            ? getFrequency(upcomingPayment?.frequency, tRoot)
+                            : '',
                         paymentType: t('paymentType.premium'),
                     }) || undefined
                 }

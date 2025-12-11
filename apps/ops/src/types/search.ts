@@ -1,7 +1,6 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { Case } from '@deps/models/case/case';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { Order, SortObject } from './sort';
 
@@ -21,7 +20,8 @@ export type PolicySearchKeys =
     | 'agentLastName'
     | 'documentNumber'
     | 'taskName'
-    | 'agentSsn';
+    | 'agentSsn'
+    | 'fullName';
 
 export interface PolicySearchResult {
     carrierId: string;
@@ -60,6 +60,7 @@ export interface SearchViewQuery {
     brokerDealerName?: string;
     [key: string]: any; // used to loop over the object
     documentNumber?: string;
+    fullName?: string;
 }
 
 export interface SearchParams {

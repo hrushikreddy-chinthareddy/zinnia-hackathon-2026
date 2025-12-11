@@ -1,11 +1,10 @@
+import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import {
     DocumentDownloadResponse,
     MetadataSearchResponse,
     SearchRequest as SearchRequestBody,
     SearchDocumentResponse as SearchResponse,
 } from '@zinnia/api-types/types/documents-v3';
-
-import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 
 export type DocumentDownloadV3WithMime = DocumentDownloadResponse & {
     mimeType: string;
@@ -29,6 +28,7 @@ export type SearchRequest = SearchRequestBody & {
         periodQuarters: ('Q1' | 'Q2' | 'Q3' | 'Q4')[];
     }[];
     masterAgentNumber?: string;
+    excludeDocumentTypes?: string[]; // this will go away when v2 doc search is deprecated
 };
 // The v3 request is the same as the v2 request
 export interface TaxDocumentApiRequestInputs {

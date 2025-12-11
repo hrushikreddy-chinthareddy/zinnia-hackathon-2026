@@ -1,12 +1,16 @@
 import { AxiosResponse } from 'axios';
 
+import { createQueryString } from '@deps/helpers/string.helpers';
 import { CallLogResponse } from '@deps/models/case/call-log';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 
 interface CaseCallLogsQuery {
     contract: string;
+    carrier: string;
     limit?: number;
     offset?: number;
 }
@@ -14,20 +18,29 @@ interface CaseCallLogsQuery {
 export const getCaseCallLogs = async (
     query: CaseCallLogsQuery
 ): Promise<{ data: CallLogResponse | null; status: number }> => {
-    const { contract, limit, offset } = query;
-    const queryParams = `?contract=${contract}&limit=${limit}&offset=${offset}`;
+    const { contract, carrier, limit, offset } = query;
+    const queryParams = createQueryString({
+        contract,
+        clientCode: carrier,
+        limit,
+        offset,
+    });
+
+    browserLogInfo('getCaseCallLogs::fetching call logs', {
+        ...query,
+    });
 
     try {
         const { data, status } = await client.get<
             CallLogResponse,
             AxiosResponse
-        >(`${baseAppUrl}/api/callcenter/v1/CallEntry${queryParams}`);
+        >(`${baseAppUrl}/api/callcenter/v1/CallEntry?${queryParams}`);
 
         return { data, status };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getCaseCallLogs::An error occurred while getting case call log results results',
-            error
+            { ...parseErrorInformation(error), input: query }
         );
 
         return { data: null, status: (error as AxiosResponse)?.status || 500 };

@@ -8,6 +8,9 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
+import { getRiderNames } from 'components/illustrations/helpers/get-rider-names';
 
 import {
     IllustrationHandler,
@@ -15,6 +18,7 @@ import {
 } from './illustrationsHandlerAbstractClass';
 import { farmersBlueprintIU0101 } from '../farmers/farmersBlueprintIU0101';
 import {
+    ConversionType,
     CreateIllustrationPayload,
     CreateIllustrationPayloadParsingError,
     createIllustrationPayloadSchema,
@@ -29,7 +33,6 @@ import {
     SubStandardRating,
     UnderwritingClass,
 } from '../illustrationApiSchemas';
-import { riderNamesMap } from '../rider-names-map';
 
 const baseCoverageSchema = t.object(
     // TODO: change to not optional once we understand how to get amount when solve for is face amount
@@ -218,7 +221,7 @@ const farmersEntitiesSchema = t.object(
             t.undefined
         )
     ),
-    t.optionalProperty('preventMec', t.string),
+    t.optionalProperty('preventMec', t.boolean),
     t.optionalProperty('non1035LumpSumAmount', t.union(t.number, t.undefined)),
     t.optionalProperty(
         'scheduleDeathBenefitOption',
@@ -291,7 +294,9 @@ const farmersEntitiesSchema = t.object(
         t.union(t.array(t.string), t.undefined)
     ),
     t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined)),
-    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined))
+    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined)),
+    t.optionalProperty('isConversion', t.union(t.boolean, t.undefined)),
+    t.optionalProperty('isMec', t.union(t.boolean, t.undefined))
 );
 
 export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
@@ -339,7 +344,13 @@ function createIllustrationPayload(
 > {
     const parseResult = farmersEntitiesSchema.parse(answerOutputData);
     if (!parseResult.success) {
-        console.log('Blueprint parseResult: ', parseResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::IU0101::createIllustrationPayload Error parsing input data',
+            {
+                ...parseErrorInformation(parseResult.error),
+                answersData: answerOutputData,
+            }
+        );
         return failure(new OutputDataParsingError());
     }
 
@@ -624,7 +635,7 @@ function createIllustrationPayload(
                     ],
                 },
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -672,7 +683,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -713,7 +724,7 @@ function createIllustrationPayload(
                 }),
                 targetCashValueAmount: values.targetCashValueAmount,
                 doli: 'GPT',
-                preventModifiedEndowment: values.preventMec,
+                preventModifiedEndowmentContract: values.preventMec,
                 dumpInAmount: values.non1035LumpSumAmount,
                 ...(deathBenefitSchedule && {
                     deathBenefitOption: {
@@ -759,12 +770,23 @@ function createIllustrationPayload(
                     loanInterestOption: values.loanInterestOption,
                 },
             }),
+        ...(values.isConversion && {
+            conversion: {
+                conversionType: ConversionType.STANDARD,
+                isSourceMEC: values.isMec,
+            },
+        }),
     };
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
-        console.log('pre-parsed output', output);
-        console.log('parseOutputResult', parseOutputResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::IU0101::createIllustrationPayload Error parsing output',
+            {
+                ...parseErrorInformation(parseOutputResult.error),
+                outputData: output,
+            }
+        );
         return failure(
             new CreateIllustrationPayloadParsingError(parseOutputResult.error)
         );
@@ -827,7 +849,7 @@ function mapIllustrationPayloadToEngineInputData(
 }
 
 // We are not checking the type of the return value right now so type is any
-function getIllustrationDataFromResponse(data: any, formInputs: any) {
+function getIllustrationDataFromResponse(data: any) {
     const fiveYearIndex = 4;
     const tenYearIndex = 9;
     const twentyYearIndex = 19;
@@ -858,6 +880,9 @@ function getIllustrationDataFromResponse(data: any, formInputs: any) {
         mecPremium:
             data?.assumed?.initial?.modifiedEndowmentPremium ||
             DEFAULT_ERROR_STRING,
+        guidelineLevelPremium:
+            data?.assumed?.initial?.guidelineLevelPremium ||
+            DEFAULT_ERROR_STRING,
         ...netSurrenderValue,
     };
 }
@@ -886,8 +911,8 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return mapIllustrationPayloadToEngineInputData(data);
     }
 
-    getIllustrationDataFromResponse(data: any, formInputs: any): any {
-        return getIllustrationDataFromResponse(data, formInputs);
+    getIllustrationDataFromResponse(data: any): any {
+        return getIllustrationDataFromResponse(data);
     }
 
     getBlueprint(): QuestionnaireBlueprint {
@@ -919,42 +944,19 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         return 'api/illustration/v3/indexed-universal-life/new-business';
     }
 
-    public generateTitle(data: any, formInputs: any): string {
+    public generateTitle(data: any): string {
         const assumed = data.assumed;
         const creationDate = new Date().toLocaleDateString();
 
-        const getRidersTextList = () => {
-            const hasRiders = Object.keys(assumed.coverages).length > 1;
-            if (!hasRiders) {
-                return [];
-            }
-
-            const riders = Object.keys(assumed.coverages)
-                .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderNamesMap?.[riderName] ?? riderName);
-
-            return riders;
-        };
-
-        const getDeathBenefits = () => {
-            const deathBenefitsMount =
-                assumed.annualTimeSeriesData[0].deathBenefitsMount;
-
-            if (deathBenefitsMount) {
-                return `Death Benefits ${numberFormatify(deathBenefitsMount)}`;
-            }
-
-            return '';
-        };
+        const riderNames = getRiderNames(data);
 
         return [
             creationDate,
-            `Initial Premium  ${numberFormatify(
-                assumed.initial.minimumPremiumAmount
+            `Initial Modal Premium ${numberFormatify(
+                assumed.initial.totalModalPremium
             )}`,
-            numberFormatify(assumed.initial.totalFaceAmount),
-            getDeathBenefits(),
-            ...getRidersTextList(),
+            `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
+            ...riderNames,
         ]
             .filter((x) => x)
             .join(', ');

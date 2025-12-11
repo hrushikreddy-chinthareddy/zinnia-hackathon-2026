@@ -11,6 +11,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { useSelectIllustrationForApplication } from '@deps/components/illustrations/helpers/hooks/use-select-illustration-for-application';
 import { useIllustrationActions } from '@deps/components/illustrations/helpers/hooks/useIllustrationActions';
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
@@ -23,11 +24,13 @@ import {
     IllustrationStatuses,
 } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
+import StatusBadge from 'components/illustrations/components/case-details/illustration-item/status-badge';
+import { EditSidesheet } from 'components/illustrations/components/details/edit-sidesheet/edit-sidesheet';
+import { IllustrationCalcEngineWarnings as CalcEngineWarnings } from 'components/illustrations/components/details/toolbar/IllustrationCalcEngineWarnings';
 
 import ToolbarButton from './illustration-details-toolbar-button';
 import styles from './illustration-details-toolbar.module.css';
-import StatusBadge from '../../case-details/illustration-item/status-badge';
-import { EditSidesheet } from '../edit-sidesheet/edit-sidesheet';
 
 type IllustrationDetailsToolbarProps = {
     isLoading?: boolean;
@@ -46,16 +49,18 @@ export default function IllustrationDetailsToolbar({
     eAppId,
     planCode,
 }: IllustrationDetailsToolbarProps) {
-    const { t } = useTranslation(TranslationFiles.COMMON, {});
     const [isPdfGenerationErrorVisible, setIsPdfGenerationErrorVisible] =
         useState<boolean>(false);
+
+    const { t } = useTranslation(TranslationFiles.COMMON, {});
     const { isLoadingSelectForApplication, selectedIllustration } =
         useSelectedIllustration();
-    const { product } = selectedIllustration ?? {};
     const { unarchiveIllustrationMutation } = useIllustrationActions();
-
-    const handleSelectForApplication = useSelectIllustrationForApplication();
     const { onNewSubmit } = useSubmit();
+    const handleSelectForApplication = useSelectIllustrationForApplication();
+    const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
+
+    const { product } = selectedIllustration ?? {};
 
     const { data: isPdfReportAvailable, isError } = useQuery({
         queryKey: ['illustrationProcessingStatus', illustrationId],
@@ -79,6 +84,12 @@ export default function IllustrationDetailsToolbar({
     });
 
     const handleDownloadPdf = async () => {
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.getIllustrationPDF
+            );
+        }
         try {
             const response = await fetch(
                 `/api/illustration-pdf/${illustrationId}`,
@@ -111,6 +122,37 @@ export default function IllustrationDetailsToolbar({
         }
     };
 
+    const handleUnarchiveIllustration = () => {
+        if (isLoadingSelectForApplication || !illustrationId || !clientCase.id)
+            return;
+
+        unarchiveIllustrationMutation.mutateAsync({
+            clientCaseId: clientCase.id,
+            illustrationId,
+        });
+
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.unarchiveIllustration
+            );
+        }
+    };
+
+    const handleDuplicate = () => {
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.duplicateIllustration
+            );
+        }
+        onNewSubmit();
+    };
+
+    const handleSelectForApplicationAnalytics = () => {
+        handleSelectForApplication();
+    };
+
     useEffect(() => {
         if (isError) {
             setIsPdfGenerationErrorVisible(true);
@@ -121,19 +163,9 @@ export default function IllustrationDetailsToolbar({
         }
     }, [isError]);
 
-    const handleUnarchiveIllustration = () => {
-        if (isLoadingSelectForApplication || !illustrationId || !clientCase.id)
-            return;
-
-        unarchiveIllustrationMutation.mutateAsync({
-            clientCaseId: clientCase.id,
-            illustrationId,
-        });
-    };
-
     return (
         <>
-            <div className="flex justify-start items-center gap-4 py-6 pl-6 pr-4 border-border-light border-b-2">
+            <div className={styles.toolbarContainer}>
                 {product?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE && (
                     <ToolbarButton
                         disabled={isLoading || !isPdfReportAvailable}
@@ -148,7 +180,7 @@ export default function IllustrationDetailsToolbar({
                 <ToolbarButton
                     icon={IconType.DOCUMENT_DUPLICATE}
                     className={styles.linkButton}
-                    onClick={onNewSubmit}
+                    onClick={handleDuplicate}
                 >
                     {t('clientCase.illustrationDetails.duplicate')}
                 </ToolbarButton>
@@ -194,7 +226,7 @@ export default function IllustrationDetailsToolbar({
                             <Button
                                 mode="primary"
                                 size="small"
-                                onClick={handleSelectForApplication}
+                                onClick={handleSelectForApplicationAnalytics}
                             >
                                 {t(
                                     'clientCase.illustrationDetails.selectForApplication'
@@ -207,6 +239,7 @@ export default function IllustrationDetailsToolbar({
                         </span>
                     )}
                 </div>
+                <CalcEngineWarnings />
             </div>
             {isPdfGenerationErrorVisible && (
                 <div className={styles.bannerWrapper}>

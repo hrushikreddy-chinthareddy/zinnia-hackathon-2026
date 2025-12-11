@@ -1,5 +1,9 @@
 /* eslint-disable import/no-unresolved */
-import { Radio } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    Radio,
+} from '@zinnia/bloom/components';
 import { useContext, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -51,6 +55,10 @@ export const ClaimBeneStatus = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'claimsDay150.beneStatus',
     });
+    const { t: errorsT } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'claimsDay150.errors',
+    });
+
     const [isBeneDeceased, setIsBeneDeceased] = useState<string>('');
 
     const handleContinueFn = async () => {
@@ -68,13 +76,7 @@ export const ClaimBeneStatus = ({
     const validateAddress = () => {
         const errors: FormValidationErrors = {};
         if (!isBeneDeceased) {
-            errors['beneDeceased'] =
-                'Missing contactRole or phone or name or changeType';
-        }
-
-        if (!beneficiary.beneDeceased && isBeneDeceased === BENE_STATUS.YES) {
-            errors['beneDeceased'] =
-                'Missing contactRole or phone or name or changeType';
+            errors['beneDeceased'] = errorsT('beneDeceased') as string;
         }
         setFormErrors(errors);
     };
@@ -124,7 +126,7 @@ export const ClaimBeneStatus = ({
 
     return (
         <WorkflowCard
-            title={t('title')}
+            title={task.taskName || t('title')}
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
@@ -186,6 +188,14 @@ export const ClaimBeneStatus = ({
                             },
                         ]}
                     />
+                    {formErrors?.beneDeceased && (
+                        <div className="mt-4">
+                            <AssistiveText
+                                text={formErrors?.beneDeceased}
+                                variant={AssistiveTextVariant.Error}
+                            />
+                        </div>
+                    )}
                 </div>
 
                 {isBeneDeceased === BENE_STATUS.YES && (

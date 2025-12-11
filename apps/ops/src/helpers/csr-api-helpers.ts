@@ -3,8 +3,14 @@ import { AxiosResponse } from 'axios';
 import { ApiProps } from '@deps/models/case/task';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
-import { browserLogWarn } from '@deps/utils/browser-logging';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogWarn,
+} from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
+import { sortByAndThenBy } from './sort.helpers';
 import { replacePlaceholders } from './value-placement.helpers';
 const baseUrl = baseAppUrl + '/api/';
 
@@ -20,8 +26,9 @@ export function parseJsonValue(value: string) {
             return value;
         }
     }
-
-    // Return non-JSON-like strings as is
+    if (typeof value === 'string' && (value === 'true' || value === 'false')) {
+        return value === 'true';
+    }
     return value;
 }
 
@@ -40,6 +47,9 @@ export const stringifyObjectValue = (v: unknown) => {
                     return acc;
                 }, {})
         );
+    }
+    if (v !== null && typeof v === 'boolean') {
+        return String(v);
     }
     return v;
 };
@@ -66,7 +76,16 @@ export const csrApiHelper = async (
     formData: any,
     strigify = false
 ) => {
-    const { apiUrl, apiMethod, apiPayload, responseData, response } = props;
+    const { apiUrl, apiMethod, apiPayload, responseData, response, sorted } =
+        props;
+    browserLogInfo('csrApiHelper:: fetching data', {
+        apiUrl,
+        apiMethod,
+        apiPayload,
+        responseData,
+        response,
+        strigify,
+    });
 
     if (apiMethod === 'post') {
         try {
@@ -111,6 +130,18 @@ export const csrApiHelper = async (
 
             return filteredApiData;
         } catch (error) {
+            browserLogError(
+                'csrApiHelper::Error occurred while fetching post api data',
+                {
+                    ...parseErrorInformation(error),
+                    apiUrl,
+                    apiMethod,
+                    apiPayload,
+                    responseData,
+                    response,
+                    strigify,
+                }
+            );
             return error;
         }
     }
@@ -129,18 +160,38 @@ export const csrApiHelper = async (
                 ? replacePlaceholders(responseData, data)
                 : data;
 
+            const sortedData = sorted
+                ? sortByAndThenBy(filteredApiData, response?.enum || '')
+                : filteredApiData;
+
             if (response) {
                 const mapDataToKeys: Record<string, any> = {};
                 Object.keys(response).forEach((key) => {
-                    mapDataToKeys[key] = filteredApiData?.map((item: any) => {
-                        const filteredItem = item[(response as any)?.[key]];
-                        return filteredItem ? filteredItem : item;
-                    });
+                    const values =
+                        sortedData?.map((item: any) => {
+                            const filteredItem = item[(response as any)?.[key]];
+                            return filteredItem ? filteredItem : item;
+                        }) || [];
+
+                    mapDataToKeys[key] = values;
                 });
+
                 return mapDataToKeys;
             }
             return filteredApiData;
         } catch (error) {
+            browserLogError(
+                'csrApiHelper:: Error occurred while fetching get api data',
+                {
+                    ...parseErrorInformation(error),
+                    apiUrl,
+                    apiMethod,
+                    apiPayload,
+                    responseData,
+                    response,
+                    strigify,
+                }
+            );
             return error;
         }
     }

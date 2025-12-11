@@ -1,13 +1,3 @@
-import {
-    AdhocSystematicProgram,
-    AmountType,
-    ArrangementType,
-    Frequency,
-    PaymentForm,
-    Policy,
-    Reason,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -51,6 +41,16 @@ import {
     TransactionStep,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import {
+    AdhocSystematicProgram,
+    AmountType,
+    ArrangementType,
+    Frequency,
+    PaymentForm,
+    Policy,
+    Reason,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
@@ -89,7 +89,6 @@ const SideSheetCancelAutopay = ({
     systematicProgramReason,
     isFromWithdrawals = false,
     errorContent,
-    date,
 }: SideSheetCancelAutopayProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'transactions.cancelAutopay',
@@ -188,7 +187,7 @@ const SideSheetCancelAutopay = ({
                 startDate: systematicProgram?.startDate,
                 endDate: effectiveDateFormatted,
                 previousProgramDate: systematicProgram?.previousProgramDate,
-                nextProgramDate: effectiveDateFormatted,
+                nextProgramDate: systematicProgram?.nextProgramDate,
                 ...(systematicProgram?.parties && {
                     parties: systematicProgram.parties,
                 }),
@@ -244,7 +243,7 @@ const SideSheetCancelAutopay = ({
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: TransactionType.SYSTEMATIC_PROGRAM_UPDATE,
                 correlationId: updateBody.correlationId,

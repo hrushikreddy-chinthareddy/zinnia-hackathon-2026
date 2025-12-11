@@ -1,12 +1,6 @@
-import {
-    PartyRole,
-    PartyStatus,
-    PartyType,
-    Party,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
+import { useQuery } from '@tanstack/react-query';
 import { TFunction, useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
 import NavElement, {
     NavElementSize,
@@ -16,6 +10,7 @@ import { PageHeader } from '@deps/components/page-header/page-header';
 import PartyTag from '@deps/components/party/party-tag';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import {
     getHeaderText,
@@ -23,8 +18,17 @@ import {
 } from '@deps/helpers/party-info-helpers';
 import { orderObjectsByString } from '@deps/helpers/sort.helpers';
 import { formatDate } from '@deps/helpers/string.helpers';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkExistingNameChangeEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    PartyRole,
+    PartyStatus,
+    PartyType,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-info-card';
 import { NameCard } from '../people-data-cards/name-card/name-card';
@@ -63,6 +67,34 @@ const InteriorPeoplePageHeaderContainer = ({
             PartyRole.PRIMARYSERVICINGAGENT.toLowerCase()
         );
 
+    const { policy } = useContext(PolicyData);
+
+    const { policyNumber, product } = policy ?? {};
+    const { planCode } = product ?? {};
+
+    const { data: existingNameChangeEligibility } = useQuery({
+        queryKey: [
+            'existingNameChangeEligibility',
+            planCode,
+            policyNumber,
+            selectedPolicyParty?.partyId,
+        ],
+        queryFn: () =>
+            checkExistingNameChangeEligibilityQuery(
+                planCode as string,
+                policyNumber as string,
+                selectedPolicyParty?.partyId as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleExistingNameChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+
     // for header text siblings group one
     // pronouns and edit button
     const getPronouns = (partyType: string | undefined) => {
@@ -89,8 +121,7 @@ const InteriorPeoplePageHeaderContainer = ({
     // for header text siblings group two
     // date of birth
     const getDateOfBirth = (
-        partyType: string | undefined,
-        editable: boolean
+        partyType: string | undefined
     ): JSX.Element | null => {
         if (!partyType || partyType !== PartyType.INDIVIDUAL || isAgent) {
             return null;
@@ -169,7 +200,9 @@ const InteriorPeoplePageHeaderContainer = ({
         <NameCard
             t={t}
             selectedPolicyParty={selectedPolicyParty}
-            editable={editable}
+            editable={
+                existingNameChangeEligibility?.isEligibleExistingNameChange
+            }
             isUserPermissionedToEditCards={isUserPermissionedToEditCards}
         >
             {getHeaderText(selectedPolicyParty)}
@@ -186,12 +219,12 @@ const InteriorPeoplePageHeaderContainer = ({
                 editable={editable}
                 isUserPermissionedToEditCards={isUserPermissionedToEditCards}
             >
-                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+                {getDateOfBirth(selectedPolicyParty?.partyType)}
             </HeaderInfoCard>
         ) : (
             <div className="flex items-start align-baseline">
                 {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
-                {getDateOfBirth(selectedPolicyParty?.partyType, editable)}
+                {getDateOfBirth(selectedPolicyParty?.partyType)}
             </div>
         );
     const belowHeaderTextChildren = partyRoleTags;

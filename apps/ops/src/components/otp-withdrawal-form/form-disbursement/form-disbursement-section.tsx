@@ -1,17 +1,10 @@
-import React, {
-    Dispatch,
-    SetStateAction,
-    createElement,
-    useContext,
-} from 'react';
+import { Dispatch, SetStateAction, createElement, useContext } from 'react';
 
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import {
     DisbursementConfig,
     DisbursementParts,
 } from '@deps/models/case/withdrawal/disbursement-types';
-
-import { SelectedBankContext } from './form-disbursement-parts/pre-populate-banking-details';
 
 export type FormDisbursementSectionProps = {
     onDataChange: Dispatch<SetStateAction<DisbursementParts>>;
@@ -25,7 +18,8 @@ const FormDisbursementSection = ({
     disbursementInformation,
     onDataChange,
 }: FormDisbursementSectionProps) => {
-    const { isBankSelected } = useContext(SelectedBankContext);
+    const { bankDetails } = useContext(FormDataContext);
+
     const formDataContext = useContext(FormDataContext);
     return (
         <div className="my-4 grid w-full grid-cols-3 gap-2">
@@ -43,6 +37,7 @@ const FormDisbursementSection = ({
                         maskOnBlur,
                         disableCopyPaste,
                         validator,
+                        isAddressLine2Required,
                     } = currentField;
                     if (
                         shouldDisplay &&
@@ -55,7 +50,8 @@ const FormDisbursementSection = ({
                         fieldLabel,
                         isBankingField,
                         isFormStateReadOnly:
-                            (!!isBankingField && !!isBankSelected) ||
+                            (!!isBankingField &&
+                                !!bankDetails?.isBankSelected) ||
                             isFormStateReadOnly,
                         disbursementInformation,
                         onDataChange,
@@ -67,6 +63,7 @@ const FormDisbursementSection = ({
                         error: formDataContext.formErrors[fieldName],
                         validator,
                         disableCopyPaste,
+                        isAddressLine2Required,
                     });
                 })}
         </div>

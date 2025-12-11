@@ -1,14 +1,3 @@
-import { capitalize } from '@xd/utils/dist';
-import {
-    Country,
-    IdentificationType,
-    Party,
-    PartyRole,
-    PartyType,
-    Policy,
-    PolicyPartyRoles,
-    PreferredCommunicationType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { TFunction } from 'next-i18next';
@@ -40,6 +29,17 @@ import {
     ZAHARA_API_DATE_FORMAT,
     DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
+import { capitalize } from '@deps/utils/strings';
+import {
+    Country,
+    IdentificationType,
+    Party,
+    PartyRole,
+    PartyType,
+    Policy,
+    PolicyPartyRoles,
+    PreferredCommunicationType,
+} from '@zinnia/api-types/types/sor';
 
 import { newTrustOptions } from '../bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 
@@ -479,30 +479,30 @@ export const buildRoleChangeRequestBody = (
         party = {},
         documents,
         caseId,
+        correlationId,
     } = roleData || {};
 
     const { partyType = PartyType.INDIVIDUAL } = party || {};
-
-    const isRoleCheck = [PolicyRole.OWNER, PolicyRole.JOINTOWNER].includes(
-        role
-    );
     const isRolePartyCheck =
         [PolicyRole.OWNER, PolicyRole.JOINTOWNER].includes(role) &&
         [PartyType.TRUST, PartyType.ORGANIZATION].includes(partyType);
 
     let {
         firstName,
-        lastName,
         fullName,
         middleName,
         prefix,
         suffix,
-        trustType,
-        dateOfBirth,
-        gender = null,
         phones = [],
         emails = [],
         addresses = [],
+    } = party;
+
+    const {
+        lastName,
+        trustType,
+        dateOfBirth,
+        gender = null,
         identifications = [],
         preferredCommunicationType = null,
         trustDate = null,
@@ -576,7 +576,7 @@ export const buildRoleChangeRequestBody = (
     return {
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         caseId,
-        correlationId: uuidV4(),
+        correlationId: correlationId || uuidV4(),
         changeReason: changeReason || null,
         signatures: signatures || [],
         beneDetailsReqInd: false,
@@ -882,6 +882,17 @@ export const getTrustTypeLabel = (
 ): string => {
     const option = newTrustOptions(t).find((option) => option.value === value);
 
+    return option?.label ?? defaultLabel;
+};
+
+export const getEntityTypeLabel = (
+    value: EntityTypeValue,
+    t: TFunction,
+    defaultLabel: string = 'Other'
+): string => {
+    const option = entityTypeOptions(t).find(
+        (option) => option.value === value
+    );
     return option?.label ?? defaultLabel;
 };
 

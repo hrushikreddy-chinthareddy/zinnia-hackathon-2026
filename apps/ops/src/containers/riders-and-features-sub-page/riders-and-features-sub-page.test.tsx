@@ -5,7 +5,6 @@ import {
     fireEvent,
     waitFor,
 } from '@testing-library/react';
-import { PolicyFeature, Rider, Status } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -13,6 +12,7 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { PolicyFeature, Rider, Status } from '@zinnia/api-types/types/sor';
 
 import RidersAndFeaturesSubPage from './riders-and-features-sub-page';
 import { calculaterFilterProps } from './riders-and-features-sub-page.helpers';
@@ -138,7 +138,7 @@ describe('Riders and Features Helpers', () => {
                     { status: Status.PENDING },
                     { status: Status.ACTIVE },
                     { status: Status.ACTIVE },
-                    { riderElected: 'NOT ELECTED' },
+                    { riderElected: 'NOTELECTED' },
                 ] as Rider[],
                 // terminated, active, available, available, not elected
                 features: [

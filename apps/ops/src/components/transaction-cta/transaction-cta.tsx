@@ -87,7 +87,7 @@ const TransactionCta = ({
         segmentAnalyticsTrackEvent<TransactionCancelClickedEvent>(
             SegmentTrackedEventName.TransactionCancelClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 ...trackEventProps,
             }
@@ -101,7 +101,7 @@ const TransactionCta = ({
             segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
                 SegmentTrackedEventName.TransactionContinueClicked,
                 {
-                    session_id: sessionId,
+                    authSessionId: sessionId,
                     userId: partyId,
                     ...trackEventProps,
                 }

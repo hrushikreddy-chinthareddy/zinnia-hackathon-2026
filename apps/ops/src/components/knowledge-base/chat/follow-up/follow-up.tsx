@@ -1,20 +1,15 @@
-import {
-    FollowUpResponse,
-    SourceDocument,
-} from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Loader, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
-import Button from '@deps/components/button/button';
 import ChatResponse from '@deps/components/knowledge-base/chat/chat-response/chat-response';
 import { TranslationFiles } from '@deps/config/translations';
-import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
+import { useScroll } from '@deps/hooks/useScroll';
 import { getFollowupMessages } from '@deps/queries/api/knowledge-base';
-import { ReactComponent as SendButton } from '@deps/styles/elements/icons/knowledge-base/send.svg';
 import {
+    AnswerMode,
     ChatbotMessage,
     FeedbackType,
     KeyboardEvents,
@@ -22,8 +17,11 @@ import {
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './follow-up.module.css';
+import ActionButton from '../action-button/action-button';
+import AnswerModeSelect from '../answer-mode-select/answer-mode-select';
 import ChatQuestion from '../chat-question/chat-question';
 
 type FollowUpProps = {
@@ -34,6 +32,8 @@ type FollowUpProps = {
     sourceDocuments?: SourceDocument[];
     submittedFeedbackType?: FeedbackType | null;
     submittedFeedbackComment?: string | null;
+    selectedClientId: string;
+    commonClientId: string;
 };
 type FollowUpChainMessage = {
     id: string;
@@ -49,11 +49,12 @@ const FollowUp = ({
     sourceDocuments = [],
     submittedFeedbackType = null,
     submittedFeedbackComment = null,
+    selectedClientId,
+    commonClientId,
 }: FollowUpProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
-    const { selectedClientId } = useKnowledgeBaseContext();
     const {
         response: chatbotResponse,
         status,
@@ -61,7 +62,10 @@ const FollowUp = ({
         isStreaming,
         followUpId,
         sendFollowUp,
-    } = useChatStream(selectedClientId);
+        stopStreaming,
+        definitiveAnswerFound,
+        getCommonClientFollowUp,
+    } = useChatStream(selectedClientId, commonClientId);
     const [loading, setLoading] = useState<boolean>(false);
     const [followUpQuestion, setFollowUpQuestion] = useState<string>('');
     const [followUpChain, setFollowUpChain] = useState<FollowUpChainMessage[]>(
@@ -71,35 +75,43 @@ const FollowUp = ({
     const [parentFollowUpId, setParentFollowUpId] = useState<string | null>(
         null
     );
-
-    const endref = useRef<HTMLDivElement | null>(null);
+    const { handleContainerScroll, scrollContainerRef, endref } =
+        useScroll(followUpChain);
     const botMsgIdRef = useRef<string | null>(null);
+    const [answerMode, setAnswerMode] = useState<AnswerMode>(AnswerMode.Short);
+
+    const MAX_FOLLOWUPS_ALLOWED = 5;
 
     useEffect(() => {
-        if (!botMsgIdRef.current) return;
+        const botId = botMsgIdRef.current;
+        if (!botId) return;
+
         setFollowUpChain((prev) => {
             const newChatbotResponse = {
-                id: botMsgIdRef.current,
+                id: botId,
                 role: MessageRole.Bot,
                 content:
                     (chatbotResponse && chatbotResponse.length > 0
                         ? chatbotResponse
                         : status) || '',
                 sourceDocuments: sources || [],
+                ...(definitiveAnswerFound === false && {
+                    definitiveAnswerFound,
+                }),
             };
             return prev.map((m) =>
-                m.chatbot?.id === botMsgIdRef.current
+                m.chatbot?.id === botId
                     ? { ...m, chatbot: newChatbotResponse as ChatbotMessage }
                     : m
             );
         });
-        if (!isStreaming && botMsgIdRef.current) {
-            setTotalFollowUps((prev) => prev + 1);
-            if (followUpId && followUpId?.length > 1) {
+
+        if (!isStreaming && botId) {
+            if (followUpId && followUpId.length > 1) {
                 setParentFollowUpId(followUpId);
                 setFollowUpChain((prev) =>
                     prev.map((m) =>
-                        m.chatbot?.id === botMsgIdRef.current
+                        m.chatbot?.id === botId
                             ? {
                                   ...m,
                                   chatbot: { ...m.chatbot, id: followUpId },
@@ -108,8 +120,18 @@ const FollowUp = ({
                     )
                 );
             }
+            botMsgIdRef.current = null;
+            setTotalFollowUps(followUpChain.length);
         }
-    }, [chatbotResponse, status, sources, isStreaming, followUpId]);
+    }, [
+        chatbotResponse,
+        status,
+        sources,
+        isStreaming,
+        followUpId,
+        definitiveAnswerFound,
+        followUpChain,
+    ]);
 
     const handleFollowUpQuestionSend = async () => {
         if (!followUpQuestion.trim()) return;
@@ -129,6 +151,7 @@ const FollowUp = ({
             await sendFollowUp(
                 questionId,
                 userMessage.content,
+                answerMode,
                 parentFollowUpId
             );
             const botMsgId = uuidv4();
@@ -153,6 +176,45 @@ const FollowUp = ({
         }
     };
 
+    const searchCommonClientFollowUp = async () => {
+        const lastFollowUp = followUpChain[followUpChain.length - 1];
+        if (!lastFollowUp) return;
+        botMsgIdRef.current = lastFollowUp?.chatbot?.id ?? '';
+
+        setFollowUpChain((prev) =>
+            prev.map((msg) => {
+                if (msg.id === lastFollowUp?.id) {
+                    const { chatbot, ...rest } = msg;
+                    return rest;
+                }
+                return msg;
+            })
+        );
+        await getCommonClientFollowUp(
+            botMsgIdRef.current,
+            lastFollowUp?.user?.content,
+            answerMode
+        );
+
+        const chatbotMessage: ChatbotMessage = {
+            id: botMsgIdRef.current ?? '',
+            role: MessageRole.Bot,
+            content: '',
+            sourceDocuments: [],
+        };
+        setFollowUpChain((prev) =>
+            prev.map((msg) =>
+                msg.id === lastFollowUp.id
+                    ? { ...msg, chatbot: chatbotMessage }
+                    : msg
+            )
+        );
+    };
+
+    const handleStopResponse = () => {
+        stopStreaming();
+    };
+
     useEffect(() => {
         const fetchFollowUp = async () => {
             setLoading(true);
@@ -165,35 +227,37 @@ const FollowUp = ({
                         user: UserMessage;
                         chatbot?: ChatbotMessage;
                     }[] = [];
-                    response.followUpChain?.forEach(
-                        (message: FollowUpResponse) => {
-                            const {
-                                followUpId,
-                                followUpQuestion,
-                                followUpAnswer,
-                                sourceDocuments,
-                            } = message;
-                            const userMessage: UserMessage = {
-                                id: followUpId ?? '',
-                                role: MessageRole.User,
-                                content: followUpQuestion ?? '',
-                            };
-                            const chatbotMessage: ChatbotMessage = {
-                                id: followUpId ?? '',
-                                questionId,
-                                role: MessageRole.Bot,
-                                content: followUpAnswer ?? '',
-                                sourceDocuments: sourceDocuments,
-                                feedbackType: null,
-                                feedbackComment: null,
-                            };
-                            followUpMessages.push({
-                                id: followUpId ?? '',
-                                user: userMessage,
-                                chatbot: chatbotMessage,
-                            });
-                        }
-                    );
+                    response.followUpChain?.forEach((message) => {
+                        const {
+                            followUpId,
+                            followUpQuestion,
+                            followUpAnswer,
+                            sourceDocuments,
+                            definitiveAnswerFound,
+                        } = message;
+                        const userMessage: UserMessage = {
+                            id: followUpId ?? '',
+                            role: MessageRole.User,
+                            content: followUpQuestion ?? '',
+                        };
+                        const chatbotMessage: ChatbotMessage = {
+                            id: followUpId ?? '',
+                            questionId,
+                            role: MessageRole.Bot,
+                            content: followUpAnswer ?? '',
+                            sourceDocuments:
+                                definitiveAnswerFound === false
+                                    ? []
+                                    : sourceDocuments,
+                            feedbackType: null,
+                            feedbackComment: null,
+                        };
+                        followUpMessages.push({
+                            id: followUpId ?? '',
+                            user: userMessage,
+                            chatbot: chatbotMessage,
+                        });
+                    });
                     setFollowUpChain(followUpMessages);
                     setParentFollowUpId(
                         response.followUpChain?.[
@@ -210,13 +274,9 @@ const FollowUp = ({
         fetchFollowUp();
     }, [questionId]);
 
-    useEffect(() => {
-        endref.current?.scrollIntoView({ behavior: 'smooth' });
-    }, [followUpChain]);
-
     return (
         <div
-            className="w-full pt-4 flex flex-col gap-4 h-full"
+            className="w-full p-4 flex flex-col gap-4 h-full"
             data-testid="followup-modal"
         >
             {loading ? (
@@ -225,7 +285,11 @@ const FollowUp = ({
                 </div>
             ) : (
                 <>
-                    <div className={`h-[720px] overflow-y-auto`}>
+                    <div
+                        ref={scrollContainerRef}
+                        onScroll={handleContainerScroll}
+                        className={`h-[720px] overflow-y-auto`}
+                    >
                         <ChatResponse
                             email={email}
                             questionId={questionId}
@@ -235,10 +299,11 @@ const FollowUp = ({
                             submittedFeedbackType={submittedFeedbackType}
                             submittedFeedbackComment={submittedFeedbackComment}
                             showFeedbackControls={false}
+                            isStreaming={false}
                         />
                         {followUpChain && (
                             <div>
-                                {followUpChain?.map((message) => {
+                                {followUpChain?.map((message, index) => {
                                     const { id, user, chatbot } = message;
                                     return (
                                         <div
@@ -262,6 +327,19 @@ const FollowUp = ({
                                                         null
                                                     }
                                                     showFeedbackControls={false}
+                                                    isFollowUp={true}
+                                                    searchCommonClientFollowUp={
+                                                        searchCommonClientFollowUp
+                                                    }
+                                                    definitiveAnswerFound={
+                                                        chatbot.definitiveAnswerFound
+                                                    }
+                                                    isStreaming={
+                                                        index !==
+                                                        followUpChain.length - 1
+                                                            ? false
+                                                            : isStreaming
+                                                    }
                                                 />
                                             )}
                                         </div>
@@ -273,40 +351,53 @@ const FollowUp = ({
                     </div>
 
                     <div className={`${styles.textboxContainer}`}>
-                        <textarea
-                            className={`!outline-none !ring-0 ${styles.textarea}`}
-                            value={followUpQuestion}
-                            onChange={(e) =>
-                                setFollowUpQuestion(e.target.value)
-                            }
-                            onKeyDown={(e) => {
-                                if (e.key === KeyboardEvents.Enter) {
-                                    handleFollowUpQuestionSend();
+                        <div className="w-full flex flex-col">
+                            <textarea
+                                className={`!outline-none !ring-0 ${styles.textarea}`}
+                                value={followUpQuestion}
+                                onChange={(e) =>
+                                    setFollowUpQuestion(e.target.value)
                                 }
-                            }}
-                            disabled={isStreaming || totalFollowUps >= 5}
-                            placeholder={t('chat.followUpPlaceholder') || ''}
-                        ></textarea>
+                                rows={2}
+                                onKeyDown={(e) => {
+                                    if (e.key === KeyboardEvents.Enter) {
+                                        handleFollowUpQuestionSend();
+                                    }
+                                }}
+                                disabled={
+                                    isStreaming ||
+                                    totalFollowUps >= MAX_FOLLOWUPS_ALLOWED
+                                }
+                                placeholder={
+                                    t('chat.followUpPlaceholder') || ''
+                                }
+                            ></textarea>
+                            <AnswerModeSelect
+                                isStreaming={isStreaming}
+                                modeSelected={answerMode}
+                                onModeSelectedChange={setAnswerMode}
+                            />
+                        </div>
                         <Tooltip
                             placement={TooltipPlacement.CenterLeft}
                             triggerClassName="!w-auto"
                             tooltipClassName="!w-auto !p-0 !px-2 z-50"
                             trigger={
-                                <Button
-                                    aria-label="send-followup"
-                                    className="!bg-transparent !border-none !pl-2 !p-0"
-                                    onClick={handleFollowUpQuestionSend}
-                                >
-                                    <SendButton
-                                        className={`!w-[30px] transition-all duration-300 ${
-                                            isStreaming ||
-                                            totalFollowUps >= 5 ||
-                                            !followUpQuestion.trim()
-                                                ? 'text-gray-400'
-                                                : 'text-gray-700'
-                                        }`}
-                                    />
-                                </Button>
+                                <ActionButton
+                                    ariaLabel="send-followup"
+                                    message={followUpQuestion}
+                                    disabled={
+                                        totalFollowUps >=
+                                            MAX_FOLLOWUPS_ALLOWED ||
+                                        (!isStreaming &&
+                                            !followUpQuestion.trim())
+                                    }
+                                    isStreaming={isStreaming}
+                                    handleMessageSend={
+                                        handleFollowUpQuestionSend
+                                    }
+                                    handleStopResponse={handleStopResponse}
+                                />
                             }
                         >
                             {t('chat.send')}

@@ -1,0 +1,164 @@
+.contentMainTable {
+    display: grid;
+    min-width: 100%;
+
+    row-gap: var(--measure-dimension-gap-lg, 16px);
+
+    --results-table-border: var(--measure-dimension-stroke-xs, 1px) solid
+        var(--color-base-border-border-subtle, #ccc);
+}
+
+.contentSubtitle {
+    margin-bottom: var(--measure-dimension-gap-lg, 16px);
+}
+
+.contentSection,
+.contentSubtable,
+.contentTableSection,
+.contentTableRow {
+    display: grid;
+    grid-template-columns: subgrid;
+    grid-auto-flow: column;
+
+    align-items: stretch;
+
+    grid-column: 1 / -1;
+}
+
+.contentSection {
+    row-gap: var(--measure-dimension-gap-lg, 16px);
+}
+
+.contentSection > p,
+.contentSection > h4 {
+    grid-column: 1 / -1;
+}
+
+.contentSubtable {
+    border-radius: var(--measure-dimension-radius-md, 8px);
+    border: var(--results-table-border);
+}
+
+.contentTableSection {
+    border-top: var(--results-table-border);
+}
+
+.contentTableSection:first-child {
+    border-top: unset;
+}
+
+.contentTableSection > .contentTableRow,
+.contentTableSectionHeading {
+    border-bottom: var(--results-table-border);
+}
+
+.contentTableSection > .contentTableRow:last-child {
+    border-bottom: unset;
+}
+
+.contentTableSectionHeading {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+
+    grid-column: 1 / -1;
+
+    padding: var(--measure-dimension-padding-lg, 8px)
+        var(--measure-dimension-padding-3xl, 24px);
+    column-gap: var(--measure-dimension-gap-sm, 4px);
+
+    background-color: var(--color-base-surface-surface-tertiary);
+}
+
+.contentTableRowHeader {
+    padding: var(--measure-dimension-padding-lg, 8px)
+        var(--measure-dimension-padding-3xl, 24px);
+
+    background-color: var(--color-base-surface-surface-secondary);
+}
+
+.contentTableRowHeader,
+.productHeaderTitle {
+    border-right: var(--results-table-border);
+}
+
+.contentTableRowHeader:last-child {
+    border-right: unset;
+}
+
+.contentDataCell,
+.notAvailableReasonCell {
+    display: flex;
+    align-items: center;
+
+    padding: var(--measure-dimension-padding-lg, 8px)
+        var(--measure-dimension-padding-3xl, 24px);
+}
+
+.fullDataCell {
+    grid-column: 2 / -1;
+}
+
+.notAvailableText {
+    color: var(--color-base-text-text-secondary);
+}
+
+.productHeaderTitle,
+.productInfoCell {
+    padding: var(--measure-dimension-padding-3xl, 24px);
+}
+
+.productInfoCellAvatar {
+    grid-row: 1 / -1;
+}
+
+.productHeaderTitle {
+    align-self: stretch;
+
+    background-color: var(--color-base-surface-surface-secondary);
+}
+
+.productInfoCell {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: min-content 1fr;
+    column-gap: var(--measure-dimension-gap-lg, 16px);
+}
+
+.productInfoCellCarrier {
+    color: var(--color-base-text-text-secondary);
+}
+
+.premiumFreeRidersHeading {
+    background-color: var(--color-base-surface-surface-secondary);
+}
+
+.riderRowHeader {
+    display: grid;
+    grid-template-columns: min-content 1fr;
+
+    gap: var(--measure-dimension-gap-sm, 4px)
+        var(--measure-dimension-gap-lg, 16px);
+}
+
+.riderRowHeaderCheckbox {
+    grid-row: 1 / span 2;
+}
+
+.riderRowHeaderInput {
+    width: 124px;
+}
+
+.riderSubtotalCell {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr;
+}
+
+.riderSubtotalCellText {
+    grid-row-start: 2;
+}
+
+.premiumFreeRiderContent {
+    grid-column: 2 / -1;
+}

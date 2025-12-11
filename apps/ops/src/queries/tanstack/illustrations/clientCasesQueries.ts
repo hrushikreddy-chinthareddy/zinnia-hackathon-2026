@@ -1,11 +1,6 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import {
-    getIllustrationAsyncCalculationStatus,
-    getNewIndexedUniversalLifeIllustration,
-    getNewTermLifeIllustration,
-} from '@deps/queries/api/client/documents/v3/illustrations';
-import {
     archiveIllustration,
     createClientCase,
     patchClientCase,
@@ -14,6 +9,11 @@ import {
     unarchiveIllustration,
 } from '@deps/queries/api/v1/client-cases';
 import {
+    getIllustrationAsyncCalculationStatus,
+    getNewIndexedUniversalLifeIllustration,
+    getNewTermLifeIllustration,
+} from '@deps/queries/api/v3/illustrations';
+import {
     ClientCaseSearchInputs,
     IllustraionsClientCaseSearchResponse,
     IllustrationProductType,
@@ -21,19 +21,6 @@ import {
     IllustrationType,
 } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
-
-function parseFilterString(filter: string): Record<string, string> {
-    const conditions = filter.split('&&').map((c) => c.trim());
-
-    const result: Record<string, string> = {};
-    for (const cond of conditions) {
-        const [key, val] = cond.split('==').map((s) => s.trim());
-        if (key && val) {
-            result[key] = val.toLowerCase();
-        }
-    }
-    return result;
-}
 
 export function filterClientCaseDataFromQueryString(
     data: IllustrationsClientCase[],
@@ -123,7 +110,12 @@ export const getIllustrationQueryOptions = (
     illustrationType: IllustrationType = 'NEW_BUSINESS'
 ) => {
     return queryOptions({
-        queryKey: ['illustrationData', illustrationId],
+        queryKey: [
+            'illustrationData',
+            illustrationId,
+            illustrationType,
+            productType,
+        ],
         queryFn: async () => {
             if (illustrationType === 'INFORCE') {
                 throw Error('Not implemented');

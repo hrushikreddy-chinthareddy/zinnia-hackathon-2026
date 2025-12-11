@@ -1,17 +1,17 @@
-import { AllocationOption, PaymentForm } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { LoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { LoanRepaymentOneTimeRequestQuery } from '@deps/queries/api/bpm';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { AllocationOption, PaymentForm } from '@zinnia/api-types/types/sor';
 
 export const buildLoanPaymentRequestBody = (
     loanPayment: LoanPayment
 ): LoanRepaymentOneTimeRequestQuery => {
     return {
         caseId: loanPayment.caseId || '',
-        correlationId: uuidV4(),
+        correlationId: loanPayment.correlationId || uuidV4(),
         effectiveDate: dayjs(loanPayment.effectiveDate, 'MMDDYYYY').format(
             ZAHARA_API_DATE_FORMAT
         ),

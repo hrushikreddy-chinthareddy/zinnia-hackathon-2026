@@ -45,6 +45,7 @@ import {
     AccountType,
     FormDisbursement,
     RestrictionOption,
+    FormValidationErrors,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -54,8 +55,8 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { commonOftFormValidation } from '../oft-forms/oft-form-helpers';
 import { createValidator } from '../utils/helper-utils';
+import { validateSignESign } from './utils/form-validator.helpers';
 
 export enum FormSubtype {
     FullWithdrawal = 'Full',
@@ -85,6 +86,57 @@ export default function getFlicConfig(
     qualType: string = '',
     isLC: boolean = true
 ) {
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: true,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
     const identifySelectedFormProgramOption = (
         formProgram: FormProgram
     ): { selectedOption: string | null; amount: string | null } => {
@@ -262,29 +314,7 @@ export default function getFlicConfig(
                 );
             },
         },
-        {
-            key: `sig-val-beneficiary`,
-            fields: [
-                {
-                    component: SignatureFields.SignatureType,
-                    key: 'beneficiary-type',
-                },
-                {
-                    component: SignatureFields.SignaturePresent,
-                    key: 'beneficiary-present',
-                },
-                {
-                    component: SignatureFields.SignatureDesignation,
-                    key: 'beneficiary-designation',
-                },
-                {
-                    component: SignatureFields.SignatureDate,
-                    key: 'beneficiary-date',
-                },
-            ],
-            signatureType:
-                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-        },
+
         {
             key: `sig-val-spouse`,
             bonusField: SignatureBonusFields.SpousalConsent,
@@ -828,8 +858,7 @@ export default function getFlicConfig(
         disbursementOptions,
         formPartyConfigs,
         formSubtypeOptions,
-        formValidation: (values: Partial<FormParts> = {}) =>
-            commonOftFormValidation(t, values),
+        formValidation,
         fundWithdrawnMethodOptions,
         identifySelectedFormProgramOption,
         irsSignatureConfig,

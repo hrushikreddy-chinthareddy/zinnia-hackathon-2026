@@ -30,6 +30,7 @@ import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 
@@ -45,7 +46,6 @@ function TaskQueueDrawer({
     const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
     const [date, setDate] = useState(tomorrow);
     const [startLoader, setStartLoader] = useState(false);
-    const [timer] = useState(performance.now());
     const [pendingReason, setPendingReason] = useState('');
     const { t } = useTranslation(TranslationFiles.COMMON, { keyPrefix: '' });
     const [notes, setNotes] = useState('');
@@ -108,7 +108,7 @@ function TaskQueueDrawer({
     };
 
     const handleClose = () => {
-        router.back();
+        sideSheet.onClose();
     };
     const updateTaskStatus = async () => {
         if (isSupportTicketRaised && !notes) {
@@ -120,9 +120,12 @@ function TaskQueueDrawer({
             return;
         }
         if (!taskId) {
-            browserLogError('task-queue:handleStartTask::Missing taskId', {
-                taskStatus: taskStatus,
-            });
+            browserLogError(
+                'task-queue-drawer:updateTaskStatus::Missing taskId',
+                {
+                    taskStatus: taskStatus,
+                }
+            );
             router.push(
                 `/create-case/error?errorCode=${ERROR_CODES.DATA_ENTRY_START_TASK_ERROR}`
             );
@@ -134,7 +137,7 @@ function TaskQueueDrawer({
             setStartLoader(true);
             if (!taskData) {
                 browserLogError(
-                    'task-queue:handleStartTask::Error retrieving task data',
+                    'task-queue-drawer:updateTaskStatus::Error retrieving task data',
                     {
                         taskId: taskId,
                         taskStatus: taskStatus,
@@ -151,7 +154,7 @@ function TaskQueueDrawer({
 
             const body = {
                 ...taskData,
-                status: TaskStatus.Pending,
+                status: TaskStatus.Scheduled,
                 source: TaskSource.ZinniaTaskManagement,
                 scheduledReason: pendingReason,
                 scheduledDate: formattedDate,
@@ -164,8 +167,7 @@ function TaskQueueDrawer({
             const response = await updateTask(
                 taskData.caseId,
                 taskData.id,
-                body,
-                timer
+                body
             );
 
             if (response) {
@@ -182,10 +184,16 @@ function TaskQueueDrawer({
                 handleClose();
                 getTasks && getTasks();
             } else {
-                throw new Error('Failed to update task status.');
+                throw new Error('Failed to update task status to Pending');
             }
         } catch (error) {
-            console.log(error);
+            browserLogError(
+                'task-queue-drawer:updateTaskStatus::An error occurred updating task to pending',
+                {
+                    ...parseErrorInformation(error),
+                    function: 'task-queue-drawer.updateTaskStatus',
+                }
+            );
         } finally {
             setStartLoader(false);
         }

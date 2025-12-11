@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -24,6 +23,7 @@ import {
     TransactionSuccessfulEvent,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { buildLoanPaymentRequestBody } from '../loan-payment.helpers';
 
@@ -62,7 +62,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: TransactionType.LOAN_REPAYMENT_ONE_TIME,
                 correlationId: paymentBody.correlationId,

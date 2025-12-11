@@ -1,18 +1,18 @@
-import { generateNewColor } from '@zinnia/utils';
 import clsx from 'clsx';
 import { SeriesOptionsType } from 'highcharts';
 import { useContext, useMemo } from 'react';
 
 import { StackedColumnChart } from '@deps/components/dashboard/charts/bar-charts/stacked-column-chart';
 import { PieChart } from '@deps/components/dashboard/charts/pie-charts/pie-chart';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { Legend } from '@deps/components/dashboard/legend/legend';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { generateNewColor } from '@deps/utils/colors';
 
 import { ActiveAgingContext } from '../../context/active-aging-context';
 import { generateActiveAgingCategories } from '../../utils';
@@ -65,50 +65,30 @@ export const ActiveAgingChart = () => {
                     <ActiveAgingFilters />
 
                     <BlurOverlayLoader loading={activeAgingDataFetching}>
-                        {activeAgingDataError ? (
-                            <div className="grid place-content-center h-full w-full min-h-[400px]">
-                                <Typography
-                                    variant={TypographyVariant.BodyBold}
-                                    className="mt-4 flex flex-row gap-2"
-                                >
-                                    <ChartBarsIcon
-                                        height={'24px'}
-                                        width={'24px'}
+                        <>
+                            {activeAgingDataError ? (
+                                <ErrorMessage />
+                            ) : chartSeries?.length === 0 ? (
+                                <NoDataMessage />
+                            ) : (
+                                <>
+                                    <StackedColumnChart
+                                        series={
+                                            chartSeries as SeriesOptionsType[]
+                                        }
+                                        categories={generateActiveAgingCategories(
+                                            timeframe
+                                        )}
+                                        colors={colors}
+                                        yAxisTitle="Case Volume"
                                     />
-                                    {
-                                        'Something went wrong fetching insights, please try again by refreshing the page'
-                                    }
-                                </Typography>
-                            </div>
-                        ) : chartSeries?.length === 0 ? (
-                            <div className="grid place-content-center h-full w-full min-h-[400px]">
-                                <Typography
-                                    variant={TypographyVariant.BodyBold}
-                                    className="mt-4 flex flex-row gap-2"
-                                >
-                                    <ChartBarsIcon
-                                        height={'24px'}
-                                        width={'24px'}
+                                    <Legend
+                                        items={legendItemsNew}
+                                        title="Duration of open cases"
                                     />
-                                    {'There is no data for this selection'}
-                                </Typography>
-                            </div>
-                        ) : (
-                            <>
-                                <StackedColumnChart
-                                    series={chartSeries as SeriesOptionsType[]}
-                                    categories={generateActiveAgingCategories(
-                                        timeframe
-                                    )}
-                                    colors={colors}
-                                    yAxisTitle="Case Volume"
-                                />
-                                <Legend
-                                    items={legendItemsNew}
-                                    title="Duration of open cases"
-                                />
-                            </>
-                        )}
+                                </>
+                            )}
+                        </>
                     </BlurOverlayLoader>
                 </CardContainer>
             </div>

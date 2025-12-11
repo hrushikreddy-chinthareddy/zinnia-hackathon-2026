@@ -1,9 +1,13 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 
 import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
 import { createNewChatSession } from '@deps/queries/api/knowledge-base';
-import { BOT_ERROR_MESSAGE_ID, MessageRole } from '@deps/types/knowledge-base';
+import {
+    AnswerMode,
+    BOT_ERROR_MESSAGE_ID,
+    MessageRole,
+} from '@deps/types/knowledge-base';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import ChatInput from './chat-input';
 
@@ -63,6 +67,8 @@ describe('ChatInput', () => {
             startNewChatSession: jest.fn(),
             viewChatHistory: jest.fn(),
             currentMessages: [],
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
         (useChatStream as jest.Mock).mockReturnValue({
@@ -74,7 +80,6 @@ describe('ChatInput', () => {
             responseId: null,
             sendMessage: mockSendMessage,
             stopStreaming: mockStopStreaming,
-            isStreamingRef: { current: false },
         });
     });
 
@@ -82,7 +87,9 @@ describe('ChatInput', () => {
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={mockSendMessage}
+                stopStreaming={mockStopStreaming}
+                isStreaming={false}
             />
         );
         expect(getByRole('textbox')).toBeInTheDocument();
@@ -95,7 +102,9 @@ describe('ChatInput', () => {
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={mockSendMessage}
+                stopStreaming={mockStopStreaming}
+                isStreaming={false}
             />
         );
         fireEvent.change(getByRole('textbox'), {
@@ -112,7 +121,9 @@ describe('ChatInput', () => {
             expect(mockSetSessionId).toHaveBeenCalledWith('1234567890');
             expect(mockSendMessage).toHaveBeenCalledWith(
                 '1234567890',
-                mockMessage
+                mockMessage,
+                expect.any(String),
+                AnswerMode.Short
             );
         });
     });
@@ -126,12 +137,16 @@ describe('ChatInput', () => {
             currentMessages: [],
             chatHistoryReloadTrigger: 0,
             setChatHistoryReloadTrigger: mockSetChatHistoryReloadTrigger,
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={mockSendMessage}
+                stopStreaming={mockStopStreaming}
+                isStreaming={false}
             />
         );
         fireEvent.change(getByRole('textbox'), {
@@ -143,7 +158,9 @@ describe('ChatInput', () => {
             expect(createNewChatSession).not.toHaveBeenCalled();
             expect(mockSendMessage).toHaveBeenCalledWith(
                 'existing-session',
-                mockMessage
+                mockMessage,
+                expect.any(String),
+                AnswerMode.Short
             );
         });
     });
@@ -154,7 +171,9 @@ describe('ChatInput', () => {
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={mockSendMessage}
+                stopStreaming={mockStopStreaming}
+                isStreaming={false}
             />
         );
 
@@ -191,13 +210,14 @@ describe('ChatInput', () => {
             responseId: null,
             sendMessage: jest.fn(),
             stopStreaming: mockStopStreaming,
-            isStreamingRef: { current: true },
         });
 
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={jest.fn()}
+                stopStreaming={mockStopStreaming}
+                isStreaming
             />
         );
         const stopButton = getByRole('button', { name: /stop-button/i });
@@ -215,12 +235,16 @@ describe('ChatInput', () => {
             currentMessages: [],
             chatHistoryReloadTrigger: 0,
             setChatHistoryReloadTrigger: mockSetChatHistoryReloadTrigger,
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={mockSendMessage}
+                stopStreaming={mockStopStreaming}
+                isStreaming={false}
             />
         );
         fireEvent.change(getByRole('textbox'), {
@@ -235,7 +259,9 @@ describe('ChatInput', () => {
         await waitFor(() => {
             expect(mockSendMessage).toHaveBeenCalledWith(
                 'existing-session',
-                mockMessage
+                mockMessage,
+                expect.any(String),
+                AnswerMode.Short
             );
         });
     });
@@ -244,7 +270,6 @@ describe('ChatInput', () => {
         const mockErrorMsg = 'chat.errorMsg';
         const mockSetCurrentMessagesLocal = jest.fn();
 
-        // Set initial context with a bot error message
         mockUseKnowledgeBaseContext.mockReturnValue({
             sessionId: '1234567890',
             setSessionId: mockSetSessionId,
@@ -264,34 +289,35 @@ describe('ChatInput', () => {
             ],
             chatHistoryReloadTrigger: 0,
             setChatHistoryReloadTrigger: jest.fn(),
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
-        // Render the component
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={mockSendMessage}
+                stopStreaming={mockStopStreaming}
+                isStreaming={false}
             />
         );
 
         const input = getByRole('textbox');
         const retryButton = getByRole('button', { name: /retry-button/i });
 
-        // Simulate typing message (this sets lastMessage.current inside handleMessageSend)
         fireEvent.change(input, { target: { value: mockMessage } });
         fireEvent.click(getByRole('button', { name: /send-button/i }));
 
-        // click retry
         fireEvent.click(retryButton);
 
         await waitFor(() => {
-            // lastMessage.current should be resent
             expect(mockSendMessage).toHaveBeenCalledWith(
                 '1234567890',
-                mockMessage
+                mockMessage,
+                expect.any(String),
+                AnswerMode.Short
             );
 
-            // The current messages should have been sliced before retry
             expect(mockSetCurrentMessagesLocal).toHaveBeenCalled();
         });
     });
@@ -303,7 +329,9 @@ describe('ChatInput', () => {
         const { getByRole } = render(
             <ChatInput
                 opsUserData={mockOpsUserData}
-                setIsCompleted={jest.fn()}
+                sendMessage={mockSendMessage}
+                stopStreaming={mockStopStreaming}
+                isStreaming={false}
             />
         );
         fireEvent.change(getByRole('textbox'), {

@@ -1,6 +1,5 @@
-import { Policy, WithdrawalValues } from '@zinnia/api-types/types/sor';
-
 import { DataDefinition } from '@deps/types/data';
+import { Policy, WithdrawalValues } from '@zinnia/api-types/types/sor';
 
 export type WithdrawalValuesDto = WithdrawalValues;
 

@@ -1,0 +1,470 @@
+{
+    "formId": "9903d40d-6347-4e16-920d-c6662ba06621",
+    "process": "Policy Update",
+    "taskType": "AGENT_CHANGE_DETAIL",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Manage Agents",
+                "tabTitle": "Start",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "details": {
+                            "type": "object",
+                            "title": "Document Details",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "signatures": {
+                            "type": "array",
+                            "minItems": 1,
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "signType": {
+                                        "type": ["string", "null"]
+                                    },
+                                    "signDesignation": {
+                                        "type": ["string", "null"]
+                                    },
+                                    "isSignedPresent": {
+                                        "type": "boolean",
+                                        "enum": [true, false],
+                                        "title": "Does the associated form include valid and legible signatures?",
+                                        "default": false
+                                    }
+                                },
+                                "dependencies": {
+                                    "isSignedPresent": {
+                                        "oneOf": [
+                                            {
+                                                "properties": {
+                                                    "isSignedPresent": {
+                                                        "const": true
+                                                    },
+                                                    "signDate": {
+                                                        "type": "string",
+                                                        "title": "Signature dated",
+                                                        "format": "date"
+                                                    }
+                                                },
+                                                "required": ["signDate"]
+                                            },
+                                            {
+                                                "properties": {
+                                                    "isSignedPresent": {
+                                                        "const": false
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                "required": ["isSignedPresent"]
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": [
+                                "The paper application is complete.",
+                                "The paper application is incomplete."
+                            ],
+                            "title": "Is the paper application form complete?",
+                            "default": true
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": true
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "const": false
+                                        },
+                                        "declineReason": {
+                                            "type": "array",
+                                            "title": "What is the issue with the form?",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "exceptionSubRefs"
+                                                ]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "required": ["issueResolved", "signatures"]
+                },
+                "uiSchema": {
+                    "ui:hideError": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "ui:order": [
+                        "details",
+                        "signatures",
+                        "issueResolved",
+                        "declineReason"
+                    ],
+                    "details": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false,
+                                "canAdd": false
+                            },
+                            "ui:dataPath": ["documents"]
+                        },
+                        "ui:dataPath": ["details"]
+                    },
+                    "signatures": {
+                        "ui:dataPath": ["signatures"],
+                        "ui:canAdd": false,
+                        "ui:options": {
+                            "addable": false,
+                            "canAdd": false,
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "nobackground": true,
+                                "label": false
+                            },
+                            "signDate": {
+                                "ui:options": {
+                                    "ui:hideError": true
+                                }
+                            },
+                            "signDesignation": {
+                                "ui:widget": "hidden"
+                            },
+                            "signType": {
+                                "ui:widget": "hidden"
+                            },
+                            "isSignedPresent": {
+                                "ui:widget": "radio",
+                                "ui:options": {
+                                    "label": true
+                                }
+                            }
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
+                    }
+                }
+            },
+            {
+                "title": "Agent Details",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "partyUpdates": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "action": {
+                                        "type": "string",
+                                        "title": "Action",
+                                        "enum": [
+                                            "ADD",
+                                            "UPDATE",
+                                            "DELETE",
+                                            "NONE"
+                                        ]
+                                    },
+                                    "partyRole": {
+                                        "type": "string",
+                                        "title": "Agent Type",
+                                        "enum": [
+                                            "PRIMARYWRITINGAGENT",
+                                            "PRIMARYSERVICINGAGENT"
+                                        ]
+                                    },
+                                    "party": {
+                                        "type": "object",
+                                        "properties": {
+                                            "partyPercentage": {
+                                                "type": "number",
+                                                "title": "Allocation Percentage",
+                                                "minimum": 0,
+                                                "maximum": 100
+                                            },
+                                            "agentExternalId": {
+                                                "type": "string",
+                                                "title": "External ID",
+                                                "minLength": 1
+                                            }
+                                        },
+                                        "dependencies": {
+                                            "if": {
+                                                "properties": {
+                                                    "action": {
+                                                        "enum": [
+                                                            "UPDATE",
+                                                            "DELETE"
+                                                        ]
+                                                    }
+                                                }
+                                            },
+                                            "then": {
+                                                "properties": {
+                                                    "agentName": {
+                                                        "type": "string",
+                                                        "title": "Agent Name"
+                                                    }
+                                                },
+                                                "required": ["agentName"]
+                                            }
+                                        },
+                                        "required": [
+                                            "partyPercentage",
+                                            "agentExternalId"
+                                        ]
+                                    }
+                                },
+                                "required": ["party", "partyRole"]
+                            }
+                        }
+                    },
+                    "required": ["partyUpdates"]
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "partyUpdates": {
+                        "ui:widget": "AgentTransactionAccordion",
+                        "ui:dataPath": ["partyUpdates"],
+                        "ui:hideError": true,
+                        "ui:options": {
+                            "label": false,
+                            "addable": true,
+                            "defaultItemLabel": "New Agent",
+                            "showDeleteBtn": true,
+                            "showAddBtn": true,
+                            "tabTitle": "Agent Details"
+                        },
+                        "items": {
+                            "ui:options": {
+                                "label": true,
+                                "title": "",
+                                "nobackground": true,
+                                "removable": true
+                            },
+                            "action": {
+                                "ui:widget": "hidden",
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": ["Add", "Update", "Delete"]
+                                }
+                            },
+                            "partyRole": {
+                                "ui:widget": "select",
+                                "ui:options": {
+                                    "enumNames": [
+                                        "Writing Agent",
+                                        "Servicing Agent"
+                                    ]
+                                }
+                            },
+                            "party": {
+                                "ui:order": [
+                                    "agentName",
+                                    "agentExternalId",
+                                    "agentType",
+                                    "partyPercentage"
+                                ],
+                                "ui:options": {
+                                    "label": false
+                                },
+                                "agentName": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "agentExternalId": {
+                                    "ui:widget": "text",
+                                    "ui:hideError": true
+                                },
+                                "partyPercentage": {
+                                    "ui:widget": "AgentPercentageWidget"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Summary",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "summary": {
+                            "type": "string"
+                        },
+                        "validationUrl": {
+                            "type": "string",
+                            "default": "/api/bpm/v1/policies/{{customData.planCode}}/{{customData.policyNumber}}/multi-agent/validation"
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:hideFooter": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "summary": {
+                        "ui:options": {
+                            "label": false,
+                            "dataKey": "partyUpdates",
+                            "templateType": "summaryCard",
+                            "ObjectFieldTemplate": "TransactionSummaryTemplate",
+                            "sections": [
+                                {
+                                    "label": "",
+                                    "fields": [
+                                        {
+                                            "key": "agentExternalId",
+                                            "label": "External ID"
+                                        },
+                                        {
+                                            "key": "agentType",
+                                            "label": "Agent type"
+                                        },
+                                        {
+                                            "key": "allocation",
+                                            "label": "Allocation"
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "validationUrl": {
+                        "ui:widget": "hidden"
+                    }
+                }
+            }
+        ]
+    }
+}

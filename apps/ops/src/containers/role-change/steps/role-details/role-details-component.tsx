@@ -1,4 +1,3 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -41,8 +40,9 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import ContactDetailsComponent from './contact-details-component';
 import RoleIdentification from './role-identification';
@@ -80,16 +80,8 @@ const RoleDetailsComponent = ({
     );
     const [uploadError, setUploadError] = useState<string | null>(null);
 
-    const {
-        setRoleData,
-        existingRoleData,
-        setAddRole,
-        addRole,
-        removeRole,
-        setRemoveRole,
-        currentErrors,
-        setCurrentErrors,
-    } = useRoleChange();
+    const { setRoleData, setAddRole, removeRole, setRemoveRole } =
+        useRoleChange();
 
     const isReadOnly = !role?.toLowerCase().includes(NEW);
 
@@ -157,6 +149,7 @@ const RoleDetailsComponent = ({
     };
 
     const handleFilesChange = async (files: File[]) => {
+        const correlationId = uuidV4();
         // Helper to check if two files are the same
         const isSameFile = (a: File, b: File) =>
             a.name === b.name &&
@@ -223,11 +216,16 @@ const RoleDetailsComponent = ({
                     sourceSystem: SourceSystem.ZL,
                     zinniaLiveCaseId: '',
                     parentCarrierCode: policy.carrierId ?? '',
-                    correlationId: uuidV4() || '',
+                    correlationId: correlationId,
                     docAccessLevel: CLIENT_COPY,
                     docCategory: NEW_BUSINESS,
                     documentType: '',
                 };
+
+                browserLogInfo(
+                    `roleDetailsComponent:: Uploading document: correlationID=${correlationId}`,
+                    metaData
+                );
 
                 try {
                     const response = await uploadDocumentV2(
@@ -250,9 +248,10 @@ const RoleDetailsComponent = ({
                 } catch (error) {
                     setUploadError('Failed to upload file. Please try again.');
                     browserLogError(
-                        'sidesheet-name-change: Error uploading document:',
+                        `roleDetailsComponent:: Error uploading document: correlationID=${correlationId}`,
                         {
                             ...parseErrorInformation(error),
+                            metaData,
                         }
                     );
                 }

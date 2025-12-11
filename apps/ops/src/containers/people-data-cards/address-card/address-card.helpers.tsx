@@ -1,5 +1,4 @@
 import { Skeleton } from '@radix-ui/themes';
-import { Address, AddressType, Party } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
@@ -26,6 +25,7 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
+import { Address, AddressType, Party } from '@zinnia/api-types/types/sor';
 
 interface AddressesProps {
     addresses: Address[];
@@ -132,7 +132,7 @@ export const Addresses = ({
                             <AssistiveText
                                 className="mt-1"
                                 text={t(
-                                    'people.card.address.general.mailingAddress'
+                                    'people.card.address.general.preferredMailingAddress'
                                 )}
                                 variant={AssistiveTextVariant.Success}
                             />

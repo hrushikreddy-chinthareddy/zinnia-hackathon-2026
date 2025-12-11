@@ -26,11 +26,14 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getValidFullName } from '@deps/helpers/case-management';
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
 import { formatSSN, toTitleCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
-import { Case, Processes } from '@deps/models/case/case';
+import {
+    Case,
+    Processes,
+    shouldShowEscalationBadge,
+} from '@deps/models/case/case';
 import {
     CaseDetailsTabValues,
     DEFAULT_ERROR_STRING,
@@ -44,9 +47,9 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { formatTimestamp } from '@deps/utils/dates';
 
 import styles from './case-result-table.module.css';
-import { formatTimestamp } from '../../../../../packages/utils/src/dates';
 import CaseDetailField from '../card/case-search-card/case-detail-field';
 import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
 import Highlighter from '../highlighter/highlighter';
@@ -181,7 +184,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             SegmentTrackedEventName.CaseClicked,
             {
                 caseId: singleCase.id,
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
             }
         );
@@ -239,7 +242,10 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
             </>
         );
     };
-
+    const showBadge = shouldShowEscalationBadge(
+        singleCase.escalated ?? false,
+        singleCase.caseStatus
+    );
     return (
         <TableRow className={styles.row}>
             <TableCell className={styles.caseLinkContainer}>
@@ -270,6 +276,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <CaseDetailField
                         text={singleCase.id}
                         className={styles.detail}
+                        escalated={showBadge}
                         highlights={
                             searchValues?.caseId ? [searchValues.caseId] : null
                         }
@@ -322,8 +329,8 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                                     src={imageSrc}
                                     alt={`${singleCase.carrier} icon`}
                                     role="presentation"
-                                    height={24}
-                                    width={24}
+                                    height={14}
+                                    width={14}
                                 />
                                 <span className="sr-only">
                                     {singleCase.carrier} icon
@@ -386,45 +393,49 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
     );
 };
 
-const NoResultsRow = ({
-    searchValues,
-}: {
-    searchValues: SearchViewQuery | undefined;
-}) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
-    const hasSearchValue = !isEmptyObject(searchValues);
-
-    return (
-        <TableRow>
-            <TableCell colSpan={7} className="text-center">
-                <Typography variant={TypographyVariant.BodySm} className="my-4">
-                    {hasSearchValue
-                        ? t('caseManagementDashboard.search.empty.title')
-                        : t(
-                              'caseManagementDashboard.search.empty.titleFilters'
-                          )}
-                </Typography>
-            </TableCell>
-        </TableRow>
-    );
-};
-
 interface CaseResultTableProps {
     cases: Case[];
     searchValues?: SearchViewQuery;
     handleSort: (key: 'createdAt') => void;
     sortDirection: 'asc' | 'desc';
     sortBy: string | null;
+    caseSearchLoading: boolean;
+    loadingMessage: string;
 }
 
+const NoResultsRow = ({
+    loadingMessage,
+    caseSearchLoading,
+}: {
+    searchValues: SearchViewQuery | undefined;
+    loadingMessage: string;
+    caseSearchLoading: boolean;
+}) => {
+    const { t } = useTranslation(TranslationFiles.COMMON);
+
+    return (
+        <TableRow>
+            <TableCell colSpan={7} className="text-center">
+                <Typography variant={TypographyVariant.BodySm} className="my-4">
+                    {caseSearchLoading
+                        ? loadingMessage
+                        : t('caseManagementDashboard.search.empty.title')}
+                </Typography>
+            </TableCell>
+        </TableRow>
+    );
+};
 export const CaseResultTable = ({
     cases,
     searchValues,
     handleSort,
     sortDirection,
     sortBy,
+    caseSearchLoading,
+    loadingMessage,
 }: CaseResultTableProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
+
     return (
         <Table className={styles.tableContainer}>
             <TableHeader>
@@ -499,7 +510,6 @@ export const CaseResultTable = ({
                     </TableHeaderCell>
                 </TableRow>
             </TableHeader>
-
             <TableBody>
                 {cases && cases.length ? (
                     cases.map((singleCase) => (
@@ -510,7 +520,11 @@ export const CaseResultTable = ({
                         />
                     ))
                 ) : (
-                    <NoResultsRow searchValues={searchValues} />
+                    <NoResultsRow
+                        searchValues={searchValues}
+                        caseSearchLoading={caseSearchLoading}
+                        loadingMessage={loadingMessage}
+                    />
                 )}
             </TableBody>
         </Table>

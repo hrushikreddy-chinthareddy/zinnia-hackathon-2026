@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import CedingCompanySignature from '@deps/components/ceding-company-signature/ceding-company-signature';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
@@ -133,11 +133,8 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
                     ) as string
                 }
             />
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
-            <CedingCompanyDistribution
+
+            <CedingCompanySignature
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
                 renderCorporateResolution={isNonQualifiedOr403b}
@@ -150,6 +147,10 @@ const OftDlicForm = ({ qualType, planCode }: OftDlicFormProps) => {
                     t('distributionMethod.cedingCompanyDistribution') as string
                 }
                 defaultValue={defaultValues.disbursementOption}
+            />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
             />
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}

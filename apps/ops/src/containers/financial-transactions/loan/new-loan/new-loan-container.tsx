@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
@@ -20,6 +19,7 @@ import { Processes } from '@deps/models/case/case';
 import { validateNewLoan } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';

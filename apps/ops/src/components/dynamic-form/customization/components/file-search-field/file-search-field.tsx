@@ -1,5 +1,3 @@
-import { MetadataSearchResponse } from '@xd/api-types/dist/generated-types/documents-v3';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import {
     IconType,
     Icon,
@@ -20,6 +18,10 @@ import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQu
 import { browserLogError } from '@deps/utils/browser-logging';
 import { handleKeyDown } from '@deps/utils/events';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    SearchRequest,
+    MetadataSearchResponse,
+} from '@zinnia/api-types/types/documents-v3';
 
 import { FileAttachmentProps } from '../../widgets/file-widget/file-widget';
 import style from '../../widgets/file-widget/file-widget.module.css';

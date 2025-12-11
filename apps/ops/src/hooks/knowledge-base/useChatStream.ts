@@ -1,12 +1,18 @@
-import { SourceDocument } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { useCallback, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { baseAppUrl } from '@deps/queries/api-config';
-import { SSEEventType } from '@deps/types/knowledge-base';
+import {
+    AnswerMode,
+    BOT_ERROR_MESSAGE_ID,
+    MessageRole,
+    SSEEventType,
+} from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 type ChatEvent =
     | { type: SSEEventType.STATUS; message: string }
@@ -18,6 +24,7 @@ type ChatEvent =
           questionId?: string;
           responseId?: string;
           followUpID?: string;
+          definitiveAnswerFound?: boolean;
       }
     | { type: SSEEventType.ERROR; error: string };
 
@@ -35,11 +42,14 @@ type SSEConfig = {
     assignRef?: boolean;
 };
 
-export const useChatStream = (clientId: string) => {
+export const useChatStream = (
+    selectedClientId: string,
+    commonClientId: string
+) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
-    const { selectedClientId } = useKnowledgeBaseContext();
+    const { setCurrentMessages, currentMessages } = useKnowledgeBaseContext();
     const [status, setStatus] = useState<string | null>(null);
     const [isStreaming, setIsStreaming] = useState(false);
     const [response, setResponse] = useState<string | null>(null);
@@ -47,14 +57,65 @@ export const useChatStream = (clientId: string) => {
     const [questionId, setQuestionId] = useState<string | null>(null);
     const [responseId, setResponseId] = useState<string | null>(null);
     const [followUpId, setFollowUpId] = useState<string | null>(null);
-
+    const [definitiveAnswerFound, setDefinitiveAnswerFound] = useState<
+        boolean | null
+    >(null);
+    const botMsgIdRef = useRef<string | null>(null);
     const eventSourceRef = useRef<EventSource | null>(null);
 
-    const isStreamingRef = useRef(isStreaming);
-    const setIsStreamingSafe = (v: boolean) => {
-        isStreamingRef.current = v;
-        setIsStreaming(v);
+    const isATag = (chunk: string) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(chunk, 'text/html');
+        return (
+            doc.body.childElementCount === 1 &&
+            doc.body.firstElementChild?.tagName === 'A'
+        );
     };
+
+    const parseATag = (html: string) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, 'text/html');
+        const aTag = doc.body.firstElementChild as HTMLAnchorElement | null;
+        if (aTag?.tagName === 'A') {
+            return {
+                web_url: aTag.href,
+                file_name: aTag.textContent?.trim() || '',
+            };
+        }
+        return null;
+    };
+
+    const filterSourceDocs = (
+        docs: SourceDocument[],
+        anchors: {
+            web_url: string;
+            file_name: string;
+        }[]
+    ) => {
+        return docs.filter((doc) =>
+            anchors.some(
+                (a) =>
+                    a.web_url === doc.web_url && a.file_name === doc.file_name
+            )
+        );
+    };
+
+    const setErrorMessage = useCallback(
+        (id: string) => {
+            setCurrentMessages((prev) =>
+                prev.map((msg) =>
+                    msg.id === id
+                        ? {
+                              id: BOT_ERROR_MESSAGE_ID,
+                              role: MessageRole.Bot,
+                              content: t('chat.errorMsg'),
+                          }
+                        : msg
+                )
+            );
+        },
+        [setCurrentMessages, t]
+    );
 
     const initSSE = useCallback(
         ({
@@ -97,15 +158,16 @@ export const useChatStream = (clientId: string) => {
                                     source_documents
                                 );
                                 eventSource.close();
-                                setIsStreamingSafe(false);
+                                setIsStreaming(false);
                                 if (assignRef) eventSourceRef.current = null;
                                 break;
 
                             case SSEEventType.ERROR:
                                 onError?.(parsedData.error);
                                 eventSource.close();
-                                setIsStreamingSafe(false);
+                                setIsStreaming(false);
                                 if (assignRef) eventSourceRef.current = null;
+                                setErrorMessage(botMsgIdRef.current || '');
                                 break;
                         }
                     } catch (error) {
@@ -114,9 +176,10 @@ export const useChatStream = (clientId: string) => {
                             event.data
                         );
                         setResponse(t('chat.errorMsg') || '');
-                        setIsStreamingSafe(false);
+                        setIsStreaming(false);
                         if (assignRef) eventSourceRef.current = null;
                         eventSource.close();
+                        setErrorMessage(botMsgIdRef.current || '');
                     }
                 };
 
@@ -124,86 +187,223 @@ export const useChatStream = (clientId: string) => {
                     browserLogError(`SSE error: ${logPrefix}`, err);
                     setResponse(t('chat.errorMsg') || '');
                     eventSource.close();
-                    setIsStreamingSafe(false);
+                    setIsStreaming(false);
                     if (assignRef) eventSourceRef.current = null;
+                    setErrorMessage(botMsgIdRef.current || '');
                 };
             } catch (error: any) {
                 browserLogError(`Error opening SSE: ${logPrefix}`, error);
                 setResponse(t('chat.errorMsg') || '');
-                setIsStreamingSafe(false);
+                setIsStreaming(false);
                 if (assignRef) eventSourceRef.current = null;
+                setErrorMessage(botMsgIdRef.current || '');
             }
         },
-        [t]
+        [t, setErrorMessage]
     );
 
+    const resetData = () => {
+        setIsStreaming(true);
+        setResponse('');
+        setStatus(null);
+        setSources([]);
+        setQuestionId(null);
+        setResponseId(null);
+        setFollowUpId(null);
+        setDefinitiveAnswerFound(null);
+    };
+
     const sendMessage = useCallback(
-        async (sessionId: string, question: string) => {
-            setIsStreamingSafe(true);
-            setResponse('');
-            setStatus(null);
-            setSources([]);
-            setQuestionId(null);
-            setResponseId(null);
+        async (
+            sessionId: string,
+            question: string,
+            userMsgId: string,
+            responseType: AnswerMode
+        ) => {
+            resetData();
+            const botMsgId = uuidv4();
+            botMsgIdRef.current = botMsgId;
+            setCurrentMessages((prev) => [
+                ...prev,
+                {
+                    id: botMsgId,
+                    role: MessageRole.Bot,
+                    content: '',
+                },
+            ]);
 
             const queryParams = new URLSearchParams({
                 sessionId,
                 question,
-                clientId,
+                clientId: selectedClientId,
+                responseType,
             }).toString();
 
             const url = `${baseAppUrl}/api/knowledge-base/chat-stream?${queryParams}`;
+            let hasClearedAfterStatus = false;
+
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
 
             initSSE({
                 url,
                 logPrefix: 'sendMessage',
-                onStatus: setStatus,
-                onToken: (c) => setResponse((prev) => (prev ?? '') + c),
+                onStatus: (status) => {
+                    setStatus(status);
+                    setCurrentMessages((prev) =>
+                        prev.map((msg) =>
+                            msg.id === botMsgId
+                                ? {
+                                      ...msg,
+                                      content: status,
+                                  }
+                                : msg
+                        )
+                    );
+                },
+                onToken: (chunk) => {
+                    if (!hasClearedAfterStatus) {
+                        setCurrentMessages((prev) =>
+                            prev.map((msg) =>
+                                msg.id === botMsgId
+                                    ? {
+                                          ...msg,
+                                          content: '',
+                                      }
+                                    : msg
+                            )
+                        );
+                        hasClearedAfterStatus = true;
+                    }
+                    setResponse((prev) => (prev ?? '') + chunk);
+                    setCurrentMessages((prev) =>
+                        prev.map((msg) =>
+                            msg.id === botMsgId
+                                ? {
+                                      ...msg,
+                                      content: (msg.content ?? '') + chunk,
+                                  }
+                                : msg
+                        )
+                    );
+                    if (isATag(chunk)) {
+                        const parsedDoc = parseATag(chunk);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
+                },
                 onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
                     setResponse(data.full_response);
-                    setSources(docs);
+                    setSources(filtered_source_docs);
                     setQuestionId(data.questionId ?? null);
                     setResponseId(data.responseId ?? null);
+                    if (selectedClientId !== commonClientId) {
+                        setDefinitiveAnswerFound(
+                            data.definitiveAnswerFound ?? null
+                        );
+                    }
+                    setCurrentMessages((prev) =>
+                        prev.map((msg) => {
+                            if (msg.id === botMsgId) {
+                                return {
+                                    ...msg,
+                                    content: data.full_response,
+                                    ...(data.definitiveAnswerFound === false
+                                        ? { sourceDocuments: [] }
+                                        : {
+                                              sourceDocuments:
+                                                  filtered_source_docs,
+                                          }),
+                                    id: data.responseId ?? botMsgId,
+                                    questionId: data.questionId,
+                                    ...(selectedClientId !== commonClientId && {
+                                        definitiveAnswerFound:
+                                            data.definitiveAnswerFound,
+                                    }),
+                                };
+                            }
+                            if (msg.id === userMsgId) {
+                                return {
+                                    ...msg,
+                                    id: data.questionId ?? userMsgId,
+                                };
+                            }
+                            return msg;
+                        })
+                    );
                 },
                 onError: () => {
                     setResponse(t('chat.errorMsg') || '');
                     setSources([]);
+                    setErrorMessage(botMsgId);
                 },
             });
         },
-        [clientId, initSSE, t]
+        [
+            initSSE,
+            t,
+            setCurrentMessages,
+            selectedClientId,
+            setErrorMessage,
+            commonClientId,
+        ]
     );
 
     const sendFollowUp = useCallback(
         async (
             questionId: string,
             followUpQuestion: string,
+            responseType: AnswerMode,
             parentFollowUpId?: string | null
         ) => {
-            setIsStreamingSafe(true);
-            setResponse('');
-            setStatus(null);
-            setSources([]);
-            setFollowUpId(null);
-
+            resetData();
             const queryParams = new URLSearchParams({
                 messageId: questionId,
                 followUpQuestion,
                 parentFollowUpId: parentFollowUpId ?? '',
                 clientId: selectedClientId,
+                responseType,
             }).toString();
 
             const url = `${baseAppUrl}/api/knowledge-base/follow-up/sendFollowUpStream?${queryParams}`;
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
 
             initSSE({
                 url,
                 logPrefix: 'sendFollowUp',
                 onStatus: setStatus,
-                onToken: (c) => setResponse((prev) => (prev ?? '') + c),
+                onToken: (c) => {
+                    setResponse((prev) => (prev ?? '') + c);
+                    if (isATag(c)) {
+                        const parsedDoc = parseATag(c);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
+                },
                 onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
                     setResponse(data.full_response);
-                    setSources(docs);
+                    if (data.definitiveAnswerFound === false) {
+                        setSources([]);
+                    } else {
+                        setSources(filtered_source_docs);
+                    }
                     setFollowUpId(data.followUpID ?? null);
+                    if (selectedClientId !== commonClientId) {
+                        setDefinitiveAnswerFound(
+                            data.definitiveAnswerFound ?? null
+                        );
+                    }
                 },
                 onError: () => {
                     setResponse(t('chat.errorMsg') || '');
@@ -211,14 +411,196 @@ export const useChatStream = (clientId: string) => {
                 },
             });
         },
-        [selectedClientId, initSSE, t]
+        [selectedClientId, initSSE, t, commonClientId]
+    );
+
+    const getCommonClientResponse = useCallback(
+        async (
+            sessionId: string,
+            questionId: string,
+            messageId: string,
+            responseType: AnswerMode
+        ) => {
+            resetData();
+            setCurrentMessages((prev) => prev.slice(0, -1));
+
+            const question =
+                currentMessages.find((msg) => msg.id === questionId)?.content ??
+                '';
+            const botMsgId = uuidv4();
+            botMsgIdRef.current = botMsgId;
+            setCurrentMessages((prev) => [
+                ...prev,
+                {
+                    id: botMsgId,
+                    role: MessageRole.Bot,
+                    content: '',
+                },
+            ]);
+
+            const queryParams = new URLSearchParams({
+                sessionId,
+                question,
+                messageId,
+                commonClientId: commonClientId || '',
+                responseType,
+            }).toString();
+
+            const url = `${baseAppUrl}/api/knowledge-base/common-client-response?${queryParams}`;
+            let hasClearedAfterStatus = false;
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
+
+            initSSE({
+                url,
+                logPrefix: 'getCommonClientResponse',
+                onStatus: (status) => {
+                    setStatus(status);
+                    setCurrentMessages((prev) =>
+                        prev.map((msg) =>
+                            msg.id === botMsgId
+                                ? {
+                                      ...msg,
+                                      content: status,
+                                  }
+                                : msg
+                        )
+                    );
+                },
+                onToken: (chunk) => {
+                    if (!hasClearedAfterStatus) {
+                        setCurrentMessages((prev) =>
+                            prev.map((msg) =>
+                                msg.id === botMsgId
+                                    ? {
+                                          ...msg,
+                                          content: '',
+                                      }
+                                    : msg
+                            )
+                        );
+                        hasClearedAfterStatus = true;
+                    }
+                    setResponse((prev) => (prev ?? '') + chunk);
+                    setCurrentMessages((prev) =>
+                        prev.map((msg) =>
+                            msg.id === botMsgId
+                                ? {
+                                      ...msg,
+                                      content: (msg.content ?? '') + chunk,
+                                  }
+                                : msg
+                        )
+                    );
+                    if (isATag(chunk)) {
+                        const parsedDoc = parseATag(chunk);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
+                },
+                onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
+                    setResponse(data.full_response);
+                    setSources(filtered_source_docs);
+                    setQuestionId(data.questionId ?? null);
+                    setResponseId(data.responseId ?? null);
+                    setCurrentMessages((prev) =>
+                        prev.map((msg) =>
+                            msg.id === botMsgId
+                                ? {
+                                      ...msg,
+                                      content: data.full_response,
+                                      ...(data.definitiveAnswerFound === false
+                                          ? { sourceDocuments: [] }
+                                          : {
+                                                sourceDocuments:
+                                                    filtered_source_docs,
+                                            }),
+                                      id: data.responseId ?? botMsgId,
+                                      questionId: data.questionId,
+                                  }
+                                : msg
+                        )
+                    );
+                },
+                onError: () => {
+                    setResponse(t('chat.errorMsg') || '');
+                    setSources([]);
+                    setErrorMessage(botMsgId);
+                },
+            });
+        },
+        [
+            initSSE,
+            t,
+            currentMessages,
+            setCurrentMessages,
+            setErrorMessage,
+            commonClientId,
+        ]
+    );
+
+    const getCommonClientFollowUp = useCallback(
+        async (
+            followUpId: string,
+            followUpQuestion: string,
+            responseType: AnswerMode
+        ) => {
+            resetData();
+            const queryParams = new URLSearchParams({
+                followUpId,
+                followUpQuestion,
+                commonClientId: commonClientId || '',
+                responseType,
+            }).toString();
+
+            const url = `${baseAppUrl}/api/knowledge-base/follow-up/commonClientFollowUp?${queryParams}`;
+            const responseSourceDocs: {
+                web_url: string;
+                file_name: string;
+            }[] = [];
+
+            initSSE({
+                url,
+                logPrefix: 'commonClientFollowUp',
+                onStatus: setStatus,
+                onToken: (c) => {
+                    setResponse((prev) => (prev ?? '') + c);
+                    if (isATag(c)) {
+                        const parsedDoc = parseATag(c);
+                        if (parsedDoc) responseSourceDocs.push(parsedDoc);
+                    }
+                },
+                onComplete: (data, docs) => {
+                    const filtered_source_docs = filterSourceDocs(
+                        docs,
+                        responseSourceDocs
+                    );
+                    setResponse(data.full_response);
+                    if (data.definitiveAnswerFound === false) {
+                        setSources([]);
+                    } else {
+                        setSources(filtered_source_docs);
+                    }
+                },
+                onError: () => {
+                    setResponse(t('chat.errorMsg') || '');
+                    setSources([]);
+                },
+            });
+        },
+        [initSSE, t, commonClientId]
     );
 
     const stopStreaming = useCallback(() => {
         if (eventSourceRef.current) {
             eventSourceRef.current.close();
             eventSourceRef.current = null;
-            setIsStreamingSafe(false);
+            setIsStreaming(false);
         }
     }, []);
 
@@ -227,12 +609,14 @@ export const useChatStream = (clientId: string) => {
         status,
         sources,
         isStreaming,
-        isStreamingRef,
         questionId,
         responseId,
         followUpId,
+        definitiveAnswerFound,
         sendMessage,
         sendFollowUp,
         stopStreaming,
+        getCommonClientResponse,
+        getCommonClientFollowUp,
     };
 };

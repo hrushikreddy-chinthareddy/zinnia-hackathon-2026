@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/react';
-import { PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { generateClassParty, generateParty } from '@deps/utils/mock/mockParty';
+import { PartyRole, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import AddressCard from './address-card/address-card';
 import BankCard from './bank-card/bank-card';

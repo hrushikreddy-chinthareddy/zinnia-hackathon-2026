@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -28,6 +27,7 @@ import { getCases } from '@deps/queries/api/cases';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import DocumentCard from '../document/document-card';
 import WorkflowCard from '../workflow-card/workflow-card';
@@ -35,6 +35,7 @@ import WorkflowCard from '../workflow-card/workflow-card';
 export interface StartType {
     caseId?: string;
     businessKey?: string;
+    correlationId?: string;
 }
 
 export type StartStepSetState = Dispatch<SetStateAction<StartType>>;
@@ -52,6 +53,7 @@ interface StartStepProps extends TransactionClickProps {
     leaveTransactionLink?: string;
     processSubType?: string[];
     type?: SourceType;
+    correlationId?: string;
 }
 
 const StartStep = ({
@@ -68,6 +70,7 @@ const StartStep = ({
     leaveTransactionLink,
     processSubType,
     type = SourceType.Document,
+    correlationId,
 }: StartStepProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -130,10 +133,31 @@ const StartStep = ({
                         return {
                             documentNumber: documentNumber || '',
                             caseId: caseDetails.id,
-                            tag: `${caseDetails?.process || ''}`,
+                            tag: caseDetails.processSubType
+                                ? `${caseDetails?.process || ''} - ${
+                                      caseDetails.processSubType
+                                  }`
+                                : `${caseDetails?.process || ''}`,
                             value: caseDetails.id,
+                            correlationId: caseDetails.correlationId,
                         };
                     });
+
+                const selectedDefaultCase =
+                    correlationId &&
+                    mappedCaseOptions.find(
+                        (option) => option.correlationId === correlationId
+                    );
+
+                if (selectedDefaultCase && setState) {
+                    setState((prevState) => ({
+                        ...prevState,
+                        caseId: selectedDefaultCase.caseId,
+                        correlationId: selectedDefaultCase.correlationId,
+                    }));
+                    setSelectedCaseId(selectedDefaultCase.caseId);
+                }
+
                 setCaseOptions([...mappedCaseOptions, noDocument]);
             } else {
                 setCaseOptions([noDocument]);
@@ -162,6 +186,9 @@ const StartStep = ({
                 ...prevState,
                 caseId,
                 businessKey: documentNumber,
+                correlationId: caseOptions?.find(
+                    (option) => option.value === caseId
+                )?.correlationId,
             }));
 
             setSelectedCaseId(caseId);
@@ -243,7 +270,14 @@ const StartStep = ({
                             sentenceCase={false}
                             variant={LabelVariant.LabelLg}
                         />
-                        <div className="grid max-w-[436px] gap-2">
+                        <div
+                            className={`grid max-w-[436px] gap-2 ${
+                                correlationId &&
+                                state?.correlationId == correlationId
+                                    ? 'opacity-50 pointer-events-none'
+                                    : ''
+                            }`}
+                        >
                             {caseOptions.map((option) => (
                                 <CardCaseDocument
                                     caseDocumentOption={option}
@@ -295,6 +329,14 @@ const StartStep = ({
                                     />
                                 )}
                             </div>
+                        )}
+                        {selectedCaseId && (
+                            <AssistiveText
+                                variant={AssistiveTextVariant.Info}
+                                text={t(
+                                    'workflows.start.caseSelectionAssistiveText'
+                                )}
+                            />
                         )}
                     </div>
                 </div>

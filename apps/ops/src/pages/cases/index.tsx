@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { FgaRoles } from '@xd/utils/dist';
+import { Button, IconType } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 import dynamic from 'next/dynamic';
@@ -13,15 +13,6 @@ import {
     useEffect,
 } from 'react';
 
-import FilterButton from '@deps/components/filter-button/filter-button';
-import NavElement, {
-    NavElementSize,
-    NavElementType,
-} from '@deps/components/nav-element/nav-element';
-import {
-    PageLoader,
-    PageLoaderVariant,
-} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar from '@deps/components/search/search-bar';
 import { CaseResultTable } from '@deps/components/table/case-result-table';
@@ -30,7 +21,6 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
-import StatusFilter from '@deps/containers/active-filters/status-filter';
 import {
     CaseManagementFiltersContext,
     CaseSearchAdditionalFilters,
@@ -47,15 +37,15 @@ import {
     getSearchValueObject,
     toggleLabels,
 } from '@deps/helpers/case-management';
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import {
     doesUserHavePagePermissions,
     getUserData,
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
+import { useLoadingTime } from '@deps/hooks/useLoadingTime';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { Statuses } from '@deps/models/case/case';
+import { LOADING_TIME_CONFIG, Statuses } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
@@ -72,6 +62,7 @@ import {
     SegmentTrackedEventName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -81,7 +72,8 @@ import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
 import useCaseFilterQueryStore from './caseFilterQueryStore';
-
+import styles from './index.module.css';
+import stylesWithCounts from './index.with-counts.module.css';
 // Lazy Loaded Components
 const SideSheetRefineResults = dynamic(
     () =>
@@ -109,6 +101,15 @@ interface CaseManagementDashboardProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     isAdvisorsExcel: boolean;
 }
+const StatusFilterWithCounts = dynamic(
+    () => import('@deps/containers/active-filters/status-filter'),
+    { ssr: false }
+);
+
+const StatusFilterWithoutCounts = dynamic(
+    () => import('@deps/containers/active-filters/status-chip-dropdown'),
+    { ssr: false }
+);
 
 const CaseManagementDashboard = ({
     authorizedCarriers,
@@ -121,7 +122,6 @@ const CaseManagementDashboard = ({
         currentSearchValue,
         setCurrentSearchValue,
     ] = useCaseFilterQueryStore();
-
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
 
@@ -192,7 +192,7 @@ const CaseManagementDashboard = ({
         queryKey: ['caseStats', caseStatsRequestObject],
         queryFn: () => postCaseStatsQuery(caseStatsRequestObject),
         placeholderData: {
-            All: 0,
+            [Statuses.All]: 0,
             [Statuses.InProgress]: 0,
             [Statuses.Exception]: 0,
             [Statuses.NotStarted]: 0,
@@ -221,7 +221,6 @@ const CaseManagementDashboard = ({
                 ...advisorsExcelParams,
             };
         }
-
         return {
             ...svo,
             ...additionalFilters,
@@ -237,6 +236,8 @@ const CaseManagementDashboard = ({
         caseManagementFilters.offset,
         caseManagementFilters.sortDirection,
         caseManagementFilters.sortBy,
+        isAdvisorsExcel,
+        enableAdditionalAdvisorsExcelCarriers,
     ]);
 
     const {
@@ -248,9 +249,35 @@ const CaseManagementDashboard = ({
         queryFn: () => getCaseSearchQuery(searchValueObject, featureFlags),
         enabled: loadedStoredFilters,
     });
+    const loadingTime = useLoadingTime(caseSearchLoading, {
+        incrementInterval: 100,
+        noMessageThreshold: LOADING_TIME_CONFIG.NO_MESSAGE_THRESHOLD,
+        gatheringThreshold: LOADING_TIME_CONFIG.GATHERING_THRESHOLD,
+        organizingThreshold: LOADING_TIME_CONFIG.ORGANIZING_THRESHOLD,
+    });
+
+    const loadingMessage = useMemo(() => {
+        if (loadingTime < LOADING_TIME_CONFIG.NO_MESSAGE_THRESHOLD) return '';
+        if (loadingTime < LOADING_TIME_CONFIG.GATHERING_THRESHOLD)
+            return t(
+                'caseManagementDashboard.loadingMessage.gatheringYourResults'
+            );
+        if (loadingTime < LOADING_TIME_CONFIG.ORGANIZING_THRESHOLD)
+            return t(
+                'caseManagementDashboard.loadingMessage.organizingYourResults'
+            );
+        return t(
+            'caseManagementDashboard.loadingMessage.takingLongerThanUsual'
+        );
+    }, [loadingTime, t]);
+
+    const hasResults = !!caseSearchData?.data?.length;
 
     const liveResultsMessage = useMemo(() => {
-        if (caseSearchData?.data.length) {
+        if (caseSearchLoading) {
+            return loadingMessage;
+        }
+        if (hasResults) {
             return t('policy.documents.xToYOfZ', {
                 x: caseManagementFilters.offset + 1,
                 y: Math.min(
@@ -262,9 +289,7 @@ const CaseManagementDashboard = ({
                 }`,
             });
         } else {
-            return !isEmptyObject(caseManagementFilters.searchValue)
-                ? t('caseManagementDashboard.search.empty.title')
-                : t('caseManagementDashboard.search.empty.titleFilters');
+            return t('caseManagementDashboard.search.empty.title');
         }
     }, [
         caseSearchData,
@@ -292,6 +317,8 @@ const CaseManagementDashboard = ({
                     requestSubType: Array.from(
                         caseManagementFilters.additionalFilters.requestSubType
                     ),
+                    escalated:
+                        caseManagementFilters.additionalFilters.escalated,
                 },
             });
         }
@@ -372,7 +399,7 @@ const CaseManagementDashboard = ({
                     firstNameUsed: !!value?.ownerFirstName,
                     lastNameUsed: !!value?.ownerLastName,
                     policyNumber: value?.policyNumber,
-                    session_id: user.sid,
+                    authSessionId: user.sid,
                     userId: user.partyId,
                 }
             );
@@ -387,6 +414,7 @@ const CaseManagementDashboard = ({
 
     const handleClear = useCallback(
         (searchField: PolicySearchKeys | undefined) => {
+            setCurrentSearchValue(() => {});
             if (searchField) {
                 const prevSearch = caseManagementFilters.searchValue;
                 delete prevSearch?.[searchField];
@@ -442,8 +470,6 @@ const CaseManagementDashboard = ({
     ]);
 
     const tableContent = useMemo(() => {
-        if (caseSearchLoading)
-            return <PageLoader variant={PageLoaderVariant.Center} />;
         if (caseSearchError) return <SearchResultsErrorCard />;
 
         const numberOfItems = caseManagementFilters.offset + 1;
@@ -454,7 +480,6 @@ const CaseManagementDashboard = ({
         const total = `${caseSearchData?.total?.toLocaleString() ?? '0'}${
             caseSearchData?.total === 10000 ? '+' : ''
         }`;
-
         return (
             <>
                 <CaseResultTable
@@ -463,6 +488,8 @@ const CaseManagementDashboard = ({
                     handleSort={handleCreatedBySort}
                     sortDirection={caseManagementFilters.sortDirection}
                     sortBy={caseManagementFilters.sortBy}
+                    caseSearchLoading={caseSearchLoading}
+                    loadingMessage={loadingMessage}
                 />
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography
@@ -472,7 +499,7 @@ const CaseManagementDashboard = ({
                         aria-live="polite"
                         aria-atomic="true"
                     >
-                        {caseSearchData
+                        {hasResults
                             ? t('policy.documents.xToYOfZ', {
                                   x: numberOfItems,
                                   y: currentIndex,
@@ -517,8 +544,12 @@ const CaseManagementDashboard = ({
             openRefineResultsSidesheet();
         }
     };
+    const isCaseStatsEnabled = featureFlags[FEATURE_FLAGS.CASE_STATS_COUNT];
 
-    // JSX
+    const StatusFilterComponent = isCaseStatsEnabled
+        ? StatusFilterWithCounts
+        : StatusFilterWithoutCounts;
+    const activeStyles = isCaseStatsEnabled ? stylesWithCounts : styles;
     return (
         <CaseManagementFiltersContext.Provider
             value={[
@@ -533,40 +564,63 @@ const CaseManagementDashboard = ({
                 {t('caseManagementDashboard.h1')}
             </Typography>
             <>
-                <SearchBar
-                    searchValue={caseManagementFilters.searchValue}
-                    onSearch={handleSearch}
-                    toggleLabels={toggleLabels}
-                    initialToggleValue={caseManagementFilters.toggleValue}
-                    onToggle={handleToggle}
-                    onClear={handleClear}
-                    onChangeCallback={handleSearchInputChange}
-                />
-                <fieldset form="search-form">
-                    <legend>
-                        <label
-                            htmlFor="status-select"
-                            className="typography-labels-field-label mt-4 mb-1"
+                <div className={activeStyles.searchContainer}>
+                    <SearchBar
+                        searchValue={caseManagementFilters.searchValue}
+                        onSearch={handleSearch}
+                        toggleLabels={toggleLabels(featureFlags)}
+                        initialToggleValue={caseManagementFilters.toggleValue}
+                        onToggle={handleToggle}
+                        onClear={handleClear}
+                        onChangeCallback={handleSearchInputChange}
+                        hasLegend={!isCaseStatsEnabled}
+                    />
+                    <div className={activeStyles.searchActions}>
+                        <Button
+                            type="button"
+                            onClick={openRefineResultsSidesheet}
+                            tabIndex={0}
+                            size={'small'}
+                            mode="secondary"
+                            iconPosition="start"
+                            iconType={IconType.FILTER}
+                            aria-label={
+                                t('ariaLabel.openRefineResultsButton') as string
+                            }
+                            onKeyDown={() => handleKeyDown}
                         >
-                            {t('caseOverview.tasks.status')}
-                        </label>
-                    </legend>
-                    <div className="sm:my-4 mt-4 mb-6 flex flex-col gap-2 sm:flex-row sm:items-center">
-                        <StatusFilter
+                            {t('caseManagementDashboard.filters')}
+                        </Button>
+                        <div></div> {/* to add date range picker here */}
+                    </div>
+                </div>
+
+                <fieldset form="search-form">
+                    {!isCaseStatsEnabled && (
+                        <legend>
+                            <label
+                                htmlFor="status-select"
+                                className="typography-labels-field-label mt-4 mb-1"
+                            >
+                                {t('caseOverview.tasks.status')}
+                            </label>
+                        </legend>
+                    )}
+                    <div className={activeStyles.statusRow}>
+                        <StatusFilterComponent
                             caseTotals={caseTotals}
-                            onChange={(vals) =>
+                            onChange={(vals) => {
                                 setCaseManagementFilters((prev) => {
                                     const { notInCaseStatus = [] } =
                                         prev.additionalFilters;
                                     const nonConflictingNicsVals =
                                         notInCaseStatus.filter(
                                             (val) => !vals.includes(val)
-                                        ); // remove any values that are both in caseStatus and notInCaseStatus
+                                        );
                                     return {
                                         ...prev,
                                         offset: 0,
                                         searchValue: {
-                                            // set this to the current search value in the input field
                                             ...currentSearchValue,
                                         },
                                         additionalFilters: {
@@ -576,8 +630,8 @@ const CaseManagementDashboard = ({
                                                 nonConflictingNicsVals,
                                         },
                                     };
-                                })
-                            }
+                                });
+                            }}
                             sessionId={user.sid}
                             userId={user.partyId}
                             values={
@@ -585,20 +639,6 @@ const CaseManagementDashboard = ({
                                     .caseStatus
                             }
                         />
-                        <NavElement
-                            tabIndex={0}
-                            size={NavElementSize.Small}
-                            type={NavElementType.Button}
-                            startIcon={<FilterButton />}
-                            className="flex items-center whitespace-nowrap"
-                            aria-label={
-                                t('ariaLabel.openRefineResultsButton') as string
-                            }
-                            onClick={openRefineResultsSidesheet}
-                            onKeyDown={handleKeyDown}
-                        >
-                            {t('caseManagementDashboard.addFilters')}
-                        </NavElement>
                         <ActiveFilters
                             authorizedCarriers={authorizedCarriers}
                             filters={caseManagementFilters.additionalFilters}
@@ -620,26 +660,6 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
-            const featureFlagDecisions: FeatureFlags =
-                await optimizelyService.getFeatureFlagDecisions(
-                    user.sub,
-                    loggingContext
-                );
-
-            const doesUserHasPagePermissions = featureFlagDecisions?.[
-                FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
-            ]
-                ? await checkTuplePage(
-                      context,
-                      FgaRelation.UiAccess,
-                      FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
-                      loggingContext
-                  )
-                : await doesUserHavePagePermissions(
-                      context,
-                      UserPermission.AllowReadCaseManagement,
-                      loggingContext
-                  );
 
             // DEPU-2835
             const isAdvisorsExcel = await checkTuplePage(
@@ -649,13 +669,40 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
-            if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
+            // IMH-87188-87186 (186 is the IMH you can view in JIRA)
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            if (
+                featureFlagDecisions?.[
+                    FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT
+                ]
+            ) {
+                const doesUserHasPagePermissions = featureFlagDecisions?.[
+                    FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
+                ]
+                    ? await checkTuplePage(
+                          context,
+                          FgaRelation.UiAccess,
+                          FgaRoles.CASE_MANAGEMENT_ZL_ENTITY,
+                          loggingContext
+                      )
+                    : await doesUserHavePagePermissions(
+                          context,
+                          UserPermission.AllowReadCaseManagement,
+                          loggingContext
+                      );
+
+                if (!isAdvisorsExcel && !doesUserHasPagePermissions) {
+                    return {
+                        redirect: {
+                            destination: '/403',
+                            permanent: false,
+                        },
+                    };
+                }
             }
 
             const { locale = DEFAULT_LOCALE } = context;

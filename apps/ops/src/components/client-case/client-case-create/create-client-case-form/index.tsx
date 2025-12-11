@@ -1,5 +1,4 @@
 import { useIsFetching } from '@tanstack/react-query';
-import { isValidDate } from '@xd/utils/dist';
 import {
     Button,
     ButtonGroup,
@@ -17,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 import DateTextInput from '@deps/components/date-text-input/date-text-input';
 import { POM_QUERY_PREFIXES } from '@deps/components/illustrations/helpers/hooks/pom';
 import { useAgencyOptions } from '@deps/components/illustrations/helpers/hooks/use-agency-options';
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import {
     getMainIdentyfiers,
     useAllAliasesWithSellingCode,
@@ -33,7 +33,9 @@ import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,
     IllustrationsClientCase,
+    TransactionType,
 } from '@deps/types/illustrations';
+import { isValidDate } from '@deps/utils/dates';
 
 import styles from './create-client-case-form.module.css';
 import { AgentField } from '../agent-search/agent-field';
@@ -106,6 +108,12 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { writeClientCaseCarriers, partyReferenceData } =
         usePermissionsContext();
+    const {
+        sendClientCaseTitleInput,
+        sendAgencySelection,
+        sendNewClientCaseCreated,
+        sendClientCaseEdited,
+    } = useIllustrationAnalytics();
     const isSuperIllustrator = !!writeClientCaseCarriers.length;
 
     const aliasesWithSellingCodes =
@@ -114,6 +122,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         mainAlias: loggedInUserMainAlias,
         mainSellingCode: loggedInUserMainSellingCode,
     } = getMainIdentyfiers(aliasesWithSellingCodes);
+
+    const canEditInsuredDetails =
+        clientCase?.transactionType !== TransactionType.CONVERSION;
 
     const firstAgencyKey = 0;
 
@@ -287,8 +298,22 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const displayAgencyDropdown =
         agencyOptions && selectedAgencyOption && agencyOptions.length > 1;
 
+    const sendAnalytics = () => {
+        const { title } = clientCaseData;
+        const { title: initialTitle } = mergedCase;
+        sendAgencySelection(agencyOptions ?? []);
+        sendClientCaseTitleInput(title !== initialTitle);
+        if (isEdit) {
+            sendClientCaseEdited();
+        } else {
+            sendNewClientCaseCreated();
+        }
+    };
+
     const onSubmitForm = async () => {
         setIsSubmiting(true);
+        sendAnalytics();
+
         try {
             await onSubmit?.(clientCaseData);
         } finally {
@@ -552,6 +577,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.firstName}
+                    disabled={!canEditInsuredDetails}
                 />
                 <FieldData
                     className={styles.inputItem}
@@ -564,6 +590,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.lastName}
+                    disabled={!canEditInsuredDetails}
                 />
                 <ButtonGroup
                     id="sexAtBirth"
@@ -603,6 +630,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </Label>
                     }
                     defaultValue={clientCaseData.insuredDetails?.sexAtBirth}
+                    inactive={!canEditInsuredDetails}
                 />
                 <div className={styles.datePickerContainer}>
                     <div className={styles.datePicker}>
@@ -620,6 +648,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     )
                                 ),
                             })}
+                            disabled={!canEditInsuredDetails}
                         />
                     </div>
                     {clientCaseData.insuredDetails?.dateOfBirth !== null && (
@@ -675,6 +704,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 ? 'Nicotine'
                                 : 'Non-Nicotine'
                         }
+                        inactive={!canEditInsuredDetails}
                     />
                 )}
                 <div className={styles.clientState}>
@@ -693,6 +723,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         }}
                         value={clientCaseData.insuredDetails?.state}
                         defaultValue={clientCaseData.insuredDetails?.state}
+                        disabled={!canEditInsuredDetails}
                     />
                 </div>
             </section>

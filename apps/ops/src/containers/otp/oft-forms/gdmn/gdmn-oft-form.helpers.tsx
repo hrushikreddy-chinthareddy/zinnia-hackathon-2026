@@ -45,34 +45,71 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import {
-    commonOftFormValidation,
-    getQualTypeOptions,
-} from '../oft-form-helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import { getQualTypeOptions, isMorganStanleyFirm } from '../oft-form-helpers';
 
 export default function useGdmnOftConfig(t: TFunction) {
-    // importing base configuration from FLIC form helper.
-    const formValidation = (values: Partial<FormParts> = {}) =>
-        commonOftFormValidation(t, values);
-
-    const oftFormValidation = ({
-        formParty,
+    const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
+        const errors = {} as FormValidationErrors;
+        // FORM DISBURSEMENT VALIDATIONS
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
         // fbo details required
         if (
+            ![PaymentMethod.DTCC].includes(
+                formDisbursement?.paymentMethod.text as PaymentMethod
+            ) &&
             formDisbursement?.paymentMethod.text &&
             !formDisbursement?.payee?.fboDetails?.text
         ) {
             errors['fboDetails'] = t('formValidation.fboDetails');
         }
-        return errors;
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+            validateAnnuitant: true,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -301,6 +338,8 @@ export default function useGdmnOftConfig(t: TFunction) {
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean =>
+                !isMorganStanleyFirm(formParty),
         },
         {
             key: `sig-val-joint`,
@@ -325,6 +364,26 @@ export default function useGdmnOftConfig(t: TFunction) {
                     (party) => party.partyRoleType === PartyRoles.JOINT_OWNER
                 );
             },
+        },
+        {
+            key: `sig-val-annuitant`,
+            fields: [
+                {
+                    component: SignatureFields.SignatureType,
+                    key: 'annuitant-type',
+                },
+                {
+                    component: SignatureFields.SignaturePresent,
+                    key: 'annuitant-sign-present',
+                },
+                {
+                    component: SignatureFields.SignatureDate,
+                    key: 'annuitant-date',
+                },
+            ],
+            signatureType: SignatureValidationTypeWithdrawal.Annuitant,
+            shouldDisplay: ({ formParty }: OtpWithdrawalFormState): boolean =>
+                isMorganStanleyFirm(formParty),
         },
     ];
 
@@ -873,7 +932,7 @@ export default function useGdmnOftConfig(t: TFunction) {
     };
 
     return {
-        formValidation: oftFormValidation,
+        formValidation,
         formPartyConfigs,
         surrenderingInstructionsOptions,
         signaturesConfig,

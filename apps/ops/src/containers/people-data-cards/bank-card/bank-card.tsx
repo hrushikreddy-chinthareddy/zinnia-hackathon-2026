@@ -1,4 +1,3 @@
-import { BankAccount, Party } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState, useContext } from 'react';
 
@@ -22,13 +21,15 @@ import SideSheetPeopleHeader, {
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { BankAccount, Party } from '@zinnia/api-types/types/sor';
+
+import { filterPastEndDate } from '../people-data-cards.utils';
 
 export interface BankCardProps {
     editable?: boolean;
@@ -60,7 +61,7 @@ export const BankCard = ({
     const { policyDetails } = useContext(PolicyData);
 
     const [currentBankAccounts, setCurrentBankAccounts] = useState(
-        party?.bankDetails?.filter((bank) => !isEndDated(bank.endDate)) ?? []
+        filterPastEndDate(party?.bankDetails)
     );
     const { featureFlags } = useOptimizely();
     const shouldShowAddBankChange =

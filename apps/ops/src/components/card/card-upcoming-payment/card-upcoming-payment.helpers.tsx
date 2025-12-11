@@ -1,5 +1,6 @@
-import { FlatExtra } from '@zinnia/api-types/types/sor';
 import { I18n, i18n } from 'next-i18next';
+
+import { FlatExtra } from '@zinnia/api-types/types/sor';
 
 export interface AddChargesProps {
     flatExtra?: FlatExtra[];

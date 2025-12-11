@@ -1,11 +1,3 @@
-import {
-    Policy,
-    Frequency,
-    Status,
-    AmountType as AutopayAmountType,
-    TransactionType,
-    FeatureType,
-} from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -34,6 +26,14 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    Policy,
+    Frequency,
+    Status,
+    AmountType as AutopayAmountType,
+    TransactionType,
+    FeatureType,
+} from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
     policy: Policy;
@@ -233,7 +233,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     const items: RadioItem[] = [
         { label: t('monthly'), value: Frequency.MONTHLY },
         { label: t('quarterly'), value: Frequency.QUARTERLY },
-        { label: t('biAnnually'), value: Frequency.BIANNUAL },
+        { label: t('semiAnnually'), value: Frequency.SEMIANNUAL },
         { label: t('annually'), value: Frequency.ANNUAL },
     ];
 

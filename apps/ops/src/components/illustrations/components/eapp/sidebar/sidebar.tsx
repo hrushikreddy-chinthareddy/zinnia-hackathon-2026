@@ -2,7 +2,10 @@ import { Button, Loader } from '@zinnia/bloom/components';
 import { FC, useEffect, useMemo } from 'react';
 
 import { ButtonType } from '@deps/components/button/button';
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { Product, ProductType } from '@deps/types/product';
+import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import style from './sidebar.module.css';
 import { EAppData, useEapp } from '../../../providers/EAppProvider';
@@ -15,7 +18,11 @@ const dataToTitleMap: Record<
 > = {
     solveFor: { label: 'Solve for', type: 'string' },
     targetPremium: { label: 'Target annual premium', type: 'money' },
-    mecPremium: { label: 'MEC annual premium', type: 'money' },
+    mecPremium: { label: '7-Pay annual premium', type: 'money' },
+    guidelineLevelPremium: {
+        label: 'Guideline level annual premium',
+        type: 'money',
+    },
     faceAmount: { label: 'Face amount', type: 'money' },
     initialPremium: { label: 'Initial premium', type: 'money' },
     initialModalPremium: { label: 'Initial modal premium', type: 'money' },
@@ -37,9 +44,16 @@ const dataToTitleMap: Record<
 interface SidebarProps {
     isEdit?: boolean;
     illustrationId?: string;
+    productType: ProductType;
+    carrier: string;
 }
 
-export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
+export const Sidebar: FC<SidebarProps> = ({
+    isEdit,
+    illustrationId,
+    productType,
+    carrier,
+}) => {
     const { renderingQuestionnaire } = useQuestionnaireEngine();
     const {
         onNewSubmit,
@@ -51,6 +65,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
         createIllustrationPending,
     } = useSubmit();
     const { data } = useEapp();
+    const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
 
     const isCompleted = useMemo(() => {
         return !renderingQuestionnaire.some((renderingSectionGroup) => {
@@ -58,14 +73,37 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
         });
     }, [renderingQuestionnaire]);
 
+    const handleAnalytics = (eventName: string) => {
+        const product = {
+            productType,
+            carrier,
+        } as Product;
+        sendIllustrationsClickedEvent(product, eventName);
+    };
+
+    const handleSubmit = () => {
+        handleAnalytics(
+            IllustrationsSegmentTrackedEventName.calculateIllustration
+        );
+        onNewSubmit();
+    };
+
+    const handleEditSubmit = () => {
+        handleAnalytics(IllustrationsSegmentTrackedEventName.editIllustration);
+        if (illustrationId) {
+            onEditSubmit(illustrationId);
+        }
+    };
+
     useEffect(() => {
         if (!isCompleted) return;
 
         const debounceTimeout = setTimeout(() => {
             onQuickQuote();
-        }, 200);
+        }, 400);
 
         return () => clearTimeout(debounceTimeout);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [renderingQuestionnaire, isCompleted]);
 
     return (
@@ -108,7 +146,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                 <Button
                     expand
                     size="small"
-                    onClick={onNewSubmit}
+                    onClick={handleSubmit}
                     disabled={!isCompleted || createIllustrationPending}
                     mode={isEdit ? ButtonType.Secondary : ButtonType.Primary}
                 >
@@ -118,11 +156,7 @@ export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
                     <Button
                         expand
                         size="small"
-                        onClick={() => {
-                            if (illustrationId) {
-                                onEditSubmit(illustrationId);
-                            }
-                        }}
+                        onClick={handleEditSubmit}
                         disabled={!isCompleted || editIllustrationPending}
                     >
                         Update

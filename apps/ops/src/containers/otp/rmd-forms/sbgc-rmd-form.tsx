@@ -6,7 +6,7 @@ import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signatu
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FinancialProfessionalSignature from '@deps/components/otp-withdrawal-form/financial-professional-signature';
-import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
+import FormDisbursementV2 from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import JointLifeExpectancy from '@deps/components/otp-withdrawal-form/rmd-method/joint-life-expectancy';
 import RMDMethod from '@deps/components/otp-withdrawal-form/rmd-method/rmd-method';
@@ -75,8 +75,8 @@ export default function SbgcRmdWithdrawalForm() {
             },
         });
 
-        setFormProgram((prev) => ({
-            ...prev,
+        const newRMDFormType = {
+            ...formProgram,
             program: {
                 text:
                     rmdFormType === RmdFormType.QCD
@@ -89,8 +89,10 @@ export default function SbgcRmdWithdrawalForm() {
                         ? RmdFormType.QCD
                         : RmdFormType.RMD,
             },
-            qcd: prev.qcd ? [...prev.qcd] : [],
-        }));
+            qcd: formProgram.qcd ? [...formProgram.qcd] : [],
+        };
+
+        setFormProgram(newRMDFormType);
     }, [initialForm, rmdFormType]);
 
     const hasTpaAuthorization =
@@ -119,9 +121,9 @@ export default function SbgcRmdWithdrawalForm() {
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
-            <FormDisbursement
+            <FormDisbursementV2
                 isFormStateReadOnly={isFormStateReadOnly}
-                options={disbursementOptions}
+                options={disbursementOptions as any}
             />
         </>
     );
@@ -176,11 +178,7 @@ export default function SbgcRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
             />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
+
             <ESignatureValidation
                 isFormStateReadOnly={isFormStateReadOnly}
                 formESignatureData={
@@ -190,6 +188,11 @@ export default function SbgcRmdWithdrawalForm() {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

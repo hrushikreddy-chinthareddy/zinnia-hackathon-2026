@@ -1,10 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
-import {
-    CaseCountGroupByEnum,
-    CaseCountInputFilter,
-    CaseCountOutput,
-} from '@zinnia/api-types/types/analytics';
 import {
     createContext,
     FC,
@@ -24,6 +18,13 @@ import {
 } from '@deps/components/dashboard/utils';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { useDashboardStore } from '@deps/store/store';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutput,
+} from '@zinnia/api-types/types/analytics';
 
 interface TransactionTrendsContextTypes {
     timeframeRadio: TimeframeFilterOptions | undefined;
@@ -98,7 +99,7 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
         updatedDateStart: timerange.from,
         updatedDateEnd: startOfTomorrowLocalIso(timerange.to),
         process: formatProcessFilter(selectedProcess),
-        caseStatus: [Statuses.Completed],
+        caseStatus: [Statuses.Completed, Statuses.Canceled],
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
     };
@@ -116,6 +117,23 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
                 CaseCountGroupByEnum.UPDATED_DAY,
             ]),
         enabled: Object.keys(filter).length > 0,
+        select: (response) => {
+            // Transform carrier IDs to names when groupBy is CARRIER
+            if (
+                groupBy === CaseCountGroupByEnum.CARRIER &&
+                response?.data?.length
+            ) {
+                return {
+                    ...response,
+                    data: response.data.map((item) => ({
+                        ...item,
+                        name: getCarrierNameByClientId(item.name) || item.name,
+                    })),
+                };
+            }
+
+            return response;
+        },
     });
 
     // If there is a selected carrier, default to the product name. Otherwise back to carrier

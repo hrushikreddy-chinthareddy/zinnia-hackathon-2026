@@ -19,6 +19,7 @@ import {
     FollowupId,
     LetterPartyRoles,
     FollowUpLetter,
+    FollowUpStatusReason,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import { StatusBadge } from '@deps/components/status-badge/status-badge';
 import Title, { TitleVariant } from '@deps/components/title/title';
@@ -106,12 +107,19 @@ function DeliveryMethodDetails({
     return displayNotification(notification);
 }
 
-const getSentNotificationStatusText = (
-    notification: INotification,
-    attemptCount: number,
-    carrier: string,
-    t: TFunction
-) => {
+interface SentNotificationStatusProps {
+    notification: INotification;
+    attemptCount: number;
+    carrier: string;
+    t: TFunction;
+}
+
+const SentNotificationStatus = ({
+    notification,
+    attemptCount,
+    carrier,
+    t,
+}: SentNotificationStatusProps) => {
     const { sendDateTime, deliveryMethod, followupLetters } = notification;
     const beneFollowUpLetter = followupLetters?.find(
         (letter: FollowUpLetter) => letter.letterParty === LetterPartyRoles.BENE
@@ -146,9 +154,7 @@ const getSentNotificationStatusText = (
                         docTypeView: DocumentTypeView.Correspondence,
                         carrier: carrier,
                     }}
-                    isViewButtonHiddenForEMLType={
-                        fileType?.toLowerCase() === 'eml'
-                    }
+                    isViewButtonHidden={fileType?.toLowerCase() === 'eml'}
                 />
             </>
         );
@@ -372,6 +378,38 @@ const getNextResetNotification = (
     return null;
 };
 
+const getResetNotificationRestartedStatusText = (
+    notification: INotification,
+    nextResetNotification: INotification | null,
+    t: TFunction
+) => {
+    const contentText = t('caseOverview.notifications.notificationRestarted', {
+        date: standardMonthDayYear(notification.statusDateTime),
+    });
+    return (
+        <div
+            className="flex flex-row gap-2 relative"
+            key={`contact-established-notification-${notification.followupId}`}
+        >
+            <div className="flex h-6 w-6 shrink-0 items-center justify-center">
+                <Edit width={20} height={20} />
+            </div>
+            <div className="flex w-full flex-col gap-1">
+                <Content
+                    variant={ContentVariant.BodySm}
+                    details={contentText}
+                />
+                <div className="flex gap-2 items-center mt-1">
+                    <div className="bg-green-100 text-green-700 font-semibold p-1 break-all rounded-xs">
+                        <DeliveryMethodDetails notification={notification} />
+                    </div>
+                </div>
+            </div>
+            <VerticalBorderLine />
+        </div>
+    );
+};
+
 export const NotificationItem = ({
     notification,
     carrier,
@@ -406,17 +444,28 @@ export const NotificationItem = ({
             {notification.followupStatus === NotificationStatus.Receive &&
                 getReceiveNotificationStatusText(notification, t)}
             {notification.send === true &&
-                notification.followupId !== FollowupId.fifth &&
-                getSentNotificationStatusText(
-                    notification,
-                    attemptCount,
-                    carrier,
-                    t
+                notification.followupId !== FollowupId.fifth && (
+                    <SentNotificationStatus
+                        notification={notification}
+                        attemptCount={attemptCount}
+                        carrier={carrier}
+                        t={t}
+                    />
                 )}
             {notification.followupStatus === NotificationStatus.Resend &&
                 getResendNotificationStatusText(notification, t)}
             {notification.followupStatus === NotificationStatus.Reset &&
+                notification?.followupStatusReason !==
+                    FollowUpStatusReason.CONTACT_WAS_ESTABLISHED &&
                 getResetNotificationStatusText(
+                    notification,
+                    nextResetNotification,
+                    t
+                )}
+            {notification.followupStatus === NotificationStatus.Reset &&
+                notification?.followupStatusReason ===
+                    FollowUpStatusReason.CONTACT_WAS_ESTABLISHED &&
+                getResetNotificationRestartedStatusText(
                     notification,
                     nextResetNotification,
                     t

@@ -46,7 +46,7 @@ const peopleDataToColors = (
     return filteredData.map((nt, index) => {
         const allocationPercentageValue =
             type === BeneficiaryType.PRIMARY ||
-            type === BeneficiaryType.CONTIGENT
+            type === BeneficiaryType.CONTINGENT
                 ? nt.beneficiaryPercentage?.toString()
                 : nt.agentPercentage?.toString();
 
@@ -70,7 +70,6 @@ const BeneficiaryCardContainer = ({
     peopleCardData,
     showAllocationBar = true,
     isRereg = false,
-    tooltip,
     showManageBeneficiary = false,
     enableManageBeneficiary = false,
 }: BeneficiaryCardContainerProps) => {

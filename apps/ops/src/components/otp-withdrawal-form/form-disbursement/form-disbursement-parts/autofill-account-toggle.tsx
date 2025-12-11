@@ -2,13 +2,13 @@ import * as React from 'react';
 import { useContext, useEffect, useState } from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementConfig,
     DisbursementParts,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { SelectedBankContext } from './pre-populate-banking-details';
 import FormDisbursementContainer from '../form-disbursement-section';
 import {
     BankDetailsInputMethod,
@@ -39,7 +39,7 @@ const AutofillAccountToggle = ({
     isFormStateReadOnly,
     carrier,
 }: AutofillAccountToggleProps) => {
-    const { setBankSelected } = useContext(SelectedBankContext);
+    const { setBankDetails } = useContext(FormDataContext);
     const [fillType, setFillType] = useState<BankDetailsInputMethod>(
         getPreselectedWireOption(preFillBankInfo?.payeeName || '')
     );
@@ -51,7 +51,8 @@ const AutofillAccountToggle = ({
         supplementaryFieldsFiltered && supplementaryFieldsFiltered.length > 0;
     useEffect(() => {
         if (fillType === BankDetailsInputMethod.Auto) {
-            setBankSelected(true);
+            setBankDetails &&
+                setBankDetails((pv) => ({ ...pv, isBankSelected: true }));
             const updatedData = getUpdatedData(
                 preFillBankInfo,
                 fillType,
@@ -59,7 +60,9 @@ const AutofillAccountToggle = ({
             );
             setDisbursementInformation(updatedData);
         } else if (fillType === BankDetailsInputMethod.Envison) {
-            setBankSelected(true);
+            setBankDetails &&
+                setBankDetails((pv) => ({ ...pv, isBankSelected: true }));
+
             const updatedData = getUpdatedData(
                 preFillBankInfo,
                 fillType,
@@ -68,7 +71,9 @@ const AutofillAccountToggle = ({
             setDisbursementInformation(updatedData);
         }
         if (fillType === BankDetailsInputMethod.Manual) {
-            setBankSelected(false);
+            setBankDetails &&
+                setBankDetails((pv) => ({ ...pv, isBankSelected: false }));
+
             const disbursementInformation =
                 fillType === BankDetailsInputMethod.Manual &&
                 isFormStateReadOnly

@@ -7,6 +7,9 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
+import { getRiderNames } from 'components/illustrations/helpers/get-rider-names';
 
 import {
     IllustrationHandler,
@@ -23,7 +26,6 @@ import {
     InsuredRoleCodes,
     SubStandardRating,
 } from '../illustrationApiSchemas';
-import { riderNamesMap } from '../rider-names-map';
 
 const baseCoverageSchema = t.object(
     // TODO: change to not optional once we understand how to get amount when solve for is face amount
@@ -157,7 +159,13 @@ export function getFarmersCreateIllustrationPayload(
 > {
     const parseResult = farmersEntitiesSchema.parse(answerOutputData);
     if (!parseResult.success) {
-        console.log('Blueprint parseResult: ', parseResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::TR0101::getFarmersCreateIllustrationPayload Error parsing input data',
+            {
+                ...parseErrorInformation(parseResult.error),
+                answersData: answerOutputData,
+            }
+        );
         return failure(new OutputDataParsingError());
     }
 
@@ -319,7 +327,13 @@ export function getFarmersCreateIllustrationPayload(
 
     const parseOutputResult = createIllustrationPayloadSchema.parse(output);
     if (!parseOutputResult.success) {
-        console.log('parseOutputResult', parseOutputResult.error);
+        browserLogInfo(
+            'illustrations::Eapp::factory::IU0101::getFarmersCreateIllustrationPayload Error parsing output',
+            {
+                ...parseErrorInformation(parseOutputResult.error),
+                outputData: output,
+            }
+        );
         return failure(
             new CreateIllustrationPayloadParsingError(parseOutputResult.error)
         );
@@ -452,24 +466,17 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
 
     public generateTitle(data: any, formInputs: any): string {
         const assumed = data.assumed;
-        const createDate = new Date().toLocaleDateString();
+        const creationDate = new Date().toLocaleDateString();
 
-        const getRidersText = () => {
-            const hasRiders = Object.keys(assumed.coverages).length > 1;
-            if (!hasRiders) {
-                return '';
-            }
+        const riderNames = getRiderNames(data);
 
-            const riders = Object.keys(assumed.coverages)
-                .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderNamesMap?.[riderName] ?? riderName)
-                .join(', ');
-
-            return `, ${riders}`;
-        };
-
-        return `${createDate}, ${numberFormatify(
-            assumed.initial.totalFaceAmount
-        )}, ${formInputs.fixedCostPeriod} yr${getRidersText()}`;
+        return [
+            creationDate,
+            `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
+            `${formInputs.fixedCostPeriod} yr`,
+            ...riderNames,
+        ]
+            .filter((x) => x)
+            .join(', ');
     }
 }

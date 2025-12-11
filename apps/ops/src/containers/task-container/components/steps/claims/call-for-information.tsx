@@ -1,4 +1,3 @@
-import { Phone } from '@xd/api-types/dist/generated-types/sor';
 import {
     Label,
     AssistiveText,
@@ -28,11 +27,15 @@ import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-c
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { formatPhone } from '@deps/helpers/string.helpers';
+import {
+    deStringifyTrueFalseNull,
+    formatPhone,
+} from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { NOOP } from '@deps/types/constants';
+import { Phone } from '@zinnia/api-types/types/sor';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
 import BeneficiaryNotificationChange from './beneficiary-notification-change';
@@ -79,6 +82,7 @@ function CallForInformation({
             name: '',
             phone: {} as Phone,
             callSummary: '',
+            contactEstablished: '',
         },
     ]);
 
@@ -96,6 +100,7 @@ function CallForInformation({
     const [relationshipToOwner, setRelationshipToOwner] = useState('');
     const [addressSelected, setAddressSelected] = useState(false);
     const [callSummary, setCallSummary] = useState('');
+    const [contactEstablished, setContactEstablished] = useState<string>('');
 
     const { goToNext } = useWorkflow();
 
@@ -129,7 +134,15 @@ function CallForInformation({
         addressSelected,
         callSummary,
         setCallSummary,
+        contactEstablished,
+        setContactEstablished,
     });
+
+    const contractNumber =
+        getCaseIdentifierValue(
+            task.identifiers,
+            CaseIdentifier.contractNumber
+        ) || '';
 
     useEffect(() => {
         if (readOnly) {
@@ -161,14 +174,17 @@ function CallForInformation({
                 phone,
                 country,
                 relationshipToOwner,
-                callSummary
+                callSummary,
+                contactEstablished
             );
+
             if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
                 updatedTask.data.details[
                     dynamicKey
-                ].subTaskBeneCallChangeRequire = beneficiary.changeRequire
-                    ? true
-                    : false;
+                ].subTaskBeneCallChangeRequire =
+                    task?.data?.details?.benefinalcontactattempt?.callLogs?.some(
+                        (log: CallLog) => log.contactEstablished === true
+                    );
             }
             setTask(updatedTask);
             const success = await updateTask(task, correlationId);
@@ -192,6 +208,7 @@ function CallForInformation({
         goToNext,
         country,
         dynamicKey,
+        contactEstablished,
     ]);
 
     useEffect(() => {
@@ -215,7 +232,14 @@ function CallForInformation({
         if (contactRole && name) {
             updateCurrentCallEntry();
         }
-    }, [contactRole, name, phone, updateCurrentCallEntry]);
+    }, [
+        contactRole,
+        name,
+        phone,
+        callSummary,
+        contactEstablished,
+        updateCurrentCallEntry,
+    ]);
 
     useEffect(() => {
         if (!contactRole || !task?.data?.details?.[dynamicKey]?.callLogs)
@@ -253,12 +277,16 @@ function CallForInformation({
     useEffect(() => {
         validateForm();
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [contactRole, phone, name, beneficiary, addressSelected, callSummary]);
-    const contractNumber =
-        getCaseIdentifierValue(
-            task.identifiers,
-            CaseIdentifier.contractNumber
-        ) || '';
+    }, [
+        contactRole,
+        phone,
+        name,
+        beneficiary,
+        addressSelected,
+        relationshipToOwner,
+        callSummary,
+        contactEstablished,
+    ]);
 
     return (
         <div>
@@ -363,7 +391,7 @@ function CallForInformation({
                             <Field
                                 label={t('name') as string}
                                 message={formErrors?.nameRequired}
-                                onChange={(e) => setName(e.target.value.trim())}
+                                onChange={(e) => setName(e.target.value)}
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
                                 value={name}
@@ -400,9 +428,7 @@ function CallForInformation({
                                     formErrors?.relationshipToOwnerRequired
                                 }
                                 onChange={(e) =>
-                                    setRelationshipToOwner(
-                                        e.target.value.trim()
-                                    )
+                                    setRelationshipToOwner(e.target.value)
                                 }
                                 size={FieldSize.Small}
                                 type={FieldType.BaseActive}
@@ -419,26 +445,56 @@ function CallForInformation({
                 )}
 
                 {!readOnly && contactRole && (
-                    <div className="col-span-3 gap-4">
-                        <Field
-                            label={t('callSummary') as string}
-                            message={formErrors?.callSummaryRequired}
-                            onChange={(e) =>
-                                setCallSummary(e.target.value.trim())
-                            }
-                            size={FieldSize.Small}
-                            type={FieldType.BaseActive}
-                            value={callSummary}
-                            variant={
-                                formErrors?.callSummaryRequired
-                                    ? FieldVariant.Error
-                                    : FieldVariant.Default
-                            }
-                            required
-                        />
-                    </div>
+                    <>
+                        <div className="col-span-3 gap-4">
+                            <Field
+                                label={t('callSummary') as string}
+                                message={formErrors?.callSummaryRequired}
+                                onChange={(e) => setCallSummary(e.target.value)}
+                                size={FieldSize.Small}
+                                type={FieldType.BaseActive}
+                                value={callSummary}
+                                variant={
+                                    formErrors?.callSummaryRequired
+                                        ? FieldVariant.Error
+                                        : FieldVariant.Default
+                                }
+                                required
+                            />
+                        </div>
+                        <div className="col-span-4 mt-4">
+                            <Radio
+                                label={t('wasContactEstablished') as string}
+                                items={[
+                                    { label: t('yes'), value: 'true' },
+                                    {
+                                        label: t('no'),
+                                        value: 'false',
+                                    },
+                                ]}
+                                readonly={readOnly}
+                                disabled={readOnly}
+                                value={contactEstablished}
+                                onChange={(event) => {
+                                    setContactEstablished(event.target.value);
+                                }}
+                                required={true}
+                            />
+                            {formErrors?.contactEstablishedRequired && (
+                                <div className="mt-4">
+                                    <AssistiveText
+                                        text={
+                                            formErrors?.contactEstablishedRequired
+                                        }
+                                        variant={AssistiveTextVariant.Error}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    </>
                 )}
-                {(shouldRenderChangeRequire() || readOnly) && (
+
+                {shouldRenderChangeRequire() && (
                     <div className="col-span-4 mt-4">
                         <Radio
                             label={t('didYouMakeAnyChanges') as string}
@@ -451,14 +507,7 @@ function CallForInformation({
                             ]}
                             readonly={readOnly}
                             disabled={readOnly}
-                            value={
-                                task.status === TaskStatus.Completed
-                                    ? task.data.details.benefinalcontactattempt
-                                          ?.subTaskBeneCallChangeRequire
-                                        ? beneficiary.changeRequire?.toString()
-                                        : beneficiary.changeRequire?.toString()
-                                    : beneficiary.changeRequire?.toString()
-                            }
+                            value={beneficiary.changeRequire?.toString()}
                             onChange={(event) =>
                                 setBeneficiary({
                                     ...beneficiary,
@@ -479,7 +528,8 @@ function CallForInformation({
                     </div>
                 )}
 
-                {beneficiary.changeRequire === false &&
+                {(beneficiary.changeRequire === false ||
+                    contactEstablished === 'false') &&
                     contactRole &&
                     name &&
                     callSummary && (
@@ -496,6 +546,7 @@ function CallForInformation({
                     )}
 
                 {(beneficiary.changeRequire &&
+                    deStringifyTrueFalseNull(contactEstablished) &&
                     contactRole &&
                     name &&
                     phone.dialNumber &&
@@ -566,6 +617,7 @@ function CallForInformation({
                                 setBeneficiary={setBeneficiary}
                                 task={task}
                                 setAddressSelected={setAddressSelected}
+                                dynamicKey={dynamicKey}
                             />
                         )}
 

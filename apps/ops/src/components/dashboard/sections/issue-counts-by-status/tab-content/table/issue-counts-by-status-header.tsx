@@ -1,10 +1,10 @@
 import { useContext } from 'react';
 
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
-import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 import { IssueCountsByStatusContext } from '../../context/issue-counts-by-status-context';
+import { getIssueStatusText } from '../../utlis';
 
 export const IssueCountsByStatusHeader = () => {
     const {
@@ -12,13 +12,8 @@ export const IssueCountsByStatusHeader = () => {
         issueCountsByStatusDataFetching,
         exceptionStatus,
     } = useContext(IssueCountsByStatusContext);
-    const issueStatusText =
-        exceptionStatus.includes(ExceptionStatus.UNRESOLVED) &&
-        exceptionStatus.includes(ExceptionStatus.RESOLVED)
-            ? 'Issues'
-            : exceptionStatus.includes(ExceptionStatus.UNRESOLVED)
-            ? `${ExceptionStatus.UNRESOLVED} issues`
-            : `${ExceptionStatus.RESOLVED} issues`;
+
+    const issueStatusText = getIssueStatusText(exceptionStatus);
     const totalCount =
         issueCountsByStatusData?.totalElements?.toLocaleString() ||
         DEFAULT_ERROR_STRING;

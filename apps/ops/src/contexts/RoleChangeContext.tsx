@@ -1,16 +1,3 @@
-import {
-    Address,
-    AddressType,
-    Country,
-    Email,
-    EmailType,
-    IdentificationType,
-    Phone,
-    PhoneType,
-    PartyType,
-    State,
-    PartyBase,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import {
     Dispatch,
@@ -25,6 +12,19 @@ import { EntityTypeValue } from '@deps/constants/policy';
 import { Signature } from '@deps/models/case/task';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    Address,
+    AddressType,
+    Country,
+    Email,
+    EmailType,
+    IdentificationType,
+    Phone,
+    PhoneType,
+    PartyType,
+    State,
+    PartyBase,
+} from '@zinnia/api-types/types/sor';
 
 export type RoleIdentification = {
     permanentResident?: string | null;
@@ -70,6 +70,7 @@ export type RoleData = {
     relationshipToParty?: string;
     validationResponse?: TransactionResponse;
     documents: any;
+    correlationId?: string;
 };
 
 type RoleChangeContextType = {

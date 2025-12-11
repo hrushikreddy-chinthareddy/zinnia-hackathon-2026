@@ -32,6 +32,13 @@
     }
 }
 
+.contentSectionHeader {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .contentSectionContainer {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
 import Button, {
@@ -23,8 +22,6 @@ const SpinnerButton = ({
     text,
     onClick,
 }: SpinnerButtonProps) => {
-    const { t } = useTranslation();
-
     const [isLoading, setIsLoading] = useState(false);
     const [variant, setVariant] = useState(ButtonVariant.Default);
 

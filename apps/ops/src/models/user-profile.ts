@@ -4,7 +4,9 @@ export enum UserPermission {
     AllowReadOtpRenewals = 'input_case',
     AllowEditPolicy = 'write_policy',
     AllowReadTasks = 'AllowReadTasks',
+    AllowUIAccess = 'ui_access',
     AllowWriteClientCase = 'write_client_case',
+    AllowWriteCasePriority = 'write_case_priority',
 }
 
 export interface PermissionsModel {

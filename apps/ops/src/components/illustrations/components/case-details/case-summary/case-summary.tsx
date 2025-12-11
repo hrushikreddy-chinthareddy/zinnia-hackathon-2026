@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { capitalize } from '@xd/utils/src/strings';
 import {
+    AssistiveText,
+    AssistiveTextVariant,
     BodyVariant,
     Breadcrumb,
     Button,
@@ -19,6 +20,7 @@ import { useCallback, useEffect, useState } from 'react';
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
@@ -26,7 +28,11 @@ import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { patchIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
-import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    IllustrationsClientCase,
+    TransactionType,
+} from '@deps/types/illustrations';
+import { capitalize } from '@deps/utils/strings';
 
 import styles from './case-summary.module.css';
 
@@ -143,6 +149,16 @@ const IllustrationCaseSumary = ({
         closeSideSheet();
     };
 
+    const isConversion =
+        clientCase?.transactionType === TransactionType.CONVERSION;
+    const infoItems = isConversion
+        ? ['Conversion', clientCase?.isMec && 'MEC'].filter(
+              (item): item is string => !!item
+          )
+        : [];
+
+    const infoText = infoItems.join(', ');
+
     return (
         <header className={clsx(styles.header)}>
             <section>
@@ -208,35 +224,35 @@ const IllustrationCaseSumary = ({
             <section className={clsx(styles.summary)}>
                 <article>
                     <Label>{t('clientCase.caseSummary.insured')}</Label>
-                    <span
+                    <PiiWrapper
                         className={clsx(
                             styles.value,
                             'typography-content-value'
                         )}
                     >
                         {insurredFullName}
-                    </span>
+                    </PiiWrapper>
                     {insuranceDetails && (
-                        <span
+                        <PiiWrapper
                             className={clsx(
                                 styles.caption,
                                 'typography-content-caption'
                             )}
                         >
                             {insuranceDetails}
-                        </span>
+                        </PiiWrapper>
                     )}
                 </article>
                 <article>
                     <Label>{t('clientCase.caseSummary.agent')}</Label>
-                    <span
+                    <PiiWrapper
                         className={clsx(
                             styles.value,
                             'typography-content-value'
                         )}
                     >
                         {agentFullName}
-                    </span>
+                    </PiiWrapper>
                     <span
                         className={clsx(
                             styles.caption,
@@ -247,6 +263,16 @@ const IllustrationCaseSumary = ({
                     </span>
                 </article>
             </section>
+            {isConversion && (
+                <section className="mt-4">
+                    <article>
+                        <AssistiveText
+                            text={infoText}
+                            variant={AssistiveTextVariant.Info}
+                        />
+                    </article>
+                </section>
+            )}
         </header>
     );
 };

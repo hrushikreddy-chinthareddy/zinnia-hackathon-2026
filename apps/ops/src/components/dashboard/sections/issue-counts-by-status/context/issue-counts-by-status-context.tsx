@@ -1,9 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    ExceptionCountInputFilter,
-    ExceptionCountGroupByEnum,
-    ExceptionCountOutput,
-} from '@zinnia/api-types/types/analytics';
+import dayjs from 'dayjs';
 import { createContext, FC, PropsWithChildren, useState } from 'react';
 
 import { ExtendedProcesses } from '@deps/components/dashboard/filters/case-type-filter';
@@ -18,6 +14,11 @@ import { Processes } from '@deps/models/case/case';
 import { getExceptionCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
 import { useDashboardStore } from '@deps/store/store';
+import {
+    ExceptionCountInputFilter,
+    ExceptionCountGroupByEnum,
+    ExceptionCountOutput,
+} from '@zinnia/api-types/types/analytics';
 
 export type IssueStatusType = { [key: string]: string };
 export type ExceptionStatusMappingType = { [key: string]: ExceptionStatus[] };
@@ -87,13 +88,9 @@ export const IssueCountsByStatusProvider: FC<PropsWithChildren> = ({
     const [category, setCategory] = useState<string[]>([]);
 
     //Issue Status Filter
-    const [exceptionStatus, setExceptionStatus] = useState([
-        ExceptionStatus.UNRESOLVED,
-        ExceptionStatus.INPROGRESS,
-        ExceptionStatus.IN_PROGRESS,
-        ExceptionStatus.NEW,
-        ExceptionStatus.RESOLVED,
-    ]);
+    const [exceptionStatus, setExceptionStatus] = useState<ExceptionStatus[]>(
+        []
+    );
 
     // Case Type Filter
     const [selectedProcess, setSelectedProcess] = useState<
@@ -116,7 +113,9 @@ export const IssueCountsByStatusProvider: FC<PropsWithChildren> = ({
         exceptionCategory: category,
         process: formatProcessFilter(selectedProcess),
         exceptionCreatedDateStart: timerange.from,
-        exceptionCreatedDateEnd: timerange.to || undefined,
+        exceptionCreatedDateEnd: timerange.to
+            ? dayjs(timerange.to).add(1, 'day').toISOString()
+            : undefined,
         carrier: Object.keys(selectedCarriers),
         brokerDealerName: Object.keys(selectedBrokerDealers),
         exceptionStatus,

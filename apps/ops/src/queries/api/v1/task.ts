@@ -129,17 +129,28 @@ export const postCaseTasksSSR = async (
 export const getCaseTaskInstances = async (
     query: any
 ): Promise<ManagementTask[] | null> => {
-    try {
-        const { data } = await client.post<any, AxiosResponse>(
-            `${baseTasksUrl}/search`,
-            query
-        );
+    const url = `${baseTasksUrl}/search`;
+    browserLogInfo(
+        'v1/task:getCaseTaskInstances::Getting Case Task Instances',
+        {
+            file: 'queries/api/v1/task',
+            function: 'getCaseTaskInstances',
+            url: url,
+        }
+    );
 
+    try {
+        const { data } = await client.post<any, AxiosResponse>(url, query);
         return data.data;
     } catch (error: any) {
-        console.error(
-            'getCaseTaskInstances::An error occurred while getting case Task Instances',
-            error
+        browserLogError(
+            'v1/task:getCaseTaskInstances::An error occurred while getting case Task Instances',
+            {
+                ...parseErrorInformation(error),
+                file: 'queries/api/v1/task',
+                function: 'getCaseTaskInstances',
+                url: url,
+            }
         );
         return error.response;
     }
@@ -149,15 +160,28 @@ export const createTask = async (
     caseId: string,
     query: CreateTaskBody<TaskStatus, TaskV1Payload>
 ): Promise<CreateTaskResponse> => {
+    const url = `${baseCasesUrl}/${caseId}/tasks`;
+    browserLogInfo('v1/task:createTask::Creating a case task ', {
+        file: 'queries/api/v1/task',
+        function: 'createTask',
+        url,
+    });
+
     try {
         const { data } = await client.post<
             CreateTaskBody<TaskStatus, TaskV1Payload>,
             AxiosResponse
-        >(`${baseCasesUrl}/${caseId}/tasks`, query);
-
+        >(url, query);
         return data;
     } catch (error: any) {
-        console.error('createTask::An error occurred create task ', error);
+        browserLogError(
+            'v1/task:createTask::An error occurred in creating task ',
+            {
+                ...parseErrorInformation(error),
+                function: 'task.createTask',
+                url,
+            }
+        );
         return error.response;
     }
 };
@@ -192,19 +216,24 @@ export const putCaseTask = async (
 
 export const getCaseTasks = async (query: any): Promise<any | null> => {
     try {
-        browserLogInfo('getCaseTasks', {
+        const url = `${baseCasesUrl}/${query.caseId}/tasks`;
+        browserLogInfo('v1/task:getCaseTasks::getCaseTasks', {
             caseId: query.caseId,
             file: 'queries/api/v1/task',
             function: 'getCaseTasks',
-            url: `${baseAppUrl}/cases/${query.caseId}/tasks`,
+            url: url,
         });
-        const { data } = await client.get<any, AxiosResponse>(
-            `${baseCasesUrl}/${query.caseId}/tasks`,
-            query
-        );
+        const { data } = await client.get<any, AxiosResponse>(url, query);
         return data?.data;
     } catch (error: any) {
-        browserLogError('getCaseTasks', { error });
+        browserLogError(
+            'v1/task:getCaseTasks::An error occurred while getting case tasks',
+            {
+                ...parseErrorInformation(error),
+                file: 'queries/api/v1/task',
+                function: 'getCaseTasks',
+            }
+        );
         return error.response;
     }
 };
@@ -260,10 +289,10 @@ export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
         return data ?? [];
     } catch (error) {
         browserLogError(
-            'getAssignedTasks::Failed to retrieve unassigned tasks',
+            'v1/task:getAssignedTasks::Error getting assigned tasks',
             {
                 ...parseErrorInformation(error),
-                file: 'queries/v1/tasks',
+                file: 'queries/ap1/v1/task',
                 function: 'getAssignedTasks',
             }
         );
@@ -271,15 +300,6 @@ export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     }
 };
 
-type TaskManagerTaskResponseData = {
-    count: number;
-    limit: number;
-    message: string;
-    offset: number;
-    status: number;
-    total: number;
-    data: (AssignedTask | UnassignedTask)[];
-};
 export const getManagerTasks = async (searchParams?: {
     field?: string;
     value?: string;
@@ -362,19 +382,20 @@ export const unassignTask = async (
         const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/assignments`;
         const { data } = await client.delete<AxiosResponse>(url);
 
-        browserLogInfo('unassignTask::Successfully unassigned task', {
+        browserLogInfo('v1/task:unassignTask::Successfully unassigned task', {
             timeElapsedSinceLoad: timeInSeconds,
             taskId,
             url,
-            function: 'tasks.unassignTask',
+            function: 'task.unassignTask',
         });
+
         return data;
     } catch (error: any) {
-        browserLogError('unassignTask::::Failed to unassign task', {
+        browserLogError('v1/task:unassignTask::Failed to unassign task', {
             ...parseErrorInformation(error),
             error,
             taskId,
-            function: 'tasks.unassignTask',
+            function: 'task.unassignTask',
         });
         return error;
     }
@@ -385,19 +406,22 @@ export const claimTask = async (taskId: string): Promise<any> => {
         const url = `${baseAppUrl}/api/case/v1/tasks/${taskId}/assignments`;
         const { data } = await client.put<AxiosResponse>(url);
 
-        browserLogInfo('Form entry time', {
+        browserLogInfo('v1/task:claimTask::Claiming task', {
             taskId,
             url,
-            function: 'tasks.claimTask',
+            function: 'task.claimTask',
         });
         return data;
     } catch (error: any) {
-        browserLogError('An error occurred during update task using v1', {
-            ...parseErrorInformation(error),
-            error,
-            taskId,
-            function: 'tasks.claimTask',
-        });
+        browserLogError(
+            'v1/task:claimTask::An error occurred during claim task using v1',
+            {
+                ...parseErrorInformation(error),
+                error,
+                taskId,
+                function: 'task.claimTask',
+            }
+        );
         return error?.data;
     }
 };

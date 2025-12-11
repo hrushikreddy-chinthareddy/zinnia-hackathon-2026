@@ -1,11 +1,3 @@
-import {
-    ArrangementType,
-    Policy,
-    Reason,
-    SystematicProgram,
-    TransactionType,
-    Policy as PolicyView,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
@@ -33,6 +25,14 @@ import { Processes } from '@deps/models/case/case';
 import { validateSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    ArrangementType,
+    Policy,
+    Reason,
+    SystematicProgram,
+    TransactionType,
+    Policy as PolicyView,
+} from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import WithdrawalAmount from './amount/withdrawalAmount';
@@ -40,6 +40,7 @@ import {
     buildSystematicProgramUpdateRequestBody,
     getSystematicInfo,
     buildSystematicWithdrawalProgramUpdateRequestBody,
+    getProcessSubTypes,
 } from './autopay.helpers';
 import Confirm from './confirm/confirm';
 import ManageSummary from './summary/manage-summary';
@@ -155,6 +156,8 @@ const AutopayContainer = ({
         systematicProgramReason == Reason.PREMIUM &&
         checkCustomPolicy(policy, CarrierCode.Farmers, FarmersPlanCodes);
 
+    const processSubType = getProcessSubTypes(parentPage);
+
     const steps: Step[] = [
         {
             component: (
@@ -187,6 +190,7 @@ const AutopayContainer = ({
                         type: transactionType,
                         step: TransactionStep.Start,
                     }}
+                    processSubType={processSubType}
                 />
             ),
             screenReaderLabel: startLabel,

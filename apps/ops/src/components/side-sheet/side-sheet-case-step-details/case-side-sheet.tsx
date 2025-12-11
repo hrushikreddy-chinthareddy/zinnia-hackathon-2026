@@ -62,7 +62,6 @@ export const doesStepHaveSidesheet = (step: TransformedStep): boolean => {
 
 export const ContractDetails = ({
     step,
-    ...rest
 }: { step: TransformedStep } & React.HTMLAttributes<HTMLDivElement>) => {
     const { t } = useTranslation();
     return (

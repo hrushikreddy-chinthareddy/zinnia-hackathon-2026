@@ -1,15 +1,17 @@
-import { toTitleCase } from '@xd/utils/dist';
-import get from 'lodash/get';
+import { merge } from 'lodash';
 import last from 'lodash/last';
 
 import { NEW_BUSINESS_API_ORIGIN } from '@deps/queries/api/server/v2/new-business';
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { NewBusiness, party, Policy } from '@deps/types/new-business';
-import { LoggingContext } from '@deps/utils/server-logging';
+import { LoggingContext, logInfo, logTrace } from '@deps/utils/server-logging';
+import { toTitleCase } from '@deps/utils/strings';
 
+import { buildConversionData } from './conversions';
 import { getAgencyIdFromHierarchy } from './get-agency-id-from-hierarchy';
-import { getSellingcodeFromPartyReference } from './get-selling-code-from-party-reference';
+import { getAgentSellingCode } from './get-agent-selling-code';
+import { validateRequiredFields } from './validate-required-fields';
 
 const INSURED_BUSINESS_LABEL = 'INSURED';
 enum AgentBusinessLabel {
@@ -19,10 +21,6 @@ enum AgentBusinessLabel {
     ADDITIONAL_WRITING_AGENT = 'ADDITIONALWRITINGAGENT',
 }
 
-const AOR_IDENTIFIER_LABEL = 'AOR';
-const UPN_IDENTIFIER_LABEL = 'UPN';
-export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
-
 export const isAgentBusinessLabel = (
     value: string
 ): value is AgentBusinessLabel => {
@@ -30,20 +28,6 @@ export const isAgentBusinessLabel = (
         value as AgentBusinessLabel
     );
 };
-
-/**
- * Returns an array with the readable names of missing fields of an object
- */
-const validateRequiredFields = (
-    object: any,
-    requiredFieldsPathArray: Record<string, string>
-) =>
-    Object.entries(requiredFieldsPathArray)
-        .filter(([path]) => {
-            const value = get(object, path);
-            return value === null || value === undefined || value === '';
-        })
-        .map(([_, label]) => label);
 
 const INSURED_PARTY_REQUIRED_FIELDS = {
     firstName: 'Insured first name',
@@ -97,6 +81,7 @@ export const buildInsuredDetailsFromNewbusiness = (
         INSURED_PARTY_REQUIRED_FIELDS
     );
 
+    // Prevent client case creation with incomplete insured data
     if (insuredPartyMissingFields.length) {
         throwTypedError(
             `There are missing insured required fields: ${insuredPartyMissingFields.join(
@@ -106,6 +91,8 @@ export const buildInsuredDetailsFromNewbusiness = (
         );
     }
 
+    // Convert ISO date string from New Business to a UTC Date object
+    // to avoid timezone shifts during SSR and form hydration
     return {
         firstName,
         lastName,
@@ -116,15 +103,19 @@ export const buildInsuredDetailsFromNewbusiness = (
         // nicotineUser
         // illustrateAtOlderAge
         // issueAge
-        // riskClass
-        // riskClassCode
     };
 };
 
-export const buildAngentDetailsFromNewBusiness = async (
+export const buildAgentDetailsFromNewBusiness = async (
     parties: party[],
     loggingContext: LoggingContext
 ) => {
+    const logPrefix = `ClientCases:New:Sureify:buildAgentDetails`;
+    const logCtx = {
+        ...loggingContext,
+        file: 'build-client-case-from-new-business',
+        function: 'buildAgentDetailsFromNewBusiness',
+    };
     const agentParties = parties.filter((party) =>
         isAgentBusinessLabel(party.partyRole)
     );
@@ -137,12 +128,17 @@ export const buildAngentDetailsFromNewBusiness = async (
             NEW_BUSINESS_API_ORIGIN
         );
     }
+
     const {
         personalInformation: agentPersonalInformation,
         email: agentEmailObject,
-        identifiers,
         partyId,
     } = agentParty;
+
+    logInfo(`${logPrefix} Found agent partyId`, {
+        ...logCtx,
+        partyId,
+    });
 
     if (!agentEmailObject) {
         throwTypedError(
@@ -153,6 +149,7 @@ export const buildAngentDetailsFromNewBusiness = async (
 
     const { emails, preferredEmailId } = agentEmailObject;
 
+    // Determine correct agent email: prefer selected email, otherwise fallback to first listed
     const agentEmail = !emails.length
         ? null
         : (preferredEmailId &&
@@ -176,35 +173,13 @@ export const buildAngentDetailsFromNewBusiness = async (
         );
     }
 
-    // get Identifiers from newBusiness
-    let agentSellingCode: string | null = null;
+    const agentSellingCode = await getAgentSellingCode(agentParty, logCtx);
 
-    if (identifiers) {
-        const aorIdentifier = identifiers.find(
-            ({ key }) => key === AOR_IDENTIFIER_LABEL
-        );
-        const upnIdentifier = identifiers.find(
-            ({ key }) => key === UPN_IDENTIFIER_LABEL
-        );
-        if (upnIdentifier?.value && aorIdentifier?.value) {
-            // For Farmers: AOR + UPN = SELLING_CODE
-            agentSellingCode = aorIdentifier.value + upnIdentifier.value;
-        }
-    }
-
-    if (!agentSellingCode) {
-        agentSellingCode = await getSellingcodeFromPartyReference(
-            partyId,
-            loggingContext
-        );
-    }
-
-    if (!agentSellingCode) {
-        return throwTypedError(
-            'Agent Selling Code was not able to be obtained',
-            NEW_BUSINESS_API_ORIGIN
-        );
-    }
+    logInfo(`${logPrefix} Found selling Code for agent`, {
+        ...logCtx,
+        partyId,
+        agentSellingCode,
+    });
 
     return {
         firstName,
@@ -214,11 +189,48 @@ export const buildAngentDetailsFromNewBusiness = async (
     };
 };
 
+/**
+ * Utility module to build a Client Case payload from a New Business object.
+ *
+ * Business Context:
+ *  - Sureify may pass an eAppId referencing a New Business application
+ *  - Our system requires a mapped Client Case record for Illustrations
+ *  - This module transforms New Business domain data → Client Case domain shape
+ *
+ * High-Level Flow:
+ *  1) Extract insured information
+ *  2) Extract agent information and selling code
+ *  3) Determine agency via selling hierarchy
+ *  4) Validate required fields exist
+ *  5) Return partial payload to initialize a Client Case
+ *
+ * Why this logic exists:
+ *  - New Business API returns raw policy + party information
+ *  - Illustrations requires normalized structure before saving
+ *  - Maintains consistency between external systems & internal case data
+ *
+ * Error Handling Strategy:
+ *  - Throws typed business errors for known missing data cases
+ *  - Prevents creation of invalid client cases
+ *  - Logging handled upstream via LoggingContext
+ *
+ * Notes:
+ *  - Date strings are normalized to UTC to avoid timezone issues
+ *  - Selling Code may originate from UPN/AOR identifiers OR PartyReference lookup
+ *  - Required fields validated both for Insured & Agent (prevents silent failures)
+ */
 export const buildClientCaseFromNewBusiness = async (
     newBusinessObject: NewBusiness,
     eAppId: string,
     loggingContext: LoggingContext
 ): Promise<Partial<IllustrationsClientCase>> => {
+    const logPrefix = `ClientCases:New:Sureify`;
+    const logCtx = {
+        ...loggingContext,
+        file: 'build-client-case-from-new-business',
+        function: 'buildClientCaseFromNewBusiness',
+    };
+
     const { parties, caseId } = newBusinessObject;
     if (!parties) {
         throwTypedError(
@@ -233,17 +245,19 @@ export const buildClientCaseFromNewBusiness = async (
             NEW_BUSINESS_API_ORIGIN
         );
     }
-
+    // Identify the insured party from list — New Business can contain multiple party roles
     const insuredDetails = buildInsuredDetailsFromNewbusiness(
         parties,
         newBusinessObject.policy
     );
 
-    const agentDetails = await buildAngentDetailsFromNewBusiness(
+    const agentDetails = await buildAgentDetailsFromNewBusiness(
         parties,
         loggingContext
     );
 
+    // Once selling code is known, derive agency for routing & permissions
+    // (hierarchy must exist for this agent in distribution system)
     const agencyId = await getAgencyIdFromHierarchy(
         agentDetails.sellingCode,
         loggingContext
@@ -256,12 +270,20 @@ export const buildClientCaseFromNewBusiness = async (
         );
     }
 
-    return {
-        eAppId,
-        caseManagementCaseId: caseId,
-        title: 'Untitled Client Case',
-        insuredDetails,
-        agentDetails,
-        agencyId,
-    };
+    logTrace(`${logPrefix} Found agencyId for eApp`, { ...logCtx, agencyId });
+
+    // Extract conversion data (if available)
+    const conversionData = buildConversionData(newBusinessObject);
+
+    return merge(
+        {
+            eAppId,
+            caseManagementCaseId: caseId,
+            title: 'Untitled Client Case',
+            insuredDetails,
+            agentDetails,
+            agencyId,
+        },
+        conversionData
+    );
 };

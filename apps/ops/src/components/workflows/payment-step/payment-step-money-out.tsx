@@ -1,9 +1,3 @@
-import {
-    PaymentForm,
-    ArrangementType,
-    Status,
-    SystematicProgram,
-} from '@zinnia/api-types/types/sor';
 import { FieldData, FieldSize, Radio } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -21,7 +15,14 @@ import { CarrierCode } from '@deps/constants/policy';
 import AddressDataCard from '@deps/containers/small-data-card/address-data/address-data';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
+import { usePaymentFormsQuery } from '@deps/hooks/usePaymentFormsQuery';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import {
+    PaymentForm,
+    ArrangementType,
+    Status,
+    SystematicProgram,
+} from '@zinnia/api-types/types/sor';
 
 import { BankDetailsCards } from './bank-details-cards';
 import { PaymentMethodType, PaymentStepProps } from './types';
@@ -35,6 +36,7 @@ const PaymentStepMoneyOut = ({
     state,
     subtitle,
     validateTransaction,
+    transactionName,
 }: PaymentStepProps) => {
     const { t } = useTranslation();
     const { goToNext } = useWorkflow();
@@ -66,9 +68,21 @@ const PaymentStepMoneyOut = ({
         data: bankDetails,
         isLoading: bankDetailsLoading,
         isError: bankDetailsError,
+        error: paymentMethodsError,
     } = usePaymentMethods({
         state,
         policy,
+    });
+    const {
+        data: PaymentForms,
+        error,
+        isLoading,
+    } = usePaymentFormsQuery({
+        planCode: product?.planCode,
+        policyNumber,
+        payeePartyId,
+        carrierId: policy?.carrierId,
+        transactionName,
     });
 
     const addresses = useMemo(() => {
@@ -205,34 +219,36 @@ const PaymentStepMoneyOut = ({
     };
 
     const paymentMethodOptions = useMemo(() => {
-        // TODO: remove this check once https://zinnia.atlassian.net/browse/DEPU-6754 is fixed
-        if (customFarmerCheck) {
-            return [
-                {
-                    ariaLabel: t('workflows.paymentStep.paymentMethod.check'),
-                    label: t('workflows.paymentStep.paymentMethod.check'),
-                    value: PaymentForm.CHECK,
-                },
-            ];
-        }
-        return [
-            {
-                ariaLabel: t('workflows.paymentStep.paymentMethod.ach'),
-                label: t('workflows.paymentStep.paymentMethod.ach'),
-                value: PaymentForm.ACH,
-            },
-            {
-                ariaLabel: t('workflows.paymentStep.paymentMethod.check'),
-                label: t('workflows.paymentStep.paymentMethod.check'),
-                value: PaymentForm.CHECK,
-            },
-            {
-                ariaLabel: t('workflows.paymentStep.paymentMethod.wire'),
-                label: t('workflows.paymentStep.paymentMethod.wire'),
-                value: PaymentForm.WIRE,
-            },
+        const defaultOptions = [
+            PaymentForm.ACH,
+            PaymentForm.CHECK,
+            PaymentForm.WIRE,
         ];
-    }, [t]);
+        const paymentFormLabels: Record<string, string> = {
+            ACH: t('workflows.paymentStep.paymentMethod.ach'),
+            CHECK: t('workflows.paymentStep.paymentMethod.check'),
+            WIRE: t('workflows.paymentStep.paymentMethod.wire'),
+        };
+
+        const forms: string[] = !customFarmerCheck
+            ? defaultOptions
+            : PaymentForms?.supportedConfigurations?.paymentForms ??
+              (isLoading ? [] : defaultOptions);
+
+        return forms.map((form: string) => {
+            const label = paymentFormLabels[form] || form;
+            return {
+                ariaLabel: label,
+                label,
+                value: PaymentForm[form as keyof typeof PaymentForm] ?? form,
+            };
+        });
+    }, [
+        t,
+        PaymentForms?.supportedConfigurations?.paymentForms,
+        isLoading,
+        customFarmerCheck,
+    ]);
 
     const mainCta = {
         text: t('general.continue'),
@@ -280,6 +296,7 @@ const PaymentStepMoneyOut = ({
                             options={paymentMethodOptions}
                             value={paymentForm}
                         />
+                        {error && <>Failed to fetch payment forms</>}
                         {paymentForm && (
                             <div className="flex flex-col gap-4">
                                 <Label
@@ -335,6 +352,9 @@ const PaymentStepMoneyOut = ({
                                     <BankDetailsCards
                                         bankDetails={bankDetails}
                                         bankDetailsError={bankDetailsError}
+                                        bankDetailsErrorDetails={
+                                            paymentMethodsError
+                                        }
                                         bankDetailsLoading={bankDetailsLoading}
                                         paymentBankId={paymentBankId}
                                         dataTestid="payment-methods-money-out"

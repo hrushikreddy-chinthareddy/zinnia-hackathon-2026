@@ -1,5 +1,4 @@
 import { datadogRum } from '@datadog/browser-rum';
-import { Phone, Party } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
@@ -10,6 +9,7 @@ import {
     LEGACY_END_DATE,
     LEGACY_START_DATE,
 } from '@deps/types/constants';
+import { Phone, Party } from '@zinnia/api-types/types/sor';
 
 import { calculateAgeNumber } from './age.helpers';
 
@@ -472,3 +472,16 @@ export const formatPercentage = (value: number | undefined) => {
     if (!value) return '';
     return `${value}%`;
 };
+
+// Creates a query string from an object.
+export const createQueryString = (obj: Record<string, unknown>) =>
+    Object.entries(obj)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
+
+export function capitalizeAfterPeriod(text: string): string {
+    if (!text) return '';
+    return text
+        .toLowerCase()
+        .replace(/(^\s*\w|\. \w)/g, (match) => match.toUpperCase());
+}

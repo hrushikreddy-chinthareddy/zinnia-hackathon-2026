@@ -1,5 +1,9 @@
 .fieldSet {
     & .inputContainer {
+        & input {
+            border-radius: 0;
+        }
+
         &:first-of-type {
             & input {
                 border-radius: 0;
@@ -77,7 +81,7 @@
         outline-offset: -2px;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
         border-left-width: 0;
         border-top-width: var(--measure-dimension-stroke-sm);
         border-radius: 0 var(--measure-dimension-radius-md)

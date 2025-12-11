@@ -1,4 +1,3 @@
-import { ExceptionCountOutputLevel1 } from '@xd/api-types/dist/generated-types/analytics';
 import {
     Icon,
     IconType,
@@ -16,6 +15,10 @@ import {
 import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { Columns, DownloadCSV } from '@deps/components/dashboard/download-csv';
 import {
@@ -27,16 +30,16 @@ import NavElement, {
 } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import Tooltip from '@deps/components/tooltip/tooltip';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { toSentenceCase } from '@deps/helpers/string.helpers';
+import {
+    capitalizeAfterPeriod,
+    toSentenceCase,
+} from '@deps/helpers/string.helpers';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { ExceptionCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import { IssueCountsByStatusHeader } from './issue-counts-by-status-header';
 import { IssueCountsByStatusContext } from '../../context/issue-counts-by-status-context';
@@ -204,27 +207,9 @@ export const IssueCountsByStatusTable = () => {
                     }
                 >
                     {issueCountsByStatusDataError ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {
-                                    'Something went wrong fetching insights, please try again by refreshing the page'
-                                }
-                            </Typography>
-                        </div>
+                        <ErrorMessage />
                     ) : searchedData?.length === 0 ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        <NoDataMessage />
                     ) : (
                         <Table>
                             <TableHeader>
@@ -364,10 +349,10 @@ export const IssueCountsByStatusTable = () => {
                                             <TableCell>
                                                 <Tooltip
                                                     body={
-                                                        toSentenceCase(
+                                                        capitalizeAfterPeriod(
                                                             item.details
                                                         ) ||
-                                                        toSentenceCase(
+                                                        capitalizeAfterPeriod(
                                                             item.reason
                                                         )
                                                     }
@@ -377,10 +362,10 @@ export const IssueCountsByStatusTable = () => {
                                                 >
                                                     {
                                                         <div className="text-left">
-                                                            {toSentenceCase(
+                                                            {capitalizeAfterPeriod(
                                                                 item.details
                                                             ) ||
-                                                                toSentenceCase(
+                                                                capitalizeAfterPeriod(
                                                                     item.reason
                                                                 )}
                                                         </div>

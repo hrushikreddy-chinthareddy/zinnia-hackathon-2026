@@ -1,6 +1,6 @@
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
-import { ClaimsBeneficiaryCall } from '../components/steps/claims/claim-beneficiary-call.tsx';
+import { ClaimsBeneficiaryCall } from '../components/steps/claims/claim-beneficiary-call';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 export const getBeneCallSteps = ({
     taskType,

@@ -1,5 +1,3 @@
-import { formatRelativeTime } from '@xd/utils/src/dates';
-import { capitalize } from '@xd/utils/src/strings';
 import {
     Icon,
     IconType,
@@ -18,6 +16,7 @@ import { TFunction } from 'next-i18next';
 import { useTranslation } from 'react-i18next';
 
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -28,6 +27,8 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductType, ProductTypeLabel } from '@deps/types/product';
+import { formatRelativeTime } from '@deps/utils/dates';
+import { capitalize } from '@deps/utils/strings';
 
 import styles from './client-case-table.module.css';
 import TableHeaderSortWrapper from './table-header-sort-wrapper.tsx/table-header-sort-wrapper';
@@ -49,7 +50,7 @@ const generateTableContent = (
                 productTypes,
                 agencyName,
             } = caseData;
-            const clientCase = title || DEFAULT_ERROR_STRING;
+            const clientCaseTitle = title || DEFAULT_ERROR_STRING;
 
             const insuredName =
                 `${insuredDetails?.firstName || ''} ${
@@ -103,12 +104,12 @@ const generateTableContent = (
                                 height={16}
                                 className={styles.iconTableAlignment}
                             />
-                            {clientCase}
+                            <PiiWrapper>{clientCaseTitle}</PiiWrapper>
                         </Typography>
                     </TableCell>
                     <TableCell>
                         <Typography variant={TypographyVariant.BodySm}>
-                            {insuredName}
+                            <PiiWrapper>{insuredName}</PiiWrapper>
                         </Typography>
                         <Typography
                             variant={TypographyVariant.BodySm}
@@ -119,7 +120,7 @@ const generateTableContent = (
                     </TableCell>
                     <TableCell>
                         <Typography variant={TypographyVariant.BodySm}>
-                            {agentName}
+                            <PiiWrapper>{agentName}</PiiWrapper>
                         </Typography>
                     </TableCell>
                     <TableCell>
@@ -205,7 +206,7 @@ export const ClientCaseTable = () => {
                                             <CircleInfoIcon
                                                 height={'16px'}
                                                 width={'16px'}
-                                                className="text-primary"
+                                                className="tooltip-primary"
                                             />
                                         }
                                         triggerClassName={styles.agentTrigger}

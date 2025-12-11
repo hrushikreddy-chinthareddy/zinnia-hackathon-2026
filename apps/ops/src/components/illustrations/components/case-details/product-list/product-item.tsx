@@ -2,10 +2,10 @@ import { Button, Divider, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Fragment } from 'react';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
+import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
@@ -13,6 +13,7 @@ import {
     IllustrationSummary,
 } from '@deps/types/illustrations';
 import { Product, ProductTypeLabel } from '@deps/types/product';
+import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import CarrierIcon from './carrier-icon';
 import styles from './product-item.module.css';
@@ -38,18 +39,15 @@ const IllustrationProductItem = ({
     const illustrationsCount = (illustrations ?? []).length;
     const router = useRouter();
     const { illustrationId } = router.query;
+    const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
+    const productName =
+        ProductTypeLabel.get(product.productType) ?? DEFAULT_ERROR_STRING;
 
     return (
         <li className={styles.productWrapper}>
             <div className={styles.product}>
                 <CarrierIcon carrierCode={product.carrier} />
-                <Badge
-                    label={
-                        ProductTypeLabel.get(product.productType) ??
-                        DEFAULT_ERROR_STRING
-                    }
-                    variant={BadgeVariant.Brand}
-                />
+                <Badge label={productName} variant={BadgeVariant.Brand} />
                 <span
                     className={clsx(
                         !illustrationsCount && 'typography-content-body',
@@ -74,6 +72,12 @@ const IllustrationProductItem = ({
                         type="button"
                         size="small"
                         className={styles.addIllustration}
+                        onClick={() => {
+                            sendIllustrationsClickedEvent(
+                                product,
+                                IllustrationsSegmentTrackedEventName.newIllustrationClicked
+                            );
+                        }}
                     >
                         <Icon type={IconType.ADD} />
                     </Button>

@@ -1,8 +1,7 @@
-import { render, renderHook, screen } from '@testing-library/react';
-import { format } from 'path';
+import { render, renderHook } from '@testing-library/react';
 
 import { IllustrationDetailProvider } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
-import { Illustration } from '@deps/queries/api/client/documents/v3/illustrations';
+import { Illustration } from '@deps/queries/api/v3/illustrations';
 
 import { useIllustrationRidersData } from './use-riders-data';
 
@@ -53,9 +52,15 @@ describe('useIllustrationRidersData', () => {
                         base: {},
                         accidentalDeathBenefit: {
                             premium: 1000,
+                            isIncludedInQuote: true,
                         },
                         childrensTerm: {
                             premium: 200,
+                            isIncludedInQuote: true,
+                        },
+                        acceleratedDeathBenefitForChronicIllness: {
+                            premium: 0,
+                            isIncludedInQuote: false,
                         },
                     },
                 },

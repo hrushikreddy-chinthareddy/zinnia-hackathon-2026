@@ -1,9 +1,5 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
-import { PartyType } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
-import { v4 as uuidV4 } from 'uuid';
 
 import Field, {
     FieldSize,
@@ -39,16 +35,8 @@ import {
     suffixOptions,
     TrustType,
 } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
-import { convertToBase64 } from '@deps/containers/people-data-cards/name-card/sidesheet/sidesheet-name-card.helpers';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
-import { uploadDocumentV2 } from '@deps/queries/api/documents';
-import {
-    EDS_DATE_DISPLAY_FORMAT,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
-import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
-import { parseErrorInformation } from '@deps/utils/server-logging';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import {
     countryOptions,
@@ -60,8 +48,6 @@ import {
     normalizeRole,
     NO,
     IDENTIFICATIONS,
-    CLIENT_COPY,
-    NEW_BUSINESS,
     entityTypeOptions,
 } from '../../role-change-helper';
 
@@ -99,7 +85,6 @@ const RoleIdentification = ({
     handleIdentificationChange,
     isReadOnly,
     role,
-    policy,
     existingRoleData,
     index,
     handleFilesChange,
@@ -113,14 +98,7 @@ const RoleIdentification = ({
         keyPrefix: 'beneChange.beneDetails.identification',
     });
 
-    const {
-        roleData,
-        setRoleData,
-        currentErrors,
-        setCurrentErrors,
-        addRole,
-        removeRole,
-    } = useRoleChange();
+    const { roleData, setRoleData, currentErrors } = useRoleChange();
     const newRole = role.toLowerCase().includes('new');
 
     const party = newRole
@@ -132,7 +110,7 @@ const RoleIdentification = ({
         : existingRoleData?.party?.identifications?.[0] || [];
 
     const genderOptions = genderOption(t2);
-    const partyTypeOptions = getPartyTypeOptions(t, role);
+    const partyTypeOptions = getPartyTypeOptions(t);
 
     const relationshipToPartyOptions = getRelationshipOptions(t);
 
@@ -144,7 +122,6 @@ const RoleIdentification = ({
 
     const firstNameExist =
         party?.firstName && party?.firstName.trim().length > 0;
-    const lastNameExist = party?.lastName && party?.lastName.trim().length > 0;
 
     const { partyType = '' } = party || {};
     let dob = '';
@@ -597,7 +574,7 @@ const RoleIdentification = ({
                 </div>
             </div>
 
-            {party?.partyType === PartyType.INDIVIDUAL && (
+            {
                 <div className={containerClasses}>
                     <div className={sectionClasses}>
                         <div className="grid w-full grid-cols-4 gap-4">
@@ -629,91 +606,90 @@ const RoleIdentification = ({
                                     />
                                 </div>
 
-                                {isRolePartyCheck && (
-                                    <>
-                                        <div className="mb-6">
-                                            <Radio
-                                                label={t('gender') as string}
-                                                items={genderOptions}
-                                                onChange={handleOnChange(
-                                                    RoleField.Gender
-                                                )}
-                                                disabled={isReadOnly}
-                                                value={party?.gender || ''}
-                                                variant={
-                                                    isReadOnly
-                                                        ? RadioVariant.Inactive
-                                                        : RadioVariant.Default
-                                                }
-                                                name={'gender' + Math.random()}
-                                            />
-                                        </div>
-                                        <div>
-                                            <FieldDateSelect
-                                                label={
-                                                    t('dateOfBirth') as string
-                                                }
-                                                id="dateOfBirth"
-                                                data-testid="dateOfBirth"
-                                                isFutureDateDisabled={false}
-                                                onChange={handleOnChange(
-                                                    RoleField.DateOfBirth
-                                                )}
-                                                size={FieldSize.Small}
-                                                type={FieldType.BaseActive}
-                                                value={
-                                                    !newRole
-                                                        ? dob
-                                                        : party?.dateOfBirth ||
-                                                          ''
-                                                }
-                                                maxLength={10}
-                                                disabled={isReadOnly}
-                                                variant={
-                                                    isReadOnly
-                                                        ? FieldVariant.Inactive
-                                                        : FieldVariant.Default
-                                                }
-                                            />
-                                        </div>
-                                    </>
-                                )}
+                                {isRolePartyCheck &&
+                                    party?.partyType ===
+                                        PartyType.INDIVIDUAL && (
+                                        <>
+                                            <div className="mb-6">
+                                                <Radio
+                                                    label={
+                                                        t('gender') as string
+                                                    }
+                                                    items={genderOptions}
+                                                    onChange={handleOnChange(
+                                                        RoleField.Gender
+                                                    )}
+                                                    disabled={isReadOnly}
+                                                    value={party?.gender || ''}
+                                                    variant={
+                                                        isReadOnly
+                                                            ? RadioVariant.Inactive
+                                                            : RadioVariant.Default
+                                                    }
+                                                    name={
+                                                        'gender' + Math.random()
+                                                    }
+                                                />
+                                            </div>
+                                            <div>
+                                                <FieldDateSelect
+                                                    label={
+                                                        t(
+                                                            'dateOfBirth'
+                                                        ) as string
+                                                    }
+                                                    id="dateOfBirth"
+                                                    data-testid="dateOfBirth"
+                                                    isFutureDateDisabled={false}
+                                                    onChange={handleOnChange(
+                                                        RoleField.DateOfBirth
+                                                    )}
+                                                    size={FieldSize.Small}
+                                                    type={FieldType.BaseActive}
+                                                    value={
+                                                        !newRole
+                                                            ? dob
+                                                            : party?.dateOfBirth ||
+                                                              ''
+                                                    }
+                                                    maxLength={10}
+                                                    disabled={isReadOnly}
+                                                    variant={
+                                                        isReadOnly
+                                                            ? FieldVariant.Inactive
+                                                            : FieldVariant.Default
+                                                    }
+                                                />
+                                            </div>
+                                        </>
+                                    )}
                             </div>
                         </div>
                     </div>
                 </div>
-            )}
+            }
 
-            {party?.partyType === PartyType.TRUST && (
-                <div className={containerClasses}>
-                    <div className={sectionClasses}>
-                        {(role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ||
-                            role.toUpperCase() ===
-                                Roles.NEWTHIRDPARTYDESIGNEE) &&
-                            party?.partyType === PartyType.TRUST && (
-                                <>
-                                    <div className="mb-7 w-[400px]">
-                                        <FileUpload
-                                            value={uploadedFiles}
-                                            onChange={handleFilesChange}
-                                        />
-                                    </div>
-                                    <Radio
-                                        items={options}
-                                        label={
-                                            t('documentsAvailable') as string
-                                        }
-                                        value={documentValid}
-                                        onChange={isRelevantChangeHandler}
-                                        orientation={
-                                            RadioOrientation.Horizontal
-                                        }
-                                    />
-                                </>
-                            )}
+            {party?.partyType === PartyType.TRUST &&
+                (role.toUpperCase() === Roles.THIRDPARTYDESIGNEE ||
+                    role.toUpperCase() === Roles.NEWTHIRDPARTYDESIGNEE) && (
+                    <div className={containerClasses}>
+                        <div className={sectionClasses}>
+                            <div className="mb-7 w-[400px]">
+                                <FileUpload
+                                    value={uploadedFiles}
+                                    onChange={handleFilesChange}
+                                />
+                            </div>
+                            <Radio
+                                items={options}
+                                label={t('documentsAvailable') as string}
+                                value={documentValid}
+                                onChange={isRelevantChangeHandler}
+                                orientation={RadioOrientation.Horizontal}
+                            />
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
         </div>
     );
 };

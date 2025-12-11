@@ -1,6 +1,5 @@
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
-
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { getPolicyBadgeStatusTooltip } from './global-values-helpers';
 

@@ -1,0 +1,53 @@
+import { SideSheet } from '@zinnia/bloom/components';
+import { Dispatch, SetStateAction } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { toTitleCase } from '@deps/helpers/string.helpers';
+import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
+import { Transaction } from '@zinnia/api-types/types/sor';
+
+import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
+
+/**
+ * A Sidesheet component that displays all key-value pairs of a policy.
+ *
+ * When opened, it displays a date picker to select a date, and a search field to search
+ * key-value pairs. The date picker is disabled for future dates, and the search field
+ * filters down the key-value pairs based on the search value.
+ *
+ * @param {string} transaction - the plan code of the policy
+ * @returns {JSX.Element} - the rendered component
+ */
+export const FindAllKeyValuesTransactionSidesheet = ({
+    transaction,
+    open,
+    onOpenChange,
+}: {
+    transaction: Transaction;
+    open: boolean;
+    onOpenChange: Dispatch<SetStateAction<boolean>>;
+}) => {
+    const { t } = useTranslation();
+
+    return (
+        <SideSheet
+            trigger={null}
+            header={
+                <span className="typography-desktop-headline-2-d">
+                    {toTitleCase(
+                        t(
+                            `historyEventCard.transactionTypes.${transaction.transactionType}`
+                        ) ?? ''
+                    )}
+                </span>
+            }
+            open={open}
+            onOpenChange={onOpenChange}
+            preventCloseOnOutsideClick={false}
+        >
+            <TreeStateProvider initialTreeState={Collapse}>
+                <TransactionSidesheetContent transaction={transaction} />
+            </TreeStateProvider>
+        </SideSheet>
+    );
+};

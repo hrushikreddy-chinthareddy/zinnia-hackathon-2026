@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { PartyRole } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -29,6 +27,8 @@ import {
     checkEmailChangeEligibilityQuery,
     checkCommunicationPreferenceChangeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 
@@ -61,6 +61,9 @@ export const PersonSubPage = ({
             ) || []
         );
     }, [partyRoles, selectedPolicyParty?.partyId]);
+    const hasTPD = selectedPolicyPartyRoles.some(
+        (policy) => policy.partyRole === PartyRole.THIRDPARTYDESIGNEE
+    );
 
     // to do - this is the new implementation of the Parties Class - update in all locations, rather than just the Identification Card
     const newSelectedPolicyParty = policyDetails.getPartyById(partyId);
@@ -158,7 +161,12 @@ export const PersonSubPage = ({
         );
 
     const { data: phoneChangeEligibility } = useQuery({
-        queryKey: ['checkPhoneChangeEligibilityQuery', planCode, policyNumber],
+        queryKey: [
+            'checkPhoneChangeEligibilityQuery',
+            planCode,
+            policyNumber,
+            policy.policyNumber,
+        ],
         queryFn: () =>
             checkPhoneChangeEligibilityQuery(
                 planCode as string,
@@ -272,17 +280,18 @@ export const PersonSubPage = ({
                 />
 
                 <hr className="h-0.5 border-none bg-gray-200" />
-                <BankCard
-                    editable={editable}
-                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
-                    party={selectedPolicyParty}
-                    // TODO CB - set these ase vars to be reused above
-                    planCode={planCode}
-                    policyNumber={policyNumber}
-                    isEligible={
-                        manageBankChangeEligibility?.isEligibleBankChange
-                    }
-                />
+                {!hasTPD && (
+                    <BankCard
+                        editable={editable}
+                        isUserPermissionedToEditCards={isUserAllowedToEditCards}
+                        party={selectedPolicyParty}
+                        planCode={planCode}
+                        policyNumber={policyNumber}
+                        isEligible={
+                            manageBankChangeEligibility?.isEligibleBankChange
+                        }
+                    />
+                )}
 
                 {isInsured && (
                     <>

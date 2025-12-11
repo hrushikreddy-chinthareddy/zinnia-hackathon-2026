@@ -1,6 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import clsx from 'clsx';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useRef, useState } from 'react';
+
+import { calculateMenuPlacement } from './menu-placement';
 
 export interface MenuContextualProps {
     children: ReactNode;
@@ -20,31 +22,52 @@ export const MenuContextual = ({
     const [side, setSide] =
         useState<DropdownMenu.DropdownMenuContentProps['side']>('bottom');
     const [open, setOpen] = useState(false);
+    const menuContentRef = useRef<HTMLDivElement>(null);
 
-    const triggerRef = useCallback((node: HTMLButtonElement) => {
-        if (node !== null && node.dataset.state === 'open') {
-            const { bottom, left, right, top } = node.getBoundingClientRect();
+    const calculateAndSetPlacement = useCallback(
+        (triggerElement: HTMLButtonElement) => {
+            const triggerRect = triggerElement.getBoundingClientRect();
+            const viewport = {
+                scrollY: window.scrollY,
+                innerHeight: window.innerHeight,
+                innerWidth: window.innerWidth,
+            };
 
-            setSide(
-                Math.floor((top + bottom) / 2) >
-                    Math.floor(window.innerHeight / 2)
-                    ? 'top'
-                    : 'bottom'
+            let dimensions = { height: 300, width: 320 };
+
+            if (menuContentRef.current) {
+                const menuRect = menuContentRef.current.getBoundingClientRect();
+                dimensions = {
+                    height: menuRect.height || 300,
+                    width: menuRect.width || 320,
+                };
+            }
+
+            const placement = calculateMenuPlacement(
+                triggerRect,
+                viewport,
+                dimensions
             );
-            setAlign(
-                Math.floor((left + right) / 2) >
-                    Math.floor(window.innerWidth / 2)
-                    ? 'end'
-                    : 'start'
-            );
-        }
-    }, []);
+            setSide(placement.side);
+            setAlign(placement.align);
+        },
+        []
+    );
+
+    const triggerRef = useCallback(
+        (node: HTMLButtonElement) => {
+            if (!node?.dataset.state || node.dataset.state !== 'open') return;
+            calculateAndSetPlacement(node);
+        },
+        [calculateAndSetPlacement]
+    );
 
     const placementClasses = clsx({
-        'right-full': align === 'end',
-        'left-full': align === 'start',
+        'right-full': align === 'end' && (side === 'top' || side === 'bottom'),
+        'left-full': align === 'start' && (side === 'top' || side === 'bottom'),
         'top-full mt-1': side === 'bottom',
         'bottom-full mb-1': side === 'top',
+        'right-full ml-1': side === 'left',
     });
 
     return (
@@ -67,7 +90,7 @@ export const MenuContextual = ({
             <DropdownMenu.Portal>
                 <DropdownMenu.Content
                     className={clsx(
-                        'absolute z-[300] flex max-w-[320px] flex-col items-start justify-center gap-2 rounded bg-gray-900 py-4 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
+                        'absolute z-[300] max-w-[320px] sm:max-h-[65vh] md:max-h-[40vh] overflow-y-auto rounded bg-gray-900 shadow-elevation-light-16 data-[state=closed]:animate-fadeOut data-[state=open]:animate-fadeIn',
                         placementClasses
                     )}
                     side={side}
@@ -76,7 +99,7 @@ export const MenuContextual = ({
                     onEscapeKeyDown={() => setOpen(false)}
                     onInteractOutside={() => setOpen(false)}
                 >
-                    <ul className="flex flex-col items-start gap-4 rounded-md">
+                    <ul className="flex flex-col items-start gap-4 rounded-md py-4">
                         {children}
                     </ul>
                 </DropdownMenu.Content>

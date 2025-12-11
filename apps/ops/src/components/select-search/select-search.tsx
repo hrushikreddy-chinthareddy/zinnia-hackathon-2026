@@ -1,4 +1,3 @@
-import useDebounce from '@xd/hooks/useDebounce';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -13,6 +12,7 @@ import SelectSearchItem from '@deps/components/select-search/select-search-item/
 import { TranslationFiles } from '@deps/config/translations';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { filterOnSearchHandler } from '@deps/helpers/search.helpers';
+import { useDebounce } from '@deps/hooks/useDebounce';
 import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { DataDefinition } from '@deps/types/data';
 import {
@@ -126,7 +126,7 @@ const SelectSearch = ({
             {
                 dropdownName: 'Key Value Search',
                 searchText: searchValue as string,
-                session_id: sessionId as string,
+                authSessionId: sessionId as string,
                 userId: userPartyId as string,
             }
         );
@@ -146,7 +146,7 @@ const SelectSearch = ({
         } else {
             setSearchResults(values);
         }
-    }, [debouncedSearchValue]);
+    }, [debouncedSearchValue, values]);
 
     const mergedLabelClassNames = getLabelClasses(
         variant,
@@ -184,12 +184,9 @@ const SelectSearch = ({
         />
     );
 
-    const handleSelect = useCallback(
-        (select = false) => {
-            setIsSelected(select);
-        },
-        [isSelected, searchValue]
-    );
+    const handleSelect = useCallback((select = false) => {
+        setIsSelected(select);
+    }, []);
 
     return (
         <div className={classNames}>

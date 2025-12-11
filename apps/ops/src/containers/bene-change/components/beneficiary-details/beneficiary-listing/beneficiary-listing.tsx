@@ -1,5 +1,4 @@
 import { Transition } from '@headlessui/react';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
@@ -17,6 +16,7 @@ import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider
 import { SorSystem } from '@deps/models/policy/enums';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import BeneficiaryDetails from '../beneficiary-details';
 import BeneficiaryListingItem from '../beneficiary-listing-item/beneficiary-listing-item';

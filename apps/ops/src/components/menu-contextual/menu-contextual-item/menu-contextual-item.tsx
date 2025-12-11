@@ -1,6 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import clsx from 'clsx';
-import { useRouter } from 'next/router';
 
 import NavElement, {
     NavElementType,
@@ -10,9 +9,10 @@ import styles from './menu-contextual-item.module.css';
 
 export interface MenuContextualItemProps {
     content: string;
-    href: string;
+    href?: string;
     icon?: React.ReactNode;
     onClick?: () => void;
+    type?: NavElementType;
     disabled?: boolean;
     openInNewTab?: boolean;
 }
@@ -23,14 +23,11 @@ const MenuContextualItem = ({
     href,
     onClick,
     disabled,
+    type = NavElementType.Link,
     openInNewTab,
 }: MenuContextualItemProps) => {
-    const router = useRouter();
-
     const handleSelect = () => {
         onClick && onClick();
-
-        !openInNewTab && router.push(href);
     };
 
     return (
@@ -40,7 +37,7 @@ const MenuContextualItem = ({
                     styles.menuContextualItem,
                     disabled && styles.disabled
                 )}
-                type={NavElementType.Link}
+                type={type}
                 disabled={disabled}
                 href={href}
                 rel={openInNewTab ? 'noopener noreferrer' : undefined}

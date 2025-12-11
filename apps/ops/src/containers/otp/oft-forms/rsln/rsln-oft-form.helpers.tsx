@@ -13,7 +13,10 @@ import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
-import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import {
+    SignatureFieldNames,
+    SignatureFields,
+} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationConfig } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
@@ -44,16 +47,10 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import {
-    commonOftFormValidation,
-    getQualTypeOptions,
-} from '../oft-form-helpers';
+import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import { getQualTypeOptions } from '../oft-form-helpers';
 
 export default function getRSLNOftConfig(t: TFunction) {
-    // importing base configuration from FLIC form helper.
-    const formValidation = (values: Partial<FormParts> = {}) =>
-        commonOftFormValidation(t, values);
-
     const signaturesConfig: SignatureValidationConfig[] = [
         {
             key: `sig-val-owner`,
@@ -80,7 +77,8 @@ export default function getRSLNOftConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'owner-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.Owner,
@@ -110,7 +108,8 @@ export default function getRSLNOftConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'joint-sign-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType: SignatureValidationTypeWithdrawal.JointOwner,
@@ -146,7 +145,8 @@ export default function getRSLNOftConfig(t: TFunction) {
                     component: SignatureFields.SignatureComment,
                     key: 'beneficiary-sign-comment',
                     label: 'signatureCommentLabel',
-                    displayLogic: (val: SignatureWithdrawal) => val.isSigned,
+                    displayLogic: (val: SignatureWithdrawal) =>
+                        val.isSignatureValid === true,
                 },
             ],
             signatureType:
@@ -154,28 +154,118 @@ export default function getRSLNOftConfig(t: TFunction) {
         },
     ];
 
-    const oftFormValidation = ({
-        formParty,
+    const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
-        const errors = formValidation({
-            formParty,
-            formSignature,
-            formDisbursement,
-        });
+        const errors = {} as FormValidationErrors;
+        if (
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
 
         // fbo details required
         if (
-            ![PaymentMethod.DTCC].includes(
-                formDisbursement?.paymentMethod.text as PaymentMethod
-            ) &&
             formDisbursement?.paymentMethod.text &&
             !formDisbursement?.payee?.fboDetails?.text
         ) {
             errors['fboDetails'] = t('formValidation.fboDetails');
         }
-        return errors;
+
+        const jointOwnerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.JointOwner
+        );
+
+        const beneficiarySignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+        );
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSigned &&
+            !jointOwnerSignature?.isSignatureValid &&
+            jointOwnerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSigned &&
+            !beneficiarySignature?.isSignatureValid &&
+            beneficiarySignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSignatureValid &&
+            !jointOwnerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSignatureValid &&
+            !beneficiarySignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const formPartyConfigs: PartyConfig[] = [
@@ -919,69 +1009,6 @@ export default function getRSLNOftConfig(t: TFunction) {
                 };
             },
         },
-        {
-            label: t('distributionMethod.dtcc'),
-            value: FormDisbursementSelections.DTCC,
-            fields: [
-                {
-                    fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maxLength: 40,
-                },
-                {
-                    fieldName: BankingFields.ParticipantId,
-                    fieldLabel: t('distributionMethod.participantId'),
-                    component: DisbursementFields.SelectParticipantId,
-                },
-                {
-                    fieldName: BankingFields.ContractNumber,
-                    fieldLabel: t('distributionMethod.onlyContractNumber'),
-                    component: DisbursementFields.BankTextField,
-                    maxLength: 30,
-                },
-            ],
-            getDefaultPayload({
-                paymentMethod,
-                payee,
-                participantId,
-                bank,
-            }: FormDisbursement) {
-                if (paymentMethod.text !== FormDisbursementSelections.DTCC) {
-                    return DEFAULT_DISBURSEMENT_UPDATE;
-                }
-                return {
-                    ...DEFAULT_DISBURSEMENT_UPDATE,
-                    payeeName: payee?.name.text ?? '',
-                    address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
-                    contractNumber: bank?.[0]?.accountNumber ?? '',
-                    participantId: participantId?.text ?? '',
-                };
-            },
-            generatePayloadFromSelection: ({
-                payeeName,
-                participantId,
-                contractNumber,
-            }: DisbursementParts) => {
-                return {
-                    ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.DTCC },
-                    participantId: { text: participantId ?? null },
-                    payee: {
-                        name: { text: payeeName ?? null },
-                        addresses: [],
-                        contractNumber: { text: null },
-                    },
-                    bank: [
-                        {
-                            ...DEFAULT_BANK_DETAILS,
-                            accountNumber: contractNumber ?? '',
-                        },
-                    ],
-                };
-            },
-        },
     ];
 
     const selectOneOptions: SelectOneOption[] = [
@@ -1003,7 +1030,7 @@ export default function getRSLNOftConfig(t: TFunction) {
     ];
 
     const defaultValues = {
-        disbursementOption: FormDisbursementSelections.DTCC,
+        disbursementOption: FormDisbursementSelections.EFT,
     };
 
     const eSignatureFieldConfig = {
@@ -1017,7 +1044,7 @@ export default function getRSLNOftConfig(t: TFunction) {
     return {
         signaturesConfig,
         formPartyConfigs,
-        formValidation: oftFormValidation,
+        formValidation,
         disbursementOptions,
         surrenderingInstructionsOptions,
         identifySelectedFormProgramOption,

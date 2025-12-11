@@ -1,6 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import {
     Button,
     Icon,
@@ -31,13 +30,13 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/Document
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
+import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { formatDateTime } from '@deps/helpers/string.helpers';
+import { formatDateTime, toTitleCase } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import {
     includeDocumentTypeForInboundSearch,
@@ -68,16 +67,17 @@ import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outli
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
+import { formatTimestamp } from '@deps/utils/dates';
 import { isProd } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import {
     isAPIErrorInformation,
     isClaimNextTask,
     RequestData,
 } from './type-guards';
-import { formatTimestamp } from '../../../../../../packages/utils/src/dates';
 
 export enum TabOptions {
     Details = 'Details',
@@ -131,7 +131,7 @@ const DocumentItem = ({ document, taskCarrier, t }: DocumentItemProps) => {
                 </div>
             </div>
             <div className="ml-auto">
-                {createAction(
+                {createViewDownloadAction(
                     document as V3DocumentWithSource,
                     taskCarrier.toUpperCase(),
                     t,
@@ -150,7 +150,7 @@ const DocumentsListComponent = ({
     t,
     documentsListType,
 }: {
-    documentsList: DocumentWithSource[] | V3DocumentWithSource[];
+    documentsList: V3DocumentWithSource[];
     task: { carrier: string };
     t: TFunction;
     documentsListType?: string;
@@ -211,7 +211,7 @@ export default function GlobalTaskSideSheet({
         useState('');
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
-    const [timer] = useState(performance.now());
+    const { isZinniaInternalProcessor } = usePermissionsContext();
     const limit = 25;
     const offset = 0;
 
@@ -232,9 +232,10 @@ export default function GlobalTaskSideSheet({
                 SearchRequest.documentClassification.INBOUND,
             zinniaLiveCaseId: task.caseId,
             excludeDocumentTypes,
-            ...(includeDocumentTypeForInboundSearch(task.carrier) && {
-                documentType: includeDocumentTypesInbound.join(','),
-            }),
+            ...(includeDocumentTypeForInboundSearch(task.carrier) &&
+                !isZinniaInternalProcessor && {
+                    documentType: includeDocumentTypesInbound.join(','),
+                }),
         };
     }, [task]);
 
@@ -310,12 +311,12 @@ export default function GlobalTaskSideSheet({
                     setErrorClaimingTask(false);
                     setClaimingTaskErrorMessage('');
                     browserLogInfo(
-                        'task-queue:handleClaimTask::Successfully claimed task',
+                        'global-task:handleClaimTask::Successfully claimed task',
                         { taskId: taskId }
                     );
                 } else {
                     browserLogInfo(
-                        'task-queue:handleClaimTask::An error occurred while claiming the task',
+                        'global-task:handleClaimTask::An error occurred while claiming the task',
                         {
                             taskId: taskId,
                             status: isAPIErrorInformation(response)
@@ -330,7 +331,7 @@ export default function GlobalTaskSideSheet({
                 }
             } catch (e) {
                 browserLogError(
-                    'task-queue:handleClaimTask::Error claiming task',
+                    'global-task:handleClaimTask::Error claiming task',
                     {
                         ...parseErrorInformation(e),
                         taskId: task.id,
@@ -368,7 +369,7 @@ export default function GlobalTaskSideSheet({
                 const taskData = await getTaskInstance({ taskId });
                 if (!taskData) {
                     browserLogError(
-                        'handleStartTask::Task data could not be retrieved.',
+                        'global-task:handleStartTask::Task data could not be retrieved.',
                         {
                             taskId,
                             fileName: 'global-task-sidesheet-content',
@@ -384,8 +385,7 @@ export default function GlobalTaskSideSheet({
                 const response = await updateTask(
                     taskData.caseId,
                     taskData.id,
-                    body,
-                    timer
+                    body
                 );
                 if (response) {
                     await router.push(url);
@@ -394,11 +394,14 @@ export default function GlobalTaskSideSheet({
                 }
             }
         } catch (error) {
-            browserLogError('handleStartTask::Error handling start task', {
-                ...parseErrorInformation(error),
-                taskId,
-                fileName: 'global-task-sidesheet-content',
-            });
+            browserLogError(
+                'global-task:handleStartTask::Error handling start task',
+                {
+                    ...parseErrorInformation(error),
+                    taskId,
+                    fileName: 'global-task-sidesheet-content',
+                }
+            );
         } finally {
             setStartLoader(false);
         }
@@ -443,7 +446,7 @@ export default function GlobalTaskSideSheet({
     let allowedTaskStatusForStartBtnDisplay = [
         TaskStatus.New,
         TaskStatus.InProgress,
-        TaskStatus.Pending,
+        TaskStatus.Scheduled,
         TaskStatus.Completed,
     ];
 
@@ -455,7 +458,7 @@ export default function GlobalTaskSideSheet({
         task.status
     );
     const statusReason =
-        task.status === TaskStatus.Pending
+        task.status === TaskStatus.Scheduled
             ? task.scheduledReason
             : task.cancellationReason;
 
@@ -484,10 +487,10 @@ export default function GlobalTaskSideSheet({
             badgeVariant = BadgeVariant.Inactive;
             badgeLabel = TaskLabel.Canceled;
             break;
-        case TaskStatus.Pending:
+        case TaskStatus.Scheduled:
             badgeIcon = <Pause height={16} width={16} />;
             badgeVariant = BadgeVariant.Error;
-            badgeLabel = TaskLabel.Pending;
+            badgeLabel = toTitleCase(TaskStatus.Scheduled);
             break;
         default:
             badgeIcon = <ClipboardIcon height={16} width={16} />;
@@ -533,7 +536,7 @@ export default function GlobalTaskSideSheet({
     };
     const statuses = [
         {
-            label: 'Pending',
+            label: TaskLabel.Scheduled,
             icon: <Pause width={16} height={16} />,
             onSelect: () => {
                 openSideSheet();
@@ -543,7 +546,7 @@ export default function GlobalTaskSideSheet({
 
     const renderTaskStatus = (status: TaskStatus) => {
         const validTaskStatuses = [
-            TaskStatus.Pending,
+            TaskStatus.Scheduled,
             TaskStatus.Canceled,
             TaskStatus.Completed,
             TaskStatus.Closed,
@@ -559,7 +562,7 @@ export default function GlobalTaskSideSheet({
             : 'N/A';
 
         switch (status) {
-            case TaskStatus.Pending:
+            case TaskStatus.Scheduled:
                 label = t('sideSheet.task.pendinglabel');
                 timestamp = formattedPending
                     ? formatTimestamp(formattedPending, 'standard')
@@ -648,7 +651,7 @@ export default function GlobalTaskSideSheet({
                     )}
                 </div>
 
-                {((task.status === TaskStatus.Pending &&
+                {((task.status === TaskStatus.Scheduled &&
                     task.scheduledReason) ||
                     (task.status === TaskStatus.Canceled &&
                         task.cancellationReason)) &&

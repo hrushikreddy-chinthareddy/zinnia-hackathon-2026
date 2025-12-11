@@ -1,23 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useTranslation } from 'react-i18next';
 
-import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart';
+import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
-    startDates,
-    TimeframeFilterOptions,
     toProcessRoleRows,
     top5ProcessesByVisibleRoles,
     toGroupedBarSeriesFromRows,
@@ -26,7 +24,13 @@ import {
 } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName, ApiRoles } from '../utils';
+import {
+    colors,
+    generateCSVFileName,
+    ApiRoles,
+    startDates,
+    TimeframeFilterOptions,
+} from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({
     title,
@@ -74,9 +78,20 @@ export const ZinniaLiveCaseViewsByTransaction = ({
     const categories = top5ProcessesByVisibleRoles(rows);
 
     const series = toGroupedBarSeriesFromRows(rows, categories, colors);
+    const hasNoCategories = !categories || categories.length === 0;
+    const hasNoSeries = !series || series.length === 0;
+    const seriesAllEmpty =
+        !hasNoSeries &&
+        series.every(
+            (s) =>
+                !s.data || s.data.length === 0 || s.data.every((v) => v === 0)
+        );
 
     const chartNotRenderable =
-        zinniaLiveCaseViewsByTransactionDataError || !series?.length;
+        zinniaLiveCaseViewsByTransactionDataError ||
+        hasNoCategories ||
+        hasNoSeries ||
+        seriesAllEmpty;
 
     const { t } = useTranslation();
 
@@ -88,10 +103,10 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                     t('usage.pageViews.zinniaLiveCaseViews.description') ?? ''
                 )}
                 data={zinniaLiveCaseViewsByTransactionData?.data || []}
-                csvFileName={generateCSVFileName(
-                    'usage.pageViews.zinniaLiveCaseViews.title',
-                    timerange
-                )}
+                csvFileName={generateCSVFileName({
+                    title: t('usage.pageViews.zinniaLiveCaseViews.title'),
+                    timerange,
+                })}
                 csvFunction={PrepareTop5CaseViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">
@@ -129,17 +144,11 @@ export const ZinniaLiveCaseViewsByTransaction = ({
             >
                 <div className="w-full flex-grow">
                     {chartNotRenderable ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {chartNotRenderable
-                                    ? 'Something went wrong fetching the zinnia live unique logins, please try again by refreshing the page'
-                                    : 'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        zinniaLiveCaseViewsByTransactionDataError ? (
+                            <ErrorMessage />
+                        ) : (
+                            <NoDataMessage />
+                        )
                     ) : (
                         <GroupedColumnsChart
                             categories={categories}
@@ -149,17 +158,22 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                             height={495}
                             pointWidth={8}
                             tooltipFormatter={categoryValueTooltip}
+                            labelRotation={-45.604}
                         />
                     )}
                 </div>
                 <div className="w-full pl-2">
-                    {series?.length !== 0 && (
-                        <Legend
-                            title={''} // no title needed
-                            colors={series.map((item) => item.color)}
-                            labels={series.map((item) => item.name)}
-                        />
-                    )}
+                    {categories &&
+                        categories.length > 0 &&
+                        series &&
+                        series.length > 0 &&
+                        !seriesAllEmpty && (
+                            <Legend
+                                title={''} // no title needed
+                                colors={series.map((item) => item.color)}
+                                labels={series.map((item) => item.name)}
+                            />
+                        )}
                 </div>
             </BlurOverlayLoader>
         </div>

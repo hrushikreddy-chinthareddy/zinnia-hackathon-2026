@@ -43,6 +43,7 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
             triggerAsChild
             trigger={
                 <div
+                    aria-label={t('site.navLinks.userMenu.text') as string}
                     tabIndex={0}
                     className={clsx(
                         styles.contextTrigger,

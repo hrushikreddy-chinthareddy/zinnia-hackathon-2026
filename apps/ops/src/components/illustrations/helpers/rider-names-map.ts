@@ -1,3 +1,5 @@
+import { RiderName } from '@deps/types/illustrations';
+
 const _riderNamesMap = {
     acceleratedDeathBenefit: 'Accelerated Death Benefit',
     accidentalDeathBenefit: 'Accidental Death Benefit',
@@ -11,7 +13,8 @@ const _riderNamesMap = {
     waiverOfDeduction: 'Waiver of Deduction',
     waiverOfPremium: 'Waiver of Premium',
     guaranteedInsurabilityBenefit: 'Guaranteed Insurability Benefit',
-} as const;
+    ownerWaiverOfDeduction: 'Owner Waiver of Deduction',
+} satisfies Record<RiderName, string>;
 
 export const riderNamesMap = _riderNamesMap as typeof _riderNamesMap &
     Record<string, undefined>;

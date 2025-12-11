@@ -1,3 +1,7 @@
+import { friendlyGroupByName } from '@deps/components/dashboard/utils';
+import { Statuses } from '@deps/models/case/case';
+import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
+import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 import {
     CaseCountGroupByEnum,
     CaseCountInput,
@@ -5,11 +9,9 @@ import {
     CompletedCaseTimeGroupByEnum,
     CompletedCaseTimeInputFilter,
     ExceptionCountGroupByEnum,
+    TaskCountGroupByEnum,
+    TaskCountInputFilter,
 } from '@zinnia/api-types/types/analytics';
-
-import { friendlyGroupByName } from '@deps/components/dashboard/utils';
-import { Statuses } from '@deps/models/case/case';
-import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
 
 import { getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
 
@@ -98,6 +100,52 @@ export const getExceptionCountQuery = async (
     );
 
     return exceptionResponse;
+};
+
+export const getTaskCountQuery = async (
+    baseFilter: TaskCountInputFilter,
+    groupBy: TaskCountGroupByEnum[]
+) => {
+    const taskCountResponse = await getTaskCountData({
+        filter: baseFilter,
+        groupBy: groupBy,
+    });
+
+    if (
+        !taskCountResponse ||
+        'detail' in taskCountResponse ||
+        !('data' in taskCountResponse)
+    ) {
+        throw taskCountResponse;
+    }
+    taskCountResponse.data = taskCountResponse.data
+        .filter((item) => item.name !== null && item.name !== 'null')
+        .map((item) => {
+            // Handle empty names
+            if (item.name === '') {
+                const friendlyName = friendlyGroupByName[groupBy[0]];
+                item.name = `No ${friendlyName.toLowerCase()} name`;
+            }
+
+            // Filter nested values as well
+            if (item.values && item.values.length > 0) {
+                item.values = item.values
+                    .filter(
+                        (value) => value.name !== null && value.name !== 'null'
+                    )
+                    .map((value) => {
+                        // Handle empty or missing task names
+                        if (value.name === '' || !value.name) {
+                            value.name = 'Unknown task';
+                        }
+                        return value;
+                    });
+            }
+
+            return item;
+        });
+
+    return taskCountResponse;
 };
 
 /**************************

@@ -1,14 +1,4 @@
 import {
-    FullSurrenderRequest,
-    PartialWithdrawalOneTimeRequest,
-} from '@zinnia/api-types/types/bpm';
-import {
-    ArrangementType,
-    LineOfBusiness,
-    Policy,
-} from '@zinnia/api-types/types/sor';
-
-import {
     NewLoanRequestQuery,
     LoanRepaymentOneTimeRequestQuery,
     OneTimePremiumRequestQuery,
@@ -19,6 +9,15 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import {
+    FullSurrenderRequest,
+    PartialWithdrawalOneTimeRequest,
+} from '@zinnia/api-types/types/bpm';
+import {
+    ArrangementType,
+    LineOfBusiness,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import { EventConfig } from './submit-transaction-event-constants';
 
@@ -77,7 +76,7 @@ export const buildNonFinancialTransactionsSubmittedEvent = ({
         ...deriveDocContextFromQuery(query),
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };
@@ -105,7 +104,7 @@ export const buildOneTimeFinancialTransactionSubmittedEvent = ({
         carrier: getCarrierFromPolicy(policy) ?? '',
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };
@@ -124,7 +123,7 @@ export const buildFullSurrenderSubmittedEvent = ({
         ...deriveDocContextFromQuery(query),
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };
@@ -215,7 +214,7 @@ export const buildSystematicProgramSubmittedEvent = ({
         carrier: getCarrierFromPolicy(policy) ?? '',
         case_id: caseId ?? '',
         product_kind: getProductKindFromPolicy(policy),
-        session_id: sessionId,
+        authSessionId: sessionId,
         user_id: userId,
         userId,
     };

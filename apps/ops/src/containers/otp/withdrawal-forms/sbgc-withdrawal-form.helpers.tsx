@@ -3,18 +3,16 @@ import { TFunction } from 'next-i18next';
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
     BankingFields,
-    DisbursementFields,
     getDefaultFormDisbursementValues,
+    updateBankingDetails,
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
+import { BankingDetails } from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
 import { PartyConfig } from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import { PartyFields } from '@deps/components/otp-withdrawal-form/form-party/party-helpers';
 import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/party-phone';
 import { Description } from '@deps/components/otp-withdrawal-form/form-restriction/description';
 import { ReasonDate } from '@deps/components/otp-withdrawal-form/form-restriction/reason-date';
-import {
-    SignatureFieldNames,
-    SignatureFields,
-} from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
+import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -42,6 +40,7 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../utils/helper-utils';
+import { validateSignESign } from './utils/form-validator.helpers';
 
 export default function getSbgcConfig(t: TFunction) {
     const signaturesConfig = [
@@ -122,8 +121,11 @@ export default function getSbgcConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formDisbursement,
+        formESignatureData,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
+
+        // TODO: DEPU-7616
         if (
             [PaymentMethod.EFT, PaymentMethod.Wire].includes(
                 formDisbursement?.paymentMethod?.text as PaymentMethod
@@ -149,25 +151,6 @@ export default function getSbgcConfig(t: TFunction) {
             }
         }
 
-        const ownerSignature = formSignature?.signatures?.find(
-            (sigInfo) =>
-                sigInfo?.signType?.text ===
-                SignatureValidationTypeWithdrawal.Owner
-        );
-
-        // No choice made for signature
-        if (ownerSignature?.isSigned !== false && !ownerSignature?.isSigned) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-            ] = t('formValidation.signaturePresentOptionMustBeSelected');
-        }
-
-        if (ownerSignature?.isDesignationPresent === null) {
-            errors[
-                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-            ] = t('formValidation.signatureDesignationMustBeSelected');
-        }
-
         if (
             formDisbursement?.bank[0].accountType?.text === '' &&
             [PaymentMethod.EFT, PaymentMethod.Wire].includes(
@@ -178,7 +161,15 @@ export default function getSbgcConfig(t: TFunction) {
                 'formValidation.accountTypeMustBeSelected'
             );
         }
-        return errors;
+
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: true,
+        });
+
+        return { ...errors, ...signESignValidate };
     };
 
     const disbursementOptions = (withdrawalType: string) => {
@@ -190,33 +181,25 @@ export default function getSbgcConfig(t: TFunction) {
                     {
                         fieldLabel: t('distributionMethod.chooseTheBank'),
                         fieldName: BankingFields.Bank,
-                        component: DisbursementFields.SelectBank,
+                        fieldType: 'choose-the-bank',
                     },
                     {
-                        fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                        fieldName: BankingFields.IsVoidCheckAttached,
-                        component: DisbursementFields.BankBooleanButtonGroup,
-                        classNames: 'col-start-1',
-                    },
-                    {
-                        fieldLabel: t(
-                            'distributionMethod.doesCheckMeetSecurityRequirements'
-                        ),
-                        fieldName:
-                            BankingFields.DoesCheckMeetSecurityRequirements,
-                        component: DisbursementFields.BankBooleanButtonGroup,
+                        fieldName: BankingFields.ChooseBankingType,
+                        fieldLabel: t('distributionMethod.chooseTheBank'),
+                        fieldType: 'choose-the-banking-type',
+                        classNames: 'col-start-1 col-span-2 mt-2',
                     },
                     {
                         fieldName: BankingFields.AccountType,
                         fieldLabel: t('distributionMethod.accountType'),
-                        component: DisbursementFields.AccountTypes,
-                        classNames: 'col-span-2 w-full',
+                        fieldType: 'account-type',
+                        classNames: 'col-start-1 col-span-2 mt-2',
                         isBankingField: true,
                     },
                     {
                         fieldName: BankingFields.AccountNumber,
                         fieldLabel: t('distributionMethod.accountNumber'),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         classNames: 'col-start-1',
                         isBankingField: true,
                         maskOnBlur: true,
@@ -227,7 +210,7 @@ export default function getSbgcConfig(t: TFunction) {
                         fieldLabel: t(
                             'distributionMethod.reEnterAccountNumber'
                         ),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         classNames: 'col-start-2',
                         isBankingField: true,
                         disableCopyPaste: true,
@@ -237,9 +220,9 @@ export default function getSbgcConfig(t: TFunction) {
                         ),
                     },
                     {
-                        fieldName: BankingFields.BankRoutingNumber,
+                        fieldName: 'routingNumber',
                         fieldLabel: t('distributionMethod.bankRoutingNumber'),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         isBankingField: true,
                         classNames: 'col-start-1',
                         maskOnBlur: true,
@@ -250,84 +233,68 @@ export default function getSbgcConfig(t: TFunction) {
                         fieldLabel: t(
                             'distributionMethod.reEnterBankRoutingNumber'
                         ),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         isBankingField: true,
                         disableCopyPaste: true,
                         validator: createValidator(
-                            'bankRoutingNumber',
+                            'routingNumber' as any,
                             t('formValidation.routingNumberDoesNotMatch')
                         ),
                     },
                     {
                         fieldName: BankingFields.BankName,
                         fieldLabel: t('distributionMethod.bankName'),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         isBankingField: true,
-                        classNames: 'col-start-1',
-                    },
-                    {
-                        fieldName: BankingFields.AccountHolder,
-                        fieldLabel: t('distributionMethod.accountHolder'),
-                        component: DisbursementFields.BankTextField,
-                        classNames: 'col-start-2',
+                        classNames: 'col-start-1 w-full',
                     },
                 ],
-                getDefaultPayload({
-                    paymentMethod,
-                    doesCheckMeetSecRequiremnt,
-                    voidCheck,
-                    bank,
-                }: FormDisbursement) {
+                getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
                     if (paymentMethod.text !== PaymentMethod.EFT) {
                         return DEFAULT_DISBURSEMENT_UPDATE;
                     }
                     const selectedBank = bank[0];
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        doesCheckMeetSecurityRequirements:
-                            doesCheckMeetSecRequiremnt,
-                        isVoidCheckAttached: voidCheck,
                         accountHolder: selectedBank.nameOnBankAccount ?? '',
                         accountNumber: selectedBank.accountNumber ?? '',
                         accountType:
                             selectedBank.accountType?.text ??
                             AccountType.Checking,
-                        bankName: selectedBank.bankName ?? '',
                         bankRoutingNumber: selectedBank.routingNumber ?? '',
                     };
                 },
-                generatePayloadFromSelection: ({
-                    accountNumber,
-                    accountType,
-                    bankName,
-                    bankRoutingNumber,
-                    accountHolder,
-                    isVoidCheckAttached,
-                    doesCheckMeetSecurityRequirements,
-                    reEnterAccountNumber,
-                    reEnterBankRoutingNumber,
-                }: DisbursementParts) => {
+                generatePayloadFromSelection: (
+                    defaultDisbursementInfo: any,
+                    bankingInFile?: BankingDetails[] | null | []
+                ) => {
+                    let bank = [];
+                    if (bankingInFile && bankingInFile?.length > 0) {
+                        bank = updateBankingDetails(
+                            bankingInFile[0],
+                            defaultDisbursementInfo
+                        );
+                    } else {
+                        bank = defaultDisbursementInfo?.bank?.[0];
+                    }
+
                     return {
                         ...getDefaultFormDisbursementValues(),
-                        paymentMethod: { text: PaymentMethod.EFT || '' },
+                        paymentMethod: { text: PaymentMethod.EFT },
                         paymentMailType: { text: null },
                         bank: [
                             {
                                 ...DEFAULT_BANK_DETAILS,
-                                accountNumber,
+                                accountNumber: bank?.accountNumber ?? '',
                                 accountType: {
-                                    text: accountType,
+                                    text: bank?.accountType?.text,
                                 },
-                                bankName,
-                                nameOnBankAccount: accountHolder ?? '',
-                                routingNumber: bankRoutingNumber,
-                                reEnterAccountNumber,
-                                reEnterBankRoutingNumber,
+                                bankName: bank?.bankName ?? '',
+                                routingNumber: bank?.bankRoutingNumber ?? '',
                             },
                         ],
-                        voidCheck: isVoidCheckAttached ?? null,
-                        doesCheckMeetSecRequiremnt:
-                            doesCheckMeetSecurityRequirements ?? null,
+                        bankVerification:
+                            defaultDisbursementInfo?.bankVerification ?? null,
                     };
                 },
             },
@@ -336,30 +303,29 @@ export default function getSbgcConfig(t: TFunction) {
                 value: FormDisbursementSelections.Wire,
                 fields: [
                     {
-                        fieldLabel: t('distributionMethod.isVoidCheckAttached'),
-                        fieldName: BankingFields.IsVoidCheckAttached,
-                        component: DisbursementFields.BankBooleanButtonGroup,
-                        classNames: 'col-start-1',
+                        fieldLabel: t('distributionMethod.chooseTheBank'),
+                        fieldName: BankingFields.Bank,
+                        fieldType: 'choose-the-bank',
                     },
                     {
-                        fieldLabel: t(
-                            'distributionMethod.doesCheckMeetSecurityRequirements'
-                        ),
-                        fieldName:
-                            BankingFields.DoesCheckMeetSecurityRequirements,
-                        component: DisbursementFields.BankBooleanButtonGroup,
+                        fieldName: BankingFields.ChooseBankingType,
+                        fieldLabel: t('distributionMethod.chooseTheBank'),
+                        fieldType: 'choose-the-banking-type',
+                        classNames: 'col-start-1 col-span-2 mt-2',
                     },
                     {
                         fieldName: BankingFields.AccountType,
                         fieldLabel: t('distributionMethod.accountType'),
-                        component: DisbursementFields.AccountTypes,
-                        classNames: 'col-span-2 w-full',
+                        fieldType: 'account-type',
+                        classNames: 'col-start-1 col-span-2 mt-2',
+                        isBankingField: true,
                     },
                     {
                         fieldName: BankingFields.AccountNumber,
                         fieldLabel: t('distributionMethod.accountNumber'),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         classNames: 'col-start-1',
+                        isBankingField: true,
                         maskOnBlur: true,
                         disableCopyPaste: true,
                     },
@@ -368,7 +334,7 @@ export default function getSbgcConfig(t: TFunction) {
                         fieldLabel: t(
                             'distributionMethod.reEnterAccountNumber'
                         ),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         classNames: 'col-start-2',
                         isBankingField: true,
                         disableCopyPaste: true,
@@ -378,10 +344,12 @@ export default function getSbgcConfig(t: TFunction) {
                         ),
                     },
                     {
-                        fieldName: BankingFields.BankRoutingNumber,
+                        fieldName: 'routingNumber',
                         fieldLabel: t('distributionMethod.bankRoutingNumber'),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
+                        isBankingField: true,
                         classNames: 'col-start-1',
+                        maskOnBlur: true,
                         disableCopyPaste: true,
                     },
                     {
@@ -389,62 +357,43 @@ export default function getSbgcConfig(t: TFunction) {
                         fieldLabel: t(
                             'distributionMethod.reEnterBankRoutingNumber'
                         ),
-                        component: DisbursementFields.BankTextField,
+                        fieldType: 'text',
                         isBankingField: true,
                         disableCopyPaste: true,
                         validator: createValidator(
-                            'bankRoutingNumber',
+                            'routingNumber' as any,
                             t('formValidation.routingNumberDoesNotMatch')
                         ),
                     },
                     {
                         fieldName: BankingFields.BankName,
                         fieldLabel: t('distributionMethod.bankName'),
-                        component: DisbursementFields.BankTextField,
-                        classNames: 'col-start-1',
-                    },
-                    {
-                        fieldName: BankingFields.AccountHolder,
-                        fieldLabel: t('distributionMethod.accountHolder'),
-                        component: DisbursementFields.BankTextField,
-                        classNames: 'col-start-2',
+                        fieldType: 'text',
+                        isBankingField: true,
+                        classNames: 'col-start-1 w-full',
                     },
                 ],
-                getDefaultPayload({
-                    paymentMethod,
-                    doesCheckMeetSecRequiremnt,
-                    voidCheck,
-                    bank,
-                }: FormDisbursement) {
+                getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
                     if (paymentMethod.text !== PaymentMethod.Wire) {
                         return DEFAULT_DISBURSEMENT_UPDATE;
                     }
                     const selectedBank = bank[0];
                     return {
                         ...DEFAULT_DISBURSEMENT_UPDATE,
-                        doesCheckMeetSecurityRequirements:
-                            doesCheckMeetSecRequiremnt,
-                        isVoidCheckAttached: voidCheck,
                         accountHolder: selectedBank.nameOnBankAccount ?? '',
                         accountNumber: selectedBank.accountNumber ?? '',
                         accountType:
                             selectedBank.accountType?.text ??
                             AccountType.Checking,
-                        bankName: selectedBank.bankName ?? '',
                         bankRoutingNumber: selectedBank.routingNumber ?? '',
+                        bankName: selectedBank.bankName ?? '',
                     };
                 },
-                generatePayloadFromSelection: ({
-                    accountNumber,
-                    accountType,
-                    bankName,
-                    bankRoutingNumber,
-                    accountHolder,
-                    isVoidCheckAttached,
-                    doesCheckMeetSecurityRequirements,
-                    reEnterAccountNumber,
-                    reEnterBankRoutingNumber,
-                }: DisbursementParts) => {
+                generatePayloadFromSelection: (
+                    defaultDisbursementInfo: any
+                ) => {
+                    const bank = defaultDisbursementInfo?.bank?.[0];
+
                     return {
                         ...getDefaultFormDisbursementValues(),
                         paymentMethod: { text: PaymentMethod.Wire || '' },
@@ -452,20 +401,20 @@ export default function getSbgcConfig(t: TFunction) {
                         bank: [
                             {
                                 ...DEFAULT_BANK_DETAILS,
-                                accountNumber,
+                                accountNumber: bank?.accountNumber ?? '',
                                 accountType: {
-                                    text: accountType,
+                                    text: bank?.accountType,
                                 },
-                                bankName,
-                                nameOnBankAccount: accountHolder ?? '',
-                                routingNumber: bankRoutingNumber,
-                                reEnterAccountNumber,
-                                reEnterBankRoutingNumber,
+                                bankName: bank?.bankName ?? '',
+                                routingNumber: bank?.bankRoutingNumber,
+                                reEnterAccountNumber:
+                                    bank?.reEnterAccountNumber,
+                                reEnterBankRoutingNumber:
+                                    bank?.reEnterBankRoutingNumber,
                             },
                         ],
-                        voidCheck: isVoidCheckAttached ?? null,
-                        doesCheckMeetSecRequiremnt:
-                            doesCheckMeetSecurityRequirements ?? null,
+                        bankVerification:
+                            defaultDisbursementInfo?.bankVerification ?? null,
                     };
                 },
             },
@@ -478,7 +427,6 @@ export default function getSbgcConfig(t: TFunction) {
                 },
                 generatePayloadFromSelection: () => {
                     return {
-                        ...getDefaultFormDisbursementValues(),
                         paymentMethod: { text: PaymentMailType.Check },
                         paymentMailType: { text: null },
                     };
@@ -491,6 +439,7 @@ export default function getSbgcConfig(t: TFunction) {
                 getDefaultPayload() {
                     return DEFAULT_DISBURSEMENT_UPDATE;
                 },
+
                 generatePayloadFromSelection: () => {
                     return {
                         ...getDefaultFormDisbursementValues(),
@@ -505,25 +454,28 @@ export default function getSbgcConfig(t: TFunction) {
                 fields: [
                     {
                         fieldName: BankingFields.AccountNumber,
-                        component: DisbursementFields.BankTextField,
                         fieldLabel: t('distributionMethod.accountNumber'),
+                        fieldType: 'text',
+                        classNames: 'col-start-1',
                     },
                     {
                         fieldName: BankingFields.CompanyName,
-                        component: DisbursementFields.BankTextField,
                         fieldLabel: t('distributionMethod.companyName'),
+                        fieldType: 'text',
+                        classNames: 'col-start-2',
                     },
 
                     {
                         fieldName: BankingFields.Address,
                         fieldLabel: '',
-                        component: DisbursementFields.BankAddress,
+                        fieldType: 'address',
+                        classNames: 'col-start-1 col-span-2 w-full',
                     },
                     {
                         fieldName: BankingFields.AcordAttached,
                         fieldLabel: t('distributionMethod.acordFormReceived'),
-                        component: DisbursementFields.BankCheckboxField,
                         classNames: 'col-start-1',
+                        fieldType: 'checkbox',
                     },
                 ],
                 getDefaultPayload({
@@ -567,21 +519,24 @@ export default function getSbgcConfig(t: TFunction) {
                       value: FormDisbursementSelections.AlternatePayeeAddress,
                       fields: [
                           {
-                              fieldName: BankingFields.PayeeName,
+                              fieldName: 'name',
                               fieldLabel: t('distributionMethod.payeeName'),
-                              component: DisbursementFields.BankTextField,
                               maxLength: 40,
+                              fieldType: 'text',
+                              classNames: 'col-start-1',
                           },
                           {
                               fieldName: BankingFields.FboDetails,
                               fieldLabel: t('distributionMethod.fboDetails'),
-                              component: DisbursementFields.BankTextField,
+                              fieldType: 'text',
                               maxLength: 35,
+                              classNames: 'col-start-2',
                           },
                           {
                               fieldName: BankingFields.Address,
-                              component: DisbursementFields.BankAddress,
-                              fieldLabel: '',
+                              fieldType: 'address',
+                              classNames: 'col-start-1 col-span-2 w-full',
+                              isAddressLine2Required: true,
                           },
                       ],
                       getDefaultPayload({
@@ -629,6 +584,7 @@ export default function getSbgcConfig(t: TFunction) {
         ];
         return data.filter((item) => item !== null);
     };
+
     const formPartyConfigs: PartyConfig[] = [
         {
             partyRoleType: PartyRoles.OWNER,

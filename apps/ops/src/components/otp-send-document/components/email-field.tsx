@@ -22,20 +22,20 @@ const EmailAddress = ({
     name,
     isDisabled,
 }: EmailAddressProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
 
     return (
         <div>
             <Field
                 disabled={isDisabled}
-                label={t('correspondence.email') as string}
+                label={t('allFields.email') ?? ''}
                 onChange={(e) => {
                     setEmail(xss(e?.target?.value?.trim() ?? ''));
                 }}
                 value={email as string}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
-                className="max-w-xs "
+                className="max-w-xs"
                 message={error?.email}
                 variant={
                     error?.email
@@ -44,8 +44,8 @@ const EmailAddress = ({
                         ? FieldVariant.Inactive
                         : FieldVariant.Default
                 }
-                labelTooltip={t('correspondence.email') as string}
-                labelTooltipBody={t('correspondence.emailTooltip') as string}
+                labelTooltip={t('allFields.email') ?? ''}
+                labelTooltipBody={t('allFields.emailTooltip') ?? ''}
                 name={name ?? 'emailField'}
             />
         </div>

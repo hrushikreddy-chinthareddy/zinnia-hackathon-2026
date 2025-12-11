@@ -1,5 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-import { convertToCamelCase } from '@zinnia/utils';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
@@ -19,6 +17,8 @@ import {
     DEFAULT_DATE_FORMAT,
     DEFAULT_ERROR_STRING,
 } from '@deps/types/constants';
+import { convertToCamelCase } from '@deps/utils/strings';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export type WithdrawalRulesProps = {
     policy: Policy;

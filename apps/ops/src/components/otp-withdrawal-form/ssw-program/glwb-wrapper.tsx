@@ -18,8 +18,13 @@ const GlWbWrapper = ({ sswData }: GlWbWrapperProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.sswProgram',
     });
-    const { formParty, setFormParty, formProgram, setFormProgram } =
-        useContext(FormDataContext);
+    const {
+        formParty,
+        setFormParty,
+        formProgram,
+        setFormProgram,
+        isFormStateReadOnly,
+    } = useContext(FormDataContext);
 
     const [glwbType, setGlwbType] = useState(
         formProgram?.glwbType?.text || GlwbType.Dynamic
@@ -56,6 +61,7 @@ const GlWbWrapper = ({ sswData }: GlWbWrapperProps) => {
                             size={FieldSize.Small}
                             value={glwbType}
                             name="glwb-type"
+                            disabled={isFormStateReadOnly}
                         />
                     </div>
                     {formParty.parties.map(
@@ -67,7 +73,9 @@ const GlWbWrapper = ({ sswData }: GlWbWrapperProps) => {
                                     <GuaranteedWithdrawalBenefits
                                         glwbDetails={item}
                                         setFormParty={setFormParty}
-                                        isFormStateReadOnly={false}
+                                        isFormStateReadOnly={
+                                            isFormStateReadOnly
+                                        }
                                         key={item.partyRoleType}
                                     />
                                 </>

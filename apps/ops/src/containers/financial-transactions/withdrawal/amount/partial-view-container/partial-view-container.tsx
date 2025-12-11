@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 import { ChangeEvent, useCallback } from 'react';
 
@@ -17,6 +16,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 const getRadioItems = (
     t: TFunction,

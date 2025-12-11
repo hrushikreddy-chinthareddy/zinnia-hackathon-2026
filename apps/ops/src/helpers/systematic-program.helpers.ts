@@ -1,9 +1,10 @@
+import { TFunction } from 'next-i18next';
+
 import {
     DisbursementPaymentForm,
     Frequency,
     PaymentForm,
 } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
 
 export const getPaymentType = (
     paymentType: DisbursementPaymentForm | PaymentForm | null,
@@ -23,7 +24,7 @@ export const getFrequency = (frequency: Frequency, t: TFunction): string => {
         case Frequency.DAILY:
             return t('systematicProgram.frequency.daily');
         case Frequency.EVERYTWOWEEKS:
-            return t('systematicProgram.frequency.biAnnual');
+            return t('systematicProgram.frequency.everyTwoWeeks');
         case Frequency.MONTHLY:
             return t('systematicProgram.frequency.monthly');
         case Frequency.SEMIANNUAL:

@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -14,18 +13,27 @@ import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useDeathClaimSupportingDocument } from '@deps/hooks/useDeathClaimSupportingDocument';
+import { UserProfile } from '@deps/models/user-profile';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { RoleType } from './death-claim.types';
 import DocumentSelectionModal from './document-selection/document-selection-modal';
 import ConfirmStep from './steps/confirm/confirm-step';
 import { DeathClaimNotificationStep } from './steps/death-claim-notifier/death-claim-notifier-step';
 import NotificationMethodStep from './steps/notification-method/notification-method.step';
+
 interface DeathClaimContainerProps {
     policy: Policy;
+    user: UserProfile;
+    correlationId: string;
 }
 
-const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
+const DeathClaimContainer = ({
+    policy,
+    user,
+    correlationId,
+}: DeathClaimContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims',
     });
@@ -113,6 +121,8 @@ const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
                     <DeathClaimNotificationStep
                         policy={policy}
                         showNotification={showNotificationMethod}
+                        user={user}
+                        correlationId={correlationId}
                     />
                 ),
                 screenReaderLabel: t('tabs.deathClaimNotification'),
@@ -126,6 +136,8 @@ const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
                     <NotificationMethodStep
                         communicationOptions={communicationOptions}
                         policy={policy}
+                        user={user}
+                        correlationId={correlationId}
                     />
                 ),
                 screenReaderLabel: t('tabs.notificationMethod'),
@@ -135,13 +147,26 @@ const DeathClaimContainer = ({ policy }: DeathClaimContainerProps) => {
             {
                 ariaLabel: t('tabs.confirm'),
                 isVisible: () => true,
-                component: <ConfirmStep policy={policy} />,
+                component: (
+                    <ConfirmStep
+                        policy={policy}
+                        user={user}
+                        correlationId={correlationId}
+                    />
+                ),
                 screenReaderLabel: t('tabs.confirm'),
                 index: 2,
                 text: t('tabs.confirm'),
             },
         ],
-        [t, policy, communicationOptions, showNotificationMethod]
+        [
+            t,
+            policy,
+            showNotificationMethod,
+            user,
+            correlationId,
+            communicationOptions,
+        ]
     );
 
     const filteredSteps: Step[] = useMemo(

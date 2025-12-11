@@ -12,6 +12,7 @@ import PolicySummaryCard, {
     PolicyQuickView,
 } from '@deps/containers/policy-summary-card/policy-summary-card';
 import SearchResults from '@deps/containers/search-results/search-results';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import {
     PolicySearchFilters,
     PolicySearchFiltersContext,
@@ -30,42 +31,87 @@ import {
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
-const toggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
-    {
-        label: t('dashboard.search.buttons.policyNumber'),
-        value: 'policyNumber',
-        placeholder: '',
-        errorMessage: t('dashboard.search.error.policyNumber') as string,
-    },
-    {
-        label: t('dashboard.search.buttons.ssn'),
-        value: 'ssn',
-        fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
-        placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
-        format: '###-##-####',
-        replaceValue: '-',
-        errorMessage: t('dashboard.search.error.ssn') as string,
-    },
-    {
-        label: t('dashboard.search.buttons.name'),
-        value: 'firstName',
-        group: [
+const toggleLabels =
+    (featureFlags: FeatureFlags) =>
+    (t: TFunction): LabelValue<PolicySearchKeys>[] =>
+        [
             {
-                label: t('dashboard.search.buttons.firstName'),
+                label: t('dashboard.search.buttons.policyNumber'),
+                value: 'policyNumber',
+                placeholder: '',
+                errorMessage: t(
+                    'dashboard.search.error.policyNumber'
+                ) as string,
+            },
+            {
+                label: t('dashboard.search.buttons.ssn'),
+                value: 'ssn',
+                fullLabel: t('dashboard.search.buttons.ssnFullLabel') ?? '',
+                placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
+                format: '###-##-####',
+                replaceValue: '-',
+                errorMessage: t('dashboard.search.error.ssn') as string,
+            },
+            {
+                label: t('dashboard.search.buttons.name'),
                 value: 'firstName',
-                placeholder: '',
-                errorMessage: t('dashboard.search.error.firstName') as string,
+                ...(featureFlags.enterprise_search_trust_or_organization
+                    ? {
+                          group: [
+                              {
+                                  label: t(
+                                      'dashboard.search.buttons.firstName'
+                                  ),
+                                  value: 'firstName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.firstName'
+                                  ) as string,
+                              },
+                              {
+                                  label: t('dashboard.search.buttons.lastName'),
+                                  value: 'lastName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.lastName'
+                                  ) as string,
+                              },
+                              {
+                                  label: t('dashboard.search.buttons.fullName'),
+                                  value: 'fullName',
+                                  placeholder: 'Trust or organization',
+                                  errorMessage: t(
+                                      'dashboard.search.error.fullName'
+                                  ) as string,
+                              },
+                          ],
+                      }
+                    : {
+                          group: [
+                              {
+                                  label: t(
+                                      'dashboard.search.buttons.firstName'
+                                  ),
+                                  value: 'firstName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.firstName'
+                                  ) as string,
+                              },
+                              {
+                                  label: t('dashboard.search.buttons.lastName'),
+                                  value: 'lastName',
+                                  placeholder: '',
+                                  errorMessage: t(
+                                      'dashboard.search.error.lastName'
+                                  ) as string,
+                              },
+                          ],
+                      }),
             },
-            {
-                label: t('dashboard.search.buttons.lastName'),
-                value: 'lastName',
-                placeholder: '',
-                errorMessage: t('dashboard.search.error.lastName') as string,
-            },
-        ],
-    },
-];
+        ];
 
 export interface DashboardContextProps {
     searchValue: SearchViewQuery;
@@ -93,6 +139,8 @@ export const PolicyIndexCardView = ({
     } = useContext(PolicySearchFiltersContext);
 
     const { searchValue, limit, offset } = policySearchFilters;
+
+    const { featureFlags } = useOptimizely();
 
     const goToPage = (pageNumber: number) => {
         setPolicySearchFilters({
@@ -174,7 +222,7 @@ export const PolicyIndexCardView = ({
                 ssnUsed: !!value?.ssn,
                 firstNameUsed: !!value?.firstName,
                 lastNameUsed: !!value?.lastName,
-                session_id: user.sid,
+                authSessionId: user.sid,
                 userId: user.partyId,
             }
         );
@@ -236,7 +284,7 @@ export const PolicyIndexCardView = ({
                 <SearchBar
                     searchValue={policySearchFilters.searchValue}
                     onSearch={handleSearch}
-                    toggleLabels={toggleLabels}
+                    toggleLabels={toggleLabels(featureFlags)}
                     initialToggleValue={policySearchFilters.toggleValue}
                     onClear={async () => {
                         await removePolicyNumberFromQuery(router);

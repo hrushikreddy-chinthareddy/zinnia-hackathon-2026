@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Button } from '@zinnia/bloom/components';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback, useEffect, useRef, useState } from 'react';
@@ -34,16 +33,15 @@ import {
     renderTiffPagesToContainer,
     ViewerState,
 } from '@deps/utils/fileviewer/tiffUtils';
-import {
-    isFeatureFlagVariableActive,
-    optimizelyService,
-} from '@deps/utils/optimizely/optimizely';
+import { optimizelyService } from '@deps/utils/optimizely/optimizely';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     logWarn,
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import nextI18nextConfig from 'next-i18next.config';
 
 const DocumentViewerPage = ({

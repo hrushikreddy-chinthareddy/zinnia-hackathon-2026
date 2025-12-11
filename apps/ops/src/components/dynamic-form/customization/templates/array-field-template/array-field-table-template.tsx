@@ -9,11 +9,25 @@ import {
 } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
+import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { parseAndFormatDate } from '@deps/helpers/string.helpers';
+import {
+    isNullEmptyOrUndefined,
+    parseAndFormatDate,
+} from '@deps/helpers/string.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+
+export enum PropertyKey {
+    TransactionAmount = 'transactionAmount',
+    CheckAmount = 'checkAmount',
+    TransactionDate = 'transactionDate',
+}
 
 export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
-    const { items, schema, formData, uiSchema } = props;
+    const { items, schema, formData, uiSchema, title } = props;
     const [columns, setColumns] = useState<{ [key: string]: string }>({});
     const [sortedData, setSortedData] = useState<any[]>([]);
     const [sortColumn, setSortColumn] = useState<string | null>(null);
@@ -22,6 +36,7 @@ export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
     >('ascending');
     const uiOptions = getUiOptions(uiSchema);
     const sorting = uiOptions.sorting as boolean | undefined;
+    const tableTitle = uiOptions.title || title;
 
     useEffect(() => {
         const cols: { [key: string]: string } = {};
@@ -75,58 +90,77 @@ export function ArrayFieldTableTemplate(props: ArrayFieldTemplateProps) {
     return (
         <>
             {schema.type === 'array' && (
-                <Table>
-                    <TableHeader>
-                        <TableRow>
-                            {Object.entries(columns).map(
-                                ([property, title], index) => (
-                                    <TableHeaderCell
-                                        key={property}
-                                        className="typography-content-body-sm-bold"
-                                        sortable={sorting}
-                                        onClick={() => handleSort(property)}
-                                    >
-                                        {sorting && sortColumn === property
-                                            ? `${title} ${
-                                                  sortDirection === 'ascending'
-                                                      ? '↑'
-                                                      : '↓'
-                                              }`
-                                            : title}
-                                    </TableHeaderCell>
-                                )
-                            )}
-                        </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                        {sortedData.map((element: any, index: number) => (
-                            <TableRow key={element.key ?? index}>
-                                {Object.keys(columns).map((property) => (
-                                    <TableCell
-                                        key={property}
-                                        className="typography-content-body-sm"
-                                    >
-                                        {property === 'transactionAmount' &&
-                                        element[property] != null
-                                            ? numberFormatify(
-                                                  Math.abs(element[property])
-                                              )
-                                            : property === 'transactionDate' &&
-                                              element[property] != null
-                                            ? parseAndFormatDate(
-                                                  'YYYY-MM-DD',
-                                                  'MM-DD-YYYY',
-                                                  element[property]
-                                              )
-                                            : element[property] != null
-                                            ? element[property]
-                                            : ''}
-                                    </TableCell>
-                                ))}
+                <>
+                    {tableTitle && (
+                        <Typography
+                            variant={TypographyVariant.BodyBold}
+                            className="mb-2"
+                        >
+                            {tableTitle as string}
+                        </Typography>
+                    )}
+                    <Table>
+                        <TableHeader>
+                            <TableRow>
+                                {Object.entries(columns).map(
+                                    ([property, title]) => (
+                                        <TableHeaderCell
+                                            key={property}
+                                            className="typography-content-body-sm-bold"
+                                            sortable={sorting}
+                                            onClick={() => handleSort(property)}
+                                        >
+                                            {sorting && sortColumn === property
+                                                ? `${title} ${
+                                                      sortDirection ===
+                                                      'ascending'
+                                                          ? '↑'
+                                                          : '↓'
+                                                  }`
+                                                : title}
+                                        </TableHeaderCell>
+                                    )
+                                )}
                             </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                        </TableHeader>
+                        <TableBody>
+                            {sortedData.map((element: any, index: number) => (
+                                <TableRow key={element.key ?? index}>
+                                    {Object.keys(columns).map((property) => (
+                                        <TableCell
+                                            key={property}
+                                            className="typography-content-body-sm"
+                                        >
+                                            {(property ===
+                                                PropertyKey.TransactionAmount ||
+                                                property ===
+                                                    PropertyKey.CheckAmount) &&
+                                            element[property] != null
+                                                ? numberFormatify(
+                                                      Math.abs(
+                                                          element[property]
+                                                      )
+                                                  )
+                                                : property ===
+                                                      PropertyKey.TransactionDate &&
+                                                  element[property] != null
+                                                ? parseAndFormatDate(
+                                                      ZAHARA_DATE_FORMAT,
+                                                      'MM-DD-YYYY',
+                                                      element[property]
+                                                  )
+                                                : !isNullEmptyOrUndefined(
+                                                      element[property]
+                                                  )
+                                                ? element[property]
+                                                : DEFAULT_ERROR_STRING}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                </>
             )}
         </>
     );

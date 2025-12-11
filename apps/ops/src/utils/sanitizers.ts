@@ -1,16 +1,3 @@
-import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/types/pom';
-import {
-    Address,
-    BankAccount,
-    Email,
-    Identification,
-    IdentificationType,
-    Phone,
-    Policy,
-    PolicyCoverage,
-    State,
-    TaxWithholding,
-} from '@zinnia/api-types/types/sor';
 import { ApiError } from 'next/dist/server/api-utils';
 
 import {
@@ -32,8 +19,25 @@ import {
     AgentEmail,
     AgentPhone,
 } from '@deps/types/agents';
-import { CaseSearchResponse } from '@deps/types/search';
+import {
+    CaseSearchResponse,
+    PolicyReferenceSearchResponse,
+} from '@deps/types/search';
+import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/types/pom';
+import {
+    Address,
+    BankAccount,
+    Email,
+    Identification,
+    IdentificationType,
+    Phone,
+    Policy,
+    PolicyCoverage,
+    State,
+    TaxWithholding,
+} from '@zinnia/api-types/types/sor';
 
+import { getErrorMessage } from './error-utils';
 import {
     logErrorWithoutContext,
     parseErrorInformation,
@@ -79,9 +83,9 @@ export const caseSearchSanitizer = (
         });
         throw new ApiError(
             500,
-            `caseSearchSanitizer::error sanitizing case search results: ${
-                (e as Error).message
-            }`
+            `caseSearchSanitizer::error sanitizing case search results: ${getErrorMessage(
+                e
+            )}`
         );
     }
 };
@@ -145,7 +149,7 @@ export const policySanitizer = ({ parties = [], ...rest }: Policy): Policy => {
         });
         throw new ApiError(
             500,
-            `policySanitizer::error sanitizing policy: ${(e as Error).message}`
+            `policySanitizer::error sanitizing policy: ${getErrorMessage(e)}`
         );
     }
 };
@@ -166,9 +170,9 @@ export const policySanitizerWithoutSSN = ({
         });
         throw new ApiError(
             500,
-            `policySanitizerWithoutSSN::error sanitizing policy: ${
-                (e as Error).message
-            }`
+            `policySanitizerWithoutSSN::error sanitizing policy: ${getErrorMessage(
+                e
+            )}`
         );
     }
 };
@@ -193,9 +197,33 @@ export const policyResponseSanitizer = (
         });
         throw new ApiError(
             500,
-            `policyResponseSanitizer::error sanitizing policyResponse: ${
-                (e as Error).message
-            }`
+            `policyResponseSanitizer::error sanitizing policyResponse: ${getErrorMessage(
+                e
+            )}`
+        );
+    }
+};
+
+export const policySearchResponseSanitizer = (
+    policySearchResponse: PolicyReferenceSearchResponse
+): PolicyReferenceSearchResponse => {
+    try {
+        const results = policySearchResponse.results.map((party) => {
+            return { ...party, ssn: formatSSN(party.ssn) };
+        });
+        return { ...policySearchResponse, results };
+    } catch (e) {
+        logErrorWithoutContext(
+            'sanitizers::policySearchResponseSanitizer::error',
+            {
+                ...parseErrorInformation(e),
+            }
+        );
+        throw new ApiError(
+            500,
+            `policySearchResponseSanitizer::error sanitizing policySearchResponse: ${getErrorMessage(
+                e
+            )}`
         );
     }
 };
@@ -213,9 +241,9 @@ export const lcPartyResponseSanitizer = (
         });
         throw new ApiError(
             500,
-            `lcPartyResponseSanitizer::error sanitizing lcPartyResponse: ${
-                (e as Error).message
-            }`
+            `lcPartyResponseSanitizer::error sanitizing lcPartyResponse: ${getErrorMessage(
+                e
+            )}`
         );
     }
 };
@@ -443,9 +471,33 @@ export const fullyMaskPolicyResponse = (
         });
         throw new ApiError(
             500,
-            `fullyMaskPolicyResponse::error masking policy response: ${
-                (e as Error).message
-            }`
+            `fullyMaskPolicyResponse::error masking policy response: ${getErrorMessage(
+                e
+            )}`
+        );
+    }
+};
+
+export const fullyMaskPolicySearchResponse = (
+    policySearchResponse: PolicyReferenceSearchResponse
+): PolicyReferenceSearchResponse => {
+    try {
+        const results = policySearchResponse.results.map((party) => {
+            return { ...party, ssn: toMaskedStringOrNull(party.ssn) ?? '' };
+        });
+        return { ...policySearchResponse, results };
+    } catch (e) {
+        logErrorWithoutContext(
+            'sanitizers::fullyMaskPolicySearchResponse::error',
+            {
+                ...parseErrorInformation(e),
+            }
+        );
+        throw new ApiError(
+            500,
+            `fullyMaskPolicySearchResponse::error masking policySearchResponse: ${getErrorMessage(
+                e
+            )}`
         );
     }
 };
@@ -530,9 +582,9 @@ export const caseSearchFullMasker = ({
         });
         throw new ApiError(
             500,
-            `caseSearchFullMasker::error sanitizing case search results: ${
-                (e as Error).message
-            }`
+            `caseSearchFullMasker::error sanitizing case search results: ${getErrorMessage(
+                e
+            )}`
         );
     }
 };

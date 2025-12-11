@@ -1,4 +1,3 @@
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import React, {
     createContext,
     useCallback,
@@ -7,19 +6,27 @@ import React, {
     useState,
 } from 'react';
 
-import { getChatHistoryBySessionId } from '@deps/queries/api/knowledge-base';
 import {
+    getChatHistoryBySessionId,
+    getCommonClientId,
+} from '@deps/queries/api/knowledge-base';
+import {
+    AnswerMode,
     ChatbotMessage,
+    COMMON_CLIENT_NAME,
     MessageRole,
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 type KnowledgeBaseContextState = {
     selectedClientId: string;
     sessionId: string;
     currentMessages: (UserMessage | ChatbotMessage)[];
     chatHistoryReloadTrigger: number;
+    commonClientId?: string | null;
+    answerMode: AnswerMode;
     setSelectedClient: (clientId: string) => void;
     setSessionId: React.Dispatch<React.SetStateAction<string>>;
     setCurrentMessages: React.Dispatch<
@@ -28,6 +35,7 @@ type KnowledgeBaseContextState = {
     setChatHistoryReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
     startNewChatSession: () => void;
     viewChatHistory: (sessionId: string) => void;
+    setAnswerMode: React.Dispatch<React.SetStateAction<AnswerMode>>;
 };
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
@@ -37,12 +45,15 @@ const KnowledgeBaseContextDefaultValues = {
     sessionId: '',
     currentMessages: [],
     chatHistoryReloadTrigger: 0,
-    setSelectedClient: (clientId: string) => {},
+    commonClientId: null,
+    answerMode: AnswerMode.Short,
+    setSelectedClient: () => {},
     setSessionId: noop,
     setCurrentMessages: noop,
     setChatHistoryReloadTrigger: noop,
     startNewChatSession: () => {},
-    viewChatHistory: (sessionId: string) => {},
+    viewChatHistory: () => {},
+    setAnswerMode: noop,
 };
 
 const KnowledgeBaseContext = createContext<KnowledgeBaseContextState>(
@@ -63,6 +74,7 @@ const KnowledgeBaseProvider = ({
     const defaultClientId =
         opsUserData?.client?.find((client) => client.default === true)?.id ??
         '';
+    const [commonClientId, setCommonClientId] = useState<string | null>(null);
     const [selectedClientId, setSelectedClientId] =
         useState<string>(defaultClientId);
     const [sessionId, setSessionId] = useState<string>('');
@@ -70,11 +82,25 @@ const KnowledgeBaseProvider = ({
         (UserMessage | ChatbotMessage)[]
     >([]);
     const [chatHistoryReloadTrigger, setChatHistoryReloadTrigger] = useState(0);
+    const [answerMode, setAnswerMode] = useState<AnswerMode>(AnswerMode.Short);
 
     const setSelectedClient = useCallback((clientId: string) => {
         setSelectedClientId(clientId);
         sessionStorage.setItem('ZinniaLive_kb_selectedClientId', clientId);
     }, []);
+
+    const initializeCommonClientId = useCallback(async () => {
+        const localCommonId = opsUserData?.client?.find((client) =>
+            client.name?.toLowerCase().startsWith(COMMON_CLIENT_NAME)
+        )?.id;
+
+        if (localCommonId) {
+            setCommonClientId(localCommonId);
+        } else {
+            const fetchedCommonId = await getCommonClientId();
+            setCommonClientId(fetchedCommonId);
+        }
+    }, [opsUserData]);
 
     const startNewChatSession = () => {
         if (sessionId) {
@@ -105,6 +131,7 @@ const KnowledgeBaseProvider = ({
                         sourceDocuments,
                         feedbackType,
                         feedbackComment,
+                        definitiveAnswerFound,
                     } = message;
                     if (responseId && response) {
                         const userMessage: UserMessage = {
@@ -117,7 +144,10 @@ const KnowledgeBaseProvider = ({
                             questionId,
                             role: MessageRole.Bot,
                             content: response,
-                            sourceDocuments: sourceDocuments,
+                            sourceDocuments:
+                                definitiveAnswerFound === false
+                                    ? []
+                                    : sourceDocuments,
                             feedbackType,
                             feedbackComment,
                         };
@@ -141,6 +171,9 @@ const KnowledgeBaseProvider = ({
     }, [sessionIdProp]);
 
     useEffect(() => {
+        if (opsUserData?.client?.length) {
+            initializeCommonClientId();
+        }
         const savedClientId = sessionStorage.getItem(
             'ZinniaLive_kb_selectedClientId'
         );
@@ -163,7 +196,7 @@ const KnowledgeBaseProvider = ({
         if (defaultClientId.length > 0) {
             setSelectedClient(defaultClientId);
         }
-    }, [opsUserData, setSelectedClient]);
+    }, [opsUserData, setSelectedClient, initializeCommonClientId]);
 
     return (
         <KnowledgeBaseContext.Provider
@@ -178,6 +211,9 @@ const KnowledgeBaseProvider = ({
                 setChatHistoryReloadTrigger,
                 startNewChatSession,
                 viewChatHistory,
+                commonClientId,
+                answerMode,
+                setAnswerMode,
             }}
         >
             {children}

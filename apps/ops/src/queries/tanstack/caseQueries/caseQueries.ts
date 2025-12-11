@@ -1,7 +1,11 @@
 import { AxiosResponse } from 'axios';
 
 import { Statuses } from '@deps/models/case/case';
-import { getCaseDetails, getCases } from '@deps/queries/api/cases';
+import {
+    getCaseDetails,
+    getCases,
+    getCaseTimePredict,
+} from '@deps/queries/api/cases';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
@@ -56,13 +60,18 @@ export const getCasesQuery = async (
     return response;
 };
 
-export const getCallLogsQuery = async (policyNumber?: string, limit = 10) => {
+export const getCallLogsQuery = async (
+    policyNumber?: string,
+    carrier?: string,
+    limit = 10
+) => {
     if (!policyNumber) {
         throw 'No policy number provided';
     }
 
     const results = await getCaseCallLogs({
         contract: policyNumber,
+        carrier: carrier || '',
         offset: 0,
         limit,
     });
@@ -82,6 +91,19 @@ export const getCaseDetailsQuery = async (
     }
 
     const response = await getCaseDetails(caseId, featureFlags);
+
+    if (!response) {
+        throw 'No data in response';
+    }
+
+    return response;
+};
+
+export const getCaseTimePredictQuery = async (caseId: string) => {
+    if (!caseId) {
+        throw 'No caseId provided';
+    }
+    const response = await getCaseTimePredict({ caseId });
 
     if (!response) {
         throw 'No data in response';

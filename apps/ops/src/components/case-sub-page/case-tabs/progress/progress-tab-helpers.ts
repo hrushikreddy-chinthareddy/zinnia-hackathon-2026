@@ -387,6 +387,7 @@ export class TransformedStage {
                                     ? acc.updatedAt
                                     : val.updatedAt, // Take the latest updated at date for the multi-instance step
                             stepStatus,
+                            stepResult: val.stepResult,
                         };
                     },
                     {} as MultiStepInstance
@@ -408,7 +409,7 @@ export class TransformedStage {
                     ),
                 };
             })
-            .sort((a, b) => a.label.localeCompare(b.label));
+            .sort((a, b) => (a.label || '').localeCompare(b.label || ''));
         return convertedSteps.concat(convertedMultiSteps);
     };
     private processSteps() {

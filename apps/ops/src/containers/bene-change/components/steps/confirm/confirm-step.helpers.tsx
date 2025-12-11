@@ -1,11 +1,3 @@
-import {
-    Policy,
-    EmailType,
-    Email,
-    PartyType,
-    PhoneType,
-    IdentificationType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
@@ -13,6 +5,7 @@ import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/fi
 import { EntityTypeValue } from '@deps/constants/policy';
 import { getChannel } from '@deps/containers/address-change-container/utils/address-change-helpers';
 import { SignatureState } from '@deps/containers/bene-change/bene-change.types';
+import { BeneChangePayload } from '@deps/contexts/BeneChangeContext';
 import {
     isNullEmptyOrUndefined,
     toTitleCase,
@@ -29,6 +22,14 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { SorSystem } from '@deps/models/policy/enums';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    Policy,
+    EmailType,
+    Email,
+    PartyType,
+    PhoneType,
+    IdentificationType,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ENTERPRISE_ADDRESS_TYPE,
@@ -124,7 +125,12 @@ const getPolicySignatureType = (
 export const transformSignatureStateToPayload = (
     data: SignatureState | null
 ) => {
-    if (!data) return {};
+    if (!data)
+        return {
+            signatures: [],
+            isSpousePresent: null,
+            isIrrevocableBene: false,
+        };
 
     const signature = data.signatures.map((item: SignatureWithdrawal) => ({
         signType: item.signType.text
@@ -266,12 +272,8 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
     const selectedParty = parties?.find((selectedItem: any) =>
         selectedItem?.partyRoleIds?.includes(item?.partyRole?.partyRoleId)
     );
-    let {
-        emails = [],
-        addresses = [],
-        phones = [],
-        partyType,
-    } = selectedParty || {};
+    const { emails = [], addresses = [], phones = [] } = selectedParty || {};
+    let partyType = selectedParty?.partyType;
     const currentEmails: Email[] = getPersonalEmails({ emails });
     const currentPhones: EnterprisePhone[] = getPhones({ phones });
     const currentAddresses: EnterpriseAddress[] = getAddresses({ addresses });
@@ -435,7 +437,7 @@ export const buildReRegRequestBody = ({
     selectedDocument,
     parties,
     sorSystem = SorSystem.LifeCad,
-}: any) => {
+}: any): BeneChangePayload => {
     const { policyNumber, policyStatus, product, carrierId } = policy;
 
     const records = beneData.map((item: any) =>
@@ -473,7 +475,7 @@ export const buildReRegRequestBody = ({
         data = {
             ...DEFAULT_PAYLOAD,
             businessKey: document?.documentNumber,
-            correlationid: uuid4(),
+            correlationid: formData.correlationId || uuid4(),
             onbaseCaseId: document?.caseId,
             caseId: formData?.caseId ?? null,
             documentDate: document

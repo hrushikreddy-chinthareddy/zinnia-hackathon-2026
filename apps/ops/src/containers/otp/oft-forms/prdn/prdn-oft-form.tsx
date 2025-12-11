@@ -1,7 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect } from 'react';
 
-import CedingCompanyDistribution from '@deps/components/otp-withdrawal-form/ceding-company-distribution';
+import CedingCompanySignature from '@deps/components/ceding-company-signature/ceding-company-signature';
 import EmployerTpaAuthorization from '@deps/components/otp-withdrawal-form/employer-tpa-authorization';
 import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
@@ -91,16 +91,8 @@ export default function PrdnOftWithdrawalForm() {
                 selectOneOptions={selectOneOptions}
                 showContractReplacement={showContractReplacement}
             />
-            <SignatureValidations
-                isFormStateReadOnly={isFormStateReadOnly}
-                config={signaturesConfig}
-            />
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
-            <CedingCompanyDistribution
+
+            <CedingCompanySignature
                 qualificationOptions={qualificationOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
@@ -112,6 +104,15 @@ export default function PrdnOftWithdrawalForm() {
                 }
                 defaultValue={defaultValues.disbursementOption}
             />
+            <SignatureValidations
+                isFormStateReadOnly={isFormStateReadOnly}
+                config={signaturesConfig}
+            />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

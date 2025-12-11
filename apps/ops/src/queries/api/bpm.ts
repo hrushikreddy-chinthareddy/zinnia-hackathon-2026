@@ -1,3 +1,12 @@
+import { AxiosResponse } from 'axios';
+import dayjs from 'dayjs';
+import { v4 as uuidV4 } from 'uuid';
+
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 import {
     FreeLookCancellationRequest,
     FullSurrenderRequest,
@@ -12,15 +21,6 @@ import {
     LoanRepaymentOneTimeRequest,
     NewLoanRequest,
 } from '@zinnia/api-types/types/sor';
-import { AxiosResponse } from 'axios';
-import dayjs from 'dayjs';
-import { v4 as uuidV4 } from 'uuid';
-
-import { baseAppUrl } from '@deps/queries/api-config';
-import { client } from '@deps/queries/api-utils/client';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { parseErrorInformation } from '@deps/utils/server-logging';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
 
@@ -91,6 +91,12 @@ export interface TransactionResponse {
         | PartialWithdrawalOneTimeQuoteResponse;
     validationResult?: ValidationResult[];
     data?: any;
+}
+
+export interface TransactionSubmitResponse {
+    caseId?: string;
+    status?: string;
+    correlationId?: string;
 }
 
 export interface TransactionRequest {

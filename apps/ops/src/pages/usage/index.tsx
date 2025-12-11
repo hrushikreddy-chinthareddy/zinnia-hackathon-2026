@@ -1,11 +1,11 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
-import { FgaRoles } from '@zinnia/utils';
 import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect } from 'react';
 
 import { PageHead } from '@deps/components/page-title';
+import { Activity } from '@deps/components/usage/activity/activity';
 import { Logins } from '@deps/components/usage/logins/logins';
 import { UsageResponsiveLayout } from '@deps/components/usage/logins/usage-responsive-layout';
 import { PageViews } from '@deps/components/usage/page-views/page-views';
@@ -22,6 +22,7 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -63,11 +64,9 @@ const UsagePage = ({ user }: UsagePageProps) => {
                         <TabContent value={UsageTabs.PAGE_VIEWS}>
                             <PageViews />
                         </TabContent>
-                        {/*
-                        NOTE: This is disabled as the data provided is inaccurate: DEPU-6502 - MR
                         <TabContent value={UsageTabs.ACTIVITY}>
                             <Activity />
-                        </TabContent> */}
+                        </TabContent>
                     </div>
                 </UsageTabNav>
             </UsageResponsiveLayout>
@@ -83,9 +82,8 @@ export const getServerSideProps = withPageAuthAndLogging(
             // Get the user object from the Auth0 Session
             const user = await getUserData(context);
             const { locale = DEFAULT_LOCALE, res, req } = context;
-            let accessToken;
             try {
-                accessToken = (await getAccessToken(req, res)).accessToken;
+                await getAccessToken(req, res);
             } catch (e) {
                 logWarn('usage/index:: Access token expired', {
                     ...parseErrorInformation(e),

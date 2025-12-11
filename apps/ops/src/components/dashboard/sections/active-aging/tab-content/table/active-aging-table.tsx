@@ -1,4 +1,3 @@
-import { toSentenceCase } from '@xd/utils/dist';
 import {
     FieldData,
     FieldSize,
@@ -15,6 +14,10 @@ import {
 import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import {
     friendlyGroupByName,
@@ -24,12 +27,9 @@ import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
+import { toSentenceCase } from '@deps/utils/strings';
 
 import { ActiveAgingContext } from '../../context/active-aging-context';
 import { calculateEndDate, startDates } from '../../utils';
@@ -154,27 +154,9 @@ export const ActiveAgingTable = () => {
                     loading={activeAgingDataFetching || activeAgingDataLoading}
                 >
                     {activeAgingDataError ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {
-                                    'Something went wrong fetching insights, please try again by refreshing the page'
-                                }
-                            </Typography>
-                        </div>
+                        <ErrorMessage />
                     ) : searchedData?.length === 0 ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {'There is no data for this selection'}
-                            </Typography>
-                        </div>
+                        <NoDataMessage />
                     ) : (
                         <Table>
                             <TableHeader>

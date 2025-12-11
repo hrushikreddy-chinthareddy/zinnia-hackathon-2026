@@ -1,10 +1,13 @@
-import { CompletedCaseTimeOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { FC, useContext } from 'react';
 
 import { Carousel } from '@deps/components/carousel/carousel';
+import {
+    ErrorMessage,
+    NoDataMessage,
+} from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
 import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-filters';
@@ -17,13 +20,10 @@ import {
 } from '@deps/components/dashboard/sections/case-timing/utils';
 import { generateCarouselDataLengths } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
-import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { chunkArray } from '@deps/utils/array';
+import { CompletedCaseTimeOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import styles from './case-timing-chart.module.css';
 
@@ -101,19 +101,9 @@ export const CaseTimingChart: FC = () => {
         <CardContainer fullWidth={false}>
             <CaseTimingHeader />
             <BlurOverlayLoader loading={caseTimingDataFetching}>
-                <div className=" flex bg-[--color-base-surface-surface-primary">
+                <div className=" flex flex-col bg-[--color-base-surface-surface-primary">
                     {caseTimingDataError ? (
-                        <div className="grid place-content-center h-full w-full min-h-[400px]">
-                            <Typography
-                                variant={TypographyVariant.BodyBold}
-                                className="mt-4 flex flex-row gap-2"
-                            >
-                                <ChartBarsIcon height={'24px'} width={'24px'} />
-                                {
-                                    'Something went wrong fetching insights, please try again by refreshing the page'
-                                }
-                            </Typography>
-                        </div>
+                        <ErrorMessage />
                     ) : (
                         <>
                             <div
@@ -124,22 +114,7 @@ export const CaseTimingChart: FC = () => {
                             >
                                 <CaseTimingFilters />
                                 {caseTimingData?.length === 0 ? (
-                                    <div className=" h-[19rem] flex flex-col gap-2 items-center justify-center">
-                                        <>
-                                            <ChartBarsIcon
-                                                height={'24px'}
-                                                width={'24px'}
-                                            />
-                                            <Typography
-                                                variant={
-                                                    TypographyVariant.BodyBold
-                                                }
-                                            >
-                                                There is no data for this
-                                                selection
-                                            </Typography>
-                                        </>
-                                    </div>
+                                    <NoDataMessage />
                                 ) : (
                                     <Carousel
                                         slideStyle="my-8 pt-6"

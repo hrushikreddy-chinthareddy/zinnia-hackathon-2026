@@ -61,7 +61,6 @@ export default function RslnWithdrawalForm() {
         initialForm,
         isFormStateReadOnly,
         formSubtype,
-        contractIssueState,
         formESignatureData,
         setFormESignatureData,
         formErrors,
@@ -175,11 +174,6 @@ export default function RslnWithdrawalForm() {
                 ownerAcknowledgement={ownerAcknowledgement}
             />
 
-            {hasTpaAuthorization && (
-                <EmployerTpaAuthorization
-                    isFormStateReadOnly={isFormStateReadOnly}
-                />
-            )}
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}
@@ -193,6 +187,11 @@ export default function RslnWithdrawalForm() {
                 fieldConfig={eSignatureFieldConfig}
                 formErrors={formErrors}
             />
+            {hasTpaAuthorization && (
+                <EmployerTpaAuthorization
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
         </>
     );
 }

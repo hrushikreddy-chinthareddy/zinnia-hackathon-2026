@@ -1,11 +1,11 @@
 import { AxiosResponse } from 'axios';
-import { SearchRequest } from 'node_modules/@zinnia/api-types/dist/generated-types/documents-v3/models/SearchRequest';
 
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { DocumentDownloadV3WithMime } from '@deps/types/documents-v3';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 // note: docType and clientCode are used to allow v3 to hit v2 documents for us.  We can remove if all v2 documents are migrated
 

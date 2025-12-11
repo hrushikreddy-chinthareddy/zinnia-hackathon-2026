@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -54,6 +53,7 @@ import {
     TransactionSuccessfulEvent,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { FundViewModel } from '../types';
 import { AllocationSuccessFlow } from './allocation-success-flow';
@@ -286,7 +286,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
         segmentAnalyticsTrackEvent<TransactionContinueClickedEvent>(
             SegmentTrackedEventName.TransactionContinueClicked,
             {
-                session_id: sessionId,
+                authSessionId: sessionId,
                 userId: partyId,
                 type: TransactionType.FUND_ALLOCATIONS_CHANGE,
                 correlationId: payload.correlationId,

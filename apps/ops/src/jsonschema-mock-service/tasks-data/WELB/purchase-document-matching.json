@@ -3,7 +3,7 @@
     "caseId": "CA0000390338",
     "source": "BPM.IndexationOrkestr",
     "templateId": "1f802f29-b4e0-4a4b-9923-ba63a1bde55b",
-    "process": "Qualification",
+    "process": "Matching",
     "carrier": "WELB",
     "taskType": "PURCHASE_DOCUMENT_MATCHING",
     "taskName": "Match Document",

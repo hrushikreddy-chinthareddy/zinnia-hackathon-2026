@@ -1,5 +1,4 @@
 import { Skeleton } from '@radix-ui/themes';
-import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
@@ -22,6 +21,7 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 export const PolicyNumber = ({
     policyNumber,
@@ -54,7 +54,11 @@ export const PolicyBadgeStatus = ({
     return (
         <div className="mt-[-3px]">
             {!!status && !!tooltip && (
-                <Tooltip placement={tooltipPlacements} body={tooltip}>
+                <Tooltip
+                    placement={tooltipPlacements}
+                    body={tooltip}
+                    popoverClassName="max-w-[75vw]" // Increase min size at small viewports
+                >
                     <Badge
                         rounded={true}
                         label={status}
@@ -98,8 +102,8 @@ export const PolicyCarrierLogo = ({
                             <div className="default-focus flex h-12 w-12 items-center justify-center rounded border-2 border-gray-100 bg-white">
                                 <Image
                                     alt={carrierName}
-                                    width={48}
-                                    height={48}
+                                    width={24}
+                                    height={24}
                                     src={getCarrierLogoByClientId(carrierId)}
                                 />
                             </div>
@@ -113,8 +117,8 @@ export const PolicyCarrierLogo = ({
                                     getCarrierNameByClientId(carrierId) ||
                                     carrierId
                                 }
-                                width={48}
-                                height={48}
+                                width={24}
+                                height={24}
                                 src={getCarrierLogoByClientId(carrierId)}
                             />
                         </div>

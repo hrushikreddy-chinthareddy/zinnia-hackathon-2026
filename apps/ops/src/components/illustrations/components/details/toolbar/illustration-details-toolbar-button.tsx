@@ -1,5 +1,5 @@
 import { Button, ButtonProps, Icon, IconType } from '@zinnia/bloom/components';
-import { ReactNode } from 'react';
+import { forwardRef, ReactNode } from 'react';
 
 interface IllustrationDetailsToolbarButtonProps
     extends Omit<ButtonProps, 'type' | 'size' | 'mode'> {
@@ -7,14 +7,13 @@ interface IllustrationDetailsToolbarButtonProps
     children: ReactNode;
 }
 
-export default function IllustrationDetailsToolbarButton({
-    icon,
-    children,
-    onClick,
-    ...rest
-}: IllustrationDetailsToolbarButtonProps) {
+const IllustrationDetailsToolbarButton = forwardRef<
+    HTMLButtonElement,
+    IllustrationDetailsToolbarButtonProps
+>(({ icon, children, onClick, ...rest }, ref) => {
     return (
         <Button
+            ref={ref}
             onClick={onClick}
             mode="link"
             type="button"
@@ -25,4 +24,9 @@ export default function IllustrationDetailsToolbarButton({
             {children}
         </Button>
     );
-}
+});
+
+IllustrationDetailsToolbarButton.displayName =
+    'IllustrationDetailsToolbarButton';
+
+export default IllustrationDetailsToolbarButton;

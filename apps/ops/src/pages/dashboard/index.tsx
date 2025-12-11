@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { TabContent } from '@zinnia/bloom/components';
-import { FgaRoles } from '@zinnia/utils';
 import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useRef } from 'react';
@@ -16,6 +15,7 @@ import { ActiveApplications } from '@deps/containers/dashboard/active-applicatio
 import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
 import { NIGOAnalysis } from '@deps/containers/dashboard/nigo-analysis/nigo-analysis';
+import { TasksVolumeContainer } from '@deps/containers/dashboard/tasks-volume/tasks-volume';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -33,6 +33,7 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRoles } from '@deps/utils/auth';
 import {
     logWarn,
     parseErrorInformation,
@@ -93,6 +94,9 @@ const DashboardPage = ({
                         </TabContent>
                         <TabContent value={DashboardTabs.NIGO_ANALYSIS}>
                             <NIGOAnalysis />
+                        </TabContent>
+                        <TabContent value={DashboardTabs.TASKS_VOLUME}>
+                            <TasksVolumeContainer />
                         </TabContent>
                     </div>
                 </DashboardTabNav>

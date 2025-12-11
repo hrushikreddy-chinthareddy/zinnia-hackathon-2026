@@ -1,12 +1,11 @@
-import { SearchRequest as DocsSearchRequest } from '@zinnia/api-types/types/documents-v3';
-
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
-import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import { downloadDocumentV2 } from '@deps/queries/api/client/documents/v2/download';
 import { downloadDocumentV3 } from '@deps/queries/api/client/documents/v3/download';
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { SearchRequest, V3DocumentWithSource } from '@deps/types/documents-v3';
 import { b64ToBlob } from '@deps/utils/blob';
+import { browserLogInfo } from '@deps/utils/browser-logging';
+import { SearchRequest as DocsSearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 export const getDocumentDownloadQuery = async (
     documentId: string,
@@ -54,13 +53,18 @@ export const getDocumentSearchResultsQuery = async (
     limit: number,
     offset: number
 ): Promise<{
-    data: DocumentWithSource[] | V3DocumentWithSource[] | null;
+    data: V3DocumentWithSource[] | null;
     status: number;
     total: number;
 }> => {
     if (!searchBody) {
         throw 'No search body provided';
     }
+    browserLogInfo('getDocumentSearchResultsQuery::searchBody', {
+        searchBody,
+        limit,
+        offset,
+    });
     const { data, error } = await searchDocumentsV3({
         limit,
         offset,
