@@ -94,7 +94,13 @@ export default function PartyInfoListTemplate(
         };
 
         setCustomData({ actionData: updatedActionData });
-    }, [preferredIndex]);
+    }, [
+        contacts,
+        idSchema?.$id,
+        preferredIndex,
+        setCustomData,
+        updatedActionData,
+    ]);
 
     const toggleIsPreferred = (index: number, checked: boolean) => {
         let newPreferredIndex = preferredIndex;
