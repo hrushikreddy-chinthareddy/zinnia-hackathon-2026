@@ -142,7 +142,6 @@ const SummaryStep = ({
             partyData: party,
             tagVariant: tagVariant,
             tagText: tagText,
-            typeVariant: 'NEW',
         });
     }
 
@@ -156,7 +155,6 @@ const SummaryStep = ({
             partyData: existingRoleData[removedTpdIndex].party || {},
             tagVariant: existingTagVariant,
             tagText: existingTagText,
-            typeVariant: 'DELETE',
         });
     }
 
@@ -170,7 +168,6 @@ const SummaryStep = ({
             partyData: existingRoleData[0].party || {},
             tagVariant: existingTagVariant,
             tagText: existingTagText,
-            typeVariant: 'DELETE',
         });
     }
 

@@ -623,25 +623,6 @@ export const buildRoleChangeRequestBody = (
     };
 };
 
-export const buildDeleteTPDRequestBody = (roleData: RoleData) => {
-    const signatures = (roleData?.signatures || []).map((sig: any) => ({
-        isSignedPresent:
-            sig.isSignedPresent === BooleanValue.Yes
-                ? true
-                : sig.isSignedPresent === BooleanValue.No
-                ? false
-                : null,
-        signDate: getFormattedZaharaDate(sig.signDate),
-        signType: sig.signType,
-    }));
-
-    return {
-        effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
-        party: {},
-        signatures,
-    };
-};
-
 export const validate = (
     roleData: any,
     addRole: boolean,

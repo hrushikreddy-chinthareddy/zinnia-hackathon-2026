@@ -28,10 +28,7 @@ import {
 } from '@deps/types/segment-analytics';
 import { Policy } from '@zinnia/api-types/types/sor';
 
-import {
-    buildDeleteTPDRequestBody,
-    buildRoleChangeRequestBody,
-} from '../../role-change-helper';
+import { buildRoleChangeRequestBody } from '../../role-change-helper';
 
 interface ConfirmStepProps {
     policy: Policy;
@@ -76,7 +73,12 @@ const ConfirmStep = ({
         const isTpdRole = role === PolicyRole.THIRDPARTYDESIGNEE;
 
         const roleBody = buildRoleChangeRequestBody(roleData, role);
-        const deleteRoleBody = buildDeleteTPDRequestBody(roleData);
+        const { signatures, effectiveDate } = roleBody;
+        const deleteRoleBody = {
+            effectiveDate,
+            party: {},
+            signatures,
+        };
 
         // Determine if this is a TPD removal operation
         const isTpdRemoval = isTpdRole && removedTpdIndex !== null && addRole;
@@ -132,11 +134,9 @@ const ConfirmStep = ({
 
             let transactionType;
             if (isTpdRemoval) {
-                // TPD Removal analytics
                 transactionType =
                     TransactionSubmittedEventType.REMOVE_THIRD_PARTY;
             } else {
-                // Existing analytics logic
                 switch (role) {
                     case PolicyRole.OWNER:
                         transactionType =
