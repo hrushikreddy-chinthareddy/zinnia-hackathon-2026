@@ -14,7 +14,7 @@ import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import {
     combineDuplicateLabels,
     getBrokerDealerOptions,
-} from './filters-header.helpers';
+} from './select-filters-header.helpers';
 
 export const SelectFiltersHeader = ({
     authorizedCarriers,
