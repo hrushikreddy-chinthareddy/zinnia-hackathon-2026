@@ -14,3 +14,19 @@ export const getBrokerDealerOptions = (
         };
     });
 };
+
+export const combineDuplicateLabels = (
+    data: { label: string; value: string }[]
+): SelectFilterOption[] => {
+    const groupByLabel = data.reduce<Record<string, string>>((acc, curr) => {
+        acc[curr.label] = acc[curr.label]
+            ? `${acc[curr.label]}, ${curr.value}`
+            : curr.value;
+        return acc;
+    }, {});
+
+    return Object.entries(groupByLabel).map(([label, value]) => ({
+        label,
+        value,
+    }));
+};

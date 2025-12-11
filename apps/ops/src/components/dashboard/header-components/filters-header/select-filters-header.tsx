@@ -1,25 +1,19 @@
 import { Label, SelectFilter } from '@zinnia/bloom/components';
-import {
-    SetStateAction,
-    useCallback,
-    useEffect,
-    useMemo,
-    useState,
-} from 'react';
+import { SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import styles from '@deps/components/dashboard/header-components/filters-header/select-filters-header.module.css';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import {
-    DashboardResponseData,
-    fetchAgents,
-} from '@deps/queries/api/dashboard';
+import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 
-import { getBrokerDealerOptions } from './filters-header.helpers';
+import {
+    combineDuplicateLabels,
+    getBrokerDealerOptions,
+} from './filters-header.helpers';
 
 export const SelectFiltersHeader = ({
     authorizedCarriers,
@@ -43,40 +37,17 @@ export const SelectFiltersHeader = ({
         selectedBrokerDealers,
     } = useDashboardStore((state) => state);
 
-    const authorizedCarriersOptions = authorizedCarriers.map((carrier) => ({
-        value: carrier,
-        label: getCarrierNameByClientId(carrier) || carrier.toUpperCase(),
-        //label: getCarrierListItem(carrier),
-    }));
+    const authorizedCarriersOptions = useMemo(() => {
+        const authorizedCarriersObjects = authorizedCarriers.map((carrier) => ({
+            value: carrier,
+            label: getCarrierNameByClientId(carrier) || carrier.toUpperCase(),
+        }));
+        return combineDuplicateLabels(authorizedCarriersObjects);
+    }, [authorizedCarriers]);
 
     const brokerDealerOptions = useMemo(() => {
         return getBrokerDealerOptions(brokerDealersSSR);
     }, [brokerDealersSSR]);
-
-    // const clearFilters = () => {
-    //     updateSelectedCarriers([]);
-    //     updateSelectedBrokerDealers([]);
-    // };
-
-    // const clearFiltersDisabled =
-    //     Object.keys({
-    //         ...selectedCarriers,
-    //         ...selectedBrokerDealers,
-    //     }).length === 0;
-
-    useEffect(() => {
-        const fetchBrokerDealersClient = async () => {
-            const brokerDealerArray = await fetchAgents();
-            console.log({ brokerDealerArray });
-            updateSelectedBrokerDealers([]);
-        };
-
-        if (!selectedBrokerDealers) {
-            fetchBrokerDealersClient();
-        }
-    }, [selectedBrokerDealers, updateSelectedBrokerDealers]);
-
-    console.log({ selectedCarriers, selectedBrokerDealers });
 
     return (
         <div
@@ -107,16 +78,6 @@ export const SelectFiltersHeader = ({
                     container={container}
                     values={selectedBrokerDealers}
                 />
-                {/* <Button
-                    className="flex items-center align-middle flex-row"
-                    mode="link"
-                    disabled={clearFiltersDisabled}
-                    size={ButtonSize.Small}
-                    onClick={clearFilters}
-                >
-                    <Icon type={IconType.CLOSE} />
-                    clear
-                </Button> */}
             </div>
         </div>
     );
