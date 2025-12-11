@@ -9021,7 +9021,7 @@
                 "title": "Net Surrender Value",
                 "atNYears": "At {{years}} years"
             },
-            "unArchive": "Un-archive",
+            "unArchive": "Unarchive",
             "selected": "Selected",
             "archived": "Archived",
             "expired": "Expired",
