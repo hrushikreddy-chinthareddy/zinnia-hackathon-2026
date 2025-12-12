@@ -11,12 +11,15 @@ import Button, {
 import Content, { ContentVariant } from '@deps/components/content/content';
 import SearchBar from '@deps/components/search/search-bar';
 import { SearchBarInitialValues } from '@deps/components/search/search-bar-initial-value';
+import MultiselectField from '@deps/components/side-sheet/side-sheet-refine-results/multiselect-field';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskManagerActiveFilters from '@deps/containers/task-manager-active-filters/';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import useTaskManagementQueue from '@deps/hooks/useTaskManagementQueue';
+import useTaskManagementQueue, {
+    DEFAULT_SORTING_CONFIG,
+} from '@deps/hooks/useTaskManagementQueue';
 import { FilterKeys, MessageType } from '@deps/models/case/task';
-import { TaskStatus } from '@deps/models/case/task-instance';
+import { TaskLabel, TaskStatus } from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
 import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_outlined/filter.svg';
@@ -25,6 +28,7 @@ import { PolicySearchKeys } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import TaskQueueTable from './task-queue-table';
+import { SortingTypeValues } from './task-queue-table-header';
 const SideSheetTasksResults = dynamic(
     () =>
         import(
@@ -36,6 +40,27 @@ const fieldKeyMapping: Record<string, string> = {
     taskName: 'taskName',
     caseId: 'caseId',
 };
+
+export const TaskStatusValues = Object.keys(TaskLabel)
+    .filter((key) => key !== TaskLabel.Closed)
+    .map((key) => TaskStatus[key as keyof typeof TaskStatus])
+    .filter(Boolean);
+
+const customLabelMap: Record<string, string> = Object.keys(TaskLabel).reduce(
+    (acc, key) => {
+        if (key === TaskLabel.Closed) return acc;
+
+        const statusValue = TaskStatus[key as keyof typeof TaskStatus];
+        const labelValue = TaskLabel[key as keyof typeof TaskLabel];
+
+        if (statusValue && labelValue) {
+            acc[statusValue] = labelValue;
+        }
+
+        return acc;
+    },
+    {} as Record<string, string>
+);
 
 type TaskManagementQueueProps = {
     featureFlagDecisions: FeatureFlags;
@@ -56,6 +81,7 @@ type SearchParamsPayload = {
     carriers?: string[];
     queues?: string[];
     statuses?: string[];
+    sortDirection?: string;
     escalated?: boolean | null | undefined;
 };
 
@@ -106,6 +132,10 @@ const TaskManagementQueue = ({
         total,
     } = useTaskManagementQueue({ isOpsManagerView, additionalData });
 
+    const [sortDirection, setSortDirection] = useState(
+        DEFAULT_SORTING_CONFIG.sortDirection
+    );
+
     const transformCarriers = (carriers?: string[]): string[] => {
         if (!Array.isArray(carriers)) return [];
         return carriers.map((carrier) => carrier.toUpperCase());
@@ -116,7 +146,12 @@ const TaskManagementQueue = ({
     );
 
     const getSafeSearchParams = (searchParams: SearchParamsPayload) => {
-        const { carriers, queues, escalated } = searchParams;
+        const {
+            carriers = [],
+            queues = [],
+            statuses = [],
+            escalated,
+        } = searchParams;
         const safeSearchParams = {
             ...searchParams,
             ...(carriers && carriers.length > 0
@@ -125,10 +160,38 @@ const TaskManagementQueue = ({
             ...(queues && queues.length > 0
                 ? { queues }
                 : { queues: additionalData?.taskListingParams?.queues }),
+            ...(statuses.length > 0
+                ? { statuses }
+                : getStatusPayload(statuses)),
+            sortDirection: searchParams.sortDirection || sortDirection,
+            sortBy: DEFAULT_SORTING_CONFIG.sortBy,
             ...(escalated !== undefined && { escalated }),
         };
 
         return safeSearchParams;
+    };
+
+    const handleSort = () => {
+        let payload = {
+            ...searchValue,
+            ...searchValue.additionalFilters,
+        };
+
+        delete payload.additionalFilters;
+
+        const newSortDirection =
+            sortDirection === SortingTypeValues.DESCENDING
+                ? SortingTypeValues.ASCENDING
+                : SortingTypeValues.DESCENDING;
+        setSortDirection(newSortDirection);
+
+        payload = {
+            ...payload,
+            sortDirection: newSortDirection,
+            sortBy: DEFAULT_SORTING_CONFIG.sortBy,
+        };
+
+        getTasks(true, getSafeSearchParams(payload));
     };
 
     const handleSearch = useCallback(
@@ -159,25 +222,84 @@ const TaskManagementQueue = ({
         [getTasks, searchValue]
     );
 
+    const getStatusPayload = (statuses: string[] = []) => {
+        return {
+            statuses:
+                statuses.length > 0
+                    ? statuses
+                    : TaskStatusValues.filter(
+                          (status) =>
+                              status !== TaskStatus.Canceled &&
+                              status !== TaskStatus.Completed
+                      ),
+        };
+    };
+
     const handleApplyFilters = useCallback(
         (additionalFilters: any, payload: any) => {
             const newFilters = {
                 carriers: transformCarriers(
                     Object.keys(additionalFilters.carriers)
                 ),
-                statuses: additionalFilters.taskStatus,
                 queues: additionalFilters.group,
                 escalated: additionalFilters.escalated,
             };
 
             const copy = { ...searchValue };
+            const statuses = copy.additionalFilters?.statuses || [];
             delete copy.additionalFilters;
 
-            setSearchValue({ ...copy, additionalFilters: newFilters });
-            getTasks(true, getSafeSearchParams({ ...copy, ...payload }));
+            setSearchValue({
+                ...copy,
+                additionalFilters: {
+                    ...searchValue.additionalFilters,
+                    ...newFilters,
+                },
+            });
+            getTasks(
+                true,
+                getSafeSearchParams({
+                    ...copy,
+                    ...payload,
+                    statuses,
+                })
+            );
         },
         [getTasks, searchValue]
     );
+
+    const handleTaskStatusChange = (selectedStatus: string) => {
+        const currentStatuses = searchValue?.additionalFilters?.statuses || [];
+        const updatedStatuses = currentStatuses.includes(selectedStatus)
+            ? currentStatuses.filter(
+                  (status: string) => status !== selectedStatus
+              )
+            : [...currentStatuses, selectedStatus];
+
+        setSearchValue((prev) => {
+            return {
+                ...prev,
+                additionalFilters: {
+                    ...prev.additionalFilters,
+                    statuses: updatedStatuses,
+                },
+            };
+        });
+
+        const payload = {
+            ...searchValue,
+            ...searchValue.additionalFilters,
+        };
+
+        delete payload?.additionalFilters;
+
+        getTasks(true, {
+            ...getSafeSearchParams({
+                ...payload,
+                statuses: updatedStatuses,
+            }),
+        });
+    };
 
     const handleFilterRemove = useCallback(
         (filterName: string, value: string) => {
@@ -212,10 +334,12 @@ const TaskManagementQueue = ({
 
     const handleReset = useCallback(() => {
         const newSearchValue = { ...searchValue };
+        const statuses = newSearchValue?.additionalFilters?.statuses || [];
 
         if (newSearchValue.additionalFilters) {
             Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                if (key === FilterKeys.escalated) {
+                if (key === FilterKeys.statuses) return;
+                else if (key === FilterKeys.escalated) {
                     newSearchValue.additionalFilters[key] = undefined;
                 } else {
                     newSearchValue.additionalFilters[key] = [];
@@ -230,6 +354,9 @@ const TaskManagementQueue = ({
         getTasks(true, {
             ...payload,
             ...additionalData?.taskListingParams,
+            ...getStatusPayload(statuses),
+            sortDirection,
+            sortBy: DEFAULT_SORTING_CONFIG.sortBy,
         });
     }, [getTasks, searchValue]);
 
@@ -246,6 +373,7 @@ const TaskManagementQueue = ({
         const newValue = { ...searchValue };
         delete newValue[toggleValue];
         const { additionalFilters } = newValue;
+        const statuses = additionalFilters?.statuses || [];
 
         setSearchValue({ additionalFilters });
 
@@ -254,6 +382,7 @@ const TaskManagementQueue = ({
             getSafeSearchParams({
                 ...additionalFilters,
                 carriers: transformCarriers(additionalFilters?.carriers),
+                ...getStatusPayload(statuses),
             })
         );
     }, [searchValue, toggleValue]);
@@ -261,12 +390,14 @@ const TaskManagementQueue = ({
     const clearFilters = useCallback(() => {
         const newSearchValue = { ...searchValue };
         const searchParams = { ...newSearchValue };
+        const statuses = searchParams?.additionalFilters?.statuses || [];
 
         delete searchParams?.additionalFilters;
 
         if (newSearchValue?.additionalFilters) {
             Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                if (key === FilterKeys.escalated) {
+                if (key === FilterKeys.statuses) return;
+                else if (key === FilterKeys.escalated) {
                     newSearchValue.additionalFilters[key] = undefined;
                 } else {
                     newSearchValue.additionalFilters[key] = [];
@@ -278,6 +409,9 @@ const TaskManagementQueue = ({
             getTasks(true, {
                 ...searchParams,
                 ...additionalData?.taskListingParams,
+                ...getStatusPayload(statuses),
+                sortDirection,
+                sortBy: DEFAULT_SORTING_CONFIG.sortBy,
             });
         } else {
             return;
@@ -327,31 +461,53 @@ const TaskManagementQueue = ({
                         onClear={handleClear}
                         disabled={isLoading}
                     />
-                    <Button
-                        onClick={openRefineResultsSidesheet}
-                        data-testid="search-btn"
-                        aria-label="Add filters"
-                        type={ButtonType.Secondary}
-                        size={ButtonSize.Small}
-                        className="flex items-center whitespace-nowrap mt-5 mb-5 !border-none !bg-white"
-                        onKeyDown={handleKeyDownToOpenRefineResultsSidesheeet}
-                        disabled={isLoading}
-                    >
-                        <FilterIcon
-                            className="text-secondary"
-                            width={16}
-                            height={16}
-                        />
-                        <Content
-                            contentClassName="text-secondary"
-                            variant={ContentVariant.BodyBold}
-                            details={
-                                tTaskView(
-                                    'filters.buttons.addFilters'
-                                ) as string
+                    <div className="flex flex-row gap-3 items-end mb-4">
+                        <MultiselectField
+                            className="!m-0 w-1/5"
+                            isLoading={false}
+                            label={t('status') as string}
+                            options={TaskStatusValues}
+                            disabled={isLoading}
+                            value={
+                                new Set(
+                                    Array.isArray(
+                                        searchValue?.additionalFilters?.statuses
+                                    )
+                                        ? searchValue.additionalFilters.statuses
+                                        : []
+                                )
                             }
+                            handleChange={handleTaskStatusChange}
+                            customLabelMap={customLabelMap}
                         />
-                    </Button>
+                        <Button
+                            onClick={openRefineResultsSidesheet}
+                            data-testid="search-btn"
+                            aria-label="Add filters"
+                            type={ButtonType.Secondary}
+                            size={ButtonSize.Small}
+                            className="flex items-center whitespace-nowrap mt-5 !border-none !bg-white"
+                            onKeyDown={
+                                handleKeyDownToOpenRefineResultsSidesheeet
+                            }
+                            disabled={isLoading}
+                        >
+                            <FilterIcon
+                                className="text-secondary"
+                                width={16}
+                                height={16}
+                            />
+                            <Content
+                                contentClassName="text-secondary"
+                                variant={ContentVariant.BodyBold}
+                                details={
+                                    tTaskView(
+                                        'filters.buttons.addFilters'
+                                    ) as string
+                                }
+                            />
+                        </Button>
+                    </div>
                     <TaskManagerActiveFilters
                         authorizedCarriers={
                             additionalData?.authorizedCarriers as string[]
@@ -404,6 +560,8 @@ const TaskManagementQueue = ({
                     additionalData={additionalData}
                     showClaimTask={showClaimTask}
                     getTasks={getTasks}
+                    handleSort={handleSort}
+                    sortDirection={sortDirection}
                     isOpsManagerView={isOpsManagerView}
                     setErrorMessage={setErrorMessage}
                     offset={offset}
