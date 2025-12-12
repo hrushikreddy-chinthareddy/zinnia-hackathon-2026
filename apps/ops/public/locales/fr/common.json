@@ -2995,7 +2995,8 @@
                 "re-illustration": "Nouvelle illustration",
                 "linked case": "Cas lié",
                 "bene": "Notifier",
-                "beneficiary": "Beneficiaire"
+                "beneficiary": "Beneficiaire",
+                "owner": "Proprietaire"
             },
             "reviewIssues": "Revoir problèmes",
             "suitabilityReview": "suitability",
