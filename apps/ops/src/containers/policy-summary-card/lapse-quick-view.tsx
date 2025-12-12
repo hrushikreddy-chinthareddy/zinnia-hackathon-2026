@@ -127,7 +127,11 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
                     tooltipBody={t('allFields.baseDeathBenefitTooltip')}
                 />
                 <Content
-                    details={numberFormatify(policy.baseDeathBenefit)}
+                    details={
+                        policy.baseDeathBenefit != null
+                            ? numberFormatify(policy.baseDeathBenefit)
+                            : DEFAULT_ERROR_STRING
+                    }
                     variant={ContentVariant.BodySm}
                 />
             </div>
