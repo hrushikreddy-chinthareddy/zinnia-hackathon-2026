@@ -3947,7 +3947,8 @@
                 "fboDetails": "Les détail du FBO sont obligatoires",
                 "accountTypeMustBeSelected": "Veuillez choisir un type de compte pour procéder à votre demande.",
                 "participantIdCannotBeSubmitted": "L'identifiant du participant 0000 ne peut pas être soumis",
-                "contractNumberRequired": "Le numéro de contrat est requis/BIN numéro"
+                "contractNumberRequired": "Le numéro de contrat est requis/BIN numéro",
+                "charityNameRequired": "Le nom de l'association caritative est requis"
             },
             "formSubtype": {
                 "formType": "Type de formulaire",

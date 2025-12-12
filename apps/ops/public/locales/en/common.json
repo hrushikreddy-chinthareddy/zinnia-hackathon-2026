@@ -3998,7 +3998,8 @@
                 "fboDetails": "FBO detail is required",
                 "accountTypeMustBeSelected": "Please choose an account type to proceed with your request.",
                 "participantIdCannotBeSubmitted": "Participant ID 0000 cannot be submitted",
-                "contractNumberRequired": "Contract number/BIN number is required"
+                "contractNumberRequired": "Contract number/BIN number is required",
+                "charityNameRequired": "Charity name is required"
             },
             "formSubtype": {
                 "formType": "Form type",

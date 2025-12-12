@@ -36,12 +36,16 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
-import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import {
+    validateQcdDetails,
+    validateSignESign,
+} from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getDlicRmdWithdrawalConfig(t: TFunction) {
     const formValidation = ({
         formSignature,
         formESignatureData,
+        formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
 
@@ -51,6 +55,14 @@ export default function getDlicRmdWithdrawalConfig(t: TFunction) {
             t,
             validateDesignationPresent: false,
         });
+
+        const qcd = formProgram?.qcd;
+
+        if (qcd && qcd.length > 0) {
+            const qcdErrors = validateQcdDetails(t, qcd);
+
+            return { ...errors, ...signESignValidate, ...qcdErrors };
+        }
 
         return { ...errors, ...signESignValidate };
     };
