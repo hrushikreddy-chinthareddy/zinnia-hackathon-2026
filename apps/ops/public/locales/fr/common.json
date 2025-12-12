@@ -1095,7 +1095,8 @@
             "jointOwnerChange": "Changement de copropriétaire",
             "payorChange": "Changement de payeur",
             "thirdPartyDesigneeChange": "Changement de tiers désigné",
-            "nigoSelected": "NIGO sélectionné"
+            "nigoSelected": "NIGO sélectionné",
+            "operationsReview": "Demande de révision des opérations"
         },
         "navLinks": {
             "accessManagement": {
@@ -7077,6 +7078,9 @@
             "cancelPolicy": "Annuler la police",
             "newDeathClaim": "Nouvelle réclamation pour décès",
             "surrender": "Politique de reddition"
+        },
+        "requestOperationReview": {
+            "label": "Demande de révision des opérations"
         }
     },
     "historyEventCard": {
@@ -8566,7 +8570,7 @@
             "submitTask": "Soumettre"
         }
     },
-    "opsReview": {
+    "operationsReview": {
         "confirmStep": {
             "title": "C'est fait !",
             "subTitle": "Tâche : Validation des opérations a été soumise.",

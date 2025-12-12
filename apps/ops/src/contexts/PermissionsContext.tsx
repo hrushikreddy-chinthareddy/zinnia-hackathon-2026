@@ -62,6 +62,7 @@ export interface PermissionsContextProps {
     isZinniaInternalViewer: boolean;
     isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
+    isAllowOpsCaseReviewRequest: boolean;
     hasPermissionToPrioritizeCases: boolean;
     hasMarketConnectContacts: boolean;
 }
@@ -185,6 +186,21 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             enabled: !!partyId,
             staleTime: FIFTEEN_MINUTES_IN_MS,
         });
+
+    const {
+        data: isAllowOpsCaseReviewRequest,
+        isLoading: opsCaseReviewRequestLoading,
+    } = useQuery({
+        queryKey: ['isAllowOpsCaseReviewRequest', partyId],
+        queryFn: () => {
+            return doesUserHavePagePermissionQuery(
+                UserPermission.AllowOpsCaseReviewRequest,
+                partyId
+            );
+        },
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
 
     const {
         data: hasEditServiceRequestAccess,
@@ -381,7 +397,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         !hasServiceRequestLoading &&
         !partyRefLoading &&
         !homeCheckLoading &&
-        !opsManagerLoading;
+        !opsManagerLoading &&
+        !opsCaseReviewRequestLoading;
 
     return (
         <PermissionContext.Provider
@@ -426,6 +443,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
+                isAllowOpsCaseReviewRequest: !!isAllowOpsCaseReviewRequest,
                 hasMarketConnectContacts,
             }}
         >

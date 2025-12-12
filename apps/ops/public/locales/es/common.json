@@ -1127,7 +1127,8 @@
             "jointOwnerChange": "Cambio de Copropietario",
             "payorChange": "Cambio de pagador",
             "thirdPartyDesigneeChange": "Cambio de designado por terceros",
-            "nigoSelected": "NIGO seleccionado"
+            "nigoSelected": "NIGO seleccionado",
+            "operationsReview": "Solicitud de revisión de operaciones"
         },
         "navLinks": {
             "accessManagement": {
@@ -7032,6 +7033,9 @@
             "cancelPolicy": "Cancelar póliza",
             "newDeathClaim": "Nuevo reclamo por muerte",
             "surrender": "Política de rendición"
+        },
+        "requestOperationReview": {
+            "label": "Solicitud de revisión de operaciones"
         }
     },
     "historyEventCard": {
@@ -8523,7 +8527,7 @@
             "submitTask": "Enviar"
         }
     },
-    "opsReview": {
+    "operationsReview": {
         "confirmStep": {
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Operaciones fue enviada.",

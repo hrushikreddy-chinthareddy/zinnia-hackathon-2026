@@ -1128,7 +1128,8 @@
             "tasks": "Tasks",
             "payorChange": "Payor Change",
             "thirdPartyDesigneeChange": "Third Party Designee Change",
-            "nigoSelected": "Nigo Selected"
+            "nigoSelected": "Nigo Selected",
+            "operationsReview": "Request Operations Review"
         },
         "navLinks": {
             "accessManagement": {
@@ -7179,6 +7180,9 @@
             "newDeathClaim": "New Death Claim",
             "surrender": "Surrender policy",
             "freeLookCancel": "Free look cancel"
+        },
+        "requestOperationReview": {
+            "label": "Request Operations Review"
         }
     },
     "historyEventCard": {
@@ -8680,7 +8684,7 @@
             "submitTask": "Submit"
         }
     },
-    "opsReview": {
+    "operationsReview": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Operations Review was submitted.",
