@@ -61,9 +61,9 @@ export const useNavLink = () => {
 
     const childToString = (child?: ReactNode): string => {
         if (
-            typeof child === 'undefined' ||
-            child === null ||
-            typeof child === 'boolean'
+            child == null ||
+            typeof child === 'boolean' ||
+            (typeof child === 'object' && !Object.keys(child).length)
         ) {
             return '';
         }
