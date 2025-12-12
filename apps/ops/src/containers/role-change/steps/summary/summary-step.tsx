@@ -49,7 +49,6 @@ import {
     formatDate,
     rolePartyCheck,
     roleCheck,
-    getPartyName,
 } from '../../role-change-helper';
 
 interface SummaryStepProps {
@@ -270,7 +269,7 @@ const SummaryStep = ({
                 const identification = identifications?.[0];
 
                 const { identificationValue, usCitizen } = identification || {};
-                const nameVisible = getPartyName(
+                const nameVisible = getFullName(
                     item?.partyData as Partial<Party>
                 );
                 const { tagVariant: ItemTagVariant, tagText: ItemTagText } =
