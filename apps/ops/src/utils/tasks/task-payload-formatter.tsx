@@ -459,7 +459,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         partyId,
         party,
         signatures: signatureData.signatures ?? [],
-        notarySignature: signatureData.notarySignature ?? [],
+        notarySignatures: signatureData.notarySignatures ?? [],
     };
 
     if (
