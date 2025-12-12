@@ -103,13 +103,13 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
             <div>
                 <Label
                     variant={LabelVariant.FieldLabel}
-                    label={t('allFields.reinstatementMinPayment')}
-                    tooltipTitle={t('allFields.reinstatementMinPayment')}
-                    tooltipBody={t('allFields.reinstatementMinPaymentTooltip')}
+                    label={t('allFields.reinstatementPayment')}
+                    tooltipTitle={t('allFields.reinstatementPayment')}
+                    tooltipBody={t('allFields.reinstatementPaymentTooltip')}
                 />
                 <Content
                     details={
-                        reinstatement?.totalRequiredAmount
+                        reinstatement?.totalRequiredAmount != null
                             ? numberFormatify(
                                   reinstatement?.totalRequiredAmount
                               )

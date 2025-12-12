@@ -537,8 +537,8 @@
         "underwritingDecisionTooltip": "Lapsed policies must be approved via underwriting to be reinstated. During underwriting, the carrier assesses the risk of insuring the owner based on their health and lifestyle and determines the cost of their insurance. Once approved, the owner may make the required payment to get their policy back to active.",
         "reinstatementPaymentPeriod": "Reinstatement payment period",
         "reinstatementPaymentPeriodTooltip": "These dates tell you how long the owner has to make the required reinstatement payment once approved via underwriting. The first date is when the owner was approved for reinstatement, and the second is the deadline to make the required reinstatement payment.",
-        "reinstatementMinPayment": "Reinstatement min payment",
-        "reinstatementMinPaymentTooltip": "This is the minimum amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
+        "reinstatementPayment": "Reinstatement payment",
+        "reinstatementPaymentTooltip": "This is the amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
         "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}.",
         "year(s)": "year(s)"
     },

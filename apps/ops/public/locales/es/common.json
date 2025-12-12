@@ -537,8 +537,8 @@
         "underwritingDecisionTooltip": "Las pólizas caducadas deben ser aprobadas a través de suscripción para ser reinstaladas. Durante la suscripción, la aseguradora evalúa el riesgo de asegurar al propietario en función de su salud y estilo de vida y determina el costo de su seguro. Una vez aprobado, el propietario puede realizar el pago requerido para que su póliza vuelva a estar activa.",
         "reinstatementPaymentPeriod": "Período de pago de reinstalación",
         "reinstatementPaymentPeriodTooltip": "Estas fechas indican cuánto tiempo tiene el propietario para realizar el pago de reinstalación requerido una vez aprobado a través de suscripción. La primera fecha es cuando el propietario fue aprobado para la reinstalación, y la segunda es la fecha límite para realizar el pago de reinstalación requerido.",
-        "reinstatementMinPayment": "Pago mínimo de reinstalación",
-        "reinstatementMinPaymentTooltip": "Este es el monto mínimo que el propietario debe pagar en primas dentro del período de aprobación de la reinstalación para que su póliza vuelva a estar activa.",
+        "reinstatementPayment": "Pago de reinstalación",
+        "reinstatementPaymentTooltip": "Este es el monto que el propietario debe pagar en primas para que su póliza vuelva a estar activa.",
         "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}.",
         "year(s)": "año(s)"
     },
