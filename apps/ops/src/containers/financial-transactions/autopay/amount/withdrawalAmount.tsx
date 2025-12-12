@@ -406,10 +406,6 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                 />
                 {
                     <Field
-                        data-testid={
-                            t(`${translationKeyPrefix}.amount.paymentAmount`) ??
-                            ''
-                        }
                         size={FieldSize.Small}
                         className="max-w-[160px]"
                         label={
