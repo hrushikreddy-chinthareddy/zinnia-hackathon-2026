@@ -17,9 +17,6 @@
         border-bottom-color: var(--color-base-border-border-bold);
         padding: var(--measure-dimension-padding-2xl);
         box-shadow: var(--shadow-elevation-elevation-light-sm);
-    }
-
-    &.pinned {
         z-index: 4;
     }
 }
@@ -34,7 +31,7 @@
 
     > * {
         flex: 1;
-        width: 45%;
-        max-width: 425px;
+        min-width: 240px;
+        max-width: 400px;
     }
 }

@@ -1,3 +1,5 @@
+import { TFunction } from 'next-i18next';
+
 import {
     getCarrierName,
     getStatusDisplayText,
@@ -12,49 +14,67 @@ jest.mock('@deps/components/dashboard/utils', () => ({
     defaultDateFormat: 'MMM D, YYYY',
 }));
 
+const mockT: TFunction = (key: any) => key;
+
 describe('Tasks Volume Utils', () => {
     describe('getCarrierName', () => {
         it('should return "All Carriers" when no carriers selected', () => {
-            expect(getCarrierName([])).toBe('All Carriers');
+            expect(getCarrierName([], mockT)).toBe('allFields.allCarriers');
         });
 
         it('should return carrier name when one carrier selected', () => {
-            expect(getCarrierName(['Pacific Life'])).toBe('Pacific Life');
+            expect(getCarrierName(['Pacific Life'], mockT)).toBe(
+                'Pacific Life'
+            );
         });
 
         it('should return "All Carriers" when multiple carriers selected', () => {
             const carriers = ['Pacific Life', 'MetLife'];
-            expect(getCarrierName(carriers)).toBe('All Carriers');
+            expect(getCarrierName(carriers, mockT)).toBe(
+                'allFields.allCarriers'
+            );
         });
     });
 
     describe('getStatusDisplayText', () => {
         it('should return "All" when no statuses selected', () => {
-            expect(getStatusDisplayText([])).toBe('All');
+            expect(getStatusDisplayText([], mockT)).toBe('allFields.all');
         });
 
         it('should return "Open" for open statuses', () => {
-            expect(getStatusDisplayText([TaskStatus.OPEN])).toBe('Open');
-            expect(getStatusDisplayText([TaskStatus.INPROGRESS])).toBe('Open');
+            expect(getStatusDisplayText([TaskStatus.OPEN], mockT)).toBe(
+                'allFields.open'
+            );
+            expect(getStatusDisplayText([TaskStatus.INPROGRESS], mockT)).toBe(
+                'allFields.open'
+            );
             expect(
-                getStatusDisplayText([TaskStatus.OPEN, TaskStatus.INPROGRESS])
-            ).toBe('Open');
+                getStatusDisplayText(
+                    [TaskStatus.OPEN, TaskStatus.INPROGRESS],
+                    mockT
+                )
+            ).toBe('allFields.open');
         });
 
         it('should return "Closed" for closed statuses', () => {
-            expect(getStatusDisplayText([TaskStatus.CLOSED])).toBe('Closed');
+            expect(getStatusDisplayText([TaskStatus.CLOSED], mockT)).toBe(
+                'allFields.closed'
+            );
             expect(
-                getStatusDisplayText([
-                    TaskStatus.COMPLETED,
-                    TaskStatus.COMPLETE,
-                ])
-            ).toBe('Closed');
+                getStatusDisplayText(
+                    [TaskStatus.COMPLETED, TaskStatus.COMPLETE],
+                    mockT
+                )
+            ).toBe('allFields.closed');
         });
 
         it('should return "Open-Closed" when both selected', () => {
             expect(
-                getStatusDisplayText([TaskStatus.OPEN, TaskStatus.CLOSED])
-            ).toBe('Open-Closed');
+                getStatusDisplayText(
+                    [TaskStatus.OPEN, TaskStatus.CLOSED],
+                    mockT
+                )
+            ).toBe('allFields.openClosed');
         });
     });
 

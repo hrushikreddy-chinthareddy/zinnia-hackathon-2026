@@ -54,8 +54,6 @@ const DashboardPage = ({
     user,
 }: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
-
-    //const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const {
         isIntersecting: carrierHeaderIsIntersecting,
         ref: tabContentRef,
