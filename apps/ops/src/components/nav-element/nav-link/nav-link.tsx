@@ -1,8 +1,7 @@
 import NextLink from 'next/link';
 import { AnchorHTMLAttributes, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
 
-import { transformChildrenToString } from '@deps/utils/nav-link';
+import useNavLink from '@deps/hooks/useNavLink';
 
 export type NavLinkProps = {
     isNewPage?: boolean;
@@ -29,15 +28,13 @@ export default function NavLink({
     replace = false,
     ...rest
 }: NavLinkProps) {
-    const { t } = useTranslation();
+    const { getLinkText } = useNavLink();
     const clickEvent = !disabled && onClick ? onClick : () => undefined;
     const focusEvent = !disabled && onFocus ? onFocus : () => undefined;
     const blurEvent = !disabled && onBlur ? onBlur : () => undefined;
     const newPageAnnounce = useRef<string | undefined>(undefined);
-    const linkText = transformChildrenToString(children);
-    newPageAnnounce.current = `${linkText}${
-        target === '_blank' ? ` ${t('allFields.openInNewWindow') ?? ''}` : ''
-    }`;
+
+    newPageAnnounce.current = getLinkText(target, children);
 
     if (isNewPage) {
         return (
