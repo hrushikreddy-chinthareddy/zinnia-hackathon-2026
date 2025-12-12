@@ -224,7 +224,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                     const isIrrevocable =
                         item.isIrrevocable === true ? 'Yes' : 'No';
                     const { tagVariant, tagText } = getTagVariant(
-                        item.action ?? 'NONE',
+                        customData?.requestType ?? item.action ?? 'NONE',
                         t
                     );
                     const role = item.partyRole
