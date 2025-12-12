@@ -6421,6 +6421,7 @@
         },
         "type": "Type",
         "submissionType": "Submission Type",
+        "transactionId": "Transaction ID",
         "submissionSource": "Submission Source",
         "submittedBy": "Submitted By",
         "caseId": "Parent Case ID",

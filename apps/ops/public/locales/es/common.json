@@ -6373,6 +6373,7 @@
         },
         "type": "Tipo",
         "submissionType": "Tipo de envío",
+        "transactionId": "ID de transacción",
         "submissionSource": "Origen de envío",
         "submittedBy": "Presentado por",
         "caseId": "ID del caso principal",
