@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { HttpStatusCode } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
@@ -48,7 +49,8 @@ export default withAuthAndLogging(
                 ...loggingContext,
                 duration: performance.now() - now,
             });
-            const statusCode = error?.status || 500;
+            const statusCode =
+                error?.status || HttpStatusCode.InternalServerError;
             const message =
                 error?.statusText || error?.message || 'Internal Server Error';
 

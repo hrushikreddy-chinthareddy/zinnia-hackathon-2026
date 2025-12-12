@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
-import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import { NavElementType } from '@deps/components/nav-element/nav-element';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { TextButton } from '@deps/components/quick-actions-menu/quick-action-text-button';
@@ -16,7 +15,10 @@ import { QualityAuditStatus } from '@deps/models/case/case';
 import { INTERVAL } from '@deps/models/case/task';
 import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { UserTuple } from '@deps/types/fga';
-import { CreateQualityAuditRequest } from '@deps/types/search';
+import {
+    CreateQualityAuditRequest,
+    CreateQualityAuditResponse,
+} from '@deps/types/search';
 
 import { buildCreateQualityAuditPayload } from './case-helpers';
 
@@ -35,15 +37,15 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
 }) => {
     const { t } = useTranslation();
     const { caseDetails, userTuplesData } = useCaseActivityContext();
-    const [toastMessage, setToastMessage] = useState<any>(undefined);
-    const [toastVariant, setToastVariant] = useState<any>(undefined);
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
     const [isQualityAuditCreated, setIsQualityAuditCreated] = useState(false);
 
     useEffect(() => {
         if (toastMessage && toastVariant) {
             const timer = setTimeout(() => {
-                setToastMessage(undefined);
-                setToastVariant(undefined);
+                setToastMessage('');
+                setToastVariant(null);
             }, INTERVAL);
             return () => clearTimeout(timer);
         }
@@ -60,12 +62,16 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
         mutationFn: async (qualityAuditPayload: CreateQualityAuditRequest) => {
             return await createQualityAuditForCaseIdQuery(qualityAuditPayload);
         },
-        onSuccess: (response) => {
+        onSuccess: (response: CreateQualityAuditResponse) => {
+            const qualityAuditCode = response?.data?.code as
+                | QualityAuditStatus
+                | undefined;
             if (
+                qualityAuditCode &&
                 [
                     QualityAuditStatus.QA_CASE_ALREADY_EXISTS,
                     QualityAuditStatus.QA_CASE_CREATED,
-                ].includes(response?.code || '')
+                ].includes(qualityAuditCode)
             ) {
                 setIsQualityAuditCreated(true);
                 setToastVariant(ToastVariant.Success);
@@ -140,35 +146,33 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                     />
                 }
             >
-                <MenuContextualLabel label={'quick actions'} hideLabel={true}>
-                    {qualityAuditOptions
-                        .filter((option) => option.shouldShow)
-                        .map((option) => {
-                            return (
-                                <Tooltip
-                                    key={option.name}
-                                    placement={PopoverPlacement.TopLeft}
-                                    body={option.tooltip}
-                                    isTabbable={false}
-                                    popoverClassName="md:mb-5"
-                                >
-                                    <MenuContextualItem
-                                        content={option.name}
-                                        href={option.href}
-                                        disabled={!option.isEligible}
-                                        onClick={() =>
-                                            handleQuickActionsMethods(option)
-                                        }
-                                        type={
-                                            option?.href
-                                                ? NavElementType.Link
-                                                : NavElementType.Button
-                                        }
-                                    />
-                                </Tooltip>
-                            );
-                        })}
-                </MenuContextualLabel>
+                {qualityAuditOptions
+                    .filter((option) => option.shouldShow)
+                    .map((option) => {
+                        return (
+                            <Tooltip
+                                key={option.name}
+                                placement={PopoverPlacement.TopLeft}
+                                body={option.tooltip}
+                                isTabbable={false}
+                                popoverClassName="md:mb-5"
+                            >
+                                <MenuContextualItem
+                                    content={option.name}
+                                    href={option.href}
+                                    disabled={!option.isEligible}
+                                    onClick={() =>
+                                        handleQuickActionsMethods(option)
+                                    }
+                                    type={
+                                        option?.href
+                                            ? NavElementType.Link
+                                            : NavElementType.Button
+                                    }
+                                />
+                            </Tooltip>
+                        );
+                    })}
             </MenuContextual>
 
             {toastMessage && toastVariant && (

@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, HttpStatusCode } from 'axios';
 
 import { Statuses } from '@deps/models/case/case';
 import {
@@ -15,6 +15,7 @@ import {
     CaseSearchErrorResponse,
     CaseSearchResponse,
     CreateQualityAuditRequest,
+    CreateQualityAuditResponse,
 } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
@@ -158,9 +159,9 @@ export const createQualityAuditForCaseIdQuery = async (
 ) => {
     const response = await createQualityAuditForCaseId(query);
 
-    if (response?.status !== 200) {
+    if (response?.status !== HttpStatusCode.Ok) {
         throw 'Quality audit creation error';
     } else {
-        return response.data;
+        return response as CreateQualityAuditResponse;
     }
 };

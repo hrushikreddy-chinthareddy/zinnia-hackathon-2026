@@ -137,7 +137,6 @@ export enum TransactionResponseStatus {
 }
 export interface CaseQualityAuditEligibilityResponse {
     status: string | number;
-    data?: any;
 }
 
 export const checkEligibilityLoanRepaymentOneTime = async (
@@ -853,7 +852,7 @@ export const checkCaseQualityAuditEligibility = async (
             CreateQualityAuditRequest,
             AxiosResponse
         >(caseQualityAuditUrl, query);
-        return { status: response.status, data: response.data };
+        return { status: response.status };
     } catch (error: any) {
         browserLogError(
             'CaseQualityAuditEligibility::Eligibility check failed',

@@ -1,4 +1,5 @@
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
+import { HttpStatusCode } from 'axios';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -123,7 +124,7 @@ const CasePageHeader = ({
                 qualityAuditEligibilityPayload
             );
 
-            if (response?.status === 200) {
+            if (response?.status === HttpStatusCode.Ok) {
                 setIsCaseEligibleForQualityAudit(true);
             }
         };

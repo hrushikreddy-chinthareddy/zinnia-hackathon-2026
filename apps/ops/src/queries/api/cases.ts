@@ -557,7 +557,7 @@ export const createQualityAuditForCaseId = async (
         const qualityAuditUrl = `${baseAppUrl}/api/process/workflow/v1/qualityaudit`;
         const response = await client.post<
             CreateQualityAuditRequest,
-            AxiosResponse<any>
+            AxiosResponse
         >(qualityAuditUrl, caseDetails);
         return { status: response.status, data: response.data };
     } catch (error: any) {

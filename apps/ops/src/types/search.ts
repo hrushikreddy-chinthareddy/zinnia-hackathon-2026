@@ -162,7 +162,12 @@ export interface CreateQualityAuditRequest {
 }
 export interface CreateQualityAuditResponse {
     status: number;
-    data: any;
+    data: {
+        code: string;
+        message: string;
+        refCaseId: string;
+        status: string;
+    };
 }
 
 export interface CreateQualityAuditErrorResponse {
