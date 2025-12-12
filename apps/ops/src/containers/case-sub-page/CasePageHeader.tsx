@@ -148,7 +148,7 @@ const CasePageHeader = ({
         openSideSheet(
             escalated ? CaseAction.Deprioritize : CaseAction.Prioritize
         );
-    }, [openSideSheet]);
+    }, [escalated, openSideSheet]);
 
     return (
         <div className="flex items-center justify-between rounded-t border-b-2 border-gray-100 bg-white pb-4 md:items-center md:pb-8">

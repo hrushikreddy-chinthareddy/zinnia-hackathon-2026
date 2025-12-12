@@ -104,7 +104,6 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                   ),
             href: '',
         },
-
         {
             name: t('caseOverview.prioritizeCase.title'),
             hideLabel: false,
