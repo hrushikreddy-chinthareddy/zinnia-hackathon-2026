@@ -8,6 +8,18 @@ import {
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
+import {
+    detectRoleChangeRequestType,
+    getDefaultRoleChangeParty,
+    cleanAddresses,
+    cleanEmails,
+    cleanPhones,
+    mergeIdentifications,
+} from './role-change-data-entry.utils';
+
+const getRelationship = (item: any) =>
+    item?.party?.relationshipToTheCurrentOwner || null;
+
 export const getPurchaseDocumentPayload = (
     task: ManagementTask,
     initialTask: ManagementTask
@@ -17,12 +29,11 @@ export const getPurchaseDocumentPayload = (
     let updateTask = { ...task };
 
     let matchingResult = correlationId;
-    // reindexing case
+
     if (correlationId === MatchingCase.REINDEX) {
         matchingResult = MatchingCase.REINDEX;
     }
 
-    // match found & duplicate case
     if (![MatchingCase.REINDEX].includes(correlationId) && duplicateCase) {
         matchingResult = duplicateCase;
 
@@ -148,291 +159,42 @@ export const getStandardDocumentPayload = (
 };
 
 export const getThirdPartyDetailPayload = (task: ManagementTask) => {
-    let updateTask = { ...task };
-    const updates = Array.isArray(task.data.actionData)
-        ? task.data.actionData
-        : [];
+    const actionData = task?.data?.actionData || [];
+    const signatureData = task?.data?.signatureData || [];
 
-    const deleteItem = updates.find(
-        (item: any) => item.action === Action.DELETE && item.party?.partyId
-    );
+    const { requestType, addedItem, deletedItem } =
+        detectRoleChangeRequestType(actionData);
 
-    const addItem = updates.find((item: any) => item.action === Action.ADD);
+    const src = addedItem?.party ?? deletedItem?.party ?? {};
+    const base = getDefaultRoleChangeParty();
 
-    let requestType: Action.ADD | Action.DELETE | Action.UPDATE | null = null;
-    let party: any = null;
-    let partyId: string | undefined = undefined;
-
-    const effectiveDate = dayjs().format(ZAHARA_API_DATE_FORMAT);
-
-    const getAddresses = (addressesArr = []) => {
-        if (!Array.isArray(addressesArr)) return null;
-
-        let allHaveType = true;
-        let allRequiredMissing = true;
-
-        const cleaned = addressesArr.filter((item: any) => {
-            const type = item?.addressType;
-
-            const line1 = item?.addressLine1;
-            const city = item?.city;
-            const state = item?.state;
-            const zip = item?.zipCode;
-
-            const hasType = Boolean(type);
-            const anyRequiredPresent = Boolean(line1 || city || state || zip);
-            const requiredMissing = !anyRequiredPresent;
-
-            if (!hasType) allHaveType = false;
-            if (!requiredMissing) allRequiredMissing = false;
-
-            if (hasType && requiredMissing) {
-                return false;
-            }
-
-            if (!hasType && requiredMissing) {
-                return false;
-            }
-
-            return true;
-        });
-
-        if (allHaveType && allRequiredMissing) {
-            return null;
-        }
-
-        return cleaned.length > 0 ? cleaned : null;
+    const party = {
+        ...base,
+        ...src,
+        addresses: cleanAddresses(src.addresses),
+        emails: cleanEmails(src.emails),
+        phones: cleanPhones(src.phones),
+        identifications: mergeIdentifications(src.identifications),
+        relationshipToTheCurrentOwner: getRelationship(src),
     };
 
-    const getEmails = (emailsArr = []) => {
-        if (!Array.isArray(emailsArr)) return null;
+    const partyId =
+        requestType === Action.ADD ? undefined : deletedItem?.party?.partyId;
 
-        let allHaveType = true;
-        let allMissingAddress = true;
-
-        const cleaned = emailsArr.filter((item: any) => {
-            const type = item?.emailType;
-            const addr = item?.emailAddress;
-
-            const hasType = Boolean(type);
-            const hasAddress = Boolean(addr);
-
-            if (!hasType) allHaveType = false;
-            if (hasAddress) allMissingAddress = false;
-
-            if (hasType && !hasAddress) return false;
-
-            if (!hasType && !hasAddress) return false;
-
-            return true;
-        });
-
-        if (allHaveType && allMissingAddress) {
-            return null;
-        }
-
-        return cleaned.length > 0 ? cleaned : null;
-    };
-
-    const getPhones = (emailsArr = []) => {
-        if (!Array.isArray(emailsArr)) return null;
-
-        let allHaveType = true;
-        let allMissingPhone = true;
-
-        const cleaned = emailsArr.filter((item: any) => {
-            const type = item?.phoneType;
-            const phn = item?.dialNumber;
-
-            const hasType = Boolean(type);
-            const hasPhone = Boolean(phn);
-
-            if (!hasType) allHaveType = false;
-            if (hasPhone) allMissingPhone = false;
-
-            if (hasType && !hasPhone) return false;
-
-            if (!hasType && !hasPhone) return false;
-
-            return true;
-        });
-
-        if (allHaveType && allMissingPhone) {
-            return null;
-        }
-
-        return cleaned.length > 0 ? cleaned : null;
-    };
-
-    const getRelationship = (item: any) =>
-        item?.party?.relationshipToTheCurrentOwner || null;
-
-    if (addItem && deleteItem) {
-        requestType = Action.UPDATE;
-        partyId = deleteItem.party.partyId;
-
-        party = {
-            ...getDefaultPartyObject(),
-            ...addItem.party,
-            partyId: deleteItem.party.partyId,
-            emails: getEmails(addItem.party.emails),
-            phones: getPhones(addItem.party.phones),
-            addresses: getAddresses(addItem.party.addresses),
-            relationshipToTheCurrentOwner: getRelationship(addItem),
-            identifications: mergeIdentifications(
-                addItem.party.identifications
-            ),
-        };
-    } else if (addItem && !deleteItem) {
-        requestType = Action.ADD;
-
-        partyId = undefined;
-
-        party = {
-            ...getDefaultPartyObject(),
-            ...addItem.party,
-            relationshipToTheCurrentOwner: getRelationship(addItem),
-            emails: getEmails(addItem.party.emails),
-            phones: getPhones(addItem.party.phones),
-            addresses: getAddresses(addItem.party.addresses),
-            partyId: undefined,
-            identifications: mergeIdentifications(
-                addItem.party.identifications
-            ),
-        };
-    } else if (!addItem && deleteItem) {
-        requestType = Action.DELETE;
-        partyId = deleteItem.party.partyId;
-
-        party = {
-            ...deleteItem.party,
-            relationshipToTheCurrentOwner: getRelationship(deleteItem),
-            emails: getEmails(deleteItem.party.emails),
-            phones: getPhones(deleteItem.party.phones),
-            addresses: getAddresses(deleteItem.party.addresses),
-            identifications: mergeIdentifications(
-                deleteItem.party.identifications
-            ),
-        };
-    }
-
-    const { actionData, signatureData, ...rest } = task.data;
-
-    const formattedData: any = {
-        ...rest,
-        carrierId: task.carrier,
-        caseId: task.caseId,
-        planCode: task.data.planCode,
-        policyNumber: task.data.policyNumber,
-        requestType,
-        effectiveDate,
-        partyId,
-        party,
-        signatures: signatureData?.signatures ?? [],
-    };
-
-    if (
-        (requestType === Action.UPDATE || requestType === Action.DELETE) &&
-        partyId
-    ) {
-        formattedData.partyId = partyId;
-    }
-
-    updateTask = {
+    return {
         ...task,
         data: {
-            ...formattedData,
+            ...task.data,
+            requestType,
+            partyId,
+            party,
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
             transactionName: 'ThirdPartyDesignee',
+            carrierId: task.carrier,
+            caseId: task.caseId,
+            planCode: task.data.planCode,
+            policyNumber: task.data.policyNumber,
+            signatures: signatureData?.signatures ?? [],
         },
     };
-    return updateTask;
 };
-
-function mergeIdentifications(uiIdentifications: any[]) {
-    const defaultIdentification = {
-        identificationValue: null,
-        identificationType: 'SSN',
-        startDate: null,
-        endDate: null,
-        issueCountry: null,
-        permanentResident: null,
-    };
-
-    if (!uiIdentifications || uiIdentifications.length === 0) {
-        return [defaultIdentification];
-    }
-    return [
-        {
-            ...defaultIdentification,
-            ...uiIdentifications[0],
-        },
-    ];
-}
-
-function getDefaultPartyObject() {
-    return {
-        partyType: null,
-        prefix: null,
-        firstName: null,
-        middleName: null,
-        lastName: null,
-        fullName: null,
-        entityType: null,
-        dateOfBirth: null,
-        gender: null,
-        trustType: null,
-        trustDate: null,
-        usCitizen: null,
-        countryOfCitizenship: null,
-        relationshipToTheCurrentOwner: null,
-        identifications: [
-            {
-                identificationValue: null,
-                identificationType: 'SSN',
-                startDate: null,
-                endDate: null,
-                issueCountry: null,
-                permanentResident: null,
-            },
-        ],
-        preferredCommunicationType: null,
-        addresses: [
-            {
-                addressType: 'RESIDENCE',
-                addressLine1: null,
-                addressLine2: null,
-                addressLine3: null,
-                city: null,
-                state: null,
-                zipCode: null,
-                zipCodeExtension: '',
-                country: 'US',
-                isPreferred: true,
-                startDate: null,
-                endDate: null,
-            },
-        ],
-        phones: [
-            {
-                phoneType: 'HOME',
-                areaCode: null,
-                dialNumber: null,
-                countryCode: '1',
-                extension: null,
-                bestTime: null,
-                isPreferred: false,
-                startDate: null,
-                endDate: null,
-            },
-        ],
-        emails: [
-            {
-                emailType: 'PERSONAL',
-                emailAddress: null,
-                isPreferred: false,
-                startDate: null,
-                endDate: null,
-            },
-        ],
-    };
-}

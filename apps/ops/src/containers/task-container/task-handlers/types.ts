@@ -1,3 +1,4 @@
+import { Action, EntityTypeValue } from '@deps/constants/policy';
 import {
     ExtendedAddress,
     ExtendedEmail,
@@ -6,7 +7,6 @@ import {
 import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { LoggingContext } from '@deps/utils/server-logging';
-
 export interface ApiFunction<RequestPayload, ResponseData> {
     (
         payload: RequestPayload,
@@ -66,15 +66,15 @@ export interface PartyRole {
 }
 
 export interface Identification {
-    identificationType: string;
-    identificationValue: string;
+    identificationType: string | null;
+    identificationValue: string | null;
     endDate: string | null;
-    identificationDescription: string | null;
-    identificationId: string;
-    identificationKey: string | null;
-    issueCountry: string | null;
-    issueState: string | null;
-    startDate: string | null;
+    identificationDescription?: string | null;
+    identificationId?: string;
+    identificationKey?: string | null;
+    issueCountry?: string | null;
+    issueState?: string | null;
+    startDate?: string | null;
 }
 
 export interface Party {
@@ -99,6 +99,8 @@ export interface Party {
     agentFullName?: string;
     agentPercentage?: number;
     agentType?: string;
+    entityType?: EntityTypeValue | string;
+    preferredCommunicationType?: string | null;
 }
 
 export interface PolicyResponse {
@@ -135,3 +137,63 @@ export enum AddressTypeLabel {
     RESIDENCE = 'Residential Address',
     MAILING = 'Mailing Address',
 }
+
+export type ApiResponse = {
+    nigoSearchResult: Reason[];
+    policyResult: PolicyResponse;
+} | null;
+
+export interface Address {
+    addressType: AddressType | string;
+    addressLine1: string;
+    city: string;
+    state: string | null;
+    zipCode: string;
+    zipCodeExtension?: string | null;
+    country?: string;
+    endDate?: string | null;
+    isPreferred?: boolean;
+    startDate?: string | null;
+}
+
+export interface Phone {
+    phoneType: string;
+    dialNumber: string | null;
+    areaCode?: string | null;
+    countryCode?: string;
+    endDate?: string | null;
+    isPreferred?: boolean;
+    startDate?: string | null;
+}
+
+export interface Email {
+    emailAddress: string | null;
+    emailType: string;
+    endDate?: string | null;
+    isPreferred?: boolean;
+    startDate?: string | null;
+}
+
+export type ActionDataItem = {
+    action: Action;
+    supportingDocumentAttached: boolean | null;
+    party: {
+        partyId: string | null;
+        partyType: string | null;
+        prefix: string | null;
+        firstName: string | null;
+        middleName: string | null;
+        lastName: string | null;
+        fullName: string | null;
+        entityType: EntityTypeValue | string;
+        gender: null;
+        dateOfBirth: null;
+        trustType: string | null;
+        trustDate: string | null;
+        preferredCommunicationType?: string | null;
+        addresses: Address[];
+        phones: Phone[];
+        emails: Email[];
+        identifications: Identification[];
+    };
+};

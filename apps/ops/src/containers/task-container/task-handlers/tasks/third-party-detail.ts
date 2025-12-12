@@ -1,8 +1,10 @@
 import dayjs from 'dayjs';
 
-import { Action, EntityTypeValue } from '@deps/constants/policy';
+import { Action, EntityTypeValue, Roles } from '@deps/constants/policy';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { FormMetadata } from '@deps/models/case/task';
+import { ManagementTask } from '@deps/models/case/task-instance';
 import {
     EmailType,
     IdentificationType,
@@ -16,207 +18,215 @@ import { LoggingContext } from '@deps/utils/server-logging';
 
 import {
     TaskHandler,
-    ReviewPayload,
     Reason,
-    AddressType,
-    PartyRoleType,
-    PartyRole,
+    ReviewPayload,
     Party,
+    PolicyResponse,
+    PartyRoleType,
+    AddressType,
+    Identification,
+    Email,
+    Phone,
+    ApiResponse,
+    Address,
+    ActionDataItem,
 } from '../types';
 
-const getPrefix = (prefix: string | null) => {
-    switch (prefix) {
-        case 'MR':
-            return 'Mr.';
-        case 'MRS':
-            return 'Mrs.';
-        case 'MS':
-            return 'Ms.';
-        case 'DR':
-            return 'Dr.';
-        default:
-            return null;
-    }
+const ensureArray = <T>(value?: T[] | null): T[] =>
+    Array.isArray(value) ? value : [];
+
+const ensureSingle = <T>(items: T[], fallback: T): T[] =>
+    items.length > 0 ? [items[0]] : [fallback];
+
+const normalizeNullableString = (v?: string | null): string | null =>
+    v === undefined || v === null || v === '' ? null : String(v);
+
+const PREFIX_MAP: Record<string, string> = {
+    MR: 'Mr.',
+    MRS: 'Mrs.',
+    MS: 'Ms.',
+    DR: 'Dr.',
 };
 
-const getAddresses = (addresses: any) => {
-    return addresses.length > 0
-        ? addresses.map((address: any) => ({
-              addressType: address?.addressType ?? AddressType.RESIDENCE,
-              addressLine1: address?.addressLine1 ?? '',
-              city: address?.city ?? '',
-              state: address?.state?.length > 0 ? address?.state : null,
-              zipCode: address?.zipCode ?? '',
-              zipCodeExtension: address?.zipCodeExtension ?? '',
-              country: address?.country ?? 'USA',
-              endDate: address?.endDate ?? null,
-              isPreferred: address?.isPreferred ?? false,
-              startDate: address?.startDate ?? null,
-          }))
-        : [
-              {
-                  addressType: AddressType.RESIDENCE,
-                  addressLine1: '',
-                  city: '',
-                  state: null,
-                  zipCode: '',
-              },
-          ];
-};
+const getPrefix = (prefix?: string | null): string | null =>
+    prefix ? PREFIX_MAP[prefix] ?? null : null;
 
-const getPhones = (phones: any) => {
-    return phones.length > 0
-        ? [phones[0]].map((phone: any) => ({
-              phoneType: phone.phoneType ?? PhoneType.HOME,
-              dialNumber: phone.dialNumber ?? null,
-              areaCode: phone.areaCode ?? null,
-              countryCode: phone.countryCode ?? 'USA',
-              endDate: phone.endDate ?? null,
-              isPreferred: phone.isPreferred ?? false,
-              startDate: phone.startDate ?? null,
-          }))
-        : [
-              {
-                  phoneType: PhoneType.HOME,
-                  dialNumber: '',
-              },
-          ];
-};
-
-const getEmails = (emails: any) => {
-    return emails.length > 0
-        ? emails.map((email: any) => ({
-              emailAddress: email.emailAddress ?? null,
-              emailType: email.emailType ?? EmailType.PERSONAL,
-              endDate: email.endDate ?? null,
-              isPreferred: email.isPreferred ?? false,
-              startDate: email.startDate ?? null,
-          }))
-        : [
-              {
-                  emailAddress: null,
-                  emailType: EmailType.PERSONAL,
-              },
-          ];
-};
-
-const getIdentifications = (identifications: any = []) => {
-    const ssnIdentification = (identifications ?? []).find(
-        (id: any) => id.identificationType === IdentificationType.SSN
-    );
-    return identifications.length > 0 && ssnIdentification
-        ? [ssnIdentification]
-        : [
-              {
-                  identificationValue: null,
-                  identificationType: IdentificationType.SSN,
-              },
-          ];
-};
-
-const formatParty = (party: Party, role: string) => ({
-    partyRoleId: party?.partyRoleId ?? null,
-    partyRole: role,
-    partyType: party?.partyType,
-    prefix: party?.prefix ?? null,
-    firstName:
-        party?.partyType === PartyType.INDIVIDUAL
-            ? party?.firstName || null
+const formatAddress = (address?: Partial<Address>): Address => ({
+    addressType: address?.addressType ?? AddressType.RESIDENCE,
+    addressLine1: address?.addressLine1 ?? '',
+    city: address?.city ?? '',
+    state:
+        address?.state && String(address.state).length > 0
+            ? String(address.state)
             : null,
-    lastName:
-        party?.partyType === PartyType.INDIVIDUAL
-            ? party?.lastName || null
-            : party?.fullName || null,
-    middleName:
-        party?.partyType === PartyType.INDIVIDUAL
-            ? party?.middleName || null
-            : null,
-    fullName: party?.fullName || null,
-    dateOfBirth: party?.dateOfBirth ?? null,
-    suffix: party?.suffix ?? null,
-    trustType: party?.trustType ?? null,
-    addresses: getAddresses(party?.addresses ?? []),
-    identifications: getIdentifications(party.identifications),
-    emails: getEmails(party.emails),
-    phones: getPhones(party.phones),
+    zipCode: address?.zipCode ?? '',
+    zipCodeExtension: address?.zipCodeExtension ?? null,
+    country: address?.country ?? 'USA',
+    endDate: (address?.endDate as string) ?? null,
+    isPreferred: Boolean(address?.isPreferred),
+    startDate: (address?.startDate as string) ?? null,
 });
 
-const getContractInfo = (policyResponse: any) => {
-    const rolesToFormat = [
+const getAddresses = (addresses?: Party['addresses']): Address[] => {
+    const arr = ensureArray(addresses);
+    return arr.length > 0
+        ? arr.map((a) => formatAddress(a as Partial<Address>))
+        : [formatAddress()];
+};
+
+const formatPhone = (phone?: Partial<Phone>): Phone => ({
+    phoneType: (phone?.phoneType as string) ?? PhoneType.HOME,
+    dialNumber: phone?.dialNumber ?? null,
+    areaCode: phone?.areaCode ?? null,
+    countryCode: phone?.countryCode ?? 'USA',
+    endDate: (phone?.endDate as string) ?? null,
+    isPreferred: Boolean(phone?.isPreferred),
+    startDate: (phone?.startDate as string) ?? null,
+});
+
+const getPhones = (phones?: Party['phones']): Phone[] => {
+    const arr = ensureArray(phones);
+    const mapped = arr.map((p) => formatPhone(p as Partial<Phone>));
+    return ensureSingle(mapped, formatPhone());
+};
+
+const formatEmail = (email?: Partial<Email>): Email => ({
+    emailAddress: email?.emailAddress ?? null,
+    emailType: (email?.emailType as string) ?? EmailType.PERSONAL,
+    endDate: (email?.endDate as string) ?? null,
+    isPreferred: Boolean(email?.isPreferred),
+    startDate: (email?.startDate as string) ?? null,
+});
+
+const getEmails = (emails?: Party['emails']): Email[] => {
+    const arr = ensureArray(emails);
+    return arr.length > 0
+        ? arr.map((e) => formatEmail(e as Partial<Email>))
+        : [formatEmail()];
+};
+
+const getIdentifications = (
+    identifications?: Party['identifications']
+): Identification[] => {
+    const ids = ensureArray(identifications);
+    const ssn = ids.find(
+        (id) => id.identificationType === IdentificationType.SSN
+    );
+    if (ssn) {
+        return [
+            {
+                identificationType: ssn.identificationType,
+                identificationValue: ssn.identificationValue ?? null,
+                endDate: ssn.endDate ?? null,
+            },
+        ];
+    }
+    return [
         {
-            roleKey: PartyRoleType.OWNER,
-            roleLabel: PartyRoleType.OWNER,
-        },
-        {
-            roleKey: PartyRoleType.JOINTOWNER,
-            roleLabel: PartyRoleType.JOINTOWNER,
-        },
-        {
-            roleKey: PartyRoleType.THIRDPARTYDESIGNEE,
-            roleLabel: PartyRoleType.THIRDPARTYDESIGNEE,
+            identificationType: IdentificationType.SSN,
+            identificationValue: null,
+            endDate: null,
         },
     ];
+};
 
-    const partyRoleMap = policyResponse.partyRoles.reduce(
-        (acc: Record<string, string>, role: PartyRole) => {
-            acc[role.partyRole] = role.partyId;
+const toFullName = (party: Party): string | null =>
+    toTitleCase(
+        [
+            party.prefix,
+            party.firstName,
+            party.middleName,
+            party.lastName,
+            party.suffix,
+        ]
+            .filter(Boolean)
+            .join(' ')
+    ) || null;
+
+const formatPartyForContract = (party: Party, role: string) => {
+    const isIndividual = party.partyType === PartyType.INDIVIDUAL;
+
+    return {
+        partyRoleId: party?.partyRoleId ?? null,
+        partyRole: role,
+        partyType: party?.partyType,
+        prefix: getPrefix(party?.prefix ?? null),
+        firstName: isIndividual
+            ? normalizeNullableString(party?.firstName)
+            : null,
+        middleName: isIndividual
+            ? normalizeNullableString(party?.middleName)
+            : null,
+        lastName: isIndividual
+            ? normalizeNullableString(party?.lastName)
+            : normalizeNullableString(party?.fullName),
+        fullName: normalizeNullableString(party?.fullName) ?? toFullName(party),
+        dateOfBirth: party?.dateOfBirth ?? null,
+        suffix: party?.suffix ?? null,
+        trustType: party?.trustType ?? null,
+        addresses: getAddresses(party?.addresses),
+        identifications: getIdentifications(party?.identifications),
+        emails: getEmails(party?.emails),
+        phones: getPhones(party?.phones),
+    };
+};
+
+const getContractInfo = (policy: PolicyResponse) => {
+    const rolesToFormat: PartyRoleType[] = [
+        PartyRoleType.OWNER,
+        PartyRoleType.JOINTOWNER,
+        PartyRoleType.THIRDPARTYDESIGNEE,
+    ];
+
+    const partyRoleToId = policy.partyRoles.reduce<Record<string, string>>(
+        (acc, r) => {
+            acc[r.partyRole] = r.partyId;
             return acc;
         },
         {}
     );
 
-    const parties = rolesToFormat
-        .map(({ roleKey, roleLabel }) => {
-            const partyId = partyRoleMap[roleKey];
-            const party = policyResponse.parties.find(
-                (p: Party) => p.partyId === partyId
-            );
-            return party ? formatParty(party, roleLabel) : null;
+    return rolesToFormat
+        .map((role) => {
+            const partyId = partyRoleToId[role];
+            const party = policy.parties.find((p) => p.partyId === partyId);
+            return party ? formatPartyForContract(party, role) : null;
         })
-        .filter(Boolean);
-
-    return parties;
+        .filter(Boolean) as ReturnType<typeof formatPartyForContract>[];
 };
-const formatPartyData = (policyResponse: any) => {
-    const partyIds = policyResponse.partyRoles
-        .filter(
-            (role: any) =>
-                role.partyRole === 'THIRDPARTYDESIGNEE' &&
-                (!role?.endDate || !isEndDated(role?.endDate))
-        )
-        .map((role: any) => role.partyId);
 
-    const actionData = policyResponse.parties
-        .filter((party: any) => partyIds.includes(party.partyId))
-        .map((party: any) => {
-            return {
-                action: party?.action ?? Action.NONE,
+const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
+    const eligiblePartyIds = policy.partyRoles
+        .filter(
+            (r) =>
+                r.partyRole === Roles.THIRDPARTYDESIGNEE &&
+                (!r.endDate || !isEndDated(r.endDate))
+        )
+        .map((r) => r.partyId);
+
+    return policy.parties
+        .filter((p) => eligiblePartyIds.includes(p.partyId ?? ''))
+        .map(
+            (party): ActionDataItem => ({
+                action: (party as any).action ?? Action.NONE,
                 supportingDocumentAttached:
                     party.supportingDocumentAttached ?? null,
                 party: {
                     partyId: party.partyId ?? null,
                     partyType: party.partyType ?? null,
-                    prefix: getPrefix(party.prefix),
+                    prefix: getPrefix(party.prefix ?? null),
                     firstName: party.firstName ?? null,
                     middleName: party.middleName ?? null,
                     lastName:
-                        party.lastName ||
+                        party.lastName ??
                         (party.partyType !== PartyType.INDIVIDUAL
-                            ? party.fullName
-                            : null) ||
+                            ? party.fullName ?? null
+                            : null) ??
                         null,
-                    fullName: toTitleCase(
-                        [
-                            party.prefix,
-                            party.firstName,
-                            party.middleName,
-                            party.lastName,
-                            party.suffix,
-                        ]
-                            .filter(Boolean)
-                            .join(' ')
-                    ),
-                    entityType: party.entityType ?? EntityTypeValue.Other,
+                    fullName: toFullName(party),
+                    entityType:
+                        (party.entityType as EntityTypeValue) ??
+                        EntityTypeValue.Other,
                     gender: null,
                     dateOfBirth: null,
                     trustType: party.trustType ?? null,
@@ -228,80 +238,72 @@ const formatPartyData = (policyResponse: any) => {
                     emails: getEmails(party.emails),
                     identifications: getIdentifications(party.identifications),
                 },
-            };
-        });
-    return actionData;
+            })
+        );
 };
 
-const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
-    api: async (payload: any, accessToken: string | undefined) => {
-        const {
-            category,
-            businessProcess,
-            carrier,
-            policyNumber,
-            planCode,
-            logCtx,
-        } = payload;
+const thirdPartyDetailHandler: TaskHandler<ReviewPayload, ApiResponse> = {
+    api: async (payload: any, accessToken: string, logCtx: LoggingContext) => {
+        const { category, businessProcess, carrier } = payload;
+
         const [nigoSearchResult, policyResult] = await Promise.all([
             NigoSearch(
-                {
-                    category,
-                    businessProcess,
-                    carrier,
-                },
+                { category, businessProcess, carrier },
                 accessToken,
-                (logCtx ?? {}) as LoggingContext
+                logCtx
             ),
             getPolicyDetailsSsr(
-                policyNumber,
-                planCode,
+                payload.policyNumber,
+                payload.planCode,
                 accessToken,
-                (logCtx ?? {}) as LoggingContext,
+                logCtx,
                 true
             ),
         ]);
+
         return {
-            nigoSearchResult,
-            policyResult,
+            nigoSearchResult: nigoSearchResult ?? [],
+            policyResult: policyResult as PolicyResponse,
         };
     },
 
-    getPayload: (task: any, logCtx?: LoggingContext) => ({
-        category: ['Party Change', 'TPD Change'],
-        businessProcess: task?.process,
-        carrier: task?.carrier,
-        policyNumber: task?.data?.policyNumber,
-        planCode: task?.data?.planCode,
-        logCtx,
-    }),
+    getPayload: (task: any) => {
+        return {
+            category: ['Party Change', 'TPD Change'],
+            businessProcess: task?.process,
+            carrier: task?.carrier,
+            policyNumber: task?.data?.policyNumber,
+            planCode: task?.data?.planCode,
+            logCtx: task?.logCtx,
+        } as ReviewPayload;
+    },
 
-    transformResponse: (response, metadata, task) => {
-        if (!response || response.length === 0) return;
+    transformResponse: (
+        response: ApiResponse,
+        metadata: FormMetadata[],
+        task?: ManagementTask
+    ): void => {
+        if (!response) return;
 
-        const nigoResponse = response?.nigoSearchResult;
-        const policyResponse = response?.policyResult;
-
-        const reasonList: Reason[] = Array.from(
-            new Set(nigoResponse.map((item: any) => item))
-        );
+        const { nigoSearchResult, policyResult } = response;
+        const nigoList: Reason[] = ensureArray(nigoSearchResult);
+        const policy: PolicyResponse = policyResult;
 
         const seen = new Set<string>();
-        const declineReasonEnum: string[] = [];
         const declineReasonOptions: {
             label: string;
             value: string;
             category: string;
             reason: string;
             detailedReason: string;
-            selectOptions: any;
+            selectOptions: { label: string; value: string }[];
         }[] = [];
 
-        for (const r of reasonList) {
+        for (const r of nigoList) {
             if (!seen.has(r.detailedReason)) {
                 seen.add(r.detailedReason);
 
-                const selectOptions = r.exceptionSubRefs
+                const selectOptions = ensureArray(r.exceptionSubRefs)
                     .filter(
                         (item: any) =>
                             item.carrier === task?.carrier &&
@@ -312,8 +314,7 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
                         value: item.subNmId,
                     }));
 
-                if (selectOptions.length) {
-                    declineReasonEnum.push(r.detailedReason);
+                if (selectOptions.length > 0) {
                     declineReasonOptions.push({
                         label: r.detailedReason,
                         value: r.nmId,
@@ -326,28 +327,31 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, any> = {
             }
         }
 
-        metadata[0].uiSchema.declineReason = {
-            'ui:options': {
-                label: true,
-                widget: 'CheckBoxesSelectWidget',
-                enumOptions: declineReasonOptions,
-            },
-            'ui:dataPath': ['declineReason'],
-        };
+        if (metadata && metadata.length > 0) {
+            metadata[0].uiSchema = metadata[0].uiSchema || {};
+            (metadata[0].uiSchema as any).declineReason = {
+                'ui:dataPath': ['declineReason'],
+                'ui:options': {
+                    label: true,
+                    widget: 'CheckBoxesSelectWidget',
+                    enumOptions: declineReasonOptions,
+                },
+            };
+        }
 
         if (task) {
+            const actionData = formatPartyData(policy);
+
             Object.assign(task, {
                 data: {
-                    ...task.data,
-
+                    ...(task.data || {}),
                     contractInfo: {
-                        parties: getContractInfo(policyResponse),
+                        parties: getContractInfo(policy),
                     },
                     effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
-                    actionData: formatPartyData(policyResponse),
+                    actionData,
                     defaultPartyIdRoleChange:
-                        formatPartyData(policyResponse)?.[0]?.party?.partyId ||
-                        '',
+                        actionData?.[0]?.party?.partyId ?? '',
                 },
             });
         }

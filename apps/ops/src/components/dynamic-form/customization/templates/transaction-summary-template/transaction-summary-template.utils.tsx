@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
-import { Action, PolicyRole } from '@deps/constants/policy';
+import { PolicyRole } from '@deps/constants/policy';
 import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
@@ -20,6 +20,14 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+
+import {
+    cleanAddresses,
+    cleanEmails,
+    cleanPhones,
+    detectRoleChangeRequestType,
+    resolveRoleChangePartyId,
+} from '../../../../../utils/tasks/role-change-data-entry.utils';
 
 export function getPartyMeta(item: SummaryItem) {
     const party = item.party || {};
@@ -115,81 +123,6 @@ export async function fetchValidationSummary(
 
 type RequestBodyBuilder = (customData: any) => any;
 
-const getRoleChangePartyId = (customData: any): string | null => {
-    const { defaultPartyIdRoleChange } = customData;
-    if (!customData || !Array.isArray(customData.actionData)) {
-        return defaultPartyIdRoleChange;
-    }
-
-    const actionData = customData.actionData;
-
-    const addedItem = actionData.find((item: any) => item.action === 'ADD');
-
-    const deletedItem = actionData.find(
-        (item: any) => item.action === Action.DELETE
-    );
-
-    let requestType = Action.NONE;
-    if (addedItem && deletedItem) {
-        requestType = Action.UPDATE;
-    } else if (addedItem) {
-        requestType = Action.ADD;
-    } else if (deletedItem) {
-        requestType = Action.DELETE;
-    }
-
-    switch (requestType) {
-        case Action.ADD:
-            return defaultPartyIdRoleChange;
-
-        case Action.UPDATE:
-            return deletedItem?.party?.partyId ?? null;
-
-        case Action.DELETE:
-            return deletedItem?.party?.partyId ?? null;
-
-        default:
-            return defaultPartyIdRoleChange;
-    }
-};
-
-const getRoleChangeParty = (customData: any): object | null => {
-    if (!customData || !Array.isArray(customData.actionData)) {
-        return null;
-    }
-
-    const actionData = customData.actionData;
-
-    const addedItem = actionData.find((item: any) => item.action === 'ADD');
-
-    const deletedItem = actionData.find(
-        (item: any) => item.action === Action.DELETE
-    );
-
-    let requestType = Action.NONE;
-    if (addedItem && deletedItem) {
-        requestType = Action.UPDATE;
-    } else if (addedItem) {
-        requestType = Action.ADD;
-    } else if (deletedItem) {
-        requestType = Action.DELETE;
-    }
-
-    switch (requestType) {
-        case Action.ADD:
-            return addedItem.party;
-
-        case Action.UPDATE:
-            return addedItem.party;
-
-        case Action.DELETE:
-            return null;
-
-        default:
-            return null;
-    }
-};
-
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
         const { task } = customData;
@@ -228,10 +161,30 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
         };
     },
     THIRD_PARTY_DETAIL: (customData) => {
+        const { actionData } = customData || [];
+        const { requestType, addedItem, deletedItem } =
+            detectRoleChangeRequestType(actionData);
+
+        const partyId = resolveRoleChangePartyId(
+            requestType,
+            deletedItem,
+            customData.defaultPartyIdRoleChange
+        );
+
+        const uiParty = (addedItem ?? deletedItem)?.party ?? null;
+
+        const cleanedParty = uiParty
+            ? {
+                  ...uiParty,
+                  addresses: cleanAddresses(uiParty.addresses),
+                  emails: cleanEmails(uiParty.emails),
+                  phones: cleanPhones(uiParty.phones),
+              }
+            : null;
         return {
             planCode: customData?.planCode,
             policyNumber: customData?.policyNumber,
-            partyId: getRoleChangePartyId(customData),
+            partyId,
             role: PolicyRole.THIRDPARTYDESIGNEE,
             query: {
                 effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
@@ -244,7 +197,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 supportingDocumentAttached:
                     customData?.supportingDocumentAttached || null,
                 relationshipToParty: customData?.relationshipToParty,
-                party: getRoleChangeParty(customData),
+                party: cleanedParty,
             },
         };
     },
