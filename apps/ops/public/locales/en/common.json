@@ -1332,7 +1332,9 @@
         "minItems": "Please select atleast {{limit}} item(s).",
         "patternSsn": "Please enter valid SSN.",
         "maximum": "Field must not be more than {{limit}}.",
-        "inValidDomain": "Only Zinnia emails are allowed."
+        "inValidDomain": "Only Zinnia emails are allowed.",
+        "patternEmail": "Please enter valid email.",
+        "minContains": "At least {{limit}} valid {{ item}} must be present."
     },
     "beneChange": {
         "tabs": {
@@ -9353,7 +9355,7 @@
     "thirdPartyDetail": {
         "confirmStep": {
             "title": "Got It!",
-            "subTitle": "Name change/correction form was submitted successfully.",
+            "subTitle": "Third party detail form was submitted successfully.",
             "cta": "Go to case",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"

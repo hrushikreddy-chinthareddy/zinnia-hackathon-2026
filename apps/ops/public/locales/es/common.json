@@ -1317,7 +1317,9 @@
         "minItems": "Seleccione al menos {{limit}} artículo(s).",
         "patternSsn": "Por favor, introduzca un SSN válido.",
         "maximum": "El campo no debe ser mayor que {{limit}}.",
-        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia."
+        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+        "patternEmail": "Por favor, introduzca un correo electrónico válido.",
+        "minContains": "Al menos {{limit}} válido {{ item}} debe estar presente."
     },
     "beneChange": {
         "tabs": {
@@ -9182,5 +9184,14 @@
         "submitWithErrorsText": "Envíe con errores y cree una tarea NIGO para que el equipo apropiado le haga seguimiento.",
         "internalServerError": "Error Interno del Servidor",
         "failedToFetch": "No se pudo obtener el resumen de validación"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "El formulario de detalles del tercero se ha enviado correctamente.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
     }
 }

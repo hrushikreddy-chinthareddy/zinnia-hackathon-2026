@@ -1297,7 +1297,9 @@
         "minItems": "Veuillez sélectionner au moins {{limit}} élément(s).",
         "patternSsn": "Veuillez saisir un numéro SSN valide.",
         "maximum": "Le champ ne doit pas dépasser 100 {{limit}}.",
-        "inValidDomain": "Seuls les e-mails Zinnia sont autorisés."
+        "inValidDomain": "Seuls les e-mails Zinnia sont autorisés.",
+        "patternEmail": "Veuillez saisir une adresse e-mail valide.",
+        "minContains": "Au moins {{limit}} {{ item}} valide doit être présent."
     },
     "taskManagementQueue": {
         "homeTitle": "Accueil",
@@ -9227,7 +9229,7 @@
     "thirdPartyDetail": {
         "confirmStep": {
             "title": "Compris!",
-            "subTitle": "Le formulaire de changement/correction de nom a été soumis avec succès.",
+            "subTitle": "Le formulaire de détails du tiers a été soumis avec succès.",
             "cta": "Aller à l’Audit de Qualité",
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"

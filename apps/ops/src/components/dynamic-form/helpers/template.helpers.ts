@@ -7,14 +7,12 @@ import { TransactionsArrayFieldTemplate } from '../customization/templates/array
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
 import { ChangeAddressTemplate } from '../customization/templates/change-address-templete/change-address-template';
 import DifferenceTemplate from '../customization/templates/difference-template/difference-template';
-import { FieldTemplate } from '../customization/templates/field-template/field-template';
 import { PartyCardFieldTemplate } from '../customization/templates/field-template/party-card-field-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 import TransactionInstructionTemplate from '../customization/templates/instructions-template/transaction-instruction-template';
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import PartyInfoListTemplate from '../customization/templates/party-info-list-template/party-info-list';
 import TextListTemplate from '../customization/templates/text-list-template';
-import { TitleFieldTemplate } from '../customization/templates/title-field-template/title-field-template';
 import { TransactionAccordionTemplate } from '../customization/templates/transaction-accordion/transaction-accordion';
 
 export const UIArrayTemplateMap: Record<
@@ -40,8 +38,6 @@ export const UIObjectTemplateMap: Record<
     ['ObjectRowFieldTemplate']: ObjectRowFieldTemplate,
     ['DifferenceTemplate']: DifferenceTemplate,
     ['ChangeAddressTemplate']: ChangeAddressTemplate,
-    ['TitleFieldTemplate']: TitleFieldTemplate,
-    ['FieldTemplate']: FieldTemplate,
     ['PartyCardFieldTemplate']: PartyCardFieldTemplate,
 };
 

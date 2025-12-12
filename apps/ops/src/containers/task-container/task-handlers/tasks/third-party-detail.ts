@@ -43,11 +43,11 @@ const getAddresses = (addresses: any) => {
     return addresses.length > 0
         ? addresses.map((address: any) => ({
               addressType: address?.addressType ?? AddressType.RESIDENCE,
-              addressLine1: address?.addressLine1 ?? null,
-              city: address?.city ?? null,
+              addressLine1: address?.addressLine1 ?? '',
+              city: address?.city ?? '',
               state: address?.state?.length > 0 ? address?.state : null,
-              zipCode: address?.zipCode ?? null,
-              zipCodeExtension: address?.zipCodeExtension ?? null,
+              zipCode: address?.zipCode ?? '',
+              zipCodeExtension: address?.zipCodeExtension ?? '',
               country: address?.country ?? 'USA',
               endDate: address?.endDate ?? null,
               isPreferred: address?.isPreferred ?? false,
@@ -56,10 +56,10 @@ const getAddresses = (addresses: any) => {
         : [
               {
                   addressType: AddressType.RESIDENCE,
-                  addressLine1: null,
-                  city: null,
+                  addressLine1: '',
+                  city: '',
                   state: null,
-                  zipCode: null,
+                  zipCode: '',
               },
           ];
 };
@@ -94,7 +94,7 @@ const getEmails = (emails: any) => {
           }))
         : [
               {
-                  emailAddress: '',
+                  emailAddress: null,
                   emailType: EmailType.PERSONAL,
               },
           ];

@@ -7,6 +7,14 @@ import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text'
 import styles from './party-info-list.module.css';
 
 // the commented code in this file is for future use and is intentionally left there
+
+type PartyArrayKey = 'emails' | 'phones' | 'addresses';
+
+const suffixToKey: Record<string, PartyArrayKey> = {
+    _emails: 'emails',
+    _phones: 'phones',
+    _addresses: 'addresses',
+};
 export default function PartyInfoListTemplate(
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
 ) {
@@ -52,6 +60,9 @@ export default function PartyInfoListTemplate(
     //         return copy;
     //     });
     // };
+
+    const safeStringify = (v: any) => JSON.stringify(v ?? []);
+
     useEffect(() => {
         const id = idSchema?.$id ?? '';
         const match = id.match(/actionData_(\d+)/);
@@ -66,22 +77,11 @@ export default function PartyInfoListTemplate(
 
         let updatedParty = { ...party };
         let hasChanged = false;
-
-        const safeStringify = (v: any) => JSON.stringify(v ?? []);
-
-        if (id.endsWith('_emails')) {
-            if (safeStringify(party.emails) !== safeStringify(updatedList)) {
-                updatedParty = { ...party, emails: updatedList };
-                hasChanged = true;
-            }
-        } else if (id.endsWith('_phones')) {
-            if (safeStringify(party.phones) !== safeStringify(updatedList)) {
-                updatedParty = { ...party, phones: updatedList };
-                hasChanged = true;
-            }
-        } else if (id.endsWith('_addresses')) {
-            if (safeStringify(party.addresses) !== safeStringify(updatedList)) {
-                updatedParty = { ...party, addresses: updatedList };
+        const suffix = Object.keys(suffixToKey).find((s) => id.endsWith(s));
+        if (suffix) {
+            const key = suffixToKey[suffix];
+            if (safeStringify(party[key]) !== safeStringify(updatedList)) {
+                updatedParty = { ...party, [key]: updatedList };
                 hasChanged = true;
             }
         }
@@ -94,6 +94,7 @@ export default function PartyInfoListTemplate(
         };
 
         setCustomData({ actionData: updatedActionData });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [preferredIndex]);
 
     const toggleIsPreferred = (index: number, checked: boolean) => {
