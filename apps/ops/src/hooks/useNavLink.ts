@@ -16,7 +16,12 @@ export const useNavLink = () => {
         [t]
     );
 
-    const getLinkText = (
+    const buildOpenInNewWindowLinkText = (text: string | null | undefined) => {
+        if (!text) return undefined;
+        return `${text} ${OPEN_IN_NEW_WINDOW_LABEL ?? ''}`;
+    };
+
+    const getLinkTextFromChildren = (
         target: HTMLAttributeAnchorTarget | undefined,
         children: ReactNode | ReactNode[]
     ) => {
@@ -76,7 +81,11 @@ export const useNavLink = () => {
         isValidElement<{ children?: ReactNode[] }>(element) &&
         Boolean(element.props.children);
 
-    return { OPEN_IN_NEW_WINDOW_LABEL, getLinkText, transformChildrenToString };
+    return {
+        getLinkTextFromChildren,
+        buildOpenInNewWindowLinkText,
+        transformChildrenToString,
+    };
 };
 
 export default useNavLink;

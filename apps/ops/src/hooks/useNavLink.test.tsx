@@ -77,22 +77,44 @@ describe('get text from nav-link components', () => {
 
         it('should return arial-label text ready for link target blank', () => {
             const { result } = renderHook(() => useNavLink());
-            const { getLinkText } = result.current;
+            const { getLinkTextFromChildren } = result.current;
             const value = 'text';
             const TestComponent = (
                 <a target="_blank">
                     <span>{value}</span>
                 </a>
             );
-            const componentText = getLinkText('_blank', TestComponent);
+            const componentText = getLinkTextFromChildren(
+                '_blank',
+                TestComponent
+            );
             expect(componentText).toBe(`${value} Open in new window`);
         });
 
-        it('should return the open in new window label', () => {
+        it('should return arial-label text without the open in new window text', () => {
             const { result } = renderHook(() => useNavLink());
-            const { OPEN_IN_NEW_WINDOW_LABEL } = result.current;
+            const { getLinkTextFromChildren } = result.current;
+            const value = 'text';
+            const TestComponent = (
+                <a target="_top">
+                    <span>{value}</span>
+                </a>
+            );
+            const componentText = getLinkTextFromChildren(
+                '_top',
+                TestComponent
+            );
+            expect(componentText).toBe(`${value}`);
+        });
 
-            expect(OPEN_IN_NEW_WINDOW_LABEL).toBe('Open in new window');
+        it('should return the link text along with open in new window', () => {
+            const { result } = renderHook(() => useNavLink());
+            const { buildOpenInNewWindowLinkText } = result.current;
+            const value = 'text';
+
+            const componentText = buildOpenInNewWindowLinkText(value);
+
+            expect(componentText).toBe(`${value} Open in new window`);
         });
     });
 });

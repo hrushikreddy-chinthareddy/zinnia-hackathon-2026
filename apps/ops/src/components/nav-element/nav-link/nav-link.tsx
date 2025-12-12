@@ -28,13 +28,13 @@ export default function NavLink({
     replace = false,
     ...rest
 }: NavLinkProps) {
-    const { getLinkText } = useNavLink();
+    const { getLinkTextFromChildren } = useNavLink();
     const clickEvent = !disabled && onClick ? onClick : () => undefined;
     const focusEvent = !disabled && onFocus ? onFocus : () => undefined;
     const blurEvent = !disabled && onBlur ? onBlur : () => undefined;
     const newPageAnnounce = useRef<string | undefined>(undefined);
 
-    newPageAnnounce.current = getLinkText(target, children);
+    newPageAnnounce.current = getLinkTextFromChildren(target, children);
 
     if (isNewPage) {
         return (

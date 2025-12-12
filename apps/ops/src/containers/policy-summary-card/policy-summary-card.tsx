@@ -63,6 +63,7 @@ import {
     toTitleCase,
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
+import useNavLink from '@deps/hooks/useNavLink';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
@@ -298,6 +299,7 @@ export const StatusBanner = ({
     casesTotal,
 }: BasePolicyComponentArgs & { casesTotal?: number }) => {
     const { t } = useTranslation();
+    const { buildOpenInNewWindowLinkText } = useNavLink();
     const policyStatus = policy.policyStatus;
     const { featureFlags } = useOptimizely();
     const freeLookEnabled =
@@ -394,6 +396,11 @@ export const StatusBanner = ({
                         ),
                         target: '_blank',
                     }}
+                    aria-label={buildOpenInNewWindowLinkText(
+                        t(
+                            'dashboard.search.results.policySummaryCard.caseBannerLink'
+                        )
+                    )}
                 />
             )}
 

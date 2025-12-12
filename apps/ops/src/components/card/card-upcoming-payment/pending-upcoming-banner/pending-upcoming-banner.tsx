@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import useNavLink from '@deps/hooks/useNavLink';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
 
@@ -19,6 +20,8 @@ const PendingUpcomingBanner = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'autopay.pendingBanner',
     });
+
+    const { buildOpenInNewWindowLinkText } = useNavLink();
 
     const { featureFlags } = useOptimizely();
 
@@ -73,6 +76,7 @@ const PendingUpcomingBanner = ({
                         text: t('caseLinkText'),
                         target: '_blank',
                     }}
+                    aria-label={buildOpenInNewWindowLinkText(t('caseLinkText'))}
                 />
             ))}
         </div>
