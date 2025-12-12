@@ -37,17 +37,17 @@ const getDefaultCommunicationType = (communicationOptions?: RadioItem[]) => {
 
 export const validateEmail = (email: string) => {
     if (!emailRegex.test(email)) {
-        return 'errors.inValidEmail';
+        return 'allFields.invalidEmail';
     }
     if (!domainValidation.test(email) && isNonProductionEnvironment()) {
-        return 'errors.inValidDomain';
+        return 'allFields.invalidDomain';
     }
     return;
 };
 
 const validateEmailExist = (recipients: string[]) => {
     if (!recipients.length) {
-        return 'errors.emailRequired';
+        return 'allFields.emailRequired';
     }
     return false;
 };
@@ -63,7 +63,7 @@ const ContactCenterCorrespondence = ({
     communicationOptions,
     submitRequest,
 }: CorrespondenceProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
     const { setCurrentStepIndex, goToNext } = useWorkflow();
     const { state, dispatch } = useCorrespondence();
     const defaultCommunicationType =
@@ -103,10 +103,10 @@ const ContactCenterCorrespondence = ({
                         planCode: policy?.product?.planCode || '',
                         carrierId: policy?.carrierId || '',
                         payload: correspondenceData?.recipients || [],
-                        error: t(emailError) as string,
+                        error: t(emailError) ?? '',
                         function: 'correspondence.validateEmail',
                     });
-                    setError({ ...error, submit: t(emailError) as string });
+                    setError({ ...error, submit: t(emailError) ?? '' });
                     return false;
                 }
                 break;
@@ -115,7 +115,7 @@ const ContactCenterCorrespondence = ({
                 if (!state.correspondence?.mailDetails) {
                     setError({
                         ...error,
-                        submit: t('errors.mailDetails') as string,
+                        submit: t('allFields.selectAddressToContinue') ?? '',
                     });
                     return false;
                 }
@@ -125,7 +125,8 @@ const ContactCenterCorrespondence = ({
                 if (!state.correspondence.recipients.length) {
                     setError({
                         ...error,
-                        submit: t('errors.recipient') as string,
+                        submit:
+                            t('allFields.recipientRequiredToContinue') ?? '',
                     });
                     return false;
                 }
@@ -181,7 +182,7 @@ const ContactCenterCorrespondence = ({
 
     return (
         <WorkflowCard
-            title={t(`tabs.correspondence`)}
+            title={t(`allFields.correspondence`)}
             footerContent={
                 <SendDocumentNavigationButtons
                     handleContinue={handleContinue}

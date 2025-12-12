@@ -1,5 +1,5 @@
 {
-    "formId": "f62f34ec-dcf2-4539-937e-5246b4f2a068",
+    "formId": "dc7ce621-295e-4588-9756-5c279121bcc1",
     "process": "Matching",
     "taskType": "STANDARD_DOCUMENT_MATCHING",
     "formSchema": {
@@ -116,7 +116,9 @@
                                             "caseId": {
                                                 "type": "string",
                                                 "title": "Case ID",
-                                                "minLength": 12
+                                                "minLength": 12,
+                                                "maxLength": 15,
+                                                "pattern": "^[a-zA-Z0-9]*$"
                                             }
                                         },
                                         "required": ["caseId"]
@@ -195,6 +197,14 @@
                                         "value": "",
                                         "url": ""
                                     }
+                                },
+                                {
+                                    "value": "NOT_APPLICABLE",
+                                    "subElement": {
+                                        "label": "Not Applicable",
+                                        "value": "",
+                                        "url": ""
+                                    }
                                 }
                             ]
                         },
@@ -205,7 +215,7 @@
                         "ui:options": {
                             "label": true
                         },
-                        "ui:hideError": true
+                        "ui:hideError": false
                     },
                     "caseTitle": {
                         "ui:options": {

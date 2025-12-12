@@ -63,6 +63,7 @@ export interface PermissionsContextProps {
     isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
     hasPermissionToPrioritizeCases: boolean;
+    hasMarketConnectContacts: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -78,6 +79,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { featureFlags } = useOptimizely();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
+
+    const hasMarketConnectContacts =
+        !!featureFlags[FEATURE_FLAGS.MARKET_CONNECT_ENABLED];
 
     const { data: homeCheck, isLoading: homeCheckLoading } = useQuery({
         queryKey: ['isAllowHomeExperience', partyId],
@@ -239,7 +243,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             'fgaRoles',
             partyId,
             featureFlags[FEATURE_FLAGS.FGA_ENTITY_SALES_MATERIALS],
-            featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS],
         ],
         queryFn: async () => {
             const tuples = [
@@ -264,10 +267,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 },
             ];
 
-            if (
-                isDemo() &&
-                featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
-            ) {
+            if (isDemo()) {
                 tuples.push({
                     user: `party:${partyId}`,
                     relation: FgaRelation.UiAccess,
@@ -317,10 +317,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRelation.UiAccess
             );
             let hasTestHarnessAccess = false;
-            if (
-                isDemo() &&
-                featureFlags[FEATURE_FLAGS.FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS]
-            ) {
+            if (isDemo()) {
                 hasTestHarnessAccess = !!checkRelation(
                     data,
                     FgaRoles.TEST_HARNESS_ACCESS,
@@ -429,6 +426,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
+                hasMarketConnectContacts,
             }}
         >
             {children}

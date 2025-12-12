@@ -10,6 +10,7 @@ import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { getRiderNames } from 'components/illustrations/helpers/get-rider-names';
 
 import {
     IllustrationHandler,
@@ -32,7 +33,6 @@ import {
     SubStandardRating,
     UnderwritingClass,
 } from '../illustrationApiSchemas';
-import { riderNamesMap } from '../rider-names-map';
 
 const baseCoverageSchema = t.object(
     // TODO: change to not optional once we understand how to get amount when solve for is face amount
@@ -948,18 +948,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
         const assumed = data.assumed;
         const creationDate = new Date().toLocaleDateString();
 
-        const getRidersTextList = () => {
-            const hasRiders = Object.keys(assumed.coverages).length > 1;
-            if (!hasRiders) {
-                return [];
-            }
-
-            const riders = Object.keys(assumed.coverages)
-                .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderNamesMap?.[riderName] ?? riderName);
-
-            return riders;
-        };
+        const riderNames = getRiderNames(data);
 
         return [
             creationDate,
@@ -967,7 +956,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
                 assumed.initial.totalModalPremium
             )}`,
             `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
-            ...getRidersTextList(),
+            ...riderNames,
         ]
             .filter((x) => x)
             .join(', ');

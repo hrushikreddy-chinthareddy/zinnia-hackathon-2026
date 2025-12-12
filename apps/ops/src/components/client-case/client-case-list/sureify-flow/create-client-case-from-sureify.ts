@@ -18,7 +18,12 @@ import {
     TransactionType,
 } from '@deps/types/illustrations';
 import { NewBusiness } from '@deps/types/new-business';
-import { logError, LoggingContext, logInfo } from '@deps/utils/server-logging';
+import {
+    logError,
+    LoggingContext,
+    logInfo,
+    logTrace,
+} from '@deps/utils/server-logging';
 
 import { buildClientCaseFromNewBusiness } from './build-client-case-from-new-business';
 import { validateConversionPayload } from './conversions';
@@ -62,18 +67,33 @@ export const createClientCaseFromSureify = async (
     accessToken: string,
     loggingContext: LoggingContext
 ) => {
+    const logPrefix = `ClientCases:New:Sureify`;
+    const logCtx = {
+        ...loggingContext,
+        file: 'create-client-case-from-sureify',
+        function: 'createClientCaseFromSureify',
+    };
+
+    logTrace(`${logPrefix} Started`, {
+        ...logCtx,
+        eAppId,
+    });
     try {
         // Step 1: Search existing client cases if and eAppId is on the query string
         const clientCases = await searchClientCaseByEappId(
             eAppId,
             accessToken,
-            loggingContext
+            logCtx
         );
         // In a real scenario it should only exist one client case with the eAppId assigned
         const defaultClientCaseId = first(clientCases)?.id;
 
         // Step 2: if a client case already exists, redirect to the client case
         if (defaultClientCaseId) {
+            logInfo(`${logPrefix} Found existing client case`, {
+                ...logCtx,
+                clientCaseId: defaultClientCaseId,
+            });
             return {
                 redirect: {
                     destination: `/illustrations/client-cases/${defaultClientCaseId}/illustrate`,
@@ -87,7 +107,7 @@ export const createClientCaseFromSureify = async (
         // 3a. Retrieve the new business response object from the API
         const newBusinessResponseObject = await getNewBusinessById(
             eAppId,
-            loggingContext
+            logCtx
         );
 
         if (isEmptyObject(newBusinessResponseObject)) {
@@ -101,16 +121,27 @@ export const createClientCaseFromSureify = async (
                 NEW_BUSINESS_API_ORIGIN
             );
         }
+        logTrace(`${logPrefix} Got eApp from new business`, {
+            ...logCtx,
+            eApp: newBusinessResponseObject,
+        });
 
         // 3b. Build the client case payload from the new business response object
         const newClientCasePayload = await buildClientCaseFromNewBusiness(
             newBusinessResponseObject,
             eAppId,
-            loggingContext
+            logCtx
         );
 
         const isConversion =
             newClientCasePayload.transactionType === TransactionType.CONVERSION;
+
+        logTrace(
+            isConversion
+                ? `${logPrefix} Conversion detected`
+                : `${logPrefix} Non-Conversion detected`,
+            logCtx
+        );
 
         // 3c. Check additional required fields if it's a conversion
         if (isConversion) {
@@ -120,6 +151,10 @@ export const createClientCaseFromSureify = async (
         // 3d. Check if the sex at birth field is missing from the client case payload (if not a conversion)
         if (!newClientCasePayload.insuredDetails?.sexAtBirth) {
             // If it's missing, redirect to the new client case page and pre-populate the form with the available data
+            logTrace(
+                `${logPrefix} Detected missing sexAtBirth for non-coversion`,
+                logCtx
+            );
             return {
                 props: {
                     clientCase: merge(
@@ -139,7 +174,7 @@ export const createClientCaseFromSureify = async (
         const newCaseResponse = await createClientCase(
             newClientCasePayload,
             accessToken,
-            loggingContext
+            logCtx
         );
 
         if (!newCaseResponse) {
@@ -149,20 +184,26 @@ export const createClientCaseFromSureify = async (
             );
         }
 
-        logInfo('Client case created from new business', {
-            ...loggingContext,
+        logInfo(`${logPrefix} Client case created from eApp`, {
+            ...logCtx,
             clientCaseId: newCaseResponse.id,
         });
 
         // Step 5: Redirect to the new client case page
-        return buildSuccessRedirection(
+        const redirection = buildSuccessRedirection(
             newCaseResponse,
             newBusinessResponseObject
         );
+
+        logTrace(`${logPrefix} Redirect user to new client case page`, {
+            ...logCtx,
+            redirection: redirection.redirect,
+        });
+        return redirection;
     } catch (error: any) {
         // Never throw from SSR — always return props to avoid server response crash
         logError(error.message, {
-            ...loggingContext,
+            ...logCtx,
             error: error,
         });
 

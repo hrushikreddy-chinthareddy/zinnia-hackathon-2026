@@ -33,7 +33,7 @@ const DifferentAddress = ({
     isSideSheet = false,
     isCancel = true,
 }: DifferentAddressProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -62,13 +62,13 @@ const DifferentAddress = ({
     const validateAddress = () => {
         const errors: FormValidationErrors = {};
         if (showName && !firstName) {
-            errors['firstName'] = t('errors.firstName');
+            errors['firstName'] = t('allFields.firstNameRequired');
         }
         if (showName && !lastName) {
-            errors['lastName'] = t('errors.lastName');
+            errors['lastName'] = t('allFields.lastNameRequired');
         }
         if (!selectedId) {
-            errors['address'] = t('errors.address');
+            errors['address'] = t('allFields.verifyAndSelectAddressToContinue');
         }
         setFormErrors(errors);
         return Object.keys(errors).length === 0;
@@ -102,9 +102,7 @@ const DifferentAddress = ({
             {showName && (
                 <div className="grid w-full grid-cols-2 gap-4">
                     <Field
-                        label={
-                            t(`correspondence.mailDetails.firstName`) as string
-                        }
+                        label={t(`allFields.firstName`) ?? ''}
                         onChange={(e) => setFirstName(e.target.value)}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
@@ -117,9 +115,7 @@ const DifferentAddress = ({
                         })}
                     />
                     <Field
-                        label={
-                            t(`correspondence.mailDetails.lastName`) as string
-                        }
+                        label={t(`allFields.lastName`) ?? ''}
                         onChange={(e) => setLastName(e.target.value)}
                         size={FieldSize.Small}
                         type={FieldType.BaseActive}
@@ -172,17 +168,17 @@ const DifferentAddress = ({
                     size={ButtonSize.Small}
                     type={ButtonType.Primary}
                 >
-                    {t('formActions.continue')}
+                    {t('allFields.continue')}
                 </Button>
                 {isCancel && (
                     <NavElement
-                        aria-label={t('cancel') as string}
+                        aria-label={t('allFields.cancel') ?? ''}
                         onClick={handleCancelClick}
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}
                     >
-                        {t('formActions.cancel')}
+                        {t('allFields.cancel')}
                     </NavElement>
                 )}
             </div>

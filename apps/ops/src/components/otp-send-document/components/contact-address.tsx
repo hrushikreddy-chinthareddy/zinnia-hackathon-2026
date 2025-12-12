@@ -24,9 +24,7 @@ const ContactCenterAddress = ({
     const { t: addressChangeT } = useTranslation(undefined, {
         keyPrefix: 'addressChange',
     });
-    const { t: contactCenterT } = useTranslation(undefined, {
-        keyPrefix: 'sendDocument.correspondence',
-    });
+    const { t } = useTranslation();
 
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const sideSheet = useSideSheetContext();
@@ -144,7 +142,7 @@ const ContactCenterAddress = ({
             />
         );
         sideSheet.changeSideSheetContent(
-            contactCenterT('mailDetails.sendToDifferentAddress'),
+            t('allFields.sendToDifferentAddress'),
             content
         );
         sideSheet.handleOpen(true);
@@ -175,7 +173,7 @@ const ContactCenterAddress = ({
                     isSelected={selectedAddress === partyCardsData.length}
                 >
                     <div key={partyCardsData.length} className="text-secondary">
-                        + {contactCenterT('mailDetails.sendToDifferentAddress')}
+                        + {t('allFields.sendToDifferentAddress')}
                     </div>
                 </ClickContainer>
             )}

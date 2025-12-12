@@ -73,7 +73,7 @@ interface SendDocumentProps extends SegmentTrackedPageProps {
 }
 
 const SendDocument = ({ featureFlagDecisions, user }: SendDocumentProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
 
     const { ctiCallNumber, correlationId, policyNumber, planCode } =
         router.query;
@@ -88,9 +88,9 @@ const SendDocument = ({ featureFlagDecisions, user }: SendDocumentProps) => {
         policyNumber: policyNumber,
     });
 
-    const formSelectionLabel = t('tabs.formSelection');
-    const CorrespondenceLabel = t('tabs.correspondence');
-    const confirmLabel = t('tabs.confirm');
+    const formSelectionLabel = t('allFields.formSelection');
+    const CorrespondenceLabel = t('allFields.correspondence');
+    const confirmLabel = t('allFields.confirm');
 
     const shouldShowCaseButton =
         featureFlagDecisions?.[FEATURE_FLAGS.SEND_DOCUMENT_SHOW_CASE_BUTTON] ??
@@ -166,11 +166,11 @@ const SendDocument = ({ featureFlagDecisions, user }: SendDocumentProps) => {
     const communicationTypes = useMemo(
         () => [
             {
-                label: t('correspondence.email'),
+                label: t('allFields.email'),
                 value: CommunicationTypes.Email,
             },
             {
-                label: t('correspondence.fax'),
+                label: t('allFields.fax'),
                 value: CommunicationTypes.Fax,
             },
         ],
@@ -181,7 +181,7 @@ const SendDocument = ({ featureFlagDecisions, user }: SendDocumentProps) => {
 
     useEffect(() => {
         const mailOption = {
-            label: t('correspondence.mail'),
+            label: t('allFields.mail'),
             value: CommunicationTypes.Mail,
         };
         if (shouldShowMailOption) {

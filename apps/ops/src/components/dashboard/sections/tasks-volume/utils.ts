@@ -18,6 +18,33 @@ export interface TaskVolumeData {
     }[];
     totalTasks: number;
 }
+
+export enum TaskVolumeTimeframeOptions {
+    Last1Day = '1D',
+    LastWeek = '1W',
+    Last1Month = '1M',
+    Last3Months = '3M',
+    Last6Months = '6M',
+}
+
+export const taskVolumeStartDates: Record<TaskVolumeTimeframeOptions, string> =
+    {
+        [TaskVolumeTimeframeOptions.Last6Months]: dayjs()
+            .subtract(6, 'month')
+            .format(defaultDateFormat),
+        [TaskVolumeTimeframeOptions.Last3Months]: dayjs()
+            .subtract(3, 'month')
+            .format(defaultDateFormat),
+        [TaskVolumeTimeframeOptions.Last1Month]: dayjs()
+            .subtract(1, 'month')
+            .format(defaultDateFormat),
+        [TaskVolumeTimeframeOptions.LastWeek]: dayjs()
+            .subtract(1, 'week')
+            .format(defaultDateFormat),
+        [TaskVolumeTimeframeOptions.Last1Day]: dayjs()
+            .subtract(1, 'day')
+            .format(defaultDateFormat),
+    };
 /**
  * CSV column definitions for task volume export
  */

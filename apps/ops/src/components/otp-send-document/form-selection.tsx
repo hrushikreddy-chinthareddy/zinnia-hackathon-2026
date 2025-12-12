@@ -65,7 +65,7 @@ function FormSelection({
     correlationId,
     isLoading,
 }: FormSelectionProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
     const [forms, setForms] = useState(mapIdToFormDetails(formDetails));
     const { goToNext } = useWorkflow();
     const [error, setError] = useState<string>('');
@@ -75,7 +75,7 @@ function FormSelection({
             .filter((form) => form.document.selected !== null)
             .map(({ id, ...rest }) => rest);
         if (!selectedForms.length) {
-            return setError(t('errors.formId') as string);
+            return setError(t('allFields.selectFormToContinue') ?? '');
         }
         setFormDetails(selectedForms);
         goToNext();
@@ -116,7 +116,7 @@ function FormSelection({
     };
     return (
         <WorkflowCard
-            title={t(`tabs.formSelection`)}
+            title={t(`allFields.formSelection`)}
             footerContent={
                 <SendDocumentNavigationButtons
                     handleContinue={handleContinue}
@@ -169,12 +169,12 @@ function FormSelection({
                 <NavElement
                     className={'my-4'}
                     size={NavElementSize.Small}
-                    title={t(`formSelection.addNewDocument`) as string}
+                    title={t(`allFields.sendAnotherDocument`) ?? ''}
                     type={NavElementType.Button}
                     startIcon={<AddDocumentIcon width={20} height={20} />}
                     onClick={addNewFilter}
                 >
-                    {t(`formSelection.addNewDocument`) as string}
+                    {t(`allFields.sendAnotherDocument`) ?? ''}
                 </NavElement>
             </div>
             {error && (

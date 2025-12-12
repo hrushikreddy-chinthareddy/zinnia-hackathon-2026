@@ -14,7 +14,10 @@ import { SignatureValidationContext } from '../signature-validation-context';
 
 export default function SignatureTitle({
     isFormStateReadOnly = false,
-}: SignatureTitleProps) {
+    customOptions,
+}: SignatureTitleProps & {
+    customOptions?: Array<{ label: string; value: SignatureDesignation }>;
+}) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.signatureValidation',
     });
@@ -22,7 +25,7 @@ export default function SignatureTitle({
         SignatureValidationContext
     );
 
-    const signatureDesignationOptions = [
+    const defaultOptions = [
         { label: t('selectOption'), value: SignatureDesignation.Unselected },
         { label: t('trustee'), value: SignatureDesignation.Trustee },
         { label: t('executor'), value: SignatureDesignation.Executor },
@@ -35,6 +38,7 @@ export default function SignatureTitle({
         { label: t('assignee'), value: SignatureDesignation.Assignee },
         { label: t('na'), value: SignatureDesignation.NA },
     ];
+    const signatureDesignationOptions = customOptions ?? defaultOptions;
 
     return (
         <SelectSimple
