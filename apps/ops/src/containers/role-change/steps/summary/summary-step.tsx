@@ -25,13 +25,13 @@ import { Links, PolicyRole, Roles, TagType } from '@deps/constants/policy';
 import { getRelationshipLabel } from '@deps/constants/role';
 import { FormattedEnterprisePhone } from '@deps/containers/bene-change/components/steps/summary/beneficiary-summary';
 import {
-    getDisplayName,
     getExistingPartyIndex,
     getTagVariant,
 } from '@deps/containers/bene-change/components/steps/summary/summary-step.helpers';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { getFullName } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
     TransactionResponseStatus,
@@ -41,6 +41,7 @@ import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Party, PartyType, Policy } from '@zinnia/api-types/types/sor';
 
+import styles from './summary-step.module.css';
 import {
     filterNotRemoved,
     getContactLabel,
@@ -132,12 +133,13 @@ const SummaryStep = ({
     };
 
     const isRoleCheck = roleCheck(role);
-
-    const displayPartyName = getDisplayName(party as Partial<Party>);
+    const displayPartyName =
+        party?.partyType === PartyType.INDIVIDUAL
+            ? getFullName(party as Partial<Party>)
+            : toTitleCase(party?.lastName || '');
 
     const partiesToRender = [];
 
-    // Add party data for Add New TPD with NEW tag variant
     if (!addRole && party) {
         partiesToRender.push({
             partyData: party,
@@ -280,10 +282,7 @@ const SummaryStep = ({
                 );
 
                 return (
-                    <div
-                        className="my-4 w-full rounded-sm border-2 border-gray-100 p-8"
-                        key={0}
-                    >
+                    <div className={styles.summaryContainer} key={0}>
                         <div className="mb-5">
                             <div className="flex">
                                 <Typography variant={TypographyVariant.H2}>
@@ -328,7 +327,7 @@ const SummaryStep = ({
                                         </Typography>
                                     </div>
                                 </div>
-                                <div className="w-[1020px] border border-b-2 border-gray-100"></div>
+                                <div className={styles.summaryDivider}></div>
                             </div>
                         )}
                         <div className="mb-6">

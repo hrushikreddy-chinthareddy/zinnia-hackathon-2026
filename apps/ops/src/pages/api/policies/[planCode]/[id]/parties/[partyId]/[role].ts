@@ -45,6 +45,10 @@ export default withAuthAndLogging(
                 ...parseErrorInformation(error),
                 ...loggingContext,
                 duration: performance.now() - now,
+                planCode,
+                id,
+                partyId,
+                role,
             });
             const statusCode = error?.status || 500;
             const message =
