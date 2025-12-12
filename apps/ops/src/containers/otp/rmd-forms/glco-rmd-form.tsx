@@ -119,6 +119,12 @@ export default function GlcoRmdWithdrawalForm() {
                 configs={beneficiaryConfig}
             />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
             <IrsWithholding
                 isFormStateReadOnly={isFormStateReadOnly}
                 signatureFields={irsSignatureConfig}
@@ -127,12 +133,6 @@ export default function GlcoRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />
-            {shouldStateW4pRender && (
-                <StateW4Form
-                    isFormStateReadOnly={isFormStateReadOnly}
-                    w4pSignaturesConfig={w4pSignaturesConfig}
-                />
-            )}
         </>
     );
 

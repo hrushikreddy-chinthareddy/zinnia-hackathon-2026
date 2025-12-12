@@ -119,17 +119,17 @@ const DlicRmdWithdrawalForm = () => {
                     isLC={false}
                 />
             )}
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+                additionalWithHoldingConfig={additionalWithholdingAmountConfig}
+            />
             {shouldStateW4pRender && (
                 <StateW4Form
                     isFormStateReadOnly={isFormStateReadOnly}
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
-            <TaxWithholdings
-                isFormStateReadOnly={isFormStateReadOnly}
-                ownerStateOfResidence={ownerStateOfResidence}
-                additionalWithHoldingConfig={additionalWithholdingAmountConfig}
-            />
             <IrsWithholding
                 signatureFields={irsSignatureConfig}
                 isFormStateReadOnly={isFormStateReadOnly}

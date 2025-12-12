@@ -136,8 +136,10 @@ describe.skip('Correspondence component', () => {
             />
         );
 
-        expect(screen.getByText('tabs.correspondence')).toBeInTheDocument();
-        expect(screen.getByText('correspondence.fax')).toBeInTheDocument();
+        expect(
+            screen.getByText('allFields.correspondence')
+        ).toBeInTheDocument();
+        expect(screen.getByText('allFields.fax')).toBeInTheDocument();
     });
 
     it('should pre-populate the email for E-delivery role', async () => {
@@ -171,7 +173,7 @@ describe.skip('Correspondence component', () => {
         );
 
         const emailRadio = screen.getAllByLabelText(
-            'correspondence.email'
+            'allFields.email'
         )[0] as HTMLInputElement;
         expect(emailRadio).toBeInTheDocument();
         fireEvent.keyDown(emailRadio, { key: 'Enter', keyCode: 13 });
@@ -216,7 +218,7 @@ describe.skip('Correspondence component', () => {
             />
         );
 
-        const faxRadio = screen.getByLabelText('correspondence.fax');
+        const faxRadio = screen.getByLabelText('allFields.fax');
         expect(faxRadio).toBeInTheDocument();
         fireEvent.keyDown(faxRadio, { key: 'Enter', keyCode: 13 });
         await waitFor(() => {
@@ -299,7 +301,7 @@ describe.skip('Correspondence component', () => {
             />
         );
 
-        expect(screen.getByTestId('correspondence.email')).toBeInTheDocument();
+        expect(screen.getByTestId('allFields.email')).toBeInTheDocument();
     });
 
     it.skip('should display addresses on Mail type selection', async () => {
@@ -333,7 +335,7 @@ describe.skip('Correspondence component', () => {
         //click on continue
 
         const mailOption = screen.getByTestId(
-            'correspondence.mail '
+            'allFields.mail '
         ) as HTMLInputElement;
         fireEvent.click(mailOption);
 

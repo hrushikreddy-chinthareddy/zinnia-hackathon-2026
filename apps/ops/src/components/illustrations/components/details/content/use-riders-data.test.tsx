@@ -52,9 +52,15 @@ describe('useIllustrationRidersData', () => {
                         base: {},
                         accidentalDeathBenefit: {
                             premium: 1000,
+                            isIncludedInQuote: true,
                         },
                         childrensTerm: {
                             premium: 200,
+                            isIncludedInQuote: true,
+                        },
+                        acceleratedDeathBenefitForChronicIllness: {
+                            premium: 0,
+                            isIncludedInQuote: false,
                         },
                     },
                 },

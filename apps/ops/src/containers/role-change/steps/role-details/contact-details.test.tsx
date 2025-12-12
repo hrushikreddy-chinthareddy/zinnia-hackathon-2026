@@ -84,6 +84,8 @@ describe('ContactDetailsComponent', () => {
                 setAddRole: jest.fn(),
                 removeRole: false,
                 setRemoveRole: jest.fn(),
+                removedTpdIndex: null,
+                setRemovedTpdIndex: jest.fn(),
                 currentErrors: {},
                 setCurrentErrors: jest.fn(),
             })
@@ -122,6 +124,14 @@ describe('ContactDetailsComponent', () => {
                 party: {},
             },
             setExistingRoleData: mockSetExistingRoleData,
+            addRole: true,
+            setAddRole: jest.fn(),
+            removeRole: false,
+            setRemoveRole: jest.fn(),
+            removedTpdIndex: null,
+            setRemovedTpdIndex: jest.fn(),
+            currentErrors: {},
+            setCurrentErrors: jest.fn(),
         });
         render(
             <ContactDetailsComponent roleData={roleData} {...defaultProps} />
@@ -166,6 +176,14 @@ describe('ContactDetailsComponent', () => {
                 party: {},
             },
             setExistingRoleData: mockSetExistingRoleData,
+            addRole: true,
+            setAddRole: jest.fn(),
+            removeRole: false,
+            setRemoveRole: jest.fn(),
+            removedTpdIndex: null,
+            setRemovedTpdIndex: jest.fn(),
+            currentErrors: {},
+            setCurrentErrors: jest.fn(),
         });
         render(<ContactDetailsComponent roleData={undefined} {...baseProps} />);
         expect(

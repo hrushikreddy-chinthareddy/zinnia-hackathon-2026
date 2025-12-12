@@ -14,28 +14,24 @@ const ANNUITY_UL_IUL = new Set([
     ProductType.UNIVERSALLIFE,
     ProductType.INDEXEDUNIVERSALLIFE,
 ]);
-const NEVER = new Set([]);
+
 /**
- * Fields that should not be displayed
+ * Controls section visibility based on line of business, product type, and plan code
+ *
+ * @param node - node to filter
+ * @param lineOfBusiness - line of business
+ * @param productType - product type
+ * @param planCode - plan code as string
+ * @returns filtered node
  */
 export const sectionVisibility: Record<
     string,
-    Set<LineOfBusiness | ProductType | ExceptionalPlanCode>
+    Set<LineOfBusiness | ProductType | ExceptionalPlanCode> | undefined
 > = {
-    // policy
-    loanValues: UL_IUL_TR0101,
+    loans: UL_IUL_TR0101,
     marketValueAdjustment: ANNUITY_ONLY,
     withdrawalValues: ANNUITY_UL_IUL,
     testValues: LIFE_ONLY,
     requiredMinimumDistribution: ANNUITY_ONLY,
-    allocation: ANNUITY_UL_IUL,
-    partyRoles: NEVER,
-    parties: NEVER,
-
-    // transaction
-    taxBasis: NEVER,
-    taxWithholdingInstructions: NEVER,
-    taxWithheldAmounts: NEVER,
-    payors: NEVER,
-    payeeOrBeneficiaries: NEVER,
+    combinedFunds: ANNUITY_UL_IUL,
 };

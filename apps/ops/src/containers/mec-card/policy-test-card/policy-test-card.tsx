@@ -223,6 +223,7 @@ const PolicyTestCard = ({
         >
             <Title title={title} showIcon={showIcon} badgeProps={badgeProps} />
             <Progress.Root
+                aria-hidden
                 className={clsx(
                     'h-3 w-full overflow-hidden rounded-full bg-[--color-progress-total]',
                     progressRootClasses

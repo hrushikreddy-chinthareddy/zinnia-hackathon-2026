@@ -11,32 +11,36 @@ import {
     FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import customParseFormat from 'dayjs/plugin/customParseFormat';
-import isBetween from 'dayjs/plugin/isBetween';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState, ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import {
+    groupSectionsForPolicy,
+    groupBasicsForPolicy,
+} from '@deps/components/find-key-values-sidesheet/transformations/section-grouping';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
+import { Expand, useTreeState } from '@deps/hooks/useTreeState';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
-import { KeyValueBasics } from '../components/key-value-basics';
-import { KeyValueSections } from '../components/key-value-sections';
-import styles from '../find-all-key-values-sidesheet.module.css';
-import { preparePolicy } from '../transformations';
+import { DataNodesRenderer } from '../components/data-node-renderer';
 import {
-    Collapse,
-    Expand,
-    FindAllKeyValuesSidebarProps,
-    NestedData,
-} from '../types';
-dayjs.extend(localizedFormat);
-dayjs.extend(customParseFormat);
-dayjs.extend(isBetween);
+    applyTransformationsToNodes,
+    buildRenderTreeFromSourceData,
+    transformNodes,
+} from '../data-node-helpers/mutations';
+import styles from '../find-all-key-values-sidesheet.module.css';
+import { addToolTip, formatNode } from '../transformations/formatters';
+import {
+    excludeNodeByCarrierRules,
+    excludeNodesByLabel,
+    searchNodes,
+} from '../transformations/node-visibility';
+import { FindAllKeyValuesSidebarProps } from '../types';
 
 export const PolicySidesheetContent = ({
     planCode,
@@ -45,9 +49,9 @@ export const PolicySidesheetContent = ({
     handleCalendarOpen,
 }: FindAllKeyValuesSidebarProps) => {
     const [date, setDate] = useState('');
-    const [treeState, setTreeState] = useState(Collapse);
+    const { treeState, setTreeState, searchValue, setSearchValue } =
+        useTreeState();
     const [fieldError, setFieldError] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
     const queryClient = useQueryClient();
     const [enableQuery, setEnableQuery] = useState(false);
     const { t } = useTranslation();
@@ -72,7 +76,6 @@ export const PolicySidesheetContent = ({
         if (date === undefined) {
             return;
         }
-
         const day = dayjs(date);
 
         if (day.isValid() && isDateAllowed(day)) {
@@ -87,29 +90,79 @@ export const PolicySidesheetContent = ({
     };
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
+    const lineOfBusiness = policy?.product?.lineOfBusiness;
+    const productType = policy?.product?.productType;
+    const policyNomenclature =
+        lineOfBusiness === LineOfBusiness.LIFE
+            ? t('policy.nomenclature.policy')
+            : t('policy.nomenclature.contract');
 
-    // This retains all the persistent extracted data on the policy
-    const preparedPolicy = useMemo(
+    const policyNodes = useMemo(
         () =>
-            policy
-                ? preparePolicy({
-                      policy,
-                      t,
-                      searchValue: debouncedSearchValue,
-                  })
-                : null,
-        [policy, debouncedSearchValue, t]
+            // Chains transformations for the entire tree
+            applyTransformationsToNodes(
+                // buildRenderTreeFromSourceData will take an arbitrary data structure, and
+                // convert it into a structure that can be rendered
+                // Full docs here: https://zinnia.atlassian.net/wiki/spaces/AU/pages/5738889232/Rendering+Data+Trees
+                (nodes) => buildRenderTreeFromSourceData(nodes, t),
+                (nodes) => groupBasicsForPolicy(nodes), // Groups all top-level DataField nodes into a section
+                (nodes) =>
+                    // Groups various data into sections, as defined by Policy FKV business rules
+                    groupSectionsForPolicy({
+                        nodes,
+                        t,
+                        planCode,
+                        policyNumber,
+                    }),
+                (nodes) =>
+                    // Transforms the entire tree, chaining transformations on *each node*
+                    transformNodes({
+                        nodes,
+                        transforms: [
+                            (node) =>
+                                // Excludes sections and fields that are required to be hidden specifically by carrier/product
+                                excludeNodeByCarrierRules({
+                                    node,
+                                    lineOfBusiness,
+                                    productType,
+                                    planCode,
+                                }),
+                            (node) =>
+                                // Excludes sections and fields that are required to be hidden across all data
+                                excludeNodesByLabel({
+                                    node,
+                                }),
+                            (node) =>
+                                // Adds a tooltip to the node if it exists in the tooltip mapping
+                                addToolTip({
+                                    node,
+                                    t,
+                                    policyNomenclature,
+                                }),
+                            (node) =>
+                                // Applies translations and formats dates, currencies, etc.
+                                formatNode({
+                                    node,
+                                    t,
+                                    policyNomenclature,
+                                }),
+                        ],
+                    })
+            )(policy),
+        [
+            policy,
+            t,
+            planCode,
+            policyNumber,
+            lineOfBusiness,
+            policyNomenclature,
+            productType,
+        ]
     );
 
-    const { basics, sections } = useMemo(
-        () =>
-            preparedPolicy
-                ? preparedPolicy.toSections()
-                : {
-                      basics: null,
-                      sections: null,
-                  },
-        [preparedPolicy]
+    const matches = useMemo(
+        () => searchNodes(policyNodes, debouncedSearchValue),
+        [policyNodes, debouncedSearchValue]
     );
 
     // If the search value changes to non-empty, expand the tree
@@ -124,9 +177,16 @@ export const PolicySidesheetContent = ({
             planCode: planCode,
         });
         setTreeState(Expand);
-    }, [debouncedSearchValue, authSessionId, planCode, policyNumber]);
+        setSearchValue(debouncedSearchValue);
+    }, [
+        debouncedSearchValue,
+        authSessionId,
+        planCode,
+        policyNumber,
+        setTreeState,
+        setSearchValue,
+    ]);
 
-    if (!preparedPolicy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
             <FieldDateSingle
@@ -141,7 +201,9 @@ export const PolicySidesheetContent = ({
                     new Date(policy?.policyDates?.issueDate || '')
                 }
                 defaultDate={new Date()}
-                onDateSelect={(date) => handleDateChange(date)}
+                onDateSelect={(date: Date | undefined) =>
+                    handleDateChange(date)
+                }
                 container={container}
                 fieldStatus={fieldError ? FieldStatus.ERROR : undefined}
                 formatErrorMsg={t('allFields.invalidDateFormat') || ''}
@@ -149,7 +211,9 @@ export const PolicySidesheetContent = ({
                 handleCalendarOpen={handleCalendarOpen}
             />
             <FieldData
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setSearchValue(e.target.value)
+                }
                 handleClear={() => setSearchValue('')}
                 value={searchValue}
                 fieldType={FieldTypes.Search}
@@ -174,28 +238,12 @@ export const PolicySidesheetContent = ({
                                 className={styles.treeControlIcon}
                             />
                             {treeState === Expand
-                                ? 'Collapse all'
-                                : 'Expand all'}
+                                ? t('allFields.collapseAll')
+                                : t('allFields.expandAll')}
                         </Button>
                     </div>
-                    {basics && (
-                        <KeyValueBasics
-                            policyBasics={basics as NestedData[]}
-                            searchValue={searchValue}
-                            treeState={treeState}
-                        />
-                    )}
-
-                    {!!sections?.length && (
-                        <KeyValueSections
-                            preparedData={preparedPolicy}
-                            sections={sections}
-                            searchValue={searchValue}
-                            treeState={treeState}
-                        />
-                    )}
-
-                    {!basics && !sections?.length && (
+                    <DataNodesRenderer nodes={matches} />
+                    {!matches.length && (
                         <div className={styles.emptySearch}>
                             <Label>
                                 <Icon
