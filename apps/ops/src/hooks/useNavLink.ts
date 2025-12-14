@@ -2,6 +2,7 @@ import {
     Children,
     HTMLAttributeAnchorTarget,
     isValidElement,
+    MutableRefObject,
     ReactElement,
     ReactNode,
     useMemo,
@@ -19,6 +20,23 @@ export const useNavLink = () => {
     const buildOpenInNewWindowLinkText = (text: string | null | undefined) => {
         if (!text) return undefined;
         return `${text} ${OPEN_IN_NEW_WINDOW_LABEL ?? ''}`;
+    };
+
+    const setAriaLabelToChildLinks = (
+        ref: MutableRefObject<HTMLDivElement | null>,
+        value: string | null
+    ) => {
+        if (!ref.current) return;
+
+        const links = ref.current.querySelectorAll('a');
+        links.forEach((link) => {
+            const target = link.getAttribute('target');
+            const ariaLabelValue =
+                target === '_blank'
+                    ? buildOpenInNewWindowLinkText(value)
+                    : value;
+            if (ariaLabelValue) link.setAttribute('aria-label', ariaLabelValue);
+        });
     };
 
     const getLinkTextFromChildren = (
@@ -85,6 +103,7 @@ export const useNavLink = () => {
         getLinkTextFromChildren,
         buildOpenInNewWindowLinkText,
         transformChildrenToString,
+        setAriaLabelToChildLinks,
     };
 };
 

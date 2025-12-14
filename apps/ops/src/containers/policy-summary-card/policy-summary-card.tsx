@@ -12,6 +12,7 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 
@@ -299,6 +300,8 @@ export const StatusBanner = ({
     casesTotal,
 }: BasePolicyComponentArgs & { casesTotal?: number }) => {
     const { t } = useTranslation();
+    const { setAriaLabelToChildLinks } = useNavLink();
+    const bannerRef = useRef<HTMLDivElement | null>(null);
     const { buildOpenInNewWindowLinkText } = useNavLink();
     const policyStatus = policy.policyStatus;
     const { featureFlags } = useOptimizely();
@@ -378,10 +381,21 @@ export const StatusBanner = ({
         },
     });
 
+    useEffect(() => {
+        // Adding necessary logic to set aria-label to BannerAlert since it is not a component property
+        if (bannerRef.current) {
+            setAriaLabelToChildLinks(
+                bannerRef,
+                t('dashboard.search.results.policySummaryCard.caseBannerLink')
+            );
+        }
+    }, [showCaseBanner, setAriaLabelToChildLinks, t]);
+
     return (
         <div className={styles.bannerContainer}>
             {showCaseBanner && (
                 <BannerAlert
+                    ref={bannerRef}
                     variant={BannerVariant.Information}
                     bodyText={t(
                         'dashboard.search.results.policySummaryCard.caseBannerText',
@@ -396,11 +410,6 @@ export const StatusBanner = ({
                         ),
                         target: '_blank',
                     }}
-                    aria-label={buildOpenInNewWindowLinkText(
-                        t(
-                            'dashboard.search.results.policySummaryCard.caseBannerLink'
-                        )
-                    )}
                 />
             )}
 

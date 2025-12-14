@@ -1,6 +1,6 @@
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -20,6 +20,10 @@ const PendingUpcomingBanner = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'autopay.pendingBanner',
     });
+
+    const bannerContainerRef = useRef<HTMLDivElement | null>(null);
+
+    const { setAriaLabelToChildLinks } = useNavLink();
 
     const { buildOpenInNewWindowLinkText } = useNavLink();
 
@@ -60,12 +64,21 @@ const PendingUpcomingBanner = ({
         fetchCases();
     }, [fetchCases]);
 
+    useEffect(() => {
+        if (caseIds.length > 0 && bannerContainerRef.current) {
+            setAriaLabelToChildLinks(bannerContainerRef, t('caseLinkText'));
+        }
+    }, [caseIds, setAriaLabelToChildLinks, t]);
+
     if (caseIds.length === 0) {
         return null;
     }
 
     return (
-        <div className="flex flex-col gap-4 bg-white md:p-6 lg:p-8 !pb-0">
+        <div
+            ref={bannerContainerRef}
+            className="flex flex-col gap-4 bg-white md:p-6 lg:p-8 !pb-0"
+        >
             {caseIds.map((caseId) => (
                 <BannerAlert
                     key={caseId}
@@ -76,7 +89,6 @@ const PendingUpcomingBanner = ({
                         text: t('caseLinkText'),
                         target: '_blank',
                     }}
-                    aria-label={buildOpenInNewWindowLinkText(t('caseLinkText'))}
                 />
             ))}
         </div>
