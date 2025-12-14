@@ -25,8 +25,6 @@ const PendingUpcomingBanner = ({
 
     const { setAriaLabelToChildLinks } = useNavLink();
 
-    const { buildOpenInNewWindowLinkText } = useNavLink();
-
     const { featureFlags } = useOptimizely();
 
     const [caseIds, setCaseIds] = useState<string[]>([]);

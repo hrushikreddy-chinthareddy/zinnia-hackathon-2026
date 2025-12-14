@@ -302,7 +302,6 @@ export const StatusBanner = ({
     const { t } = useTranslation();
     const { setAriaLabelToChildLinks } = useNavLink();
     const bannerRef = useRef<HTMLDivElement | null>(null);
-    const { buildOpenInNewWindowLinkText } = useNavLink();
     const policyStatus = policy.policyStatus;
     const { featureFlags } = useOptimizely();
     const freeLookEnabled =
