@@ -160,7 +160,8 @@ const formatPartyData = (policyResponse: any) => {
                 party: {
                     partyId: party.partyId ?? null,
                     partyType: party.partyType ?? null,
-                    prefix: getPrefix(party.prefix),
+                    prefix: party.prefix,
+                    suffix: party.suffix,
                     firstName: party.firstName ?? null,
                     middleName: party.middleName ?? null,
                     lastName:

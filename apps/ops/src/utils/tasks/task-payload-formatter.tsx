@@ -458,8 +458,8 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         collateralAmount,
         partyId,
         party,
-        signatures: signatureData.signatures ?? [],
-        notarySignatures: signatureData.notarySignatures ?? [],
+        signatures: signatureData?.signatures ?? [],
+        notarySignatures: signatureData?.notarySignatures ?? [],
     };
 
     if (
