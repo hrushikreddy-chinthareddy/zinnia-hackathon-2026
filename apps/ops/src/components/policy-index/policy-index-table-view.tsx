@@ -189,7 +189,7 @@ export const PolicyIndexTableView = ({
 
     useEffect(() => {
         return () => setShowFieldErrorMessage(false);
-    }, []);
+    }, [setShowFieldErrorMessage]);
 
     //TODO: Can we completely refactor how the search context works?
     // I feel like we could potentially move it out of state and make the search completely URL driven
