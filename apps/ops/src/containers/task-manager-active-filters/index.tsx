@@ -47,7 +47,12 @@ export default function TaskManagerActiveFilters({
 
     const [filtersActive, setFiltersActive] = useState(false);
 
-    const { carriers, statuses, queues, escalated } = filters || {};
+    const {
+        carriers = [],
+        statuses = [],
+        queues = [],
+        escalated = undefined,
+    } = filters || {};
 
     useEffect(() => {
         if (
@@ -96,30 +101,30 @@ export default function TaskManagerActiveFilters({
                 />
             )}
 
-            {(
-                [
-                    FilterKeys.carriers,
-                    FilterKeys.queues,
-                    FilterKeys.statuses,
-                ] as const
-            ).map((filterKey) =>
-                filters[filterKey]?.map((filterItem) => (
-                    <ActiveChip
-                        codeList={authorizedCarriers}
-                        key={`${filterKey}-filter-${filterItem}`}
-                        code={filterItem}
-                        allCodes={Object.fromEntries(
-                            filters[filterKey]?.map((item) => [item, item]) ||
-                                []
-                        )}
-                        handleRemoveFilter={() => {
-                            removeFilter(filterKey, filterItem);
-                        }}
-                        t={t}
-                    />
-                ))
-            )}
-            <Clear onReset={onReset} />
+            {filters &&
+                ([FilterKeys.carriers, FilterKeys.queues] as const).map(
+                    (filterKey) =>
+                        filters[filterKey]?.map((filterItem) => (
+                            <ActiveChip
+                                codeList={authorizedCarriers}
+                                key={`${filterKey}-filter-${filterItem}`}
+                                code={filterItem}
+                                allCodes={Object.fromEntries(
+                                    filters[filterKey]?.map((item) => [
+                                        item,
+                                        item,
+                                    ]) || []
+                                )}
+                                handleRemoveFilter={() => {
+                                    removeFilter(filterKey, filterItem);
+                                }}
+                                t={t}
+                            />
+                        ))
+                )}
+            {(carriers.length > 0 ||
+                queues.length > 0 ||
+                escalated !== undefined) && <Clear onReset={onReset} />}
         </div>
     );
 }

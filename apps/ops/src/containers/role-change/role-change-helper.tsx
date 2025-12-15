@@ -629,7 +629,8 @@ export const validate = (
     removeRole: boolean,
     t: TFunction,
     roleLabel: RoleLabel,
-    role: PartyRole
+    role: PartyRole,
+    removedTpdIndex?: number | null
 ) => {
     const currentErrors: Record<string, string> = {};
     const { party } = roleData;
@@ -648,7 +649,14 @@ export const validate = (
         Roles.NEWTHIRDPARTYDESIGNEE,
     ];
 
-    if (addRole === true) {
+    if (
+        allowedRolesForRemove.includes(role) &&
+        addRole &&
+        removedTpdIndex !== null
+    ) {
+        return currentErrors;
+    }
+    if (addRole) {
         currentErrors['owner'] = t('formValidations.addRole', { roleLabel });
         return currentErrors;
     }

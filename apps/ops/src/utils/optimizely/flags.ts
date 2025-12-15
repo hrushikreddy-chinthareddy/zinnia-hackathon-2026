@@ -179,9 +179,10 @@ export enum FEATURE_FLAGS {
     //Illustrations
     ILLUSTRATIONS_QUICK_QUOTE = 'illustrations_quick_quote',
     FGA_ENTITY_SALES_MATERIALS = 'fga_entity_sales_materials',
-    FGA_ENTITY_ZINNIA_LIVE_TEST_HARNESS = 'fga_entity_zinnia_live_test_harness',
     FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT = 'fga_entity_zinnia_live_policy_management',
     FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT = 'fga_entity_zinnia_live_case_management',
     REVISED_HISTORY_TABLE = 'revised_history_table',
+    OPS_REVIEW_REQUEST = 'ops_review_request',
+    ILLUSTRATIONS_AS_IS_ILLUSTRATIONS = 'illustrations_as_is_illustrations',
     CASE_STATS_COUNT = 'case-stats-count',
 }
