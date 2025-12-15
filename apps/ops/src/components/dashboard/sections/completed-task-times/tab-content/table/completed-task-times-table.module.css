@@ -18,7 +18,7 @@
 }
 
 .taskName {
-    word-break: break-all;
+    word-break: break-word;
 }
 
 /* Temporary fix to avoid chevron icon to shrink */
