@@ -183,21 +183,27 @@ export const generateSeries = (
             ]) ?? [];
 
         const name = t(`allFields.${item.name?.toLowerCase()}`) ?? item.name;
+        const firstDataPoint = data?.[0]?.name ?? 0;
+
+        // Ensure months from filter (3M, 6M) are shown in chart even when there is no data on those dates
+        const olderThanOneMonth =
+            fromDate.diff(dayjs(firstDataPoint), 'month') > 1;
+        if (!olderThanOneMonth) {
+            return {
+                type: 'line',
+                name,
+                color: color[index],
+                data: timeData,
+            };
+        }
 
         const defaultStartTime = fromDate.unix() * 1000;
-        const hasDateAlready = timeData.some(([t]) => t === defaultStartTime);
-        const firstSeries = timeData[0]?.[0] ?? 0;
-        const seriesStartPoint = !firstSeries
-            ? defaultStartTime
-            : Math.min(firstSeries, defaultStartTime);
 
         return {
             type: 'line',
             name,
             color: color[index],
-            data: hasDateAlready
-                ? timeData
-                : [[seriesStartPoint, 0], ...timeData],
+            data: [[defaultStartTime, 0], ...timeData],
         };
     });
 };
