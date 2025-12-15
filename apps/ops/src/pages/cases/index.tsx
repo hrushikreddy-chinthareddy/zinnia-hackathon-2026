@@ -130,8 +130,8 @@ const CaseManagementDashboard = ({
         useSearchBarcontext();
 
     useEffect(() => {
-        setShowFieldErrorMessage(false);
-    }, [setShowFieldErrorMessage]);
+        return () => setShowFieldErrorMessage(false);
+    }, []);
 
     const handleCreatedBySort = useCallback(
         (key: 'createdAt') => {

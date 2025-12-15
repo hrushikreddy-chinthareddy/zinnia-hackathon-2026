@@ -167,8 +167,8 @@ export const PolicyIndexCardView = ({
     };
 
     useEffect(() => {
-        setShowFieldErrorMessage(false);
-    }, [setShowFieldErrorMessage]);
+        return () => setShowFieldErrorMessage(false);
+    }, []);
 
     useEffect(() => {
         const { policyNumber = '' } = router.query;
