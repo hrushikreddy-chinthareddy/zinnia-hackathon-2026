@@ -36,7 +36,8 @@ export const FindAllKeyValuesTransactionSidesheet = ({
                 <span className="typography-desktop-headline-2-d">
                     {toTitleCase(
                         t(
-                            `historyEventCard.transactionTypes.${transaction.transactionType}`
+                            `enums.${transaction.transactionType}`,
+                            transaction.transactionType ?? ''
                         ) ?? ''
                     )}
                 </span>

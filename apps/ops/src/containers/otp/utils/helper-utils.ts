@@ -45,7 +45,9 @@ export const createDtccValidator = (t: TFunction, processType: ProcessType) => {
 
             // Use switch for contract number required error logic
             switch (processType) {
-                case ProcessType.OFT: {
+                case ProcessType.OFT:
+                case ProcessType.RMD:
+                case ProcessType.SSW: {
                     const participantId = allValues?.participantId;
 
                     // If participantId is '0000' and contractNumber is '0000', return error

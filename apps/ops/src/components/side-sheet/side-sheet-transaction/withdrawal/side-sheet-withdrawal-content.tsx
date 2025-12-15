@@ -73,9 +73,7 @@ const SideSheetWithdrawalContent = ({
     ) {
         transactionTypeLabel = t('historyEventCard.withdrawal');
     } else if (transactionType == TransactionType.FREE_LOOK_CANCELLATION) {
-        transactionTypeLabel = t(
-            'historyEventCard.transactionTypes.FreeLookCancellation'
-        );
+        transactionTypeLabel = t('enums.FreeLookCancellation');
     }
 
     return (

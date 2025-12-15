@@ -34,6 +34,7 @@ import { createValidator } from '../utils/helper-utils';
 import getGilicoConfig, {
     FormSubtype,
 } from '../withdrawal-forms/gilico/gilico-withdrawal-form.helpers';
+import { validateQcdDetails } from '../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getGlcoRmdConfig(t: TFunction) {
     const { formValidation } = getGilicoConfig(t, '' as FormSubtype, '');
@@ -241,6 +242,14 @@ export default function getGlcoRmdConfig(t: TFunction) {
             errors['rmdMinimumRequiredProgram'] = t(
                 'rmdMethod.rmdWarnings.minimumRequiredProgram'
             );
+        }
+
+        const qcd = formProgram?.qcd;
+
+        if (qcd && qcd.length > 0) {
+            const qcdErrors = validateQcdDetails(t, qcd);
+
+            return { ...errors, ...qcdErrors };
         }
 
         return errors;

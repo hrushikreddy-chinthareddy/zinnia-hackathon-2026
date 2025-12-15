@@ -1,5 +1,5 @@
 {
-    "formId": "dc7ce621-295e-4588-9756-5c279121bcc1",
+    "formId": "f62f34ec-dcf2-4539-937e-5246b4f2a068",
     "process": "Matching",
     "taskType": "STANDARD_DOCUMENT_MATCHING",
     "formSchema": {
@@ -98,10 +98,11 @@
                                         "caseSubType": {
                                             "type": "string",
                                             "title": "Case Type",
+                                            "minLength": 1,
                                             "$ref": "#/definitions/caseSubTypeEnum"
                                         }
                                     },
-                                    "required": ["caseType"]
+                                    "required": ["caseType", "caseSubType"]
                                 },
                                 "else": {
                                     "if": {

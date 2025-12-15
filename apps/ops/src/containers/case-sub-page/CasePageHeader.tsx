@@ -15,7 +15,9 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { caseProcessingDetails, Statuses } from '@deps/models/case/case';
@@ -25,6 +27,11 @@ import { checkCaseQualityAuditEligibility } from '@deps/queries/api/bpm';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    DropdownClickedEvent,
+    PolicyClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
@@ -67,6 +74,7 @@ const CasePageHeader = ({
     const { featureFlags } = useOptimizely();
     const caseTitle = toSentenceCase(title);
     const sideSheet = useSideSheetContext();
+    const { sessionId, partyId: userPartyId } = usePermissionsContext();
     const [partyData, setPartyData] = useState<partyDataType>({
         firstName: '',
         lastName: '',
@@ -150,6 +158,29 @@ const CasePageHeader = ({
             escalated ? CaseAction.Deprioritize : CaseAction.Prioritize
         );
     }, [escalated, openSideSheet]);
+
+    const trackClick = (linkName: string, linkUrl: string) => {
+        // TODO MG: do we always want to call both of these?
+        segmentAnalyticsTrackEvent<DropdownClickedEvent>(
+            SegmentTrackedEventName.DropdownClicked,
+            {
+                dropdownName: 'Policy Quick Actions',
+                selectedItemName: linkName,
+                authSessionId: sessionId,
+                userId: userPartyId,
+            }
+        );
+        segmentAnalyticsTrackEvent<PolicyClickedEvent>(
+            SegmentTrackedEventName.PolicyClicked,
+            {
+                linkName,
+                linkUrl,
+                authSessionId: sessionId,
+                userId: userPartyId,
+                caseId,
+            }
+        );
+    };
 
     return (
         <div className="flex items-center justify-between rounded-t border-b-2 border-gray-100 bg-white pb-4 md:items-center md:pb-8">
@@ -263,6 +294,8 @@ const CasePageHeader = ({
                 escalated={escalated}
                 canShowPriorityActions={canShowPriorityActions}
                 handleCasePrioritize={handleCasePrioritize}
+                caseId={caseId}
+                trackClick={trackClick}
             />
         </div>
     );

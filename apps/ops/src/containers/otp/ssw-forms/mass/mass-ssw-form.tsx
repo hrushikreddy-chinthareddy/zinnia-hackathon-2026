@@ -112,19 +112,18 @@ export function MassMutualSSWForm({ qualType }: MassWithdrawalFormProps) {
                 isReadOnly={isFormStateReadOnly}
                 options={systematicWithdrawalOptions}
             />
-            {shouldStateW4pRender && (
-                <StateW4Form
-                    isFormStateReadOnly={isFormStateReadOnly}
-                    w4pSignaturesConfig={w4pSignaturesConfig}
-                />
-            )}
-
             <TaxWithholdings
                 specifiedView={true}
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
             />
+            {shouldStateW4pRender && (
+                <StateW4Form
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
+                />
+            )}
             <IrsWithholding
                 isFormStateReadOnly={isFormStateReadOnly}
                 signatureFields={irsSignatureConfig}

@@ -89,7 +89,10 @@ export default function GdmnRmdWithdrawalForm() {
                         ? RmdFormType.QCD
                         : RmdFormType.RMD,
             },
-            qcd: prev.qcd ? [...prev.qcd] : [],
+            qcd:
+                rmdFormType === RmdFormType.QCD && prev.qcd
+                    ? [...prev.qcd]
+                    : [],
         }));
     }, [initialForm, rmdFormType]);
 
@@ -103,16 +106,16 @@ export default function GdmnRmdWithdrawalForm() {
         <>
             <RMDMethod isFormStateReadOnly={isFormStateReadOnly} />
             <TaxWithholdings isFormStateReadOnly={isFormStateReadOnly} />
-            <IrsWithholding
-                isFormStateReadOnly={isFormStateReadOnly}
-                signatureFields={irsSignatureConfig}
-            />
             {shouldStateW4pRender && (
                 <StateW4Form
                     isFormStateReadOnly={isFormStateReadOnly}
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}

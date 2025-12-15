@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { useTranslation } from 'next-i18next';
+import { useContext } from 'react';
 
 import Field, {
     FieldSize,
@@ -10,6 +11,7 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import AddressEntry, {
     DEFAULT_ADDRESS,
 } from '@deps/components/otp-withdrawal-form/address-entry';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { QCD } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as RemoveIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 
@@ -33,6 +35,8 @@ const QcdPaymentDetails: React.FC<QcdPaymentDetailsProps> = ({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.distributionMethod',
     });
+    const { formErrors } = useContext(FormDataContext);
+
     return (
         <div className="flex">
             <div>
@@ -42,6 +46,7 @@ const QcdPaymentDetails: React.FC<QcdPaymentDetailsProps> = ({
                     onChange={(e) =>
                         onDataChange('charityName', e.target.value, id)
                     }
+                    message={formErrors?.[`charityName_${id}`]}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
                     value={qcdDetails.charityName}
