@@ -9,7 +9,9 @@ import { NavElementType } from '@deps/components/nav-element/nav-element';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { TextButton } from '@deps/components/quick-actions-menu/quick-action-text-button';
 import Tooltip from '@deps/components/tooltip/tooltip';
+import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN } from '@deps/helpers/case-stat-helpers';
 import { QualityAuditStatus } from '@deps/models/case/case';
 import { INTERVAL } from '@deps/models/case/task';
@@ -23,13 +25,18 @@ import {
 import { buildCreateQualityAuditPayload } from './case-helpers';
 
 type QualityAuditOption = {
-    id: 'createQualityAudit' | 'prioritizeCase' | 'deprioritizeCase';
+    id:
+        | 'createQualityAudit'
+        | 'prioritizeCase'
+        | 'deprioritizeCase'
+        | 'operationsReviewRequest';
     name: string;
     hideLabel: boolean;
     isEligible: boolean;
     shouldShow: boolean;
     tooltip?: string | null;
     href?: string;
+    openInNewTab?: boolean;
 };
 
 type CaseQuickActionsProps = {
@@ -37,6 +44,8 @@ type CaseQuickActionsProps = {
     escalated: boolean;
     canShowPriorityActions: boolean;
     handleCasePrioritize: () => void;
+    caseId: string;
+    trackClick: (linkName: string, linkUrl: string) => void;
 };
 
 const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
@@ -44,12 +53,19 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     escalated,
     handleCasePrioritize,
     canShowPriorityActions,
+    caseId,
+    trackClick,
 }) => {
     const { t } = useTranslation();
+    const { t: quickLinksT } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'quickActions',
+    });
     const { caseDetails, userTuplesData } = useCaseActivityContext();
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
     const [isQualityAuditCreated, setIsQualityAuditCreated] = useState(false);
+
+    const { isAllowOpsCaseReviewRequest } = usePermissionsContext();
 
     useEffect(() => {
         if (toastMessage && toastVariant) {
@@ -135,6 +151,15 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             isEligible: true,
             shouldShow: canShowPriorityActions && escalated,
         },
+        {
+            id: 'operationsReviewRequest',
+            name: quickLinksT('requestOperationReview.label'),
+            hideLabel: false,
+            isEligible: true,
+            shouldShow: isAllowOpsCaseReviewRequest,
+            href: `/cases/${caseId}/operations-review`,
+            openInNewTab: true,
+        },
     ];
 
     const handleQuickActionsMethods = (option: QualityAuditOption) => {
@@ -146,6 +171,12 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             case 'prioritizeCase':
             case 'deprioritizeCase':
                 handleCasePrioritize();
+                break;
+            case 'operationsReviewRequest':
+                trackClick(
+                    'Raise a Service Request',
+                    option?.href || `/cases/${caseId}/operations-review`
+                );
                 break;
 
             default:
@@ -186,6 +217,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                                             ? NavElementType.Link
                                             : NavElementType.Button
                                     }
+                                    openInNewTab={option?.openInNewTab}
                                 />
                             </Tooltip>
                         );
