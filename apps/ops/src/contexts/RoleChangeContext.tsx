@@ -84,11 +84,12 @@ type RoleChangeContextType = {
     setAddRole: Dispatch<SetStateAction<boolean>>;
     removeRole: boolean;
     setRemoveRole: Dispatch<SetStateAction<boolean>>;
+    removedTpdIndex: number | null;
+    setRemovedTpdIndex: Dispatch<SetStateAction<number | null>>;
 };
 
 export const defaultRoleValue: RoleChangeContextType = {
     roleData: {
-        signatures: [],
         documents: null,
         party: {
             partyId: '',
@@ -147,6 +148,8 @@ export const defaultRoleValue: RoleChangeContextType = {
     setAddRole: () => {},
     removeRole: false,
     setRemoveRole: () => {},
+    removedTpdIndex: null,
+    setRemovedTpdIndex: () => {},
 };
 
 const RoleChangeContext = createContext<RoleChangeContextType | null>(null);
@@ -159,6 +162,7 @@ export const RoleChangeProvider = ({ children }: PropsWithChildren) => {
     const [currentErrors, setCurrentErrors] = useState<any>({});
     const [addRole, setAddRole] = useState<boolean>(true);
     const [removeRole, setRemoveRole] = useState<boolean>(false);
+    const [removedTpdIndex, setRemovedTpdIndex] = useState<number | null>(null);
 
     return (
         <RoleChangeContext.Provider
@@ -173,6 +177,8 @@ export const RoleChangeProvider = ({ children }: PropsWithChildren) => {
                 setAddRole,
                 removeRole,
                 setRemoveRole,
+                removedTpdIndex,
+                setRemovedTpdIndex,
             }}
         >
             {children}

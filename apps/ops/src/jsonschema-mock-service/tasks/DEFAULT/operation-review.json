@@ -1,0 +1,235 @@
+{
+    "formId": "36a49458-9af4-49d0-9064-75371f9c927d",
+    "process": "Operations Review",
+    "taskType": "OPERATIONS_REVIEW",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "Operations Review Request",
+                "formSchema": {
+                    "type": "object",
+                    "definitions": {
+                        "caseTypeEnum": {
+                            "enum": ["SERVICE REQUEST"]
+                        }
+                    },
+                    "properties": {
+                        "caseDetails": {
+                            "type": "object",
+                            "title": "New Case Details",
+                            "required": ["caseType", "caseSubType"],
+                            "properties": {
+                                "caseType": {
+                                    "type": "string",
+                                    "title": "Case Type",
+                                    "$ref": "#/definitions/caseTypeEnum"
+                                },
+                                "caseSubType": {
+                                    "type": "string",
+                                    "title": "Case Sub Type",
+                                    "minLength": 1
+                                },
+                                "customerDetails": {
+                                    "type": "object",
+                                    "title": "Customer Details",
+                                    "properties": {
+                                        "firstName": {
+                                            "type": "string",
+                                            "title": "First Name"
+                                        },
+                                        "lastName": {
+                                            "type": "string",
+                                            "title": "Last Name"
+                                        },
+                                        "taxId": {
+                                            "type": "string",
+                                            "title": "SSN / Tax ID"
+                                        }
+                                    }
+                                },
+                                "reporterDetails": {
+                                    "type": "object",
+                                    "title": "Reporter Details",
+                                    "properties": {
+                                        "requestedBy": {
+                                            "type": "string",
+                                            "title": "Requested By"
+                                        }
+                                    }
+                                },
+                                "referenceCaseId": {
+                                    "type": "string",
+                                    "title": "Reference Case ID"
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "caseDetails": {
+                        "ui:options": {
+                            "ObjectFieldTemplate": "AddressFieldTemplate",
+                            "backgroundColor": "white",
+                            "classes": "p-0"
+                        },
+                        "caseType": {
+                            "ui:disabled": true,
+                            "ui:placeholder": "Select Case Type",
+                            "ui:options": {
+                                "width": 50,
+                                "enumNames": ["Service Request"]
+                            },
+                            "ui:hideError": true
+                        },
+                        "caseSubType": {
+                            "ui:widget": "SelectWidget",
+                            "ui:options": {
+                                "width": 50,
+                                "label": true
+                            },
+                            "ui:placeholder": "Select Case Sub Type",
+                            "ui:hideError": true
+                        },
+                        "referenceCaseId": {
+                            "ui:options": {
+                                "width": 50
+                            },
+                            "ui:disabled": true,
+                            "ui:hideError": true
+                        },
+                        "customerDetails": {
+                            "ui:options": {
+                                "label": true,
+                                "ObjectFieldTemplate": "AddressFieldTemplate",
+                                "backgroundColor": "white",
+                                "classes": "p-0"
+                            },
+                            "firstName": {
+                                "ui:options": {
+                                    "width": 50
+                                },
+
+                                "ui:hideError": true
+                            },
+                            "lastName": {
+                                "ui:options": {
+                                    "width": 50
+                                },
+
+                                "ui:hideError": true
+                            },
+                            "taxId": {
+                                "ui:disabled": false
+                            }
+                        },
+                        "reporterDetails": {
+                            "ui:options": {
+                                "ObjectFieldTemplate": "AddressFieldTemplate",
+                                "backgroundColor": "white",
+                                "classes": "p-0"
+                            },
+
+                            "requestedBy": {
+                                "ui:options": {
+                                    "width": 50
+                                },
+                                "ui:disabled": true,
+                                "ui:hideError": true
+                            }
+                        }
+                    }
+                }
+            },
+            {
+                "title": "Details",
+                "formSchema": {
+                    "properties": {
+                        "caseDetails": {
+                            "type": "object",
+                            "title": "New Case Details",
+                            "properties": {
+                                "caseType": {
+                                    "type": "string",
+                                    "title": "Case Type"
+                                },
+                                "caseSubType": {
+                                    "type": "string",
+                                    "title": "Case Sub Type"
+                                },
+                                "additionalDetails": {
+                                    "type": "object",
+                                    "title": "Additional Information",
+                                    "properties": {
+                                        "comment": {
+                                            "type": "string",
+                                            "title": "Comments",
+                                            "minLength": 1
+                                        }
+                                    },
+                                    "required": ["comment"]
+                                }
+                            },
+                            "required": ["additionalDetails"]
+                        },
+                        "attachments": {
+                            "title": "Attach Documents",
+                            "type": "array",
+                            "items": {
+                                "format": "data-url"
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "caseDetails": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "AddressFieldTemplate",
+                            "backgroundColor": "white",
+                            "classes": "p-0"
+                        },
+                        "caseType": {
+                            "ui:options": {
+                                "width": 33
+                            },
+                            "ui:readonly": true
+                        },
+                        "caseSubType": {
+                            "ui:options": {
+                                "width": 50
+                            },
+                            "ui:readonly": true
+                        },
+                        "additionalDetails": {
+                            "comment": {
+                                "ui:widget": "textarea",
+                                "ui:hideError": true
+                            },
+                            "ui:order": ["*", "comment"]
+                        }
+                    },
+                    "attachments": {
+                        "ui:widget": "FileWidget",
+                        "ui:options": {
+                            "label": true,
+                            "addable": false,
+                            "removable": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

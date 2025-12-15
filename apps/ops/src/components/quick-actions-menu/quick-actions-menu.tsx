@@ -92,6 +92,8 @@ export const MenuContextualContent = ({
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
     const loanPaymentEnabled =
         featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
+    const asIsIllustrationsEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_AS_IS_ILLUSTRATIONS];
 
     const isNewDeathClaimEnabled =
         policy.carrierId &&
@@ -323,6 +325,15 @@ export const MenuContextualContent = ({
         },
         enabled: !isDemo(), //TODO: Remove this check when demo endpoint is available
     });
+
+    const { data: BPMEligibility } = useQuery({
+        queryKey: ['checkBPMAsIsIllustrationEligibility'],
+        queryFn: () => {
+            // This is a placeholder variable, should be replaced with a BPM call to check eligibility
+            return false;
+        },
+    });
+
     const { data: freelookCancellation } = useFreelookCancellation(
         policy?.product?.planCode,
         policy.policyNumber
@@ -501,6 +512,35 @@ export const MenuContextualContent = ({
         );
     }
 
+    const additionalItems: JSX.Element[] = [];
+
+    if (serviceRequestFormEnabled) {
+        additionalItems.push(
+            <MenuContextualItem
+                key="serviceRequestForm"
+                content={t('additionalActions.serviceRequestForm')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/service-request/`}
+                onClick={() => {
+                    trackClick(
+                        'Raise a Service Request',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/service-request/`
+                    );
+                }}
+                openInNewTab={true}
+            />
+        );
+    }
+
+    if (BPMEligibility && asIsIllustrationsEnabled) {
+        additionalItems.push(
+            <MenuContextualItem
+                key="createAsIsIllustration"
+                content={t('additionalActions.createAsIsIllustration')}
+                onClick={() => console.log('generate PDF')}
+            />
+        );
+    }
+
     return (
         <>
             {transactionItems.length > 0 && (
@@ -575,19 +615,9 @@ export const MenuContextualContent = ({
                 </>
             </MenuContextualLabel>
 
-            {serviceRequestFormEnabled && (
+            {additionalItems.length > 0 && (
                 <MenuContextualLabel label={t('additionalActions.label')}>
-                    <MenuContextualItem
-                        content={t('additionalActions.serviceRequestForm')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/service-request/`}
-                        onClick={() => {
-                            trackClick(
-                                'Raise a Service Request',
-                                `/policies/${policy.planCode}/${policy.policyNumber}/service-request/`
-                            );
-                        }}
-                        openInNewTab={true}
-                    />
+                    <>{additionalItems}</>
                 </MenuContextualLabel>
             )}
         </>
