@@ -12,7 +12,10 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN } from '@deps/helpers/case-stat-helpers';
+import {
+    FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
+    FNWL_QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
+} from '@deps/helpers/case-stat-helpers';
 import { QualityAuditStatus } from '@deps/models/case/case';
 import { INTERVAL } from '@deps/models/case/task';
 import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
@@ -64,7 +67,6 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
     const [isQualityAuditCreated, setIsQualityAuditCreated] = useState(false);
-
     const { isAllowOpsCaseReviewRequest } = usePermissionsContext();
 
     useEffect(() => {
@@ -77,9 +79,16 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
         }
     }, [toastMessage, toastVariant]);
 
+    const allowedPermissions = [
+        FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
+        FNWL_QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
+    ];
+
     const hasQualityAuditAdminPermission = userTuplesData?.tuples?.some(
         (tuple: UserTuple) =>
-            tuple?.key?.object.includes(FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN)
+            allowedPermissions.some((permission) =>
+                tuple?.key?.object.includes(permission)
+            )
     );
 
     const qualityAuditPayload = buildCreateQualityAuditPayload(caseDetails);
@@ -196,7 +205,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                 {qualityAuditOptions
                     .filter((option) => option.shouldShow)
                     .map((option) => {
-                        return (
+                        return option?.tooltip ? (
                             <Tooltip
                                 key={option.id}
                                 placement={PopoverPlacement.TopLeft}
@@ -220,6 +229,22 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                                     openInNewTab={option?.openInNewTab}
                                 />
                             </Tooltip>
+                        ) : (
+                            <MenuContextualItem
+                                key={option.id}
+                                content={option.name}
+                                href={option.href}
+                                disabled={!option.isEligible}
+                                onClick={() =>
+                                    handleQuickActionsMethods(option)
+                                }
+                                type={
+                                    option?.href
+                                        ? NavElementType.Link
+                                        : NavElementType.Button
+                                }
+                                openInNewTab={option?.openInNewTab}
+                            />
                         );
                     })}
             </MenuContextual>
