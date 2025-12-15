@@ -113,6 +113,19 @@ const getIdentifications = (identifications: any = []) => {
               },
           ];
 };
+
+const toFullName = (party: Party): string | null =>
+    toTitleCase(
+        [
+            party.prefix,
+            party.firstName,
+            party.middleName,
+            party.lastName,
+            party.suffix,
+        ]
+            .filter(Boolean)
+            .join(' ')
+    ) || null;
 const formatParty = (party: Party, role: string) => ({
     partyRoleId: party?.partyRoleId ?? null,
     partyRole: role,
@@ -130,7 +143,7 @@ const formatParty = (party: Party, role: string) => ({
         party?.partyType === PartyType.INDIVIDUAL
             ? party?.middleName || null
             : null,
-    fullName: party?.fullName || null,
+    fullName: toFullName(party),
     dateOfBirth: party?.dateOfBirth ?? null,
     suffix: party?.suffix ?? null,
     trustType: party?.trustType ?? null,

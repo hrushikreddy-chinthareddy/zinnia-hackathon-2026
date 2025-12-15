@@ -216,16 +216,32 @@ const getRoleChangeParty = (customData: any): object | null => {
         requestType = Action.DELETE;
         customData.requestType = Action.DELETE;
     }
+    const getFullName = (party: any) => {
+        if (!party) return null;
+        return [
+            party.prefix,
+            party.firstName,
+            party.middleName,
+            party.lastName,
+            party.suffix,
+        ]
+            .filter(Boolean)
+            .join(' ')
+            .trim();
+    };
     switch (requestType) {
         case Action.ADD:
             addedItem.party.partyId = null;
             addedItem.party.startDate = customData.effectiveDate;
+            addedItem.party.fullName = getFullName(addedItem.party);
             return addedItem.party;
         case Action.UPDATE:
             addedItem.party.startDate = customData.effectiveDate;
+            addedItem.party.fullName = getFullName(addedItem.party);
             return addedItem.party;
         case Action.DELETE:
             deletedItem.party.endDate = customData.effectiveDate;
+            deletedItem.party.fullName = getFullName(deletedItem.party);
             return deletedItem?.party;
         default:
             return null;

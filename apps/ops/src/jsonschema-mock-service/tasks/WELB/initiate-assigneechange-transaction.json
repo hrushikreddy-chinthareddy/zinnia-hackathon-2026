@@ -217,6 +217,7 @@
                                         "entityType": "Other",
                                         "prefix": null,
                                         "suffix": null,
+                                        "preferredCommunicationType": null,
                                         "emails": [
                                             {
                                                 "emailAddress": "",
@@ -350,9 +351,10 @@
                                                 "enum": [
                                                     "EMAIL",
                                                     "REGULARMAIL",
-                                                    null
+                                                    "NONE"
                                                 ],
-                                                "title": "Preferred contact method"
+                                                "title": "Preferred contact method",
+                                                "default": "NONE"
                                             },
                                             "addresses": {
                                                 "type": "array",
@@ -947,7 +949,7 @@
                                                     {
                                                         "properties": {
                                                             "preferredCommunicationType": {
-                                                                "const": null
+                                                                "const": "NONE"
                                                             }
                                                         }
                                                     }
@@ -979,6 +981,7 @@
                     },
                     "supportingDocumentAttached": {
                         "ui:widget": "RadioWidget",
+                        "ui:dataPath": ["supportingDocumentAttached"],
                         "ui:options": {
                             "enumNames": ["Yes", "No"],
                             "inline": true,
@@ -1004,11 +1007,7 @@
                             "allowContentDisabled": true
                         },
                         "items": {
-                            "ui:order": [
-                                "action",
-                                "party",
-                                "preferredCommunicationType"
-                            ],
+                            "ui:order": ["action", "party"],
                             "ui:options": {
                                 "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                 "label": false,
@@ -1026,19 +1025,6 @@
                                         "Delete",
                                         "None"
                                     ]
-                                }
-                            },
-                            "preferredCommunicationType": {
-                                "ui:widget": "RadioWidget",
-                                "ui:emptyValue": "Not specified",
-                                "ui:options": {
-                                    "inline": true,
-                                    "enumNames": [
-                                        "Email",
-                                        "Mail",
-                                        "Not specified"
-                                    ],
-                                    "allowNullValue": true
                                 }
                             },
                             "party": {
@@ -1392,7 +1378,6 @@
                                         }
                                     }
                                 },
-
                                 "preferredCommunicationType": {
                                     "ui:widget": "RadioWidget",
                                     "ui:options": {
@@ -1401,7 +1386,8 @@
                                             "Email",
                                             "Mail",
                                             "Not specified"
-                                        ]
+                                        ],
+                                        "allowNullValue": true
                                     }
                                 },
                                 "addresses": {
