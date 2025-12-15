@@ -33,7 +33,8 @@ export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({
             }
             delete newStatus[status];
         } else {
-            newStatus[status] = caseStatusMap[status];
+            newStatus[status] =
+                caseStatusMap[status as keyof typeof caseStatusMap];
         }
         handleChangeCallback(newStatus);
     };
@@ -45,7 +46,8 @@ export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({
         () =>
             caseStatusKeys.reduce(
                 (acc: { [key in Statuses]?: string }, key) => {
-                    acc[key as Statuses] = caseStatusMap[key as Statuses];
+                    acc[key as Statuses] =
+                        caseStatusMap[key as keyof typeof caseStatusMap];
                     return acc;
                 },
                 {}

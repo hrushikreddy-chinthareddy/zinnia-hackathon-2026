@@ -239,10 +239,6 @@ export default function getMassOftConfig(t: TFunction) {
                     fieldLabel: t('personalDetails.lastName'),
                 },
                 {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
-                {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },

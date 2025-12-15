@@ -1,0 +1,94 @@
+.statusFilterContainer {
+    display: flex;
+    width: 100%;
+    gap: var(--measure-dimension-gap-md);
+    flex-direction: row;
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+
+    @media (max-width: 767px) {
+        flex-direction: column;
+        overflow-x: hidden;
+        gap: 12px;
+    }
+}
+.statusChip {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--measure-dimension-padding-lg)
+        var(--measure-dimension-padding-xl);
+    border-radius: 6px;
+    flex-shrink: 0;
+    font-size: var(--measure-dimension-font-size-font-size-x-small);
+    font-weight: var(--font-weight-content-body-sm-font-weight);
+    border: var(--measure-dimension-stroke-xs) solid;
+    cursor: pointer;
+    color: var(--color-base-text-text-primary);
+    min-width: 210px;
+    @media (max-width: 768px) {
+        min-height: 56px;
+    }
+}
+
+.statusChip:hover {
+    border-width: var(--measure-dimension-stroke-xs);
+    border-color: var(--color-secondary-color-secondary);
+}
+
+.statusChip:focus {
+    outline: none;
+    border-width: var(--measure-dimension-stroke-sm);
+
+    border-color: var(--color-secondary-color-secondary);
+}
+.statusChipSelected {
+    border-color: var(--color-secondary-color-secondary);
+    border-width: var(--measure-dimension-stroke-sm);
+}
+
+.statusChipUnselected {
+    border-color: var(--color-grayscale-color-200-gray);
+}
+
+.casesContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+}
+
+.totalCases {
+    font-weight: var(--string-font-weight-font-weight-bold);
+    font-size: var(--measure-dimension-font-size-font-size-x-large);
+}
+
+.casesLabel {
+    font-weight: var(--string-font-weight-font-weight-semibold);
+    font-size: var(--measure-dimension-font-size-font-size-2x-small);
+}
+
+.statusFilterContainer::-webkit-scrollbar {
+    height: 6px;
+}
+
+.statusFilterContainer::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.statusFilterContainer::-webkit-scrollbar-thumb {
+    background-color: #c1c1c1;
+    border-radius: 3px;
+}
+
+.dropdownMenu .statusChip {
+    width: 100%;
+    margin: 0;
+}
+
+.dropdownMenu {
+    display: flex;
+    gap: var(--measure-dimension-gap-md);
+    flex-direction: column;
+}

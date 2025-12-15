@@ -5,7 +5,7 @@ import { baseAppUrl } from '@deps/queries/api-config';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import { TransactionResponse } from './bpm';
+import { deleteRoleBodyProps, TransactionResponse } from './bpm';
 import { client } from '../api-utils/client';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
@@ -84,8 +84,6 @@ export const submitRoleChange = async (
     });
 
     try {
-        const method = partyId ? HttpMethod.PUT : HttpMethod.POST;
-
         const response = await client[method]<
             TransactionResponse,
             AxiosResponse
@@ -104,6 +102,44 @@ export const submitRoleChange = async (
                 role,
             }
         );
+        return error?.data;
+    }
+};
+
+export const deleteTPDRole = async (
+    planCode: string | undefined,
+    id: string | undefined,
+    role: PolicyRole,
+    partyId: string,
+    query: deleteRoleBodyProps
+): Promise<TransactionResponse> => {
+    const method = HttpMethod.DELETE;
+    const url = `${baseAppUrl}/api/policies/${planCode}/${id}/parties/${partyId}/${role}`;
+
+    browserLogInfo(`deleteRole::Starting deletion for ${role}`, {
+        method,
+        url,
+        planCode,
+        id,
+        partyId,
+        role,
+        payload: JSON.stringify(query),
+        timestamp: new Date().toISOString(),
+    });
+
+    try {
+        const response = await client.delete<any>(url, { data: query });
+
+        return { status: response.status, data: response.data };
+    } catch (error: any) {
+        browserLogError('deleteRole::an error occurred during deletion', {
+            ...parseErrorInformation(error),
+            method,
+            planCode,
+            id,
+            partyId,
+            role,
+        });
         return error?.data;
     }
 };

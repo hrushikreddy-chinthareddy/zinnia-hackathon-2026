@@ -4,7 +4,6 @@ import {
     ExtendedPhone,
 } from '@deps/contexts/RoleChangeContext';
 import { FormMetadata } from '@deps/models/case/task';
-import { ManagementTask } from '@deps/models/case/task-instance';
 import { LoggingContext } from '@deps/utils/server-logging';
 
 export interface ApiFunction<RequestPayload, ResponseData> {
@@ -21,7 +20,7 @@ export interface TaskHandler<RequestPayload, ResponseData> {
     transformResponse: (
         response: ResponseData,
         metadata: FormMetadata[],
-        task?: ManagementTask
+        task: any
     ) => void;
 }
 
