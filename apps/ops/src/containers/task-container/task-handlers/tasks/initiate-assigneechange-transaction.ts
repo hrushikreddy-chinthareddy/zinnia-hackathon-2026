@@ -24,20 +24,20 @@ import {
     Party,
 } from '../types';
 
-const getPrefix = (prefix: string | null) => {
-    switch (prefix) {
-        case 'MR':
-            return 'Mr.';
-        case 'MRS':
-            return 'Mrs.';
-        case 'MS':
-            return 'Ms.';
-        case 'DR':
-            return 'Dr.';
-        default:
-            return null;
-    }
-};
+// const getPrefix = (prefix: string | null) => {
+//     switch (prefix) {
+//         case 'MR':
+//             return 'Mr.';
+//         case 'MRS':
+//             return 'Mrs.';
+//         case 'MS':
+//             return 'Ms.';
+//         case 'DR':
+//             return 'Dr.';
+//         default:
+//             return null;
+//     }
+// };
 
 const getAddresses = (addresses: any) => {
     return addresses.length > 0
@@ -153,10 +153,9 @@ const formatPartyData = (policyResponse: any) => {
     const actionData = policyResponse.parties
         .filter((party: any) => partyIds.includes(party.partyId))
         .map((party: any) => {
+            console.log('party', party);
             return {
                 action: party?.action ?? Action.NONE,
-                supportingDocumentAttached:
-                    party.supportingDocumentAttached ?? null,
                 party: {
                     partyId: party.partyId ?? null,
                     partyType: party.partyType ?? null,
@@ -345,7 +344,6 @@ const initiateAssigneeChangeTransaction: TaskHandler<ReviewPayload, any> = {
             },
             'ui:dataPath': ['declineReason'],
         };
-        console.log(task, 'task');
 
         if (task) {
             Object.assign(task, {
@@ -360,6 +358,8 @@ const initiateAssigneeChangeTransaction: TaskHandler<ReviewPayload, any> = {
                     contractInfo: {
                         parties: getContractInfo(policyResponse),
                     },
+                    supportingDocumentAttached:
+                        task.data.supportingDocumentAttached ?? null,
                 },
             });
         }
