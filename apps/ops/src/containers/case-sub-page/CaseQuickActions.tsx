@@ -22,6 +22,16 @@ import {
 
 import { buildCreateQualityAuditPayload } from './case-helpers';
 
+type QualityAuditOption = {
+    id: 'createQualityAudit' | 'prioritizeCase' | 'deprioritizeCase';
+    name: string;
+    hideLabel: boolean;
+    isEligible: boolean;
+    shouldShow: boolean;
+    tooltip?: string | null;
+    href?: string;
+};
+
 type CaseQuickActionsProps = {
     isCaseEligibleForQualityAudit: boolean;
     escalated: boolean;
@@ -93,8 +103,9 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     const isQualityAuditEligible =
         hasQualityAuditAdminPermission && isCaseEligibleForQualityAudit;
 
-    const qualityAuditOptions = [
+    const qualityAuditOptions: QualityAuditOption[] = [
         {
+            id: 'createQualityAudit',
             name: t('caseOverview.quickActions.createQualityAudit'),
             hideLabel: false,
             isEligible: isQualityAuditEligible,
@@ -111,12 +122,14 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             href: '',
         },
         {
+            id: 'prioritizeCase',
             name: t('caseOverview.prioritizeCase.title'),
             hideLabel: false,
             isEligible: true,
             shouldShow: canShowPriorityActions && !escalated,
         },
         {
+            id: 'deprioritizeCase',
             name: t('caseOverview.deprioritizeCase.title'),
             hideLabel: false,
             isEligible: true,
@@ -124,16 +137,19 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
         },
     ];
 
-    const handleQuickActionsMethods = (option: any) => {
-        if (
-            option?.name === t('caseOverview.quickActions.createQualityAudit')
-        ) {
-            mutate(qualityAuditPayload);
-        } else if (
-            option?.name === t('caseOverview.prioritizeCase.title') ||
-            option?.name === t('caseOverview.deprioritizeCase.title')
-        ) {
-            handleCasePrioritize();
+    const handleQuickActionsMethods = (option: QualityAuditOption) => {
+        switch (option.id) {
+            case 'createQualityAudit':
+                mutate(qualityAuditPayload);
+                break;
+
+            case 'prioritizeCase':
+            case 'deprioritizeCase':
+                handleCasePrioritize();
+                break;
+
+            default:
+                break;
         }
     };
 
@@ -151,13 +167,14 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                     .map((option) => {
                         return (
                             <Tooltip
-                                key={option.name}
+                                key={option.id}
                                 placement={PopoverPlacement.TopLeft}
                                 body={option.tooltip}
                                 isTabbable={false}
                                 popoverClassName="md:mb-5"
                             >
                                 <MenuContextualItem
+                                    key={option.id}
                                     content={option.name}
                                     href={option.href}
                                     disabled={!option.isEligible}
