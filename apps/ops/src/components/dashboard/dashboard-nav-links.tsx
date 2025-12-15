@@ -14,13 +14,9 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { toTitleCase } from '@deps/utils/strings';
 
-export enum DashboardTabs {
-    ACTIVE_APPLICATIONS = 'active-applications',
-    CLOSED_TRANSACTIONS = 'closed-transactions',
-    NIGO_ANALYSIS = 'nigo-analysis',
-    TASKS_VOLUME = 'tasks-volume',
-}
-const DEFAULT_TAB = DashboardTabs.ACTIVE_APPLICATIONS;
+import { AnalyticsTabs } from './types';
+
+const DEFAULT_TAB = AnalyticsTabs.ACTIVE_APPLICATIONS;
 
 export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
     const router = useRouter();
@@ -35,7 +31,7 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
     };
 
     if (!tabParam) {
-        router.replace(`/dashboard?tab=${DEFAULT_TAB}`, undefined, {
+        router.replace(`/analytics?tab=${DEFAULT_TAB}`, undefined, {
             shallow: true,
         });
     }
@@ -56,43 +52,43 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
                 }
                 className="!mb-0 w-full !border-b-0 bg-white "
             >
-                <TabTrigger value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                <TabTrigger value={AnalyticsTabs.ACTIVE_APPLICATIONS}>
                     <Icon
                         type={IconType.DOCUMENT_TEXT}
                         width={24}
                         height={24}
                         className="hidden lg:block"
-                    />{' '}
+                    />
                     {toTitleCase('open cases')}
                 </TabTrigger>
-                <TabTrigger value={DashboardTabs.CLOSED_TRANSACTIONS}>
+                <TabTrigger value={AnalyticsTabs.CLOSED_TRANSACTIONS}>
                     <Icon
                         type={IconType.SHIELD_CHECKMARK}
                         width={24}
                         height={24}
                         className="hidden lg:block"
-                    />{' '}
+                    />
                     {toTitleCase('closed cases')}
                 </TabTrigger>
                 {featureFlags[FEATURE_FLAGS.DASHBOARD_NIGO_TAB] && (
-                    <TabTrigger value={DashboardTabs.NIGO_ANALYSIS}>
+                    <TabTrigger value={AnalyticsTabs.NIGO_ANALYSIS}>
                         <Icon
                             type={IconType.HEX_EXCLAMATION}
                             width={24}
                             height={24}
                             className="hidden lg:block"
-                        />{' '}
-                        {String(t('caseStats.tabs.issue') ?? '')}
+                        />
+                        {t('caseStats.tabs.issue') ?? ''}
                     </TabTrigger>
                 )}
-                <TabTrigger value={DashboardTabs.TASKS_VOLUME}>
+                <TabTrigger value={AnalyticsTabs.TASKS_VOLUME}>
                     <Icon
                         type={IconType.CLIPBOARD_LIST}
                         width={24}
                         height={24}
                         className="hidden lg:block"
-                    />{' '}
-                    {String(t('caseStats.tabs.tasks') ?? '')}
+                    />
+                    {t('caseStats.tabs.tasks') ?? ''}
                 </TabTrigger>
             </TabList>
             {children}

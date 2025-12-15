@@ -664,6 +664,7 @@
         "CHECK": "Chèque",
         "CHECKING": "Compte courant",
         "ClaimPayout": "Paiement de réclamation",
+        "CLOSEDCASES": "Dossiers clos",
         "CommunicationPreferenceChange": "Changement des préférences de communication",
         "Commutation": "Commutation",
         "Completed": "Terminé",
@@ -858,6 +859,7 @@
         "IRSROTH403(B)": "Roth 403(b) selon l'IRS",
         "Issuance": "Émission",
         "ISSUED": "Émis",
+        "ISSUES": "Problèmes",
         "JOINTINDIVIDUAL": "Individu conjoint",
         "KEOGH/HR10": "Plan Keogh (HR-10)",
         "Lapse": "Expiration",
@@ -928,6 +930,7 @@
         "O": "En cours de révision",
         "OneTimePremium": "Prime unique",
         "ONETIMEPREMIUM": "Prime unique",
+        "OPENCASES": "Affaires en cours",
         "OPERATIONAL": "Opérationnel",
         "OPTIONA": "Option A",
         "OPTIONB": "Option B",
@@ -1070,6 +1073,7 @@
         "SystematicRequiredMinimumDistributionSetup": "Mise en place de la distribution minimale systématique requise",
         "TAKEINPUTTEDVALUE": "Utiliser la valeur saisie",
         "TARGETBENEFITPLAN": "Plan à prestations cibles",
+        "TASKS": "Tâches",
         "TENYEARTAXOPTION": "Option fiscale sur dix ans",
         "TERM": "Temporaire",
         "TERMINATED": "Terminé",
@@ -1150,7 +1154,7 @@
             "createCaseRmd": "Traiter RMD - OTP",
             "createCaseSsw": "Traiter retrait systématique - OTP",
             "createCaseWithdrawal": "Traiter retrait - OTP",
-            "dashboard": "Statistiques du dossier",
+            "dashboard": "Analytique",
             "documents": "Documents",
             "featuresAndRiders": "Caractéristiques et cavaliers",
             "formData": "Données du formulaire",
@@ -1256,9 +1260,9 @@
                 "link": "/policies/{{planCode}}/{{id}}/policy/coverage",
                 "text": "$t(pageHeader.coverage.headerText)"
             },
-            "dashboard": {
-                "link": "/dashboard",
-                "text": "Statistiques du dossier"
+            "analytics": {
+                "link": "/analytics",
+                "text": "Analytique"
             },
             "details": {
                 "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",

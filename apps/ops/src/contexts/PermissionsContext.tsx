@@ -16,8 +16,8 @@ import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
 import {
     BulkCheckTuple,
     checkIfUserHasAdvisorsExcel,
+    checkIfUserHasAnalyticsAccess,
     checkIfUserHasCaseInsightsAccess,
-    checkIfUserHasDashboardAccess,
     checkIfUserHasPolicyIndexAccess,
     checkIfUserHasUsageAccess,
     checkIfUserIsSuperAdmin,
@@ -39,7 +39,7 @@ export interface PermissionsContextProps {
     fgaRolesData: BulkCheckTuple[];
     isAdvisorsExcel: boolean;
     isSuperAdmin: boolean;
-    hasDashboardPermission: boolean;
+    hasAnalyticsPermission: boolean;
     hasCaseInsightPermission: boolean;
     isAllowReadCaseManagement: boolean;
     isAllowReadPolicyAdmin: boolean;
@@ -304,7 +304,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
             const data = await bulkCheckPermissionsQuery({ tuples });
             const superAdmin = checkIfUserIsSuperAdmin(data);
-            const hasDashboard = checkIfUserHasDashboardAccess(data);
+            const hasAnalytics = checkIfUserHasAnalyticsAccess(data);
             const hasCaseInsight = checkIfUserHasCaseInsightsAccess(data);
             const hasUsage = checkIfUserHasUsageAccess(data);
             const hasAdvisorsExcel = checkIfUserHasAdvisorsExcel(data);
@@ -371,7 +371,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
-                hasDashboardPermission: !!hasDashboard,
+                hasAnalyticsPermission: !!hasAnalytics,
                 hasCaseInsightPermission: !!hasCaseInsight,
                 isAdvisorsExcel: !!hasAdvisorsExcel,
                 isCallLogAudioPermitted,
@@ -413,7 +413,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAdvisorsExcel: !!fgaRoleData?.isAdvisorsExcel,
                 isSuperAdmin: !!fgaRoleData?.isSuperAdmin,
                 fgaRolesData: fgaRoleData?.fgaRoles || [],
-                hasDashboardPermission: !!fgaRoleData?.hasDashboardPermission,
+                hasAnalyticsPermission: !!fgaRoleData?.hasAnalyticsPermission,
                 hasCaseInsightPermission:
                     !!fgaRoleData?.hasCaseInsightPermission,
                 isAllowReadCaseManagement: !!isAllowReadCaseManagement,

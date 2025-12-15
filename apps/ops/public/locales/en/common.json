@@ -10,7 +10,6 @@
     "last14Days": "Last 14 days",
     "last30Days": "Last 30 days",
     "yearToDate": "Year-to-date",
-    "caseStatsDashboardTitle": "Case Stats",
     "customRange": "Custom Range",
     "allAgents": "All Agents",
     "allDistributors": "All Distributors",
@@ -671,6 +670,7 @@
         "CHECK": "Check",
         "CHECKING": "Checking",
         "ClaimPayout": "Claim payout",
+        "CLOSEDCASES": "Closed Cases",
         "CommunicationPreferenceChange": "Communication preference change",
         "Commutation": "Commutation",
         "Completed": "Completed",
@@ -875,6 +875,7 @@
         "IRSROTH403(B)": "IRS-Classified Roth 403(b)",
         "Issuance": "Issuance",
         "ISSUED": "Issued",
+        "ISSUES": "Issues",
         "JOINTANNUITANT": "Joint annuitant",
         "JOINTINDIVIDUAL": "Joint Individual",
         "JOINTLIFEONLYJOINTANDSURVIVOR": "Joint life only; joint and survivor",
@@ -952,6 +953,7 @@
         "O": "Reviewing",
         "ONETIMEPREMIUM": "One time premium",
         "OneTimePremium": "One-time premium",
+        "OPENCASES": "Open Cases",
         "OPERATIONAL": "Operational",
         "OPTIONA": "Option a",
         "OPTIONB": "Option b",
@@ -1100,6 +1102,7 @@
         "SystematicRequiredMinimumDistributionSetup": "Systematic RMD setup",
         "TAKEINPUTTEDVALUE": "Use inputted value",
         "TARGETBENEFITPLAN": "Target Benefit Plan",
+        "TASKS": "Tasks",
         "TENYEARTAXOPTION": "Ten-year tax option",
         "TERM": "Term",
         "TERMINATED": "Terminated",
@@ -1182,7 +1185,7 @@
             "createCaseRmd": "Process RMD - OTP",
             "createCaseSsw": "Process Systematic Withdrawal - OTP",
             "createCaseWithdrawal": "Process Withdrawal - OTP",
-            "dashboard": "Case Stats",
+            "analytics": "Analytics",
             "documents": "Documents",
             "formData": "Form Data",
             "funds": "Funds",
@@ -1290,9 +1293,9 @@
                 "link": "/customers",
                 "altText": "Customers"
             },
-            "dashboard": {
-                "text": "Case Stats",
-                "link": "/dashboard"
+            "analytics": {
+                "text": "Analytics",
+                "link": "/analytics"
             },
             "details": {
                 "text": "Details",
@@ -8793,10 +8796,6 @@
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
     "caseStats": {
-        "tabs": {
-            "issue": "Issues",
-            "tasks": "Tasks"
-        },
         "tasks": {
             "title": "Task Volume",
             "description": "Volume of tasks created over a selected time range, grouped by case type and task.",

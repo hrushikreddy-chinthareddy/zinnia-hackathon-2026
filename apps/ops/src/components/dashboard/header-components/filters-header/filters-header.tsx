@@ -13,7 +13,6 @@ import Select from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
 import {
@@ -61,7 +60,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
         },
         ref
     ) => {
-        const { t } = useTranslation(TranslationFiles.COMMON);
+        const { t } = useTranslation();
 
         const carrierFilterItems = useMemo(
             () =>
@@ -233,7 +232,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                     variant={TypographyVariant.H1}
                     data-testid="header-text"
                 >
-                    {t('caseStatsDashboardTitle')}
+                    {t('site.pageTitles.analytics')}
                 </Typography>
                 <div className="flex justify-between items-center">
                     <div className="flex nowrap gap-2 items-center align-middle">

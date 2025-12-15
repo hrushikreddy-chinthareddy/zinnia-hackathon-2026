@@ -1,14 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { TabContent } from '@zinnia/bloom/components';
+import { ButtonGroup, TabContent, TabGroup } from '@zinnia/bloom/components';
 import Highcharts from 'highcharts';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
-import {
-    DashboardTabNav,
-    DashboardTabs,
-} from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
+import { AnalyticsTabs, TabTitles } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
@@ -54,7 +52,10 @@ const DashboardPage = ({
     user,
 }: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
-
+    const { t } = useTranslation();
+    const [selectedTab, setSelectedTab] = useState<string>(
+        AnalyticsTabs.ACTIVE_APPLICATIONS
+    );
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const {
         isIntersecting: carrierHeaderIsIntersecting,
@@ -73,9 +74,32 @@ const DashboardPage = ({
         });
     }, []);
 
+    const radioItems = [
+        {
+            id: `analytics-tab-${TabTitles.OPEN}`,
+            children: <span>{t(`enums.${TabTitles.OPEN}`)}</span>,
+            value: AnalyticsTabs.ACTIVE_APPLICATIONS,
+        },
+        {
+            id: `analytics-tab-${TabTitles.CLOSED}`,
+            children: <span>{t(`enums.${TabTitles.CLOSED}`)}</span>,
+            value: AnalyticsTabs.CLOSED_TRANSACTIONS,
+        },
+        {
+            id: `analytics-tab-${TabTitles.ISSUES}`,
+            children: <span>{t(`enums.${TabTitles.ISSUES}`)}</span>,
+            value: AnalyticsTabs.NIGO_ANALYSIS,
+        },
+        {
+            id: `analytics-tab-${TabTitles.TASKS}`,
+            children: <span>{t(`enums.${TabTitles.TASKS}`)}</span>,
+            value: AnalyticsTabs.TASKS_VOLUME,
+        },
+    ];
+
     return (
         <>
-            <PageHead titleKey="dashboard" />
+            <PageHead titleKey="analytics" />
             <DashboardResponsiveLayout>
                 <FiltersHeader
                     carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
@@ -84,22 +108,31 @@ const DashboardPage = ({
                     brokerDealersSSR={brokerDealersSSR}
                     ref={carrierHeaderRef}
                 />
-                <DashboardTabNav>
+                <ButtonGroup
+                    className={styles.buttonGroup}
+                    ariaLabel="analytics-sub-nav"
+                    items={radioItems}
+                    onClick={(value) => setSelectedTab(value as string)}
+                />
+                <TabGroup
+                    defaultValue={AnalyticsTabs.ACTIVE_APPLICATIONS}
+                    value={selectedTab}
+                >
                     <div ref={tabContentRef} className={styles.tabContent}>
-                        <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
+                        <TabContent value={AnalyticsTabs.ACTIVE_APPLICATIONS}>
                             <ActiveApplications />
                         </TabContent>
-                        <TabContent value={DashboardTabs.CLOSED_TRANSACTIONS}>
+                        <TabContent value={AnalyticsTabs.CLOSED_TRANSACTIONS}>
                             <ClosedTransactions />
                         </TabContent>
-                        <TabContent value={DashboardTabs.NIGO_ANALYSIS}>
+                        <TabContent value={AnalyticsTabs.NIGO_ANALYSIS}>
                             <NIGOAnalysis />
                         </TabContent>
-                        <TabContent value={DashboardTabs.TASKS_VOLUME}>
+                        <TabContent value={AnalyticsTabs.TASKS_VOLUME}>
                             <TasksAnalysis />
                         </TabContent>
                     </div>
-                </DashboardTabNav>
+                </TabGroup>
             </DashboardResponsiveLayout>
         </>
     );
@@ -117,7 +150,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('dashboard/index:: Access token expired', {
+                logWarn('analytics/index:: Access token expired', {
                     ...parseErrorInformation(e),
                     ...loggingContext,
                 });
@@ -174,8 +207,8 @@ export const getServerSideProps = withPageAuthAndLogging(
         },
     },
     {
-        file: 'dashboard/index',
+        file: 'analytics/index',
         function: 'getServerSideProps',
-        page: 'dashboard',
+        page: 'analytics',
     }
 );

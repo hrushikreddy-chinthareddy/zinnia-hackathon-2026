@@ -119,7 +119,7 @@ export function checkIfUserIsSuperAdmin(
     );
 }
 
-export function checkIfUserHasDashboardAccess(
+export function checkIfUserHasAnalyticsAccess(
     bulkCheckTuples: Array<BulkCheckTuple>
 ) {
     const roleVals = {
