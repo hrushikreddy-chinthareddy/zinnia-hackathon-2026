@@ -15,14 +15,7 @@ interface SearchBarProps {
     validateValueToSearch: (v: SearchViewQuery) => void;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const noop = () => {};
-
-export const SearchBarContext = createContext<SearchBarProps>({
-    setShowFieldErrorMessage: noop,
-    showFieldErrorMessage: false,
-    validateValueToSearch: noop,
-});
+export const SearchBarContext = createContext<SearchBarProps | null>(null);
 
 export const useSearchBarcontext = () => {
     const context = useContext(SearchBarContext);
