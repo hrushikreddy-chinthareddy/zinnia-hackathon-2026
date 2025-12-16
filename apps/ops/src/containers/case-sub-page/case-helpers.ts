@@ -14,7 +14,7 @@ import {
     Statuses,
 } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
-import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { CaseTimePredictOutput } from '@zinnia/api-types/types/analytics';
 
 import { CaseSideNavProps } from './CaseSideNav';
@@ -350,7 +350,7 @@ export const buildCreateQualityAuditPayload = (caseDetails: Case) => {
         clientCode: carrier,
         source: 'zinnia-live',
         correlationId: correlationId,
-        processEndDate: dayjs(updatedAt).format(DEFAULT_EXTENDED_DATE_FORMAT),
+        processEndDate: dayjs(updatedAt).format(EDS_DATE_DISPLAY_FORMAT),
         auditRequestId: auditRequestId,
     };
 };

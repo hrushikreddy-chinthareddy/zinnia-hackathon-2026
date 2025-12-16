@@ -43,7 +43,7 @@ const MenuContextualItem = ({
                 rel={openInNewTab ? 'noopener noreferrer' : undefined}
                 target={openInNewTab ? '_blank' : undefined}
             >
-                <span className={styles.icon}>{icon}</span>
+                {icon && <span className={styles.icon}>{icon}</span>}
                 <p>{content}</p>
             </NavElement>
         </DropdownMenu.Item>

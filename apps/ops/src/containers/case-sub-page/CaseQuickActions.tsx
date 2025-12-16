@@ -5,16 +5,21 @@ import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
+import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
 import { NavElementType } from '@deps/components/nav-element/nav-element';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import { TextButton } from '@deps/components/quick-actions-menu/quick-action-text-button';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import {
-    FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
-    FNWL_QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
+    QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
+    QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
 } from '@deps/helpers/case-stat-helpers';
 import { QualityAuditStatus } from '@deps/models/case/case';
 import { INTERVAL } from '@deps/models/case/task';
@@ -24,8 +29,11 @@ import {
     CreateQualityAuditRequest,
     CreateQualityAuditResponse,
 } from '@deps/types/search';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 
 import { buildCreateQualityAuditPayload } from './case-helpers';
+import styles from './CaseQuickActions.module.css';
 
 type QualityAuditOption = {
     id:
@@ -68,6 +76,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
     const [isQualityAuditCreated, setIsQualityAuditCreated] = useState(false);
     const { isAllowOpsCaseReviewRequest } = usePermissionsContext();
+    const { featureFlagVariables } = useOptimizely();
 
     useEffect(() => {
         if (toastMessage && toastVariant) {
@@ -79,17 +88,27 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
         }
     }, [toastMessage, toastVariant]);
 
-    const allowedPermissions = [
-        FNWL_QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
-        FNWL_QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
+    const carrier = caseDetails?.carrier?.toLowerCase();
+    const allowedQualityAuditRoles = [
+        QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
+        QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
     ];
 
-    const hasQualityAuditAdminPermission = userTuplesData?.tuples?.some(
+    let hasCreateQualityAuditPermission = userTuplesData?.tuples?.some(
         (tuple: UserTuple) =>
-            allowedPermissions.some((permission) =>
+            allowedQualityAuditRoles.some((permission) =>
                 tuple?.key?.object.includes(permission)
             )
     );
+
+    hasCreateQualityAuditPermission =
+        hasCreateQualityAuditPermission &&
+        isFeatureFlagVariableActive(
+            featureFlagVariables,
+            FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
+            OptimizelyVariableKey.Clients,
+            carrier
+        );
 
     const qualityAuditPayload = buildCreateQualityAuditPayload(caseDetails);
 
@@ -126,7 +145,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
     });
 
     const isQualityAuditEligible =
-        hasQualityAuditAdminPermission && isCaseEligibleForQualityAudit;
+        hasCreateQualityAuditPermission && isCaseEligibleForQualityAudit;
 
     const qualityAuditOptions: QualityAuditOption[] = [
         {
@@ -134,7 +153,7 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
             name: t('caseOverview.quickActions.createQualityAudit'),
             hideLabel: false,
             isEligible: isQualityAuditEligible,
-            shouldShow: hasQualityAuditAdminPermission,
+            shouldShow: hasCreateQualityAuditPermission,
             tooltip: !isCaseEligibleForQualityAudit
                 ? t('caseOverview.quickActions.caseIsNotEligible')
                 : isQualityAuditCreated
@@ -144,7 +163,6 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                 : t(
                       'caseOverview.quickActions.createQualityAuditTooltipDisabled'
                   ),
-            href: '',
         },
         {
             id: 'prioritizeCase',
@@ -202,17 +220,38 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                     />
                 }
             >
-                {qualityAuditOptions
-                    .filter((option) => option.shouldShow)
-                    .map((option) => {
-                        return option?.tooltip ? (
-                            <Tooltip
-                                key={option.id}
-                                placement={PopoverPlacement.TopLeft}
-                                body={option.tooltip}
-                                isTabbable={false}
-                                popoverClassName="md:mb-5"
-                            >
+                <MenuContextualLabel
+                    label={t('caseOverview.quickActions.quickActions')}
+                    hideLabel={true}
+                >
+                    {qualityAuditOptions
+                        .filter((option) => option.shouldShow)
+                        .map((option) => {
+                            return option?.tooltip ? (
+                                <Tooltip
+                                    key={option.id}
+                                    placement={PopoverPlacement.TopLeft}
+                                    body={option.tooltip}
+                                    isTabbable={false}
+                                    popoverClassName="md:mb-5"
+                                >
+                                    <MenuContextualItem
+                                        key={option.id}
+                                        content={option.name}
+                                        href={option.href}
+                                        disabled={!option.isEligible}
+                                        onClick={() =>
+                                            handleQuickActionsMethods(option)
+                                        }
+                                        type={
+                                            option?.href
+                                                ? NavElementType.Link
+                                                : NavElementType.Button
+                                        }
+                                        openInNewTab={option?.openInNewTab}
+                                    />
+                                </Tooltip>
+                            ) : (
                                 <MenuContextualItem
                                     key={option.id}
                                     content={option.name}
@@ -228,29 +267,13 @@ const CaseQuickActions: React.FC<CaseQuickActionsProps> = ({
                                     }
                                     openInNewTab={option?.openInNewTab}
                                 />
-                            </Tooltip>
-                        ) : (
-                            <MenuContextualItem
-                                key={option.id}
-                                content={option.name}
-                                href={option.href}
-                                disabled={!option.isEligible}
-                                onClick={() =>
-                                    handleQuickActionsMethods(option)
-                                }
-                                type={
-                                    option?.href
-                                        ? NavElementType.Link
-                                        : NavElementType.Button
-                                }
-                                openInNewTab={option?.openInNewTab}
-                            />
-                        );
-                    })}
+                            );
+                        })}
+                </MenuContextualLabel>
             </MenuContextual>
 
             {toastMessage && toastVariant && (
-                <div className="fixed bottom-4 right-10 z-50">
+                <div className={styles.toastContainer}>
                     <Toast variant={toastVariant}>{toastMessage}</Toast>
                 </div>
             )}
