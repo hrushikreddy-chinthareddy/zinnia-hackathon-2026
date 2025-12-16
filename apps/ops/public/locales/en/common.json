@@ -514,6 +514,7 @@
         "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
         "collapseAll": "Collapse all",
         "expandAll": "Expand all",
+        "remove": "Remove",
         "policyNumberSearchError": "Enter a policy/contract number to return search results",
         "ssnSearchError": "Enter a Social Security number to return search results",
         "firstNameSearchError": "Enter a first name to return search results",
@@ -1393,7 +1394,9 @@
         "minItems": "Please select atleast {{limit}} item(s).",
         "patternSsn": "Please enter valid SSN.",
         "maximum": "Field must not be more than {{limit}}.",
-        "inValidDomain": "Only Zinnia emails are allowed."
+        "inValidDomain": "Only Zinnia emails are allowed.",
+        "patternEmail": "Please enter valid email.",
+        "minContains": "At least {{limit}} valid {{ item}} must be present."
     },
     "beneChange": {
         "tabs": {
@@ -9200,5 +9203,14 @@
         "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
         "internalServerError": "Internal Server Error",
         "failedToFetch": "Failed to fetch validation summary"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Third party detail form was submitted successfully.",
+            "cta": "Go to case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

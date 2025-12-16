@@ -514,6 +514,7 @@
         "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
         "collapseAll": "Tout réduire",
         "expandAll": "Tout développer",
+        "remove": "Supprimer",
         "policyNumberSearchError": "Entrez un numéro de police pour obtenir les résultats de recherche",
         "ssnSearchError": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
         "firstNameSearchError": "Entrez un prénom pour obtenir les résultats de recherche",
@@ -1358,7 +1359,9 @@
         "minItems": "Veuillez sélectionner au moins {{limit}} élément(s).",
         "patternSsn": "Veuillez saisir un numéro SSN valide.",
         "maximum": "Le champ ne doit pas dépasser 100 {{limit}}.",
-        "inValidDomain": "Seuls les e-mails Zinnia sont autorisés."
+        "inValidDomain": "Seuls les e-mails Zinnia sont autorisés.",
+        "patternEmail": "Veuillez saisir une adresse e-mail valide.",
+        "minContains": "Au moins {{limit}} {{ item}} valide doit être présent."
     },
     "taskManagementQueue": {
         "homeTitle": "Accueil",
@@ -9081,5 +9084,14 @@
         "submitWithErrorsText": "Soumettez le document en signalant les erreurs et créez une tâche NIGO pour que l'équipe concernée puisse assurer le suivi.",
         "internalServerError": "Erreur interne du serveur",
         "failedToFetch": "Impossible de récupérer le résumé de validation"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Le formulaire de détails du tiers a été soumis avec succès.",
+            "cta": "Aller à l’Audit de Qualité",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }
