@@ -513,7 +513,8 @@
         "view": "Afficher",
         "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
         "collapseAll": "Tout réduire",
-        "expandAll": "Tout développer"
+        "expandAll": "Tout développer",
+        "remove": "Supprimer"
     },
     "enums": {
         "LIFE": "Vie",

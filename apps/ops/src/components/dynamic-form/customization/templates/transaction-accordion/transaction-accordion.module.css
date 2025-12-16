@@ -34,3 +34,11 @@
     color: #155e75;
     font-weight: 700;
 }
+.container {
+    background-color: #f9fafb;
+    padding: 0;
+}
+
+.active {
+    padding: 1rem;
+}

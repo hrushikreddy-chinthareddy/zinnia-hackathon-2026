@@ -513,7 +513,8 @@
         "view": "View",
         "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
         "collapseAll": "Collapse all",
-        "expandAll": "Expand all"
+        "expandAll": "Expand all",
+        "remove": "Remove"
     },
     "enums": {
         "LIFE": "Life",

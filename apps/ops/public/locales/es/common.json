@@ -513,7 +513,8 @@
         "view": "Ver",
         "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
         "collapseAll": "Contraer todo",
-        "expandAll": "Expandir todo"
+        "expandAll": "Expandir todo",
+        "remove": "Eliminar"
     },
     "enums": {
         "LIFE": "Vida",

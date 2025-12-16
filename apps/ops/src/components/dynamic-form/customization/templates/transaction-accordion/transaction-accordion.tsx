@@ -1,5 +1,7 @@
 import { ArrayFieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { Action, Roles } from '@deps/constants/policy';
@@ -14,7 +16,6 @@ import { useAccordionState } from './hooks/useAccordionState';
 import { useTransactionActions } from './hooks/useTransactionActions';
 import styles from './transaction-accordion.module.css';
 import { getTitle } from './utils';
-
 export const TransactionAccordionTemplate = (
     props: ArrayFieldTemplateProps
 ) => {
@@ -29,6 +30,7 @@ export const TransactionAccordionTemplate = (
     } = props;
     const ui = getUiOptions(uiSchema);
     const { setCustomData } = formContext;
+    const { t } = useTranslation();
 
     const {
         templateId = 'default',
@@ -137,7 +139,7 @@ export const TransactionAccordionTemplate = (
                                 !isSimpleAccordion && (
                                     <CheckboxText
                                         id={`remove-${index}`}
-                                        label="Remove"
+                                        label={t('allFields.remove')}
                                         checked={isDeleted}
                                         onChange={(val) =>
                                             onToggleDelete(index, val)
@@ -148,12 +150,11 @@ export const TransactionAccordionTemplate = (
 
                         {activeIndex === index && (
                             <div
-                                className={`bg-gray-50 ${
+                                className={clsx(
+                                    styles.container,
+                                    activeIndex === index && styles.active,
                                     disableContent && styles.disabledContent
-                                }`}
-                                style={{
-                                    padding: activeIndex === index ? '1rem' : 0,
-                                }}
+                                )}
                             >
                                 {element.children}
                             </div>
