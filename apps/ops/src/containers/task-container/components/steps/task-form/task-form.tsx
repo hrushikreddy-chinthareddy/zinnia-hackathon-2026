@@ -251,7 +251,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 await fetchData();
             } else {
                 const taskPayload = buildTaskPayload(
-                    cleanForm(task, taskMetadata),
+                    cleanForm({ ...task, ...customData?.task }, taskMetadata),
                     initialTask
                 );
                 const success = await updateTask(
@@ -424,7 +424,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             setCustomData: (patch: any) => {
                 setCustomData((prev: any) => ({
                     ...prev,
-                    ...patch,
+                    task: {
+                        ...prev.task,
+                        data: { ...prev.task.data, ...patch },
+                    },
                 }));
             },
             updateSchema: updateSchemaHandler,

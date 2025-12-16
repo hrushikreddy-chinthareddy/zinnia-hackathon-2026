@@ -119,6 +119,7 @@ export default function NotesWidget(props: WidgetProps) {
     }, [notes, value, required, setSubmitEnabled]);
 
     const { customData, setCustomData } = formContext as FormContextType;
+
     const { task, correlationId } = customData;
 
     const addNote = () => {
@@ -137,7 +138,7 @@ export default function NotesWidget(props: WidgetProps) {
             .then((success) => {
                 if (success) {
                     setNotes(updatedNotes);
-                    setCustomData({ [name]: notesPayload.data });
+                    setCustomData({ [name]: updatedNotes });
                     setCurrentNote('');
                 } else {
                     browserLogWarn('updateTask::Error updating task', {
