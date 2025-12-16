@@ -1,4 +1,6 @@
 import { render } from '@testing-library/react';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 
 import enTranslations from 'public/locales/en/common.json';
 import esTranslations from 'public/locales/es/common.json';
@@ -137,6 +139,22 @@ describe('AssistiveText', () => {
     });
 });
 
+beforeAll(async () => {
+    await i18n.use(initReactI18next).init({
+        lng: 'en',
+        fallbackLng: 'en',
+        resources: {
+            en: { common: enTranslations },
+            es: { common: esTranslations },
+            fr: { common: frTranslations },
+        },
+        defaultNS: 'common',
+        interpolation: {
+            escapeValue: false,
+        },
+    });
+});
+
 describe('assistive text - Translation Tests', () => {
     // Translation configurations
     const translationConfigs = {
@@ -160,21 +178,13 @@ describe('assistive text - Translation Tests', () => {
             translationConfigs[languageCode as keyof typeof translationConfigs];
 
         describe('with SYSTEMATIC_PROGRAMS_TABLE flag enabled', () => {
-            const t = (key: string) => {
-                const keys = key.split('.');
-                let value: any = config.translations;
-
-                for (const k of keys) {
-                    value = value?.[k];
-                }
-
-                return value || key;
-            };
-
             it(`should display missing amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('premiumAutopay.amount.missingAmountErrorSP')}
+                        text={i18n.t(
+                            'premiumAutopay.amount.missingAmountErrorSP'
+                        )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
@@ -185,9 +195,12 @@ describe('assistive text - Translation Tests', () => {
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
             it(`should display invalid amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('premiumAutopay.amount.invalidAmountErrorSP')}
+                        text={i18n.t(
+                            'premiumAutopay.amount.invalidAmountErrorSP'
+                        )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
@@ -198,9 +211,10 @@ describe('assistive text - Translation Tests', () => {
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
             it(`should display missing amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('loanAutopay.amount.missingAmountErrorSP')}
+                        text={i18n.t('loanAutopay.amount.missingAmountErrorSP')}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
@@ -211,9 +225,10 @@ describe('assistive text - Translation Tests', () => {
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
             it(`should display invalid amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('loanAutopay.amount.invalidAmountErrorSP')}
+                        text={i18n.t('loanAutopay.amount.invalidAmountErrorSP')}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
@@ -226,21 +241,13 @@ describe('assistive text - Translation Tests', () => {
         });
 
         describe('with SYSTEMATIC_PROGRAMS_TABLE flag disabled ', () => {
-            const t = (key: string) => {
-                const keys = key.split('.');
-                let value: any = config.translations;
-
-                for (const k of keys) {
-                    value = value?.[k];
-                }
-
-                return value || key;
-            };
-
             it(`should display missing amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('premiumAutopay.amount.missingAmountError')}
+                        text={i18n.t(
+                            'premiumAutopay.amount.missingAmountError'
+                        )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
@@ -251,9 +258,12 @@ describe('assistive text - Translation Tests', () => {
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
             it(`should display invalid amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('premiumAutopay.amount.invalidAmountError')}
+                        text={i18n.t(
+                            'premiumAutopay.amount.invalidAmountError'
+                        )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
@@ -264,9 +274,10 @@ describe('assistive text - Translation Tests', () => {
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
             it(`should display missing amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('loanAutopay.amount.missingAmountError')}
+                        text={i18n.t('loanAutopay.amount.missingAmountError')}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
@@ -277,9 +288,10 @@ describe('assistive text - Translation Tests', () => {
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
             it(`should display invalid amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={t('loanAutopay.amount.invalidAmountError')}
+                        text={i18n.t('loanAutopay.amount.invalidAmountError')}
                         variant={AssistiveTextVariant.Error}
                     />
                 );

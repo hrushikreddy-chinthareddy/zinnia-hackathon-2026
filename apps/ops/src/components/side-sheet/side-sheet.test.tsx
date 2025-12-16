@@ -2,9 +2,9 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { useTranslation } from 'next-i18next';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 
-import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import enTranslations from 'public/locales/en/common.json';
 import esTranslations from 'public/locales/es/common.json';
 import frTranslations from 'public/locales/fr/common.json';
@@ -13,19 +13,23 @@ import SideSheet from './side-sheet'; // Adjust the import path as needed
 import Popover from '../popover/popover';
 import Typography, { TypographyVariant } from '../typography/typography';
 
-jest.mock('next-i18next', () => ({
-    useTranslation: jest.fn(),
-}));
+beforeAll(async () => {
+    await i18n.use(initReactI18next).init({
+        lng: 'en',
+        fallbackLng: 'en',
+        resources: {
+            en: { common: enTranslations },
+            es: { common: esTranslations },
+            fr: { common: frTranslations },
+        },
+        defaultNS: 'common',
+        interpolation: {
+            escapeValue: false,
+        },
+    });
+});
 
 describe('SideSheet', () => {
-    beforeEach(() => {
-        (useTranslation as jest.Mock).mockReturnValue({
-            t: (key: string) => key,
-            i18n: {
-                language: DEFAULT_LOCALE,
-            },
-        });
-    });
     test('should disable scroll when opened and enable when closed', () => {
         const { rerender } = render(
             <SideSheet open={false} handleClose={() => {}} />
@@ -97,32 +101,15 @@ describe('Side Sheets - Translation Tests', () => {
             translationConfigs[languageCode as keyof typeof translationConfigs];
 
         describe('with SYSTEMATIC_PROGRAMS_TABLE flag enabled', () => {
-            beforeEach(() => {
-                (useTranslation as jest.Mock).mockReturnValue({
-                    t: (key: string) => {
-                        const keys = key.split('.');
-                        let value: any = config.translations;
-
-                        for (const k of keys) {
-                            value = value?.[k];
-                        }
-
-                        return value || key;
-                    },
-                    i18n: {
-                        language: languageCode,
-                    },
-                });
-            });
-
             it(`should display tittle in ${languageName} for cancel Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <SideSheet
                         open
                         handleClose={() => {}}
                         headerElement={
                             <Typography variant={TypographyVariant.H2}>
-                                {useTranslation().t(
+                                {i18n.t(
                                     'premium.upcoming.cancelPremiumAutopayTitleSP'
                                 )}
                             </Typography>
@@ -136,15 +123,14 @@ describe('Side Sheets - Translation Tests', () => {
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
             it(`should display tittle in ${languageName} for cancel Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <SideSheet
                         open
                         handleClose={() => {}}
                         headerElement={
                             <Typography variant={TypographyVariant.H2}>
-                                {useTranslation().t(
-                                    'allFields.cancelLoanProgram'
-                                )}
+                                {i18n.t('allFields.cancelLoanProgram')}
                             </Typography>
                         }
                     />
@@ -158,32 +144,15 @@ describe('Side Sheets - Translation Tests', () => {
         });
 
         describe('with SYSTEMATIC_PROGRAMS_TABLE flag disabled ', () => {
-            beforeEach(() => {
-                (useTranslation as jest.Mock).mockReturnValue({
-                    t: (key: string) => {
-                        const keys = key.split('.');
-                        let value: any = config.translations;
-
-                        for (const k of keys) {
-                            value = value?.[k];
-                        }
-
-                        return value || key;
-                    },
-                    i18n: {
-                        language: languageCode,
-                    },
-                });
-            });
-
             it(`should display tittle in ${languageName} for cancel Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <SideSheet
                         open
                         handleClose={() => {}}
                         headerElement={
                             <Typography variant={TypographyVariant.H2}>
-                                {useTranslation().t(
+                                {i18n.t(
                                     'premium.upcoming.cancelPremiumAutopayTitle'
                                 )}
                             </Typography>
@@ -198,13 +167,14 @@ describe('Side Sheets - Translation Tests', () => {
             });
 
             it(`should display tittle in ${languageName} for cancel Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <SideSheet
                         open
                         handleClose={() => {}}
                         headerElement={
                             <Typography variant={TypographyVariant.H2}>
-                                {useTranslation().t(
+                                {i18n.t(
                                     'premium.upcoming.cancelLoanAutopayTitle'
                                 )}
                             </Typography>

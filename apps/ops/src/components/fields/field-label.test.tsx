@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 
 import { render } from '@testing-library/react';
-import { useTranslation } from 'next-i18next';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
 
 import enTranslations from 'public/locales/en/common.json';
 import esTranslations from 'public/locales/es/common.json';
@@ -9,9 +10,21 @@ import frTranslations from 'public/locales/fr/common.json';
 
 import FieldLabel from './field-label';
 
-jest.mock('next-i18next', () => ({
-    useTranslation: jest.fn(),
-}));
+beforeAll(async () => {
+    await i18n.use(initReactI18next).init({
+        lng: 'en',
+        fallbackLng: 'en',
+        resources: {
+            en: { common: enTranslations },
+            es: { common: esTranslations },
+            fr: { common: frTranslations },
+        },
+        defaultNS: 'common',
+        interpolation: {
+            escapeValue: false,
+        },
+    });
+});
 
 describe('Work Flow - Translation Tests', () => {
     // Translation configurations
@@ -36,31 +49,13 @@ describe('Work Flow - Translation Tests', () => {
             translationConfigs[languageCode as keyof typeof translationConfigs];
 
         describe('with SYSTEMATIC_PROGRAMS_TABLE flag enabled', () => {
-            beforeEach(() => {
-                (useTranslation as jest.Mock).mockReturnValue({
-                    t: (key: string) => {
-                        const keys = key.split('.');
-                        let value: any = config.translations;
-
-                        for (const k of keys) {
-                            value = value?.[k];
-                        }
-
-                        return value || key;
-                    },
-                    i18n: {
-                        language: languageCode,
-                    },
-                });
-            });
-
             it(`should display field label for Premium Autopay ${languageName}`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <FieldLabel
                         label={
-                            useTranslation().t(
-                                'premiumAutopay.amount.paymentAmountSP'
-                            ) || 'premiumAutopay.amount.paymentAmountSP'
+                            i18n.t('premiumAutopay.amount.paymentAmountSP') ||
+                            'premiumAutopay.amount.paymentAmountSP'
                         }
                     />
                 );
@@ -73,31 +68,13 @@ describe('Work Flow - Translation Tests', () => {
         });
 
         describe('with SYSTEMATIC_PROGRAMS_TABLE flag disabled ', () => {
-            beforeEach(() => {
-                (useTranslation as jest.Mock).mockReturnValue({
-                    t: (key: string) => {
-                        const keys = key.split('.');
-                        let value: any = config.translations;
-
-                        for (const k of keys) {
-                            value = value?.[k];
-                        }
-
-                        return value || key;
-                    },
-                    i18n: {
-                        language: languageCode,
-                    },
-                });
-            });
-
             it(`should display field label for Premium Autopay ${languageName}`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <FieldLabel
                         label={
-                            useTranslation().t(
-                                'premiumAutopay.amount.paymentAmount'
-                            ) || 'premiumAutopay.amount.paymentAmount'
+                            i18n.t('premiumAutopay.amount.paymentAmount') ||
+                            'premiumAutopay.amount.paymentAmount'
                         }
                     />
                 );

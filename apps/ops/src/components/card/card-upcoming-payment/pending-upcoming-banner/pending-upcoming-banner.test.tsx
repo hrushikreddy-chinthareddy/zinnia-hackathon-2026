@@ -1,5 +1,7 @@
 import { render, waitFor } from '@testing-library/react';
+import i18n from 'i18next';
 import { useTranslation } from 'next-i18next';
+import { initReactI18next } from 'react-i18next';
 
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { Processes, Statuses } from '@deps/models/case/case';
@@ -18,6 +20,22 @@ jest.mock('@deps/contexts/OptimizelyContext');
 jest.mock('next-i18next', () => ({
     useTranslation: jest.fn(),
 }));
+
+beforeAll(async () => {
+    await i18n.use(initReactI18next).init({
+        lng: 'en',
+        fallbackLng: 'en',
+        resources: {
+            en: { common: enTranslations },
+            es: { common: esTranslations },
+            fr: { common: frTranslations },
+        },
+        defaultNS: 'common',
+        interpolation: {
+            escapeValue: false,
+        },
+    });
+});
 
 describe('PendingUpcomingBanner - Translation Tests', () => {
     const mockPolicyNumber = '123456789';
@@ -65,14 +83,7 @@ describe('PendingUpcomingBanner - Translation Tests', () => {
 
                 (useTranslation as jest.Mock).mockReturnValue({
                     t: (key: string) => {
-                        const keys = key.split('.');
-                        let value: any = config.translations;
-
-                        for (const k of keys) {
-                            value = value?.[k];
-                        }
-
-                        return value || key;
+                        return i18n.t(key);
                     },
                     i18n: {
                         language: languageCode,
@@ -81,6 +92,7 @@ describe('PendingUpcomingBanner - Translation Tests', () => {
             });
 
             it(`should display systematic program banner text in ${languageName}`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <PendingUpcomingBanner
                         policyNumber={mockPolicyNumber}
@@ -118,14 +130,7 @@ describe('PendingUpcomingBanner - Translation Tests', () => {
 
                 (useTranslation as jest.Mock).mockReturnValue({
                     t: (key: string) => {
-                        const keys = key.split('.');
-                        let value: any = config.translations;
-
-                        for (const k of keys) {
-                            value = value?.[k];
-                        }
-
-                        return value || key;
+                        return i18n.t(key);
                     },
                     i18n: {
                         language: languageCode,
@@ -134,6 +139,7 @@ describe('PendingUpcomingBanner - Translation Tests', () => {
             });
 
             it(`should display autopay banner text in ${languageName}`, async () => {
+                await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <PendingUpcomingBanner
                         policyNumber={mockPolicyNumber}
