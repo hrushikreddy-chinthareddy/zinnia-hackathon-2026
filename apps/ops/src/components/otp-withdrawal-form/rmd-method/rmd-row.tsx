@@ -56,7 +56,7 @@ export default function RMDOptions({
     const [startDate, setStartDate] = useState(formStartDate || today);
     const [frequency, setFrequency] = useState(freq);
     const [duration, setDuration] = useState(rmdData?.duration?.text || '0'); // CMW-13796 default set to 0 instead of 1
-    const [amount, setAmount] = useState('');
+    const [amount, setAmount] = useState(rmdData?.amount?.text || '');
     const [showAmount, setShowAmount] = useState<boolean>(false);
 
     const onClickAmount = () => {
@@ -64,6 +64,11 @@ export default function RMDOptions({
             setShowAmount(!showAmount);
         }
     };
+    useEffect(() => {
+        if (isFormStateReadOnly && rmdData?.amount?.text !== '') {
+            setShowAmount(true);
+        }
+    }, []);
 
     useEffect(() => {
         onDataChange({
@@ -140,15 +145,17 @@ export default function RMDOptions({
                                 className="primary-gradient-linear my-2 inline-flex w-max cursor-pointer italic"
                             />
                         )}
-                    {formConfig?.amount && showAmount && (
-                        <AssistiveText
-                            text={t('removeAmountField') as string}
-                            iconOverride={` `}
-                            onClick={onClickAmount}
-                            variant={AssistiveTextVariant.Info}
-                            className="primary-gradient-linear my-2 inline-flex w-max cursor-pointer italic"
-                        />
-                    )}
+                    {formConfig?.amount &&
+                        showAmount &&
+                        !isFormStateReadOnly && (
+                            <AssistiveText
+                                text={t('removeAmountField') as string}
+                                iconOverride={` `}
+                                onClick={onClickAmount}
+                                variant={AssistiveTextVariant.Info}
+                                className="primary-gradient-linear my-2 inline-flex w-max cursor-pointer italic"
+                            />
+                        )}
                 </div>
 
                 {formConfig?.frequency && (

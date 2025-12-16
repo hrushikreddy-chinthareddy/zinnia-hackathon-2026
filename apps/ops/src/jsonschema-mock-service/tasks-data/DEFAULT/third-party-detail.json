@@ -1,0 +1,233 @@
+{
+    "id": "TA000000022112",
+    "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
+    "caseId": "CA0000402461",
+    "source": "Zinnia.BPMTransactions",
+    "templateId": "0b5b7dfb-7532-4cf3-a875-db06c2378078",
+    "process": "Policy Update",
+    "processSubType": "Third Party Designee Change",
+    "carrier": "WELB",
+    "taskType": "THIRD_PARTY_DETAIL",
+    "taskName": "Third Party Data Entry",
+    "status": "NEW",
+    "category": "Data entry",
+    "productType": "",
+    "data": {
+        "caseId": "CA0000402461",
+        "process": "Policy Update",
+        "policyNumber": "ADA2364566",
+        "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
+        "taskName": "Third Party Data Entry",
+        "processSubType": "Third Party Designee Change",
+        "planCode": "WBFDAV03",
+        "policyStatus": "ACTIVE",
+        "transactionName": "ThirdPartyDesignee",
+        "businessKey": "",
+        "partyRole": "ThirdPartyDesignee",
+        "deleteRequest": false,
+        "effectiveDate": "2025-11-07",
+        "details": {
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "Post issue Application",
+                    "documentExt": "pdf"
+                },
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25g",
+                    "documentName": "Post issue Application",
+                    "documentExt": "pdf"
+                }
+            ]
+        },
+        "actionData": [
+            {
+                "action": "ADD",
+                "actionType": "THIRD_PARTY_DESIGNEE_CHANGE",
+                "isIrrevocable": true,
+                "isPerStirpes": false,
+                "isRestrictedBeneficiary": false,
+                "party": {
+                    "partyId": "Party_PB_Primary_Bene_1",
+                    "partyType": "INDIVIDUAL",
+                    "preferredCommunicationType": "EMAIL",
+                    "beneficiaryPercentage": 100,
+                    "dateOfBirth": "1978-11-05",
+                    "endDate": "",
+                    "entityType": "",
+                    "firstName": "WILSON",
+                    "fullName": "Wilson",
+                    "gender": "MALE",
+                    "middleName": "",
+                    "lastName": "S",
+                    "prefix": null,
+                    "suffix": "",
+                    "trustType": null,
+                    "trustDate": "",
+                    "supportingDocumentAttached": false,
+                    "addresses": [
+                        {
+                            "addressId": "Party_PB_Primary_Bene_1_Address_0",
+                            "addressLine1": "2110 West Walnut Street",
+                            "addressLine2": "",
+                            "addressLine3": "",
+                            "addressType": "RESIDENCE",
+                            "city": "Rogers",
+                            "country": "USA",
+                            "endDate": "",
+                            "isPreferred": true,
+                            "startDate": "2025-05-22",
+                            "state": "AR",
+                            "zipCode": "72756",
+                            "zipCodeExtension": ""
+                        }
+                    ],
+                    "emails": [
+                        {
+                            "emailAddress": "soni.kumari@zinnia.com",
+                            "emailId": "Party_PB_Primary_Bene_1_EmailAddress_1",
+                            "emailType": "PERSONAL",
+                            "endDate": "",
+                            "isPreferred": false,
+                            "startDate": "2025-05-22"
+                        }
+                    ],
+                    "identifications": [
+                        {
+                            "endDate": "",
+                            "identificationDescription": "",
+                            "identificationId": "1",
+                            "identificationKey": "",
+                            "identificationType": "SSN",
+                            "identificationValue": "***-**-2025",
+                            "issueCountry": "",
+                            "issueState": "",
+                            "startDate": ""
+                        }
+                    ],
+                    "phones": [
+                        {
+                            "areaCode": "515",
+                            "bestTime": "",
+                            "countryCode": "USA",
+                            "dialNumber": "3585159",
+                            "endDate": "",
+                            "extension": "",
+                            "isPreferred": false,
+                            "phoneId": "Party_PB_Primary_Bene_1_Phone0",
+                            "phoneType": "HOME",
+                            "startDate": "2025-05-22",
+                            "timezone": ""
+                        }
+                    ]
+                }
+            },
+            {
+                "action": "ADD",
+                "actionType": "THIRD_PARTY_DESIGNEE_CHANGE",
+                "party": {
+                    "partyId": "",
+                    "partyType": "TRUST",
+                    "preferredCommunicationType": "EMAIL",
+                    "beneficiaryPercentage": 100,
+                    "dateOfBirth": "2025-09-04",
+                    "endDate": "",
+                    "entityType": "UNKNOWN",
+                    "firstName": "WILSON",
+                    "fullName": "Wilson",
+                    "gender": "MALE",
+                    "middleName": "",
+                    "lastName": "S",
+                    "prefix": null,
+                    "suffix": "",
+                    "trustDate": "2025-09-04",
+                    "supportingDocumentAttached": true,
+                    "trustType": "CORPORATETRUST",
+                    "addresses": [
+                        {
+                            "addressLine1": "2110 West Walnut Street",
+                            "addressLine2": "",
+                            "addressType": "RESIDENCE",
+                            "city": "Rogers",
+                            "country": "USA",
+                            "endDate": "",
+                            "state": "AR",
+                            "zipCode": "72756"
+                        }
+                    ],
+                    "emails": [
+                        {
+                            "emailAddress": "soni.kumari@zinnia.com",
+                            "emailType": "PERSONAL",
+                            "startDate": "2025-05-22"
+                        }
+                    ],
+                    "identifications": [
+                        {
+                            "identificationType": "SSN",
+                            "identificationValue": "***-**-2025"
+                        }
+                    ],
+                    "phones": [
+                        {
+                            "areaCode": "515",
+                            "countryCode": "USA",
+                            "dialNumber": "3585159",
+                            "phoneType": "HOME",
+                            "startDate": "2025-05-22"
+                        }
+                    ]
+                }
+            }
+        ],
+        "signatureData": {
+            "isIrrevocableBene": false,
+            "isSpousePresent": null,
+            "signatures": [
+                {
+                    "isSignedPresent": false,
+                    "signDate": null,
+                    "signDesignation": null,
+                    "signType": "OWNER",
+                    "signTypeForUI": "Owner",
+                    "signGurantee": null,
+                    "signPrintName": null
+                },
+                {
+                    "isSignedPresent": false,
+                    "signDate": null,
+                    "signDesignation": null,
+                    "signType": "JOINT_OWNER",
+                    "signTypeForUI": "Joint Owner",
+                    "signGurantee": null,
+                    "signPrintName": null
+                }
+            ]
+        }
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "policy_update",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-24T11:52:37Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-24T11:52:37Z",
+    "identifiers": [
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000402461"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2501506"
+        },
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2501506"
+        }
+    ],
+    "externalId": "0a805ffe-ef0b-4f4a-ba41-f774df12d820"
+}

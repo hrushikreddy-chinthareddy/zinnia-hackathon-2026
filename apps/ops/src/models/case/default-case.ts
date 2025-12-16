@@ -8,13 +8,17 @@ export type DefaultDataEntryTask = {
             firstName: string;
             lastName: string;
             taxId: string;
-            payorId: string;
+            payorId?: string;
         };
-        callDetails: {
+        callDetails?: {
             callerRole: string;
             associateName: string;
             callerName: string;
             callerPhone: string;
+        };
+        reporterDetails?: {
+            requestedBy: string;
+            referenceCaseId: string;
         };
         additionalDetails?: {
             //LI Representative Address and Phone Change
@@ -50,3 +54,8 @@ export type DefaultDataEntryTask = {
     };
     attachments?: any[];
 };
+
+export enum RequestType {
+    Ops_Service_Request = 'opsreview',
+    Case_Service_Request = 'servicerequest',
+}

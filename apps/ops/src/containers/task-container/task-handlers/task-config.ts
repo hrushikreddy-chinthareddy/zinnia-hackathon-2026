@@ -32,6 +32,8 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Quality_Audit_Rework,
     TaskType.Quality_Rework_Audit_Review,
     TaskType.Claims_Bene_Review,
+    TaskType.Third_Party_Detail,
+    TaskType.Operation_Review,
     TaskType.Agent_Change_Detail,
     TaskType.Claims_Death_Audit_Contract_Matching,
 ]);

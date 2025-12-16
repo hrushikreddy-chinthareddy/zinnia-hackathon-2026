@@ -39,7 +39,6 @@ import {
     RestrictionOption,
     SignVerificationReason,
     WithdrawalType,
-    AddressTypes,
     FormDisbursement,
     AccountType,
 } from '@deps/models/case/withdrawal/case';
@@ -832,10 +831,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                     fieldLabel: t('personalDetails.ssn'),
                 },
                 {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
-                {
                     fieldName: PartyFields.Email,
                     fieldLabel: t('personalDetails.email'),
                 },
@@ -849,12 +844,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                             fieldLabel: t('phoneDetails.telephoneNumber'),
                         },
                     ],
-                },
-            ],
-            addressFields: [
-                {
-                    addressType: AddressTypes.DEFAULT,
-                    title: t('addressDetails.title'),
                 },
             ],
             agentRecommendation: {
@@ -882,10 +871,6 @@ export default function useMassWithdrawalConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
-                },
-                {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
                 },
                 {
                     fieldName: PartyFields.Email,

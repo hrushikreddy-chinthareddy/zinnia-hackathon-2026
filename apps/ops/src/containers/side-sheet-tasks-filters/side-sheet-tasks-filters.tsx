@@ -9,7 +9,6 @@ import NavElement, {
 import Select from '@deps/components/select/select';
 import MultiselectField from '@deps/components/side-sheet/side-sheet-refine-results/multiselect-field';
 import { Priority } from '@deps/components/side-sheet/side-sheet-refine-results/side-sheet-refine-results';
-import { TaskLabel, TaskStatus } from '@deps/models/case/task-instance';
 import {
     getCarrierListItem,
     getCarrierNameByClientId,
@@ -21,30 +20,8 @@ import { FILTER_KEYS } from './utils';
 
 const REFINE_RESULTS_BASE_KEY = 'caseManagementDashboard.refineResultsOptions.';
 
-const TaskStatusValues = Object.keys(TaskLabel)
-    .filter((key) => key !== TaskLabel.Closed)
-    .map((key) => TaskStatus[key as keyof typeof TaskStatus])
-    .filter(Boolean);
-
-const customLabelMap: Record<string, string> = Object.keys(TaskLabel).reduce(
-    (acc, key) => {
-        if (key === TaskLabel.Closed) return acc;
-
-        const statusValue = TaskStatus[key as keyof typeof TaskStatus];
-        const labelValue = TaskLabel[key as keyof typeof TaskLabel];
-
-        if (statusValue && labelValue) {
-            acc[statusValue] = labelValue;
-        }
-
-        return acc;
-    },
-    {} as Record<string, string>
-);
-
 type FilterPayload = {
     carriers: string[];
-    statuses: string[];
     queues: string[];
     escalated?: boolean | null;
 };
@@ -68,7 +45,6 @@ type Carriers = {
 
 type AdditionalFilters = {
     carriers: Carriers;
-    taskStatus: string[];
     group: string[];
     assignees: string[];
     escalated?: boolean | null;
@@ -76,9 +52,9 @@ type AdditionalFilters = {
 
 const initialAdditionalFilters: AdditionalFilters = {
     carriers: {},
-    taskStatus: [],
     group: [],
     assignees: [],
+    escalated: undefined,
 };
 
 export default function SideSheetTasksResults({
@@ -158,19 +134,14 @@ export default function SideSheetTasksResults({
         });
     };
 
-    const handleTaskStatusChange = (selectedStatus: string) => {
-        handleFilterToggle(FILTER_KEYS.TASK_STATUS, selectedStatus);
-    };
-
     const handleGroupChange = (selectedGroup: string) => {
         handleFilterToggle(FILTER_KEYS.GROUP, selectedGroup);
     };
 
     const handleSubmit = useCallback(() => {
-        const { carriers, taskStatus, group, escalated } = additionalFilters;
+        const { carriers, group, escalated } = additionalFilters;
         const payload = {
             carriers: Object.keys(carriers),
-            statuses: taskStatus,
             queues: group,
             escalated: escalated,
         };
@@ -182,7 +153,6 @@ export default function SideSheetTasksResults({
     const handleClear = () => {
         const newAdditionalFilters = { ...additionalFilters };
         newAdditionalFilters.carriers = {};
-        newAdditionalFilters.taskStatus = [];
         newAdditionalFilters.group = [];
         newAdditionalFilters.assignees = [];
         newAdditionalFilters.escalated = undefined;
@@ -191,10 +161,11 @@ export default function SideSheetTasksResults({
 
     const handleReset = () => {
         handleClear();
+        const { additionalFilters } = searchValue;
         if (
-            (additionalFilters?.taskStatus || []).length > 0 ||
             (additionalFilters?.group || []).length > 0 ||
-            Object.keys(additionalFilters?.carriers || {}).length > 0
+            Object.keys(additionalFilters?.carriers || {}).length > 0 ||
+            additionalFilters?.escalated !== undefined
         ) {
             clearFilters();
         }
@@ -210,9 +181,11 @@ export default function SideSheetTasksResults({
         if (carriers || queues || statuses || escalated !== undefined) {
             const selectedCarriers = Array.isArray(carriers)
                 ? carriers?.map((carrier: string) => carrier.toUpperCase())
-                : Object.keys(carriers).map((carrier: string) =>
+                : carriers && Object.keys(carriers).length > 0
+                ? Object.keys(carriers).map((carrier: string) =>
                       carrier.toUpperCase()
-                  );
+                  )
+                : [];
             setAdditionalFilters((prevFilters) => ({
                 ...prevFilters,
                 carriers: carrierFilterItems.reduce(
@@ -256,7 +229,6 @@ export default function SideSheetTasksResults({
     ];
 
     const hasActiveFilters =
-        (additionalFilters?.taskStatus || []).length > 0 ||
         (additionalFilters?.group || []).length > 0 ||
         Object.keys(additionalFilters?.carriers || {}).length > 0 ||
         additionalFilters.escalated !== undefined;
@@ -265,16 +237,6 @@ export default function SideSheetTasksResults({
         <div className={styles.sideSheetContainer}>
             <>
                 <div className={styles.section}>
-                    <MultiselectField
-                        isLoading={false}
-                        label={
-                            t(`${REFINE_RESULTS_BASE_KEY}taskStatus`) as string
-                        }
-                        options={TaskStatusValues}
-                        value={new Set(additionalFilters.taskStatus)}
-                        handleChange={handleTaskStatusChange}
-                        customLabelMap={customLabelMap}
-                    />
                     <MultiselectField
                         isLoading={false}
                         label={t(`${REFINE_RESULTS_BASE_KEY}group`) as string}

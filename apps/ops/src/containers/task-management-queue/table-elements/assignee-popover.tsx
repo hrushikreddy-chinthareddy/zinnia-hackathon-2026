@@ -122,7 +122,6 @@ const AssigneePopover = ({
         TaskStatus.Completed,
         TaskStatus.Canceled,
         TaskStatus.Closed,
-        TaskStatus.Scheduled,
     ];
     const isPopoverAllowed = !notAllowedStatuses.includes(task.status);
 
@@ -165,7 +164,8 @@ const AssigneePopover = ({
                     ref={buttonRef}
                     type="button"
                     className={`${assigneePopoverBtnClassName} ${
-                        task?.status === TaskStatus.Completed
+                        task?.status === TaskStatus.Completed ||
+                        task?.status === TaskStatus.Canceled
                             ? styles.assigneeBtnCompletedTask
                             : ''
                     }`}
@@ -226,7 +226,8 @@ const AssigneePopover = ({
                     >
                         <Content
                             className={
-                                task?.status === TaskStatus.Completed
+                                task?.status === TaskStatus.Completed ||
+                                task?.status === TaskStatus.Canceled
                                     ? styles.completed
                                     : styles.active
                             }

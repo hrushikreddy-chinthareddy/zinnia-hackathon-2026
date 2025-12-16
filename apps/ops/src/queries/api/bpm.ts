@@ -12,6 +12,7 @@ import {
     FullSurrenderRequest,
     PartialWithdrawalOneTimeRequest,
 } from '@zinnia/api-types/types/bpm';
+import { Signature } from '@zinnia/api-types/types/case';
 import {
     AdhocSystematicProgram,
     FullSurrenderQuoteResponse,
@@ -102,6 +103,12 @@ export interface TransactionSubmitResponse {
 export interface TransactionRequest {
     effectiveDate: string;
 }
+
+export type deleteRoleBodyProps = {
+    effectiveDate: string;
+    party: Record<string, never>;
+    signatures: Signature[];
+};
 
 export interface FullSurrenderEligibilityRequest {
     correlationId: string;
