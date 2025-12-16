@@ -29,7 +29,7 @@ export const generateCsvColumns = (
 ): { label: string; key: keyof FlattenedCompletedTaskTimeData }[] => {
     return [
         { label: t('allFields.caseType'), key: 'caseType' },
-        { label: t('allFields.medianProcessingTime'), key: 'taskName' },
+        { label: t('allFields.medianProcessingTime'), key: 'secondMedian' },
         { label: t('allFields.task'), key: 'taskName' },
         { label: t('allFields.totalTasks'), key: 'count' },
     ];
