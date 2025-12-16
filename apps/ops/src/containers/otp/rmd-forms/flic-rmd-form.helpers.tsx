@@ -40,6 +40,7 @@ import { createValidator } from '../utils/helper-utils';
 import getFlicConfig, {
     spousalSignatureStateCodes,
 } from '../withdrawal-forms/flic-withdrawal-form.helpers';
+import { validateQcdDetails } from '../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getFlicRmdConfig(t: TFunction) {
     // importing base configuration from FLIC form helper.
@@ -434,6 +435,12 @@ export default function getFlicRmdConfig(t: TFunction) {
             );
         }
 
+        const qcd = formProgram?.qcd;
+        if (qcd && qcd.length > 0) {
+            const qcdErrors = validateQcdDetails(t, qcd);
+
+            return { ...errors, ...qcdErrors };
+        }
         return errors;
     };
 

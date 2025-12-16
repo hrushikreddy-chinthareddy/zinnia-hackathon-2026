@@ -34,7 +34,6 @@ import {
     Frequency,
     AmountType,
     ProgramType,
-    AddressTypes,
     AccountType,
     FormDisbursement,
 } from '@deps/models/case/withdrawal/case';
@@ -426,10 +425,6 @@ export default function useMassSSWConfig(t: TFunction) {
                     fieldLabel: t('personalDetails.ssn'),
                 },
                 {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
-                {
                     fieldName: PartyFields.Email,
                     fieldLabel: t('personalDetails.email'),
                 },
@@ -443,12 +438,6 @@ export default function useMassSSWConfig(t: TFunction) {
                             fieldLabel: t('phoneDetails.telephoneNumber'),
                         },
                     ],
-                },
-            ],
-            addressFields: [
-                {
-                    addressType: AddressTypes.DEFAULT,
-                    title: t('addressDetails.title'),
                 },
             ],
         },
@@ -471,10 +460,6 @@ export default function useMassSSWConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
-                },
-                {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
                 },
                 {
                     fieldName: PartyFields.Email,

@@ -1,8 +1,10 @@
+import { useIsMutating } from '@tanstack/react-query';
 import { Button, Loader } from '@zinnia/bloom/components';
-import { FC, useEffect, useMemo } from 'react';
+import { FC, useMemo } from 'react';
 
 import { ButtonType } from '@deps/components/button/button';
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
+import { CREATE_QUICK_QUOTE_MUTATION_KEY } from '@deps/components/illustrations/providers/use-quick-quote-mutation';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { Product, ProductType } from '@deps/types/product';
 import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
@@ -54,13 +56,14 @@ export const Sidebar: FC<SidebarProps> = ({
     productType,
     carrier,
 }) => {
+    const isLoadingQuickQuote = !!useIsMutating({
+        mutationKey: CREATE_QUICK_QUOTE_MUTATION_KEY,
+    });
     const { renderingQuestionnaire } = useQuestionnaireEngine();
     const {
         onNewSubmit,
         onEditSubmit,
-        onQuickQuote,
         isError,
-        isLoadingQuickQuote,
         editIllustrationPending,
         createIllustrationPending,
     } = useSubmit();
@@ -94,17 +97,6 @@ export const Sidebar: FC<SidebarProps> = ({
             onEditSubmit(illustrationId);
         }
     };
-
-    useEffect(() => {
-        if (!isCompleted) return;
-
-        const debounceTimeout = setTimeout(() => {
-            onQuickQuote();
-        }, 400);
-
-        return () => clearTimeout(debounceTimeout);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [renderingQuestionnaire, isCompleted]);
 
     return (
         <div className={style.sidebar}>

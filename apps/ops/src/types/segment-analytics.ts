@@ -36,6 +36,7 @@ export enum SegmentPageName {
     IllustrationsClientCase = 'Client Case Table',
     IllustrationsNewClientCase = 'New Client Case Form',
     IllustrationsDetails = 'Client Case Illustrations',
+    OperationsReview = 'Request Operations Review',
 }
 /*
     Per Analytics Team: event names should not be customized to use case;

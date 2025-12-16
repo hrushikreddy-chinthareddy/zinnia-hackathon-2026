@@ -2,7 +2,10 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import * as nextRouter from 'next/router';
 
 import { PolicyRole, RoleLabel } from '@deps/constants/policy';
+import { Statuses } from '@deps/models/case/case';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { submitRoleChange } from '@deps/queries/api/role-change';
+import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 
 import ConfirmStep from './confirm-step';
 
@@ -43,15 +46,37 @@ jest.mock('next-i18next', () => ({
 }));
 jest.mock('@deps/contexts/RoleChangeContext', () => ({
     useRoleChange: () => ({
-        roleData: { validationResponse: { status: 'Success' } },
-        existingRoleData: { party: { partyId: 'party123' } },
+        roleData: {
+            validationResponse: { status: TransactionResponseStatus.Success },
+            caseId: null,
+        },
+        existingRoleData: [{ party: { partyId: 'party123' } }],
+        removedTpdIndex: null,
+        addRole: false,
     }),
 }));
 jest.mock('@deps/queries/api/role-change', () => ({
     submitRoleChange: jest.fn(),
+    deleteTPDRole: jest.fn(),
 }));
 jest.mock('../../role-change-helper', () => ({
     buildRoleChangeRequestBody: jest.fn(() => ({})),
+    buildDeleteTPDRequestBody: jest.fn(() => ({})),
+}));
+
+jest.mock('@deps/contexts/PermissionsContext', () => ({
+    usePermissionsContext: () => ({
+        sessionId: 'test-session-id',
+        partyId: 'test-user-id',
+    }),
+}));
+
+jest.mock('@deps/helpers/analytics/segment-analytics', () => ({
+    segmentAnalyticsTrackEvent: jest.fn(),
+}));
+
+jest.mock('@deps/helpers/analytics/submit-transaction-event', () => ({
+    buildNonFinancialTransactionsSubmittedEvent: jest.fn(() => ({})),
 }));
 
 const mockPolicy = {
@@ -86,7 +111,9 @@ describe('ConfirmStep', () => {
     });
 
     it('shows error card if submission fails', async () => {
-        mockSubmitRoleChange.mockResolvedValueOnce({ status: 400 });
+        mockSubmitRoleChange.mockResolvedValueOnce({
+            status: StatusCode.BadRequest,
+        });
         render(
             <ConfirmStep
                 policy={mockPolicy as any}
@@ -102,8 +129,8 @@ describe('ConfirmStep', () => {
 
     it('shows NIGO message if caseStatus is Exception', async () => {
         mockSubmitRoleChange.mockResolvedValueOnce({
-            status: 202,
-            data: { caseStatus: 'Exception', caseId: 'CASE123' },
+            status: StatusCode.Accepted,
+            data: { caseStatus: Statuses.Exception, caseId: 'CASE123' },
         });
         render(
             <ConfirmStep
@@ -120,8 +147,8 @@ describe('ConfirmStep', () => {
 
     it('shows success message and goToCase CTA if case is accepted', async () => {
         mockSubmitRoleChange.mockResolvedValueOnce({
-            status: 202,
-            data: { caseStatus: 'Active', caseId: 'CASE123' },
+            status: StatusCode.Accepted,
+            data: { caseStatus: Statuses.Completed, caseId: 'CASE123' },
         });
         render(
             <ConfirmStep
@@ -138,8 +165,8 @@ describe('ConfirmStep', () => {
 
     it('navigates to leaveTransactionLink on close', async () => {
         mockSubmitRoleChange.mockResolvedValueOnce({
-            status: 202,
-            data: { caseStatus: 'Active', caseId: 'CASE123' },
+            status: StatusCode.Accepted,
+            data: { caseStatus: Statuses.Completed, caseId: 'CASE123' },
         });
         render(
             <ConfirmStep

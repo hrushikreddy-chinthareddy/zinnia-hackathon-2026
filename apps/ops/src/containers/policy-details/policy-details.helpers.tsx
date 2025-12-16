@@ -293,7 +293,9 @@ export const getApplicationDetailsData = (
         issueState: getStateName(policy?.issueState),
         salesChannel: mapDistribution(policy.distribution, t),
         originalPolicyNumber:
-            policy?.policy?.parentPolicyNumber ?? DEFAULT_ERROR_STRING,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            policy?.policy?.priorPolicyNumber ?? DEFAULT_ERROR_STRING,
         applicationSource: policy?.policy?.policySource ?? DEFAULT_ERROR_STRING,
         applicationSourceDetails:
             policy?.policy?.policySourceDescription ?? DEFAULT_ERROR_STRING,

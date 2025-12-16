@@ -65,7 +65,7 @@ const CaseDetailsSideNav = ({
     const { hasCaseInsightPermission } = usePermissionsContext();
     const { t } = useTranslation();
     const submissionDetails = caseProcessingDetails?.[0]?.details;
-    const { agentFirstName, agentLastName, agentNPN, agentSSN } =
+    const { agentFirstName, agentLastName, agentNPN, agentSSN, transactionId } =
         CaseAdditionalDetails;
     const displayAgentDetails = !!(
         agentFirstName ||
@@ -154,6 +154,21 @@ const CaseDetailsSideNav = ({
                             </Typography>
                             <Content
                                 details={toSentenceCase(submissionType)}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
+
+                    {transactionId && (
+                        <>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-[--color-base-text-text-secondary]"
+                            >
+                                {t('sidenav.transactionId')}
+                            </Typography>
+                            <Content
+                                details={toSentenceCase(transactionId)}
                                 variant={ContentVariant.BodySm}
                             />
                         </>

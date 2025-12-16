@@ -64,6 +64,8 @@ const RoleDetailsComponent = ({
     action,
     roleData,
     index,
+    removedTpdIndex,
+    setRemovedTpdIndex,
 }: {
     policy: Policy;
     role: PolicyRole;
@@ -71,6 +73,8 @@ const RoleDetailsComponent = ({
     action: any;
     roleData: RoleData;
     index: number;
+    removedTpdIndex?: number | null;
+    setRemovedTpdIndex?: (index: number | null) => void;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'roleChange.roleDetails',
@@ -84,6 +88,7 @@ const RoleDetailsComponent = ({
         useRoleChange();
 
     const isReadOnly = !role?.toLowerCase().includes(NEW);
+    const isTpdRole = role === PolicyRole.THIRDPARTYDESIGNEE;
 
     const [showRole, setShowRole] = useState<boolean>(
         role?.toLowerCase().includes(NEW) ? true : false
@@ -275,10 +280,40 @@ const RoleDetailsComponent = ({
         }));
     };
 
+    const handleAddRole = () => {
+        if (isTpdRole && setRemovedTpdIndex) {
+            if (removedTpdIndex === index) {
+                setRemovedTpdIndex(null);
+                setRemoveRole(false);
+            } else {
+                setRemovedTpdIndex(index);
+                setRemoveRole(true);
+            }
+        } else {
+            setRemoveRole(!removeRole);
+        }
+    };
+
+    const handleCancelRole = () => {
+        setAddRole(true);
+        setRoleData((prevRoleData) => ({
+            ...prevRoleData,
+            signatures: prevRoleData.signatures,
+            ...defaultRoleValue.roleData,
+        }));
+        setRemoveRole(false);
+    };
+
+    const isRoleDisabled =
+        isTpdRole && removedTpdIndex !== null && removedTpdIndex !== index;
+
+    const isRoleChecked = isTpdRole ? removedTpdIndex === index : removeRole;
+
     return (
         <div
             className={
-                removeRole && !role?.toLowerCase().includes(NEW)
+                (isTpdRole && removedTpdIndex !== null) ||
+                (removeRole && !role?.toLowerCase().includes(NEW))
                     ? 'my-4 w-full rounded-sm border-2 bg-gray-50 p-8'
                     : 'my-4 w-full rounded-sm border-2 p-8'
             }
@@ -297,7 +332,14 @@ const RoleDetailsComponent = ({
                 ) : (
                     <div className="flex items-center gap-2">
                         <div className="font-primary text-xl">
-                            <span className={removeRole ? 'text-gray-200' : ''}>
+                            <span
+                                className={
+                                    (isTpdRole && removedTpdIndex !== null) ||
+                                    removeRole
+                                        ? 'text-gray-200'
+                                        : ''
+                                }
+                            >
                                 {roleData?.party?.fullName ||
                                     getPartyName(roleData?.party as any)}
                             </span>
@@ -313,11 +355,7 @@ const RoleDetailsComponent = ({
                                         t('beneficiaryListing.cancel') as string
                                     }
                                     className="default-focus-icons flex justify-start rounded-xl"
-                                    onClick={() => {
-                                        setAddRole(true);
-                                        setRoleData(defaultRoleValue.roleData);
-                                        setRemoveRole(false);
-                                    }}
+                                    onClick={handleCancelRole}
                                 >
                                     <CancelIcon height={24} width={24} />
                                 </button>
@@ -328,17 +366,11 @@ const RoleDetailsComponent = ({
                                 />
                             </label>
                         ) : (
-                            <label
-                                className={`${labelClasses} ${
-                                    role == PolicyRole.THIRDPARTYDESIGNEE
-                                        ? 'pointer-events-none opacity-50 cursor-not-allowed'
-                                        : 'cursor-pointer'
-                                }`}
-                            >
+                            <label className={`${labelClasses}`}>
                                 <InputCheckBox
-                                    isDisabled={false}
-                                    checked={removeRole}
-                                    onChange={() => setRemoveRole(!removeRole)}
+                                    isDisabled={isRoleDisabled}
+                                    checked={isRoleChecked}
+                                    onChange={handleAddRole}
                                 />
                                 <Content
                                     details={'Remove' as string}
