@@ -40,7 +40,6 @@ import {
     CompletedCaseTimeInput,
     CompletedCaseTimeOutput,
     CompletedCaseTimeOutputLevel1,
-    HTTPValidationError,
 } from '@zinnia/api-types/types/analytics';
 
 import {
@@ -168,11 +167,11 @@ export const getCaseStats = async (
 
 export const getCaseDashboardStats = async (
     query: CaseCountInput
-): Promise<CaseCountOutput | HTTPValidationError> => {
+): Promise<CaseCountOutput> => {
     try {
         const { data: response } = await client.post<
             CaseCountInput,
-            AxiosResponse<CaseCountOutput, HTTPValidationError>
+            AxiosResponse<CaseCountOutput>
         >(`${baseAppUrl}/api/dashboard/case-count`, query);
 
         return {
@@ -180,37 +179,32 @@ export const getCaseDashboardStats = async (
             totalElements: response.totalElements,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getCaseDashboardStats::An error occurred while getting case dashboard stats results',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
-        return error;
+
+        throw error;
     }
 };
 
 export const getCaseTimingData = async (
     query: CompletedCaseTimeInput
-): Promise<CaseTimingResponse | HTTPValidationError> => {
+): Promise<CaseTimingResponse> => {
     try {
         const response = await client.post<
             CompletedCaseTimeInput,
-            AxiosResponse<CompletedCaseTimeOutput, HTTPValidationError>
+            AxiosResponse<CompletedCaseTimeOutput>
         >(`${baseAppUrl}/api/dashboard/case-timing`, query);
 
         return {
             data: response.data.data,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getCaseTimingData::An error occurred while getting case dashboard stats results',
             error
         );
-        if ('detail' in error) {
-            return error.detail;
-        }
 
         return error;
     }

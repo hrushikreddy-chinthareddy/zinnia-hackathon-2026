@@ -2,29 +2,28 @@ import { AxiosResponse } from 'axios';
 
 import { browserLogError } from '@deps/utils/browser-logging';
 import {
-    TaskCountInput,
-    TaskCountOutput,
+    CompletedTaskTimeInput,
+    CompletedTaskTimeOutput,
 } from '@zinnia/api-types/types/analytics';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 
-export const getTaskCountData = async (
-    query: TaskCountInput
-): Promise<TaskCountOutput> => {
+export const getCompletedTaskTimeData = async (
+    query: CompletedTaskTimeInput
+): Promise<CompletedTaskTimeOutput> => {
     try {
         const { data: response } = await client.post<
-            TaskCountInput,
-            AxiosResponse<TaskCountOutput>
-        >(`${baseAppUrl}/api/dashboard/task-count`, query);
+            CompletedTaskTimeInput,
+            AxiosResponse<CompletedTaskTimeOutput>
+        >(`${baseAppUrl}/api/dashboard/completed-task-time`, query);
 
         return {
             data: response.data,
-            totalElements: response.totalElements,
         };
     } catch (error: any) {
         browserLogError(
-            'getTaskCountData::An error occurred while getting task count data',
+            'getCompletedTaskTimeData::An error occurred while getting completed task time',
             error
         );
 
