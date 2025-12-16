@@ -104,10 +104,28 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     });
 
     useEffect(() => {
-        setCustomData((prev: any) => ({
-            ...prev,
-            ...task.data,
+        if (!customData?.actionData) return;
+
+        setTask((prevTask: any) => ({
+            ...prevTask,
+            data: {
+                ...prevTask.data,
+
+                actionData: customData.actionData,
+            },
         }));
+    }, [customData?.actionData, setTask]);
+
+    useEffect(() => {
+        setCustomData((prev: any) => {
+            const { actionData: _ignore, ...safeTaskData } = task.data || {};
+
+            return {
+                ...prev,
+                ...safeTaskData,
+                actionData: prev.actionData,
+            };
+        });
     }, [task.data]);
 
     const fetchData = async () => {

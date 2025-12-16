@@ -30,7 +30,7 @@ export const getTagVariant = (action: string, t: TFunction) => {
         tagVariant = TagVariant.Information;
         tagText = t('tag.updated');
     } else if (action === 'DELETE') {
-        tagVariant = TagVariant.White;
+        tagVariant = TagVariant.Information;
         tagText = t('tag.removed');
     } else if (action === 'ADD') {
         tagVariant = TagVariant.Information;

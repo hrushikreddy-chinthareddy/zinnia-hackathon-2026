@@ -8,6 +8,7 @@ import {
     CaseCountGroupByEnum,
     CaseCountInputFilter,
     CaseCountOutputLevel1,
+    CompletedTaskTimeGroupByEnum,
     ExceptionCountGroupByEnum,
     TaskCountGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
@@ -283,7 +284,10 @@ export const generateCaseLink = ({
 };
 
 export const friendlyGroupByName: Record<
-    CaseCountGroupByEnum | ExceptionCountGroupByEnum | TaskCountGroupByEnum,
+    | CaseCountGroupByEnum
+    | ExceptionCountGroupByEnum
+    | TaskCountGroupByEnum
+    | CompletedTaskTimeGroupByEnum,
     string
 > = {
     [CaseCountGroupByEnum.APPLICATION_TYPE]: 'Application type',
@@ -307,6 +311,7 @@ export const friendlyGroupByName: Record<
     [TaskCountGroupByEnum.TASK_STATUS]: 'Task status',
     [TaskCountGroupByEnum.TASK_CREATED_DAY]: 'Task created date',
     [TaskCountGroupByEnum.TASK_UPDATED_DAY]: 'Task updated date',
+    [CompletedTaskTimeGroupByEnum.TASK_TYPE]: 'Task type',
 };
 
 /**

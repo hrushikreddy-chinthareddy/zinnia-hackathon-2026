@@ -82,8 +82,7 @@ export const FileSearchField = ({
                 const { data, status } = await getDocumentSearchResultsQuery(
                     searchBody,
                     limit,
-                    offset,
-                    true
+                    offset
                 );
                 if (data) {
                     setDocuments(data as MetadataSearchResponse[]);

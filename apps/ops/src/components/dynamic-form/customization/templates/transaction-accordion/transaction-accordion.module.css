@@ -16,8 +16,29 @@
     line-height: 22px;
 }
 .disabledAccordion {
-    opacity: 0.5;
+    --tw-bg-opacity: 1;
+    background-color: rgb(var(--color-50-gray) / var(--tw-bg-opacity, 1));
 }
 .disabledContent {
-    opacity: 0.5;
+    --tw-border-opacity: 1;
+    border-color: rgb(var(--color-100-gray) / var(--tw-border-opacity, 1));
+    pointer-events: none;
+}
+.row {
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+    flex-grow: 1;
+}
+.highlightText {
+    color: #155e75;
+    font-weight: 700;
+}
+.container {
+    background-color: #f9fafb;
+    padding: 0;
+}
+
+.active {
+    padding: 1rem;
 }
