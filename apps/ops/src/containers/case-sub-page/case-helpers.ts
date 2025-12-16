@@ -342,6 +342,7 @@ export const buildCreateQualityAuditPayload = (caseDetails: Case) => {
         carrier,
         correlationId,
         updatedAt,
+        policyNumber,
     } = caseDetails;
     return {
         parentCaseId: caseId,
@@ -352,5 +353,6 @@ export const buildCreateQualityAuditPayload = (caseDetails: Case) => {
         correlationId: correlationId,
         processEndDate: dayjs(updatedAt).format(EDS_DATE_DISPLAY_FORMAT),
         auditRequestId: auditRequestId,
+        policyNumber,
     };
 };

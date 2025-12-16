@@ -159,6 +159,7 @@ export interface CreateQualityAuditRequest {
     correlationId?: string;
     processEndDate: string;
     auditRequestId: string;
+    policyNumber?: string;
 }
 export interface CreateQualityAuditResponse {
     status: number;
