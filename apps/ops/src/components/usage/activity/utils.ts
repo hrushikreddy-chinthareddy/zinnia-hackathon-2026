@@ -187,7 +187,7 @@ export const generateSeries = (
 
         // Ensure months from filter (3M, 6M) are shown in chart even when there is no data on those dates
         const olderThanOneMonth =
-            fromDate.diff(dayjs(firstDataPoint), 'month') > 1;
+            Math.abs(fromDate.diff(dayjs(firstDataPoint), 'month')) > 1;
         if (!olderThanOneMonth) {
             return {
                 type: 'line',
