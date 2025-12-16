@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { Action } from '@deps/constants/policy';
+import { Action, PolicyRole } from '@deps/constants/policy';
 import {
     MatchingCase,
     PotentialMatches,
@@ -453,6 +453,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         caseId: task.caseId,
         planCode: task.data.planCode,
         policyNumber: task.data.policyNumber,
+        partyRole: PolicyRole.ASSIGNEE,
         requestType,
         effectiveDate,
         collateralAmount,

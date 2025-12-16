@@ -314,6 +314,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             partyId: getRoleChangePartyId(customData),
             role: PolicyRole.ASSIGNEE,
             query: {
+                partyRole: PolicyRole.ASSIGNEE,
                 effectiveDate: customData?.effectiveDate,
                 caseId: customData?.caseId,
                 correlationId: customData?.correlationId,
