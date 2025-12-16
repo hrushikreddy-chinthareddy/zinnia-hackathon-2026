@@ -2,7 +2,10 @@ import dayjs from 'dayjs';
 
 import { Action, EntityTypeValue, Roles } from '@deps/constants/policy';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import { toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    toTitleCase,
+    isNullEmptyOrUndefined,
+} from '@deps/helpers/string.helpers';
 import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import {
@@ -16,6 +19,7 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 
+import { PREFIX_MAP } from '../constants';
 import {
     TaskHandler,
     Reason,
@@ -39,14 +43,7 @@ const ensureSingle = <T>(items: T[], fallback: T): T[] =>
     items.length > 0 ? [items[0]] : [fallback];
 
 const normalizeNullableString = (v?: string | null): string | null =>
-    v === undefined || v === null || v === '' ? null : String(v);
-
-const PREFIX_MAP: Record<string, string> = {
-    MR: 'Mr.',
-    MRS: 'Mrs.',
-    MS: 'Ms.',
-    DR: 'Dr.',
-};
+    isNullEmptyOrUndefined(v) ? null : String(v);
 
 const getPrefix = (prefix?: string | null): string | null =>
     prefix ? PREFIX_MAP[prefix] ?? null : null;

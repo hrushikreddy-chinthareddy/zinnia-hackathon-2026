@@ -79,6 +79,7 @@ export interface Identification {
 
 export interface Party {
     partyRoleId?: string | null;
+    partyRole?: string;
     partyId?: string;
     partyType?: string;
     firstName?: string;
@@ -196,4 +197,19 @@ export type ActionDataItem = {
         emails: Email[];
         identifications: Identification[];
     };
+};
+
+export type Signatures = {
+    isSigned: boolean | null;
+    signDate: string | null;
+    signExtension: any;
+    signName: string | null;
+    signType: string | null;
+    isSignatureValid?: boolean | null;
+    signatureComment?: string;
+    isNotaryValid?: boolean | null;
+    signGuaranteeStamp?: string | null;
+    commissionExpiryDate?: string | null;
+    ssn?: string | null;
+    isDesignationPresent?: boolean | null;
 };

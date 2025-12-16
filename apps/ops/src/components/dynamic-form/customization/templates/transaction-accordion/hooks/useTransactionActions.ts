@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { useEffect, useRef } from 'react';
 
 import { Action } from '@deps/constants/policy';
+import { ActionDataItem } from '@deps/containers/task-container/task-handlers/types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 interface Params {
@@ -15,7 +16,7 @@ export function useTransactionActions({
     isSingleParty,
     formData,
 }: Params) {
-    const formDataRef = useRef<any[]>(formData);
+    const formDataRef = useRef<ActionDataItem[]>(formData);
 
     useEffect(() => {
         formDataRef.current = formData;
@@ -24,9 +25,9 @@ export function useTransactionActions({
     const disableAddButton =
         isSingleParty &&
         Array.isArray(formData) &&
-        formData.some((x: any) => x.action === Action.ADD);
+        formData.some((x: ActionDataItem) => x.action === Action.ADD);
 
-    const updateItem = (item: any, shouldDelete: boolean) => ({
+    const updateItem = (item: ActionDataItem, shouldDelete: boolean) => ({
         ...item,
         action: shouldDelete
             ? Action.DELETE
@@ -45,7 +46,7 @@ export function useTransactionActions({
         let updatedList = [...formDataRef.current];
 
         if (isSingleParty) {
-            updatedList = updatedList.map((item, i) =>
+            updatedList = updatedList.map((item: ActionDataItem, i: number) =>
                 i === index
                     ? updateItem(item, checked)
                     : updateItem(item, false)

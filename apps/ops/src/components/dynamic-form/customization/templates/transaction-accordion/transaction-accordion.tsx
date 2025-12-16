@@ -3,6 +3,10 @@ import { Icon, IconType } from '@zinnia/bloom/components';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { Action, Roles } from '@deps/constants/policy';
+import {
+    Party,
+    Signatures,
+} from '@deps/containers/task-container/task-handlers/types';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 
@@ -59,13 +63,14 @@ export const TransactionAccordionTemplate = (
 
     const isJointOwnerPresent =
         formContext?.customData?.contractInfo?.parties?.some(
-            (party: any) => party.partyRole === Roles.JOINTOWNER
+            (party: Party) => party.partyRole === Roles.JOINTOWNER
         );
     if (formContext?.customData?.signatureData) {
         formContext.customData.signatureData.signatures = isJointOwnerPresent
             ? formContext.customData.signatureData.signatures
             : formContext.customData.signatureData.signatures?.filter(
-                  (signature: any) => signature.signType !== Roles.JOINT_OWNER
+                  (signature: Signatures) =>
+                      signature.signType !== Roles.JOINT_OWNER
               );
     }
 
@@ -98,7 +103,7 @@ export const TransactionAccordionTemplate = (
                         <div className="flex justify-between items-center px-4 py-3">
                             <button
                                 type="button"
-                                className="flex items-center gap-x-2 flex-grow"
+                                className={styles.row}
                                 onClick={() => toggle(index)}
                             >
                                 <span className={styles.title}>
@@ -163,7 +168,7 @@ export const TransactionAccordionTemplate = (
                         type="button"
                         onClick={onAddClick}
                         disabled={disableAddButton}
-                        className="text-cyan-800 font-bold"
+                        className={styles.highlightText}
                         style={{ opacity: disableAddButton ? 0.4 : 1 }}
                     >
                         <Icon type={IconType.ADD} small />

@@ -20,14 +20,13 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-
 import {
     cleanAddresses,
     cleanEmails,
     cleanPhones,
     detectRoleChangeRequestType,
     resolveRoleChangePartyId,
-} from '../../../../../utils/tasks/role-change-data-entry.utils';
+} from '@deps/utils/tasks/role-change-data-entry.utils';
 
 export function getPartyMeta(item: SummaryItem) {
     const party = item.party || {};

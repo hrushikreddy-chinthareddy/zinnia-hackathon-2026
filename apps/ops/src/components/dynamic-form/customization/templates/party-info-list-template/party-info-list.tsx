@@ -180,7 +180,7 @@ export default function PartyInfoListTemplate(
                             style={{ opacity: 1 }}
                         >
                             <div className="flex justify-between items-start gap-4 flex-wrap">
-                                <div className={`flex-1 min-w-[70%]`}>
+                                <div className={styles.container}>
                                     {element.children}
                                 </div>
                                 <div className="flex flex-col gap-3 items-end">
