@@ -1,8 +1,8 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { ColumnType, TableColumn } from '@deps/components/table-v2/table.types';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { ApplyToRolesState } from '../../types/address-change-types';
 import { getRoleToLabelKeyMap } from '../../utils/address-change-helpers';

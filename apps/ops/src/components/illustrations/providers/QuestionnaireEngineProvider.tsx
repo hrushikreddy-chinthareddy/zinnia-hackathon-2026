@@ -3,7 +3,6 @@ import {
     BlueprintIdAnswersResolver,
     constructQuestionnaire,
     makeAnswerPathTreeFromBlueprint,
-    QuestionnaireBlueprint,
     QuestionnaireEngine,
     RenderingQuestionnaire,
     Timezone,
@@ -27,6 +26,9 @@ import {
 } from 'react';
 
 import { IllustrationsClientCase } from '@deps/types/illustrations';
+import { IllustrationHandler } from 'components/illustrations/helpers/factory/illustrationsHandlerAbstractClass';
+
+import { useQuickQuoteSubscriber } from './use-quick-quote-subscriber';
 
 export type EngineContextValue = {
     questionnaireEngine: QuestionnaireEngine;
@@ -39,11 +41,11 @@ export const QuestionnaireEngineContext = createContext<
 
 type QuestionnaireEngineProviderProps = PropsWithChildren<{
     applicationContext?: ApplicationContext;
-    blueprint: QuestionnaireBlueprint;
+    factoryHandler: IllustrationHandler<unknown>;
     clientCase: IllustrationsClientCase;
     planCode: string;
     language: Language;
-    subscribers: AnswersChangedSubscriber[];
+    subscribers?: AnswersChangedSubscriber[];
     versionedAnswers: VersionedAnswers;
     timezone: Timezone;
     prePopulateData?: unknown;
@@ -64,27 +66,35 @@ export function useQuestionnaireEngine(): EngineContextValue {
 export function QuestionnaireEngineProvider(
     props: QuestionnaireEngineProviderProps
 ): ReactElement {
+    const { factoryHandler, subscribers } = props;
     const [renderingQuestionnaire, setRenderingQuestionnaire] =
         useState<RenderingQuestionnaire>([]);
-    // const [illustrationHandler, setIllustrationHandler] = useState<IllustrationHandler<T> | null>(null);
+    const blueprint = useMemo(
+        () => factoryHandler.getBlueprint(),
+        [factoryHandler]
+    );
+    const quickQuoteSubscriber = useQuickQuoteSubscriber({ factoryHandler });
 
     const questionnaire = useMemo(() => {
         return localizeQuestionnaire(
             constructQuestionnaire(
-                props.blueprint,
+                blueprint,
                 makeNodeIdToAnswerPathMap(
-                    makeAnswerPathTreeFromBlueprint(props.blueprint)
+                    makeAnswerPathTreeFromBlueprint(blueprint)
                 )
             ),
             props.language
         );
-    }, [props.blueprint, props.language]);
+    }, [blueprint, props.language]);
 
-    // const illustrationHandlerFactory = IllustrationHandlerFactory(props.planCode, props.clientCase);
+    const answerChangedSubscribers = useMemo(
+        () => [...(subscribers ?? []), quickQuoteSubscriber],
+        [subscribers, quickQuoteSubscriber]
+    );
 
     const [questionnaireEngine] = useMemo(() => {
         const answerResolver = BlueprintIdAnswersResolver.from(
-            props.blueprint,
+            blueprint,
             props.versionedAnswers.v2
         );
 
@@ -111,7 +121,7 @@ export function QuestionnaireEngineProvider(
             },
             applicationContext: props.applicationContext,
             onRenderingQuestionnaireChanged: setRenderingQuestionnaire,
-            answerChangedSubscribers: props.subscribers,
+            answerChangedSubscribers,
             // TODO, have proper localization function
             renderingOptions: {
                 displayErrors: false,
@@ -128,11 +138,11 @@ export function QuestionnaireEngineProvider(
 
         return [engine];
     }, [
-        props.blueprint,
+        blueprint,
+        answerChangedSubscribers,
         props.versionedAnswers.v2,
         props.timezone,
         props.applicationContext,
-        props.subscribers,
         props.prePopulateData,
         questionnaire,
     ]);

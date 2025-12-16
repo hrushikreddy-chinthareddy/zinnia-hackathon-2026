@@ -1,10 +1,10 @@
 import { Meta, StoryObj } from '@storybook/react';
+
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import {
     DisbursementPaymentForm,
     DisbursementType,
 } from '@zinnia/api-types/types/sor';
-
-import { toSentenceCase } from '@deps/helpers/string.helpers';
 
 import PayeeSummaryCard, { PayeeSummaryCardProps } from './payee-summary-card';
 

@@ -1,7 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { FgaRelation, FgaRoles } from '@xd/utils';
-import { Party, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useMemo } from 'react';
@@ -24,6 +22,7 @@ import PolicyDetailsContainer from '@deps/containers/policy-details/policy-detai
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
 import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
+import CallLogs from '@deps/containers/subpages/activity-sub-page/call-logs';
 import { FilterTransactions } from '@deps/containers/subpages/activity-sub-page/filter-transactions';
 import DocumentsSubPage from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import FundsSubPage from '@deps/containers/subpages/funds-sub-page';
@@ -53,6 +52,7 @@ import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
+import { FgaRelation, FgaRoles } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -64,6 +64,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Party, Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface PolicyPageProps extends SegmentTrackedPageProps {
@@ -226,11 +227,10 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 }
                 break;
             case 'activity':
-                if (
-                    featureFlags.revised_history_table &&
-                    slug[1] === 'transactions'
-                ) {
-                    subPageContent = <FilterTransactions />;
+                if (featureFlags[FEATURE_FLAGS.REVISED_HISTORY_TABLE]) {
+                    if (slug[1] === 'transactions')
+                        subPageContent = <FilterTransactions />;
+                    if (slug[1] === 'call-logs') subPageContent = <CallLogs />;
                 } else {
                     subPageContent = <ActivitySubPage />;
                 }

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { Policy } from '@zinnia/api-types/types/sor';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import PaymentStep from './payment-step';
 import { PaymentState } from './types';

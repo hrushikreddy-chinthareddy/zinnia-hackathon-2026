@@ -1,4 +1,3 @@
-import { Party } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'next-i18next';
 import { FC, useContext } from 'react';
 
@@ -12,6 +11,7 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { Party } from '@zinnia/api-types/types/sor';
 
 import { SidesheetNameCard } from './sidesheet/sidesheet-name-card';
 

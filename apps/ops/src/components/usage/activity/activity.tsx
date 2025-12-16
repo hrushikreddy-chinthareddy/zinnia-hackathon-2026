@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserTransactionGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -16,18 +14,25 @@ import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
 import { getUserTransactionCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserTransactionGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
-    TimeframeFilterOptions,
     aggregateByCategory,
-    startDates,
     getTransactionTypesByCategory,
     PrepareTransactionActivityCSV,
     buildTopLevelSeries,
     buildDrilldownSeries,
-} from './utlis';
+} from './utils';
 import UsageHeaderLayout from '../usage-common-header';
-import { ApiRoles, colors, generateCSVFileName, ROLE_OPTIONS } from '../utils';
+import {
+    ApiRoles,
+    colors,
+    generateCSVFileName,
+    ROLE_OPTIONS,
+    TimeframeFilterOptions,
+    startDates,
+} from '../utils';
 import { ActivityTooltip, activityTooltipFormatter } from './activity-tooltip';
 
 export const Activity = () => {
@@ -115,14 +120,16 @@ export const Activity = () => {
                     )}
                     titleToolTip={<ActivityTooltip />}
                     data={transactionData?.data || []}
-                    csvFileName={generateCSVFileName(
-                        `${role} ${
+                    csvFileName={generateCSVFileName({
+                        title: `${role} ${
                             t(
                                 'usage.activity.zinniaLiveTransactionActivity.title'
                             ) ?? ''
                         }`,
-                        timerange
-                    )}
+                        timerange,
+                        role,
+                        optionaltitle: '',
+                    })}
                     csvFunction={PrepareTransactionActivityCSV}
                 />
                 <div className="flex items-center justify-between gap-4 w-full">

@@ -1,11 +1,11 @@
+import dayjs from 'dayjs';
+
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import {
     ArrangementType,
     Reason,
     SystematicProgram as SysProg,
 } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
-
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 //TODO: Remove this eventually because LifeCAD should be sending correct enum values in arrangementTypes
 export enum TempAnnuityArrangementTypes {

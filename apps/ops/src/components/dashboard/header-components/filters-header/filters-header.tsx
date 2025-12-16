@@ -1,8 +1,7 @@
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
-import { areObjectsEqual, toTitleCase } from '@zinnia/utils';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { forwardRef, useEffect, useMemo, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { MultiselectOption } from '@deps/components/autocomplete/autocomplete.types';
 import { ButtonSize } from '@deps/components/button/button';
@@ -22,6 +21,9 @@ import {
     getClientIdsByCarrierName,
     getCarrierListItem,
 } from '@deps/utils/carriers';
+import { areObjectsEqual } from '@deps/utils/objects';
+import { toTitleCase } from '@deps/utils/strings';
+
 interface FiltersHeaderProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
@@ -190,12 +192,24 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             }
         };
 
-        const clearFilters = () => {
+        const clearFilters = useCallback(() => {
             setPlaceholderSelectedCarriers({});
             setSelectedBrokerDealers({});
             updateSelectedBrokerDealers({});
             updateSelectedCarriers({});
-        };
+        }, [
+            setPlaceholderSelectedCarriers,
+            setSelectedBrokerDealers,
+            updateSelectedBrokerDealers,
+            updateSelectedCarriers,
+        ]);
+
+        // Clear filters on component unmount
+        useEffect(() => {
+            return () => {
+                clearFilters();
+            };
+        }, [clearFilters]);
 
         const clearFiltersDisabled =
             Object.keys({

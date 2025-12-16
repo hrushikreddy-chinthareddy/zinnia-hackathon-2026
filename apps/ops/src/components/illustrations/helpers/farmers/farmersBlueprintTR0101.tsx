@@ -2008,7 +2008,7 @@ export const farmersBlueprintTR0101 = {
                                     id: '55ebb606-92ee-4ddc-a0b4-ecc7e9acd5d8',
                                     partName:
                                         'custom-6b0d4bee-65ad-4156-91ec-4c19f480f275',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     defaultValue: 50000,
                                     visible: {
                                         booleanOperator: 'and',
@@ -2051,7 +2051,7 @@ export const farmersBlueprintTR0101 = {
                                     id: 'b1a3682f-2b2a-435c-9b60-7434631bd358',
                                     partName:
                                         'custom-928186e2-d4cc-4a7d-be74-06d6487c68b6',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
@@ -2444,7 +2444,7 @@ export const farmersBlueprintTR0101 = {
                                     id: '35f713f1-e857-4a91-ac32-9e75ffe9fdb9',
                                     partName:
                                         'custom-73695d64-bff2-41eb-a581-bebebb2b0001',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
@@ -2686,7 +2686,7 @@ export const farmersBlueprintTR0101 = {
                                     id: '5e080533-1769-489e-ba38-7b7dfc9c509a',
                                     partName:
                                         'custom-da961adc-7b66-4d12-8022-b6973b5a102c',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
@@ -2972,11 +2972,11 @@ export const farmersBlueprintTR0101 = {
                                     ],
                                 },
                                 {
+                                    fieldType: 'checkboxGroup',
                                     answerNodeId:
                                         'chronic-illness-accelerated-death-benefit-rider',
                                     outputPath:
                                         'riders.chronicIllnessAcceleratedDeathBenefitRider.values',
-                                    fieldType: 'checkboxGroup',
                                     id: '80af6907-476e-43e4-a452-4fc6017a3805',
                                     partName:
                                         'custom-6e1ec913-a3ce-43ba-8195-7c9f046811e9',
@@ -2992,16 +2992,79 @@ export const farmersBlueprintTR0101 = {
                                         booleanOperator: 'and',
                                         conditions: [
                                             {
+                                                // Not available for california
+                                                type: 'equalityCondition',
+                                                targetNodeId: 'state-of-issue',
+                                                value: 'CA',
+                                                isEqual: false,
+                                            },
+                                            {
+                                                // Requires ADB rider to also be selected
                                                 type: 'matchesCondition',
                                                 value: ['Rider_ABRTRM'],
                                                 targetNodeId:
                                                     'accelerated-death-benefit-rider-for-terminal-illness',
                                                 quantifier: 'any',
                                             },
+                                            {
+                                                // Not available for Juvenile
+                                                type: 'numberComparisonCondition',
+                                                value: 18,
+                                                targetNodeId: 'issue-age',
+                                                operator: 'greaterThanOrEqual',
+                                            },
+                                            {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        // Term ROP 20
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                                value: '20',
+                                                                isEqual: true,
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 55,
+                                                                targetNodeId:
+                                                                    'issue-age',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                    {
+                                                        // Term ROP 30
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'equalityCondition',
+                                                                targetNodeId:
+                                                                    'level-term-period',
+                                                                value: '30',
+                                                                isEqual: true,
+                                                            },
+                                                            {
+                                                                type: 'numberComparisonCondition',
+                                                                value: 45,
+                                                                targetNodeId:
+                                                                    'issue-age',
+                                                                operator:
+                                                                    'lessThanOrEqual',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
                                         ],
                                     },
                                     platforms: [],
                                     renderOn: [],
+                                    isCustom: true,
                                     copyable: 'none',
                                     optional: true,
                                     placeholder: {
@@ -3025,7 +3088,93 @@ export const farmersBlueprintTR0101 = {
                                             isCustom: true,
                                         },
                                     ],
-                                    hidden: true,
+                                    valid: [
+                                        {
+                                            id: 'b56f8155-65b3-4caf-be3b-46b9891a8958',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'chronic-illness-accelerated-death-benefit-rider',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'chronic-illness-accelerated-death-benefit-rider',
+                                                            },
+                                                            {
+                                                                booleanOperator:
+                                                                    'or',
+                                                                conditions: [
+                                                                    {
+                                                                        type: 'numberComparisonCondition',
+                                                                        value: 150_000,
+                                                                        targetNodeId:
+                                                                            'face-amount',
+                                                                        operator:
+                                                                            'greaterThanOrEqual',
+                                                                    },
+                                                                    {
+                                                                        type: 'emptinessCondition',
+                                                                        isEmpty:
+                                                                            true,
+                                                                        targetNodeId:
+                                                                            'face-amount',
+                                                                    },
+                                                                ],
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Minimum Face Amount of Base Policy $150,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: '93849e09-017e-4d83-966b-85d4aa13e20a',
+                                            conditions: {
+                                                booleanOperator: 'or',
+                                                conditions: [
+                                                    {
+                                                        type: 'emptinessCondition',
+                                                        isEmpty: true,
+                                                        targetNodeId:
+                                                            'chronic-illness-accelerated-death-benefit-rider',
+                                                    },
+                                                    {
+                                                        booleanOperator: 'and',
+                                                        conditions: [
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'chronic-illness-accelerated-death-benefit-rider',
+                                                            },
+                                                            {
+                                                                type: 'emptinessCondition',
+                                                                isEmpty: false,
+                                                                targetNodeId:
+                                                                    'accelerated-death-benefit-rider-for-terminal-illness',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Only available with Accelerated Death Benefit Rider for Terminal Illness.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                             ],
                             displayAsCard: false,

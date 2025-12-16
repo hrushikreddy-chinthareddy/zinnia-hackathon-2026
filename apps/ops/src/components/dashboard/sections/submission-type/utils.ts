@@ -1,7 +1,7 @@
-import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import { SeriesOptionsType } from 'highcharts';
 
 import { DashboardStatsElementResponse } from '@deps/models/case/case';
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 type TransformedData = {
     [key: string]: { [key: string]: number };

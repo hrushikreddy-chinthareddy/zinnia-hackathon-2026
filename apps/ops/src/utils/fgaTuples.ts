@@ -1,4 +1,4 @@
-import { FGA_Tuple } from '@zinnia/utils';
+import { FGA_Tuple } from './auth';
 
 export const getSuperAdminTupleCheck = (partyId: string): FGA_Tuple => {
     return {

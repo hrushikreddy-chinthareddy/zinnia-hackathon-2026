@@ -24,6 +24,7 @@ export function usePaymentFormsQuery({
             policyNumber,
             payeePartyId,
             carrierId,
+            transactionName,
         ],
         queryFn: () =>
             getPaymentForms({

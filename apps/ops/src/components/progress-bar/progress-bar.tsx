@@ -87,7 +87,7 @@ const ProgressBar = ({
                         <CircleInfoIcon
                             height={'13px'}
                             width={'13px'}
-                            className="text-primary"
+                            className="tooltip-primary"
                         />
                     </Popover>
                 )}

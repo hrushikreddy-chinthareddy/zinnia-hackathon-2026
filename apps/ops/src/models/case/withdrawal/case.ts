@@ -1,11 +1,11 @@
-import { PartyType } from '@zinnia/api-types/types/sor';
-
+import { FormSurrenderingSignature } from '@deps/components/ceding-company-signature/ceding-company-signature';
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
 import { MaritalStatusAllowances } from '@deps/components/otp-withdrawal-form/maritial-status-allowance-withholdings';
 import { TrustType } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 import { RelationshipToCoveredPerson } from '@deps/containers/otp/ssw-forms/sbgc/joint-covered-person.helpers';
 import { WithdrawalTaskStatus } from '@deps/contexts/OtpWithdrawalFormContext';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import {
     DesignationPresent,
@@ -85,7 +85,7 @@ export interface FormParts {
     formFullSurrenderAck: FormFullSurrenderAck;
     formSignature: FormSignature;
     formESignatureData?: FormEsignatureData | null;
-    formSurrenderingCompany: FormSurrenderingCompany | null;
+    formSurrenderingCompany: FormSurrenderingSignature | null;
     formTaxWithholding: FormTaxWithholding;
     formAdditionalWaivers: FormAdditionalWaiver[];
     formTaxIdCertificate?: {
@@ -440,6 +440,7 @@ export interface RMD {
     isOneTimeWithdrawal?: boolean;
     rmdPrograms: RMDProgram[];
     taxId: { text: string | null };
+    rmdMethod: RMDType | null;
 }
 
 export interface QCD {
@@ -1342,6 +1343,66 @@ export const ParticipantCompanies = [
     {
         code: '0226',
         companyName: 'National Financial Services (0226)',
+    },
+];
+
+export const filterParticipantIdRules = [
+    {
+        clients: Carrier.FLIC,
+        taskType: TaskType.OFT,
+        excludeParticipantCodes: ['0226'],
+    },
+    {
+        clients: Carrier.USAA,
+        taskType: [TaskType.SSW, TaskType.RMD],
+        excludeParticipantCodes: [
+            '3179',
+            '4516',
+            '4507',
+            '4535',
+            '4581',
+            '4584',
+            '4552',
+            '3165',
+            '4500',
+            '4530',
+            '4514',
+            '3881',
+            '4571',
+            '6545',
+            '4589',
+            '1187',
+            '4616',
+            '4532',
+            '4561',
+            '4566',
+            '4567',
+            '4564',
+            '4517',
+            '4506',
+            '5377',
+            '4635',
+            '4740',
+            '4709',
+            '8367',
+            '4598',
+            '4597',
+            '4504',
+            '4596',
+            '4569',
+            '4061',
+            '4062',
+            '4621',
+            '4503',
+            '4540',
+            '3286',
+            '4720',
+            '1822',
+            '4609',
+            '5949',
+            '4533',
+            '0226',
+        ],
     },
 ];
 

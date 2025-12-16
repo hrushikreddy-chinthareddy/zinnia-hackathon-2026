@@ -1,4 +1,3 @@
-import { Policy, LineOfBusiness } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'i18next';
 
 import {
@@ -16,6 +15,15 @@ import {
 } from '@deps/data/policy-details-view';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { DataDefinition } from '@deps/types/data';
+import { Policy, LineOfBusiness } from '@zinnia/api-types/types/sor';
+
+import {
+    DataField,
+    DataGroup,
+    DataNode,
+    DataSection,
+    FieldType,
+} from './types';
 
 /**
  * Takes in a policy and generates the key values search fields for that policy
@@ -64,4 +72,37 @@ export const generateKeyValueGroups = (
             items,
         };
     });
+};
+
+// TEST HELPERS
+export const makeField = (label: string, value: string): DataField => ({
+    type: FieldType.field,
+    label,
+    value,
+});
+
+export const makeSection = (
+    label: string,
+    children: DataNode[]
+): DataSection => ({
+    type: FieldType.section,
+    label,
+    children,
+});
+
+export const makeGroup = (children: DataNode[][]): DataGroup => ({
+    type: FieldType.group,
+    children,
+});
+
+export const buildSearchTree = (): DataNode[] => {
+    const nameField = makeField('name', 'Alice');
+    const cityField = makeField('city', 'Metropolis');
+    const ageField = makeField('age', '30');
+
+    const personSection = makeSection('person', [nameField, ageField]);
+
+    const group = makeGroup([[nameField], [cityField], []]);
+
+    return [personSection, group];
 };

@@ -76,10 +76,7 @@ describe('useMock hook', () => {
         expect(fakeEvent.preventDefault).toHaveBeenCalled();
 
         // Cookie should be set when mocks were OFF
-        expect(require('cookies-next').setCookie).toHaveBeenCalledWith(
-            MOCK_COOKIE_KEY,
-            'on'
-        );
+        expect(setCookie).toHaveBeenCalledWith(MOCK_COOKIE_KEY, 'on');
 
         expect(window.location.href).toBe(
             'http://localhost/policies?foo=bar&mock=true'

@@ -1,4 +1,3 @@
-import { ArrangementType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
@@ -11,6 +10,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as CogIcon } from '@deps/styles/elements/icons/icons_outlined/cog.svg';
+import { ArrangementType } from '@zinnia/api-types/types/sor';
 
 export const HELP_DESK_LINK =
     'https://zinnia.atlassian.net/servicedesk/customer/portal/6';
@@ -23,7 +23,6 @@ interface ApiErrorStateProps {
 
 const WithdrawalApiErrorState = ({
     onCancel,
-    onContinue,
     arrangementType,
 }: ApiErrorStateProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {

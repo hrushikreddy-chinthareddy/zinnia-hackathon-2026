@@ -52,6 +52,7 @@ describe('SuccessState', () => {
 
     it('navigates to case page when main CTA is clicked and caseId is provided', () => {
         const mockPush = jest.fn();
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         jest.spyOn(require('next/router'), 'useRouter').mockReturnValue({
             push: mockPush,
         });

@@ -1,4 +1,7 @@
 import { render } from '@testing-library/react';
+
+import { Party } from '@deps/models/policy-sor-touchups/Party';
+import { mockT as t } from '@deps/setupTests';
 import {
     PartyType,
     PolicyCoverage,
@@ -18,9 +21,6 @@ import {
     SubStandardRating,
     EmploymentStatus,
 } from '@zinnia/api-types/types/sor';
-
-import { Party } from '@deps/models/policy-sor-touchups/Party';
-import { mockT as t } from '@deps/setupTests';
 
 import {
     findCoverageParticipant,

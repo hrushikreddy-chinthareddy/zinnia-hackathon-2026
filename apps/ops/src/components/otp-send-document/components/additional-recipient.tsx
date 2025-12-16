@@ -1,4 +1,3 @@
-import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import {
     ChipX,
     Label,
@@ -19,6 +18,7 @@ import { PartyAddressCard } from '@deps/containers/address-change-container/comp
 import { AllowedRoleTypesEmail } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { browserLogWarn } from '@deps/utils/browser-logging';
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 import { validateEmail } from '../correspondence';
 
@@ -40,7 +40,7 @@ const AdditionalRecipient = ({
     const { t: addressChangeT } = useTranslation(undefined, {
         keyPrefix: 'addressChange',
     });
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
 
     const [email, setEmail] = useState<string>('');
     const [selectedEmailIndex, setSelectedEmailIndex] = useState<number>(-1);
@@ -104,19 +104,19 @@ const AdditionalRecipient = ({
         if (emails.length >= 5) {
             setError((error) => ({
                 ...error,
-                submit: t('errors.maxEmails') as string,
+                submit: t('allFields.max5Emails') ?? '',
             }));
             return;
         }
         if (emailError) {
             browserLogWarn('contactCenterRecipientsEmailValidation', {
                 payload: val,
-                error: t(emailError) as string,
+                error: t(emailError) ?? '',
                 function: 'correspondence.recipients.validateEmail',
             });
             setError((error) => ({
                 ...error,
-                submit: t(emailError) as string,
+                submit: t(emailError) ?? '',
             }));
             return;
         }
@@ -127,7 +127,7 @@ const AdditionalRecipient = ({
         if (duplicateEmail) {
             setError((error) => ({
                 ...error,
-                submit: t('errors.duplicateRecipientEmail') as string,
+                submit: t('allFields.duplicateRecipientEmail') ?? '',
             }));
             return;
         }
@@ -153,7 +153,7 @@ const AdditionalRecipient = ({
     const emailBox = (
         <div className={classNames}>
             <Label labelFor={'additional-recipient'}>
-                {t('correspondence.emailAddress')}
+                {t('allFields.emailAddress')}
             </Label>
             <div
                 className={`border-2 border-gray-200 px-2 pt-2 mt-1 rounded-lg`}
@@ -197,8 +197,8 @@ const AdditionalRecipient = ({
             <div className="mt-4 ">
                 <Label labelFor={'email-heading'}>
                     {partyCardsData?.length
-                        ? t('correspondence.emailLabel')
-                        : t('correspondence.noEmails')}
+                        ? t('allFields.selectEmailsOnFile')
+                        : t('allFields.noRecordsFound')}
                 </Label>
             </div>
             <RoleAddressCard
@@ -216,10 +216,10 @@ const AdditionalRecipient = ({
                     variant={TypographyVariant.Body}
                     className={`whitespace-normal mb-2 break-words`}
                 >
-                    {t('correspondence.emailMessage')}
+                    {t('allFields.enterEmailInstructions')}
                 </Typography>
                 <AssistiveText
-                    text={t('correspondence.emailWarning')}
+                    text={t('allFields.addUpTo5Recipients')}
                     variant={AssistiveTextVariant.Info}
                 />
             </div>

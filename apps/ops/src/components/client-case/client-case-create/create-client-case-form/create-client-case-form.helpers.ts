@@ -1,5 +1,3 @@
-import { groupBy, sortBy } from 'lodash';
-
 import {
     getNearestAgenciesFromUpline,
     isAgency,

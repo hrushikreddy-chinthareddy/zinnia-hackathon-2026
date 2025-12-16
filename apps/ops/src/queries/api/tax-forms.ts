@@ -1,5 +1,4 @@
 import { datadogLogs } from '@datadog/browser-logs';
-import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 import { AxiosError, AxiosRequestConfig, AxiosResponse, isCancel } from 'axios';
 
 import { DocumentDownloadV2 } from '@deps/models/case/document';
@@ -9,6 +8,7 @@ import {
 } from '@deps/models/case/send-tax-forms';
 import { client } from '@deps/queries/api-utils/client';
 import { ApiResponse } from '@deps/types/api-response';
+import { TaxformDownloadResponse } from '@zinnia/api-types/types/documents-v3';
 
 import { baseAppUrl } from '../api-config';
 
@@ -17,15 +17,12 @@ const baseUrlV3 = baseAppUrl + '/api/document/v3/';
 
 export const searchTaxForms = async (
     requestBody: SearchTaxFormRequestBody,
-    useV3: boolean,
     signal?: AbortSignal
 ): Promise<ApiResponse<SearchTaxFormResponseBody>> => {
     try {
-        let url = `${
-            useV3 ? baseUrlV3 + 'tax-forms' : baseUrl + 'taxForms'
-        }?contractNumber=${requestBody.contractNumber}&clientCode=${
-            requestBody.clientCode
-        }`;
+        let url = `${baseUrlV3 + 'tax-forms'}?contractNumber=${
+            requestBody.contractNumber
+        }&clientCode=${requestBody.clientCode}`;
 
         if (requestBody?.numYears) {
             url += `&numYears=${requestBody.numYears}`;
@@ -33,11 +30,9 @@ export const searchTaxForms = async (
         if (requestBody?.taxYear) {
             url += `&taxYear=${requestBody.taxYear}`;
         }
-        // BPB - planCode is only supported on V3
-        if (useV3 && requestBody?.planCode) {
+        if (requestBody?.planCode) {
             url += `&planCode=${requestBody.planCode}`;
         }
-
         const options: AxiosRequestConfig = {
             signal,
         };
@@ -56,7 +51,7 @@ export const searchTaxForms = async (
     } catch (e) {
         datadogLogs.logger.error('searchTaxForms', {
             payload: requestBody,
-            url: `${baseUrl}/taxForms?contractNumber=${requestBody.contractNumber}&numYears=${requestBody.numYears}&clientCode=${requestBody.clientCode}&taxYear=${requestBody.taxYear}`,
+            url: `${baseUrlV3}/taxForms?contractNumber=${requestBody.contractNumber}&numYears=${requestBody.numYears}&clientCode=${requestBody.clientCode}&taxYear=${requestBody.taxYear}`,
             error: e,
             function: 'tax-forms.searchTaxForms',
         });

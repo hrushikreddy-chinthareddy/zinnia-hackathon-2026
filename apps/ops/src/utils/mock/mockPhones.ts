@@ -1,4 +1,5 @@
 import { faker } from '@faker-js/faker';
+
 import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 export const generatePhone = (): Phone => {

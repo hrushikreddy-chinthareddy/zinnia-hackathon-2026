@@ -1,8 +1,3 @@
-import {
-    PartyRole,
-    PartyType,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { useCallback } from 'react';
 
@@ -57,6 +52,11 @@ import {
     DisbursementParts,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    PartyRole,
+    PartyType,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
 import { validateSignESign } from '../utils/form-validator.helpers';

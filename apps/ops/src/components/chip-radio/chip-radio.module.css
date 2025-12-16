@@ -25,6 +25,6 @@
 }
 
 .chipRadioGroup {
-    flex-direction: row-reverse;
+    flex-direction: row;
     gap: var(--measure-dimension-gap-md);
 }

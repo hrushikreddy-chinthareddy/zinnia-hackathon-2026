@@ -1,6 +1,5 @@
-import { LoanValues, Policy } from '@zinnia/api-types/types/sor';
-
 import { DataDefinition } from '@deps/types/data';
+import { LoanValues, Policy } from '@zinnia/api-types/types/sor';
 
 export type LoanValuesDto = LoanValues;
 

@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-
-// TODO: Find a feasiblt solution for referencing useDebounce in jest.
-// As this hook was placed outside of app/ops, So Jest was unable to find it.
+import { Timeout } from 'react-number-format/types/types';
 
 export function useDebounce<T>(value: T, delay: number): T {
     // State and setters for debounced value
@@ -23,3 +21,49 @@ export function useDebounce<T>(value: T, delay: number): T {
     );
     return debouncedValue;
 }
+
+export const debounce = (fn: any, ms: number) => {
+    let timer: NodeJS.Timeout;
+    return () => {
+        clearTimeout(timer);
+        timer = setTimeout((...args: unknown[]) => {
+            clearTimeout(timer);
+            fn.apply(this, args);
+        }, ms);
+    };
+};
+
+export const throttle = (
+    fn: any,
+    throttleDelay: number = 200,
+    options: { runAtStart?: boolean; runAtEnd?: boolean } = {}
+) => {
+    let args: any[] | null = null;
+    let timeout: Timeout | null = null;
+    let lastRan = 0;
+    const later = () => {
+        lastRan = options.runAtStart === false ? 0 : Date.now();
+        timeout = null;
+        fn.apply(this, args);
+        if (!timeout) {
+            args = null;
+        }
+    };
+
+    return function (this: any, ...rest: any[]) {
+        const now = Date.now();
+        if (!lastRan && options.runAtStart === false) lastRan = now;
+        const remaining = throttleDelay - (now - lastRan);
+        args = rest;
+        if (remaining <= 0 || remaining > throttleDelay) {
+            if (timeout) {
+                clearTimeout(timeout);
+                timeout = null;
+            }
+            lastRan = now;
+            fn.apply(this, rest);
+        } else if (!timeout && options.runAtEnd !== false) {
+            timeout = setTimeout(later, remaining);
+        }
+    };
+};

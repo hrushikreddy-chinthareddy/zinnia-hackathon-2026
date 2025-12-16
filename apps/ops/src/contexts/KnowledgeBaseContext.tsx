@@ -1,4 +1,3 @@
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import React, {
     createContext,
     useCallback,
@@ -12,12 +11,14 @@ import {
     getCommonClientId,
 } from '@deps/queries/api/knowledge-base';
 import {
+    AnswerMode,
     ChatbotMessage,
     COMMON_CLIENT_NAME,
     MessageRole,
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 type KnowledgeBaseContextState = {
     selectedClientId: string;
@@ -25,6 +26,7 @@ type KnowledgeBaseContextState = {
     currentMessages: (UserMessage | ChatbotMessage)[];
     chatHistoryReloadTrigger: number;
     commonClientId?: string | null;
+    answerMode: AnswerMode;
     setSelectedClient: (clientId: string) => void;
     setSessionId: React.Dispatch<React.SetStateAction<string>>;
     setCurrentMessages: React.Dispatch<
@@ -33,6 +35,7 @@ type KnowledgeBaseContextState = {
     setChatHistoryReloadTrigger: React.Dispatch<React.SetStateAction<number>>;
     startNewChatSession: () => void;
     viewChatHistory: (sessionId: string) => void;
+    setAnswerMode: React.Dispatch<React.SetStateAction<AnswerMode>>;
 };
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
@@ -43,12 +46,14 @@ const KnowledgeBaseContextDefaultValues = {
     currentMessages: [],
     chatHistoryReloadTrigger: 0,
     commonClientId: null,
-    setSelectedClient: (clientId: string) => {},
+    answerMode: AnswerMode.Short,
+    setSelectedClient: () => {},
     setSessionId: noop,
     setCurrentMessages: noop,
     setChatHistoryReloadTrigger: noop,
     startNewChatSession: () => {},
-    viewChatHistory: (sessionId: string) => {},
+    viewChatHistory: () => {},
+    setAnswerMode: noop,
 };
 
 const KnowledgeBaseContext = createContext<KnowledgeBaseContextState>(
@@ -77,6 +82,7 @@ const KnowledgeBaseProvider = ({
         (UserMessage | ChatbotMessage)[]
     >([]);
     const [chatHistoryReloadTrigger, setChatHistoryReloadTrigger] = useState(0);
+    const [answerMode, setAnswerMode] = useState<AnswerMode>(AnswerMode.Short);
 
     const setSelectedClient = useCallback((clientId: string) => {
         setSelectedClientId(clientId);
@@ -206,6 +212,8 @@ const KnowledgeBaseProvider = ({
                 startNewChatSession,
                 viewChatHistory,
                 commonClientId,
+                answerMode,
+                setAnswerMode,
             }}
         >
             {children}

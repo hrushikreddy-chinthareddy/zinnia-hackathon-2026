@@ -4,7 +4,6 @@ import { HttpStatusCode } from 'axios';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import {
-    APIErrorInformation,
     logTrace,
     logWarn,
     parseErrorInformation,
@@ -12,8 +11,6 @@ import {
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
-
-type error = APIErrorInformation;
 
 export default withAuthAndLogging(
     async (req: NextApiRequest, res: NextApiResponse<any>, logCtx) => {

@@ -11,6 +11,8 @@ import {
     CreateNewTermLifeIllustrationResponse,
 } from '@deps/queries/api/v3/illustrations';
 import { QuickQuoteParams } from '@deps/types/quickQuote';
+import { browserLogDebug, browserLogError } from '@deps/utils/browser-logging';
+import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import {
     buildNewTermQuickQuotePayload,
@@ -42,6 +44,8 @@ export const buildNewTermQuickQuoteOptions = (
             variantParams,
         ],
         queryFn: async () => {
+            const logPrefix =
+                'illustrations::QuickQuote::buildNewTermQuickQuoteOptions::queryFn';
             if (!variantParams.available) {
                 throw new VariantNotAvailableError(
                     'QuickQuote is not available for these values',
@@ -56,7 +60,31 @@ export const buildNewTermQuickQuoteOptions = (
                 variantParams
             );
 
-            return createNewTermLifeIllustration(payload);
+            let response;
+
+            try {
+                response = await createNewTermLifeIllustration(payload);
+            } catch (e) {
+                browserLogError(`${logPrefix} Error fetching quick quote`, {
+                    ...parseErrorInformation(e),
+                    params: {
+                        variant: variantParams,
+                        insuredDetails: quickQuoteParams,
+                    },
+                    payload,
+                });
+                throw e;
+            }
+
+            browserLogDebug(`${logPrefix} Quick quote created successfully`, {
+                params: {
+                    variant: variantParams,
+                    insuredDetails: quickQuoteParams,
+                },
+                illustrationId: response.response.id,
+            });
+
+            return response;
         },
         staleTime: 600_000,
     });

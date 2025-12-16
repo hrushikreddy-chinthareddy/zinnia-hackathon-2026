@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { SelectProps } from '@zinnia/bloom/components';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -34,6 +33,7 @@ import {
     logInfo,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface SendCorrespondenceProps extends SegmentTrackedPageProps {

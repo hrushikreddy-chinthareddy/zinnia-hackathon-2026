@@ -1,9 +1,10 @@
 import { SideSheet, Icon, IconType, Button } from '@zinnia/bloom/components';
-import { FC } from 'react';
+import { FC, SetStateAction, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { buttonClickedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
 
 import { PolicySidesheetContent } from './content/policy-sidesheet-content';
 import { FindAllKeyValuesSidebarProps } from './types';
@@ -24,6 +25,18 @@ export const FindAllKeyValuesPolicySidesheet: FC<
 > = ({ planCode, policyNumber }) => {
     const { t } = useTranslation();
     const { sessionId: authSessionId } = usePermissionsContext();
+    const [container, setContainer] = useState<HTMLDivElement | null>(null);
+    const setContainerRef = useCallback(
+        (node: SetStateAction<HTMLDivElement | null>) => {
+            setContainer(node);
+        },
+        []
+    );
+    const [calendarOpen, setCalendarOpen] = useState(false);
+
+    const handleCalendarOpen = (isOpen: boolean) => {
+        setCalendarOpen(isOpen);
+    };
     return (
         <SideSheet
             trigger={
@@ -49,11 +62,17 @@ export const FindAllKeyValuesPolicySidesheet: FC<
                 </span>
             }
             preventCloseOnOutsideClick={false}
+            ref={setContainerRef}
+            preventEscKeyDownClose={calendarOpen}
         >
-            <PolicySidesheetContent
-                planCode={planCode}
-                policyNumber={policyNumber}
-            />
+            <TreeStateProvider initialTreeState={Collapse}>
+                <PolicySidesheetContent
+                    planCode={planCode}
+                    policyNumber={policyNumber}
+                    container={container}
+                    handleCalendarOpen={handleCalendarOpen}
+                />
+            </TreeStateProvider>
         </SideSheet>
     );
 };

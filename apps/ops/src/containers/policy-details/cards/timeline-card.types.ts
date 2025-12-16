@@ -7,4 +7,5 @@ export interface PolicyTimelineCardData {
     policyAge: string;
     policyLength: string;
     policyYearsLeft: string | null;
+    deliveryDate: string;
 }

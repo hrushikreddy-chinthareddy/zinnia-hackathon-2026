@@ -1,4 +1,3 @@
-import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useState } from 'react';
 
@@ -9,6 +8,7 @@ import Radio, { RadioItem } from '@deps/components/radio/radio';
 import { Correspondence } from '@deps/models/case/correspondence';
 import { CommunicationTypes } from '@deps/models/case/send-document';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 const getPrimaryEmail = (policy: Policy) => {
     const eDeliveryRoleId = policy.partyRoles?.find(
@@ -35,12 +35,10 @@ const CorrespondenceCard = ({
     policy,
     communicationOptions,
     correspondenceData,
-    error,
-    showAdditionalRecipient,
     setError,
     setCorrespondenceData,
 }: CorrespondenceProps) => {
-    const { t } = useTranslation(undefined, { keyPrefix: 'sendDocument' });
+    const { t } = useTranslation();
 
     const selectedCommunicationType = correspondenceData?.type;
     const recipients = correspondenceData?.recipients || [];
@@ -65,19 +63,19 @@ const CorrespondenceCard = ({
             : []
     );
     const [address, setAddress] = useState(correspondenceData?.mailDetails);
-    const [ccEmails, setCCEmails] = useState<string[]>([]);
+    const [ccEmails] = useState<string[]>([]);
 
     const communicationTypes = [
         {
-            label: t('correspondence.email'),
+            label: t('allFields.email'),
             value: CommunicationTypes.Email,
         },
         {
-            label: t('correspondence.fax'),
+            label: t('allFields.fax'),
             value: CommunicationTypes.Fax,
         },
         {
-            label: t('correspondence.mail'),
+            label: t('allFields.mail'),
             value: CommunicationTypes.Mail,
         },
     ];
@@ -132,7 +130,7 @@ const CorrespondenceCard = ({
         <div className="flex flex-col gap-4">
             <Radio
                 items={communicationOptions ?? communicationTypes}
-                label={t('correspondence.label') as string}
+                label={t('allFields.whereShouldDocsBeSent') ?? ''}
                 onChange={(event) => {
                     setCommunicationType(
                         event.target.value as CommunicationTypes

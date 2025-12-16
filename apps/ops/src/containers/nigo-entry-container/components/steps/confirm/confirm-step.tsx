@@ -38,7 +38,6 @@ const ConfirmStep = ({ document }: ConfirmStepProps) => {
     const { submitFailed, setSubmitFailed, sectionOption } = useNigoEntry();
     const formState = useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
-    const [timer] = useState(performance.now());
 
     const getSubmitLabel = () => {
         switch (sectionOption) {
@@ -59,8 +58,7 @@ const ConfirmStep = ({ document }: ConfirmStepProps) => {
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
-                buildFormV2(TaskStatus.Completed, document, formState),
-                timer
+                buildFormV2(TaskStatus.Completed, document, formState)
             );
 
             if (successfulCaseUpdate && successfulCaseUpdate.id) {
@@ -73,7 +71,7 @@ const ConfirmStep = ({ document }: ConfirmStepProps) => {
         }
 
         setIsLoading(false);
-    }, [document, formState, setSubmitFailed, timer]);
+    }, [document, formState, setSubmitFailed]);
 
     if (isLoading) {
         return (

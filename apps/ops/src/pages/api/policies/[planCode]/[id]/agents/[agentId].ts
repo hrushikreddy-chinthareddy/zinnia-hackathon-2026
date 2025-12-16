@@ -1,5 +1,4 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 
 import { PRODUCERS_API_ORIGIN } from '@deps/queries/api/server/v1/producers';
@@ -13,6 +12,7 @@ import {
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 /// Tries to get agent information for a policy
 // NOTE: this uses a Machine-to-Machine token, so we want to be certain the user has access to the policy

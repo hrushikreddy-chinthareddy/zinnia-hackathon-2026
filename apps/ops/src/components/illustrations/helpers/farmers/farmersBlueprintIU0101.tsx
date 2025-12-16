@@ -2752,7 +2752,7 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     isCustom: true,
                                     disabled: true,
                                 },
@@ -2785,7 +2785,7 @@ export const farmersBlueprintIU0101 = {
                                     id: 'eb17d4c7-d6eb-4ccb-8e5c-b0ab5c365895',
                                     partName:
                                         'custom-cac050f7-6655-4cdb-a0af-015735f57720',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     isCustom: true,
                                 },
                                 {
@@ -3058,7 +3058,7 @@ export const farmersBlueprintIU0101 = {
                                     id: '20b89449-c480-48c6-97d6-c5c2c2015c96',
                                     partName:
                                         'custom-60b49b51-5e22-4094-b69f-f3e1a14091c7',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     isCustom: true,
                                     defaultValue: 50000,
                                     valid: [
@@ -3235,7 +3235,7 @@ export const farmersBlueprintIU0101 = {
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     disabled: true,
                                 },
                                 {
@@ -3421,7 +3421,7 @@ export const farmersBlueprintIU0101 = {
                                     id: '076ad6a3-6cc7-4dd2-a1e3-583c796d4dd3',
                                     partName:
                                         'custom-5086ee0d-4b7b-445b-8786-0bba12833df9',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [
@@ -3860,7 +3860,7 @@ export const farmersBlueprintIU0101 = {
                                     id: '693e5058-f7a9-4d8a-a7c5-9f4b075b367c',
                                     partName:
                                         'custom-c03d1ebe-7f27-4777-a3c6-29f2a3f65030',
-                                    validateAs: 'integer',
+                                    validateAs: 'decimal',
                                     isCustom: true,
                                     visible: {
                                         booleanOperator: 'and',

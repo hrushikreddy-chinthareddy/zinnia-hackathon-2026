@@ -1,19 +1,18 @@
 import {
-    UserActivityGroupByEnum,
-    UserActivityInputFilter,
-    UserTransactionGroupByEnum,
-    UserTransactionInputFilter,
-    UserViewsGroupByEnum,
-    UserViewsInputFilter,
-} from '@xd/api-types/dist/generated-types/analytics';
-
-import {
     friendlyGroupByName,
     friendlyGroupByNameForUserViews,
 } from '@deps/components/usage/utils';
 import { getUserActivityCounts } from '@deps/queries/api/user-actvity-count';
 import { getUserTransactionCounts } from '@deps/queries/api/user-transaction-count';
 import { getUserViewsCounts } from '@deps/queries/api/user-views-count';
+import {
+    UserActivityGroupByEnum,
+    UserActivityInputFilter,
+    UserTransactionGroupByEnum,
+    UserTransactionInputFilter,
+    UserViewsGroupByEnum,
+    UserViewsInputFilter,
+} from '@zinnia/api-types/types/analytics';
 
 export const getUserActivityCountsQuery = async (
     filter: UserActivityInputFilter,

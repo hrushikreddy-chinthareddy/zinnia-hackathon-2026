@@ -1,9 +1,8 @@
+import { PartyRole } from '@deps/models/policy/sor-policy';
 import {
     AliasModel,
     PartyReferenceDataModel,
 } from '@zinnia/api-types/types/partyreference';
-
-import { PartyRole } from '@deps/models/policy/sor-policy';
 
 /**
  * Checks if there is a Wellabe agent in the party reference data

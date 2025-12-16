@@ -1,9 +1,11 @@
+import dayjs from 'dayjs';
+import isoWeek from 'dayjs/plugin/isoWeek';
+
+import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import {
     UserActivityGroupByEnum,
     UserViewsGroupByEnum,
-} from '@xd/api-types/dist/generated-types/analytics';
-import dayjs from 'dayjs';
-import { useTranslation } from 'react-i18next';
+} from '@zinnia/api-types/types/analytics';
 
 import { Timerange } from '../dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '../dashboard/utils';
@@ -26,6 +28,25 @@ export const friendlyGroupByNameForUserViews: Record<
     [UserViewsGroupByEnum.PROCESS_SUB_TYPE]: 'Process Sub Type',
     [UserViewsGroupByEnum.USER_ROLE]: 'User Role',
 };
+
+export enum TimeframeFilterOptions {
+    Last1Month = '1M',
+    Last3Months = '3M',
+    Last6Months = '6M',
+}
+
+export const startDates: Record<TimeframeFilterOptions, string> = {
+    [TimeframeFilterOptions.Last6Months]: dayjs()
+        .subtract(6, 'month')
+        .format(ZAHARA_DATE_FORMAT),
+    [TimeframeFilterOptions.Last3Months]: dayjs()
+        .subtract(3, 'month')
+        .format(ZAHARA_DATE_FORMAT),
+    [TimeframeFilterOptions.Last1Month]: dayjs()
+        .subtract(1, 'month')
+        .format(ZAHARA_DATE_FORMAT),
+};
+dayjs.extend(isoWeek);
 
 // === Roles (API + UI) ===============================================
 
@@ -80,9 +101,9 @@ export const toUiRole = (apiRoleName: string): UiRoles | undefined =>
     API_TO_UI_ROLE[apiRoleName as ApiRoles];
 
 export const TRANSACTION_CATEGORY_DISPLAY_MAP: Record<string, string> = {
-    financial: 'Financial',
-    non_financial: 'Non-Financial',
-    policy_update: 'Policy Update',
+    financial: 'Payments & Distributions',
+    non_financial: 'Policy & Contract Servicing',
+    policy_update: 'Party Management',
 };
 
 // Transaction type mapping
@@ -100,7 +121,16 @@ export const TRANSACTION_TYPE_DISPLAY_MAP: Record<string, string> = {
     bank_info: 'Bank Info',
     beneficiary: 'Beneficiary',
     newloan: 'New Loan',
+    joint_owner: 'Joint Owner',
 };
+
+export const PageType = {
+    Cases: 'Cases',
+    Illustrations: 'Illustrations',
+    Policies: 'Policies',
+} as const;
+
+export type PageType = keyof typeof PageType;
 
 export const downloadCSV = (csv: string, filename: string) => {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -113,20 +143,24 @@ export const downloadCSV = (csv: string, filename: string) => {
     document.body.removeChild(link);
 };
 
-export const generateCSVFileName = (
-    title: string,
-    timerange: Timerange,
-    role?: string,
-    optionaltitle?: string
-) => {
-    const { t } = useTranslation();
+export const generateCSVFileName = ({
+    title,
+    timerange,
+    role,
+    optionaltitle,
+}: {
+    title: string;
+    timerange: Timerange;
+    role?: string;
+    optionaltitle?: string;
+}) => {
     const rolePart = role === 'All' ? 'All Roles' : role;
     const fromDate = dayjs(timerange.from).format(defaultDateFormat);
     const toDate = dayjs(timerange.to).format(defaultDateFormat);
 
-    return `${t(title)} ${rolePart || ''} ${t(
+    return `${title} ${rolePart || ''} ${
         optionaltitle || ''
-    )} ${fromDate} to ${toDate}`;
+    } ${fromDate} to ${toDate}`;
 };
 
 export const colors = [

@@ -1,12 +1,9 @@
-import {
-    LineOfBusiness,
-    PaymentForm,
-} from '@xd/api-types/dist/generated-types/bpm';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
 
 import { IssuanceRequest } from '@deps/pages/api/test-harness/create-policy';
 import { IssuanceType, PolicyState } from '@deps/utils/test-harness/types';
+import { LineOfBusiness, PaymentForm } from '@zinnia/api-types/types/bpm';
 
 /**
  *
@@ -120,10 +117,10 @@ export const getPartyTagRegex = (type?: IssuanceType) => {
  * Extracts a specific field from the XML
  */
 export const extractFieldFromXml = (xmlContent: string, tagName: string) => {
-    const regex = new RegExp(`<${tagName}>(.*?)<\/${tagName}>`, 'g');
+    const regex = new RegExp(`<${tagName}>(.*?)</${tagName}>`, 'g');
     const matches = xmlContent.match(regex);
     return matches?.map((match) =>
-        match.replace(new RegExp(`<\/?${tagName}>`, 'g'), '')
+        match.replace(new RegExp(`</?${tagName}>`, 'g'), '')
     );
 };
 
@@ -141,7 +138,7 @@ export const extractNestedFieldFromXml = (
     nestedTagName: string
 ) => {
     const parentRegex = new RegExp(
-        `<${parentTagName}[^>]*?>([\\s\\S]*?)<\/${parentTagName}>`,
+        `<${parentTagName}[^>]*?>([\\s\\S]*?)</${parentTagName}>`,
         'g'
     );
     const parentMatches = xmlContent.match(parentRegex);
@@ -151,7 +148,7 @@ export const extractNestedFieldFromXml = (
     return parentMatches
         .map((parentMatch) => {
             const nestedRegex = new RegExp(
-                `<${nestedTagName}[^>]*?>([\\s\\S]*?)<\/${nestedTagName}>`,
+                `<${nestedTagName}[^>]*?>([\\s\\S]*?)</${nestedTagName}>`,
                 'g'
             );
             const nestedMatch = parentMatch.match(nestedRegex);
@@ -160,7 +157,7 @@ export const extractNestedFieldFromXml = (
                 return nestedMatch.map((nm) =>
                     nm.replace(
                         new RegExp(
-                            `<${nestedTagName}[^>]*?>|<\/${nestedTagName}>`,
+                            `<${nestedTagName}[^>]*?>|</${nestedTagName}>`,
                             'g'
                         ),
                         ''
@@ -204,7 +201,7 @@ export const replaceXmlContent = (
         replacement?: string
     ) => {
         if (replacement) {
-            const regex = new RegExp(`<${tag}>([^<]*)<\/${tag}>`, 'g');
+            const regex = new RegExp(`<${tag}>([^<]*)</${tag}>`, 'g');
             return block.replace(regex, (match, p1) =>
                 match.replace(p1, replacement)
             );

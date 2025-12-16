@@ -1,4 +1,4 @@
-import { BulkCheckTuple, FGA_Tuple } from '@zinnia/utils';
+import { BulkCheckTuple, FGA_Tuple } from '@deps/utils/auth';
 
 export type CheckTupleResponse = {
     allowed: boolean;
@@ -20,6 +20,12 @@ export type GetCarrierListQuery = {
     relation: string;
     planCode?: string | string[] | undefined;
     policyNumber?: string | undefined;
+};
+
+export type GetRoleListQuery = {
+    user: string;
+    relation: string;
+    type: 'role';
 };
 
 export type Tuple = FGA_Tuple;

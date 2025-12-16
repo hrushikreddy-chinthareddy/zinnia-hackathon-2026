@@ -1,3 +1,11 @@
+import dayjs from 'dayjs';
+
+import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+import {
+    getCarrierLogoByClientId,
+    getCarrierNameByClientId,
+} from '@deps/utils/carriers';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DistributionType,
     DeathBenefitOptionType,
@@ -14,14 +22,6 @@ import {
     CostBasis,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-import { DEFAULT_ERROR_STRING } from '@zinnia/utils';
-import dayjs from 'dayjs';
-
-import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
-import {
-    getCarrierLogoByClientId,
-    getCarrierNameByClientId,
-} from '@deps/utils/carriers';
 
 import { Coverage } from './Coverage';
 import { Features } from './Features';
@@ -80,6 +80,7 @@ export class PolicyDetails {
     public systematicPrograms: SystematicPrograms;
     public investmentType?: string;
     public isTPA: boolean;
+    public deliveryDate: string | undefined;
 
     constructor(policy: Policy = {}) {
         this.policyRaw = policy;
@@ -143,6 +144,7 @@ export class PolicyDetails {
         this.investmentType = policy?.allocation?.investmentType;
         this.qualificationType = policy?.qualificationType;
         this.isTPA = policy?.thirdPartyAdministratorId !== 'Non-Zinnia';
+        this.deliveryDate = policy?.policyDates?.policyDeliveryDate;
     }
 
     public get carrierName(): string | undefined {

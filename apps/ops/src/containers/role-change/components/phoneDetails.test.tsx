@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react';
+
 import { PhoneType } from '@zinnia/api-types/types/sor';
 
 import PhoneDetails from './phoneDetails';

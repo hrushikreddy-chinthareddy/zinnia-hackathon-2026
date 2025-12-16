@@ -14,7 +14,39 @@
                 "title": "Post Issue NIGO Review",
                 "formSchema": {
                     "type": "object",
-
+                    "properties": {
+                        "rules": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "reason": {
+                                        "type": "string",
+                                        "title": "Issues",
+                                        "default": ""
+                                    },
+                                    "detailedReason": {
+                                        "type": "string",
+                                        "title": "Processing Instructions",
+                                        "default": ""
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            }
+                        },
+                        "process": {
+                            "type": "string",
+                            "title": "process"
+                        }
+                    },
+                    "default": {
+                        "process": ""
+                    },
                     "dependencies": {
                         "process": {
                             "if": {
@@ -48,36 +80,6 @@
                                     }
                                 },
                                 "dependencies": {
-                                    "properties": {
-                                        "rules": {
-                                            "type": "array",
-                                            "title": "",
-                                            "items": {
-                                                "type": "object",
-                                                "title": "",
-                                                "properties": {
-                                                    "reason": {
-                                                        "type": "string",
-                                                        "title": "Issues",
-                                                        "default": ""
-                                                    },
-                                                    "detailedReason": {
-                                                        "type": "string",
-                                                        "title": "Processing Instructions",
-                                                        "default": ""
-                                                    },
-                                                    "resolved": {
-                                                        "type": "boolean",
-                                                        "title": "Resolved"
-                                                    }
-                                                }
-                                            }
-                                        },
-                                        "process": {
-                                            "type": "string",
-                                            "title": "process"
-                                        }
-                                    },
                                     "uploadDocuments": {
                                         "type": "object",
                                         "title": "Link or upload document",

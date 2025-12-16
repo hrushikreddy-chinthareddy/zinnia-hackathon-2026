@@ -1,7 +1,6 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, {
@@ -27,6 +26,7 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface ConfirmStepProps {
     policy: Policy;
@@ -53,7 +53,14 @@ const ConfirmStep = ({ policy, user, correlationId }: ConfirmStepProps) => {
     } = useDeathClaim();
     const [isLoading, setIsLoading] = useState(false);
 
-    const submit = async () => {
+    const submit = useCallback(async () => {
+        if (caseId) {
+            browserLogInfo('ConfirmStep::Claim already submitted', {
+                caseId,
+                policy: policy?.policyNumber,
+            });
+            return;
+        }
         setIsLoading(true);
         const payload = buildClaimPayload({
             policy: policy,
@@ -94,7 +101,21 @@ const ConfirmStep = ({ policy, user, correlationId }: ConfirmStepProps) => {
         }
 
         setIsLoading(false);
-    };
+    }, [
+        beneficiaries,
+        caseId,
+        correlationId,
+        notifiers,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+        owners,
+        partyId,
+        policy,
+        sessionId,
+        setCaseId,
+        setSubmitFailed,
+        user,
+    ]);
 
     if (isLoading) {
         return (

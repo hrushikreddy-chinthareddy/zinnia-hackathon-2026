@@ -5,6 +5,7 @@ import { Result } from 'typegate';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
+import { getRiderNames } from 'components/illustrations/helpers/get-rider-names';
 
 import {
     CreateIllustrationPayload,
@@ -21,7 +22,6 @@ import {
     mapIllustrationPayloadToEngineInputData,
 } from '../farmers/famersBlueprintToIllustrationPayloadTL0101';
 import { farmersTermBlueprintTL0101 } from '../farmers/farmersTermBlueprintTL0101';
-import { riderNamesMap } from '../rider-names-map';
 
 export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
     constructor(clientCase: IllustrationsClientCase) {
@@ -82,26 +82,17 @@ export class PlanTL0101Handler extends IllustrationHandler<FarmersEntities> {
 
     public generateTitle(data: any, formInputs: any): string {
         const assumed = data.assumed;
-        const guaranteed = data.guaranteed;
-        const createDate = new Date().toLocaleDateString();
+        const creationDate = new Date().toLocaleDateString();
 
-        const getRidersText = () => {
-            const hasRiders = Object.keys(assumed.coverages).length > 1;
-            if (!hasRiders) {
-                return '';
-            }
+        const riderNames = getRiderNames(data);
 
-            const riders = Object.keys(assumed.coverages)
-                .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderNamesMap?.[riderName] ?? riderName)
-                .join(', ');
-
-            return `, ${riders}`;
-        };
-
-        return `${createDate},
-        Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}, ${
-            formInputs.fixedCostPeriod
-        } yr${getRidersText()}`;
+        return [
+            creationDate,
+            `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
+            `${formInputs.fixedCostPeriod} yr`,
+            ...riderNames,
+        ]
+            .filter((x) => x)
+            .join(', ');
     }
 }

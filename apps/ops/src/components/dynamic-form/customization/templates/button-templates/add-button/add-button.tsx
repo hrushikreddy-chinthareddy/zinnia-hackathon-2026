@@ -1,18 +1,11 @@
-import {
-    FormContextType,
-    getUiOptions,
-    IconButtonProps,
-    RJSFSchema,
-    StrictRJSFSchema,
-    TranslatableString,
-} from '@rjsf/utils';
+import { getUiOptions, IconButtonProps, TranslatableString } from '@rjsf/utils';
 import { Button } from '@zinnia/bloom/components';
 
-export default function AddButton<
-    T = any,
-    S extends StrictRJSFSchema = RJSFSchema,
-    F extends FormContextType = any
->({ uiSchema, registry, ...props }: Omit<IconButtonProps, 'iconType'>) {
+export default function AddButton({
+    uiSchema,
+    registry,
+    ...props
+}: Omit<IconButtonProps, 'iconType'>) {
     const { translateString } = registry;
     const { title, defaultItemLabel } = getUiOptions(uiSchema?.items);
     return (

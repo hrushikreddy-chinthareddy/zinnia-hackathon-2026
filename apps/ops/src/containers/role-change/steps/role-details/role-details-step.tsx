@@ -1,5 +1,4 @@
 import { Transition } from '@headlessui/react';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -13,15 +12,11 @@ import TransactionNavigationButtons, {
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import {
-    ActionType,
-    PolicyRole,
-    RoleLabel,
-    Roles,
-} from '@deps/constants/policy';
+import { ActionType, PolicyRole, RoleLabel } from '@deps/constants/policy';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import RoleDetailsComponent from './role-details-component';
 import { validate } from '../../role-change-helper';
@@ -53,6 +48,8 @@ const RoleDetailsStep = ({
         setAddRole,
         removeRole,
         setRemoveRole,
+        removedTpdIndex,
+        setRemovedTpdIndex,
         currentErrors,
         setCurrentErrors,
     } = useRoleChange();
@@ -64,7 +61,8 @@ const RoleDetailsStep = ({
             removeRole,
             t,
             roleLabel,
-            role.toUpperCase() as PartyRole
+            role.toUpperCase() as PartyRole,
+            removedTpdIndex
         );
         if (setCurrentErrors) setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
@@ -72,7 +70,15 @@ const RoleDetailsStep = ({
         } else {
             goToNext();
         }
-    }, [roleData, addRole, removeRole, setCurrentErrors, goToNext, t]);
+    }, [
+        roleData,
+        addRole,
+        removeRole,
+        removedTpdIndex,
+        setCurrentErrors,
+        goToNext,
+        t,
+    ]);
 
     return (
         <WorkflowCard
@@ -98,6 +104,8 @@ const RoleDetailsStep = ({
                         roleLabel={roleLabel}
                         index={idx}
                         policy={policy as any}
+                        removedTpdIndex={removedTpdIndex}
+                        setRemovedTpdIndex={setRemovedTpdIndex}
                     />
                 ))}
 
@@ -120,16 +128,10 @@ const RoleDetailsStep = ({
                 >
                     <NavElement
                         onClick={() => {
-                            if (
-                                role.toUpperCase() !== Roles.THIRDPARTYDESIGNEE
-                            ) {
-                                setAddRole(!addRole),
-                                    !removeRole
-                                        ? setRemoveRole(!removeRole)
-                                        : null;
-                            } else {
-                                setAddRole(!addRole);
-                                setRemoveRole(false);
+                            const newAddRole = !addRole;
+                            setAddRole(newAddRole);
+                            if (role !== PolicyRole.THIRDPARTYDESIGNEE) {
+                                setRemoveRole(true);
                             }
                         }}
                         size={NavElementSize.Small}
@@ -150,6 +152,8 @@ const RoleDetailsStep = ({
                     action={ActionType.Add}
                     index={existingRoleData?.length || 0}
                     policy={policy as any}
+                    removedTpdIndex={removedTpdIndex}
+                    setRemovedTpdIndex={setRemovedTpdIndex}
                 />
             )}
             {Object.keys(currentErrors).map((errorKey) =>

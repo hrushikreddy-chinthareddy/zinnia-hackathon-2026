@@ -19,10 +19,10 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
+import { formatTimestamp } from '@deps/utils/dates';
 
 import { BeneSideSheetStep } from './bene-notification-tab/bene-notification-tab';
 import { BeneNotification } from './transactions-step-additional-data.types';
-import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 
 const getStepStatusText = (
     step: TransformedStep,

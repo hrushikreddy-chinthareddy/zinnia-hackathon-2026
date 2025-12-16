@@ -1,4 +1,3 @@
-import { convertToCamelCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
@@ -10,6 +9,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
+import { convertToCamelCase } from '@deps/utils/strings';
 
 import CallForInformation from './call-for-information';
 import { UpdatedBeneficiaryRecord } from './claims.type';

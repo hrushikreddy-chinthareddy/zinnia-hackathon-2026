@@ -1,19 +1,22 @@
-import { BankDetailList } from '@zinnia/api-types/types/aggregation';
-import { BankAccount } from '@zinnia/api-types/types/sor';
 import { Loader } from '@zinnia/bloom/components';
+import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 
 import AssistiveText, {
     AssistiveTextVariant,
 } from '@deps/components/assistive-text/assistive-text';
 import BankDataCard from '@deps/containers/small-data-card/bank-data/bank-data';
+import { PaymentMethodError } from '@deps/pages/api/aggregation/paymentmethods';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import { BankDetailList } from '@zinnia/api-types/types/aggregation';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
 import { PaymentMethodType } from './types';
 
 type BankDetailsCardsProps = {
     bankDetails: BankAccount[] | BankDetailList;
     bankDetailsError: boolean;
+    bankDetailsErrorDetails: PaymentMethodError | null;
     bankDetailsLoading: boolean;
     paymentBankId?: string;
     handleSelection: (paymentMethod: PaymentMethodType) => void;
@@ -28,6 +31,7 @@ export const BankDetailsCards = ({
     dataTestid,
     handleSelection,
     t,
+    bankDetailsErrorDetails,
 }: BankDetailsCardsProps) => {
     const showBankingDetails =
         !bankDetailsError && !bankDetailsLoading && bankDetails?.length > 0;
@@ -70,7 +74,15 @@ export const BankDetailsCards = ({
                             <Loader />
                         ) : bankDetailsError ? (
                             <AssistiveText
-                                text={t('workflows.paymentStep.getBankError')}
+                                text={
+                                    bankDetailsErrorDetails?.error?.status ===
+                                    HttpStatusCode.NotFound
+                                        ? bankDetailsErrorDetails?.error
+                                              ?.message
+                                        : t(
+                                              'workflows.paymentStep.getBankError'
+                                          )
+                                }
                                 variant={AssistiveTextVariant.Error}
                             />
                         ) : bankDetails?.length > 0 ? (
