@@ -87,7 +87,10 @@ export default function FlicRmdWithdrawalForm() {
                         ? RmdFormType.QCD
                         : RmdFormType.RMD,
             },
-            qcd: prev.qcd ? [...prev.qcd] : [],
+            qcd:
+                rmdFormType === RmdFormType.QCD && prev?.qcd
+                    ? [...prev.qcd]
+                    : [],
         }));
     }, [initialForm, rmdFormType]);
 
@@ -108,16 +111,16 @@ export default function FlicRmdWithdrawalForm() {
                 isFormStateReadOnly={isFormStateReadOnly}
                 configs={jointLifeExpectancyConfigs}
             />
+            <TaxWithholdings
+                isFormStateReadOnly={isFormStateReadOnly}
+                ownerStateOfResidence={ownerStateOfResidence}
+            />
             {shouldStateW4pRender && (
                 <StateW4Form
                     isFormStateReadOnly={isFormStateReadOnly}
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
-            <TaxWithholdings
-                isFormStateReadOnly={isFormStateReadOnly}
-                ownerStateOfResidence={ownerStateOfResidence}
-            />
             <IrsWithholding
                 isFormStateReadOnly={isFormStateReadOnly}
                 signatureFields={irsSignatureConfig}

@@ -1,7 +1,11 @@
 import { createContext, useContext, useState } from 'react';
 
 import { formatSSN } from '@deps/helpers/string.helpers';
-import { DefaultDataEntryTask } from '@deps/models/case/default-case';
+import { Case } from '@deps/models/case/case';
+import {
+    DefaultDataEntryTask,
+    RequestType,
+} from '@deps/models/case/default-case';
 import { UserProfile } from '@deps/models/user-profile';
 import { policyOwner } from '@deps/utils/data';
 import { IdentificationType, Policy } from '@zinnia/api-types/types/sor';
@@ -15,11 +19,13 @@ export const defaultCorrespondenceState = {
     submitFailed: false,
     setSubmitFailed: noop,
     correlationId: '',
+    caseDetails: {} as Case,
+    requestType: RequestType.Ops_Service_Request,
 };
 
 type DefaultCaseContextProps = {
     defaultCaseData: DefaultDataEntryTask;
-    policy: Policy;
+    policy?: Policy;
     user: UserProfile;
     submitFailed: boolean;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,6 +33,8 @@ type DefaultCaseContextProps = {
         React.SetStateAction<DefaultDataEntryTask>
     >;
     correlationId: string;
+    caseDetails?: Case;
+    requestType: RequestType;
 };
 
 export const DefaultCaseContext = createContext<
@@ -70,10 +78,12 @@ const getCaseDetails = (
 };
 type DefaultCaseProviderProps = {
     children: React.ReactNode;
-    policy: Policy;
+    policy?: Policy;
     user: UserProfile;
     correlationId: string;
     taskData: DefaultDataEntryTask;
+    caseDetails?: Case;
+    requestType: RequestType;
 };
 export const DefaultCaseProvider = ({
     children,
@@ -81,9 +91,14 @@ export const DefaultCaseProvider = ({
     user,
     correlationId,
     taskData,
+    caseDetails,
+    requestType,
 }: DefaultCaseProviderProps) => {
     const [defaultCaseData, setDefaultCaseData] =
-        useState<DefaultDataEntryTask>(getCaseDetails(taskData, policy, user));
+        useState<DefaultDataEntryTask>(
+            policy ? getCaseDetails(taskData, policy, user) : taskData
+        );
+
     const [submitFailed, setSubmitFailed] = useState(false);
     return (
         <DefaultCaseContext.Provider
@@ -95,6 +110,8 @@ export const DefaultCaseProvider = ({
                 submitFailed,
                 setSubmitFailed,
                 correlationId,
+                caseDetails,
+                requestType,
             }}
         >
             {children}

@@ -11,7 +11,10 @@ import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
-import { DefaultDataEntryTask } from '@deps/models/case/default-case';
+import {
+    DefaultDataEntryTask,
+    RequestType,
+} from '@deps/models/case/default-case';
 import { ProcessType } from '@deps/models/case/enums';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import { Carrier } from '@deps/models/case/withdrawal/case';
@@ -34,7 +37,6 @@ import {
 } from '@deps/utils/server-logging';
 import { Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
-
 interface ServiceRequestProps extends SegmentTrackedPageProps {
     policy: Policy;
     defaultTask: DefaultDataEntryTask;
@@ -63,9 +65,11 @@ const ServiceRequest = ({
                 user={user}
                 correlationId={correlationId}
                 taskData={defaultTask}
+                requestType={RequestType.Case_Service_Request}
             >
                 <DefaultCaseContainer
                     taskMetadata={taskMetadata}
+                    taskType={TaskType.Default_Case_DataEntry}
                 ></DefaultCaseContainer>
             </DefaultCaseProvider>
         </>

@@ -38,7 +38,10 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
-import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import {
+    validateQcdDetails,
+    validateSignESign,
+} from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getGdmnRmdConfig(t: TFunction) {
     const signaturesConfig: SignatureValidationConfig[] = [
@@ -164,6 +167,14 @@ export default function getGdmnRmdConfig(t: TFunction) {
             t,
             validateDesignationPresent: false,
         });
+
+        const qcd = formProgram?.qcd;
+
+        if (qcd && qcd.length > 0) {
+            const qcdErrors = validateQcdDetails(t, qcd);
+
+            return { ...errors, ...signESignValidate, ...qcdErrors };
+        }
 
         return { ...errors, ...signESignValidate };
     };
