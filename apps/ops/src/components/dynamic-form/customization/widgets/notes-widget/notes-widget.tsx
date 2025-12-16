@@ -95,6 +95,7 @@ export default function NotesWidget(props: WidgetProps) {
         readonly,
         disabled,
         required,
+        name,
     } = props;
     const { setSubmitEnabled } = formContext;
     const [notes, setNotes] = useState(value || []);
@@ -136,7 +137,7 @@ export default function NotesWidget(props: WidgetProps) {
             .then((success) => {
                 if (success) {
                     setNotes(updatedNotes);
-                    setCustomData(notesPayload.data);
+                    setCustomData({ [name]: notesPayload.data });
                     setCurrentNote('');
                 } else {
                     browserLogWarn('updateTask::Error updating task', {
