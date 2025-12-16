@@ -184,26 +184,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                             };
                         }
                     }
-                    const enabledTask = await getFeatureFlagByKey(
-                        FEATURE_FLAG_VARIABLES.TASK_MANAGEMENT,
-                        carrier?.toLowerCase(),
-                        flag,
-                        user.sub,
-                        loggingContext
-                    );
-
-                    if (!enabledTask) {
-                        logWarn('task/:id::feature flag not enabled', {
-                            ...loggingContext,
-                            carrier,
-                        });
-                        return {
-                            redirect: {
-                                destination: '/403',
-                                permanent: false,
-                            },
-                        };
-                    }
                 }
 
                 let [isSaveAsDraftEnabled, isContinueButtonEnabled] =

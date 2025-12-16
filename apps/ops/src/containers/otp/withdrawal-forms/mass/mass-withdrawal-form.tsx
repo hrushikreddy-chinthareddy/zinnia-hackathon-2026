@@ -146,12 +146,7 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
                     />
                 </>
             )}
-            {shouldStateW4pRender && (
-                <StateW4Form
-                    isFormStateReadOnly={isFormStateReadOnly}
-                    w4pSignaturesConfig={w4pSignaturesConfig}
-                />
-            )}
+
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 isMaritalStatusAllowances={
@@ -160,16 +155,23 @@ const MassWithdrawalForm = ({ qualType }: MassWithdrawalFormProps) => {
                 }
                 specifiedView={true}
             />
-            {formSubtype === FormSubtype.FullWithdrawal && (
-                <FormWaivers
-                    config={waiverItemsConfig}
+            {shouldStateW4pRender && (
+                <StateW4Form
                     isFormStateReadOnly={isFormStateReadOnly}
+                    w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
             <IrsWithholding
                 signatureFields={irsSignatureConfig}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
+            {formSubtype === FormSubtype.FullWithdrawal && (
+                <FormWaivers
+                    config={waiverItemsConfig}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
+            )}
+
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}

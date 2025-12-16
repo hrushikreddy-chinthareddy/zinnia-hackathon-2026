@@ -22,6 +22,7 @@ import PolicyDetailsContainer from '@deps/containers/policy-details/policy-detai
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
 import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
+import CallLogs from '@deps/containers/subpages/activity-sub-page/call-logs';
 import { FilterTransactions } from '@deps/containers/subpages/activity-sub-page/filter-transactions';
 import DocumentsSubPage from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import FundsSubPage from '@deps/containers/subpages/funds-sub-page';
@@ -226,11 +227,10 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 }
                 break;
             case 'activity':
-                if (
-                    featureFlags[FEATURE_FLAGS.REVISED_HISTORY_TABLE] &&
-                    slug[1] === 'transactions'
-                ) {
-                    subPageContent = <FilterTransactions />;
+                if (featureFlags[FEATURE_FLAGS.REVISED_HISTORY_TABLE]) {
+                    if (slug[1] === 'transactions')
+                        subPageContent = <FilterTransactions />;
+                    if (slug[1] === 'call-logs') subPageContent = <CallLogs />;
                 } else {
                     subPageContent = <ActivitySubPage />;
                 }

@@ -73,9 +73,7 @@ export const PolicyFinancialsCard = ({ policy }: BasePolicyComponentArgs) => {
         select: (visibility) => buildTransactionCards(policy, t, visibility),
     });
 
-    const qualificationTypeValue = tRaw(
-        `dashboard.search.results.policySummaryCard.${qualificationType?.toLocaleLowerCase()}`
-    );
+    const qualificationTypeValue = tRaw(`enums.${qualificationType}`);
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">

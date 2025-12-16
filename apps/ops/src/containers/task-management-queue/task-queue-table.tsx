@@ -13,11 +13,19 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { NO_ASSIGNEE } from '@deps/hooks/useTaskManagementQueue';
-import { AssignedTask, UnassignedTask } from '@deps/models/case/task-instance';
+import {
+    DEFAULT_SORTING_CONFIG,
+    NO_ASSIGNEE,
+} from '@deps/hooks/useTaskManagementQueue';
+import {
+    AssignedTask,
+    TaskStatus,
+    UnassignedTask,
+} from '@deps/models/case/task-instance';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import styles from '@deps/utils/styles';
 
+import { TaskStatusValues } from './task-management-queue-container';
 import taskManagmentStyles from './task-management-queue.module.css';
 import TaskQueueTableHeader from './task-queue-table-header';
 import TaskQueueTableRow from './task-queue-table-row';
@@ -34,6 +42,8 @@ type TaskQueueTableProps = {
     setTaskDetails: any;
     filters: any;
     attachAssigneesToTasks: any;
+    handleSort?: () => void;
+    sortDirection?: string;
     additionalData: any;
     setErrorMessage: (message: string) => void;
     isOpsManagerView?: boolean;
@@ -56,9 +66,11 @@ const TaskQueueTable = ({
     isLoading,
     showClaimTask,
     getTasks,
+    handleSort,
     additionalData,
     setErrorMessage,
     isOpsManagerView,
+    sortDirection,
     offset,
     limit = 10,
     total,
@@ -92,6 +104,16 @@ const TaskQueueTable = ({
                     (payload.carriers || []).length > 0
                         ? payload.carriers
                         : additionalData?.taskListingParams?.carriers,
+                statuses:
+                    (payload.statuses || []).length > 0
+                        ? payload.statuses
+                        : TaskStatusValues.filter(
+                              (status) =>
+                                  status !== TaskStatus.Canceled &&
+                                  status !== TaskStatus.Completed
+                          ),
+                sortDirection,
+                ...(sortDirection && { sortBy: DEFAULT_SORTING_CONFIG.sortBy }),
             });
 
             getTasks(true, payload, undefined, true);
@@ -150,7 +172,11 @@ const TaskQueueTable = ({
                         : ''
                 }
             >
-                <TaskQueueTableHeader isOpsManagerView={isOpsManagerView} />
+                <TaskQueueTableHeader
+                    isOpsManagerView={isOpsManagerView}
+                    sortDirection={sortDirection}
+                    handleSort={handleSort}
+                />
                 <TableBody>
                     {isLoading && (
                         <TableRow>

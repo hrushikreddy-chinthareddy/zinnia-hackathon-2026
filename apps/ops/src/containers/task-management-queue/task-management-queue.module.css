@@ -1,3 +1,7 @@
+.opsManagerTaskTable {
+    --task-queue-sort-icon-color: #00628b;
+}
+
 .fadedText {
     color: var(--color-base-text-text-secondary);
 }
