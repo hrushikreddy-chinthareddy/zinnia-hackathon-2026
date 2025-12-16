@@ -5,36 +5,33 @@ import {
     TabList,
     TabTrigger,
 } from '@zinnia/bloom/components';
-import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { CSSProperties, FC, PropsWithChildren, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { toTitleCase } from '@deps/utils/strings';
+import { AnalyticsRouteValues } from '@deps/types/constants';
 
-import { AnalyticsTabs } from './types';
+const DEFAULT_TAB = AnalyticsRouteValues.cases;
 
-const DEFAULT_TAB = AnalyticsTabs.ACTIVE_APPLICATIONS;
-
-export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
+export const DashboardTabNav: FC<PropsWithChildren & { tab?: string }> = ({
+    children,
+    tab,
+}) => {
     const router = useRouter();
-    const params = useSearchParams();
-    const tabParam = params.get('tab');
-    const [tabVal, setTabVal] = useState(tabParam || DEFAULT_TAB);
-    const { featureFlags } = useOptimizely();
+    // const params = useSearchParams();
+    // const tabParam = params.get('tab');
+    const [tabVal, setTabVal] = useState(tab || DEFAULT_TAB);
 
     const handleTabChange = (val: string) => {
         setTabVal(val);
-        router.replace(`/dashboard?tab=${val}`, undefined, { shallow: true });
+        router.replace(`/analytics/${val}`, undefined, { shallow: true });
     };
 
-    if (!tabParam) {
-        router.replace(`/analytics?tab=${DEFAULT_TAB}`, undefined, {
-            shallow: true,
-        });
-    }
+    // if (!tabParam) {
+    //     router.replace(`/analytics?tab=${DEFAULT_TAB}`, undefined, {
+    //         shallow: true,
+    //     });
+    // }
     const { t } = useTranslation();
 
     return (
@@ -52,43 +49,23 @@ export const DashboardTabNav: FC<PropsWithChildren> = ({ children }) => {
                 }
                 className="!mb-0 w-full !border-b-0 bg-white "
             >
-                <TabTrigger value={AnalyticsTabs.ACTIVE_APPLICATIONS}>
+                <TabTrigger value={AnalyticsRouteValues.cases}>
                     <Icon
-                        type={IconType.DOCUMENT_TEXT}
+                        type={IconType.BRIEFCASE}
                         width={24}
                         height={24}
                         className="hidden lg:block"
                     />
-                    {toTitleCase('open cases')}
+                    {t('allFields.cases')}
                 </TabTrigger>
-                <TabTrigger value={AnalyticsTabs.CLOSED_TRANSACTIONS}>
+                <TabTrigger value={AnalyticsRouteValues.policies}>
                     <Icon
-                        type={IconType.SHIELD_CHECKMARK}
+                        type={IconType.BRIEFCASE}
                         width={24}
                         height={24}
                         className="hidden lg:block"
                     />
-                    {toTitleCase('closed cases')}
-                </TabTrigger>
-                {featureFlags[FEATURE_FLAGS.DASHBOARD_NIGO_TAB] && (
-                    <TabTrigger value={AnalyticsTabs.NIGO_ANALYSIS}>
-                        <Icon
-                            type={IconType.HEX_EXCLAMATION}
-                            width={24}
-                            height={24}
-                            className="hidden lg:block"
-                        />
-                        {t('caseStats.tabs.issue') ?? ''}
-                    </TabTrigger>
-                )}
-                <TabTrigger value={AnalyticsTabs.TASKS_VOLUME}>
-                    <Icon
-                        type={IconType.CLIPBOARD_LIST}
-                        width={24}
-                        height={24}
-                        className="hidden lg:block"
-                    />
-                    {t('caseStats.tabs.tasks') ?? ''}
+                    Policies
                 </TabTrigger>
             </TabList>
             {children}

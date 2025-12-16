@@ -18,7 +18,8 @@
 
     &.pinned {
         border-bottom-color: var(--color-base-border-border-bold);
-        padding: var(--measure-dimension-padding-2xl);
+        padding: var(--measure-dimension-padding-2xl)
+            var(--measure-dimension-padding-2xl) 0;
         box-shadow: var(--shadow-elevation-elevation-light-sm);
     }
 }
@@ -34,4 +35,8 @@
     &.pinned {
         z-index: 4;
     }
+}
+
+.tabsNav {
+    flex-basis: 100%;
 }
