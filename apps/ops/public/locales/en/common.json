@@ -468,6 +468,18 @@
         "taxes": "Taxes",
         "invalidDateFormat": "Invalid date format. Please use: ##/##/####",
         "selectDateInRange": "Please select a date within range:",
+        "zinniaLiveTransactionActivityTitle": "Self-Serve Transaction Activity",
+        "zinniaLiveTransactionActivityDescription": "Shows the total self-serve transaction activity for roles listed in the filter.",
+        "activityTooltipDescription": "Click a transaction type for more details on counts. Use the breadcrumb above the chart to return to all transaction types.",
+        "illustrationsActivityTitle": "Illustrations Activity",
+        "illustrationsActivityDescription": "Compares illustrations created with those selected for application over time.",
+        "illustrationsActivityTooltip": "This chart compares illustrations created with those selected for application. 'Selected' may be higher than 'Created' because an illustration was created earlier but selected in the displayed timeframe.",
+        "exportToCsv": "Export to CSV",
+        "total": "Total",
+        "to": "to",
+        "date": "Date",
+        "created": "Created",
+        "selected": "Selected",
         "completedTaskTimesTitle": "Median Processing Times",
         "completedTaskTimesDescription": "Median processing times for tasks over a selected time range.",
         "caseType": "Case type",
@@ -8787,15 +8799,6 @@
             "zinniaLiveCaseViews": {
                 "title": "Zinnia Live Top Case Views",
                 "description": "Shows number of case views for selected user groups only."
-            }
-        },
-        "activity": {
-            "zinniaLiveTransactionActivity": {
-                "title": "Self-Serve Transaction Activity",
-                "description": "Shows the total self-serve transaction activity for roles listed in the filter."
-            },
-            "toolTip": {
-                "description": "Click a transaction type for more details on counts. Use the breadcrumb above the chart to return to all transaction types."
             }
         }
     },

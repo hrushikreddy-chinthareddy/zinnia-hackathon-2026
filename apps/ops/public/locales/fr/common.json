@@ -468,6 +468,18 @@
         "taxes": "Impôts",
         "invalidDateFormat": "Format de date invalide. Veuillez utiliser: ##/##/####",
         "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "zinniaLiveTransactionActivityTitle": "Activité des Transactions en Libre-Service",
+        "zinniaLiveTransactionActivityDescription": "Affiche l’activité totale des transactions en libre-service pour les rôles répertoriés dans le filtre.",
+        "activityTooltipDescription": "Cliquez sur un type de transaction pour plus de détails sur les décomptes. Utilisez le fil d’Ariane au-dessus du graphique pour revenir à tous les types de transaction.",
+        "illustrationsActivityTitle": "Activité d'illustrations",
+        "illustrationsActivityDescription": "Compare les illustrations créées avec celles sélectionnées pour l'application au fil du temps.",
+        "illustrationsActivityTooltip": "Ce graphique compare les illustrations créées avec celles sélectionnées pour l'application. « Sélectionnées » peut être supérieur à « Créées » car une illustration a été créée plus tôt mais sélectionnée dans la période affichée.",
+        "exportToCsv": "Exporter au format CSV",
+        "total": "Total",
+        "to": "à",
+        "date": "Date",
+        "created": "Créé",
+        "selected": "Sélectionné",
         "completedTaskTimesTitle": "Temps de traitement médian",
         "completedTaskTimesDescription": "Temps de traitement médian pour les tâches sur une période selectionée.",
         "caseType": "Type de dossier",
@@ -8907,15 +8919,6 @@
             "zinniaLiveCaseViews": {
                 "title": "Top des cas de Zinnia Live",
                 "description": "Affiche le nombre de vues de cas pour les groupes d'utilisateurs sélectionnés uniquement."
-            }
-        },
-        "activity": {
-            "zinniaLiveTransactionActivity": {
-                "title": "Activité des Transactions en Libre-Service",
-                "description": "Affiche l’activité totale des transactions en libre-service pour les rôles répertoriés dans le filtre."
-            },
-            "toolTip": {
-                "description": "Cliquez sur un type de transaction pour plus de détails sur les décomptes. Utilisez le fil d’Ariane au-dessus du graphique pour revenir à tous les types de transaction."
             }
         }
     },
