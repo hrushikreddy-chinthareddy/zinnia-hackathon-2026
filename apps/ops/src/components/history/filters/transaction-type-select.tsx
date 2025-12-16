@@ -1,4 +1,5 @@
 import { FieldSize } from '@zinnia/bloom/components';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { FieldType } from '@deps/components/fields/field';
@@ -12,7 +13,7 @@ import {
     useHistoryFiltersContext,
 } from '@deps/contexts/HistoryFiltersContext';
 
-import { getFilter, getFilterEnumKey, setFilter } from './filter.helpers';
+import { filterEventFilters, getFilterEnumKey } from './filter.helpers';
 import styles from './transaction-type-select.module.css';
 
 export const TransactionTypeSelect = () => {
@@ -24,30 +25,51 @@ export const TransactionTypeSelect = () => {
         ...PeopleFilters,
         ...PolicyFilters,
     };
-    const typeOptions = Object.values(options).map((type) => ({
-        value: type,
-        label: t(`${type}`) || type,
-    }));
-    const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
-    const { eventFilter } = historyFilters;
-    const { subfilterName } = getFilter(eventFilter);
+
+    const typeOptions = Object.values(options)
+        .filter((option) => option !== 'all')
+        .map((type, index) => ({
+            value: type,
+            label: <span id={`${type}-${index}`}>{t(`${type}`) || type}</span>,
+            displayText: t(`${type}`) || type,
+        }));
+    const { setHistoryFilters } = useHistoryFiltersContext();
+
+    const [selections, setSelections] = useState<{ [key: string]: string }>({});
+    const updateSelection = (value: string, displayText: string) => {
+        const newSelections = { ...selections };
+        if (newSelections[value]) {
+            delete newSelections[value];
+        } else {
+            newSelections[value] = displayText;
+        }
+
+        setSelections(newSelections);
+        setHistoryFilters((prevState) => {
+            return {
+                ...prevState,
+                eventFilter: filterEventFilters(
+                    prevState.eventFilter,
+                    getFilterEnumKey(value) as EventFilterKeys,
+                    value
+                ),
+            };
+        });
+    };
 
     return (
         <SelectSimple
             className={styles.selectContainer}
             label={t('byTransactionType') as string}
-            onChange={(filter) => {
-                setFilter(
-                    setHistoryFilters,
-                    getFilterEnumKey(filter) as EventFilterKeys,
-                    filter as EventFilterKeys
-                );
+            onChange={(value, displayText) => {
+                updateSelection(value, displayText);
             }}
             defaultValue={EventFilterKeys.All}
+            isMultiselect
             options={typeOptions}
             size={FieldSize.Small}
             type={FieldType.BaseActive}
-            value={subfilterName ?? EventFilterKeys.All}
+            value={selections}
         />
     );
 };

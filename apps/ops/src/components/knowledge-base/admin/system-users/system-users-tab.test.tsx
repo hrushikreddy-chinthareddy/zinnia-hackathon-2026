@@ -1,5 +1,4 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { UserResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 
 import { DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import {
@@ -7,6 +6,7 @@ import {
     searchUser,
 } from '@deps/queries/api/knowledge-base';
 import { SortBy, SortDirection } from '@deps/types/knowledge-base';
+import { UserResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import SystemUsersTab from './system-users-tab';
 

@@ -1,3 +1,6 @@
+import { TFunction } from 'next-i18next';
+
+import { Charge as TransactionCharge } from '@deps/models/policy-sor-touchups/Transaction';
 import {
     BankAccount,
     FullSurrenderQuoteResponse,
@@ -6,9 +9,6 @@ import {
     Transaction,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
-import { TFunction } from 'next-i18next';
-
-import { Charge as TransactionCharge } from '@deps/models/policy-sor-touchups/Transaction';
 
 import { BaseTransactionSideSheetValues, PayeePaymentDetails } from '../types';
 

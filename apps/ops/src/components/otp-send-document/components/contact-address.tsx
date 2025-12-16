@@ -1,4 +1,3 @@
-import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import React, { useMemo, useState } from 'react';
@@ -10,6 +9,7 @@ import { PartyAddressCard } from '@deps/containers/address-change-container/comp
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { PaperMail } from '@deps/models/case/correspondence';
 import { AllowedRoleTypes } from '@deps/models/case/send-document';
+import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 import DifferentAddress from './different-address';
 
@@ -24,9 +24,7 @@ const ContactCenterAddress = ({
     const { t: addressChangeT } = useTranslation(undefined, {
         keyPrefix: 'addressChange',
     });
-    const { t: contactCenterT } = useTranslation(undefined, {
-        keyPrefix: 'sendDocument.correspondence',
-    });
+    const { t } = useTranslation();
 
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const sideSheet = useSideSheetContext();
@@ -144,7 +142,7 @@ const ContactCenterAddress = ({
             />
         );
         sideSheet.changeSideSheetContent(
-            contactCenterT('mailDetails.sendToDifferentAddress'),
+            t('allFields.sendToDifferentAddress'),
             content
         );
         sideSheet.handleOpen(true);
@@ -175,7 +173,7 @@ const ContactCenterAddress = ({
                     isSelected={selectedAddress === partyCardsData.length}
                 >
                     <div key={partyCardsData.length} className="text-secondary">
-                        + {contactCenterT('mailDetails.sendToDifferentAddress')}
+                        + {t('allFields.sendToDifferentAddress')}
                     </div>
                 </ClickContainer>
             )}

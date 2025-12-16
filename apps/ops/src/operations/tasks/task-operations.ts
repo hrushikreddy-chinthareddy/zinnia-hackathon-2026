@@ -25,9 +25,9 @@ interface TaskItem {
 const loadMockService = async (logCtx: LoggingContext) => {
     if (!isProd()) {
         try {
-            const {
-                mockService,
-            } = require('@deps/jsonschema-mock-service/mock-service');
+            const { mockService } = await import(
+                '@deps/jsonschema-mock-service/mock-service'
+            );
             return mockService;
         } catch (error) {
             logError('Error loading mockService:', { ...logCtx, error });

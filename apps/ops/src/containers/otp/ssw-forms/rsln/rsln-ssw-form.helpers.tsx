@@ -1,5 +1,4 @@
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
@@ -53,158 +52,152 @@ import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdraw
 import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getRslnConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({
+    const formValidation = ({
+        formSignature,
+        formDisbursement,
+        formProgram,
+        formDistribution,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
+
+        const sswType = formProgram?.programSubType?.text || '';
+        const funds = formDistribution?.funds?.filter(
+            (fund) => !!fund.amount.text
+        );
+
+        if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
+            errors['specifyFundsRequired'] = t(
+                'sswProgram.warnings.specifyFundsRequired'
+            );
+        }
+
+        const jointOwnerSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.JointOwner
+        );
+
+        const beneficiarySignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
+        );
+
+        const spouseSignature = formSignature?.signatures?.find(
+            (sigInfo) =>
+                sigInfo?.signType?.text ===
+                SignatureValidationTypeWithdrawal.Spouse
+        );
+
+        if (
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
+            ) {
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
+                );
+            }
+            if (
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
+            ) {
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
+                );
+            }
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSigned &&
+            !jointOwnerSignature?.isSignatureValid &&
+            jointOwnerSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSigned &&
+            !beneficiarySignature?.isSignatureValid &&
+            beneficiarySignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            spouseSignature &&
+            spouseSignature?.isSigned &&
+            !spouseSignature?.isSignatureValid &&
+            spouseSignature?.isSignatureValid !== false
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.IsSignatureValid}`
+            ] = t('formValidation.signatureValidOptionMustBeSelected');
+        }
+
+        if (
+            jointOwnerSignature &&
+            jointOwnerSignature?.isSignatureValid &&
+            !jointOwnerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            beneficiarySignature &&
+            beneficiarySignature?.isSignatureValid &&
+            !beneficiarySignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            spouseSignature &&
+            spouseSignature?.isSignatureValid &&
+            !spouseSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+        const signESignValidate = validateSignESign({
             formSignature,
-            formDisbursement,
-            formProgram,
-            formDistribution,
             formESignatureData,
-        }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
+            t,
+            validateDesignationPresent: false,
+            validateComment: true,
+        });
 
-            const sswType = formProgram?.programSubType?.text || '';
-            const funds = formDistribution?.funds?.filter(
-                (fund) => !!fund.amount.text
-            );
-
-            if (
-                sswType === SSWType.PercentOfAmountValue &&
-                funds?.length === 0
-            ) {
-                errors['specifyFundsRequired'] = t(
-                    'sswProgram.warnings.specifyFundsRequired'
-                );
-            }
-
-            const jointOwnerSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.JointOwner
-            );
-
-            const beneficiarySignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.IrrevocableBeneficiary
-            );
-
-            const spouseSignature = formSignature?.signatures?.find(
-                (sigInfo) =>
-                    sigInfo?.signType?.text ===
-                    SignatureValidationTypeWithdrawal.Spouse
-            );
-
-            if (
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !==
-                        formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t(
-                        'formValidation.accountNumberDoesNotMatch'
-                    );
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !==
-                        formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                        'formValidation.routingNumberDoesNotMatch'
-                    );
-                }
-            }
-
-            if (
-                jointOwnerSignature &&
-                jointOwnerSignature?.isSigned &&
-                !jointOwnerSignature?.isSignatureValid &&
-                jointOwnerSignature?.isSignatureValid !== false
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.IsSignatureValid}`
-                ] = t('formValidation.signatureValidOptionMustBeSelected');
-            }
-
-            if (
-                beneficiarySignature &&
-                beneficiarySignature?.isSigned &&
-                !beneficiarySignature?.isSignatureValid &&
-                beneficiarySignature?.isSignatureValid !== false
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.IsSignatureValid}`
-                ] = t('formValidation.signatureValidOptionMustBeSelected');
-            }
-
-            if (
-                spouseSignature &&
-                spouseSignature?.isSigned &&
-                !spouseSignature?.isSignatureValid &&
-                spouseSignature?.isSignatureValid !== false
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.IsSignatureValid}`
-                ] = t('formValidation.signatureValidOptionMustBeSelected');
-            }
-
-            if (
-                jointOwnerSignature &&
-                jointOwnerSignature?.isSignatureValid &&
-                !jointOwnerSignature?.signatureComment
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.JointOwner}${SignatureFieldNames.SignatureComment}`
-                ] = t('formValidation.signatureCommentMustBePresent');
-            }
-
-            if (
-                beneficiarySignature &&
-                beneficiarySignature?.isSignatureValid &&
-                !beneficiarySignature?.signatureComment
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.IrrevocableBeneficiary}${SignatureFieldNames.SignatureComment}`
-                ] = t('formValidation.signatureCommentMustBePresent');
-            }
-
-            if (
-                spouseSignature &&
-                spouseSignature?.isSignatureValid &&
-                !spouseSignature?.signatureComment
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Spouse}${SignatureFieldNames.SignatureComment}`
-                ] = t('formValidation.signatureCommentMustBePresent');
-            }
-
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                errors[BankingFields.AccountType] = t(
-                    'formValidation.accountTypeMustBeSelected'
-                );
-            }
-            const signESignValidate = validateSignESign({
-                formSignature,
-                formESignatureData,
-                t,
-                validateDesignationPresent: false,
-                validateComment: true,
-            });
-
-            return { ...errors, ...signESignValidate };
-        },
-        [t]
-    );
+        return { ...errors, ...signESignValidate };
+    };
 
     const formPartyConfigs: PartyConfig[] = [
         {

@@ -1,14 +1,4 @@
 import {
-    FullSurrenderRequest,
-    PartialWithdrawalOneTimeRequest,
-} from '@zinnia/api-types/types/bpm';
-import {
-    ArrangementType,
-    LineOfBusiness,
-    Policy,
-} from '@zinnia/api-types/types/sor';
-
-import {
     NewLoanRequestQuery,
     LoanRepaymentOneTimeRequestQuery,
     OneTimePremiumRequestQuery,
@@ -19,6 +9,15 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import {
+    FullSurrenderRequest,
+    PartialWithdrawalOneTimeRequest,
+} from '@zinnia/api-types/types/bpm';
+import {
+    ArrangementType,
+    LineOfBusiness,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import { EventConfig } from './submit-transaction-event-constants';
 

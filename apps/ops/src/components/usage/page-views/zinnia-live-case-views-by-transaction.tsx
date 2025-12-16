@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useTranslation } from 'react-i18next';
 
 import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
@@ -14,10 +12,10 @@ import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filt
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import {
-    startDates,
-    TimeframeFilterOptions,
     toProcessRoleRows,
     top5ProcessesByVisibleRoles,
     toGroupedBarSeriesFromRows,
@@ -26,7 +24,13 @@ import {
 } from './utils';
 import { TotalCount } from '../total-count';
 import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName, ApiRoles } from '../utils';
+import {
+    colors,
+    generateCSVFileName,
+    ApiRoles,
+    startDates,
+    TimeframeFilterOptions,
+} from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({
     title,
@@ -99,10 +103,10 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                     t('usage.pageViews.zinniaLiveCaseViews.description') ?? ''
                 )}
                 data={zinniaLiveCaseViewsByTransactionData?.data || []}
-                csvFileName={generateCSVFileName(
-                    'usage.pageViews.zinniaLiveCaseViews.title',
-                    timerange
-                )}
+                csvFileName={generateCSVFileName({
+                    title: t('usage.pageViews.zinniaLiveCaseViews.title'),
+                    timerange,
+                })}
                 csvFunction={PrepareTop5CaseViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">

@@ -1,5 +1,3 @@
-import { TaxWithholdingType } from '@zinnia/api-types/types/bpm';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 import xss from 'xss';
@@ -27,6 +25,8 @@ import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { TaxWithholdingType } from '@zinnia/api-types/types/bpm';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import {
     Errors,

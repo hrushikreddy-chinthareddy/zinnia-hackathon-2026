@@ -97,10 +97,12 @@ describe('Form selection component', () => {
                 </UserProvider>
             </QueryClientProvider>
         );
-        const continueButton = getByText('continue');
+        const continueButton = getByText('allFields.continue');
         fireEvent.click(continueButton);
         await waitFor(() =>
-            expect(getByText('errors.formId')).toBeInTheDocument()
+            expect(
+                getByText('allFields.selectFormToContinue')
+            ).toBeInTheDocument()
         );
     });
 
@@ -125,6 +127,6 @@ describe('Form selection component', () => {
                 </WorkflowProvider>
             </SendDocumentContext.Provider>
         );
-        expect(getByText('tabs.formSelection')).toBeInTheDocument();
+        expect(getByText('allFields.formSelection')).toBeInTheDocument();
     });
 });

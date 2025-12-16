@@ -1,10 +1,3 @@
-import {
-    Policy,
-    Transaction,
-    Transaction_Payor,
-    TransactionStatus,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { i18n, TFunction } from 'next-i18next';
 
 import {
@@ -17,6 +10,13 @@ import {
 } from '@deps/queries/api/policies';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import {
+    Policy,
+    Transaction,
+    Transaction_Payor,
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { getPaymentMethod } from '../side-sheet-transaction.helpers';
 import { TransactionSideSheetValues } from '../types';

@@ -1,4 +1,3 @@
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -41,8 +40,9 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import ContactDetailsComponent from './contact-details-component';
 import RoleIdentification from './role-identification';
@@ -64,6 +64,8 @@ const RoleDetailsComponent = ({
     action,
     roleData,
     index,
+    removedTpdIndex,
+    setRemovedTpdIndex,
 }: {
     policy: Policy;
     role: PolicyRole;
@@ -71,6 +73,8 @@ const RoleDetailsComponent = ({
     action: any;
     roleData: RoleData;
     index: number;
+    removedTpdIndex?: number | null;
+    setRemovedTpdIndex?: (index: number | null) => void;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'roleChange.roleDetails',
@@ -80,18 +84,11 @@ const RoleDetailsComponent = ({
     );
     const [uploadError, setUploadError] = useState<string | null>(null);
 
-    const {
-        setRoleData,
-        existingRoleData,
-        setAddRole,
-        addRole,
-        removeRole,
-        setRemoveRole,
-        currentErrors,
-        setCurrentErrors,
-    } = useRoleChange();
+    const { setRoleData, setAddRole, removeRole, setRemoveRole } =
+        useRoleChange();
 
     const isReadOnly = !role?.toLowerCase().includes(NEW);
+    const isTpdRole = role === PolicyRole.THIRDPARTYDESIGNEE;
 
     const [showRole, setShowRole] = useState<boolean>(
         role?.toLowerCase().includes(NEW) ? true : false
@@ -157,6 +154,7 @@ const RoleDetailsComponent = ({
     };
 
     const handleFilesChange = async (files: File[]) => {
+        const correlationId = uuidV4();
         // Helper to check if two files are the same
         const isSameFile = (a: File, b: File) =>
             a.name === b.name &&
@@ -223,11 +221,16 @@ const RoleDetailsComponent = ({
                     sourceSystem: SourceSystem.ZL,
                     zinniaLiveCaseId: '',
                     parentCarrierCode: policy.carrierId ?? '',
-                    correlationId: uuidV4() || '',
+                    correlationId: correlationId,
                     docAccessLevel: CLIENT_COPY,
                     docCategory: NEW_BUSINESS,
                     documentType: '',
                 };
+
+                browserLogInfo(
+                    `roleDetailsComponent:: Uploading document: correlationID=${correlationId}`,
+                    metaData
+                );
 
                 try {
                     const response = await uploadDocumentV2(
@@ -250,9 +253,10 @@ const RoleDetailsComponent = ({
                 } catch (error) {
                     setUploadError('Failed to upload file. Please try again.');
                     browserLogError(
-                        'sidesheet-name-change: Error uploading document:',
+                        `roleDetailsComponent:: Error uploading document: correlationID=${correlationId}`,
                         {
                             ...parseErrorInformation(error),
+                            metaData,
                         }
                     );
                 }
@@ -276,10 +280,40 @@ const RoleDetailsComponent = ({
         }));
     };
 
+    const handleAddRole = () => {
+        if (isTpdRole && setRemovedTpdIndex) {
+            if (removedTpdIndex === index) {
+                setRemovedTpdIndex(null);
+                setRemoveRole(false);
+            } else {
+                setRemovedTpdIndex(index);
+                setRemoveRole(true);
+            }
+        } else {
+            setRemoveRole(!removeRole);
+        }
+    };
+
+    const handleCancelRole = () => {
+        setAddRole(true);
+        setRoleData((prevRoleData) => ({
+            ...prevRoleData,
+            signatures: prevRoleData.signatures,
+            ...defaultRoleValue.roleData,
+        }));
+        setRemoveRole(false);
+    };
+
+    const isRoleDisabled =
+        isTpdRole && removedTpdIndex !== null && removedTpdIndex !== index;
+
+    const isRoleChecked = isTpdRole ? removedTpdIndex === index : removeRole;
+
     return (
         <div
             className={
-                removeRole && !role?.toLowerCase().includes(NEW)
+                (isTpdRole && removedTpdIndex !== null) ||
+                (removeRole && !role?.toLowerCase().includes(NEW))
                     ? 'my-4 w-full rounded-sm border-2 bg-gray-50 p-8'
                     : 'my-4 w-full rounded-sm border-2 p-8'
             }
@@ -298,7 +332,14 @@ const RoleDetailsComponent = ({
                 ) : (
                     <div className="flex items-center gap-2">
                         <div className="font-primary text-xl">
-                            <span className={removeRole ? 'text-gray-200' : ''}>
+                            <span
+                                className={
+                                    (isTpdRole && removedTpdIndex !== null) ||
+                                    removeRole
+                                        ? 'text-gray-200'
+                                        : ''
+                                }
+                            >
                                 {roleData?.party?.fullName ||
                                     getPartyName(roleData?.party as any)}
                             </span>
@@ -314,11 +355,7 @@ const RoleDetailsComponent = ({
                                         t('beneficiaryListing.cancel') as string
                                     }
                                     className="default-focus-icons flex justify-start rounded-xl"
-                                    onClick={() => {
-                                        setAddRole(true);
-                                        setRoleData(defaultRoleValue.roleData);
-                                        setRemoveRole(false);
-                                    }}
+                                    onClick={handleCancelRole}
                                 >
                                     <CancelIcon height={24} width={24} />
                                 </button>
@@ -329,17 +366,11 @@ const RoleDetailsComponent = ({
                                 />
                             </label>
                         ) : (
-                            <label
-                                className={`${labelClasses} ${
-                                    role == PolicyRole.THIRDPARTYDESIGNEE
-                                        ? 'pointer-events-none opacity-50 cursor-not-allowed'
-                                        : 'cursor-pointer'
-                                }`}
-                            >
+                            <label className={`${labelClasses}`}>
                                 <InputCheckBox
-                                    isDisabled={false}
-                                    checked={removeRole}
-                                    onChange={() => setRemoveRole(!removeRole)}
+                                    isDisabled={isRoleDisabled}
+                                    checked={isRoleChecked}
+                                    onChange={handleAddRole}
                                 />
                                 <Content
                                     details={'Remove' as string}

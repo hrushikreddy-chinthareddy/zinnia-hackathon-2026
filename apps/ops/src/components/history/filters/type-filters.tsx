@@ -7,10 +7,6 @@ import ChipX from '@deps/components/chip/chip-x';
 import {
     getFilter,
     hasFilter,
-    removeAllFilters,
-    removeEventFilter,
-    setFilter,
-    setYearFilter,
 } from '@deps/components/history/filters/filter.helpers';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import NavElement, {
@@ -22,6 +18,7 @@ import {
     AllFilters,
     EventFilterKeys,
     HistoryFilters,
+    initialFilter,
     PeopleFilters,
     PolicyFilters,
     TransactionFilters,
@@ -72,7 +69,12 @@ export const DismissableFilters = ({
                         t('clearFilter', { filter: yearFilter }) as string
                     }
                     label={yearFilter as string}
-                    onDelete={() => setYearFilter(setHistoryFilters, 'all')}
+                    onDelete={() =>
+                        setHistoryFilters((prevState) => ({
+                            ...prevState,
+                            yearFilter: 'all',
+                        }))
+                    }
                 />
             )}
 
@@ -84,7 +86,12 @@ export const DismissableFilters = ({
                         }) as string
                     }
                     label={filterNameTranslation as string}
-                    onDelete={() => removeEventFilter(setHistoryFilters)}
+                    onDelete={() =>
+                        setHistoryFilters((prevState) => {
+                            const { eventFilter, ...updatedState } = prevState;
+                            return updatedState;
+                        })
+                    }
                 />
             )}
             {hasFilter(subfilterName) && (
@@ -108,7 +115,7 @@ export const DismissableFilters = ({
 
             {hasActiveFilter && (
                 <NavElement
-                    onClick={() => removeAllFilters(setHistoryFilters)}
+                    onClick={() => setHistoryFilters(initialFilter)}
                     size={NavElementSize.Small}
                     type={NavElementType.Button}
                 >
@@ -193,7 +200,12 @@ const Subfilter = () => {
             label={label}
             selectedChip={subfilterName}
             selectionCallback={(filter) => {
-                setFilter(setHistoryFilters, filterName, filter);
+                setHistoryFilters((prevState) => ({
+                    ...prevState,
+                    eventFilter: {
+                        [filterName]: filter,
+                    },
+                }));
             }}
         />
     );
@@ -216,13 +228,18 @@ const TypeFilters = () => {
                 selectedChip={filterName ?? EventFilterKeys.All}
                 selectionCallback={(filter) => {
                     if (filter === EventFilterKeys.All) {
-                        removeEventFilter(setHistoryFilters);
-                    } else
-                        setFilter(
-                            setHistoryFilters,
-                            filter as EventFilterKeys,
-                            EventFilterKeys.All
-                        );
+                        setHistoryFilters((prevState) => {
+                            const { eventFilter, ...updatedState } = prevState;
+                            return updatedState;
+                        });
+                    } else {
+                        setHistoryFilters((prevState) => ({
+                            ...prevState,
+                            eventFilter: {
+                                [filter]: EventFilterKeys.All,
+                            },
+                        }));
+                    }
                 }}
             />
 

@@ -7,6 +7,7 @@ import {
 } from './bene-notification-tab.types';
 import { NotificationItem } from './notification-item';
 
+// eslint-disable-next-line react/display-name
 jest.mock('@deps/components/workflows/document/document-card', () => () => (
     <div>Document Card</div>
 ));

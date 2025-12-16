@@ -1,4 +1,3 @@
-import { RelationshipToParty } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useContext, ChangeEvent } from 'react';
@@ -29,6 +28,7 @@ import {
 import { getVariableQuote } from '@deps/queries/api/policies';
 import { calculateRmd } from '@deps/queries/api/rmd-calculation';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { RelationshipToParty } from '@zinnia/api-types/types/sor';
 
 import { RMDMethodId, frequencyToValue } from './rmd-method';
 

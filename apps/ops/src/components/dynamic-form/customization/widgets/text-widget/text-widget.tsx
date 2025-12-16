@@ -2,7 +2,6 @@ import { getUiOptions, WidgetProps } from '@rjsf/utils';
 import clsx from 'clsx';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
-import cardStyle from '@deps/components/dynamic-form/customization/templates/card-templates/card-template.module.css';
 
 import style from './text-widget.module.css';
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
@@ -21,16 +20,17 @@ export const TextWidget = function (props: WidgetProps) {
         hideError,
     } = props;
 
-    const { inline, prefix, inlinetext, dataType, type } =
+    const { inline, prefix, inlinetext, dataType, type, labelStyle } =
         getUiOptions(uiSchema);
 
     if (inline) {
         return (
-            <div className="grid grid-cols-2 text-md  max-w-screen-sm">
+            <div className="text-md">
                 <div
                     className={clsx(
-                        'text-gray-500 pr-2',
-                        cardStyle[type as string]
+                        'text-gray-500',
+                        style[type as string],
+                        labelStyle && '!text-black'
                     )}
                 >
                     {label}

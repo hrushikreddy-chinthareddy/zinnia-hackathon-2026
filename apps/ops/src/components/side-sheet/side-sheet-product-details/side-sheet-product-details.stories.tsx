@@ -1,6 +1,5 @@
 import '@deps/styles/styles.css';
 import { Meta } from '@storybook/react';
-import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 import {
     getBadgeStatus,
@@ -14,6 +13,7 @@ import {
     SideSheetProvider,
     useSideSheetContext,
 } from '@deps/contexts/SideSheetContext';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 import SideSheetProductDetails from './side-sheet-product-details';
 

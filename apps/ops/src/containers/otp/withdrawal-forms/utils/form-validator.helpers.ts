@@ -6,6 +6,7 @@ import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/sig
 import {
     FormSignature,
     FormValidationErrors,
+    QCD,
 } from '@deps/models/case/withdrawal/case';
 
 interface ValidateSignESignParams {
@@ -15,6 +16,7 @@ interface ValidateSignESignParams {
     validateDesignationPresent?: boolean;
     validateComment?: boolean;
     validateCityProvided?: boolean;
+    validateAnnuitant?: boolean;
 }
 
 // Signature and e-signature validation for withdrawal forms
@@ -25,6 +27,7 @@ export const validateSignESign = ({
     validateDesignationPresent = false,
     validateComment = false,
     validateCityProvided = false,
+    validateAnnuitant = false,
 }: ValidateSignESignParams): FormValidationErrors => {
     const errors = {} as FormValidationErrors;
     const ownerSignature = formSignature?.signatures?.find(
@@ -32,22 +35,61 @@ export const validateSignESign = ({
             sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
     );
 
+    const annuitantSignature = formSignature?.signatures?.find(
+        (sigInfo) =>
+            sigInfo?.signType?.text ===
+            SignatureValidationTypeWithdrawal.Annuitant
+    );
+
     const ownerESignature = formESignatureData?.eSignatures?.find(
         (sigInfo) =>
             sigInfo?.signType?.text === SignatureValidationTypeWithdrawal.Owner
     );
+    // validate owner Signature
+    if (ownerSignature) {
+        // No signature present and e-signature present unselected
+        if (
+            ownerSignature?.isSigned !== false &&
+            !ownerSignature?.isSigned &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+            ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        }
 
-    // No signature present and e-signature present unselected
+        // only where designation is present in helper file
+        if (
+            validateDesignationPresent &&
+            ownerSignature?.isDesignationPresent === null &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
+            ] = t('formValidation.signatureDesignationMustBeSelected');
+        }
+        // No signature comment added
 
-    if (
-        ownerSignature?.isSigned !== false &&
-        !ownerSignature?.isSigned &&
-        !formESignatureData?.isFormESignaturePresent
-    ) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-        ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        if (
+            validateComment &&
+            ownerSignature?.isSignatureValid &&
+            !ownerSignature?.signatureComment
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
+            ] = t('formValidation.signatureCommentMustBePresent');
+        }
+
+        if (
+            validateCityProvided &&
+            ownerSignature?.isSignatureCityProvided?.text === null
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureCityProvided}`
+            ] = t('formValidation.signatureCityOptionMustBeSelected');
+        }
     }
+    // validate owner e-Signature
     if (formESignatureData?.isFormESignaturePresent) {
         if (ownerESignature?.isSigned === null) {
             errors[
@@ -56,36 +98,53 @@ export const validateSignESign = ({
         }
     }
 
-    // only where designation is present in helper file
-    if (
-        validateDesignationPresent &&
-        ownerSignature?.isDesignationPresent === null &&
-        !formESignatureData?.isFormESignaturePresent
-    ) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureDesignation}`
-        ] = t('formValidation.signatureDesignationMustBeSelected');
-    }
-    // No signature comment added
-
-    if (
-        validateComment &&
-        ownerSignature?.isSignatureValid &&
-        !ownerSignature?.signatureComment
-    ) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureComment}`
-        ] = t('formValidation.signatureCommentMustBePresent');
-    }
-
-    if (
-        validateCityProvided &&
-        ownerSignature?.isSignatureCityProvided?.text === null
-    ) {
-        errors[
-            `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignatureCityProvided}`
-        ] = t('formValidation.signatureCityOptionMustBeSelected');
+    // validate annutant Signatuere
+    if (validateAnnuitant && annuitantSignature) {
+        if (
+            annuitantSignature?.isSigned !== false &&
+            !annuitantSignature?.isSigned &&
+            !formESignatureData?.isFormESignaturePresent
+        ) {
+            errors[
+                `${SignatureValidationTypeWithdrawal.Annuitant}${SignatureFieldNames.SignaturePresent}`
+            ] = t('formValidation.signaturePresentOptionMustBeSelected');
+        }
     }
 
     return errors;
+};
+
+export const validateCharityName = (
+    t: TFunction,
+    qcdDetails: QCD[]
+): FormValidationErrors => {
+    const errors = {} as FormValidationErrors;
+    // Push errors for charityName at specific index
+    qcdDetails?.forEach((qcd, id) => {
+        if (!qcd?.charityName || qcd?.charityName.trim() === '') {
+            errors[`charityName_${id}`] = t(
+                'formValidation.charityNameRequired'
+            );
+        }
+    });
+
+    return errors;
+};
+
+export const validateQcdDetails = (
+    t: TFunction,
+    qcdDetails: QCD[]
+): FormValidationErrors => {
+    let qcdErrors = {} as FormValidationErrors;
+
+    const charityNameValidation = validateCharityName(t, qcdDetails);
+
+    const qcdValidation = Object.keys(charityNameValidation).map((key) => ({
+        [key]: charityNameValidation[key],
+    }));
+
+    // Merge all error objects into one
+    qcdErrors = Object.assign({}, ...qcdValidation);
+
+    return qcdErrors;
 };

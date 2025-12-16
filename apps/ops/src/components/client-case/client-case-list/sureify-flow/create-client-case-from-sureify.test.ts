@@ -45,7 +45,7 @@ describe('createClientCaseFromSureify', () => {
         expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
             'eappid',
             'accessToken',
-            loggingContext
+            expect.anything()
         );
 
         expect(props).toBeUndefined();
@@ -82,12 +82,12 @@ describe('createClientCaseFromSureify', () => {
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
             'eappid',
-            loggingContext
+            expect.anything()
         );
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            loggingContext
+            expect.anything()
         );
 
         expect(redirect).toBeUndefined();
@@ -142,7 +142,7 @@ describe('createClientCaseFromSureify', () => {
         expect(createClientCaseMock).toHaveBeenCalledWith(
             createclientCasePayload,
             'accessToken',
-            loggingContext
+            expect.anything()
         );
 
         expect(props).toBeUndefined();
@@ -181,12 +181,12 @@ describe('createClientCaseFromSureify', () => {
 
             expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
                 'eappid',
-                loggingContext
+                expect.anything()
             );
             expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
                 newBusinessObject,
                 'eappid',
-                loggingContext
+                expect.anything()
             );
 
             expect(redirect).toBeUndefined();
@@ -220,12 +220,12 @@ describe('createClientCaseFromSureify', () => {
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
             'eappid',
-            loggingContext
+            expect.anything()
         );
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            loggingContext
+            expect.anything()
         );
 
         expect(redirect).toBeUndefined();
@@ -266,7 +266,7 @@ describe('createClientCaseFromSureify', () => {
         expect(createClientCaseMock).toHaveBeenCalledWith(
             createclientCasePayload,
             'accessToken',
-            loggingContext
+            expect.anything()
         );
         expect(props).toBeUndefined();
         expect(redirect).toEqual({

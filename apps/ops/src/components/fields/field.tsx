@@ -75,6 +75,7 @@ export type FieldProps = {
     suffix?: string;
     message?: string | null;
     selected?: boolean;
+    autoFocus?: boolean;
     size?: FieldSize;
     type?: FieldType;
     variant?: FieldVariant;
@@ -100,6 +101,7 @@ export default function Field({
     className,
     labelClassNames,
     selected,
+    autoFocus,
     type,
     variant,
     handleEnterKey,
@@ -132,6 +134,17 @@ export default function Field({
             document.removeEventListener('keydown', onKeyDown);
         };
     }, []);
+
+    useEffect(() => {
+        if (autoFocus && !disabled && !isReadOnly) {
+            const element = inputRef.current;
+            if (element) {
+                element.focus();
+                const len = element.value?.length ?? 0;
+                element.setSelectionRange(len, len);
+            }
+        }
+    }, [autoFocus, disabled, isReadOnly, inputRef]);
 
     const hoverClass = 'default-hover';
     const focusClass = focus

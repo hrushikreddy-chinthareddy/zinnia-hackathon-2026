@@ -1,7 +1,7 @@
-import { BankAccount } from '@zinnia/api-types/types/sor';
 import { ReactNode } from 'react';
 
 import { ClassNameProps } from '@deps/types/props';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
 import { FooterContent } from '../card-section/card-section';
 import { AdditionalCharge } from '../card-transactions/card-transactions';

@@ -1,10 +1,9 @@
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { PageHead } from '@deps/components/page-title';
 import NewLoanContainer from '@deps/containers/financial-transactions/loan/new-loan/new-loan-container';
 import { NewLoanProvider } from '@deps/contexts/transactions/NewLoanContext';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export interface NewLoanProps {
     policy: Policy;

@@ -107,12 +107,19 @@ function DeliveryMethodDetails({
     return displayNotification(notification);
 }
 
-const getSentNotificationStatusText = (
-    notification: INotification,
-    attemptCount: number,
-    carrier: string,
-    t: TFunction
-) => {
+interface SentNotificationStatusProps {
+    notification: INotification;
+    attemptCount: number;
+    carrier: string;
+    t: TFunction;
+}
+
+const SentNotificationStatus = ({
+    notification,
+    attemptCount,
+    carrier,
+    t,
+}: SentNotificationStatusProps) => {
     const { sendDateTime, deliveryMethod, followupLetters } = notification;
     const beneFollowUpLetter = followupLetters?.find(
         (letter: FollowUpLetter) => letter.letterParty === LetterPartyRoles.BENE
@@ -437,12 +444,13 @@ export const NotificationItem = ({
             {notification.followupStatus === NotificationStatus.Receive &&
                 getReceiveNotificationStatusText(notification, t)}
             {notification.send === true &&
-                notification.followupId !== FollowupId.fifth &&
-                getSentNotificationStatusText(
-                    notification,
-                    attemptCount,
-                    carrier,
-                    t
+                notification.followupId !== FollowupId.fifth && (
+                    <SentNotificationStatus
+                        notification={notification}
+                        attemptCount={attemptCount}
+                        carrier={carrier}
+                        t={t}
+                    />
                 )}
             {notification.followupStatus === NotificationStatus.Resend &&
                 getResendNotificationStatusText(notification, t)}

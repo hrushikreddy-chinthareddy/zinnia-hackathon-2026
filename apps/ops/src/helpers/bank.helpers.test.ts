@@ -1,12 +1,12 @@
 import { cleanup } from '@testing-library/react';
+
+import { LifeCadPartyRoles } from '@deps/models/case/withdrawal/case';
 import {
     BankAccount,
     Party,
     PartyRole,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { LifeCadPartyRoles } from '@deps/models/case/withdrawal/case';
 
 import {
     getBankOptions,

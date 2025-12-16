@@ -4,7 +4,9 @@ export enum UserPermission {
     AllowReadOtpRenewals = 'input_case',
     AllowEditPolicy = 'write_policy',
     AllowReadTasks = 'AllowReadTasks',
+    AllowUIAccess = 'ui_access',
     AllowWriteClientCase = 'write_client_case',
+    AllowOpsCaseReviewRequest = 'write_operations_case_review_request',
     AllowWriteCasePriority = 'write_case_priority',
 }
 

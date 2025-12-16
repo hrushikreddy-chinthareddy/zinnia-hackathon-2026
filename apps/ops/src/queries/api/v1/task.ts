@@ -300,15 +300,6 @@ export const getAssignedTasks = async (): Promise<AssignedTask[] | []> => {
     }
 };
 
-type TaskManagerTaskResponseData = {
-    count: number;
-    limit: number;
-    message: string;
-    offset: number;
-    status: number;
-    total: number;
-    data: (AssignedTask | UnassignedTask)[];
-};
 export const getManagerTasks = async (searchParams?: {
     field?: string;
     value?: string;

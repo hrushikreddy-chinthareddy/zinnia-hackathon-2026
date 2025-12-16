@@ -1,4 +1,3 @@
-import { toTitleCase } from '@zinnia/utils';
 import { useTranslation } from 'next-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
@@ -9,6 +8,7 @@ import NavElement, {
 import { TranslationFiles } from '@deps/config/translations';
 import { NonFinancialTransactions } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AlertExclamationIcon } from '@deps/styles/elements/icons/alert/alert-exclamation.svg';
+import { toTitleCase } from '@deps/utils/strings';
 
 interface WarnStateProps {
     isMailingAddress?: boolean;

@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import * as React from 'react';
@@ -15,6 +14,7 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import BeneficiarySummary from './beneficiary-summary';
 import SummaryOverview from './summary-overview';

@@ -1,10 +1,10 @@
 import { cleanup } from '@testing-library/react';
-import { ArrangementType, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import {
     DOC_CONTEXT,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import { ArrangementType, LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import {
     buildFullSurrenderSubmittedEvent,

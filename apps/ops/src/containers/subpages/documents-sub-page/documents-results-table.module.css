@@ -11,6 +11,10 @@
     }
 }
 
+.actionPadding {
+    padding: var(--measure-dimension-padding-xl);
+}
+
 .noResults:before {
     /* hides the shadow for sticky scrolling since this cell is full width */
     content: none !important;

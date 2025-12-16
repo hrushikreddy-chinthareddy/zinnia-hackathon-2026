@@ -1,11 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    CaseCountGroupByEnum,
-    CaseCountInputFilter,
-    CaseCountOutputLevel1,
-    CaseCountOutputLevel2,
-    CaseCountOutputLevel3,
-} from '@zinnia/api-types/types/analytics';
 import { Button, Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useRef, useState } from 'react';
@@ -23,6 +16,13 @@ import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { GroupByOptions } from '@deps/models/case/enums';
 import { getStatsFromSelectionQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutputLevel1,
+    CaseCountOutputLevel2,
+    CaseCountOutputLevel3,
+} from '@zinnia/api-types/types/analytics';
 
 import { SankeyCellText } from './sankey-cell-text';
 

@@ -1,5 +1,4 @@
 import { TFunction } from 'next-i18next';
-import { useCallback } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
@@ -49,75 +48,69 @@ import { spousalSignatureStateCodes } from '../../withdrawal-forms/flic-withdraw
 import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getPrdnConfig(t: TFunction) {
-    const formValidation = useCallback(
-        ({
-            formSignature,
-            formProgram,
-            formDistribution,
-            formDisbursement,
-            formESignatureData,
-        }: Partial<FormParts> = {}): FormValidationErrors => {
-            const errors = {} as FormValidationErrors;
+    const formValidation = ({
+        formSignature,
+        formProgram,
+        formDistribution,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors = {} as FormValidationErrors;
 
-            const sswType = formProgram?.programSubType?.text || '';
-            const funds = formDistribution?.funds?.filter(
-                (fund) => !!fund.amount.text
+        const sswType = formProgram?.programSubType?.text || '';
+        const funds = formDistribution?.funds?.filter(
+            (fund) => !!fund.amount.text
+        );
+        if (sswType === SSWType.PercentOfAmountValue && funds?.length === 0) {
+            errors['specifyFundsRequired'] = t(
+                'sswProgram.warnings.specifyFundsRequired'
             );
+        }
+
+        if (
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
             if (
-                sswType === SSWType.PercentOfAmountValue &&
-                funds?.length === 0
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].accountNumber !==
+                    formDisbursement?.bank[0].reEnterAccountNumber
             ) {
-                errors['specifyFundsRequired'] = t(
-                    'sswProgram.warnings.specifyFundsRequired'
+                errors[BankingFields.ReEnterAccountNumber] = t(
+                    'formValidation.accountNumberDoesNotMatch'
                 );
             }
-
             if (
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
+                formDisbursement?.bank[0].bankName === '' &&
+                formDisbursement?.bank[0].routingNumber !==
+                    formDisbursement?.bank[0].reEnterBankRoutingNumber
             ) {
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].accountNumber !==
-                        formDisbursement?.bank[0].reEnterAccountNumber
-                ) {
-                    errors[BankingFields.ReEnterAccountNumber] = t(
-                        'formValidation.accountNumberDoesNotMatch'
-                    );
-                }
-                if (
-                    formDisbursement?.bank[0].bankName === '' &&
-                    formDisbursement?.bank[0].routingNumber !==
-                        formDisbursement?.bank[0].reEnterBankRoutingNumber
-                ) {
-                    errors[BankingFields.ReEnterBankRoutingNumber] = t(
-                        'formValidation.routingNumberDoesNotMatch'
-                    );
-                }
-            }
-
-            if (
-                formDisbursement?.bank[0].accountType?.text === '' &&
-                [PaymentMethod.EFT].includes(
-                    formDisbursement?.paymentMethod?.text as PaymentMethod
-                )
-            ) {
-                errors[BankingFields.AccountType] = t(
-                    'formValidation.accountTypeMustBeSelected'
+                errors[BankingFields.ReEnterBankRoutingNumber] = t(
+                    'formValidation.routingNumberDoesNotMatch'
                 );
             }
-            const signESignValidate = validateSignESign({
-                formSignature,
-                formESignatureData,
-                t,
-                validateDesignationPresent: true,
-            });
+        }
 
-            return { ...errors, ...signESignValidate };
-        },
-        [t]
-    );
+        if (
+            formDisbursement?.bank[0].accountType?.text === '' &&
+            [PaymentMethod.EFT].includes(
+                formDisbursement?.paymentMethod?.text as PaymentMethod
+            )
+        ) {
+            errors[BankingFields.AccountType] = t(
+                'formValidation.accountTypeMustBeSelected'
+            );
+        }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: true,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
 
     const formPartyConfigs: PartyConfig[] = [
         {

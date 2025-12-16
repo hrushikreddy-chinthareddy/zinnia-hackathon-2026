@@ -1,6 +1,7 @@
-import { Party } from '@zinnia/api-types/types/sor';
 import { CarrierName } from '@zinnia/bloom/components';
 import { useCallback } from 'react';
+
+import { Party } from '@zinnia/api-types/types/sor';
 
 import useUserCarrier from './useUserCarrier';
 

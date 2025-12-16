@@ -1,4 +1,4 @@
-import { toTitleCase } from '@zinnia/utils';
+import { toTitleCase } from '@deps/utils/strings';
 
 export const sortAlphabetically = (a: any, b: any, key?: string) => {
     let aa: string = '';

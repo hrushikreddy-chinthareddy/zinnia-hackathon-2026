@@ -1,9 +1,3 @@
-import {
-    AccountType,
-    BankAccount,
-    BankAccountBase,
-    BankAccountPurpose,
-} from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import Label, { LabelVariant } from '@deps/components/label/label';
@@ -17,6 +11,12 @@ import {
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { NonFinancialTransactionActions } from '@deps/queries/api/bpm-non-financial';
+import {
+    AccountType,
+    BankAccount,
+    BankAccountBase,
+    BankAccountPurpose,
+} from '@zinnia/api-types/types/sor';
 
 interface BankDetails {
     bankAccount: BankAccountBase;

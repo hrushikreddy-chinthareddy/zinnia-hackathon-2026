@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import NavElement, {

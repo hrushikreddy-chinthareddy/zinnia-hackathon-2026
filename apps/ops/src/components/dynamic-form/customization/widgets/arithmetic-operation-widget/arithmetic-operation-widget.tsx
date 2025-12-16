@@ -28,7 +28,6 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
         id,
         required,
         disabled,
-        rawErrors,
         description,
         errors,
         readonly,
@@ -37,7 +36,6 @@ const ArithmeticOperationWidget = function (props: WidgetProps) {
         onChange,
         title,
         formContext,
-        name,
         placeholder,
     } = props;
 

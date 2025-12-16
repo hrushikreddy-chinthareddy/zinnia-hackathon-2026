@@ -1,4 +1,3 @@
-import { useTranslation } from 'next-i18next';
 import { ChangeEvent } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -9,7 +8,6 @@ import {
     FieldVariant,
 } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
-import { TranslationFiles } from '@deps/config/translations';
 
 export const CustomYesDatePicker = ({
     option,
@@ -32,9 +30,6 @@ export const CustomYesDatePicker = ({
     id: string;
     label: string;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'people.sideSheet.name',
-    });
     return (
         <div className={`-mt-4 items-center`}>
             <Content

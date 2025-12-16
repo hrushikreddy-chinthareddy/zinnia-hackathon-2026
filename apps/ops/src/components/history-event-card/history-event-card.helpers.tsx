@@ -1,13 +1,3 @@
-import {
-    BankAccount,
-    Policy,
-    Party,
-    Reason,
-    Transaction,
-    TransactionStatus,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
-import { toSentenceCase, toTitleCase } from '@zinnia/utils';
 import { I18n, TFunction, i18n } from 'next-i18next';
 
 import { getFullName } from '@deps/helpers/party-info-helpers';
@@ -20,6 +10,16 @@ import { PeopleChangeTransactionTypes } from '@deps/helpers/transaction-types.he
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Payor } from '@deps/models/policy-sor-touchups/Transaction';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { toSentenceCase, toTitleCase } from '@deps/utils/strings';
+import {
+    BankAccount,
+    Policy,
+    Party,
+    Reason,
+    Transaction,
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { GetBankAccount, PeopleChangeType } from './types';
 
@@ -143,7 +143,7 @@ export const getEventTitle = (
     }
 
     return t(
-        `historyEventCard.transactionTypes.${transactionType}`,
+        `enums.${transactionType}`,
         transactionType || DEFAULT_ERROR_STRING
     );
 };

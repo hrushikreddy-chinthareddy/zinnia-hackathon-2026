@@ -1,10 +1,5 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQuery } from '@tanstack/react-query';
-import {
-    SearchRequest,
-    TaxformResponse,
-} from '@zinnia/api-types/types/documents-v3';
-import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -17,10 +12,7 @@ import SelectSimple from '@deps/components/select/select';
 import { SimpleOption } from '@deps/components/select/select.helpers';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
@@ -37,8 +29,11 @@ import {
     DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+import {
+    SearchRequest,
+    TaxformResponse,
+} from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
@@ -79,14 +74,8 @@ const NormalDocs = ({
     isFirstYearSelected: boolean;
 }) => {
     const { t } = useTranslation();
-    const { featureFlagVariables } = useOptimizely();
     const { isZinniaInternalProcessor } = usePermissionsContext();
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        policy?.carrierId?.toLocaleLowerCase() || ''
-    );
+
     const limit = 25;
     const [offset, setOffset] = useState(0);
 
@@ -167,9 +156,9 @@ const NormalDocs = ({
         } = {},
         isLoading,
     } = useQuery({
-        queryKey: ['documentSearch', searchParams, limit, offset, useV3],
+        queryKey: ['documentSearch', searchParams, limit, offset],
         queryFn: () =>
-            getDocumentSearchResultsQuery(searchParams, limit, offset, useV3),
+            getDocumentSearchResultsQuery(searchParams, limit, offset),
         enabled: !!policy?.policyNumber,
     });
 
@@ -198,6 +187,8 @@ const NormalDocs = ({
                     documentType={documentType as DocumentTypeView}
                     policyNumber={policy.policyNumber ?? ''}
                     results={policyDocuments ?? []}
+                    planCode={policy.product?.planCode}
+                    policyDeliveryDate={policy.policyDates?.policyDeliveryDate}
                 />
             )}
             <DocumentResultsPagination
@@ -247,15 +238,7 @@ const TaxDocs = ({
             } else {
                 taxQueryParams.taxYear = Number(yearSelection);
             }
-
-            const useV3 = isFeatureFlagVariableActive(
-                featureFlagVariables,
-                FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-                OptimizelyVariableKey.Clients,
-                policy?.carrierId?.toLocaleLowerCase() || ''
-            );
-
-            const response = await searchTaxForms(taxQueryParams, useV3);
+            const response = await searchTaxForms(taxQueryParams);
             setDocs(response?.data?.items ?? null);
             setTotal(response?.data?.count ?? 0);
             setLoading(false);

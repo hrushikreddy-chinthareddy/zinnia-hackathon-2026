@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "impactedParty": "Partido impactado",
         "transactionBasics": "Conceptos básicos de transacciones",
         "emptySearch": "No se encontraron coincidencias",
         "policyBasics": "Básicos de {{policyNomenclature}}",
@@ -65,6 +66,7 @@
         "currency": "Moneda",
         "fixedCostPeriod": "Período de costo fijo",
         "totalCoverageAmount": "Monto total de cobertura",
+        "deathBenefit": "Beneficio por fallecimiento",
         "cumulativeGrossDeathBenefitAmount": "Monto acumulado bruto del beneficio por fallecimiento",
         "netDeathBenefit": "Beneficio neto estimado por fallecimiento",
         "minimumCoverageAmount": "Monto mínimo de cobertura",
@@ -123,6 +125,11 @@
         "generalLedgerFundCode": "Código contable del fondo",
         "totalFundValue": "Valor total del fondo",
         "guaranteedMinimumInterestRate": "Tasa mínima de interés garantizada",
+        "sex": "Sexo",
+        "genderIdentity": "Identidad de género",
+        "male": "Masculino",
+        "female": "Femenino",
+        "unisex": "Unisex",
         "lineOfBusiness": "Línea de negocio",
         "planName": "Nombre del plan",
         "productType": "Tipo de producto",
@@ -268,6 +275,8 @@
         "marketValueAdjustmentIndicator": "Indicador de ajuste de valor de mercado",
         "marketValueAdjustmentAmount": "Monto del ajuste de valor de mercado",
         "marketValueAdjustmentPeriod": "Período del ajuste de valor de mercado",
+        "marketValueAdjustmentBaseRate": "Tasa base del ajuste de valor de mercado",
+        "marketValueAdjustmentTransactionRate": "Tasa de transacción del ajuste de valor de mercado",
         "requiredMinimumDistribution": "Distribución mínima requerida",
         "priorYearRequiredMinimumDistributionAmount": "Monto de RMD del año previo",
         "totalRequiredMinimumDistributionAnnualAmount": "Monto anual total de RMD",
@@ -456,7 +465,56 @@
         "disbursementAmount": "Montant du décaissement",
         "payeeGrossAmount": "Montant brut du bénéficiaire",
         "timeliness": "Cronología",
-        "taxes": "Impuestos"
+        "taxes": "Impuestos",
+        "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
+        "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
+        "illustrationCalcUnreachableSolveFailed": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "La cláusula adicional solicitada no se incluyó porque no cumple con los requisitos de monto nominal.",
+        "formSelection": "Selección de Formulario",
+        "correspondence": "Correspondencia",
+        "confirm": "Confirmar",
+        "email": "Correo electrónico",
+        "fax": "Fax",
+        "mail": "Correo",
+        "max5Emails": "Se permiten un máximo de 5 correos electrónicos.",
+        "invalidEmail": "Por favor, ingrese una dirección de correo electrónico válida.",
+        "invalidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+        "emailRequired": "Se requiere correo electrónico.",
+        "selectAddressToContinue": "Seleccione una dirección para continuar.",
+        "recipientRequiredToContinue": "Se requiere un destinatario para continuar.",
+        "duplicateRecipientEmail": "El correo electrónico ya existe en la lista.",
+        "emailAddress": "Dirección de correo electrónico",
+        "selectEmailsOnFile": "Seleccionar correos electrónicos archivados",
+        "noRecordsFound": "No se encontraron registros.",
+        "enterEmailInstructions": "Ingrese direcciones de correo electrónico separadas por comas o punto y coma con un máximo de 5.",
+        "addUpTo5Recipients": "Puede agregar hasta 5 destinatarios adicionales.",
+        "selectFormToContinue": "Seleccione un formulario para continuar.",
+        "sendAnotherDocument": "Enviar otro documento",
+        "transaction": "Transacción",
+        "subtype": "Subtipo",
+        "noFormsFound": "No se encontraron formularios.",
+        "goToCase": "Ir al caso",
+        "hasBeen": "han sido",
+        "submitted": "¡Enviado!",
+        "sendChannel_paper_mail": "enviados por correo a",
+        "sendChannel_fax": "enviados por fax a",
+        "sendChannel_email": "enviados por correo electrónico a",
+        "whereShouldDocsBeSent": "¿Adónde deben enviarse los documentos?",
+        "firstNameRequired": "Se requiere el nombre.",
+        "lastNameRequired": "Se requiere el apellido.",
+        "verifyAndSelectAddressToContinue": "Verifique y seleccione la dirección para continuar.",
+        "firstName": "Nombre",
+        "lastName": "Apellido",
+        "continue": "Continuar",
+        "cancel": "Cancelar",
+        "sendToDifferentAddress": "Enviar a una dirección diferente",
+        "formsToUpdate": "Formulario(s) para actualizar",
+        "view": "Ver",
+        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
+        "collapseAll": "Contraer todo",
+        "expandAll": "Expandir todo",
+        "remove": "Eliminar"
     },
     "enums": {
         "LIFE": "Vida",
@@ -730,7 +788,7 @@
         "FundAllocationsChange": "Cambio en la asignación de fondos",
         "FundTransfer": "Transferencia de fondos",
         "GrantorChange": "Cambio de otorgante",
-        "PaymentInitialPremium": "Pago de prima inicial",
+        "PaymentInitialPremium": "Pago de la prima inicial",
         "IdentifierChange": "Cambio de identificador",
         "InitialPremium": "Prima inicial",
         "InterestCredit": "Crédito de intereses",
@@ -741,7 +799,7 @@
         "Lapse": "Vencimiento",
         "LapseAssessment": "Evaluación de vencimiento",
         "LoanAnniversaryTrueUp": "Ajuste anual del préstamo",
-        "LoanRepaymentOneTime": "Reembolso único del préstamo",
+        "LoanRepaymentOneTime": "Pago único del préstamo",
         "MatchBonusVesting": "Consolidación de bonificación correspondiente",
         "MultipleBeneficiaryChange": "Cambio múltiple de beneficiarios",
         "MultipleEmailChange": "Cambio múltiple de correos electrónicos",
@@ -754,9 +812,9 @@
         "PartialWithdrawalOneTime": "Retiro parcial único",
         "PayeeChange": "Cambio de beneficiario de pago",
         "PaymentExpiration": "Vencimiento del pago",
-        "PaymentLoanRepaymentOneTime": "Pago único de reembolso de préstamo",
+        "PaymentLoanRepaymentOneTime": "Pago único del préstamo",
         "PaymentOneTimePremium": "Pago de prima única",
-        "PaymentSystematicLoanRepayment": "Pago sistemático de reembolso de préstamo",
+        "PaymentSystematicLoanRepayment": "Reembolso sistemático de préstamo",
         "PayorChange": "Cambio de pagador",
         "PhoneNumberChange": "Cambio de número telefónico",
         "RateRenewal": "Renovación de tarifa",
@@ -1070,7 +1128,8 @@
             "jointOwnerChange": "Cambio de Copropietario",
             "payorChange": "Cambio de pagador",
             "thirdPartyDesigneeChange": "Cambio de designado por terceros",
-            "nigoSelected": "NIGO seleccionado"
+            "nigoSelected": "NIGO seleccionado",
+            "operationsReview": "Solicitud de revisión de operaciones"
         },
         "navLinks": {
             "accessManagement": {
@@ -1312,7 +1371,9 @@
         "minItems": "Seleccione al menos {{limit}} artículo(s).",
         "patternSsn": "Por favor, introduzca un SSN válido.",
         "maximum": "El campo no debe ser mayor que {{limit}}.",
-        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia."
+        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+        "patternEmail": "Por favor, introduzca un correo electrónico válido.",
+        "minContains": "Al menos {{limit}} válido {{ item}} debe estar presente."
     },
     "beneChange": {
         "tabs": {
@@ -1655,7 +1716,16 @@
             "spouseConsentText": "Si no tiene cónyuge, o si su cónyuge ha fallecido, marque esta casilla.",
             "signatureShouldBePresent": "Debe seleccionarse la opción de firma presente",
             "continue": "Continuar",
-            "leaveTransaction": "Dejar esta transacción"
+            "leaveTransaction": "Dejar esta transacción",
+            "selectOption": "Seleccionar",
+            "trustee": "Fideicomisario",
+            "executor": "Ejecutor",
+            "custodian": "Custodio",
+            "guardian": "Guardián",
+            "attorneyInFact": "Apoderado",
+            "assignee": "Cesionario",
+            "authorizedSignatory": "Firmante autorizado",
+            "na": "NA"
         },
         "summary": {
             "header": "Resumen",
@@ -1843,6 +1913,7 @@
             "custodian": "Custodio",
             "guardian": "Tutor",
             "attorneyInFact": "Abogado en hechos",
+            "authorizedSignatory": "Representante autorizado",
             "assignee": "Asignado",
             "poa": "POA",
             "na": "NA",
@@ -2107,6 +2178,7 @@
         "preview": "Vista previa",
         "rate": "tasa",
         "draft": "Guardar como Borrador",
+        "send": "Enviar",
         "submitPayment": "Enviar pago",
         "successExclamation": "¡Éxito!",
         "total": "Total",
@@ -2325,6 +2397,7 @@
         "assignTaskError": "Error al asignar tarea",
         "unassignTask": "Desasignar Tarea",
         "unassign": "Desasignar",
+        "assign": "Asignar",
         "startTask": "Iniciar Tarea",
         "assignTask": "Asignar Tarea",
         "transaction": "Transacción: {{transactionType}}",
@@ -2410,6 +2483,11 @@
     "caseManagementDashboard": {
         "h1": "Casos",
         "h2": "Resultados de Búsqueda",
+        "loadingMessage": {
+            "gatheringYourResults": "Recopilando tus resultados…",
+            "organizingYourResults": "Organizando tus resultados…",
+            "takingLongerThanUsual": "Esto está tardando más de lo habitual. Intenta ajustar tus filtros."
+        },
         "case": {
             "createdAt": "Creado",
             "updatedAt": "Actualizado",
@@ -2435,6 +2513,7 @@
         "results": "Resultados",
         "refineResults": "Refinar resultados",
         "addFilters": "Agregar filtros",
+        "filters": "Filtros",
         "refineResultsOptions": {
             "carrier": "Operadoras",
             "caseType": "Tipo de caso",
@@ -2460,9 +2539,9 @@
             "assignee": "Cesionario",
             "priority": "Prioridad",
             "selectPriority": "Seleccionar prioridad",
-            "onlyPrioritized": "Seulement priorité",
-            "any": "Tout",
-            "notPrioritized": "Non priorisé"
+            "onlyPrioritized": "Cas prioritaires",
+            "any": "Tous les cas",
+            "notPrioritized": "Cas ordinaires"
         },
         "refineResultsErrors": {
             "caseType": "Por favor, seleccione al menos un tipo de caso",
@@ -2485,9 +2564,9 @@
                 "Renewal": "Renovaciones"
             },
             "escalated": {
-                "true": "Solo priorizado",
-                "false": "No priorizado",
-                "any": "Cualquiera"
+                "onlyPrioritized": "Cas prioritaires",
+                "allCases": "Tous les cas",
+                "notPrioritized": "Cas ordinaires"
             }
         },
         "selectStatus": "Seleccionar estado",
@@ -2518,8 +2597,7 @@
                 }
             },
             "empty": {
-                "title": "No pudimos encontrar un caso que coincida con su búsqueda.",
-                "titleFilters": "No pudimos encontrar un caso que coincida con sus filtros.",
+                "title": "Nada que mostrar.",
                 "paragraph": "No se preocupe, probablemente sea solo un error tipográfico. Verifique su entrada y vuelva a intentarlo.",
                 "action": {
                     "text": "¿Sigue teniendo problemas?",
@@ -2873,9 +2951,23 @@
             "close": "Close",
             "error": "Error",
             "errorMessage": "Error: {{error}}",
-            "successMessage": "Caso ID: {{caseId}} priorizado exitosamente",
+            "errorForbidden": " No tiene permiso para priorizar este caso.",
+            "successMessage": "Caso ID: {{caseId}} ha sido priorizada.",
             "simpleTooltipBody": "Este caso está priorizado.",
             "tooltipBody": "Este caso fue priorizado el {{date}} por {{userName}} para su procesamiento."
+        },
+        "deprioritizeCase": {
+            "title": "De-priorizar Caso",
+            "detailsHeader": "Detalles",
+            "detailsBody": "Un caso depriorizado será movido como un elemento de trabajo para procesamiento normal.",
+            "cancel": "Cancelar",
+            "submit": "Enviar",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Caso ID: {{caseId}} depriorizado exitosamente",
+            "tooltipBody": "Este caso está depriorizado."
         },
         "navDrawer": {
             "topStatus": "Estado Principal",
@@ -3021,7 +3113,8 @@
             "commonTaskIssues": "Problema: Se encontraron uno o más problemas de {{taskType}}.",
             "standardDocumentMatching": "Coincidencia de Documentos",
             "toaNigo": "Revisar Problemas de Transferencia",
-            "applicationReview": "Validar Detalles de la Solicitud"
+            "applicationReview": "Validar Detalles de la Solicitud",
+            "aiIndicatorTooltip": "Datos del formulario extraídos automáticamente mediante IA."
         },
         "processDate": {
             "canceled": "Cancelado el",
@@ -3249,7 +3342,8 @@
                     "married": "Casado",
                     "widowed": "Viudo"
                 },
-                "ssn": "NSS"
+                "ssn": "SSN",
+                "trustDate": "Fecha de confianza"
             },
             "jointOwner": {
                 "title": "Información del Propietario Conjunto"
@@ -3497,14 +3591,15 @@
                     "title": "Firma de la Compañía Cedente",
                     "qualType": "Tipo de calificación",
                     "isQualTypeNotValid": "No se puede determinar el tipo de calificación",
-                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
                     "isSignatureValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "isSignatureAuthorized": "¿Es válida la firma del oficial autorizado?",
                     "isLoaAttached": "¿Está adjunta la carta de aceptación?",
-                    "validOwnerRegType": "Tipo de registro/propietario válido",
+                    "registrationType": "Tipo de registro/propietario válido",
                     "isTitlePresent": "¿Está presente el título?",
                     "loaSignDate": "Fecha de Firma de LOA",
-                    "authPersonSignPresent": "¿Está presente la firma de la persona autorizada?",
+                    "authPersonSignPresent": "La firma de la persona autorizada está presente",
+                    "isCorporateResolutionPresent": "¿Está presente la resolución corporativa?",
+                    "isAuthSignValid": "¿Es válida la firma del oficial autorizado según la resolución corporativa?",
                     "signDate": "Fecha de la firma"
                 },
                 "nonRegTypeReason": {
@@ -3906,7 +4001,8 @@
                 "fboDetails": "Se requieren detalles del FBO",
                 "accountTypeMustBeSelected": "Por favor, elija un tipo de cuenta para proceder con su solicitud.",
                 "participantIdCannotBeSubmitted": "El ID de participante 0000 no se puede enviar",
-                "contractNumberRequired": "Se requiere el número de contrato//BIN número"
+                "contractNumberRequired": "Se requiere el número de contrato//BIN número",
+                "charityNameRequired": "Se requiere el nombre de la organización benéfica"
             },
             "formSubtype": {
                 "formType": "Tipo de formulario",
@@ -4002,76 +4098,6 @@
             "receivedDate": "Fecha de recepción",
             "createdDate": "Fecha de creación",
             "actions": "Acciones"
-        }
-    },
-    "sendDocument": {
-        "tabs": {
-            "formSelection": "Selección de Formulario",
-            "correspondence": "Correspondencia",
-            "confirm": "Confirmar"
-        },
-        "formSelection": {
-            "label": "Seleccione el formulario adecuado que necesita ser actualizado.",
-            "transactionType": "Transacción",
-            "transactionSubType": "Subtipo",
-            "documentsTitle": "Formulario(s) para actualizar",
-            "view": "Ver",
-            "noFormsFound": "No se encontraron formularios",
-            "addNewDocument": "Enviar otro documento"
-        },
-        "correspondence": {
-            "label": "¿Adónde deben enviarse los documentos?",
-            "addAdditionalRecipient": "+ Agregar destinatario adicional",
-            "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
-            "additionalRecipientTooltip": "Puede agregar hasta 5 direcciones de correo electrónico en el campo CC. Use una coma (,), punto y coma (;) o Enter para separarlas.",
-            "emailMessage": "Ingrese direcciones de correo electrónico separadas por comas o punto y coma con un máximo de 5.",
-            "emailWarning": "Puede agregar hasta 5 destinatarios adicionales",
-            "emailLabel": "Seleccionar correos electrónicos archivados",
-            "noEmails": "No se encontraron registros",
-            "email": "Correo electrónico",
-            "ccEmail": "Correos CC",
-            "fax": "Fax",
-            "mail": "Correo",
-            "emailAddress": "Dirección de correo electrónico",
-            "faxNumber": "Número de fax",
-            "mailDetails": {
-                "sendToDifferentAddress": "Enviar a una dirección diferente",
-                "firstName": "Nombre",
-                "lastName": "Apellido",
-                "addressType": "Tipo de dirección"
-            }
-        },
-        "confirm": {
-            "cta": "Ir al caso",
-            "secondaryCta": "Cerrar",
-            "subtitle": {
-                "0": "Los documentos han sido",
-                "1": "y CC'd"
-            },
-            "channel": {
-                "paper_mail": "enviados por correo a",
-                "fax": "enviados por fax a",
-                "email": "enviados por correo electrónico a"
-            },
-            "title": "¡Enviado!"
-        },
-        "formActions": {
-            "continue": "Continuar",
-            "cancel": "Cancelar"
-        },
-        "errors": {
-            "formId": "Seleccione un formulario para continuar.",
-            "recipient": "Se requiere un destinatario para continuar",
-            "inValidDomain": "Solo se permiten correos electrónicos de Zinnia",
-            "mailDetails": "Seleccione una dirección para continuar.",
-            "inValidEmail": "Por favor, ingrese una dirección de correo electrónico válida",
-            "firstName": "Se requiere el nombre",
-            "lastName": "Se requiere el apellido",
-            "address": "Verifique y seleccione la dirección para continuar.",
-            "maxEmails": "Se permiten un máximo de 5 correos electrónicos",
-            "duplicateRecipientEmail": "El correo electrónico ya existe en la lista",
-            "duplicateEmail": "Por favor, asegúrese de que la dirección de correo electrónico sea única entre los campos de Destinatario y CC.",
-            "emailRequired": "Se requiere correo electrónico"
         }
     },
     "contactCenter": {
@@ -4328,6 +4354,10 @@
         "canceledFreeLook": "Vista gratuita cancelada",
         "pndAwaitingFunds": "Esperando fondos",
         "canceledNoPremium": "Sin prima"
+    },
+    "button": {
+        "showLess": "Mostrar menos",
+        "showAll": "mostrar todo"
     },
     "placeHolder": {
         "globalSelectSearch": "Empiece a escribir para encontrar valores..."
@@ -4601,7 +4631,8 @@
                 "policyTimeline": "Cronología de la póliza",
                 "freeLookEndDate": "Fecha de finalización del look gratuito",
                 "policyLength": "Duración de la póliza",
-                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado."
+                "policyLengthTooltip": "La duración de la póliza es exactamente lo que suena: es cuánto tiempo dura la póliza. Algunas pólizas tienen un término fijo (mostrado en número de años) y una fecha de finalización, mientras que otras duran hasta la muerte del asegurado.",
+                "deliveryDate": "Fecha de recepción"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Correo electrónico del agente",
@@ -4947,7 +4978,10 @@
                 "Rider_WDR": "El propietario debe tener entre 18 y 55 años para seleccionar la exención de deducción del propietario.",
                 "Rider_WPR": "Exime el pago de las primas de la póliza si el asegurado queda totalmente discapacitado.",
                 "Rider_WCR": "Exime ciertos cargos de la póliza durante los períodos de incapacidad total del asegurado.",
-                "Rider_OWCR": "Exime los cargos de la póliza si el titular de la póliza queda discapacitado o cumple criterios específicos."
+                "Rider_OWCR": "Exime los cargos de la póliza si el titular de la póliza queda discapacitado o cumple criterios específicos.",
+                "Rider_BONUS": "Aumenta el valor de acumulación del contrato aplicando una bonificación a la prima nueva.",
+                "Rider_GAB": "Activa un ajuste único al final del período GAP para elevar el valor de acumulación hasta el monto GAP garantizado cuando sea necesario.",
+                "Rider_GWB": "Garantiza retiros de por vida de una anualidad, sujeto a los términos del anexo."
             }
         },
         "history": {
@@ -5032,7 +5066,7 @@
                 "oneTimePremium": "Prima única",
                 "original": "Original",
                 "paymentMethod": "Método de pago",
-                "paymentOneTimePremium": "Pago de prima única",
+                "paymentOneTimePremium": "Prima única",
                 "phone": "Teléfono",
                 "phoneNumber": "Número de teléfono",
                 "premiumAutopayDetails": "Detalles de autopago de prima",
@@ -6344,6 +6378,7 @@
         },
         "type": "Tipo",
         "submissionType": "Tipo de envío",
+        "transactionId": "ID de transacción",
         "submissionSource": "Origen de envío",
         "submittedBy": "Presentado por",
         "caseId": "ID del caso principal",
@@ -6988,6 +7023,7 @@
         },
         "additionalActions": {
             "label": "Acciones adicionales",
+            "createAsIsIllustration": "Crear el PDF de la ilustración as-is",
             "serviceRequestForm": "Soumettre une demande de service"
         },
         "transactions": {
@@ -7000,6 +7036,9 @@
             "cancelPolicy": "Cancelar póliza",
             "newDeathClaim": "Nuevo reclamo por muerte",
             "surrender": "Política de rendición"
+        },
+        "requestOperationReview": {
+            "label": "Solicitud de revisión de operaciones"
         }
     },
     "historyEventCard": {
@@ -7026,163 +7065,6 @@
         "surrender": "Entrega",
         "toBanking": "A {{accountType}} terminando en {{lastFour}}",
         "withdrawal": "Retiro",
-        "transactionTypes": {
-            "Activation": "Activación de póliza",
-            "AddOwner": "Agregar propietario",
-            "AddressChange": "Cambio de dirección",
-            "AgentChange": "Cambio de agente",
-            "AnnuitantChange": "Cambio de anualista",
-            "Anniversary": "Aniversario de póliza",
-            "AnnualPolicyRefreshAndRecalculation": "Actualización y recálculo anual de la póliza",
-            "AssigneeChange": "Cambio de cesionario",
-            "BankAccountChange": "Cambio de cuenta bancaria",
-            "BeneficiaryChange": "Cambio de beneficiario",
-            "CalendarProcessing": "Procesamiento de calendario",
-            "CancelNoPremium": "Cancelación sin prima",
-            "ClaimPayout": "Pago de reclamo",
-            "CommunicationPreferenceChange": "Cambio de preferencia de comunicación",
-            "ConversionActivation": "Activación de conversión",
-            "CostOfInsurance": "Costo del seguro",
-            "CoverageCharge": "Cargo por cobertura",
-            "CoverageCredit": "Crédito por cobertura",
-            "DeathClaim": "Reclamo por fallecimiento",
-            "DeliveryDateSetup": "Configuración de fecha de entrega",
-            "Disbursement": "Desembolso",
-            "EmailChange": "Cambio de correo electrónico",
-            "ExistingPartyNameChange": "Cambio de nombre de la parte existente",
-            "ExpenseCharge": "Cargo por gastos",
-            "FaceAmountChange": "Cambio de monto nominal",
-            "FaceAmountDecrease": "Disminución de monto nominal",
-            "FaceAmountIncrease": "Aumento de monto nominal",
-            "FeatureChange": "Cambio de característica",
-            "ForceOut": "Expulsión forzada",
-            "FreeLookExpiration": "Expiración de período de prueba",
-            "FreeLookCancellation": "Cancelación de período de prueba",
-            "FullSurrender": "Entrega total",
-            "FundAllocationsChange": "Las asignaciones de fondos cambian",
-            "FundTransfer": "Transferencia de fondos",
-            "GrantorChange": "Cambio de otorgante",
-            "PaymentInitialPremium": "Pago de prima inicial",
-            "IdentifierChange": "Cambio de identificador",
-            "InitialPremium": "Prima inicial",
-            "InterestCredit": "Crédito por intereses",
-            "InterestCreditLoan": "Crédito por intereses del préstamo",
-            "InterestCreditMatch": "Crédito por intereses combinados",
-            "InterestLoan": "Préstamo de intereses",
-            "Lapse": "Caducidad de póliza",
-            "LapseAssessment": "Evaluación de caducidad",
-            "LoanAnniversaryTrueUp": "Ajuste de aniversario de préstamo",
-            "LoanRepaymentOneTime": "Reembolso único del préstamo",
-            "MatchBonusVesting": "Consolidación de bonificación combinada",
-            "MultipleEmailChange": "Cambio de correo electrónico múltiple",
-            "MultiplePayeeChange": "Cambio de beneficiario múltiple",
-            "MultiplePhoneNumberChange": "Cambio de número de teléfono múltiple",
-            "NewLoan": "Nuevo préstamo",
-            "NotificationOfDeathClaim": "Notificación de reclamo por fallecimiento",
-            "OneTimePremium": "Prima única",
-            "OwnerChange": "Cambio de propietario",
-            "PartialWithdrawalOneTime": "Retiro parcial único",
-            "PayeeChange": "Cambio de beneficiario",
-            "PaymentExpiration": "Vencimiento del pago",
-            "PaymentLoanRepaymentOneTime": "Pago único de reembolso del préstamo",
-            "PaymentOneTimePremium": "Pago único de prima",
-            "PaymentSystematicLoanRepayment": "Pago sistemático de reembolso del préstamo",
-            "PayorChange": "Cambio de pagador",
-            "PhoneNumberChange": "Cambio de número telefónico",
-            "RateRenewal": "Renovación de tarifas",
-            "RemoveOwner": "Eliminar propietario",
-            "Rescission": "Rescisión",
-            "Issuance": "Emisión de póliza",
-            "ValueAdjustment": "Ajuste de valor",
-            "PreferredMailingAddressChange": "Cambio de dirección de correo preferida",
-            "Reinstatement": "Reinstalación de póliza",
-            "ReinstatementApproved": "Reinstalación aprobada",
-            "RequiredMinimumDistributionOneTime": "Distribución mínima requerida una sola vez",
-            "SubsequentPayment": "Pago subsecuente",
-            "SubsequentPremium": "Prima subsecuente",
-            "Sweep": "Barrido",
-            "SystematicLoanRepayment": "Reembolso sistemático del préstamo",
-            "SystematicLoanRepaymentSetup": "Configuración de reembolso sistemático del préstamo",
-            "SystematicPartialWithdrawal": "Retiro parcial sistemático",
-            "SystematicPartialWithdrawalSetup": "Configuración de retiro parcial sistemático",
-            "SystematicProgramUpdate": "Actualización de programa sistemático",
-            "TPDChange": "Cambio de designado de tercera parte",
-            "SystematicRequiredMinimumDistribution": "Actualización sistemática de RMD",
-            "SystematicRequiredMinimumDistributionSetup": "Configuración sistemática de RMD",
-            "SystematicPaymentSetup": "Configuración de pago sistémico",
-            "SystematicAnnuityPayout": "Pago sistemático de anualidades",
-            "SystematicAnnuityPayoutSetup": "Configuración del pago sistemático de anualidades",
-            "UnitExpenseCharge": "Cargo por unidad de gastos",
-            "MultipleBeneficiaryChange": "Cambio de múltiples beneficiarios",
-            "PowerOfAttorneyChange": "Cambio de poder",
-            "TrusteeChange": "Cambio de fideicomisario",
-            "YearBeginningRefreshAndRecalculation": "Actualización y recálculo de inicio de año",
-            "WithdrawnApplication": "Solicitud retirada",
-            "DollarCostAverage": "Promedio del costo en dólares",
-            "ProcessingDate": "Fecha de procesamiento",
-            "ServiceCharge": "Cargo por servicio",
-            "TransferCharge": "Cargo por transferencia",
-            "RiderAddition": "Adición de cláusula adicional",
-            "Annuitization": "Anualización",
-            "AnnuityBenefitReduction": "Reducción de beneficio de anualidad",
-            "Reclassification": "Reclasificación",
-            "FlatExtraChange": "Cambio adicional fijo",
-            "Commutation": "Conmutación",
-            "DividendFeatureCharge": "Cargo por característica de dividendo",
-            "MarketTimerFee": "Cargo por temporizador de mercado",
-            "InterimAnnualProcessing": "Procesamiento anual provisional",
-            "HardshipWithdrawal": "Retiro por dificultad",
-            "HardshipEnd": "Fin de dificultad",
-            "ResetBenefitAmounts": "Restablecer montos de beneficios",
-            "GainLossChargeBack": "Reembolso por ganancia/pérdida",
-            "PeriodicCharge": "Cargo periódico",
-            "DeathBenefitLockIn": "Consolidación del beneficio por fallecimiento",
-            "RatchetLockIn": "Consolidación con trinquete",
-            "GrowthDeathBenefitLockIn": "Consolidación del beneficio por fallecimiento creciente",
-            "DateOfDeath": "Fecha de fallecimiento",
-            "SpousalContinuation": "Continuación conyugal",
-            "BenefitAmountAutoAdjustment": "Ajuste automático del monto del beneficio",
-            "NotificationOfRiderClaimStart": "Notificación del inicio de reclamación del anexo",
-            "LongTermCareBenefitStartStop": "Inicio/fin del beneficio de cuidado a largo plazo",
-            "Dividend": "Dividendo",
-            "DailyRatchet": "Trinquete diario",
-            "AnnuitizationAnniversary": "Aniversario de anualización",
-            "DeclineFeeChange": "Cambio en la tarifa de declinación",
-            "GuaranteedWithdrawalBenefitPaymentLockIn": "Consolidación del pago garantizado de retiro",
-            "ExcessInterestCredit": "Crédito por interés excedente",
-            "LongTermCareWithdrawal": "Retiro por cuidado a largo plazo",
-            "GuaranteedAccumulationBenefitPeriodEnd": "Fin del período de acumulación garantizada",
-            "GuaranteedWithdrawalBenefitInterestAdjustment": "Ajuste de interés por beneficio de retiro garantizado",
-            "InvestmentAdvisorFee": "Tarifa del asesor de inversiones",
-            "PayoutAmountChange": "Cambio en el monto del pago",
-            "AdditionalBenefitStart": "Inicio de beneficio adicional",
-            "AdditionalBenefitEnd": "Fin del beneficio adicional",
-            "RiderActivationAnniversary": "Aniversario de activación del anexo",
-            "AdditionalBenefitRenew": "Renovación de beneficio adicional",
-            "QualifiedPlanChange": "Cambio de plan calificado",
-            "AdvanceAnnuityPayment": "Pago anticipado de anualidad",
-            "PartialCommutation": "Conmutación parcial",
-            "GuaranteedIndexRates": "Tasas indexadas garantizadas",
-            "BailoutRenewal": "Renovación de rescate",
-            "NonLifeAnnuitization": "Anualización no vitalicia",
-            "AdditionalBenefitReCertification": "Recertificación de beneficio adicional",
-            "CostBasisReceived": "Base de costo recibida",
-            "FreeWithdrawalRecalculation": "Recalculo de retiro gratuito",
-            "YearEndGain": "Ganancia de fin de año",
-            "LongTermCareCertificationDate": "Fecha de certificación de cuidado a largo plazo",
-            "QuarterlyProcessing": "Procesamiento trimestral",
-            "BenefitBaseAdjustment": "Ajuste de base de beneficio",
-            "RiderBenefitBaseLockIn": "Consolidación de base de beneficio de anexo",
-            "GuaranteedDeathBenefitRollUpRenew": "Renovación de acumulación del beneficio por fallecimiento garantizado",
-            "GuaranteedWithdrawalBenefitRollUpRenew": "Renovación de acumulación del beneficio de retiro garantizado",
-            "RiderCharge": "Cargo del anexo",
-            "LongTermCareFeeStartStop": "Inicio/fin de tarifa de cuidado a largo plazo",
-            "LongTermCareAssessmentCharge": "Cargo por evaluación de cuidado a largo plazo",
-            "RoleBirthday": "Cumpleaños del titular",
-            "PendingUnclaimedProperty": "Propiedad no reclamada pendiente",
-            "PendingPartialUnclaimedProperty": "Propiedad parcial no reclamada pendiente",
-            "LiquidatedUnclaimedProperty": "Propiedad no reclamada liquidada"
-        },
         "transactionType": "Tipo de transacción",
         "requestDate": "Fecha de solicitud",
         "processDate": "Fecha de proceso",
@@ -7266,7 +7148,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Añadir un filtro"
+                "addFilter": "Añadir un filtro",
+                "addFilters": "Agregar filtros"
             },
             "headers": {
                 "title": "Refinar resultados"
@@ -7806,7 +7689,8 @@
                 "addressChange": "Cambio de Dirección",
                 "call": "Llamar",
                 "formReview": "Revisión del formulario"
-            }
+            },
+            "summaryNigoError": "Envíe con errores y cree una tarea NIGO para que el equipo apropiado le haga seguimiento."
         },
         "formErrors": {
             "caseNotFound": "Caso no encontrado",
@@ -8258,35 +8142,37 @@
         }
     },
     "agentChangeDetail": {
-    "confirmStep": {
-        "title": "¡Entendido!",
-        "subTitle": "Las actualizaciones del agente fueron enviadas.",
-        "cta": "Ir al caso",
-        "secondaryCta": "Volver al inicio",
-        "submitTask": "Enviar"
-    },
-    "summary": {
-        "agentType": "Tipo de agente",
-        "allocation": "Asignación",
-        "externalId": "ID externo",
-        "bpm500Error": "Error BPM 500",
-        "header": "Resumen",
-        "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
-        "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
-        "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
-        "tag": {
-            "new": "Agregado",
-            "none": "Ninguno",
-            "removed": "Eliminado",
-            "updated": "Actualizado"
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Las actualizaciones del agente fueron enviadas.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
         },
-        "validation": "La API de validación está ejecutándose..."
+        "summary": {
+            "agentType": "Tipo de agente",
+            "allocation": "Asignación",
+            "externalId": "ID externo",
+            "bpm500Error": "Error BPM 500",
+            "header": "Resumen",
+            "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
+            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
+            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "tag": {
+                "new": "Agregado",
+                "none": "Ninguno",
+                "removed": "Eliminado",
+                "updated": "Actualizado"
+            },
+            "validation": "La API de validación está ejecutándose..."
+        },
+        "agentDetails": {
+            "allocationErr": "Las asignaciones deben ser iguales al 100%"
+        }
     },
-    "agentDetails": {
-        "allocationErr": "Las asignaciones deben ser iguales al 100%"
-    }
-}
-,
+    "transactionAccordion": {
+        "remove": "Eliminar"
+    },
     "fundAllocation": {
         "submitted": "¡Enviado!",
         "editAllocationNigoSummary1": "Hemos enviado esta solicitud para ",
@@ -8487,7 +8373,7 @@
             "submitTask": "Enviar"
         }
     },
-    "opsReview": {
+    "operationsReview": {
         "confirmStep": {
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Operaciones fue enviada.",
@@ -8583,7 +8469,9 @@
             "no": "No",
             "yes": "Sí"
         },
-        "errors": { "beneDeceased": "Por favor seleccione una opción" }
+        "errors": {
+            "beneDeceased": "Por favor seleccione una opción"
+        }
     },
     "claimsMatchBeneDocument": {
         "confirmStep": {
@@ -8842,9 +8730,7 @@
             "addProductAriaLabel": "Boton para agregar un producto",
             "editIllustration": "Editar ilustración",
             "initialDeathBenefitOption": "Opción de beneficio por muerte inicial",
-            "archive": "Archivar",
-            "unsatisfiedSolveMessage": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
-            "unreachDesiredSolutionMessage": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló."
+            "archive": "Archivar"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",
@@ -8946,10 +8832,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Hola, soy agente virtual. Tenga en cuenta que esta función está actualmente en fase beta.\n¿Cómo puedo ayudarle?",
             "inputPlaceholder": "Pregúntame cualquier cosa",
-            "footerText": "Descargo de responsabilidad: El chat de zinnia puede cometer errores.",
+            "startingMessageBetaPrefix": "Hola, {{name}}",
+            "startingMessageBetaSuffix": "¿Cómo puedo asistirte hoy?",
+            "footerText": "Descargo de responsabilidad: Zinnia AI puede cometer errores.",
             "errorMsg": "Lo siento, no obtuve respuesta. Inténtalo de nuevo más tarde.",
             "send": "Enviar",
             "stop": "Detener",
@@ -8985,7 +8875,7 @@
                     "reasonForSubmittingRequest": "Describa por qué está enviando esta solicitud",
                     "outcomeExpected": "¿Cuál es el resultado que espera lograr?",
                     "smeEmail": "Proporcione el correo electrónico del experto en la materia o del contacto de su equipo con quien puede trabajar el BA.",
-                    "priority": "Prioridad",
+                    "priority": "Prioridad de la solicitud",
                     "requestFrequency": "¿Con qué frecuencia se realiza esta solicitud? (diaria, semanal, mensual, anual)",
                     "requestFrequencyAssistiveText": "Si está solicitando que un proceso manual sea automatizado, nos gustaría entender la frecuencia de ese proceso manual.",
                     "benefitMetrics": "Cualquier métrica sobre cómo este cambio beneficiará a Operaciones",
@@ -9000,7 +8890,13 @@
             "followUpButton": "Haga sus preguntas de seguimiento aquí",
             "definitiveAnswerNotFound": "No encontré una respuesta definitiva en los documentos específicos del cliente. ¿Quieres que revise también la referencia común?",
             "yes": "Sí",
-            "no": "No"
+            "no": "No",
+            "answerMode": "Modo de respuesta",
+            "client": "Cliente",
+            "answerModeOptions": {
+                "short": "Breve y conciso",
+                "long": "Largo y detallado"
+            }
         },
         "documents": {
             "recentlyAdded": "Archivos añadidos recientemente",
@@ -9052,11 +8948,23 @@
             "recentlyModified": "Recientemente modificados",
             "allDocs": "Todos los documentos",
             "recentChat": "Chat reciente",
-            "search": "Buscar",
+            "search": "Buscar chats recientes",
             "noResultsFound": "No se encontraron resultados",
             "noRecentChats": "No hay chats recientes",
             "loadingChats": "Cargando más chats...",
-            "settings": "Configuraciones"
+            "settings": "Configuraciones",
+            "quiz": {
+                "header": "Realizar un cuestionario",
+                "noQuestionsAvailable": "No hay preguntas disponibles para el cuestionario.",
+                "quizPassed": "Felicidades, has aprobado",
+                "quizFailed": "Lo siento, no has alcanzado la puntuación mínima de {{passPercentage}}%",
+                "correctAnswer": "Respuesta correcta",
+                "wrongAnswer": "Respuesta incorrecta",
+                "yourScore": "Has obtenido {{score}} de {{total}}",
+                "readMore": "Lee este documento para obtener más información sobre el tema",
+                "submit": "Enviar",
+                "tryAgain": "Intentar de nuevo"
+            }
         }
     },
     "updateSuitabilityDataEntry": {
@@ -9105,5 +9013,36 @@
         "environment": "Environment",
         "variableSearchPlaceholder": "Buscar variables de funcionalidad...",
         "flagQueueSearchPlaceholder": "Buscar variables de funcionalidad..."
+    },
+    "successErrorSidesheet": {
+        "successTitle": "Éxito",
+        "errorTitle": "Error",
+        "closeButton": "Cerrar"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Agregada",
+            "none": "Ninguna",
+            "removed": "Remota",
+            "updated": "actualizado"
+        },
+        "noSummary": "No hay resumen de transacción disponible.",
+        "primaryBene": "Beneficiario principal",
+        "contingentBene": "Beneficiario contingente",
+        "loading": "La API de validación se está ejecutando...",
+        "successMessage": "¡Se ve bien! Asegúrate de revisar tus participaciones antes de enviarlas.",
+        "errorMessage": "Encontramos un problema al revisar las reglas de esta política. Revisa el error a continuación.",
+        "submitWithErrorsText": "Envíe con errores y cree una tarea NIGO para que el equipo apropiado le haga seguimiento.",
+        "internalServerError": "Error Interno del Servidor",
+        "failedToFetch": "No se pudo obtener el resumen de validación"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "El formulario de detalles del tercero se ha enviado correctamente.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
     }
 }

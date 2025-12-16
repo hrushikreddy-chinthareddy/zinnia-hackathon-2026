@@ -2,10 +2,10 @@ import { TFunction, useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
+import { formatTimestamp } from '@deps/utils/dates';
 
 import { ExceptionView, GroupedExceptions } from './progress-tab-types';
 import Tasks from './tasks';
-import { formatTimestamp } from '../../../../../../../packages/utils/src/dates';
 
 const renderException = (
     exception: ExceptionView,

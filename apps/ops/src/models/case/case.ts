@@ -129,6 +129,7 @@ export enum Processes {
     PhoneNumberChange = 'Phone Change',
     BankChange = 'Bank Info Change',
     CommunicationPreferenceChange = 'Communication Preference Change',
+    // eslint-disable-next-line @typescript-eslint/no-duplicate-enum-values
     SystematicProgramUpdate = 'Systematic Program Update',
     SystematicProgramSetup = 'Systematic Program Setup',
     SetupPayment = 'Setup Payment',
@@ -163,6 +164,7 @@ export enum Statuses {
     Pending = 'IMPEDED',
     Resolved = 'RESOLVED',
     Unresolved = 'UNRESOLVED',
+    All = 'All',
     Issued = 'Issued', // NOTE: API response current returns Titlecase instead of ALLCAPS - MR
 }
 
@@ -331,3 +333,17 @@ export enum AgingTimeRanges {
 
 export type AgingTimeRangesKeys = keyof typeof AgingTimeRanges;
 export type AgingTimeRangesKeysExtended = keyof typeof AgingTimeRanges | 'All';
+
+export enum LOADING_TIME_CONFIG {
+    NO_MESSAGE_THRESHOLD = 500,
+    GATHERING_THRESHOLD = 2000,
+    ORGANIZING_THRESHOLD = 5000,
+}
+const BADGE_EXCLUDED_STATUSES = new Set([
+    Statuses.Completed,
+    Statuses.Canceled,
+]);
+export const shouldShowEscalationBadge = (
+    escalated: boolean,
+    status: Statuses
+): boolean => escalated && !BADGE_EXCLUDED_STATUSES.has(status);

@@ -1,4 +1,3 @@
-import { Party } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
@@ -6,6 +5,7 @@ import { buildFullName } from '@deps/helpers/string.helpers';
 import { SignValidated } from '@deps/models/case/renewal/signature-validation';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { Party } from '@zinnia/api-types/types/sor';
 
 import { getChannel } from './address-change-helpers';
 import {

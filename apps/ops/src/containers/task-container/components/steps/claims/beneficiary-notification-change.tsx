@@ -1,8 +1,6 @@
-import { AddressType } from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'i18next';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
-import DifferentAddress from '@deps/components/otp-send-document/components/different-address';
 import EmailAddress from '@deps/components/otp-send-document/components/email-field';
 import FaxNumber from '@deps/components/otp-send-document/components/fax-field';
 import { TranslationFiles } from '@deps/config/translations';
@@ -10,9 +8,11 @@ import {
     ClaimActionTypes,
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
+import EditAddress from '@deps/containers/death-claim-container/steps/notification-method/edit-address';
 import { AddressTypeAndAddress } from '@deps/containers/small-data-card/address-data/address-data';
+import { AddressType } from '@zinnia/api-types/types/sor';
 
-import { UpdatedBeneficiaryRecord } from './claims.type';
+import { DynamicKey, UpdatedBeneficiaryRecord } from './claims.type';
 
 interface BeneficiaryNotificationChangeProps {
     beneficiary: UpdatedBeneficiaryRecord;
@@ -21,6 +21,7 @@ interface BeneficiaryNotificationChangeProps {
     >;
     task: any;
     setAddressSelected: (addressSelected: boolean) => void;
+    dynamicKey: DynamicKey;
     t: TFunction<TranslationFiles.COMMON, { keyPrefix: string }>;
     readOnly?: boolean;
 }
@@ -30,6 +31,7 @@ function BeneficiaryNotificationChange({
     setBeneficiary,
     task,
     setAddressSelected,
+    dynamicKey,
     t,
     readOnly,
 }: BeneficiaryNotificationChangeProps) {
@@ -74,12 +76,14 @@ function BeneficiaryNotificationChange({
                                 isSideSheet={false}
                             />
                         ) : (
-                            <DifferentAddress
+                            <EditAddress
                                 carrierId={task.carrier ?? ''}
                                 handleClose={handleAddressSubmit}
-                                showName={false}
                                 isCancel={false}
                                 isContainerClass={false}
+                                address={
+                                    beneficiary.notificationPreferences.address
+                                }
                             />
                         )}
                     </div>
@@ -153,7 +157,7 @@ function BeneficiaryNotificationChange({
                     setBeneficiary({
                         ...beneficiary,
                         notificationPreferences: {
-                            ...task?.data?.details?.beneCall?.beneficiary
+                            ...task?.data?.details?.[dynamicKey]?.beneficiary
                                 ?.notificationPreferences,
                             notificationMethod: {
                                 action: ClaimActionTypes.UPDATE,

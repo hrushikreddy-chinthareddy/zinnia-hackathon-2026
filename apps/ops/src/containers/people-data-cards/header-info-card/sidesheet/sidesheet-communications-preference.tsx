@@ -1,14 +1,4 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
-import {
-    CommunicationPreferenceChange,
-    CommunicationPreferenceChangeRequest,
-} from '@zinnia/api-types/types/bpm';
-import {
-    PreferredCommunicationType,
-    Email,
-    Address,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { Label } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -59,6 +49,16 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
+import {
+    CommunicationPreferenceChange,
+    CommunicationPreferenceChangeRequest,
+} from '@zinnia/api-types/types/bpm';
+import {
+    PreferredCommunicationType,
+    Email,
+    Address,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { sortEmailsByType } from '../../email-card/email-card.helpers';
 
@@ -73,7 +73,6 @@ export const SidesheetCommunicationsPreference = ({
     planCode,
     policyNumber,
     policy,
-    setPreferredCommunication,
     emails,
     addresses,
 }: SideSheetCommnunicationPreferenceProps) => {

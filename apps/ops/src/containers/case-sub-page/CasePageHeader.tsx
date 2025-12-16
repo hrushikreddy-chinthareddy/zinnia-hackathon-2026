@@ -1,7 +1,6 @@
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
 import { Badge, BadgeVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
@@ -16,16 +15,28 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { caseProcessingDetails, Statuses } from '@deps/models/case/case';
+import { CaseAction } from '@deps/models/case/enums';
+import { PolicyStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    DropdownClickedEvent,
+    PolicyClickedEvent,
+    SegmentTrackedEventName,
+} from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import PrioritizeCaseSideSheet from './priortizeCaseSideSheet';
+import CaseActionSideSheet from './caseActionsSideSheet';
 import styles from './styles.module.css';
 interface CasePageHeaderProps {
     caseId: string;
@@ -58,14 +69,32 @@ const CasePageHeader = ({
     caseProcessingDetails,
 }: CasePageHeaderProps) => {
     const { t } = useTranslation();
+    const { t: quickLinksT } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'quickActions',
+    });
     const { breadcrumb } = useBreadcrumb();
+    const { featureFlags } = useOptimizely();
     const caseTitle = toSentenceCase(title);
     const sideSheet = useSideSheetContext();
+    const {
+        isAllowOpsCaseReviewRequest,
+        sessionId,
+        partyId: userPartyId,
+    } = usePermissionsContext();
     const [partyData, setPartyData] = useState<partyDataType>({
         firstName: '',
         lastName: '',
         id: '',
     });
+
+    const isCasePrioritizationEnabled =
+        featureFlags[FEATURE_FLAGS.CASE_PRIORITIZATION];
+    const canShowPriorityActions =
+        isCasePrioritizationEnabled &&
+        hasPermissionToPrioritizeCases &&
+        status.toUpperCase() !== Statuses.Canceled &&
+        status.toUpperCase() !== Statuses.Completed;
+
     const prioritizedDate = caseProcessingDetails?.find(
         (d) => d.detailType === detailTypesEnum.ESCALATION
     )?.eventTimeStamp;
@@ -98,13 +127,51 @@ const CasePageHeader = ({
         fetchPartyData();
     }, [caseProcessingDetails]);
 
-    const openSideSheet = () => {
-        const content = <PrioritizeCaseSideSheet caseId={caseId} />;
-        sideSheet.changeSideSheetContent(
-            t('caseOverview.prioritizeCase.title'),
-            content
+    const openSideSheet = useCallback(
+        (action: CaseAction) => {
+            const content = (
+                <CaseActionSideSheet action={action} caseId={caseId} />
+            );
+            sideSheet.changeSideSheetContent(
+                t(`caseOverview.${action}Case.title`),
+                content
+            );
+            sideSheet.handleOpen(true);
+        },
+        [caseId, sideSheet, t]
+    );
+
+    const handleDeprioritize = useCallback(
+        () => openSideSheet(CaseAction.Deprioritize),
+        [openSideSheet]
+    );
+
+    const handlePrioritize = useCallback(
+        () => openSideSheet(CaseAction.Prioritize),
+        [openSideSheet]
+    );
+
+    const trackClick = (linkName: string, linkUrl: string) => {
+        // TODO MG: do we always want to call both of these?
+        segmentAnalyticsTrackEvent<DropdownClickedEvent>(
+            SegmentTrackedEventName.DropdownClicked,
+            {
+                dropdownName: 'Policy Quick Actions',
+                selectedItemName: linkName,
+                authSessionId: sessionId,
+                userId: userPartyId,
+            }
         );
-        sideSheet.handleOpen(true);
+        segmentAnalyticsTrackEvent<PolicyClickedEvent>(
+            SegmentTrackedEventName.PolicyClicked,
+            {
+                linkName,
+                linkUrl,
+                authSessionId: sessionId,
+                userId: userPartyId,
+                caseId,
+            }
+        );
     };
 
     return (
@@ -214,29 +281,53 @@ const CasePageHeader = ({
                 </div>
             </div>
 
-            <div>
-                <MenuContextual
-                    trigger={
-                        <TextButton
-                            label={t(
-                                'caseOverview.prioritizeCase.quickActions'
-                            )}
-                        />
-                    }
-                >
-                    {hasPermissionToPrioritizeCases &&
-                        status.toUpperCase() !== Statuses.Canceled &&
-                        status.toUpperCase() !== Statuses.Completed && (
+            {
+                <div>
+                    <MenuContextual
+                        trigger={
+                            <TextButton
+                                label={t(
+                                    'caseOverview.prioritizeCase.quickActions'
+                                )}
+                            />
+                        }
+                    >
+                        {canShowPriorityActions && (
                             <MenuContextualItem
-                                content={t('caseOverview.prioritizeCase.title')}
-                                onClick={() => {
-                                    openSideSheet();
-                                }}
+                                content={
+                                    escalated
+                                        ? t(
+                                              'caseOverview.deprioritizeCase.title'
+                                          )
+                                        : t('caseOverview.prioritizeCase.title')
+                                }
+                                onClick={
+                                    escalated
+                                        ? handleDeprioritize
+                                        : handlePrioritize
+                                }
                                 type={NavElementType.Button}
                             />
                         )}
-                </MenuContextual>
-            </div>
+                        {isAllowOpsCaseReviewRequest && (
+                            <MenuContextualItem
+                                content={quickLinksT(
+                                    'requestOperationReview.label'
+                                )}
+                                href={`/cases/${caseId}/operations-review`}
+                                onClick={() => {
+                                    trackClick(
+                                        'Raise a Service Request',
+                                        `/cases/${caseId}/operations-review`
+                                    );
+                                }}
+                                type={NavElementType.Link}
+                                openInNewTab={true}
+                            />
+                        )}
+                    </MenuContextual>
+                </div>
+            }
         </div>
     );
 };

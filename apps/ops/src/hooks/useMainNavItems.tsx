@@ -1,8 +1,8 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { NavGroup } from '@xd/xd-components/src/components/Nav/Nav';
 import { IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
+import { NavGroup } from '@deps/components/nav/Nav';
 import { NavElementType } from '@deps/components/nav-element/nav-element';
 import NavLink from '@deps/components/nav-element/nav-link/nav-link';
 import { UserContextMenu } from '@deps/components/user-context-menu/user-context-menu';
@@ -28,6 +28,7 @@ export const useMainNavItems = (): NavGroup[] => {
         hasUsagePermission,
         hasAiAssistantPermissions,
         hasTestHarnessAccess,
+        hasMarketConnectContacts,
     } = usePermissionsContext();
 
     const { user } = useUser();
@@ -225,6 +226,19 @@ export const useMainNavItems = (): NavGroup[] => {
         ),
     };
 
+    const customersLink = {
+        id: '/customers',
+        display: 'Customers',
+        icon: IconType.USER_GROUP,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={'/customers'}
+                onClick={() => handleClick('Customers')}
+            />
+        ),
+    };
+
     const userContextMenu = {
         id: 'userContextMenu',
         display: user?.name || '',
@@ -245,6 +259,7 @@ export const useMainNavItems = (): NavGroup[] => {
         {
             items: [
                 ...(hasHomeExperience && showHomeNavBtn ? [homeLink] : []),
+                ...(hasMarketConnectContacts ? [customersLink] : []),
                 ...(isAllowReadCaseManagement ? [caseLink] : []),
                 ...(isAdvisorsExcel || isAllowReadPolicyAdmin
                     ? [policyLink]

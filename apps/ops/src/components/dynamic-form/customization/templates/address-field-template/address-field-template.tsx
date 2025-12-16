@@ -16,7 +16,9 @@ const widthClass = (width: number) => {
         ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(33%-0.25rem)]'
         : width === 25
         ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(25%-0.25rem)]'
-        : 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(20%-0.25rem)]';
+        : width === 20
+        ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(20%-0.25rem)]'
+        : 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(13%-0.25rem)]';
 };
 
 export default function AddressFieldTemplate({

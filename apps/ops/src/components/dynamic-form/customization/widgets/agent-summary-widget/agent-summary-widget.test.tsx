@@ -49,17 +49,6 @@ jest.mock('react-i18next', () => ({
     }),
 }));
 
-jest.mock(
-    '@xd/utils/dist',
-    () => ({
-        toTitleCase: (str: string) => {
-            if (!str) return '';
-            return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-        },
-    }),
-    { virtual: true }
-);
-
 // Mock components
 jest.mock('@deps/components/banner-alert/banner-alert', () => ({
     __esModule: true,
@@ -1145,6 +1134,7 @@ describe('SummaryWidget', () => {
                 ],
             });
 
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
             const { rerender } = render(<SummaryWidget {...props} />);
 
             await waitFor(() => {

@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { useTranslation } from 'next-i18next';
 
 import Button, {
     ButtonSize,
@@ -22,8 +21,6 @@ const NewSpinnerButton = ({
     text,
     onClick,
 }: SpinnerButtonProps) => {
-    const { t } = useTranslation();
-
     const variant = loading ? ButtonVariant.Inactive : ButtonVariant.Default;
 
     const handleClick = async () => {

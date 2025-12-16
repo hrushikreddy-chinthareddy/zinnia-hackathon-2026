@@ -1,0 +1,29 @@
+.betaBadge {
+    position: relative;
+    background: linear-gradient(
+        to right,
+        rgb(165, 180, 252),
+        rgb(192, 132, 252)
+    );
+}
+
+.betaBadge::after {
+    content: '★';
+    position: absolute;
+    top: -10px;
+    right: -8px;
+    font-size: 16px;
+    color: #ffd700;
+    animation: star-rotate 2s linear infinite;
+    transform-origin: 50% 50%;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes star-rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
