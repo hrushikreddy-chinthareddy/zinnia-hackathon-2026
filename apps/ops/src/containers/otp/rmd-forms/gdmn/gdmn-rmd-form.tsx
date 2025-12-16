@@ -89,7 +89,10 @@ export default function GdmnRmdWithdrawalForm() {
                         ? RmdFormType.QCD
                         : RmdFormType.RMD,
             },
-            qcd: prev.qcd ? [...prev.qcd] : [],
+            qcd:
+                rmdFormType === RmdFormType.QCD && prev.qcd
+                    ? [...prev.qcd]
+                    : [],
         }));
     }, [initialForm, rmdFormType]);
 

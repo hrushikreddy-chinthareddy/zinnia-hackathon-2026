@@ -12,6 +12,7 @@ export enum ValidationMessage {
     OnlyLettersAndNumbers = '^[a-zA-Z0-9]*$',
     LettersNumbersDashUnderscore = '^[a-zA-Z0-9-_]+$',
     InvalidSSN = '^(|[0-9]{9})$',
+    InvalidEmail = '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$',
 }
 
 function transformErrors({ errors, t }: TransformErrorsProps) {
@@ -38,6 +39,9 @@ function transformErrors({ errors, t }: TransformErrorsProps) {
             if (pattern === ValidationMessage.InvalidSSN) {
                 error.message = t('formValidations.patternSsn');
             }
+            if (pattern === ValidationMessage.InvalidEmail) {
+                error.message = t('formValidations.patternEmail');
+            }
         } else if (error.name === 'minLength') {
             error.message = t('formValidations.minLength', {
                 limit: error.params.limit,
@@ -56,6 +60,13 @@ function transformErrors({ errors, t }: TransformErrorsProps) {
             }); // Corrected key
         } else if (error.name === 'if') {
             error.message = '';
+        } else if (error.name === 'contains') {
+            if (error.params.minContains) {
+                error.message = t('formValidations.minContains', {
+                    limit: error.params.minContains,
+                    item: error.property?.split('.')?.filter(Boolean)?.pop(),
+                });
+            }
         }
         return error;
     });
