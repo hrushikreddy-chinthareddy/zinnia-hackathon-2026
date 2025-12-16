@@ -71,6 +71,7 @@ import { Statuses } from '@deps/models/case/case';
 import { ProcessType } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -80,6 +81,10 @@ import {
     getCaseSearchQuery,
     getCasesQuery,
 } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import {
+    checkEmailChangeEligibilityQuery,
+    checkPhoneChangeEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import {
     getPolicyQuery,
@@ -602,6 +607,47 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
         placeholderData: (previousData) => previousData,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
+    const { data: phoneChangeEligibility } = useQuery({
+        queryKey: [
+            'checkPhoneChangeEligibilityQuery',
+            policy.planCode,
+            policy.policyNumber,
+            policy.policyNumber,
+        ],
+        queryFn: () =>
+            checkPhoneChangeEligibilityQuery(
+                policy.planCode as string,
+                policy.policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligiblePhoneChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+    const { data: emailChangeEligibility } = useQuery({
+        queryKey: [
+            'emailChangeEligibility',
+            policy.planCode,
+            policy.policyNumber,
+        ],
+        queryFn: () =>
+            checkEmailChangeEligibilityQuery(
+                policy.planCode as string,
+                policy.policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleEmailChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
 
     const emails = owner?.bestAvailableEmail
         ? [owner?.bestAvailableEmail]
@@ -737,6 +783,9 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
         party: owner?.party,
     });
 
+    const handleEditEmailClick = () => onEditClick(SideSheetViews.EMAIL);
+    const handleEditPhoneClick = () => onEditClick(SideSheetViews.PHONE);
+
     return (
         <QuickViewRoot
             title={t('dashboard.search.results.policySummaryCard.header1')}
@@ -763,10 +812,24 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         label={t('colDefs:owner.email')}
                     />
                     {bestAvailEmail?.isPending && <PendingTag />}
-                    {canEditPolicy && bestAvailEmail && (
+                    {canEditPolicy &&
+                    bestAvailEmail &&
+                    emailChangeEligibility?.isEligibleEmailChange ? (
                         <IconButton
                             aria-describedby="policy-owner-email"
-                            onClick={() => onEditClick(SideSheetViews.EMAIL)}
+                            onClick={handleEditEmailClick}
+                        >
+                            <Icon
+                                type={IconType.EDIT_ALT}
+                                height={16}
+                                width={16}
+                            />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            aria-describedby="policy-owner-email"
+                            onClick={handleEditEmailClick}
+                            disabled={true}
                         >
                             <Icon
                                 type={IconType.EDIT_ALT}
@@ -803,10 +866,24 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         label={contactNumberLabel}
                     />
                     {bestAvailPhone?.isPending && <PendingTag />}
-                    {canEditPolicy && bestAvailPhone && (
+                    {canEditPolicy &&
+                    bestAvailPhone &&
+                    phoneChangeEligibility?.isEligiblePhoneChange ? (
                         <IconButton
                             aria-describedby="policy-owner-phone"
-                            onClick={() => onEditClick(SideSheetViews.PHONE)}
+                            onClick={handleEditPhoneClick}
+                        >
+                            <Icon
+                                type={IconType.EDIT_ALT}
+                                height={16}
+                                width={16}
+                            />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            aria-describedby="policy-owner-phone"
+                            onClick={handleEditPhoneClick}
+                            disabled={true}
                         >
                             <Icon
                                 type={IconType.EDIT_ALT}

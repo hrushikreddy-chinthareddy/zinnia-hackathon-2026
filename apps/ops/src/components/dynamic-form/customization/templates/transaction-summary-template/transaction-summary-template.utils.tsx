@@ -42,12 +42,15 @@ export function getPartyMeta(item: SummaryItem) {
                 .filter(Boolean)
                 .join(' '),
         addressStr: formattedAddress(address),
-        phoneStr: formatPhoneNumberWithCountryCode(phone as EnterprisePhone),
+        phoneStr: phone
+            ? formatPhoneNumberWithCountryCode(phone as EnterprisePhone)
+            : DEFAULT_ERROR_STRING,
         emailStr: formattedEmail(email),
         ssn: formatIdentification(identifications ?? []),
-        gender: party.gender || '-',
-        dob: party.dateOfBirth || '-',
-        relationshipToParty: item.partyRole?.relationshipToParty || '-',
+        gender: party.gender || DEFAULT_ERROR_STRING,
+        dob: party.dateOfBirth || DEFAULT_ERROR_STRING,
+        relationshipToParty:
+            item.partyRole?.relationshipToParty || DEFAULT_ERROR_STRING,
     };
 }
 

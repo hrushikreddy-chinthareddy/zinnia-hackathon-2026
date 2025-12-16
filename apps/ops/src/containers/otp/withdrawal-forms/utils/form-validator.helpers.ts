@@ -6,6 +6,7 @@ import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/sig
 import {
     FormSignature,
     FormValidationErrors,
+    QCD,
 } from '@deps/models/case/withdrawal/case';
 
 interface ValidateSignESignParams {
@@ -111,4 +112,39 @@ export const validateSignESign = ({
     }
 
     return errors;
+};
+
+export const validateCharityName = (
+    t: TFunction,
+    qcdDetails: QCD[]
+): FormValidationErrors => {
+    const errors = {} as FormValidationErrors;
+    // Push errors for charityName at specific index
+    qcdDetails?.forEach((qcd, id) => {
+        if (!qcd?.charityName || qcd?.charityName.trim() === '') {
+            errors[`charityName_${id}`] = t(
+                'formValidation.charityNameRequired'
+            );
+        }
+    });
+
+    return errors;
+};
+
+export const validateQcdDetails = (
+    t: TFunction,
+    qcdDetails: QCD[]
+): FormValidationErrors => {
+    let qcdErrors = {} as FormValidationErrors;
+
+    const charityNameValidation = validateCharityName(t, qcdDetails);
+
+    const qcdValidation = Object.keys(charityNameValidation).map((key) => ({
+        [key]: charityNameValidation[key],
+    }));
+
+    // Merge all error objects into one
+    qcdErrors = Object.assign({}, ...qcdValidation);
+
+    return qcdErrors;
 };

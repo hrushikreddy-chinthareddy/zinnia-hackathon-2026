@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useState, useEffect, useCallback } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { TaskStatusValues } from '@deps/containers/task-management-queue/task-management-queue-container';
 import { MessageType } from '@deps/models/case/task';
 import {
     AssignedTask,
@@ -53,6 +54,11 @@ export const getUserNameFromEmail = (email: string): string => {
             )
             ?.join(' ') || ''
     );
+};
+
+export const DEFAULT_SORTING_CONFIG = {
+    sortDirection: 'desc',
+    sortBy: 'createdAt',
 };
 
 const useTaskManagementQueue = ({
@@ -236,6 +242,12 @@ const useTaskManagementQueue = ({
         if (additionalData && additionalData.taskListingParams) {
             const searchParams = {
                 ...additionalData.taskListingParams,
+                statuses: TaskStatusValues.filter(
+                    (status) =>
+                        status !== TaskStatus.Canceled &&
+                        status !== TaskStatus.Completed
+                ),
+                ...DEFAULT_SORTING_CONFIG,
             };
             getTasks(true, searchParams);
         } else {

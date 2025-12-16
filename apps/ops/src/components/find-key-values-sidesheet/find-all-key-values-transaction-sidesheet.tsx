@@ -2,6 +2,8 @@ import { SideSheet } from '@zinnia/bloom/components';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { toTitleCase } from '@deps/helpers/string.helpers';
+import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
 import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
@@ -32,14 +34,21 @@ export const FindAllKeyValuesTransactionSidesheet = ({
             trigger={null}
             header={
                 <span className="typography-desktop-headline-2-d">
-                    {t('label.transactionDetails')}
+                    {toTitleCase(
+                        t(
+                            `enums.${transaction.transactionType}`,
+                            transaction.transactionType ?? ''
+                        ) ?? ''
+                    )}
                 </span>
             }
             open={open}
             onOpenChange={onOpenChange}
             preventCloseOnOutsideClick={false}
         >
-            <TransactionSidesheetContent transaction={transaction} />
+            <TreeStateProvider initialTreeState={Collapse}>
+                <TransactionSidesheetContent transaction={transaction} />
+            </TreeStateProvider>
         </SideSheet>
     );
 };
