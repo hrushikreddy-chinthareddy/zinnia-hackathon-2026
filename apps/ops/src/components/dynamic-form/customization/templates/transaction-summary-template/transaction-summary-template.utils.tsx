@@ -6,6 +6,7 @@ import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
+import { getFullName } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
@@ -167,6 +168,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
         const cleanedParty = uiParty
             ? {
                   ...uiParty,
+                  fullName: getFullName(uiParty),
                   addresses: cleanAddresses(uiParty.addresses),
                   emails: cleanEmails(uiParty.emails),
                   phones: cleanPhones(uiParty.phones),

@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 import { Action } from '@deps/constants/policy';
+import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
     MatchingCase,
     PotentialMatches,
@@ -101,6 +102,15 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         phones: cleanPhones(src.phones),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
+        fullName: getFullName(src),
+        startDate:
+            requestType === Action.ADD || requestType === Action.UPDATE
+                ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                : null,
+        endDate:
+            requestType === Action.DELETE
+                ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                : null,
     };
 
     const partyId =
