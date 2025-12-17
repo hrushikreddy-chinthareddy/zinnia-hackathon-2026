@@ -799,6 +799,92 @@ paths:
           description: Auth service timeout after 2.0s
         '505':
           description: FGA service unreachable
+  /analytics/v1/dashboard/user_illustration_activity_count:
+    post:
+      summary: User Illustration Activity Count
+      description: Get the quantity of Illustrations activities performed by users.
+      operationId: user_illustration_activity_count_analytics_v1_dashboard_user_illustration_activity_count_post
+      parameters:
+        - name: env_space
+          in: query
+          required: false
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIllustrationActivityInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserIllustrationActivityOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
+  /{env_space}/analytics/v1/dashboard/user_illustration_activity_count:
+    post:
+      summary: User Illustration Activity Count
+      description: Get the quantity of Illustrations activities performed by users.
+      operationId: user_illustration_activity_count__env_space__analytics_v1_dashboard_user_illustration_activity_count_post
+      parameters:
+        - name: env_space
+          in: path
+          required: true
+          schema:
+            type: string
+            title: Env Space
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserIllustrationActivityInput'
+      responses:
+        '200':
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserIllustrationActivityOutput'
+        '401':
+          description: Authentication failed
+        '403':
+          description: Access denied
+        '422':
+          description: Validation Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HTTPValidationError'
+        '500':
+          description: Internal Server Error
+        '502':
+          description: Auth service unreachable
+        '504':
+          description: Auth service timeout after 2.0s
+        '505':
+          description: FGA service unreachable
 components:
   schemas:
     CaseCountGroupByEnum:
@@ -2317,6 +2403,169 @@ components:
         - name
         - count
       title: UserTransactionOutputLevel3
+    UserIllustrationActivityGroupByEnum:
+      type: string
+      enum:
+        - activityType
+        - carrier
+        - productName
+        - productType
+        - activityDay
+      title: UserIllustrationActivityGroupByEnum
+    UserIllustrationActivityInput:
+      properties:
+        filter:
+          $ref: '#/components/schemas/UserIllustrationActivityInputFilter'
+        groupBy:
+          items:
+            $ref: '#/components/schemas/UserIllustrationActivityGroupByEnum'
+          type: array
+          maxItems: 3
+          minItems: 1
+          title: Groupby
+          example:
+            - activityType
+      type: object
+      required:
+        - filter
+        - groupBy
+      title: UserIllustrationActivityInput
+    UserIllustrationActivityInputFilter:
+      properties:
+        activityType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Activitytype
+          example:
+            - Created
+        carrier:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Carrier
+          example:
+            - FNWL
+        productName:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Productname
+          example:
+            - Term
+        productType:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: Producttype
+          example:
+            - TERM
+        dateStart:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Datestart
+          example: '2025-11-01T00:00:00.000Z'
+        dateEnd:
+          anyOf:
+            - type: string
+              format: date-time
+          title: Dateend
+          example: '2025-11-12T00:00:00.000Z'
+      type: object
+      title: UserIllustrationActivityInputFilter
+    UserIllustrationActivityOutput:
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/UserIllustrationActivityOutputLevel1'
+          type: array
+          title: Data
+        totalElements:
+          type: integer
+          title: Totalelements
+          example: 123
+      type: object
+      required:
+        - data
+        - totalElements
+      title: UserIllustrationActivityOutput
+    UserIllustrationActivityOutputLevel1:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: carrier
+        name:
+          type: string
+          title: Name
+          example: FNWL
+        count:
+          type: integer
+          title: Count
+          example: 18
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/UserIllustrationActivityOutputLevel2'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserIllustrationActivityOutputLevel1
+    UserIllustrationActivityOutputLevel2:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: activityType
+        name:
+          type: string
+          title: Name
+          example: Created
+        count:
+          type: integer
+          title: Count
+          example: 24
+        values:
+          anyOf:
+            - items:
+                $ref: '#/components/schemas/UserIllustrationActivityOutputLevel3'
+              type: array
+          title: Values
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserIllustrationActivityOutputLevel2
+    UserIllustrationActivityOutputLevel3:
+      properties:
+        key:
+          type: string
+          title: Key
+          example: productName
+        name:
+          type: string
+          title: Name
+          example: Term
+        count:
+          type: integer
+          title: Count
+          example: 35
+      type: object
+      required:
+        - key
+        - name
+        - count
+      title: UserIllustrationActivityOutputLevel3
     UserViewsGroupByEnum:
       type: string
       enum:

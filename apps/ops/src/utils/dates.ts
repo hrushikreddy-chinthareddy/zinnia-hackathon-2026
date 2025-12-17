@@ -1,7 +1,9 @@
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import isBetween from 'dayjs/plugin/isBetween';
 import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
+import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ERROR_STRING } from './strings';
 
@@ -13,6 +15,7 @@ export const ASIA_IN_LOCAL = 'en-IN';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.extend(isBetween);
+dayjs.extend(duration);
 
 /**
  *
@@ -201,3 +204,53 @@ export function formatDateTime(isoString: string): string {
 
     return formatted;
 }
+
+/**
+ * Converts a duration expressed in seconds into a human-readable string
+ * @param duration Duration in seconds.
+ * @returns A normalized, human-readable duration string.
+ */
+export const formatTaskTime = (
+    duration: number | string,
+    t: TFunction
+): string => {
+    const seconds =
+        typeof duration === 'string' ? Number(duration.trim()) : duration;
+    const dur = dayjs.duration(seconds, 'seconds');
+
+    const format = (value: number, unit: string): string => {
+        const rounded = Number(value.toFixed(1));
+        const displayValue = Number.isInteger(rounded)
+            ? rounded.toFixed(0)
+            : rounded.toString();
+        const unitLabel = rounded === 1 ? unit : `${unit}s`;
+
+        return `${displayValue} ${unitLabel}`;
+    };
+
+    const ONE_HOUR = dayjs.duration(1, 'hour').asSeconds();
+    const ONE_DAY = dayjs.duration(1, 'day').asSeconds();
+
+    if (seconds < ONE_HOUR) {
+        const totalMinutes = dur.asMinutes();
+        const roundedMinutes = Number(totalMinutes.toFixed(1));
+        if (roundedMinutes >= 60) {
+            return `1 ${t('allFields.hour')}`;
+        }
+
+        return format(totalMinutes, t('allFields.minute'));
+    }
+
+    if (seconds < ONE_DAY) {
+        const totalHours = dur.asHours();
+        const roundedHours = Number(totalHours.toFixed(1));
+        if (roundedHours >= 24) {
+            return `1 ${t('allFields.day')}`;
+        }
+
+        return format(totalHours, t('allFields.hour'));
+    }
+
+    const totalDays = dur.asDays();
+    return format(totalDays, t('allFields.day'));
+};
