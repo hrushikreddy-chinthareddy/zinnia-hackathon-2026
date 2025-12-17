@@ -82,15 +82,16 @@ export default function AddressDetails({
                     'formValidations.addressLine'
                 ) as string;
             } else {
-                if (!address.city) {
-                    errors.city = t('formValidations.city') as string;
-                }
-                if (!address.state) {
-                    errors.state = t('formValidations.state') as string;
-                }
-                if (!address.zipCode) {
-                    errors.zipCode = t('formValidations.zipCode') as string;
-                }
+                const requiredFields: Array<'city' | 'state' | 'zipCode'> = [
+                    'city',
+                    'state',
+                    'zipCode',
+                ];
+                requiredFields.forEach((field) => {
+                    if (!address[field]) {
+                        errors[field] = t(`formValidations.${field}`) as string;
+                    }
+                });
             }
         } else {
             errors = {};
