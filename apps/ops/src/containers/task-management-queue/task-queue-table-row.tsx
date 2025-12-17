@@ -18,20 +18,19 @@ import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
 import IconButton from '@deps/components/icon-button/icon-button';
+import NavLink from '@deps/components/nav-element/nav-link/nav-link';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import {
     getUserNameFromEmail,
     NO_ASSIGNEE,
 } from '@deps/hooks/useTaskManagementQueue';
-import { CaseIdentifier } from '@deps/models/case/case';
 import { EarlyTaskType } from '@deps/models/case/task';
 import {
     AssignedTask,
@@ -211,10 +210,6 @@ const TaskQueueTableRow = ({
     });
     const router = useRouter();
     const [_timer] = useState(performance.now());
-    const _documentNumber = getCaseIdentifierValue(
-        task.identifiers,
-        CaseIdentifier.DocumentNumber
-    );
     const [actionLoader, setActionLoader] = useState(false);
 
     const [_loader, setLoader] = useState(false);
@@ -479,27 +474,24 @@ const TaskQueueTableRow = ({
                     {''}
                 </Link>
             </TableCell>
-            <TableCell
-                onClick={handleLinkClick}
-                onKeyDown={handleLinkKeyDown}
-                role="button"
-                className="cursor-pointer"
-            >
-                <Content
-                    contentClassName="relative z-10"
-                    triggerClassName="text-left"
-                    truncate={true}
-                    details={toSentenceCase(task.taskName)}
-                    variant={ContentVariant.BodySm}
-                />
-                <Content
-                    truncate={true}
-                    contentClassName="relative z-10"
-                    triggerClassName="text-left"
-                    className={`${styles.fadedText} truncate w-full`}
-                    details={toSentenceCase(task.process)}
-                    variant={ContentVariant.BodySm}
-                />
+            <TableCell>
+                <NavLink onClick={handleLinkClick}>
+                    <Content
+                        contentClassName="relative z-0"
+                        triggerClassName="text-left"
+                        truncate={true}
+                        details={toSentenceCase(task.taskName)}
+                        variant={ContentVariant.BodySm}
+                    />
+                    <Content
+                        truncate={true}
+                        contentClassName="relative z-0"
+                        triggerClassName="text-left"
+                        className={`${styles.fadedText} truncate w-full`}
+                        details={toSentenceCase(task.process)}
+                        variant={ContentVariant.BodySm}
+                    />
+                </NavLink>
             </TableCell>
             <TableCell>
                 {task?.status === TaskStatus.InProgress &&
@@ -510,7 +502,7 @@ const TaskQueueTableRow = ({
                 ) ? (
                     <div
                         className={`relative ${
-                            isOpsManagerView ? 'z-10' : 'z-5'
+                            isOpsManagerView ? 'z-10' : 'z-0'
                         }`}
                     >
                         {task?.status === TaskStatus.InProgress && (

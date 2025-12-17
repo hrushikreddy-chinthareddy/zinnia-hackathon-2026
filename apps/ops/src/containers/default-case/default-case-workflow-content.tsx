@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
+import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/global-values-nb-bar';
 import { TranslationFiles } from '@deps/config/translations';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -16,17 +17,19 @@ import { MemoizedDefaultCaseFormStep } from './steps/default-case-form-step';
 
 type DefaultCaseWorkflowContentProps = {
     taskMetadata: FormMetadata[];
+    taskType: TaskType;
 };
 
 const DefaultCaseWorkflowContent = ({
     taskMetadata,
+    taskType,
 }: DefaultCaseWorkflowContentProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagement.taskForm',
     });
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-    const { policy } = useDefaultCase();
-    const owner = policyOwner(policy);
+    const { policy, caseDetails } = useDefaultCase();
+    const owner = policy ? policyOwner(policy) : '';
     const handleProgressBarClick = (step: Step) => {
         if (
             step.isDisabled ||
@@ -63,7 +66,7 @@ const DefaultCaseWorkflowContent = ({
                 isVisible: () => true,
                 component: (
                     <ConfirmStep
-                        taskType={TaskType.Default_Case_DataEntry as TaskType}
+                        taskType={taskType as TaskType}
                         taskInfoLink={''}
                         isCta={true}
                         ctaLink={'/cases'}
@@ -84,17 +87,27 @@ const DefaultCaseWorkflowContent = ({
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] flex-col self-center">
             <div className="flex">
-                <GlobalValuesBar
-                    carrierId={policy?.carrierId || ''}
-                    marketingName={policy?.product?.marketingName}
-                    owner={owner as Party}
-                    planCode={policy?.product?.planCode}
-                    policyNumber={policy?.policyNumber}
-                    productType={policy?.product?.productType as ProductType}
-                    status={policy?.policyStatus as PolicyStatus}
-                    tooltip={''}
-                    variant={BadgeVariant.Default}
-                />
+                {caseDetails ? (
+                    <GlobalValuesNbBar
+                        carrierId={caseDetails?.carrier}
+                        showLink={true}
+                        caseId={caseDetails?.id}
+                    />
+                ) : (
+                    <GlobalValuesBar
+                        carrierId={policy?.carrierId || ''}
+                        marketingName={policy?.product?.marketingName}
+                        owner={owner as Party}
+                        planCode={policy?.product?.planCode}
+                        policyNumber={policy?.policyNumber}
+                        productType={
+                            policy?.product?.productType as ProductType
+                        }
+                        status={policy?.policyStatus as PolicyStatus}
+                        tooltip={''}
+                        variant={BadgeVariant.Default}
+                    />
+                )}
             </div>
             <ProgressBarSteps
                 classNames={`grid-cols-${steps.length}`}

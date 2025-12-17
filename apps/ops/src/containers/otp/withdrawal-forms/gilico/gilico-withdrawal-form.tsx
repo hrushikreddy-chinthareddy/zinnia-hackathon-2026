@@ -150,16 +150,16 @@ export default function GilicoWithdrawalForm({
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
                 meritalStatusAllowanceConfig={meritalStatusAllowanceConfig}
             />
-            <IrsWithholding
-                isFormStateReadOnly={isFormStateReadOnly}
-                signatureFields={irsSignatureConfig}
-            />
             {shouldStateW4pRender && (
                 <StateW4Form
                     isFormStateReadOnly={isFormStateReadOnly}
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}

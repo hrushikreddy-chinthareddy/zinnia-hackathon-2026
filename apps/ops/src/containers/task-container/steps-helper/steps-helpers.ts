@@ -18,6 +18,7 @@ import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-rev
 import { getQualityAuditSteps } from './quality-audit-steps';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
+import { getThirdPartyDetailSteps } from './third-party-detail';
 import { getTOANigoSteps } from './toa-nigo';
 import { GetStepsProps } from './types';
 import { getUpdateSuitabilityDataSteps } from './update-suitability-data';
@@ -108,6 +109,9 @@ export const getFormSteps = (
             break;
         case TaskType.Update_Suitability_DataEntry:
             steps = getUpdateSuitabilityDataSteps(props);
+            break;
+        case TaskType.Third_Party_Detail:
+            steps = getThirdPartyDetailSteps(props);
             break;
         case TaskType.Initiate_BeneChange_Transaction:
         case TaskType.Initiate_AssigneeChange_Transaction:

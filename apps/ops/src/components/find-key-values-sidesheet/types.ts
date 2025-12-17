@@ -1,55 +1,4 @@
-import { TFunction } from 'next-i18next';
-
-import {
-    Party,
-    Policy,
-    ProductType,
-    Transaction,
-} from '@zinnia/api-types/types/sor';
-
-export type DataField = string | number | boolean | null;
-
-export type DataTuple = [string, DataField];
-
-export type NestedDataTuple = [string, NestedData];
-
-export type NestedData =
-    // Either an array of NestedDataTuple (like a tree of children):
-    | ((
-          | NestedData[]
-          // Or a tuple of [DataField, DataField | NestedDataTuple]:
-          | DataTuple
-      ) &
-          MetaData)
-    | null;
-
-export type MetaData = {
-    [label]?: string;
-    [tags]?: string[];
-    [link]?: string;
-    [linkedField]?: string;
-    [toolTip]?: string;
-};
-export const label = Symbol('label');
-export const tags = Symbol('tags');
-export const link = Symbol('link');
-export const linkedField = Symbol('linkedField');
-export const toolTip = Symbol('toolTip');
-
-export type Section = [
-    string,
-    {
-        fields?: NestedData;
-        subSections?: NestedData;
-    }
-];
-
-export type ToSections = {
-    basics: NestedData[] | null;
-    sections: Section[];
-};
-
-export const [Expand, Collapse] = [true, false];
+import { Collapse, Expand } from '@deps/hooks/useTreeState';
 
 export type ExpandCollapse = typeof Expand | typeof Collapse;
 
@@ -60,47 +9,53 @@ export interface FindAllKeyValuesSidebarProps {
     handleCalendarOpen?: (isOpen: boolean) => void;
 }
 
-export enum FormatterType {
-    POLICY = 'policy',
-    TRANSACTION = 'transaction',
-}
+export type Primitive = string | number | boolean;
 
-export type ToSectionsProps = {
-    policy: Policy;
-    t: TFunction;
-    searchValue?: string;
-    planCode?: string;
-    productType?: ProductType;
-    allPartiesById?: Record<string, Party>;
-    config: TransformationsConfig;
-} & (ToPolicySectionsProps | ToTransactionSectionsProps);
+export const FIELD = Symbol('FIELD');
+export const SECTION = Symbol('SECTION');
+export const GROUP = Symbol('GROUP');
 
-export type ToPolicySectionsProps = {
-    type: FormatterType.POLICY;
+export const FieldType = {
+    field: FIELD,
+    section: SECTION,
+    group: GROUP,
+} as const;
+
+const POLICY = Symbol('POLICY');
+const CONTRACT = Symbol('CONTRACT');
+const TRANSACTION = Symbol('TRANSACTION');
+
+export const DocumentFormat = {
+    policy: POLICY,
+    contract: CONTRACT,
+    transaction: TRANSACTION,
+} as const;
+
+export type DocumentFormatType =
+    (typeof DocumentFormat)[keyof typeof DocumentFormat];
+
+export type DataField = {
+    type: typeof FieldType.field;
+    label: string;
+    value: string;
+    link?: string;
+    toolTip?: string;
+    isPII?: boolean;
 };
 
-export type ToTransactionSectionsProps = {
-    type: FormatterType.TRANSACTION;
-    transaction: Transaction;
+export type DataSection = {
+    type: typeof FieldType.section;
+    label: string;
+    children: DataNode[];
+    tags?: string[];
+    isPIILabel?: boolean;
 };
 
-export type TransformationsConfig = {
-    labels: { [key: string]: string };
-    parseTitles?: ({
-        sectionTitle,
-        acc,
-        currentVal,
-        currentKey,
-    }: {
-        sectionTitle: keyof Policy;
-        acc: ToSections;
-        currentVal: object;
-        currentKey: string;
-    }) => ToSections;
-    showSection?: (
-        sectionTitle: string,
-        policy?: Policy,
-        planCode?: string,
-        productType?: ProductType
-    ) => boolean | undefined;
+export type DataGroup = {
+    type: typeof FieldType.group;
+    children: DataNode[][]; // arrays of arrays (groups) of nodes
 };
+
+export type DataNode = DataField | DataSection | DataGroup;
+
+export type TransformFunction = (node: DataNode) => DataNode | undefined;

@@ -143,7 +143,7 @@ export const getEventTitle = (
     }
 
     return t(
-        `historyEventCard.transactionTypes.${transactionType}`,
+        `enums.${transactionType}`,
         transactionType || DEFAULT_ERROR_STRING
     );
 };
