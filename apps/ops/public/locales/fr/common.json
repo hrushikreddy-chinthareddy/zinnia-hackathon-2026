@@ -539,9 +539,37 @@
         "sendToDifferentAddress": "Envoyer à une adresse différente",
         "formsToUpdate": "Formulaire(s) à mettre à jour",
         "view": "Afficher",
-        "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
         "collapseAll": "Tout réduire",
-        "expandAll": "Tout développer"
+        "expandAll": "Tout développer",
+        "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
+        "accountValue": "Valeur du compte",
+        "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire. La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
+        "surrenderValueTooltip": "C'est le montant auquel le propriétaire ou ses bénéficiaires peuvent s'attendre en cas de rachat de la police. Il s'agit de la valeur actuelle du compte moins les frais de rachat, les prêts en cours et autres frais",
+        "upcomingPremium": "Prime {{frequency}} à venir",
+        "upcomingPremiumNoPayment": "Pas de paiement prévu",
+        "makePayment": "Effectuer un paiement",
+        "baseDeathBenefit": "Capital décès de base",
+        "baseDeathBenefitTooltip": "C'est le montant du capital décès lié à la couverture de base du propriétaire. Il reflète la valeur actuelle, donc il tient compte de toutes les modifications apportées au capital décès dues aux retraits ou aux prêts. (Note : Cette valeur peut différer du capital décès brut total s'il y a des lignes de couverture supplémentaires ou des avenants qui ajoutent au capital décès)",
+        "account": "Cpt",
+        "endingIn": "{{accountType}} se terminant par {{accountNumber}}",
+        "freeLookCancelDate": "Date d'écheance de la police",
+        "gracePeriod": "Délai de grâce avant déchéance",
+        "gracePeriodTooltip": "Ces dates vous indiquent combien de temps le propriétaire doit effectuer le paiement différé requis pour maintenir la police active. La première date est celle à laquelle la police est passée au statut de déchéance en attente, et la seconde est la date limite pour effectuer le paiement différé requis.",
+        "gracePeriodMinPayment": "Paiement minimum du délai de grâce",
+        "gracePeriodMinPaymentTooltip": "Il s'agit du montant minimum que le propriétaire doit payer en prime avant la fin du délai de grâce pour maintenir sa police active (et sa couverture et la valeur de son compte intactes).",
+        "guaranteePeriod": "Délai de garantie",
+        "lapseEffectiveDate": "Date d'effet de la déchéance",
+        "lapseEffectiveDateTooltip": "Il s'agit de la date à laquelle la police est devenue caduque. Le propriétaire n’a pas effectué de paiement différé, la police est donc désormais officiellement inactive.",
+        "reinstatementPeriod": "Période de réintégration",
+        "reinstatementPeriodTooltip": "Cela vous indique le délai dont dispose le propriétaire après la date de déchéance pour entamer le processus de rétablissement de la police. Certaines polices n'ont pas de période de rétablissement. Dans ce cas, une politique périmée a pris fin définitivement.",
+        "underwritingDecisionTooltip": "Les polices périmées doivent être approuvées par souscription pour être rétablies. Lors de la souscription, l'assureur évalue le risque d'assurer le propriétaire en fonction de son état de santé et de son mode de vie et détermine le coût de son assurance. Une fois approuvé, le propriétaire peut effectuer le paiement requis pour réactiver sa police.",
+        "reinstatementPaymentPeriod": "Délai de paiement de réintégration",
+        "reinstatementPaymentPeriodTooltip": "Ces dates vous indiquent combien de temps le propriétaire dispose pour effectuer le paiement de réintégration requis une fois approuvé par la souscription. La première date est celle à laquelle la réintégration du propriétaire a été approuvée, et la seconde est la date limite pour effectuer le paiement de réintégration requis.",
+        "reinstatementPayment": "Paiement de réintégration",
+        "reinstatementPaymentTooltip": "Il s’agit du montant que le propriétaire doit payer en prime pour réactiver sa police.",
+        "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}.",
+        "year(s)": "année(s)",
+        "remove": "Supprimer"
     },
     "enums": {
         "LIFE": "Vie",
@@ -794,7 +822,7 @@
         "Lapse": "Expiration",
         "LapseAssessment": "Évaluation d'expiration",
         "LoanAnniversaryTrueUp": "Régularisation anniversaire de prêt",
-        "LoanRepaymentOneTime": "Remboursement unique de prêt",
+        "LoanRepaymentOneTime": "Remboursement unique du prêt",
         "MatchBonusVesting": "Acquisition du bonus correspondant",
         "MultipleBeneficiaryChange": "Changement de plusieurs bénéficiaires",
         "MultipleEmailChange": "Changement de plusieurs emails",
@@ -807,9 +835,9 @@
         "PartialWithdrawalOneTime": "Retrait partiel unique",
         "PayeeChange": "Changement de bénéficiaire",
         "PaymentExpiration": "Expiration du paiement",
-        "PaymentLoanRepaymentOneTime": "Paiement unique de remboursement de prêt",
-        "PaymentOneTimePremium": "Paiement de prime unique",
-        "PaymentSystematicLoanRepayment": "Paiement systématique de remboursement de prêt",
+        "PaymentLoanRepaymentOneTime": "Remboursement unique du prêt",
+        "PaymentOneTimePremium": "Prime unique",
+        "PaymentSystematicLoanRepayment": "Remboursement systématique de prêt",
         "PayorChange": "Changement de payeur",
         "PhoneNumberChange": "Changement de numéro de téléphone",
         "RateRenewal": "Renouvellement de taux",
@@ -833,7 +861,7 @@
         "SystematicAnnuityPayout": "Paiement systématique de rente",
         "SystematicAnnuityPayoutSetup": "Mise en place du paiement systématique de rente",
         "SystematicProgramUpdate": "Mise à jour du programme systématique",
-        "TPDChange": "Changement d'IPP",
+        "TPDChange": "Changement de TPD",
         "TrusteeChange": "Changement de fiduciaire",
         "UnitExpenseCharge": "Frais unitaires",
         "ValueAdjustment": "Ajustement de valeur",
@@ -1378,7 +1406,9 @@
         "minItems": "Veuillez sélectionner au moins {{limit}} élément(s).",
         "patternSsn": "Veuillez saisir un numéro SSN valide.",
         "maximum": "Le champ ne doit pas dépasser 100 {{limit}}.",
-        "inValidDomain": "Seuls les e-mails Zinnia sont autorisés."
+        "inValidDomain": "Seuls les e-mails Zinnia sont autorisés.",
+        "patternEmail": "Veuillez saisir une adresse e-mail valide.",
+        "minContains": "Au moins {{limit}} {{ item}} valide doit être présent."
     },
     "taskManagementQueue": {
         "homeTitle": "Accueil",
@@ -9253,5 +9283,14 @@
         "submitWithErrorsText": "Soumettez le document en signalant les erreurs et créez une tâche NIGO pour que l'équipe concernée puisse assurer le suivi.",
         "internalServerError": "Erreur interne du serveur",
         "failedToFetch": "Impossible de récupérer le résumé de validation"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "Le formulaire de détails du tiers a été soumis avec succès.",
+            "cta": "Aller à l’Audit de Qualité",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }
