@@ -1,8 +1,6 @@
 // import { Typography, Icon, IconType } from '@zinnia/bloom/components';
 import { ReactElement } from 'react';
 
-import { ProductTypes } from '@deps/types/product';
-
 import style from './eapp.module.css';
 import { Menu } from './menu/menu';
 import { SectionView } from './section-view/SectionView';
@@ -10,10 +8,8 @@ import { Sidebar } from './sidebar/sidebar';
 import { useActiveSection } from '../../providers/ActiveSectionProvider';
 
 export interface EappProps {
-    carrier: string;
     label: string;
     planCode: string;
-    planType: ProductTypes;
     isEdit?: boolean;
     illustrationId?: string;
 }
@@ -40,8 +36,6 @@ export function Eapp(props: EappProps): ReactElement | null {
                         <Sidebar
                             isEdit={props.isEdit}
                             illustrationId={props.illustrationId}
-                            productType={props.planType}
-                            carrier={props.carrier}
                         />
                     </div>
                 </div>

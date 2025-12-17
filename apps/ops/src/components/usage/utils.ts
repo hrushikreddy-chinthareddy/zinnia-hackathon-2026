@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
 import isoWeek from 'dayjs/plugin/isoWeek';
+import { TFunction } from 'i18next';
 
+import { Timerange } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
+import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
 import {
     UserActivityGroupByEnum,
     UserViewsGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
-
-import { Timerange } from '../dashboard/filters/time-filter/useTimeRangeFilter';
-import { defaultDateFormat } from '../dashboard/utils';
 
 export const friendlyGroupByName: Record<UserActivityGroupByEnum, string> = {
     [UserActivityGroupByEnum.ACTIVITY_DAY]: 'Activity day',
@@ -179,3 +179,40 @@ export const colors = [
     '#560F08',
     '#9D5400',
 ];
+
+export const ProductType = {
+    IUL: 'INDEX_UNIVERSAL_LIFE',
+    Term: 'TERM',
+    ROP: 'ROP',
+} as const;
+
+// Dropdown options for the "Product Type" select
+export const PRODUCT_TYPE_OPTIONS = [
+    { value: ProductType.IUL, label: 'IUL' },
+    { value: ProductType.Term, label: 'Term' },
+];
+
+export const ActivityType = {
+    Created: 'Created',
+    Duplicated: 'Duplicated',
+    Selected: 'Selected',
+} as const;
+
+export const generateIllustrationsCSVFileName = (
+    productType: string,
+    timerange: Timerange,
+    t: TFunction
+) => {
+    const fromDate = dayjs(timerange.from).format(defaultDateFormat);
+    const toDate = dayjs(timerange.to).format(defaultDateFormat);
+
+    return `${productType} ${t(
+        'allFields.illustrationsActivityTitle'
+    )} ${fromDate} ${t('allFields.to')} ${toDate}`;
+};
+
+export const isTimeFrameFilterOption = (
+    value: string
+): value is TimeframeFilterOptions => {
+    return Object.values(TimeframeFilterOptions).map(String).includes(value);
+};
