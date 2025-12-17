@@ -19,21 +19,6 @@ import type {
  */
 export class QuickQuoteProducts {
     /**
-     * States where no products are available at all.
-     * If the insured's state is one of these, all products
-     * are returned as unavailable with `notAvailabilityReasonField = 'state'`.
-     */
-    private NOT_COVERED_STATES = new Set([
-        'AK',
-        'FL',
-        'HI',
-        'LA',
-        'NY',
-        'WV',
-        'DC',
-    ]);
-
-    /**
      * Field that will store the reason why a product class
      * is not available (e.g. 'age' or 'face').
      * It is reset per product evaluation.
@@ -65,22 +50,6 @@ export class QuickQuoteProducts {
      *    * evaluate riders and return rider availability per product
      */
     getProductsAvailableFor(input: QuickQuoteParams): ProductClassResult[] {
-        const code = input.state;
-
-        // If the state is not covered, all products are invalid.
-        if (code && this.NOT_COVERED_STATES.has(code)) {
-            return this.rules.products.map((product) => ({
-                ...product,
-                classCodes: [],
-                notAvailabilityReasonField: 'state',
-                riders: {
-                    accidentalDeathBenefit: 'state',
-                    childrensTerm: 'state',
-                    waiverOfPremium: 'state',
-                },
-            }));
-        }
-
         const result: ProductClassResult[] = [];
 
         for (const product of this.rules.products) {
