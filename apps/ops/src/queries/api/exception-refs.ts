@@ -1,6 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     logError,
     LoggingContext,
@@ -10,7 +11,6 @@ import {
 import {
     ExceptionCountInput,
     ExceptionCountOutput,
-    HTTPValidationError,
 } from '@zinnia/api-types/types/analytics';
 
 import { baseAppUrl, se2ApiServerUrl } from '../api-config';
@@ -94,11 +94,11 @@ export const searchNigoExceptions = async (
 
 export const getDashboardExceptionStats = async (
     query: ExceptionCountInput
-): Promise<ExceptionCountOutput | HTTPValidationError> => {
+): Promise<ExceptionCountOutput> => {
     try {
         const { data: response } = await client.post<
             ExceptionCountInput,
-            AxiosResponse<ExceptionCountOutput, HTTPValidationError>
+            AxiosResponse<ExceptionCountOutput>
         >(`${baseAppUrl}/api/dashboard/exception-count`, query);
         return {
             data: response.data,
@@ -106,13 +106,11 @@ export const getDashboardExceptionStats = async (
             totalUniqueCases: response.totalUniqueCases,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getCaseDashboardStats::An error occurred while getting case dashboard stats results',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
-        return error;
+
+        throw Error;
     }
 };

@@ -4,9 +4,9 @@ import { FC, useMemo } from 'react';
 
 import { ButtonType } from '@deps/components/button/button';
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
+import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { CREATE_QUICK_QUOTE_MUTATION_KEY } from '@deps/components/illustrations/providers/use-quick-quote-mutation';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { Product, ProductType } from '@deps/types/product';
 import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import style from './sidebar.module.css';
@@ -46,16 +46,9 @@ const dataToTitleMap: Record<
 interface SidebarProps {
     isEdit?: boolean;
     illustrationId?: string;
-    productType: ProductType;
-    carrier: string;
 }
 
-export const Sidebar: FC<SidebarProps> = ({
-    isEdit,
-    illustrationId,
-    productType,
-    carrier,
-}) => {
+export const Sidebar: FC<SidebarProps> = ({ isEdit, illustrationId }) => {
     const isLoadingQuickQuote = !!useIsMutating({
         mutationKey: CREATE_QUICK_QUOTE_MUTATION_KEY,
     });
@@ -68,7 +61,10 @@ export const Sidebar: FC<SidebarProps> = ({
         createIllustrationPending,
     } = useSubmit();
     const { data } = useEapp();
-    const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
+    const { sendIllustrationsClickedEvent, sendCalculateIllustrationEvent } =
+        useIllustrationAnalytics();
+    const { selectedIllustration } = useSelectedIllustration();
+    const { product } = selectedIllustration ?? {};
 
     const isCompleted = useMemo(() => {
         return !renderingQuestionnaire.some((renderingSectionGroup) => {
@@ -76,23 +72,20 @@ export const Sidebar: FC<SidebarProps> = ({
         });
     }, [renderingQuestionnaire]);
 
-    const handleAnalytics = (eventName: string) => {
-        const product = {
-            productType,
-            carrier,
-        } as Product;
-        sendIllustrationsClickedEvent(product, eventName);
-    };
-
     const handleSubmit = () => {
-        handleAnalytics(
-            IllustrationsSegmentTrackedEventName.calculateIllustration
-        );
+        if (product && illustrationId) {
+            sendCalculateIllustrationEvent(product, illustrationId);
+        }
         onNewSubmit();
     };
 
     const handleEditSubmit = () => {
-        handleAnalytics(IllustrationsSegmentTrackedEventName.editIllustration);
+        if (product) {
+            sendIllustrationsClickedEvent(
+                product,
+                IllustrationsSegmentTrackedEventName.editIllustration
+            );
+        }
         if (illustrationId) {
             onEditSubmit(illustrationId);
         }
