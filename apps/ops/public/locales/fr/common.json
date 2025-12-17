@@ -473,6 +473,42 @@
         "proceedCancel": "Procéder à l'annulation du programme systématique {{frequency}} de {{amount}}",
         "cancelLoanProgram": "Annuler le programme de prêt",
         "cancelPremiumProgram": "Annuler le programme de prime",
+        "premiumAutopayCancellation": "Annulation du paiement automatique des primes",
+        "premiumSytematicProgramCancellation": "Annulation du programme systématique de primes",
+        "loanAutopayCancellation": "Annulation du paiement automatique de prêt",
+        "loanSytematicProgramCancellation": "Annulation du programme systématique de remboursement de prêt",
+        "withdrawalAutopayCancellation": "Annulation des retraits systématiques",
+        "minimumDistributionAutopayCancellation": "Annulation de la distribution minimale systématique",
+        "loanAutopayTitleStart": "Configurer le paiement automatique de prêt",
+        "loanAutopaySystematicProgramTitleStart": "Configurer le programme systématique de remboursement de prêt",
+        "loanAutopayManageStart": "Gérer le paiement automatique de prêt",
+        "loanAutopaySystematicProgramManageStart": "Gérer le programme systématique de remboursement de prêt",
+        "loanAutopayPaymentAmount": "Montant du paiement automatique de prêt",
+        "loanAutopaySystematicProgramPaymentAmount": "Montant du remboursement systématique de prêt",
+        "loanAutopayInvalidAmountError": "Le montant du paiement automatique de prêt doit être supérieur à 1,00 $",
+        "loanAutopaySystematicProgramInvalidAmountError": "Le montant du remboursement systématique de prêt doit être supérieur à 1,00 $",
+        "loanAutopayMissingAmountError": "Le montant du paiement automatique de prêt est manquant.",
+        "loanAutopaySystematicProgramMissingAmountError": "Le montant du remboursement systématique de prêt est manquant.",
+        "premiumAutopayTitleStart": "Configurer le paiement automatique des primes",
+        "premiumAutopaySystematicProgramTitleStart": "Configurer le programme systématique de primes",
+        "premiumAutopayManageStart": "Gérer le paiement automatique des primes",
+        "premiumAutopaySystematicProgramManageStart": "Gérer le programme systématique de primes",
+        "premiumAutopayPaymentAmount": "Montant du paiement automatique des primes",
+        "premiumAutopaySystematicProgramPaymentAmount": "Montant du paiement systématique des primes",
+        "premiumAutopayInvalidAmountError": "Le montant du paiement automatique des primes doit être supérieur à 1,00 $",
+        "premiumAutopaySystematicProgramInvalidAmountError": "Le montant de la prime systématique doit être supérieur à 1,00 $",
+        "premiumAutopayMissingAmountError": "Le montant du paiement automatique des primes est manquant.",
+        "premiumAutopaySystematicProgramMissingAmountError": "Le montant de la prime systématique est manquant.",
+        "withdrawalAutopayTitleStart": "Configurer les retraits systématiques",
+        "withdrawalAutopaySystematicProgramTitleStart": "Configurer les retraits systématiques",
+        "withdrawalAutopayManageStart": "Mettre à jour le systématique",
+        "withdrawalAutopaySystematicProgramManageStart": "Mettre à jour le systématique",
+        "withdrawalAutopayPaymentAmount": "Montant",
+        "withdrawalAutopaySystematicProgramPaymentAmount": "Montant",
+        "withdrawalAutopayInvalidAmountError": "Le montant doit être supérieur à 1,00 $",
+        "withdrawalAutopaySystematicProgramInvalidAmountError": "Le montant doit être supérieur à 1,00 $",
+        "withdrawalAutopayMissingAmountError": "Le montant est manquant.",
+        "withdrawalAutopaySystematicProgramMissingAmountError": "Le montant est manquant.",
         "systematicProgramPendingBannerText": "Une mise à jour des détails du programme systématique de cette police est en attente. Pour plus d'informations, ",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "L'illustration ne peut pas satisfaire les calculs demandés; elle utilise les meilleurs résultats disponibles.",
         "illustrationCalcUnreachableSolveFailed": "L'illustration ne peut pas atteindre la solution souhaitée, et le type de calcul sélectionné a échoué.",
@@ -5231,20 +5267,11 @@
         "cancelAutopay": {
             "cancel": "Annuler",
             "cancelAutopay": "Annuler le prélèvement automatique",
-            "cancelAutopaySP": "Annuler le programme",
             "confirmCancelError": "Confirmez avant d'annuler le prélèvement automatique.",
-            "confirmCancelErrorSP": "Veuillez confirmer avant d'annuler un programme systématique.",
             "effectiveDate": "Date d'effet",
             "invalidEffectiveDate": "Entrez une date d'effet valide.",
-            "loanAutopayCancellation": "Annulation du prélèvement automatique de prêt",
-            "loanAutopayCancellationSP": "Annulation systématique du remboursement des prêts",
             "missingCaseDocument": "Sélectionnez un document (ou continuez sans) pour continuer.",
-            "premiumAutopayCancellation": "Annulation du paiement automatique de la prime",
-            "premiumAutopayCancellationSP": "Annulation systématique des primes",
-            "proceedCancel": "Procédez à l'annulation du prélèvement automatique {{frequency}} de {{amount}}",
-            "proceedCancelSP": "Procéder à l'annulation du programme systématique {{frequency}} de {{amount}}",
-            "withdrawalAutopayCancellation": "Annulation systématique des retraits",
-            "minimumDistributionAutopayCancellation": "Annulation systématique des Rmd"
+            "proceedCancel": "Procédez à l'annulation du prélèvement automatique {{frequency}} de {{amount}}"
         },
         "bpm": {
             "500Error": "Erreur 500 BPM"
@@ -6261,7 +6288,6 @@
             "setUpAutopay": "Configurer paiement automatique",
             "oneTimePaymentText": "Effectuer un paiement ponctuel",
             "cancelAutopay": "Annuler le prélèvement automatique",
-            "cancelAutopaySP": "Annuler le programme",
             "cancelLoanAutopayTitle": "Annuler le paiement automatique du prêt",
             "cancelLoanAutopayTitleSP": "Annulation du programme de prêts",
             "cancelPremiumAutopayTitle": "Annuler le paiement automatique premium",
@@ -6445,8 +6471,7 @@
     "autopay": {
         "pendingBanner": {
             "caseLinkText": "aller au dossier",
-            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, ",
-            "textSP": "Une mise à jour des détails systématiques de ce programme est en cours. Pour plus d'informations,"
+            "text": "Une mise à jour des détails de paiement automatique de cette police est en attente. Pour plus d'informations, "
         }
     },
     "financialTransaction": {
@@ -6633,7 +6658,6 @@
             "rmdAutopay": "RMD Autopay à venir",
             "cancelWithdrawalAutopayTitle": "Annuler Systématiquement {{type}}",
             "cancelAutopay": "Annuler le paiement automatique",
-            "cancelAutopaySP": "Annuler le programme",
             "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
             "paymentType": {
                 "payment": "paiement"
@@ -6676,16 +6700,10 @@
     },
     "loanAutopay": {
         "start": {
-            "label": "Commencer",
-            "titleStart": "Configurer le paiement automatique du prêt",
-            "titleStartSP": "Mettre en place un programme de remboursement de prêt systématique",
-            "titleManage": "Gérer le paiement automatique du prêt",
-            "titleManageSP": "Gérer un programme de remboursement systématique de prêts"
+            "label": "Commencer"
         },
         "amount": {
             "label": "Montant",
-            "paymentAmount": "Montant de paiement automatique du prêt",
-            "paymentAmountSP": "Montant de remboursement systématique du prêt",
             "paymentFrequency": "Fréquence de paiement",
             "paymentStartDate": "Date de début de paiement",
             "nextPaymentDate": "Date du prochain paiement",
@@ -6695,10 +6713,6 @@
             "invalidNextPaymentDateError": "Entrez une date valide pour le prochain paiement.",
             "missingStartDateError": "La date de début de paiement est manquante.",
             "invalidStartDateError": "Entrez une date de début de paiement valide.",
-            "missingAmountError": "Le montant de paiement automatique du prêt est manquant.",
-            "missingAmountErrorSP": "Le montant des remboursements systématiques du prêt est manquant.",
-            "invalidAmountError": "Le montant de paiement automatique du prêt doit être supérieur à 1,00 $",
-            "invalidAmountErrorSP": "Le montant du remboursement systématique du prêt doit être supérieur à 1,00 $.",
             "annually": "Annuellement",
             "semiAnnually": "Semi-annuellement",
             "monthly": "Mensuellement",
@@ -6904,16 +6918,10 @@
     "premiumAutopay": {
         "start": {
             "label": "Démarrer",
-            "subtitleManage": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police.",
-            "titleStart": "Configurer le prélèvement automatique de la prime",
-            "titleStartSP": "Configurer le programme systématique Premium",
-            "titleManage": "Gérer le prélèvement automatique de la prime",
-            "titleManageSP": "Gestion du programme systématique Premium"
+            "subtitleManage": "Apportez des modifications à l'horaire, au montant ou à la méthode de paiement pour le prélèvement automatique de prime de cette police."
         },
         "amount": {
             "label": "Montant",
-            "paymentAmount": "Montant du prélèvement automatique de la prime",
-            "paymentAmountSP": "Montant de prime systématique",
             "paymentFrequency": "Fréquence de paiement",
             "paymentStartDate": "Date de début de paiement",
             "nextPaymentDate": "Prochaine date de paiement",
@@ -6923,10 +6931,6 @@
             "invalidNextPaymentDateError": "Entrez une date de prochain paiement valide.",
             "missingStartDateError": "La date de début de paiement est manquante.",
             "invalidStartDateError": "Entrez une date de début de paiement valide.",
-            "missingAmountError": "Le montant du prélèvement automatique de la prime est manquant.",
-            "missingAmountErrorSP": "Le montant de la prime systématique est manquant.",
-            "invalidAmountError": "Le montant du prélèvement automatique de la prime doit être supérieur à 1,00 $",
-            "invalidAmountErrorSP": "Le montant de la prime systématique doit être supérieur à 1,00 $.",
             "annually": "Annuellement",
             "semiAnnually": "Semestriellement",
             "monthly": "Mensuellement",
@@ -6978,8 +6982,6 @@
             "label": "Montant",
             "dollar": "Dollar",
             "earnings": "Versements",
-            "paymentAmount": "Montant",
-            "paymentAmountSP": "Montant",
             "paymentFrequency": "Fréquence de paiement",
             "paymentStartDate": "Date de début de paiement",
             "nextPaymentDate": "Prochaine date de paiement",
@@ -6989,10 +6991,6 @@
             "invalidNextPaymentDateError": "Entrez une date de paiement valide.",
             "missingStartDateError": "La date de début de paiement est manquante.",
             "invalidStartDateError": "Entrez une date de paiement valide.",
-            "missingAmountError": "Le montant est manquant.",
-            "missingAmountErrorSP": "Le montant est manquant.",
-            "invalidAmountError": "Le montant doit être supérieur à 1,00 $",
-            "invalidAmountErrorSP": "Le montant doit être supérieur à 1,00 $",
             "annually": "Annuellement",
             "semiAnnually": "Semestriellement",
             "monthly": "Mensuellement",

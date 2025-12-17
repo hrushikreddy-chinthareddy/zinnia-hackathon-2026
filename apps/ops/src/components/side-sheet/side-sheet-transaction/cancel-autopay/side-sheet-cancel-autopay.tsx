@@ -295,11 +295,11 @@ const SideSheetCancelAutopay = ({
         switch (type) {
             case ArrangementType.PAYMENT:
                 return systematicProgramTablesEnabled
-                    ? 'premiumAutopayCancellationSP'
+                    ? 'premiumSytematicProgramCancellation'
                     : 'premiumAutopayCancellation';
             case ArrangementType.LOANREPAYMENT:
                 return systematicProgramTablesEnabled
-                    ? 'loanAutopayCancellationSP'
+                    ? 'loanSytematicProgramCancellation'
                     : 'loanAutopayCancellation';
             case ArrangementType.WITHDRAWAL:
                 return 'withdrawalAutopayCancellation';
@@ -370,7 +370,7 @@ const SideSheetCancelAutopay = ({
                 <SuccessState
                     caseId={newCaseId}
                     transactionType={t(
-                        `transactions.cancelAutopay.${getArrangementTranslationKey(
+                        `allFields.${getArrangementTranslationKey(
                             arrangementType
                         )}`
                     )}

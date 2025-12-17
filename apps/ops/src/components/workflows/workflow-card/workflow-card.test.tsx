@@ -53,12 +53,14 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('premiumAutopay.start.titleStartSP')}
+                        title={i18n.t(
+                            'allFields.premiumAutopaySystematicProgramTitleStart'
+                        )}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.start.titleStartSP.trim();
+                    config.translations.allFields.premiumAutopaySystematicProgramTitleStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -66,12 +68,14 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('premiumAutopay.start.titleManageSP')}
+                        title={i18n.t(
+                            'allFields.premiumAutopaySystematicProgramManageStart'
+                        )}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.start.titleManageSP.trim();
+                    config.translations.allFields.premiumAutopaySystematicProgramManageStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -79,12 +83,14 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('loanAutopay.start.titleStartSP')}
+                        title={i18n.t(
+                            'allFields.loanAutopaySystematicProgramTitleStart'
+                        )}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.start.titleStartSP.trim();
+                    config.translations.allFields.loanAutopaySystematicProgramTitleStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -92,12 +98,14 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('loanAutopay.start.titleManageSP')}
+                        title={i18n.t(
+                            'allFields.loanAutopaySystematicProgramManageStart'
+                        )}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.start.titleManageSP.trim();
+                    config.translations.allFields.loanAutopaySystematicProgramManageStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -108,12 +116,12 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('premiumAutopay.start.titleStart')}
+                        title={i18n.t('allFields.premiumAutopayTitleStart')}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.start.titleStart.trim();
+                    config.translations.allFields.premiumAutopayTitleStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -121,12 +129,12 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('premiumAutopay.start.titleManage')}
+                        title={i18n.t('allFields.premiumAutopayManageStart')}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.start.titleManage.trim();
+                    config.translations.allFields.premiumAutopayManageStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -134,12 +142,12 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('loanAutopay.start.titleStart')}
+                        title={i18n.t('allFields.loanAutopayTitleStart')}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.start.titleStart.trim();
+                    config.translations.allFields.loanAutopayTitleStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -147,12 +155,12 @@ describe('Work Flow - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <WorkflowCard
-                        title={i18n.t('loanAutopay.start.titleManage')}
+                        title={i18n.t('allFields.loanAutopayManageStart')}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.start.titleManage.trim();
+                    config.translations.allFields.loanAutopayManageStart.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });

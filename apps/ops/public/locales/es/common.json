@@ -473,6 +473,42 @@
         "proceedCancel": "Proceder con la cancelación del programa sistemático {{frequency}} de {{amount}}",
         "cancelLoanProgram": "Cancelar programa de préstamo",
         "cancelPremiumProgram": "Cancelar programa de prima",
+        "premiumAutopayCancellation": "Cancelación de pago automático de prima",
+        "premiumSytematicProgramCancellation": "Cancelación de programa sistemático de prima",
+        "loanAutopayCancellation": "Cancelación de pago automático de préstamo",
+        "loanSytematicProgramCancellation": "Cancelación de programa sistemático de pago de préstamo",
+        "withdrawalAutopayCancellation": "Cancelación de retiro sistemático",
+        "minimumDistributionAutopayCancellation": "Cancelación de distribución mínima sistemática",
+        "loanAutopayTitleStart": "Configurar pago automático de préstamo",
+        "loanAutopaySystematicProgramTitleStart": "Configurar programa sistemático de pago de préstamo",
+        "loanAutopayManageStart": "Administrar pago automático de préstamo",
+        "loanAutopaySystematicProgramManageStart": "Administrar programa sistemático de pago de préstamo",
+        "loanAutopayPaymentAmount": "Monto de pago automático de préstamo",
+        "loanAutopaySystematicProgramPaymentAmount": "Monto de pago sistemático de préstamo",
+        "loanAutopayInvalidAmountError": "El monto de pago automático de préstamo debe ser mayor a $1.00",
+        "loanAutopaySystematicProgramInvalidAmountError": "El monto de pago sistemático de préstamo debe ser mayor a $1.00",
+        "loanAutopayMissingAmountError": "Falta el monto de pago automático de préstamo.",
+        "loanAutopaySystematicProgramMissingAmountError": "Falta el monto de pago sistemático de préstamo.",
+        "premiumAutopayTitleStart": "Configurar pago automático de prima",
+        "premiumAutopaySystematicProgramTitleStart": "Configurar programa sistemático de prima",
+        "premiumAutopayManageStart": "Administrar pago automático de prima",
+        "premiumAutopaySystematicProgramManageStart": "Administrar programa sistemático de prima",
+        "premiumAutopayPaymentAmount": "Monto de pago automático de prima",
+        "premiumAutopaySystematicProgramPaymentAmount": "Monto de pago sistemático de prima",
+        "premiumAutopayInvalidAmountError": "El monto de pago automático de prima debe ser mayor a $1.00",
+        "premiumAutopaySystematicProgramInvalidAmountError": "El monto de prima sistemática debe ser mayor a $1.00",
+        "premiumAutopayMissingAmountError": "Falta el monto de pago automático de prima.",
+        "premiumAutopaySystematicProgramMissingAmountError": "Falta el monto de prima sistemática.",
+        "withdrawalAutopayTitleStart": "Configurar retiro sistemático",
+        "withdrawalAutopaySystematicProgramTitleStart": "Configurar retiro sistemático",
+        "withdrawalAutopayManageStart": "Actualizar sistemático",
+        "withdrawalAutopaySystematicProgramManageStart": "Actualizar sistemático",
+        "withdrawalAutopayPaymentAmount": "Monto",
+        "withdrawalAutopaySystematicProgramPaymentAmount": "Monto",
+        "withdrawalAutopayInvalidAmountError": "El monto debe ser mayor a $1.00",
+        "withdrawalAutopaySystematicProgramInvalidAmountError": "El monto debe ser mayor a $1.00",
+        "withdrawalAutopayMissingAmountError": "Falta el monto.",
+        "withdrawalAutopaySystematicProgramMissingAmountError": "Falta el monto.",
         "systematicProgramPendingBannerText": "Una actualización de los detalles del programa sistemático de esta póliza está pendiente. Para más información, ",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
         "illustrationCalcUnreachableSolveFailed": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló.",
@@ -5278,18 +5314,11 @@
         "cancelAutopay": {
             "cancel": "Cancelar",
             "cancelAutopay": "Cancelar autopago",
-            "cancelAutopaySP": "Cancelar programa",
             "confirmCancelError": "Confirma antes de cancelar el autopago.",
-            "confirmCancelErrorSP": "Confirmar antes de cancelar el programa sistemático.",
             "effectiveDate": "Fecha efectiva",
             "invalidEffectiveDate": "Introduce una fecha efectiva válida.",
-            "loanAutopayCancellation": "Cancelación de autopago de préstamo",
-            "loanAutopayCancellationSP": "Cancelación sistemática del pago de préstamos",
             "missingCaseDocument": "Selecciona un documento (o procede sin él) para continuar.",
-            "premiumAutopayCancellation": "Cancelación de autopago de prima",
-            "premiumAutopayCancellationSP": "Cancelación sistemática de primas",
-            "proceedCancel": "Proceder con la cancelación del autopago {{frequency}} de {{amount}}",
-            "proceedCancelSP": "Proceder con la cancelación del programa sistemático {{frequency}} de {{amount}}"
+            "proceedCancel": "Proceder con la cancelación del autopago {{frequency}} de {{amount}}"
         },
         "loans": {
             "header": {
@@ -6295,7 +6324,6 @@
             "setUpAutopay": "Configurar pago automático",
             "oneTimePaymentText": "Hacer pago único",
             "cancelAutopay": "Cancelar pago automático",
-            "cancelAutopaySP": "Cancelar programa",
             "cancelLoanAutopayTitle": "Cancelar Pago Automático del Préstamo",
             "cancelLoanAutopayTitleSP": "Cancelar Programa de Préstamo",
             "cancelPremiumAutopayTitle": "Cancelar Pago Automático de la Prima",
@@ -6477,8 +6505,7 @@
     "autopay": {
         "pendingBanner": {
             "caseLinkText": "ir al caso",
-            "text": "Una actualización de los detalles de pago automático de esta póliza está pendiente. Para más información, ",
-            "textSP": "Se encuentra pendiente una actualización de los detalles sistemáticos del programa de esta política. Para más información, "
+            "text": "Una actualización de los detalles de pago automático de esta póliza está pendiente. Para más información, "
         }
     },
     "financialTransaction": {
@@ -6667,7 +6694,6 @@
             "rmdAutopay": "Pago automático de RMD próximo",
             "cancelWithdrawalAutopayTitle": "Cancelar sistemáticamente {{type}}",
             "cancelAutopay": "Cancelar pago automático",
-            "cancelAutopaySP": "Cancelar programa",
             "paymentFrequencyText": "{{paymentMode}} {{paymentType}}",
             "paymentType": {
                 "payment": "pago"
@@ -6707,16 +6733,10 @@
     },
     "loanAutopay": {
         "start": {
-            "label": "Iniciar",
-            "titleStart": "Configurar Pago Automático de Préstamo",
-            "titleStartSP": "Crear programa sistemático de reembolso de préstamos",
-            "titleManage": "Gestionar Pago Automático de Préstamo",
-            "titleManageSP": "Manage Systematic Loan Repayment Program"
+            "label": "Iniciar"
         },
         "amount": {
             "label": "Monto",
-            "paymentAmount": "Monto de pago automático de préstamo",
-            "paymentAmountSP": "Monto de reembolso sistemático del préstamo",
             "paymentFrequency": "Frecuencia de pago",
             "paymentStartDate": "Fecha de inicio de pago",
             "nextPaymentDate": "Fecha del próximo pago",
@@ -6726,10 +6746,6 @@
             "invalidNextPaymentDateError": "Ingresa una fecha válida para el próximo pago.",
             "missingStartDateError": "Falta la fecha de inicio de pago.",
             "invalidStartDateError": "Ingresa una fecha válida de inicio de pago.",
-            "missingAmountError": "Falta el monto del pago automático de préstamo.",
-            "missingAmountErrorSP": "Falta el monto sistemático de reembolso del préstamo.",
-            "invalidAmountError": "El monto del pago automático de préstamo debe ser mayor a $1.00",
-            "invalidAmountErrorSP": "El monto de reembolso sistemático del préstamo debe ser mayor a $1.00",
             "annually": "Anualmente",
             "semiAnnually": "Semestralmente",
             "monthly": "Mensualmente",
@@ -6935,16 +6951,10 @@
     "premiumAutopay": {
         "start": {
             "label": "Iniciar",
-            "subtitleManage": "Realizar cambios en el cronograma, monto o método de pago de la prima sistemática de esta póliza.",
-            "titleStart": "Configurar Pago Automático de Prima",
-            "titleStartSP": "Configurar Prima del Programa Sistemático",
-            "titleManage": "Gestionar Pago Automático de Prima",
-            "titleManageSP": "Administrar Prima del Programa Sistemático"
+            "subtitleManage": "Realizar cambios en el cronograma, monto o método de pago de la prima sistemática de esta póliza."
         },
         "amount": {
             "label": "Monto",
-            "paymentAmount": "Monto del pago automático de prima",
-            "paymentAmountSP": "Importe de la prima sistemática",
             "paymentFrequency": "Frecuencia de pago",
             "paymentStartDate": "Fecha de inicio de pago",
             "nextPaymentDate": "Fecha del próximo pago",
@@ -6954,10 +6964,6 @@
             "invalidNextPaymentDateError": "Ingresa una fecha válida para el próximo pago.",
             "missingStartDateError": "Falta la fecha de inicio de pago.",
             "invalidStartDateError": "Ingresa una fecha válida de inicio de pago.",
-            "missingAmountError": "Falta el monto del pago automático de prima.",
-            "missingAmountErrorSP": "Falta el importe de la prima sistemática.",
-            "invalidAmountError": "El monto del pago automático de prima debe ser mayor a $1.00",
-            "invalidAmountErrorSP": "El monto de la prima sistemática debe ser mayor a $1.00",
             "annually": "Anualmente",
             "semiAnnually": "Semestralmente",
             "monthly": "Mensualmente",
@@ -7009,8 +7015,6 @@
             "label": "Monto",
             "dollar": "Dólar",
             "earnings": "Solo ganancias",
-            "paymentAmount": "Monto",
-            "paymentAmountSP": "Monto",
             "paymentFrequency": "Frecuencia de pago",
             "paymentStartDate": "Fecha de inicio de pago",
             "nextPaymentDate": "Fecha del próximo pago",
@@ -7020,10 +7024,6 @@
             "invalidNextPaymentDateError": "Ingresa una fecha de próximo pago válida.",
             "missingStartDateError": "Falta la fecha de inicio de pago.",
             "invalidStartDateError": "Ingresa una fecha de inicio de pago válida.",
-            "missingAmountError": "Falta el monto.",
-            "missingAmountErrorSP": "Falta el monto.",
-            "invalidAmountError": "El monto debe ser mayor a $1.00",
-            "invalidAmountErrorSP": "El monto debe ser mayor a $1.00",
             "annually": "Anualmente",
             "semiAnnually": "Semestralmente",
             "monthly": "Mensualmente",

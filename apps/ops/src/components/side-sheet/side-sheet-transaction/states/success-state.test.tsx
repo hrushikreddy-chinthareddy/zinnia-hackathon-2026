@@ -54,14 +54,14 @@ describe('Success State - Translation Tests', () => {
                 const { getByText } = render(
                     <SuccessState
                         transactionType={i18n.t(
-                            'transactions.cancelAutopay.premiumAutopayCancellationSP'
+                            'allFields.premiumSytematicProgramCancellation'
                         )}
                         onCancel={() => {}}
                     />
                 );
 
                 const expectedText =
-                    config.translations.transactions.cancelAutopay.premiumAutopayCancellationSP.trim();
+                    config.translations.allFields.premiumSytematicProgramCancellation.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -71,14 +71,14 @@ describe('Success State - Translation Tests', () => {
                 const { getByText } = render(
                     <SuccessState
                         transactionType={i18n.t(
-                            'transactions.cancelAutopay.loanAutopayCancellationSP'
+                            'allFields.loanSytematicProgramCancellation'
                         )}
                         onCancel={() => {}}
                     />
                 );
 
                 const expectedText =
-                    config.translations.transactions.cancelAutopay.loanAutopayCancellationSP.trim();
+                    config.translations.allFields.loanSytematicProgramCancellation.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -90,14 +90,14 @@ describe('Success State - Translation Tests', () => {
                 const { getByText } = render(
                     <SuccessState
                         transactionType={i18n.t(
-                            'transactions.cancelAutopay.premiumAutopayCancellation'
+                            'allFields.premiumAutopayCancellation'
                         )}
                         onCancel={() => {}}
                     />
                 );
 
                 const expectedText =
-                    config.translations.transactions.cancelAutopay.premiumAutopayCancellation.trim();
+                    config.translations.allFields.premiumAutopayCancellation.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -107,14 +107,14 @@ describe('Success State - Translation Tests', () => {
                 const { getByText } = render(
                     <SuccessState
                         transactionType={i18n.t(
-                            'transactions.cancelAutopay.loanAutopayCancellation'
+                            'allFields.loanAutopayCancellation'
                         )}
                         onCancel={() => {}}
                     />
                 );
 
                 const expectedText =
-                    config.translations.transactions.cancelAutopay.loanAutopayCancellation.trim();
+                    config.translations.allFields.loanAutopayCancellation.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });

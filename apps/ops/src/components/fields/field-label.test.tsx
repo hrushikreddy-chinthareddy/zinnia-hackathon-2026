@@ -54,14 +54,16 @@ describe('Work Flow - Translation Tests', () => {
                 const { getByText } = render(
                     <FieldLabel
                         label={
-                            i18n.t('premiumAutopay.amount.paymentAmountSP') ||
-                            'premiumAutopay.amount.paymentAmountSP'
+                            i18n.t(
+                                'allFields.premiumAutopaySystematicProgramPaymentAmount'
+                            ) ||
+                            'allFields.premiumAutopaySystematicProgramPaymentAmount'
                         }
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.amount.paymentAmountSP.trim();
+                    config.translations.allFields.premiumAutopaySystematicProgramPaymentAmount.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -73,14 +75,14 @@ describe('Work Flow - Translation Tests', () => {
                 const { getByText } = render(
                     <FieldLabel
                         label={
-                            i18n.t('premiumAutopay.amount.paymentAmount') ||
-                            'premiumAutopay.amount.paymentAmount'
+                            i18n.t('allFields.premiumAutopayPaymentAmount') ||
+                            'allFields.premiumAutopayPaymentAmount'
                         }
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.amount.paymentAmount.trim();
+                    config.translations.allFields.premiumAutopayPaymentAmount.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });

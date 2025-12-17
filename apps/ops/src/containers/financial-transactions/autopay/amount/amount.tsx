@@ -221,10 +221,10 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
             errors = {
                 ...errors,
                 paymentAmount: `${t(
-                    `${translationKeyPrefix}.amount.${
+                    `allFields.${translationKeyPrefix}${
                         systematicProgramTablesEnabled
-                            ? 'missingAmountErrorSP'
-                            : 'missingAmountError'
+                            ? 'SystematicProgramMissingAmountError'
+                            : 'MissingAmountError'
                     }`
                 )}`,
             };
@@ -232,10 +232,10 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
             errors = {
                 ...errors,
                 paymentAmount: `${t(
-                    `${translationKeyPrefix}.amount.${
+                    `allFields.${translationKeyPrefix}${
                         systematicProgramTablesEnabled
-                            ? 'invalidAmountErrorSP'
-                            : 'invalidAmountError'
+                            ? 'SystematicProgramInvalidAmountError'
+                            : 'InvalidAmountError'
                     }`
                 )}`,
             };
@@ -307,10 +307,10 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                 <Field
                     data-testid={
                         t(
-                            `${translationKeyPrefix}.amount.${
+                            `allFields.${translationKeyPrefix}${
                                 systematicProgramTablesEnabled
-                                    ? 'paymentAmountSP'
-                                    : 'paymentAmount'
+                                    ? 'SystematicProgramPaymentAmount'
+                                    : 'PaymentAmount'
                             }`
                         ) ?? ''
                     }
@@ -318,10 +318,10 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                     className="max-w-[160px]"
                     label={
                         t(
-                            `${translationKeyPrefix}.amount.${
+                            `allFields.${translationKeyPrefix}${
                                 systematicProgramTablesEnabled
-                                    ? 'paymentAmountSP'
-                                    : 'paymentAmount'
+                                    ? 'SystematicProgramPaymentAmount'
+                                    : 'PaymentAmount'
                             }`
                         ) ?? ''
                     }
