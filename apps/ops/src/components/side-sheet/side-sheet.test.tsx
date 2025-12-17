@@ -109,16 +109,14 @@ describe('Side Sheets - Translation Tests', () => {
                         handleClose={() => {}}
                         headerElement={
                             <Typography variant={TypographyVariant.H2}>
-                                {i18n.t(
-                                    'premium.upcoming.cancelPremiumAutopayTitleSP'
-                                )}
+                                {i18n.t('allFields.cancelPremiumProgram')}
                             </Typography>
                         }
                     />
                 );
 
                 const expectedText =
-                    config.translations.premium.upcoming.cancelPremiumAutopayTitleSP.trim();
+                    config.translations.allFields.cancelPremiumProgram.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -152,16 +150,14 @@ describe('Side Sheets - Translation Tests', () => {
                         handleClose={() => {}}
                         headerElement={
                             <Typography variant={TypographyVariant.H2}>
-                                {i18n.t(
-                                    'premium.upcoming.cancelPremiumAutopayTitle'
-                                )}
+                                {i18n.t('allFields.cancelPremiumAutopayTitle')}
                             </Typography>
                         }
                     />
                 );
 
                 const expectedText =
-                    config.translations.premium.upcoming.cancelPremiumAutopayTitle.trim();
+                    config.translations.allFields.cancelPremiumAutopayTitle.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -174,16 +170,14 @@ describe('Side Sheets - Translation Tests', () => {
                         handleClose={() => {}}
                         headerElement={
                             <Typography variant={TypographyVariant.H2}>
-                                {i18n.t(
-                                    'premium.upcoming.cancelLoanAutopayTitle'
-                                )}
+                                {i18n.t('allFields.cancelLoanAutopayTitle')}
                             </Typography>
                         }
                     />
                 );
 
                 const expectedText =
-                    config.translations.premium.upcoming.cancelLoanAutopayTitle.trim();
+                    config.translations.allFields.cancelLoanAutopayTitle.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });

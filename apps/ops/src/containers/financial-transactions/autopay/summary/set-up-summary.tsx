@@ -146,8 +146,8 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                             variant={LabelVariant.FieldLabel}
                             label={t(
                                 systematicProgramTablesEnabled
-                                    ? `${translationKeyPrefix}.summary.autopayAmountSP`
-                                    : `${translationKeyPrefix}.summary.autopayAmount`
+                                    ? `${translationKeyPrefix}SummarySystematicProgramAmount`
+                                    : `${translationKeyPrefix}SummaryAutopayAmount`
                             )}
                         />
                         <Typography variant={TypographyVariant.Value}>

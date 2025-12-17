@@ -110,10 +110,10 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         {
             header: '',
             new: t(
-                `${translationKeyPrefix}.summary.${
+                `${translationKeyPrefix}Summary${
                     systematicProgramTablesEnabled
-                        ? 'newAutopayDetailsSP'
-                        : 'newAutopayDetails'
+                        ? 'NewSystematicProgramDetail'
+                        : 'NewAutopayDetail'
                 }`
             ),
             current: t(`${translationKeyPrefix}.summary.current`),
@@ -278,10 +278,10 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                     submitLabel={
                         validationSucceeded
                             ? t(
-                                  `${translationKeyPrefix}.summary.${
+                                  `${translationKeyPrefix}Summary${
                                       systematicProgramTablesEnabled
-                                          ? 'updateAutopaySP'
-                                          : 'updateAutopay'
+                                          ? 'UpdateSystematicProgram'
+                                          : 'UpdateAutopay'
                                   }`
                               ) ?? ''
                             : t(`${translationKeyPrefix}.summary.submit`) ?? ''
