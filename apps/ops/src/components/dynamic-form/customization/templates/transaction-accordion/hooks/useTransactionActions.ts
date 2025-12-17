@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { useEffect, useRef } from 'react';
 
 import { Action } from '@deps/constants/policy';
+import { ActionDataItem } from '@deps/containers/task-container/task-handlers/types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 interface Params {
@@ -15,7 +16,7 @@ export function useTransactionActions({
     isSingleParty,
     formData,
 }: Params) {
-    const formDataRef = useRef<any[]>(formData);
+    const formDataRef = useRef<ActionDataItem[]>(formData);
 
     useEffect(() => {
         formDataRef.current = formData;
@@ -24,43 +25,34 @@ export function useTransactionActions({
     const disableAddButton =
         isSingleParty &&
         Array.isArray(formData) &&
-        formData.some((x: any) => x.action === Action.ADD);
+        formData.some((x: ActionDataItem) => x.action === Action.ADD);
+
+    const updateItem = (item: ActionDataItem, shouldDelete: boolean) => ({
+        ...item,
+        action: shouldDelete
+            ? Action.DELETE
+            : item.action === Action.ADD
+            ? Action.ADD
+            : Action.NONE,
+        party: {
+            ...item.party,
+            endDate: shouldDelete
+                ? dayjs.utc().format(ZAHARA_API_DATE_FORMAT)
+                : null,
+        },
+    });
 
     const onToggleDelete = (index: number, checked: boolean) => {
         let updatedList = [...formDataRef.current];
 
         if (isSingleParty) {
-            updatedList = updatedList.map((item, i) => ({
-                ...item,
-                action:
-                    i === index && checked
-                        ? Action.DELETE
-                        : item.action === Action.ADD
-                        ? Action.ADD
-                        : Action.NONE,
-                party: {
-                    ...item.party,
-                    endDate:
-                        i === index && checked
-                            ? dayjs.utc().format(ZAHARA_API_DATE_FORMAT)
-                            : null,
-                },
-            }));
+            updatedList = updatedList.map((item: ActionDataItem, i: number) =>
+                i === index
+                    ? updateItem(item, checked)
+                    : updateItem(item, false)
+            );
         } else {
-            updatedList[index] = {
-                ...updatedList[index],
-                action: checked
-                    ? Action.DELETE
-                    : updatedList[index].action === Action.ADD
-                    ? Action.ADD
-                    : Action.NONE,
-                party: {
-                    ...updatedList[index].party,
-                    endDate: checked
-                        ? dayjs.utc().format(ZAHARA_API_DATE_FORMAT)
-                        : null,
-                },
-            };
+            updatedList[index] = updateItem(updatedList[index], checked);
         }
         formDataRef.current = updatedList;
         setCustomData({ actionData: updatedList });

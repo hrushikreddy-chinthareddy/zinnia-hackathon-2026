@@ -1,8 +1,14 @@
 import { ArrayFieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
+import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { Action, Roles } from '@deps/constants/policy';
+import {
+    Party,
+    Signatures,
+} from '@deps/containers/task-container/task-handlers/types';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 
@@ -10,7 +16,6 @@ import { useAccordionState } from './hooks/useAccordionState';
 import { useTransactionActions } from './hooks/useTransactionActions';
 import styles from './transaction-accordion.module.css';
 import { getTitle } from './utils';
-
 export const TransactionAccordionTemplate = (
     props: ArrayFieldTemplateProps
 ) => {
@@ -25,6 +30,7 @@ export const TransactionAccordionTemplate = (
     } = props;
     const ui = getUiOptions(uiSchema);
     const { setCustomData } = formContext;
+    const { t } = useTranslation();
 
     const {
         templateId = 'default',
@@ -59,13 +65,14 @@ export const TransactionAccordionTemplate = (
 
     const isJointOwnerPresent =
         formContext?.customData?.contractInfo?.parties?.some(
-            (party: any) => party.partyRole === Roles.JOINTOWNER
+            (party: Party) => party.partyRole === Roles.JOINTOWNER
         );
     if (formContext?.customData?.signatureData) {
         formContext.customData.signatureData.signatures = isJointOwnerPresent
             ? formContext.customData.signatureData.signatures
             : formContext.customData.signatureData.signatures?.filter(
-                  (signature: any) => signature.signType !== Roles.JOINT_OWNER
+                  (signature: Signatures) =>
+                      signature.signType !== Roles.JOINT_OWNER
               );
     }
 
@@ -110,7 +117,7 @@ export const TransactionAccordionTemplate = (
                         <div className="flex justify-between items-center px-4 py-3">
                             <button
                                 type="button"
-                                className="flex items-center gap-x-2 flex-grow"
+                                className={styles.row}
                                 onClick={() => toggle(index)}
                             >
                                 <span className={styles.title}>
@@ -144,7 +151,7 @@ export const TransactionAccordionTemplate = (
                                 !isSimpleAccordion && (
                                     <CheckboxText
                                         id={`remove-${index}`}
-                                        label="Remove"
+                                        label={t('allFields.remove')}
                                         checked={isDeleted}
                                         onChange={(val) =>
                                             onToggleDelete(index, val)
@@ -155,12 +162,11 @@ export const TransactionAccordionTemplate = (
 
                         {activeIndex === index && (
                             <div
-                                className={`bg-gray-50 ${
+                                className={clsx(
+                                    styles.container,
+                                    activeIndex === index && styles.active,
                                     disableContent && styles.disabledContent
-                                }`}
-                                style={{
-                                    padding: activeIndex === index ? '1rem' : 0,
-                                }}
+                                )}
                             >
                                 {element.children}
                             </div>
@@ -175,7 +181,7 @@ export const TransactionAccordionTemplate = (
                         type="button"
                         onClick={onAddClick}
                         disabled={disableAddButton}
-                        className="text-cyan-800 font-bold"
+                        className={styles.highlightText}
                         style={{ opacity: disableAddButton ? 0.4 : 1 }}
                     >
                         <Icon type={IconType.ADD} small />

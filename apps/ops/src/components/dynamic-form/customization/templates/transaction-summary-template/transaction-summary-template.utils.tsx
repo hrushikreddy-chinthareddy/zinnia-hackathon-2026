@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
 import { Action, PolicyRole } from '@deps/constants/policy';
@@ -14,8 +15,19 @@ import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
 } from '@deps/queries/api/web-non-financial';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    DEFAULT_ERROR_STRING,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import {
+    cleanAddresses,
+    cleanEmails,
+    cleanPhones,
+    detectRoleChangeRequestType,
+    resolveRoleChangePartyId,
+} from '@deps/utils/tasks/role-change-data-entry.utils';
+
 export function getPartyMeta(item: SummaryItem) {
     const party = item.party || {};
     const address = party.addresses?.[0];
@@ -30,15 +42,18 @@ export function getPartyMeta(item: SummaryItem) {
                 .filter(Boolean)
                 .join(' '),
         addressStr: formattedAddress(address),
-        phoneStr: formatPhoneNumberWithCountryCode(phone as EnterprisePhone),
+        phoneStr: phone
+            ? formatPhoneNumberWithCountryCode(phone as EnterprisePhone)
+            : DEFAULT_ERROR_STRING,
         emailStr: formattedEmail(email),
         ssn: formatIdentification(identifications ?? []),
-        gender: party.gender || '-',
-        dob: party.dateOfBirth || '-',
-        relationshipToParty: item.partyRole?.relationshipToParty || '-',
-        partyId: item.partyId || null,
+        gender: party.gender || DEFAULT_ERROR_STRING,
+        dob: party.dateOfBirth || DEFAULT_ERROR_STRING,
+        relationshipToParty:
+            item.partyRole?.relationshipToParty || DEFAULT_ERROR_STRING,
     };
 }
+
 export function getTransactionPartyDisplayValue({
     taskType,
     fullName,
@@ -48,33 +63,33 @@ export function getTransactionPartyDisplayValue({
     fullName?: string;
     item: any;
 }): string {
-    if (
-        taskType === TaskType.Initiate_BeneChange_Transaction ||
-        taskType === TaskType.Initiate_AssigneeChange_Transaction
-    ) {
+    if (taskType === TaskType.Initiate_BeneChange_Transaction) {
         return fullName || DEFAULT_ERROR_STRING;
     } else if (taskType === TaskType.Agent_Change_Detail) {
         return FormatAgentName(item) || DEFAULT_ERROR_STRING;
     }
-
     return fullName || DEFAULT_ERROR_STRING;
 }
+
 export const FormatAgentName = (item: any): string => {
     const firstName = item?.party?.firstName?.trim?.() || '';
     const lastName = item?.party?.lastName?.trim?.() || '';
     const fullName = `${firstName} ${lastName}`.trim();
     return toTitleCase(fullName) || `Ext. ID: ${item.party.agentExternalId}`;
 };
+
 const ROLE_MAP: { [key: string]: string } = {
     PRIMARYWRITINGAGENT: 'Writing agent',
     PRIMARYSERVICINGAGENT: 'Servicing agent',
 };
+
 export const formatAgentType = (item: any): string => {
     return (
         ROLE_MAP[item.partyRole] ||
         toTitleCase(item.partyRole?.replace(/_/g, ' ') || 'N/A')
     );
 };
+
 export async function fetchValidationSummary(
     validationUrl: string,
     customData: any,
@@ -90,8 +105,7 @@ export async function fetchValidationSummary(
         return await validateAgentTransaction(requestBody);
     } else if (
         customData.taskType === TaskType.Third_Party_Detail ||
-        customData.taskType === TaskType.Initiate_AssigneeChange_Transaction ||
-        customData.taskType === TaskType.Agent_Change_Detail
+        customData.taskType === TaskType.Initiate_AssigneeChange_Transaction
     ) {
         return await validateRoleChange(
             requestBody?.planCode,
@@ -111,142 +125,8 @@ export async function fetchValidationSummary(
         throw new Error(`Unsupported taskType: ${customData.taskType}`);
     }
 }
+
 type RequestBodyBuilder = (customData: any) => any;
-const getRoleChangePartyId = (customData: any): string | null => {
-    const { defaultPartyIdRoleChange } = customData;
-    if (!customData || !Array.isArray(customData.actionData)) {
-        return defaultPartyIdRoleChange;
-    }
-    const actionData = customData.actionData;
-
-    const addedItem = actionData.find((item: any) => item.action === 'ADD');
-    const deletedItem = actionData.find(
-        (item: any) => item.action === Action.DELETE
-    );
-    let requestType = Action.NONE;
-    if (addedItem && deletedItem) {
-        requestType = Action.UPDATE;
-    } else if (addedItem) {
-        requestType = Action.ADD;
-    } else if (deletedItem) {
-        requestType = Action.DELETE;
-    }
-    switch (requestType) {
-        case Action.ADD:
-            return defaultPartyIdRoleChange;
-        case Action.UPDATE:
-            return deletedItem?.party?.partyId ?? null;
-        case Action.DELETE:
-            return deletedItem?.party?.partyId ?? null;
-        default:
-            return defaultPartyIdRoleChange;
-    }
-};
-
-const getRequestType = (customData: any): string | null => {
-    const { defaultPartyIdRoleChange } = customData;
-    if (!customData || !Array.isArray(customData.actionData)) {
-        return defaultPartyIdRoleChange;
-    }
-    const actionData = customData.actionData;
-
-    const addedItem = actionData.find((item: any) => item.action === 'ADD');
-    const deletedItem = actionData.find(
-        (item: any) => item.action === Action.DELETE
-    );
-    let requestType = Action.NONE;
-    if (addedItem && deletedItem) {
-        requestType = Action.UPDATE;
-    } else if (addedItem) {
-        requestType = Action.ADD;
-    } else if (deletedItem) {
-        requestType = Action.DELETE;
-    }
-    return requestType;
-};
-
-const getCollateralAmount = (customData: any): string | null => {
-    const { defaultPartyIdRoleChange } = customData;
-    if (!customData || !Array.isArray(customData.actionData)) {
-        return defaultPartyIdRoleChange;
-    }
-    const actionData = customData.actionData;
-
-    const addedItem = actionData.find((item: any) => item.action === 'ADD');
-    const deletedItem = actionData.find(
-        (item: any) => item.action === Action.DELETE
-    );
-    console.log('addedItem', addedItem);
-
-    let collateralAmount = null;
-    if (addedItem && deletedItem) {
-        collateralAmount = addedItem?.party?.collateralAmount ?? null;
-    } else if (addedItem) {
-        collateralAmount = addedItem?.party?.collateralAmount ?? null;
-    } else if (deletedItem) {
-        collateralAmount = deletedItem?.party?.collateralAmount ?? null;
-    }
-    if (collateralAmount !== null && collateralAmount !== undefined) {
-        const num = Number(collateralAmount);
-        if (!isNaN(num)) {
-            return num.toFixed(2);
-        }
-    }
-
-    return null;
-};
-
-const getRoleChangeParty = (customData: any): object | null => {
-    if (!customData || !Array.isArray(customData.actionData)) {
-        return null;
-    }
-    const actionData = customData.actionData;
-    const addedItem = actionData.find((item: any) => item.action === 'ADD');
-    const deletedItem = actionData.find(
-        (item: any) => item.action === Action.DELETE
-    );
-    let requestType = Action.NONE;
-    if (addedItem && deletedItem) {
-        requestType = Action.UPDATE;
-        customData.requestType = Action.UPDATE;
-    } else if (addedItem) {
-        requestType = Action.ADD;
-        customData.requestType = Action.ADD;
-    } else if (deletedItem) {
-        requestType = Action.DELETE;
-        customData.requestType = Action.DELETE;
-    }
-    const getFullName = (party: any) => {
-        if (!party) return null;
-        return [
-            party.prefix,
-            party.firstName,
-            party.middleName,
-            party.lastName,
-            party.suffix,
-        ]
-            .filter(Boolean)
-            .join(' ')
-            .trim();
-    };
-    switch (requestType) {
-        case Action.ADD:
-            addedItem.party.partyId = null;
-            addedItem.party.startDate = customData.effectiveDate;
-            addedItem.party.fullName = getFullName(addedItem.party);
-            return addedItem.party;
-        case Action.UPDATE:
-            addedItem.party.startDate = customData.effectiveDate;
-            addedItem.party.fullName = getFullName(addedItem.party);
-            return addedItem.party;
-        case Action.DELETE:
-            deletedItem.party.endDate = customData.effectiveDate;
-            deletedItem.party.fullName = getFullName(deletedItem.party);
-            return deletedItem?.party;
-        default:
-            return null;
-    }
-};
 
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
@@ -271,6 +151,60 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             isContingentBeneInfoOnFile: false,
         };
     },
+    INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
+        const { actionData } = customData || [];
+        const { requestType, addedItem, deletedItem } =
+            detectRoleChangeRequestType(actionData);
+
+        const partyId = resolveRoleChangePartyId(
+            requestType,
+            deletedItem,
+            customData.defaultPartyIdRoleChange
+        );
+
+        const uiParty = (addedItem ?? deletedItem)?.party ?? null;
+
+        const cleanedParty = uiParty
+            ? {
+                  ...uiParty,
+                  addresses: cleanAddresses(uiParty.addresses),
+                  emails: cleanEmails(uiParty.emails),
+                  phones: cleanPhones(uiParty.phones),
+                  startDate:
+                      requestType === Action.ADD ||
+                      requestType === Action.UPDATE
+                          ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                          : null,
+                  endDate:
+                      requestType === Action.DELETE
+                          ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                          : null,
+              }
+            : null;
+        return {
+            planCode: customData?.planCode,
+            policyNumber: customData?.policyNumber,
+            partyId,
+            role: PolicyRole.THIRDPARTYDESIGNEE,
+            query: {
+                collateralAmount: cleanedParty.collateralAmount,
+                effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+                caseId: customData?.caseId,
+                correlationId: customData?.correlationId,
+                changeReason: customData?.changeReason,
+                partyRole: PolicyRole.ASSIGNEE,
+                signatures: customData?.signatureData?.signatures,
+                notarySignatures: customData?.signatureData?.notarySignatures,
+                documents: customData?.documents,
+                supportingDocumentAttached:
+                    customData?.supportingDocumentAttached || null,
+                relationshipToTheCurrentOwner:
+                    customData?.relationshipToTheCurrentOwner,
+                party: cleanedParty,
+            },
+        };
+    },
+
     AGENT_CHANGE_DETAIL: (customData) => {
         return {
             planCode: customData?.planCode,
@@ -286,13 +220,33 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
         };
     },
     THIRD_PARTY_DETAIL: (customData) => {
+        const { actionData } = customData || [];
+        const { requestType, addedItem, deletedItem } =
+            detectRoleChangeRequestType(actionData);
+
+        const partyId = resolveRoleChangePartyId(
+            requestType,
+            deletedItem,
+            customData.defaultPartyIdRoleChange
+        );
+
+        const uiParty = (addedItem ?? deletedItem)?.party ?? null;
+
+        const cleanedParty = uiParty
+            ? {
+                  ...uiParty,
+                  addresses: cleanAddresses(uiParty.addresses),
+                  emails: cleanEmails(uiParty.emails),
+                  phones: cleanPhones(uiParty.phones),
+              }
+            : null;
         return {
             planCode: customData?.planCode,
             policyNumber: customData?.policyNumber,
-            partyId: getRoleChangePartyId(customData),
+            partyId,
             role: PolicyRole.THIRDPARTYDESIGNEE,
             query: {
-                effectiveDate: customData?.effectiveDate,
+                effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                 caseId: customData?.caseId,
                 correlationId: customData?.correlationId,
                 changeReason: customData?.changeReason,
@@ -302,37 +256,12 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 supportingDocumentAttached:
                     customData?.supportingDocumentAttached || null,
                 relationshipToParty: customData?.relationshipToParty,
-                party: getRoleChangeParty(customData),
-                requestType: customData?.requestType,
-            },
-        };
-    },
-    INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
-        return {
-            planCode: customData?.planCode,
-            policyNumber: customData?.policyNumber,
-            partyId: getRoleChangePartyId(customData),
-            role: PolicyRole.ASSIGNEE,
-            query: {
-                partyRole: PolicyRole.ASSIGNEE,
-                effectiveDate: customData?.effectiveDate,
-                caseId: customData?.caseId,
-                correlationId: customData?.correlationId,
-                changeReason: customData?.changeReason,
-                signatures: customData?.signatureData?.signatures || [],
-                documents: customData?.documents,
-                supportingDocumentAttached:
-                    customData?.supportingDocumentAttached || null,
-                relationshipToParty: customData?.relationshipToParty,
-                party: getRoleChangeParty(customData),
-                requestType: getRequestType(customData),
-                collateralAmount: Number(getCollateralAmount(customData)),
-                notarySignatures:
-                    customData?.signatureData?.notarySignatures || [],
+                party: cleanedParty,
             },
         };
     },
 };
+
 export function buildValidationRequestBody(customData: any): any {
     if (!customData || typeof customData.taskType !== 'string') {
         browserLogInfo(
@@ -343,7 +272,6 @@ export function buildValidationRequestBody(customData: any): any {
         );
         return { ...customData };
     }
-    console.log('customData', customData);
     if (customData.taskType === TaskType.Initiate_BeneChange_Transaction) {
         return requestBodyBuilders.INITIATE_BENECHANGE_TRANSACTION(customData);
     }
@@ -358,16 +286,20 @@ export function buildValidationRequestBody(customData: any): any {
             customData
         );
     }
+
     return { ...customData };
 }
+
 export interface PartyRole {
     partyRole?: string;
     relationshipToParty?: string;
 }
+
 export interface Identification {
     identificationType: string;
     identificationValue: string;
 }
+
 export interface Address {
     addressType?: string;
     addressLine1?: string;
@@ -378,6 +310,7 @@ export interface Address {
     zipCodeExtension?: string;
     country?: string;
 }
+
 export interface Phone {
     phoneType?: string;
     dialNumber?: string;
@@ -385,13 +318,14 @@ export interface Phone {
     areaCode?: string;
     extension?: string;
 }
+
 export interface Email {
     emailAddress?: string;
     emailType?: string;
 }
+
 export interface Party {
     partyType?: string;
-    startDate?: string | null;
     beneficiaryPercentage?: number;
     agentPercentage?: number;
     identifications?: Identification[];
@@ -411,6 +345,7 @@ export interface Party {
     fullName?: string;
     [key: string]: any;
 }
+
 export interface SummaryItem {
     action?: string;
     isPerStirpes?: boolean;
@@ -421,6 +356,7 @@ export interface SummaryItem {
     actionType?: string;
     [key: string]: any;
 }
+
 export const formatIdentification = (
     identifications: Identification[]
 ): string => {
@@ -433,6 +369,7 @@ export const formatIdentification = (
         ? ssn.identificationValue
         : identifications[0].identificationValue;
 };
+
 export const formattedAddress = (address?: Address): string => {
     if (!address) return '-';
 
@@ -454,9 +391,11 @@ export const formattedAddress = (address?: Address): string => {
         .filter((v) => v && v.length > 0)
         .join('\n');
 };
+
 export const formattedEmail = (email?: Email): string => {
     return email?.emailAddress || '-';
 };
+
 export const getRoleLabel = (
     partyRole: PartyRole,
     t: (key: string) => string,
@@ -471,10 +410,12 @@ export const getRoleLabel = (
             CONTINGENTBENEFICIARY: (t) => t('contingentBene'),
         },
     };
+
     const taskRoleMap =
         (taskType && roleLabelMap[taskType]) ||
         roleLabelMap[TaskType.Initiate_BeneChange_Transaction];
     const label = partyRole?.partyRole && taskRoleMap[partyRole.partyRole];
+
     if (typeof label === 'function') {
         return label(t);
     } else if (typeof label === 'string') {

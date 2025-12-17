@@ -1,12 +1,20 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 
 import styles from './party-info-list.module.css';
 
 // the commented code in this file is for future use and is intentionally left there
+
+type PartyArrayKey = 'emails' | 'phones' | 'addresses';
+
+const suffixToKey: Record<string, PartyArrayKey> = {
+    _emails: 'emails',
+    _phones: 'phones',
+    _addresses: 'addresses',
+};
 export default function PartyInfoListTemplate(
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
 ) {
@@ -39,6 +47,8 @@ export default function PartyInfoListTemplate(
     const [preferredIndex, setPreferredIndex] = useState(0);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const contacts = Array.isArray(formData) ? formData : [];
+    const updatedActionData = [...(formContext.parentActionData || [])];
     // const { t } = useTranslation(TranslationFiles.COMMON, {
     //     keyPrefix: 'transactionAccordion',
     // });
@@ -51,14 +61,7 @@ export default function PartyInfoListTemplate(
     //     });
     // };
 
-    const contacts = useMemo(
-        () => (Array.isArray(formData) ? formData : []),
-        [formData]
-    );
-    const updatedActionData = useMemo(
-        () => [...(formContext.parentActionData || [])],
-        [formContext.parentActionData]
-    );
+    const safeStringify = (v: any) => JSON.stringify(v ?? []);
 
     useEffect(() => {
         const id = idSchema?.$id ?? '';
@@ -74,42 +77,25 @@ export default function PartyInfoListTemplate(
 
         let updatedParty = { ...party };
         let hasChanged = false;
-
-        const safeStringify = (v: any) => JSON.stringify(v ?? []);
-
-        if (id.endsWith('_emails')) {
-            if (safeStringify(party.emails) !== safeStringify(updatedList)) {
-                updatedParty = { ...party, emails: updatedList };
-                hasChanged = true;
-            }
-        } else if (id.endsWith('_phones')) {
-            if (safeStringify(party.phones) !== safeStringify(updatedList)) {
-                updatedParty = { ...party, phones: updatedList };
-                hasChanged = true;
-            }
-        } else if (id.endsWith('_addresses')) {
-            if (safeStringify(party.addresses) !== safeStringify(updatedList)) {
-                updatedParty = { ...party, addresses: updatedList };
+        const suffix = Object.keys(suffixToKey).find((s) => id.endsWith(s));
+        if (suffix) {
+            const key = suffixToKey[suffix];
+            if (safeStringify(party[key]) !== safeStringify(updatedList)) {
+                updatedParty = { ...party, [key]: updatedList };
                 hasChanged = true;
             }
         }
 
         if (!hasChanged) return;
 
-        const newActionData = [...updatedActionData];
-        newActionData[partyIndex] = {
+        updatedActionData[partyIndex] = {
             ...entry,
             party: updatedParty,
         };
 
-        setCustomData({ actionData: newActionData });
-    }, [
-        preferredIndex,
-        idSchema?.$id,
-        setCustomData,
-        contacts,
-        updatedActionData,
-    ]);
+        setCustomData({ actionData: updatedActionData });
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [preferredIndex]);
 
     const toggleIsPreferred = (index: number, checked: boolean) => {
         let newPreferredIndex = preferredIndex;
@@ -194,7 +180,7 @@ export default function PartyInfoListTemplate(
                             style={{ opacity: 1 }}
                         >
                             <div className="flex justify-between items-start gap-4 flex-wrap">
-                                <div className={`flex-1 min-w-[70%]`}>
+                                <div className={styles.container}>
                                     {element.children}
                                 </div>
                                 <div className="flex flex-col gap-3 items-end">
