@@ -183,14 +183,14 @@ describe('assistive text - Translation Tests', () => {
                 const { getByText } = render(
                     <AssistiveText
                         text={i18n.t(
-                            'premiumAutopay.amount.missingAmountErrorSP'
+                            'allFields.premiumAutopaySystematicProgramMissingAmountError'
                         )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.amount.missingAmountErrorSP.trim();
+                    config.translations.allFields.premiumAutopaySystematicProgramMissingAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -199,14 +199,14 @@ describe('assistive text - Translation Tests', () => {
                 const { getByText } = render(
                     <AssistiveText
                         text={i18n.t(
-                            'premiumAutopay.amount.invalidAmountErrorSP'
+                            'allFields.premiumAutopaySystematicProgramInvalidAmountError'
                         )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.amount.invalidAmountErrorSP.trim();
+                    config.translations.allFields.premiumAutopaySystematicProgramInvalidAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -214,13 +214,15 @@ describe('assistive text - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={i18n.t('loanAutopay.amount.missingAmountErrorSP')}
+                        text={i18n.t(
+                            'allFields.loanAutopaySystematicProgramMissingAmountError'
+                        )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.amount.missingAmountErrorSP.trim();
+                    config.translations.allFields.loanAutopaySystematicProgramMissingAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -228,13 +230,15 @@ describe('assistive text - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={i18n.t('loanAutopay.amount.invalidAmountErrorSP')}
+                        text={i18n.t(
+                            'allFields.loanAutopaySystematicProgramInvalidAmountError'
+                        )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.amount.invalidAmountErrorSP.trim();
+                    config.translations.allFields.loanAutopaySystematicProgramInvalidAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -246,14 +250,14 @@ describe('assistive text - Translation Tests', () => {
                 const { getByText } = render(
                     <AssistiveText
                         text={i18n.t(
-                            'premiumAutopay.amount.missingAmountError'
+                            'allFields.premiumAutopayMissingAmountError'
                         )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.amount.missingAmountError.trim();
+                    config.translations.allFields.premiumAutopayMissingAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -262,14 +266,14 @@ describe('assistive text - Translation Tests', () => {
                 const { getByText } = render(
                     <AssistiveText
                         text={i18n.t(
-                            'premiumAutopay.amount.invalidAmountError'
+                            'allFields.premiumAutopayInvalidAmountError'
                         )}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.premiumAutopay.amount.invalidAmountError.trim();
+                    config.translations.allFields.premiumAutopayInvalidAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -277,13 +281,13 @@ describe('assistive text - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={i18n.t('loanAutopay.amount.missingAmountError')}
+                        text={i18n.t('allFields.loanAutopayMissingAmountError')}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.amount.missingAmountError.trim();
+                    config.translations.allFields.loanAutopayMissingAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
@@ -291,13 +295,13 @@ describe('assistive text - Translation Tests', () => {
                 await i18n.changeLanguage(languageCode);
                 const { getByText } = render(
                     <AssistiveText
-                        text={i18n.t('loanAutopay.amount.invalidAmountError')}
+                        text={i18n.t('allFields.loanAutopayInvalidAmountError')}
                         variant={AssistiveTextVariant.Error}
                     />
                 );
 
                 const expectedText =
-                    config.translations.loanAutopay.amount.invalidAmountError.trim();
+                    config.translations.allFields.loanAutopayInvalidAmountError.trim();
 
                 expect(getByText(expectedText)).toBeInTheDocument();
             });
