@@ -903,6 +903,30 @@
                                                     },
                                                     "required": ["lastName"]
                                                 }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "preferredCommunicationType": {
+                                                            "const": "EMAIL"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "required": ["emails"]
+                                                }
+                                            },
+                                            {
+                                                "if": {
+                                                    "properties": {
+                                                        "preferredCommunicationType": {
+                                                            "const": "REGULARMAIL"
+                                                        }
+                                                    }
+                                                },
+                                                "then": {
+                                                    "required": ["addresses"]
+                                                }
                                             }
                                         ],
                                         "dependencies": {
