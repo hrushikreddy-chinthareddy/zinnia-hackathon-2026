@@ -8751,6 +8751,15 @@
             "submitTask": "Submit"
         }
     },
+    "opsReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Operations Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "opsNigo": {
         "confirmStep": {
             "title": "Got It!",

@@ -8638,6 +8638,15 @@
             "submitTask": "Soumettre"
         }
     },
+    "opsReview": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : Validation des opérations a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
     "opsNigo": {
         "confirmStep": {
             "title": "Compris!",
