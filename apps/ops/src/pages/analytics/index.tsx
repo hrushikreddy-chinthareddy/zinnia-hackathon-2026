@@ -53,7 +53,11 @@ const AnalyticsPage = ({
     const tabParam = params.get('tab') ?? '';
     const slug = path.split('/').at(-1);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
-    const isTabValid = tabParam in AnalyticsTabs;
+    const isTabValid = Object.values(AnalyticsTabs).some(
+        (value) => value === tabParam
+    );
+
+    console.log({ tabParam, isTabValid });
 
     const {
         isIntersecting: carrierHeaderIsIntersecting,
