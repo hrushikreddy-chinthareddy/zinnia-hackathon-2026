@@ -223,15 +223,10 @@ export const Nav = ({
                                         <ul>
                                             {group.items.map((navItem) => {
                                                 // Normalizes the root nav route to be a string so it can be compared
-                                                const navItemIdString =
-                                                    navItem.id
-                                                        .split('/')
-                                                        .at(-1);
                                                 const activeNavItemString =
                                                     activeNavItem?.split(
                                                         '/'
                                                     )[1];
-
                                                 return (
                                                     <Tooltip
                                                         key={navItem.id}
@@ -273,7 +268,7 @@ export const Nav = ({
                                                                     aria-current={
                                                                         activeNavItem ===
                                                                             navItem.id ||
-                                                                        navItemIdString ===
+                                                                        navItem.id ===
                                                                             activeNavItemString
                                                                             ? 'page'
                                                                             : undefined

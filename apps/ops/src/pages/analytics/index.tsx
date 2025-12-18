@@ -21,7 +21,6 @@ import {
 } from '@deps/queries/api/dashboard';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
-import { AnalyticsRouteValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import {
     SegmentPageName,
@@ -151,20 +150,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 UserPermission.AllowReadCaseManagement,
                 loggingContext
             );
-
-            // Redirect to the cases subpath by default if the user has access
-            const subPath = resolvedUrl.split('/').at(-1);
-            if (
-                doesUserHavePagePermission &&
-                !Object.values(AnalyticsRouteValues).includes(subPath ?? '')
-            ) {
-                return {
-                    redirect: {
-                        destination: `/analytics/${AnalyticsRouteValues.cases}`,
-                        permanent: false,
-                    },
-                };
-            }
 
             return {
                 props: {
