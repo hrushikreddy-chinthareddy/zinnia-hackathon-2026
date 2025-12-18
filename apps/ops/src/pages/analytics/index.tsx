@@ -37,18 +37,18 @@ import nextI18nextConfig from 'next-i18next.config';
 
 import Cases from './content/cases';
 
-interface DashboardPageProps extends SegmentTrackedPageProps {
+interface AnalyticsPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
     path: string;
 }
 
-const DashboardPage = ({
+const AnalyticsPage = ({
     authorizedCarriers,
     brokerDealersSSR,
     user,
     path,
-}: DashboardPageProps) => {
+}: AnalyticsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
     const params = useSearchParams();
     const tabParam = params.get('tab') ?? '';
@@ -94,7 +94,7 @@ const DashboardPage = ({
     );
 };
 
-export default DashboardPage;
+export default AnalyticsPage;
 
 export const getServerSideProps = withPageAuthAndLogging(
     {
@@ -153,6 +153,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             );
 
             // Redirect to the cases subpath by default if the user has access
+            console.log('render');
             const subPath = resolvedUrl.split('/').at(-1);
             if (
                 doesUserHavePagePermission &&

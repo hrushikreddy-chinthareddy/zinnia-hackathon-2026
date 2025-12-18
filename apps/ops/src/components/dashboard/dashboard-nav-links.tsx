@@ -51,15 +51,6 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
                     />
                     {t('allFields.cases')}
                 </TabTrigger>
-                <TabTrigger value={AnalyticsRouteValues.policies}>
-                    <Icon
-                        type={IconType.BRIEFCASE}
-                        width={24}
-                        height={24}
-                        className="hidden lg:block"
-                    />
-                    Policies
-                </TabTrigger>
             </TabList>
             {children}
         </TabGroup>
