@@ -3159,7 +3159,8 @@
                 "re-illustration": "Re-Illustration",
                 "linked case": "Linked Case",
                 "bene": "Notify",
-                "beneficiary": "Beneficiary"
+                "beneficiary": "Beneficiary",
+                "owner": "Owner"
             },
             "reviewIssues": "Review",
             "suitabilityReview": "suitability",

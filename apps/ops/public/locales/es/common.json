@@ -3161,7 +3161,8 @@
                 "re-illustration": "Re-Ilustración: {{label}}",
                 "linked case": "Caso vinculado: {{label}}",
                 "bene": "Notifier {{label}}",
-                "beneficiary": "Beneficiario {{label}}"
+                "beneficiary": "Beneficiario {{label}}",
+                "owner": "Propietario {{label}}"
             },
             "reviewIssues": "Revisión",
             "suitabilityReview": "idoneidad",
