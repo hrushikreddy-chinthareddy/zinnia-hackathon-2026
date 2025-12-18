@@ -56,7 +56,6 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
         <>
             <ButtonGroup
                 className={styles.buttonGroup}
-                ariaLabel="analytics-sub-nav"
                 items={buttonNavItems}
                 onClick={handleClick}
                 defaultValue={selectedTab}
