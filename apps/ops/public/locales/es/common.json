@@ -469,6 +469,34 @@
         "taxes": "Impuestos",
         "invalidDateFormat": "Formato de fecha no válido. Por favor, utilice: ##/##/####",
         "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "zinniaLiveTransactionActivityTitle": "Actividad de Transacciones de Autoservicio",
+        "zinniaLiveTransactionActivityDescription": "Muestra la actividad total de transacciones de autoservicio para los roles listados en el filtro.",
+        "activityTooltipDescription": "Haz clic en un tipo de transacción para ver más detalles sobre los conteos. Usa la ruta de navegación encima del gráfico para volver a todos los tipos de transacción.",
+        "illustrationsActivityTitle": "Actividad de Ilustraciones",
+        "illustrationsActivityDescription": "Compara las ilustraciones creadas con las seleccionadas para su aplicación a lo largo del tiempo.",
+        "illustrationsActivityTooltip": "Este gráfico compara ilustraciones creadas con las seleccionadas para su aplicación. 'Seleccionadas' puede ser mayor que 'Creadas' porque una ilustración se creó antes pero fue seleccionada en el período de tiempo mostrado.",
+        "exportToCsv": "Exportar a CSV",
+        "total": "Total",
+        "to": "a",
+        "date": "Fecha",
+        "created": "Creado",
+        "selected": "Seleccionado",
+        "completedTaskTimesTitle": "Mediana del Tiempo de Procesamiento",
+        "completedTaskTimesDescription": "Mediana del tiempo de procesamiento de tareas durante el range de tiempo seleccionado.",
+        "caseType": "Tipo de caso",
+        "medianProcessingTime": "Mediana del tiempo de procesamiento",
+        "maxProcessingTime": "Máx. tiempo de procesamiento",
+        "minProcessingTime": "Min. tiempo de procesamiento",
+        "task": "Tarea",
+        "totalTasks": "Total de tareas",
+        "allTasks": "Todas las tareas",
+        "exportCSV": "Exportar a CSV",
+        "unknownTask": "Tarea desconocida",
+        "minute": "minuto",
+        "hour": "hora",
+        "day": "día",
+        "allCarriers": "Todos los Transportistas",
+        "medianTaskProcessingTimesFilename": "{{carrierName}} Tiempos Medianos de Procesamiento de Tareas {{fromDate}} a {{toDate}}",
         "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "La ilustración no puede satisfacer los cálculos solicitados; se están utilizando los mejores resultados disponibles.",
         "illustrationCalcUnreachableSolveFailed": "La ilustración no puede alcanzar la solución deseada, y el tipo de cálculo seleccionado falló.",
         "illustrationCalcRiderNotIncludedUnmetFaceAmount": "La cláusula adicional solicitada no se incluyó porque no cumple con los requisitos de monto nominal.",
@@ -512,9 +540,37 @@
         "sendToDifferentAddress": "Enviar a una dirección diferente",
         "formsToUpdate": "Formulario(s) para actualizar",
         "view": "Ver",
-        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
         "collapseAll": "Contraer todo",
-        "expandAll": "Expandir todo"
+        "expandAll": "Expandir todo",
+        "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
+        "accountValue": "Valor de la cuenta",
+        "accountValueTooltip": "Este es el valor en efectivo contenido dentro de la póliza de seguro de vida del propietario. El valor de la cuenta se acumula con el tiempo a medida que se pagan las primas y se ganan intereses.",
+        "surrenderValueTooltip": "Esto es lo que el propietario o sus beneficiarios pueden esperar si se rescinde la póliza. Es el valor actual de la cuenta menos los cargos por rescate, préstamos pendientes y otras tarifas.",
+        "upcomingPremium": "Próxima prima de {{frequency}}",
+        "upcomingPremiumNoPayment": "No hay pago programado",
+        "makePayment": "Realizar pago",
+        "baseDeathBenefit": "Beneficio por fallecimiento básico",
+        "baseDeathBenefitTooltip": "Este es el monto del beneficio por fallecimiento relacionado con la cobertura básica del propietario. Refleja la cifra actual, por lo que tiene en cuenta cualquier cambio en el beneficio por fallecimiento que haya ocurrido debido a retiros o préstamos. (Nota: Esta cifra puede diferir del beneficio por fallecimiento bruto total si hay líneas de cobertura adicionales o cláusulas adicionales que aumentan el beneficio por fallecimiento.)",
+        "account": "Cuenta",
+        "endingIn": "{{accountType}} terminando en {{accountNumber}}",
+        "freeLookCancelDate": "Fecha de finalización del período de revisión",
+        "gracePeriod": "Período de gracia antes de la caducidad",
+        "gracePeriodTooltip": "Estas fechas indican cuánto tiempo tiene el propietario para realizar el pago de gracia requerido para mantener la póliza activa. La primera fecha es cuando la póliza entró en estado de caducidad pendiente, y la segunda es la fecha límite para realizar el pago de gracia requerido.",
+        "gracePeriodMinPayment": "Pago mínimo del período de gracia",
+        "gracePeriodMinPaymentTooltip": "Este es el monto mínimo que el propietario debe pagar en primas antes de que finalice el período de gracia para mantener su póliza activa (y su cobertura y valor de cuenta intactos).",
+        "guaranteePeriod": "Período de garantía",
+        "lapseEffectiveDate": "Fecha efectiva de caducidad",
+        "lapseEffectiveDateTooltip": "Esta es la fecha en que la póliza caducó. El propietario no realizó un pago de gracia, por lo que ahora la póliza está oficialmente inactiva.",
+        "reinstatementPeriod": "Período de reinstalación",
+        "reinstatementPeriodTooltip": "Esto indica cuánto tiempo después de la fecha de caducidad tiene el propietario para comenzar el proceso de reinstalación de la póliza. Algunas pólizas no tienen un período de reinstalación. En ese caso, una póliza caducada ha terminado definitivamente.",
+        "underwritingDecisionTooltip": "Las pólizas caducadas deben ser aprobadas a través de suscripción para ser reinstaladas. Durante la suscripción, la aseguradora evalúa el riesgo de asegurar al propietario en función de su salud y estilo de vida y determina el costo de su seguro. Una vez aprobado, el propietario puede realizar el pago requerido para que su póliza vuelva a estar activa.",
+        "reinstatementPaymentPeriod": "Período de pago de reinstalación",
+        "reinstatementPaymentPeriodTooltip": "Estas fechas indican cuánto tiempo tiene el propietario para realizar el pago de reinstalación requerido una vez aprobado a través de suscripción. La primera fecha es cuando el propietario fue aprobado para la reinstalación, y la segunda es la fecha límite para realizar el pago de reinstalación requerido.",
+        "reinstatementPayment": "Pago de reinstalación",
+        "reinstatementPaymentTooltip": "Este es el monto que el propietario debe pagar en primas para que su póliza vuelva a estar activa.",
+        "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}.",
+        "year(s)": "año(s)",
+        "remove": "Eliminar"
     },
     "enums": {
         "LIFE": "Vida",
@@ -788,7 +844,7 @@
         "FundAllocationsChange": "Cambio en la asignación de fondos",
         "FundTransfer": "Transferencia de fondos",
         "GrantorChange": "Cambio de otorgante",
-        "PaymentInitialPremium": "Pago de prima inicial",
+        "PaymentInitialPremium": "Pago de la prima inicial",
         "IdentifierChange": "Cambio de identificador",
         "InitialPremium": "Prima inicial",
         "InterestCredit": "Crédito de intereses",
@@ -799,7 +855,7 @@
         "Lapse": "Vencimiento",
         "LapseAssessment": "Evaluación de vencimiento",
         "LoanAnniversaryTrueUp": "Ajuste anual del préstamo",
-        "LoanRepaymentOneTime": "Reembolso único del préstamo",
+        "LoanRepaymentOneTime": "Pago único del préstamo",
         "MatchBonusVesting": "Consolidación de bonificación correspondiente",
         "MultipleBeneficiaryChange": "Cambio múltiple de beneficiarios",
         "MultipleEmailChange": "Cambio múltiple de correos electrónicos",
@@ -812,9 +868,9 @@
         "PartialWithdrawalOneTime": "Retiro parcial único",
         "PayeeChange": "Cambio de beneficiario de pago",
         "PaymentExpiration": "Vencimiento del pago",
-        "PaymentLoanRepaymentOneTime": "Pago único de reembolso de préstamo",
+        "PaymentLoanRepaymentOneTime": "Pago único del préstamo",
         "PaymentOneTimePremium": "Pago de prima única",
-        "PaymentSystematicLoanRepayment": "Pago sistemático de reembolso de préstamo",
+        "PaymentSystematicLoanRepayment": "Reembolso sistemático de préstamo",
         "PayorChange": "Cambio de pagador",
         "PhoneNumberChange": "Cambio de número telefónico",
         "RateRenewal": "Renovación de tarifa",
@@ -1371,7 +1427,9 @@
         "minItems": "Seleccione al menos {{limit}} artículo(s).",
         "patternSsn": "Por favor, introduzca un SSN válido.",
         "maximum": "El campo no debe ser mayor que {{limit}}.",
-        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia."
+        "inValidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+        "patternEmail": "Por favor, introduzca un correo electrónico válido.",
+        "minContains": "Al menos {{limit}} válido {{ item}} debe estar presente."
     },
     "beneChange": {
         "tabs": {
@@ -5064,7 +5122,7 @@
                 "oneTimePremium": "Prima única",
                 "original": "Original",
                 "paymentMethod": "Método de pago",
-                "paymentOneTimePremium": "Pago de prima única",
+                "paymentOneTimePremium": "Prima única",
                 "phone": "Teléfono",
                 "phoneNumber": "Número de teléfono",
                 "premiumAutopayDetails": "Detalles de autopago de prima",
@@ -8711,15 +8769,6 @@
                 "title": "Los casos más vistos de Zinnia Live",
                 "description": "Muestra el número de visualizaciones de casos únicamente para grupos de usuarios seleccionados."
             }
-        },
-        "activity": {
-            "zinniaLiveTransactionActivity": {
-                "title": "Actividad de Transacciones de Autoservicio",
-                "description": "Muestra la actividad total de transacciones de autoservicio para los roles listados en el filtro."
-            },
-            "toolTip": {
-                "description": "Haz clic en un tipo de transacción para ver más detalles sobre los conteos. Usa la ruta de navegación encima del gráfico para volver a todos los tipos de transacción."
-            }
         }
     },
     "reverseTransaction": {
@@ -9190,5 +9239,14 @@
         "submitWithErrorsText": "Envíe con errores y cree una tarea NIGO para que el equipo apropiado le haga seguimiento.",
         "internalServerError": "Error Interno del Servidor",
         "failedToFetch": "No se pudo obtener el resumen de validación"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "El formulario de detalles del tercero se ha enviado correctamente.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
     }
 }

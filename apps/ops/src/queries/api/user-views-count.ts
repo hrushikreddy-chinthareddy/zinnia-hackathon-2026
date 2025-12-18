@@ -1,9 +1,9 @@
 import { AxiosResponse } from 'axios';
 
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     UserViewsInput,
     UserViewsOutput,
-    HTTPValidationError,
 } from '@zinnia/api-types/types/analytics';
 
 import { baseAppUrl } from '../api-config';
@@ -15,7 +15,7 @@ export const getUserViewsCounts = async (
     try {
         const { data: response } = await client.post<
             UserViewsInput,
-            AxiosResponse<UserViewsOutput, HTTPValidationError>
+            AxiosResponse<UserViewsOutput>
         >(`${baseAppUrl}/api/dashboard/user-views-count`, query);
 
         return {
@@ -23,13 +23,11 @@ export const getUserViewsCounts = async (
             totalElements: response.totalElements,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getUserViewsCounts::An error occurred while getting user views results',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
-        return error;
+
+        throw error;
     }
 };
