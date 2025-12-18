@@ -424,6 +424,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             setCustomData: (patch: any) => {
                 setCustomData((prev: any) => ({
                     ...prev,
+                    ...patch,
                     task: {
                         ...prev.task,
                         data: { ...prev.task.data, ...patch },
