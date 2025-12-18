@@ -153,7 +153,6 @@ export const getServerSideProps = withPageAuthAndLogging(
             );
 
             // Redirect to the cases subpath by default if the user has access
-            console.log('render');
             const subPath = resolvedUrl.split('/').at(-1);
             if (
                 doesUserHavePagePermission &&

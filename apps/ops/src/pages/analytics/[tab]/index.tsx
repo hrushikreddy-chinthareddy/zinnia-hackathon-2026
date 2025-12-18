@@ -1,4 +1,4 @@
-import analyticsRouteHandler, { getServerSideProps as gssp } from '..';
+import analyticsRouteHandler, { getServerSideProps as gssp } from '../index';
 
 export const getServerSideProps = gssp;
 
