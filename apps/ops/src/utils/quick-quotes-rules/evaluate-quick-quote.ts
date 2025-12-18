@@ -2,11 +2,13 @@ import { QuickQuoteParams } from '@deps/types/quickQuote';
 
 import type {
     ProductClassResult,
-    ClassAlternatives,
     RulesModel,
     NotAvailabilityReasonField,
     RiderAlternatives,
     RiderRule,
+    IneligibilityReason,
+    EligibilityResult,
+    getEligibleClassProps,
 } from './types';
 
 /**
@@ -18,20 +20,6 @@ import type {
  *  - the rider availability and rejection reason (if any)
  */
 export class QuickQuoteProducts {
-    /**
-     * Field that will store the reason why a product class
-     * is not available (e.g. 'age' or 'face').
-     * It is reset per product evaluation.
-     */
-    private rejectReasonFieldForClass: NotAvailabilityReasonField;
-
-    /**
-     * Field that store the reason why a rider
-     * is not available.
-     * It is reset per product evaluation.
-     */
-    private rejectReasonFieldForRider: NotAvailabilityReasonField;
-
     /**
      * @param rules Full rules model containing class and rider rules for all products.
      */
@@ -53,18 +41,16 @@ export class QuickQuoteProducts {
         const result: ProductClassResult[] = [];
 
         for (const product of this.rules.products) {
-            this.rejectReasonFieldForClass = undefined;
-            this.rejectReasonFieldForRider = undefined;
-
-            // For each class in the product, check if it's eligible
+            // For each class in the product, check if it's eligible, it also returns an array with all non eligible classes
             const eligibleClassByPosition = product.classes.map(
                 (productClass) =>
-                    this.getClassEligible(
-                        productClass.alternatives,
-                        input.insuredAge,
-                        input.nicotineUser,
-                        input.faceAmount
-                    )
+                    this.getEligibleClass({
+                        className: productClass.className,
+                        alternatives: productClass.alternatives,
+                        age: input.insuredAge,
+                        isNicotineUser: input.nicotineUser,
+                        face: input.faceAmount,
+                    })
             );
 
             // Evaluate each rider for this product
@@ -104,23 +90,28 @@ export class QuickQuoteProducts {
                 // Use the first and last eligible indexes as min/max class.
                 const minClass = product.classes[minIdx].classCode;
                 const maxClass = product.classes[maxIdx].classCode;
+                const nonEligibleReasonByClass =
+                    this.getNonEligibleReasonByClass(eligibleClassByPosition);
 
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [minClass, maxClass],
-                    notAvailabilityReasonField: undefined,
+                    notAvailabilityReasonField: nonEligibleReasonByClass,
                     riders: {
                         ...resultRiders,
                     },
                 });
             } else {
                 // If no eligible classes; propagate the rejection reason field
+                const nonEligibleReasonByClass =
+                    this.getNonEligibleReasonByClass(eligibleClassByPosition);
+
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [],
-                    notAvailabilityReasonField: this.rejectReasonFieldForClass,
+                    notAvailabilityReasonField: nonEligibleReasonByClass,
                     riders: {
                         ...resultRiders,
                     },
@@ -147,6 +138,19 @@ export class QuickQuoteProducts {
     ) => nicotineOption === (isNicotineUser ? 'Y' : 'N');
 
     /**
+     * Retrieve all non eligible reasons for each product class.
+     */
+    private getNonEligibleReasonByClass = (
+        eligibleClasses: EligibilityResult[]
+    ) => {
+        return eligibleClasses.filter(({ className, reasons }) => {
+            if (reasons.length > 0) {
+                return { className, reasons };
+            }
+        });
+    };
+
+    /**
      * Evaluates if a given class is eligible for the provided input.
      *
      * Conditions:
@@ -158,31 +162,66 @@ export class QuickQuoteProducts {
      *  - 'face' if face is out of range
      *  - 'age' if age is out of range (takes precedence over face)
      */
-    private getClassEligible(
-        alternatives: ClassAlternatives,
-        age?: number,
-        isNicotineUser?: boolean,
-        face?: number
-    ) {
-        // If required fields are missing class is not eligible
-        if (age == null || face == null) return false;
+
+    private getEligibleClass({
+        className,
+        alternatives,
+        age,
+        isNicotineUser,
+        face,
+    }: getEligibleClassProps): EligibilityResult {
+        const reasons: IneligibilityReason[] = [];
 
         const { nicotine, ageMin, ageMax, faceMin, faceMax } = alternatives;
 
-        const isNicotineUserMatch = this.nicMatches(nicotine, isNicotineUser);
+        // If required fields are missing class is not eligible
+        if (age == null || face == null) {
+            return {
+                className,
+                eligible: false,
+                reasons: [
+                    {
+                        field: 'age',
+                        expected: [ageMin, ageMax],
+                        actual: age ?? -1,
+                    },
+                ],
+            };
+        }
+
         const isAgeInRange = this.isWithin(age, ageMin, ageMax);
         const isFaceInRange = this.isWithin(face, faceMin, faceMax);
+        const isNicotineUserMatch = this.nicMatches(nicotine, isNicotineUser);
+
+        if (!isAgeInRange) {
+            reasons.push({
+                field: 'age',
+                expected: [ageMin, ageMax],
+                actual: age,
+            });
+        }
 
         if (!isFaceInRange) {
-            this.rejectReasonFieldForClass = 'face';
+            reasons.push({
+                field: 'face',
+                expected: [faceMin, faceMax],
+                actual: face,
+            });
         }
 
-        // Age has higher priority as an error than face.
-        if (!isAgeInRange) {
-            this.rejectReasonFieldForClass = 'age';
+        if (!isNicotineUserMatch) {
+            reasons.push({
+                field: 'nicotine',
+                expected: nicotine,
+                actual: !!isNicotineUser,
+            });
         }
 
-        return isNicotineUserMatch && isAgeInRange && isFaceInRange;
+        return {
+            className,
+            eligible: reasons.length === 0,
+            reasons,
+        };
     }
 
     /**
@@ -191,12 +230,12 @@ export class QuickQuoteProducts {
      *
      * If there are no eligible classes, both indexes are -1.
      */
-    private getClassRangeIndex(eligibleClassByPosition: boolean[]) {
+    private getClassRangeIndex(eligibleClassByPosition: EligibilityResult[]) {
         let minIdx = -1,
             maxIdx = -1;
 
         for (let i = 0; i < eligibleClassByPosition.length; i++) {
-            if (eligibleClassByPosition[i]) {
+            if (eligibleClassByPosition[i].eligible) {
                 if (minIdx === -1) minIdx = i;
                 maxIdx = i;
             }

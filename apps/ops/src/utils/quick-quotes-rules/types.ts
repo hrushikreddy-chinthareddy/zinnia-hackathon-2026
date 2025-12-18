@@ -21,7 +21,31 @@ export type NotAvailabilityReasonField =
     | 'state'
     | 'face'
     | 'termLength'
+    | 'state'
     | undefined;
+
+export type IneligibilityReason =
+    | {
+          field: 'age';
+          expected: [number, number];
+          actual: number;
+      }
+    | {
+          field: 'face';
+          expected: [number, number];
+          actual: number;
+      }
+    | {
+          field: 'nicotine';
+          expected: 'Y' | 'N';
+          actual: boolean;
+      };
+
+export type EligibilityResult = {
+    className: string;
+    eligible: boolean;
+    reasons: IneligibilityReason[];
+};
 
 export type ClassAlternatives = {
     nicotine: 'Y' | 'N';
@@ -62,12 +86,16 @@ export type RulesModel = {
     classOrder: string[];
     products: ProductRule[];
 };
+export type nonEligibleReasonByClass = {
+    className: string;
+    reasons: IneligibilityReason[];
+};
 
 export type ProductClassResult = {
     planCode: PlanCode;
     termLength: TermFixedCostPeriod;
     classCodes: UnderwritingClass[];
-    notAvailabilityReasonField: NotAvailabilityReasonField;
+    notAvailabilityReasonField: nonEligibleReasonByClass[];
     riders: ProductClassResultRiders;
 };
 
@@ -76,3 +104,11 @@ export type ProductClassResultRiders = {
         | boolean
         | NotAvailabilityReasonField;
 };
+
+export interface getEligibleClassProps {
+    className: string;
+    alternatives: ClassAlternatives;
+    age?: number;
+    isNicotineUser?: boolean;
+    face?: number;
+}
