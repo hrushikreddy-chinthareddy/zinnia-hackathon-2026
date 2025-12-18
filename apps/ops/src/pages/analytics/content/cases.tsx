@@ -59,7 +59,7 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
                 ariaLabel="analytics-sub-nav"
                 items={buttonNavItems}
                 onClick={handleClick}
-                defaultValue={selectedTab ?? AnalyticsTabs.ACTIVE_APPLICATIONS}
+                defaultValue={selectedTab}
             />
             <TabGroup
                 defaultValue={AnalyticsTabs.ACTIVE_APPLICATIONS}

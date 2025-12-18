@@ -39,14 +39,13 @@ import Cases from './content/cases';
 interface DashboardPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
-    tab: string;
+    path: string;
 }
 
 const DashboardPage = ({
     authorizedCarriers,
     brokerDealersSSR,
     user,
-    tab,
     path,
 }: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
@@ -54,8 +53,6 @@ const DashboardPage = ({
     const tabParam = params.get('tab');
     const slug = path.split('/').at(-1);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
-
-    console.log(tabParam);
 
     const {
         isIntersecting: carrierHeaderIsIntersecting,
@@ -86,7 +83,7 @@ const DashboardPage = ({
                     ref={carrierHeaderRef}
                     path={slug}
                 />
-                <Cases tab={tabParam ?? ''} ref={tabContentRef} />
+                <Cases tab={tabParam ?? undefined} ref={tabContentRef} />
             </DashboardResponsiveLayout>
         </>
     );
@@ -177,7 +174,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     locale,
                     authorizedCarriers,
                     brokerDealersSSR: filteredBrokerDealers,
-                    tab,
                     path: resolvedUrl,
                     user,
                     ...translations,
