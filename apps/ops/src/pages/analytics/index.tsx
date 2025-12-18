@@ -5,6 +5,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useRef } from 'react';
 
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
+import { AnalyticsTabs } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
@@ -50,9 +51,10 @@ const DashboardPage = ({
 }: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
     const params = useSearchParams();
-    const tabParam = params.get('tab');
+    const tabParam = params.get('tab') ?? '';
     const slug = path.split('/').at(-1);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
+    const isTabValid = tabParam in AnalyticsTabs;
 
     const {
         isIntersecting: carrierHeaderIsIntersecting,
@@ -83,7 +85,10 @@ const DashboardPage = ({
                     ref={carrierHeaderRef}
                     path={slug}
                 />
-                <Cases tab={tabParam ?? undefined} ref={tabContentRef} />
+                <Cases
+                    tab={isTabValid ? tabParam : undefined}
+                    ref={tabContentRef}
+                />
             </DashboardResponsiveLayout>
         </>
     );
@@ -96,13 +101,7 @@ export const getServerSideProps = withPageAuthAndLogging(
         getServerSideProps: async (context, loggingContext) => {
             // Get the user object from the Auth0 Session
             const user = await getUserData(context);
-            const {
-                locale = DEFAULT_LOCALE,
-                params,
-                res,
-                req,
-                resolvedUrl,
-            } = context;
+            const { locale = DEFAULT_LOCALE, res, req, resolvedUrl } = context;
 
             let accessToken;
             try {
@@ -114,8 +113,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 });
                 return serverSidePropsLogout();
             }
-
-            const tab = (params?.tab as string) || '';
 
             const doesUserHavePagePermission = await checkTuplePage(
                 context,
