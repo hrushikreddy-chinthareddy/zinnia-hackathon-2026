@@ -473,10 +473,11 @@
                                                             "title": "Prefix",
                                                             "enum": [
                                                                 null,
-                                                                "Dr.",
-                                                                "Mr.",
-                                                                "Mrs.",
-                                                                "Ms."
+                                                                "MR",
+                                                                "MS",
+                                                                "MISS",
+                                                                "MRS",
+                                                                "DR"
                                                             ],
                                                             "default": null
                                                         },
