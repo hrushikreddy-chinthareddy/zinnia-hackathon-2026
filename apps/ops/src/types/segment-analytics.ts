@@ -152,12 +152,17 @@ export type CaseClickedEvent = BaseSegmentEventProps & {
 
 export type IllustrationsClickedEvent = BaseSegmentEventProps & {
     productName: string;
+    productMarketingName: string;
     productType: string;
     carrier: string;
 };
 
 export type IllustrationAddProductClickedEvent = BaseSegmentEventProps & {
     carrier: string;
+};
+
+export type IllustrationCalculateEvent = IllustrationsClickedEvent & {
+    illustrationId: string;
 };
 
 export type CaseTabClickedEvent = BaseSegmentEventProps & {
