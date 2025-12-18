@@ -11,33 +11,26 @@ import { useTranslation } from 'react-i18next';
 
 import { AnalyticsRouteValues } from '@deps/types/constants';
 
-const DEFAULT_TAB = AnalyticsRouteValues.cases;
+const DEFAULT_PATH = AnalyticsRouteValues.cases;
 
-export const DashboardTabNav: FC<PropsWithChildren & { tab?: string }> = ({
+export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
     children,
-    tab,
+    path,
 }) => {
     const router = useRouter();
-    // const params = useSearchParams();
-    // const tabParam = params.get('tab');
-    const [tabVal, setTabVal] = useState(tab || DEFAULT_TAB);
+    const [pathVal, setPathVal] = useState(path || DEFAULT_PATH);
 
     const handleTabChange = (val: string) => {
-        setTabVal(val);
+        setPathVal(val);
         router.replace(`/analytics/${val}`, undefined, { shallow: true });
     };
 
-    // if (!tabParam) {
-    //     router.replace(`/analytics?tab=${DEFAULT_TAB}`, undefined, {
-    //         shallow: true,
-    //     });
-    // }
     const { t } = useTranslation();
 
     return (
         <TabGroup
-            defaultValue={tabVal}
-            value={tabVal}
+            defaultValue={pathVal}
+            value={pathVal}
             activationMode="manual"
             onValueChange={handleTabChange}
         >

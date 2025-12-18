@@ -1,22 +1,13 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { ButtonGroup, TabContent, TabGroup } from '@zinnia/bloom/components';
 import Highcharts from 'highcharts';
 import { useSearchParams } from 'next/navigation';
-import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useEffect, useRef } from 'react';
 
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
-import { AnalyticsTabs, TabTitles } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
-import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
-import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
-import { NIGOAnalysis } from '@deps/containers/dashboard/nigo-analysis/nigo-analysis';
-import { TasksAnalysis } from '@deps/containers/dashboard/tasks-analysis/tasks-analysis';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -36,7 +27,6 @@ import {
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
 import { FgaRoles } from '@deps/utils/auth';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     logWarn,
     parseErrorInformation,
@@ -44,7 +34,7 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import styles from './Dashboard.module.css';
+import Cases from './content/cases';
 
 interface DashboardPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
@@ -57,19 +47,16 @@ const DashboardPage = ({
     brokerDealersSSR,
     user,
     tab,
+    path,
 }: DashboardPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
-    const { t } = useTranslation();
-    const { featureFlags } = useOptimizely();
-    const [selectedTab, setSelectedTab] = useState<string>(
-        AnalyticsTabs.ACTIVE_APPLICATIONS
-    );
-    const carrierHeaderRef = useRef<HTMLDivElement>(null);
-    const router = useRouter();
     const params = useSearchParams();
     const tabParam = params.get('tab');
+    const slug = path.split('/').at(-1);
+    const carrierHeaderRef = useRef<HTMLDivElement>(null);
 
     console.log(tabParam);
+
     const {
         isIntersecting: carrierHeaderIsIntersecting,
         ref: tabContentRef,
@@ -87,29 +74,6 @@ const DashboardPage = ({
         });
     }, []);
 
-    const buttonNavItems = [
-        {
-            id: `analytics-tab-${TabTitles.OPEN}`,
-            children: <span>{t(`enums.${TabTitles.OPEN}`)}</span>,
-            value: AnalyticsTabs.ACTIVE_APPLICATIONS,
-        },
-        {
-            id: `analytics-tab-${TabTitles.CLOSED}`,
-            children: <span>{t(`enums.${TabTitles.CLOSED}`)}</span>,
-            value: AnalyticsTabs.CLOSED_TRANSACTIONS,
-        },
-        {
-            id: `analytics-tab-${TabTitles.ISSUES}`,
-            children: <span>{t(`enums.${TabTitles.ISSUES}`)}</span>,
-            value: AnalyticsTabs.NIGO_ANALYSIS,
-        },
-        {
-            id: `analytics-tab-${TabTitles.TASKS}`,
-            children: <span>{t(`enums.${TabTitles.TASKS}`)}</span>,
-            value: AnalyticsTabs.TASKS_VOLUME,
-        },
-    ];
-
     return (
         <>
             <PageHead titleKey="analytics" />
@@ -120,35 +84,9 @@ const DashboardPage = ({
                     authorizedCarriers={authorizedCarriers}
                     brokerDealersSSR={brokerDealersSSR}
                     ref={carrierHeaderRef}
-                    tab={tab}
+                    path={slug}
                 />
-                <ButtonGroup
-                    className={styles.buttonGroup}
-                    ariaLabel="analytics-sub-nav"
-                    items={buttonNavItems}
-                    onClick={(value) => setSelectedTab(value as string)}
-                />
-                <TabGroup
-                    defaultValue={AnalyticsTabs.ACTIVE_APPLICATIONS}
-                    value={selectedTab}
-                >
-                    <div ref={tabContentRef} className={styles.tabContent}>
-                        <TabContent value={AnalyticsTabs.ACTIVE_APPLICATIONS}>
-                            <ActiveApplications />
-                        </TabContent>
-                        <TabContent value={AnalyticsTabs.CLOSED_TRANSACTIONS}>
-                            <ClosedTransactions />
-                        </TabContent>
-                        {featureFlags[FEATURE_FLAGS.DASHBOARD_NIGO_TAB] && (
-                            <TabContent value={AnalyticsTabs.NIGO_ANALYSIS}>
-                                <NIGOAnalysis />
-                            </TabContent>
-                        )}
-                        <TabContent value={AnalyticsTabs.TASKS_VOLUME}>
-                            <TasksAnalysis />
-                        </TabContent>
-                    </div>
-                </TabGroup>
+                <Cases tab={tabParam ?? ''} ref={tabContentRef} />
             </DashboardResponsiveLayout>
         </>
     );
@@ -161,7 +99,13 @@ export const getServerSideProps = withPageAuthAndLogging(
         getServerSideProps: async (context, loggingContext) => {
             // Get the user object from the Auth0 Session
             const user = await getUserData(context);
-            const { locale = DEFAULT_LOCALE, params, res, req } = context;
+            const {
+                locale = DEFAULT_LOCALE,
+                params,
+                res,
+                req,
+                resolvedUrl,
+            } = context;
 
             let accessToken;
             try {
@@ -214,13 +158,17 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
-            if (!tab || !AnalyticsRouteValues[tab]) {
+            // Redirect to the cases subpath by default if the user has access
+            const subPath = resolvedUrl.split('/').at(-1);
+            if (
+                doesUserHavePagePermission &&
+                !Object.values(AnalyticsRouteValues).includes(subPath ?? '')
+            ) {
                 return {
                     redirect: {
-                        destination: `/cases/${AnalyticsRouteValues.cases}`,
+                        destination: `/analytics/${AnalyticsRouteValues.cases}`,
                         permanent: false,
                     },
-                    props: {},
                 };
             }
 
@@ -230,6 +178,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     authorizedCarriers,
                     brokerDealersSSR: filteredBrokerDealers,
                     tab,
+                    path: resolvedUrl,
                     user,
                     ...translations,
                 },

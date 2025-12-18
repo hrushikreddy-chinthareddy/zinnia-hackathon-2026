@@ -15,7 +15,6 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
-import { AnalyticsRouteValues } from '@deps/types/constants';
 import {
     getCarrierNameByClientId,
     getClientIdsByCarrierName,
@@ -31,7 +30,7 @@ interface FiltersHeaderProps {
     brokerDealersSSR: DashboardResponseData[];
     carrierHeaderIsIntersecting: boolean;
     carrierHeaderEntry?: IntersectionObserverEntry;
-    tab: (typeof AnalyticsRouteValues)[keyof typeof AnalyticsRouteValues];
+    path?: string;
 }
 
 const getUniqueCarrierFilterItems = (
@@ -61,7 +60,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             brokerDealersSSR,
             carrierHeaderIsIntersecting,
             carrierHeaderEntry,
-            tab,
+            path,
         },
         ref
     ) => {
@@ -290,7 +289,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                     </div>
                 </div>
                 <div className={styles.tabsNav}>
-                    <DashboardTabNav tab={tab} />
+                    <DashboardTabNav path={path} />
                 </div>
             </div>
         );

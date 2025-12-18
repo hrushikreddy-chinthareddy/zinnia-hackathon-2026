@@ -1261,7 +1261,7 @@
                 "text": "$t(pageHeader.coverage.headerText)"
             },
             "analytics": {
-                "link": "/analytics/cases",
+                "link": "/analytics",
                 "text": "Analytique"
             },
             "details": {
