@@ -9,7 +9,11 @@ import Field, {
 import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { getStateCodes } from '@deps/helpers/states.helpers';
-import { PartyType, State } from '@zinnia/api-types/types/sor';
+import {
+    PartyType,
+    PreferredCommunicationType,
+    State,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ENTERPRISE_ADDRESS_TYPE,
@@ -24,6 +28,7 @@ export interface AddressDetailsProps {
     index: number;
     isReadOnly?: boolean;
     partyType: PartyType;
+    preferredContactMethod?: string;
 }
 
 export default function AddressDetails({
@@ -32,6 +37,7 @@ export default function AddressDetails({
     index,
     isReadOnly,
     partyType,
+    preferredContactMethod,
 }: AddressDetailsProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.beneDetails.address',
@@ -68,40 +74,34 @@ export default function AddressDetails({
             return prevState;
         });
 
-        if (address.addressLine1 || address.addressLine2) {
-            if (!address.zipCode) {
-                setCurrentErrors((prevState: any) => ({
-                    ...prevState,
-                    zipCode: t('formValidations.zipCode'),
-                }));
+        let errors: Errors = {};
+
+        if (preferredContactMethod === PreferredCommunicationType.REGULARMAIL) {
+            if (!address.addressLine1) {
+                errors.addressLine1 = t(
+                    'formValidations.addressLine'
+                ) as string;
+            } else {
+                const requiredFields: Array<'city' | 'state' | 'zipCode'> = [
+                    'city',
+                    'state',
+                    'zipCode',
+                ];
+                requiredFields.forEach((field) => {
+                    if (!address[field]) {
+                        errors[field] = t(`formValidations.${field}`) as string;
+                    }
+                });
             }
-            if (!address.state) {
-                setCurrentErrors((prevState: any) => ({
-                    ...prevState,
-                    state: t('formValidations.state'),
-                }));
-            }
-            if (!address.city) {
-                setCurrentErrors((prevState: any) => ({
-                    ...prevState,
-                    city: t('formValidations.city'),
-                }));
-            }
+        } else {
+            errors = {};
         }
-        if (!address.addressLine1 && !address.addressLine2) {
-            setCurrentErrors((prevState: any) => ({
-                ...prevState,
-                city: null,
-                state: null,
-                zipCode: null,
-            }));
-        }
-    }, [address, index, setCurrentAddresses, t]);
+        setCurrentErrors(errors);
+    }, [address, index, setCurrentAddresses, t, preferredContactMethod]);
 
     const addressError =
-        !isReadOnly &&
-        (!address.addressLine1 || address.addressLine1.trim() === '')
-            ? t('formValidations.addressLine')
+        !isReadOnly && currentErrors?.addressLine1
+            ? currentErrors.addressLine1
             : '';
 
     return (
@@ -151,7 +151,10 @@ export default function AddressDetails({
                                     : FieldVariant.Default
                             }
                             message={addressError}
-                            required={true}
+                            required={
+                                preferredContactMethod ===
+                                PreferredCommunicationType.REGULARMAIL
+                            }
                         />
                     </div>
                     <div>

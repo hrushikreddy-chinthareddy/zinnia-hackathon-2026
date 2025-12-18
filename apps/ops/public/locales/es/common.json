@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "formValidationsEmail": "Se requiere una dirección de correo electrónico",
         "impactedParty": "Partido impactado",
         "transactionBasics": "Conceptos básicos de transacciones",
         "emptySearch": "No se encontraron coincidencias",
