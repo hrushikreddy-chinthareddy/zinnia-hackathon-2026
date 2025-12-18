@@ -17,6 +17,7 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
     children,
     path,
 }) => {
+    const { t } = useTranslation();
     const router = useRouter();
     const [pathVal, setPathVal] = useState(path || DEFAULT_PATH);
 
@@ -25,11 +26,9 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
         router.replace(`/analytics/${val}`, undefined, { shallow: true });
     };
 
-    const { t } = useTranslation();
-
     return (
         <TabGroup
-            defaultValue={pathVal}
+            defaultValue={DEFAULT_PATH}
             value={pathVal}
             activationMode="manual"
             onValueChange={handleTabChange}
