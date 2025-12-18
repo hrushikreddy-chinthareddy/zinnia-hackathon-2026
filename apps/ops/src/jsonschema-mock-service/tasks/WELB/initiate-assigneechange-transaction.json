@@ -1678,10 +1678,10 @@
                                     "ui:options": {
                                         "enumNames": [
                                             "Select prefix",
-                                            "DR",
-                                            "MR",
-                                            "MRS",
-                                            "MS"
+                                            "Dr.",
+                                            "Mr.",
+                                            "Mrs.",
+                                            "Ms."
                                         ]
                                     },
                                     "ui:placeholder": "Select prefix"

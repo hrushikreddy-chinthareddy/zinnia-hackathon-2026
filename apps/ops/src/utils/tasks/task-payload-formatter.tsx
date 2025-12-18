@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { Action } from '@deps/constants/policy';
+import { Action, PolicyRole } from '@deps/constants/policy';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
     MatchingCase,
@@ -132,6 +132,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
             signatures: signatureData?.signatures ?? [],
             notarySignatures: signatureData?.notarySignatures ?? [],
             collateralAmount: collateralAmount,
+            partyRole: PolicyRole.ASSIGNEE,
         },
     };
 };
