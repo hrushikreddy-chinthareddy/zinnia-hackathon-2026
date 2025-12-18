@@ -129,7 +129,7 @@ export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
                             tickInterval={tickInterval}
                             tooltipFormatter={tooltipFormatter({
                                 timerange,
-                                isTooltipColorCircle: true,
+                                isTooltipColorCircle: false,
                             })}
                             yAxisOpposite={false}
                         />

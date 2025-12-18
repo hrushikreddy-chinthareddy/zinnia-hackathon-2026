@@ -121,7 +121,7 @@ export const MyPolicyViewUniqueLogins = ({ title }: { title: string }) => {
                             xAxisLabelFormatter={xAxisLabelFormatter}
                             tooltipFormatter={tooltipFormatter({
                                 timerange,
-                                isTooltipColorCircle: true,
+                                isTooltipColorCircle: false,
                             })}
                             yAxisOpposite={false}
                         />
