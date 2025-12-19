@@ -1,4 +1,8 @@
+import { get } from 'lodash';
+
 import { QuickQuoteParams } from '@deps/types/quickQuote';
+
+import { RIDER_ELIGIBILITY_LIST } from './rules';
 
 import type {
     ProductClassResult,
@@ -9,6 +13,7 @@ import type {
     IneligibilityReason,
     EligibilityResult,
     getEligibleClassProps,
+    RiderInputNormalized,
 } from './types';
 
 /**
@@ -79,6 +84,9 @@ export class QuickQuoteProducts {
                 // Premium-free riders has no rules to evaluate
                 ...input.premiumFreeRiders,
             } as const;
+
+            // TODO: replace resultRiders object with this new way to evaluate normalized riders input.
+            const resultRidersNew = this.manageRiders(input, product.riders);
 
             // Determine min / max eligible class indexes for the product
             const { minIdx, maxIdx } = this.getClassRangeIndex(
@@ -299,7 +307,7 @@ export class QuickQuoteProducts {
      *  - false if there are no rules for the rider or the rider is not selected
      *  - the result of `getRiderEligible` if rules and selection are present
      */
-    isRiderEligible(
+    private isRiderEligible(
         productParams: { insuredAge: number; faceAmount: number },
         rider: boolean | number,
         riderRules: RiderRule | undefined
@@ -316,5 +324,44 @@ export class QuickQuoteProducts {
 
         // Rider either not selected or no rules for this product
         return false;
+    }
+
+    private getRiderInputsNormalized(
+        input: QuickQuoteParams,
+        productRiderRules: RiderRule[]
+    ): RiderInputNormalized[] {
+        return RIDER_ELIGIBILITY_LIST.map(
+            ({ riderName, riderCode, riderPath }) => {
+                const riderInputValue = get(input, riderPath);
+                const riderRequested = !!riderInputValue;
+                const faceAmount =
+                    typeof riderInputValue === 'number' ? riderInputValue : -1;
+                const riderRule = productRiderRules.find(
+                    (rider) => rider.riderCode === riderCode
+                );
+
+                return {
+                    riderName,
+                    riderCode,
+                    riderRequested,
+                    faceAmount,
+                    riderRuleAlternatives: riderRule?.alternatives,
+                };
+            }
+        );
+    }
+
+    private manageRiders(
+        input: QuickQuoteParams,
+        productRiderRules: RiderRule[]
+    ) {
+        const normalizedRiderInputs = this.getRiderInputsNormalized(
+            input,
+            productRiderRules
+        );
+        console.log(
+            '🚀 ~ evaluate-quick-quote.ts:376 ~ QuickQuoteProducts ~ manageRiders ~ normalizedRiderInputs:',
+            normalizedRiderInputs
+        );
     }
 }

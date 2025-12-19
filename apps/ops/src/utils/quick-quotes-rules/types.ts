@@ -112,3 +112,24 @@ export interface getEligibleClassProps {
     isNicotineUser?: boolean;
     face?: number;
 }
+
+type RiderName =
+    | 'Accidental Death Benefit Rider'
+    | "Children's Term Insurance Rider"
+    | 'Waiver of Premium Rider';
+
+type RiderCode = 'Rider_ADR' | 'Rider_CTR' | 'Rider_WPR';
+
+export interface RiderEligibilityList {
+    riderName: RiderName;
+    riderCode: RiderCode;
+    riderPath: string;
+}
+
+export interface RiderInputNormalized {
+    riderName: RiderName;
+    riderCode: RiderCode;
+    riderRequested: boolean;
+    faceAmount: number;
+    riderRuleAlternatives: RiderAlternatives | undefined;
+}
