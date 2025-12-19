@@ -41,13 +41,11 @@ export const generateCsvColumns = (
  * @returns Carrier name or "All Carriers"
  */
 export const getCarrierName = (
-    selectedCarriers: {
-        [key: string]: string;
-    },
+    selectedCarriers: string[],
     t: TFunction
 ): string => {
-    const carrierKeys = Object.keys(selectedCarriers);
-    if (carrierKeys.length === 1) return selectedCarriers[carrierKeys[0]];
+    const carrierKeys = selectedCarriers;
+    if (carrierKeys.length === 1) return selectedCarriers[0];
     return t('allFields.allCarriers');
 };
 
