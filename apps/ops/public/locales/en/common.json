@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "formValidationsEmail": "Email is required",
         "impactedParty": "Impacted party",
         "transactionBasics": "Transaction basics",
         "emptySearch": "No matches found",

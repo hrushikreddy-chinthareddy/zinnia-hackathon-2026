@@ -44,6 +44,7 @@
         }
     },
     "allFields": {
+        "formValidationsEmail": "L'adresse e-mail est obligatoire",
         "impactedParty": "Partie concernée",
         "emptySearch": "Aucun résultat trouvé",
         "transactionBasics": "Bases des transactions",
