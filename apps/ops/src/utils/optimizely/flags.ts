@@ -185,5 +185,6 @@ export enum FEATURE_FLAGS {
     OPS_REVIEW_REQUEST = 'ops_review_request',
     ILLUSTRATIONS_AS_IS_ILLUSTRATIONS = 'illustrations_as_is_illustrations',
     CASE_STATS_COUNT = 'case-stats-count',
+    FINANCIAL_TRANSACTION = 'financial-transaction',
     DTCC_SECTION_ENABLED = 'dtcc_section_enabled',
 }

@@ -27,6 +27,7 @@
     "cancel": "Cancelar",
     "contractNumber": "Contract number",
     "illustrations": "Ilustraciones",
+    "notYetAvailable": "No disponible",
     "transaction": {
         "toolTips": {
             "correlationId": "Este identificador se asigna a transacciones vinculadas para que puedan rastrearse en conjunto.",
@@ -40,7 +41,12 @@
             "modifiedEndowmentContractStatus": "MEC significa Contrato de Dotación Modificado. Una póliza se convierte en MEC si no cumple con la prueba de prima de 7 pagos. Esto puede ocurrir cuando el propietario paga demasiada prima durante un período activo de 7 pagos.",
             "preTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base que antecede a la promulgación de la Ley de Equidad Fiscal y Responsabilidad Financiera.",
             "postTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base después de la promulgación de la Ley de Equidad Fiscal y Responsabilidad Financiera en 1982.",
-            "postTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de la promulgación de la Ley Técnica y de Ingresos Misceláneos en 1988."
+            "postTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de la promulgación de la Ley Técnica y de Ingresos Misceláneos en 1988.",
+            "N": "Pendiente de conciliación significa que hemos recibido la solicitud en el sistema de pagos, pero aún no hemos recibido la confirmación del banco.",
+            "R": "Conciliado significa que hemos confirmado que recibimos el importe del banco. No conciliado significa que existe una discrepancia o diferencia que requiere revisión.",
+            "U": "No conciliado significa que existe una discrepancia o diferencia que requiere revisión.",
+            "O": "En revisión significa que el pago está pasando por una revisión final.",
+            "C": "Liquidado significa que el pago se ha resuelto correctamente. El pago está completo."
         }
     },
     "allFields": {
@@ -1105,7 +1111,12 @@
         "MARRIED": "Casado",
         "HEADOFHOUSEHOLD": "Jefe de hogar",
         "WIDOWED": "Viudo",
-        "DIVORCED": "Divorciado"
+        "DIVORCED": "Divorciado",
+        "R": "Conciliado",
+        "U": "No conciliado",
+        "C": "Liquidado",
+        "O": "En revisión",
+        "N": "Pendiente de conciliación"
     },
     "site": {
         "name": "Zinnia Live",
@@ -3183,6 +3194,7 @@
             "getPolicyNumber": "Obteniendo número de póliza…",
             "getDetailsSubtext": "Estamos realizando verificaciones continuas. Lo verá aquí una vez que esté disponible.",
             "gettingPartyDetails": "Obteniendo detalles del partenaire...",
+            "gettingFinancialTransaction": "Obteniendo la transacción financiera…",
             "people": "Personas",
             "policyNumber": "Póliza #:",
             "transactionDetails": "Detalles de la transacción",
@@ -5405,6 +5417,7 @@
     "label": {
         "findKeyValues": "Buscar valores clave",
         "transactionDetails": "Detalles de la transacción",
+        "viewAllDetails": "Ver todos los detalles",
         "findKeyValuesTitle": "Buscar valores clave",
         "findKeyValuesDate": "Mostrar datos desde",
         "findKeyValuesDateError": "No se pueden obtener datos para la fecha seleccionada.",
