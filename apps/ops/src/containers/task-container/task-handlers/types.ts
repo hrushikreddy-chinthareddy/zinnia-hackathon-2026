@@ -56,6 +56,15 @@ export interface BeneficiaryTaskPayload {
     logCtx?: LoggingContext;
 }
 
+export interface AssigneeTaskPayload {
+    category: string[];
+    businessProcess: string;
+    carrier?: string;
+    policyNumber: string;
+    planCode: string;
+    logCtx?: LoggingContext;
+}
+
 export interface PartyRole {
     partyRole: string;
     partyId: string;
@@ -101,6 +110,7 @@ export interface Party {
     agentType?: string;
     entityType?: EntityTypeValue | string;
     preferredCommunicationType?: string | null;
+    isIrrevocable?: boolean;
 }
 
 export interface PolicyResponse {
@@ -116,6 +126,7 @@ export enum PartyRoleType {
     PRIMARYWRITINGAGENT = 'PRIMARYWRITINGAGENT',
     PRIMARYSERVICINGAGENT = 'PRIMARYSERVICINGAGENT',
     THIRDPARTYDESIGNEE = 'THIRDPARTYDESIGNEE',
+    ASSIGNEE = 'ASSIGNEE',
 }
 
 export enum PartyRoleLabel {

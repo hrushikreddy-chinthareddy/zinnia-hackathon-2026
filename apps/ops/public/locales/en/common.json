@@ -8350,6 +8350,15 @@
             "submitTask": "Submit"
         }
     },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Assignee Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "agentChangeDetail": {
         "confirmStep": {
             "title": "Got It!",

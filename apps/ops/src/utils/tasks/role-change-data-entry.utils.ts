@@ -26,6 +26,22 @@ export function detectRoleChangeRequestType(
     return { requestType, addedItem, deletedItem };
 }
 
+export function getCollateralAmountValue(
+    actionData: any[]
+): RoleChangeDetectionResult {
+    const addedItem = actionData.find((a) => a.action === Action.ADD) ?? null;
+    const deletedItem =
+        actionData.find((a) => a.action === Action.DELETE) ?? null;
+
+    let collateralAmount = null;
+    if (addedItem && deletedItem)
+        collateralAmount = addedItem.party.collateralAmount;
+    else if (addedItem) collateralAmount = addedItem.party.collateralAmount;
+    else if (deletedItem) collateralAmount = deletedItem.party.collateralAmount;
+
+    return collateralAmount;
+}
+
 export function resolveRoleChangePartyId(
     requestType: Action,
     deletedItem: RoleChangeActionItem | null,
@@ -97,5 +113,8 @@ export function getDefaultRoleChangeParty() {
         addresses: null,
         emails: null,
         phones: null,
+        collateralAmount: null,
+        startDate: null,
+        endDate: null,
     };
 }

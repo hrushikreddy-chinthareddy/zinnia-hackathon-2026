@@ -39,6 +39,8 @@ export const getTitle = (
     } else if (tabTitle === TabTitle.Signature) {
         header =
             item?.signTypeForUI ?? item?.signType ?? `Signature ${index + 1}`;
+    } else if (tabTitle === TabTitle.AssigneeDetails) {
+        header = item?.party?.fullName || 'Assignees';
     }
     return header;
 };
