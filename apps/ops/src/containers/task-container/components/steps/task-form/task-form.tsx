@@ -251,7 +251,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 await fetchData();
             } else {
                 const taskPayload = buildTaskPayload(
-                    cleanForm({ ...task, ...customData?.task }, taskMetadata),
+                    cleanForm(task, taskMetadata),
                     initialTask
                 );
                 const success = await updateTask(
