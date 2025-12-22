@@ -528,11 +528,7 @@
                                                 }
                                             }
                                         },
-                                        "required": [
-                                            "partyType",
-                                            "firstName",
-                                            "lastName"
-                                        ],
+                                        "required": ["partyType", "lastName"],
                                         "allOf": [
                                             {
                                                 "if": {
@@ -828,7 +824,8 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Trust name"
+                                                            "title": "Trust name",
+                                                            "minLength": 1
                                                         },
                                                         "trustType": {
                                                             "type": [
@@ -873,11 +870,9 @@
                                                 "then": {
                                                     "properties": {
                                                         "lastName": {
-                                                            "type": [
-                                                                "string",
-                                                                "null"
-                                                            ],
-                                                            "title": "Company name"
+                                                            "type": "string",
+                                                            "title": "Company name",
+                                                            "minLength": 1
                                                         },
                                                         "entityType": {
                                                             "type": "string",
