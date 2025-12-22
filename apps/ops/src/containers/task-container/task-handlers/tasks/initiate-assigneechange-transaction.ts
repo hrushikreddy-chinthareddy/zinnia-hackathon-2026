@@ -241,7 +241,10 @@ const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
         );
 };
 
-const thirdPartyDetailHandler: TaskHandler<ReviewPayload, ApiResponse> = {
+const initiateAssigneeChangeTransactionHandler: TaskHandler<
+    ReviewPayload,
+    ApiResponse
+> = {
     api: async (payload: any, accessToken: string, logCtx: LoggingContext) => {
         const { category, businessProcess, carrier } = payload;
 
@@ -357,4 +360,4 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, ApiResponse> = {
     },
 };
 
-export default thirdPartyDetailHandler;
+export default initiateAssigneeChangeTransactionHandler;
