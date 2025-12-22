@@ -2,10 +2,7 @@ import dayjs from 'dayjs';
 
 import { Action, EntityTypeValue, Roles } from '@deps/constants/policy';
 import { isEndDated } from '@deps/helpers/date.helpers';
-import {
-    toTitleCase,
-    isNullEmptyOrUndefined,
-} from '@deps/helpers/string.helpers';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import {
@@ -18,8 +15,8 @@ import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
+import { toFullName } from '@deps/utils/tasks/role-change-data-entry.utils';
 
-import { PREFIX_MAP } from '../constants';
 import {
     TaskHandler,
     Reason,
@@ -44,9 +41,6 @@ const ensureSingle = <T>(items: T[], fallback: T): T[] =>
 
 const normalizeNullableString = (v?: string | null): string | null =>
     isNullEmptyOrUndefined(v) ? null : String(v);
-
-const getPrefix = (prefix?: string | null): string | null =>
-    prefix ? PREFIX_MAP[prefix] ?? null : null;
 
 const formatAddress = (address?: Partial<Address>): Address => ({
     addressType: address?.addressType ?? AddressType.RESIDENCE,
@@ -127,19 +121,6 @@ const getIdentifications = (
     ];
 };
 
-const toFullName = (party: Party): string | null =>
-    toTitleCase(
-        [
-            party.prefix,
-            party.firstName,
-            party.middleName,
-            party.lastName,
-            party.suffix,
-        ]
-            .filter(Boolean)
-            .join(' ')
-    ) || null;
-
 const formatPartyForContract = (party: Party, role: string) => {
     const isIndividual = party.partyType === PartyType.INDIVIDUAL;
 
@@ -147,7 +128,7 @@ const formatPartyForContract = (party: Party, role: string) => {
         partyRoleId: party?.partyRoleId ?? null,
         partyRole: role,
         partyType: party?.partyType,
-        prefix: getPrefix(party?.prefix ?? null),
+        prefix: party?.prefix ?? null,
         firstName: isIndividual
             ? normalizeNullableString(party?.firstName)
             : null,
@@ -211,7 +192,7 @@ const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
                 party: {
                     partyId: party.partyId ?? null,
                     partyType: party.partyType ?? null,
-                    prefix: getPrefix(party.prefix ?? null),
+                    prefix: party.prefix ?? null,
                     firstName: party.firstName ?? null,
                     middleName: party.middleName ?? null,
                     lastName:

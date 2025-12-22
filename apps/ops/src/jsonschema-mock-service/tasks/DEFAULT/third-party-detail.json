@@ -447,11 +447,7 @@
                                                 }
                                             }
                                         },
-                                        "required": [
-                                            "partyType",
-                                            "firstName",
-                                            "lastName"
-                                        ],
+                                        "required": ["partyType", "lastName"],
                                         "allOf": [
                                             {
                                                 "if": {
@@ -1182,10 +1178,11 @@
                                     "ui:options": {
                                         "enumNames": [
                                             "Select prefix",
-                                            "Dr.",
                                             "Mr.",
+                                            "Ms.",
+                                            "Miss.",
                                             "Mrs.",
-                                            "Ms."
+                                            "Dr."
                                         ]
                                     },
                                     "ui:placeholder": "Select prefix"
