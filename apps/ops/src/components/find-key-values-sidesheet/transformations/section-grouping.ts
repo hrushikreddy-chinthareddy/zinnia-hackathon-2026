@@ -1,11 +1,10 @@
 import { TFunction } from 'next-i18next';
 
-import { formatAsDataValue, formatPartyLink } from './formatters';
 import {
-    isDataSection,
-    isDataField,
-    isDataSectionOrGroup,
-} from '../data-node-helpers/predicates';
+    FinancialTransactionEntity,
+    FinancialTransactionEntityTransaction,
+} from '@deps/models/case/financial-transactions';
+
 import {
     findValueInNode,
     findInNode,
@@ -13,7 +12,25 @@ import {
     findSectionInNodes,
 } from '../data-node-helpers/traversal';
 import { FieldType, DataNode, DataSection } from '../types';
-
+import {
+    formatAsDataValue,
+    formatPartyLink,
+    enumsMapping,
+    formatNode,
+    getTooltipByValue,
+} from './formatters';
+import {
+    applyTransformationsToNodes,
+    buildRenderTreeFromSourceData,
+    transformNodes,
+} from '../data-node-helpers/mutations';
+import {
+    isDataSection,
+    isDataField,
+    isDataSectionOrGroup,
+    isDataSectionOrField,
+} from '../data-node-helpers/predicates';
+import { defaultNotAvailableFields } from '../translations/default-not-available-fields';
 /**
  * Groups basics for policy
  *
@@ -712,4 +729,69 @@ export const getAllParties = ({
         allParties,
         allPartiesById,
     };
+};
+
+/**
+ * Groups basics for financial transaction
+ *
+ * @param data - data to group
+ * @returns grouped basics
+ */
+export const groupBasicsForFinancialTransaction = (
+    data: DataNode[]
+): DataNode[] => {
+    const filterBySectionOrGroup = data.filter(isDataSectionOrField);
+
+    return [...filterBySectionOrGroup];
+};
+
+/**
+ * Gets financial transactions
+ *
+ * @param financialTransaction - financial transaction
+ * @param t - translation function
+ * @returns financial transactions
+ */
+export const getFinancialTransactions = (
+    financialTransaction:
+        | FinancialTransactionEntity
+        | FinancialTransactionEntityTransaction
+        | null,
+    t: TFunction
+) => {
+    const policyNomenclature = 'transaction';
+    const notyetavailablefields = Array.from(defaultNotAvailableFields);
+    return applyTransformationsToNodes(
+        (nodes) =>
+            buildRenderTreeFromSourceData(nodes, t, notyetavailablefields),
+        (nodes) => groupBasicsForFinancialTransaction(nodes),
+        (nodes) =>
+            // Transforms the entire tree, chaining transformations on *each node*
+            transformNodes({
+                nodes,
+                transforms: [
+                    (node) =>
+                        // Adds a tooltip to the node if it exists in the tooltip mapping
+                        getTooltipByValue({
+                            node,
+                            t,
+                            policyNomenclature,
+                        }),
+                    (node) =>
+                        // transform the value by enums
+                        enumsMapping({
+                            node,
+                            t,
+                            policyNomenclature,
+                        }),
+
+                    (node) =>
+                        // Applies translations and formats dates, currencies, etc.
+                        formatNode({
+                            node,
+                            t,
+                        }),
+                ],
+            })
+    )(financialTransaction);
 };

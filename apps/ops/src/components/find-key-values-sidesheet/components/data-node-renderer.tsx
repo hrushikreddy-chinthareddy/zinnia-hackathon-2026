@@ -19,6 +19,7 @@ export function renderNode(node: DataNode, index: number): React.ReactNode {
                 />
             );
         }
+
         case FieldType.section: {
             return (
                 <Section
