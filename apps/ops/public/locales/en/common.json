@@ -576,7 +576,12 @@
         "reinstatementPaymentTooltip": "This is the amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
         "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}.",
         "year(s)": "year(s)",
-        "remove": "Remove"
+        "remove": "Remove",
+        "dashboardProductDetails": "Product Details",
+        "carrierName": "Carrier name",
+        "productMarketingName": "Product Details",
+        "productName": "Product Details",
+        "productNameTooltip": "Product Details"
     },
     "enums": {
         "LIFE": "Life",

@@ -577,7 +577,12 @@
         "reinstatementPaymentTooltip": "Il s’agit du montant que le propriétaire doit payer en prime pour réactiver sa police.",
         "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}.",
         "year(s)": "année(s)",
-        "remove": "Supprimer"
+        "remove": "Supprimer",
+        "dashboardProductDetails": "Détails du produit",
+        "carrierName": "Nom de l'assureur",
+        "productMarketingName": "Détails du produit",
+        "productName": "Détails du produit",
+        "productNameTooltip": "Détails du produit"
     },
     "enums": {
         "LIFE": "Vie",

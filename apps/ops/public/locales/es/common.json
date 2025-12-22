@@ -576,7 +576,12 @@
         "reinstatementPaymentTooltip": "Este es el monto que el propietario debe pagar en primas para que su póliza vuelva a estar activa.",
         "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}.",
         "year(s)": "año(s)",
-        "remove": "Eliminar"
+        "remove": "Eliminar",
+        "dashboardProductDetails": "Detalles del producto",
+        "carrierName": "Nombre de la compañía",
+        "productMarketingName": "Detalles del producto",
+        "productName": "Detalles del producto",
+        "productNameTooltip": "Detalles del producto"
     },
     "enums": {
         "LIFE": "Vida",

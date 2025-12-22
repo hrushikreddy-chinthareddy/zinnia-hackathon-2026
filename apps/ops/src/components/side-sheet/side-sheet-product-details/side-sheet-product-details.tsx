@@ -1,14 +1,16 @@
 import { useTranslation } from 'next-i18next';
 
-import DescriptionList from '@deps/components/description-list/description-list';
+import Content, { ContentVariant } from '@deps/components/content/content';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
-import { PopoverPlacement } from '@deps/components/popover/popover';
+import Label, { LabelVariant } from '@deps/components/label/label';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+
+import styles from './side-sheet-product-details.module.css';
 
 interface SideSheetProductDetailsProps {
     globalValues: GlobalValues;
@@ -20,69 +22,95 @@ const SideSheetProductDetails = ({
     const { t } = useTranslation();
 
     return (
-        <div className="p-8">
-            <Typography className="mb-8" variant={TypographyVariant.H2}>
-                {t('dashboard.productDetails') as string}
+        <div className={styles.contentBody}>
+            <Typography
+                className={styles.headerSection}
+                variant={TypographyVariant.H2}
+            >
+                {t('allFields.dashboardProductDetails') as string}
             </Typography>
-            <div className="flex gap-16">
-                <DescriptionList
-                    label={t('globalPolicyInfo.carrierName')}
-                    // DEPU-2067 - On the short term, we're using hard-coded values stored on the UI.  Future-case will be for carrierName to come back with data
-                    text={
-                        getCarrierNameByClientId(
-                            globalValues.carrierId as string
-                        ) ||
-                        globalValues.carrierId ||
-                        DEFAULT_ERROR_STRING
-                    }
-                    ariaLabel={t('globalPolicyInfo.carrierName') as string}
-                    identifier="carrier-name-side-sheet"
-                />
-                <DescriptionList
-                    label={t('globalPolicyInfo.productMarketingName')}
-                    text={globalValues.marketingName || DEFAULT_ERROR_STRING}
-                    ariaLabel={
-                        t('globalPolicyInfo.productMarketingName') as string
-                    }
-                    identifier="product-marketing-name-side-sheet"
-                />
+            <div className={styles.entryRow}>
+                <div className={styles.entryField}>
+                    <Label
+                        label={t('allFields.carrierName')}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content
+                        details={
+                            getCarrierNameByClientId(
+                                globalValues.carrierId as string
+                            ) ||
+                            globalValues.carrierId ||
+                            DEFAULT_ERROR_STRING
+                        }
+                        variant={ContentVariant.BodySm}
+                    />
+                </div>
+                <div className={styles.entryField}>
+                    <Label
+                        label={t('allFields.productMarketingName')}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content
+                        details={
+                            globalValues.marketingName || DEFAULT_ERROR_STRING
+                        }
+                        variant={ContentVariant.BodySm}
+                    />
+                </div>
             </div>
-            <div className="flex gap-16">
-                <DescriptionList
-                    label={t('globalPolicyInfo.productName')}
-                    text={globalValues.planName || ''}
-                    tooltip={t('globalPolicyInfo.productNameTooltip') as string}
-                    ariaLabel={
-                        t('globalPolicyInfo.productNameTooltip') as string
-                    }
-                    identifier="product-name-side-sheet"
-                />
-                <DescriptionList
-                    label={t('globalPolicyInfo.productType')}
-                    text={
-                        mapProductTypeToTranslation(globalValues.productType, t)
-                            .label as string
-                    }
-                    ariaLabel={globalValues.productType}
-                    identifier="product-type-side-sheet"
-                />
+            <div className={styles.entryRow}>
+                <div className={styles.entryField}>
+                    <Label
+                        label={t('allFields.productName')}
+                        tooltipTitle={t('allFields.productName')}
+                        tooltipBody={
+                            t('allFields.productNameTooltip') as string
+                        }
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content
+                        details={globalValues.planName || ''}
+                        variant={ContentVariant.BodySm}
+                    />
+                </div>
+                <div className={styles.entryField}>
+                    <Label
+                        label={t('allFields.productType')}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content
+                        details={
+                            mapProductTypeToTranslation(
+                                globalValues.productType,
+                                t
+                            ).label as string
+                        }
+                        variant={ContentVariant.BodySm}
+                    />
+                </div>
             </div>
-            <div className="flex gap-16">
-                <DescriptionList
-                    label={t('globalPolicyInfo.productCode')}
-                    text={globalValues.glPlanCode || ''}
-                    ariaLabel={
-                        t('globalPolicyInfo.productCodeTooltip') as string
-                    }
-                    identifier="product-code-side-sheet"
-                />
-                <DescriptionList
-                    label={t('globalPolicyInfo.planCode')}
-                    text={globalValues.planCode || ''}
-                    ariaLabel={t('globalPolicyInfo.planCodeTooltip') as string}
-                    tooltipPlacement={PopoverPlacement.BottomLeft}
-                    identifier="plan-code-side-sheet"
-                />
+            <div className={styles.entryRow}>
+                <div className={styles.entryField}>
+                    <Label
+                        label={t('allFields.productCode')}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content
+                        details={globalValues.glPlanCode || ''}
+                        variant={ContentVariant.BodySm}
+                    />
+                </div>
+                <div className={styles.entryField}>
+                    <Label
+                        label={t('allFields.planCode')}
+                        variant={LabelVariant.FieldLabel}
+                    />
+                    <Content
+                        details={globalValues.planCode || ''}
+                        variant={ContentVariant.BodySm}
+                    />
+                </div>
             </div>
         </div>
     );
