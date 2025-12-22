@@ -17,17 +17,14 @@ import {
 } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import { useEapp } from './EAppProvider';
+import { getIllustrationPayload } from './get-illustration-payload';
 import { useQuestionnaireEngine } from './QuestionnaireEngineProvider';
 import { IllustrationHandler } from '../helpers/factory/illustrationsHandlerAbstractClass';
-import { FarmersEntities } from '../helpers/farmers/famersBlueprintToIllustrationPayloadTL0101';
 
 type SubmitContextValue = {
     onNewSubmit: () => void;
     onEditSubmit: (oldIllustrationId: string) => void;
-    onQuickQuote: () => void;
     isError?: boolean;
-    isLoadingQuickQuote: boolean;
     createIllustrationPending: boolean;
     editIllustrationPending: boolean;
 };
@@ -39,7 +36,7 @@ export const SubmitContext = createContext<SubmitContextValue | undefined>(
 
 interface SubmitProviderProps extends PropsWithChildren {
     children: React.ReactNode;
-    factoryHandler: IllustrationHandler<FarmersEntities>;
+    factoryHandler: IllustrationHandler<unknown>;
     clientCase?: IllustrationsClientCase;
     submitCallback?: () => void;
 }
@@ -48,57 +45,10 @@ export function SubmitProvider({
     factoryHandler,
     submitCallback,
 }: SubmitProviderProps) {
-    const { onEAppDataChange: onIllustrationDataChange } = useEapp();
     const { questionnaireEngine } = useQuestionnaireEngine();
     const queryClient = useQueryClient();
     const sideSheet = useSideSheetContext();
     const router = useRouter();
-
-    const getIllustrationPayload = async ({
-        engine,
-        illustrationType,
-    }: {
-        engine: QuestionnaireEngine;
-        illustrationType: string;
-    }) => {
-        const mappedAnswersResult = engine.getSimpleMappingOutput();
-        if (!mappedAnswersResult.success) {
-            browserLogInfo(
-                'illustrations::Eapp::SubmitProvider::getIllustrationPayload Error parsing answers',
-                {
-                    ...parseErrorInformation(mappedAnswersResult.error),
-                    clientCaseId: factoryHandler.getClientCase().id,
-                }
-            );
-            return Promise.reject();
-        }
-        const answers = { ...mappedAnswersResult.value, illustrationType };
-
-        // answers.illustrationType = illustrationType;
-        if (!answers.illustrationRequestDate) {
-            answers.illustrationRequestDate = new Date()
-                .toISOString()
-                .slice(0, 10);
-        }
-
-        const createIllustrationPayload =
-            factoryHandler.createIllustrationPayloadFromAnswerOutput(answers);
-
-        if (!createIllustrationPayload.success) {
-            browserLogInfo(
-                'illustrations::Eapp::SubmitProvider::getIllustrationPayload Error parsing output',
-                {
-                    ...parseErrorInformation(createIllustrationPayload.error),
-                    clientCaseId: factoryHandler.getClientCase().id,
-                }
-            );
-            return Promise.reject();
-        }
-        return {
-            value: createIllustrationPayload.value,
-            formInputs: answers,
-        };
-    };
 
     const createIllustrationMutation = useMutation({
         mutationKey: ['saveOrderEntryAnswers'],
@@ -109,6 +59,7 @@ export function SubmitProvider({
             const carrierCode = factoryHandler.getCarrierCode();
             const payload = await getIllustrationPayload({
                 engine,
+                factoryHandler,
                 illustrationType: 'SINGLE_ILLUSTRATION',
             });
             const inputs = engine.getAnswerResolverInstance().export();
@@ -221,6 +172,7 @@ export function SubmitProvider({
         }) => {
             const payload = await getIllustrationPayload({
                 engine,
+                factoryHandler,
                 illustrationType: 'SINGLE_ILLUSTRATION',
             });
             const clientCase = factoryHandler.getClientCase();
@@ -287,53 +239,6 @@ export function SubmitProvider({
     });
 
     const {
-        mutateAsync: quickQuoteIllustrationMutateAsync,
-        isPending: isLoadingQuickQuote,
-    } = useMutation({
-        mutationKey: ['saveOrderEntryAnswers'],
-        mutationFn: async (engine: QuestionnaireEngine) => {
-            const payload = await getIllustrationPayload({
-                engine,
-                illustrationType: 'QUICK_QUOTE',
-            });
-
-            const createResponse = await createIllustration({
-                bodyData: payload.value,
-                path: factoryHandler.getIllustrationApiPath(),
-            });
-
-            return {
-                data: createResponse.data,
-                formInputs: payload.formInputs,
-            };
-        },
-        onSuccess: ({ data, formInputs }) => {
-            const illustrationData =
-                factoryHandler.getIllustrationDataFromResponse(data, {
-                    ...formInputs,
-                    illustrationType: 'QUICK_QUOTE',
-                });
-
-            browserLogTrace(
-                'illustrations::Eapp::SubmitProvider::quickQuoteIllustrationMutation::onSuccess QuickQuote',
-                {
-                    illustrationId: data?.id,
-                }
-            );
-
-            onIllustrationDataChange(illustrationData);
-        },
-        onError: (error) => {
-            browserLogInfo(
-                'illustrations::Eapp::SubmitProvider::quickQuoteIllustrationMutation::onError',
-                {
-                    ...parseErrorInformation(error),
-                }
-            );
-        },
-    });
-
-    const {
         isError: createIllustrationError,
         isPending: createIllustrationPending,
         mutateAsync: createIllustrationMutateAsync,
@@ -356,21 +261,16 @@ export function SubmitProvider({
                     {}
                 );
             },
-            onQuickQuote: () =>
-                quickQuoteIllustrationMutateAsync(questionnaireEngine, {}),
             isError: createIllustrationError || editIllustrationError,
-            isLoadingQuickQuote,
             createIllustrationPending,
             editIllustrationPending,
         }),
         [
             createIllustrationError,
             editIllustrationError,
-            isLoadingQuickQuote,
             createIllustrationMutateAsync,
             questionnaireEngine,
             editIllustrationMutateAsync,
-            quickQuoteIllustrationMutateAsync,
             createIllustrationPending,
             editIllustrationPending,
         ]

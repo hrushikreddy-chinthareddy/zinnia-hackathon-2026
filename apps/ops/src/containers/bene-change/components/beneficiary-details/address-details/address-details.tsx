@@ -98,7 +98,6 @@ export default function AddressDetails({
         }
         setCurrentErrors(errors);
     }, [address, index, setCurrentAddresses, t, preferredContactMethod]);
-
     const addressError =
         !isReadOnly && currentErrors?.addressLine1
             ? currentErrors.addressLine1

@@ -211,9 +211,9 @@ function RadioWidget<
             <Radio
                 id={id}
                 items={
-                    newOptions.filter(
-                        (option) => option.value !== null
-                    ) as RadioItem[]
+                    (allowNullValue
+                        ? newOptions.filter((option) => option.value !== null)
+                        : newOptions) as RadioItem[]
                 }
                 value={selectedValue as string}
                 disabled={disabled}

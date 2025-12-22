@@ -1,58 +1,152 @@
 import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
-import { groupBy, sortBy, uniqBy, zip } from 'lodash';
+import { first, groupBy, sortBy, uniqBy, zip } from 'lodash';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Simplify } from 'type-fest';
 
 import {
     getNearestAgenciesFromUpline,
+    GetProducerByIdWrappedResponse,
+    isAgency,
     POM_QUERY_PREFIXES,
-    useAuthenticatedAgentAgencies,
+    useAuthenticatedAgentSellingCodes,
     useDownlineListQuery,
     useGetProducerById,
+    useGetProducersByIdListQuery,
     useGetProducersListQuery,
     useHierarchyListQuery,
 } from '@deps/components/illustrations/helpers/hooks/pom';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useReduceCombinedResults } from '@deps/hooks/combined-query';
 import {
+    Carrier,
     GetDownlineResponse,
     GetHierarchyResponse,
     PRODUCER_SEARCH_RESULT_TYPES,
     ProducersResponse,
+    UplineItem,
 } from '@deps/types/producers';
 
 import { AgentFieldContextProvider } from './agent-field-context';
 import { GenericAgentField } from './generic-agent-field';
 import { AgentOption } from './types';
 
-/**
- * Returns the nearest agencies for each hierarchy of an agent
- *
- * @param sellingCodes Agent selling codes
- */
-const useAgentAgencyIds = (
+const useAgentHierarchies = (
     params: { sellingCode: string; carrierShortName: string }[]
 ) =>
     useHierarchyListQuery(
         params,
         useCallback(
             (results: UseQueryResult<GetHierarchyResponse | null>[]) => {
-                const agencyIds = results
+                const hierarchies = results
                     .map((result) => result?.data)
-                    .filter((data): data is GetHierarchyResponse => !!data)
-                    .map(({ upline, carrier }) => ({
-                        agencies: getNearestAgenciesFromUpline(upline),
-                        carrier,
-                    }))
-                    .flatMap(({ agencies, carrier }) =>
-                        agencies.map((agency) => ({
-                            sellingCode: agency.sellingCode,
-                            carrierShortName: carrier.carrierShortName,
-                        }))
+                    .filter((data): data is GetHierarchyResponse => !!data);
+
+                const agencies = hierarchies
+                    .map((hierarchy) => {
+                        const { upline, carrier } = hierarchy;
+
+                        return {
+                            agency: isAgency(hierarchy)
+                                ? hierarchy
+                                : first(getNearestAgenciesFromUpline(upline)),
+                            carrier,
+                        };
+                    })
+                    .filter(
+                        (
+                            item
+                        ): item is {
+                            agency: UplineItem | GetHierarchyResponse;
+                            carrier: Carrier;
+                        } => !!item.agency
                     );
 
-                return uniqBy(agencyIds, 'sellingCode');
+                return {
+                    hierarchies,
+                    producerLookUpParams: hierarchies.map(
+                        ({ producerLookupId, carrier }) => ({
+                            lookupId: producerLookupId,
+                            carrierShortName: carrier.carrierShortName,
+                        })
+                    ),
+                    agencyLookupParams: agencies.map(
+                        ({ agency: { sellingCode }, carrier }) => ({
+                            sellingCode,
+                            carrierShortName: carrier.carrierShortName,
+                        })
+                    ),
+                };
             },
             []
+        )
+    );
+
+const useAgentOptionsFromSellingCodes = (
+    params: { lookupId: string; carrierShortName: string }[],
+    { partialFullName }: { partialFullName: string }
+) =>
+    useGetProducersByIdListQuery(
+        params,
+        useCallback(
+            (
+                results: UseQueryResult<GetProducerByIdWrappedResponse | null>[]
+            ) =>
+                results
+                    .map((result) => result?.data)
+                    .filter(
+                        (
+                            data
+                        ): data is Simplify<
+                            GetProducerByIdWrappedResponse & {
+                                response: NonNullable<unknown>;
+                            }
+                        > => !!data && !!data.response
+                    )
+                    .map(
+                        ({
+                            response: {
+                                firstName,
+                                lastName,
+                                fullName,
+                                middleName,
+                                email,
+                                nationalProducerNumber,
+                                carrierSellingCodeRoles,
+                            },
+                            carrierShortName,
+                        }) => ({
+                            firstName: firstName,
+                            lastName,
+                            fullName,
+                            middleName,
+                            emailAddress: email,
+                            npn: nationalProducerNumber,
+                            carrierShortName,
+                            carrierSellingCodeRoles,
+                        })
+                    )
+                    .filter(({ firstName, middleName, lastName, fullName }) =>
+                        [
+                            `${firstName} ${middleName} ${lastName}`,
+                            `${firstName} ${lastName}`,
+                            fullName,
+                        ].some((refString) =>
+                            refString
+                                ?.toLowerCase()
+                                .includes(partialFullName.toLowerCase())
+                        )
+                    )
+                    .flatMap(
+                        (option) =>
+                            option.carrierSellingCodeRoles?.[
+                                option.carrierShortName
+                            ]?.map(({ sellingCode, role }) => ({
+                                sellingCode,
+                                role,
+                                ...option,
+                            })) ?? []
+                    ),
+            [partialFullName]
         )
     );
 
@@ -60,39 +154,48 @@ const useNormalUserAgentOptions = (searchQuery: string) => {
     const { writeClientCaseCarriers } = usePermissionsContext();
     const isSuperIllustrator = !!writeClientCaseCarriers.length;
 
-    const { data: authAgencyData } = useAuthenticatedAgentAgencies();
+    const agentSellingCodes = useAuthenticatedAgentSellingCodes();
+    const { data: { producerLookUpParams, agencyLookupParams } = {} } =
+        useAgentHierarchies(agentSellingCodes);
 
-    const sellingCodes =
-        authAgencyData?.map((agency) => ({
-            sellingCode: agency.agentSellingCode,
-            carrierShortName: agency.carrierShortName,
-        })) ?? [];
+    const selfAgentOptionsCombinedResult = useAgentOptionsFromSellingCodes(
+        producerLookUpParams ?? [],
+        { partialFullName: searchQuery }
+    );
 
-    const agencyIdsCombinedResult = useAgentAgencyIds(sellingCodes);
-
-    const { data: agencyIds } = agencyIdsCombinedResult;
+    const { data: selfAgentOptions } = selfAgentOptionsCombinedResult;
 
     const agentOptionsCombinedResult = useDownlineListQuery(
-        !isSuperIllustrator ? agencyIds ?? [] : [],
+        !isSuperIllustrator ? agencyLookupParams ?? [] : [],
         {
             partialFullName: searchQuery,
             combine: useCallback(
                 (
                     results: UseQueryResult<GetDownlineResponse[][] | null>[]
                 ): AgentOption[] => {
-                    const downlines = zip(results, authAgencyData!).flatMap(
-                        ([result, authAgencyData]) =>
-                            (result?.data?.flat(2) ?? []).map((downline) => ({
-                                ...downline,
-                                carrierShortName:
-                                    authAgencyData!.carrierShortName,
-                            }))
+                    const downlines = zip(
+                        results,
+                        agencyLookupParams ?? []
+                    ).flatMap(([result, agencyLookupParams]) =>
+                        (result?.data?.flat(2) ?? []).map((downline) => ({
+                            ...downline,
+                            carrierShortName:
+                                agencyLookupParams!.carrierShortName,
+                        }))
+                    );
+
+                    const downLinesWithSelfOptions = [
+                        ...downlines,
+                        ...(selfAgentOptions ?? []),
+                    ].filter(
+                        ({ role, firstName, lastName }) =>
+                            role === 'Rep' || (firstName && lastName)
                     );
 
                     const agentOptions = Object.entries(
-                        groupBy(downlines, 'npn')
-                    ).map(([npn, downline]) => {
-                        const downlineWithDetails = downline.find(
+                        groupBy(downLinesWithSelfOptions, 'npn')
+                    ).map(([npn, sameNpnDownlines]) => {
+                        const downlineWithDetails = sameNpnDownlines.find(
                             ({ firstName, lastName, emailAddress }) =>
                                 firstName && lastName && emailAddress
                         );
@@ -102,8 +205,9 @@ const useNormalUserAgentOptions = (searchQuery: string) => {
                             lastName: downlineWithDetails?.lastName,
                             email: downlineWithDetails?.emailAddress,
                             npn,
-                            carrierShortName: downline[0].carrierShortName,
-                            sellingCodes: downline
+                            carrierShortName:
+                                sameNpnDownlines[0].carrierShortName,
+                            sellingCodes: sameNpnDownlines
                                 .map(({ sellingCode }) => sellingCode)
                                 .filter(
                                     (sellingCode): sellingCode is string =>
@@ -114,13 +218,13 @@ const useNormalUserAgentOptions = (searchQuery: string) => {
 
                     return agentOptions;
                 },
-                [authAgencyData]
+                [agencyLookupParams, selfAgentOptions]
             ),
         }
     );
 
     return useReduceCombinedResults(
-        agencyIdsCombinedResult,
+        selfAgentOptionsCombinedResult,
         agentOptionsCombinedResult
     );
 };
@@ -191,7 +295,7 @@ const useSubscribeToProducerData = (
 ) => {
     const selectedAgentLookupId = selectedAgent?.lookupId || selectedAgent?.npn;
 
-    const { data: agentData } = useGetProducerById(
+    const { data: { response: agentData } = {} } = useGetProducerById(
         selectedAgentLookupId,
         selectedAgent?.carrierShortName
     );

@@ -39,10 +39,8 @@ const EappContainer: FC<EappContainer> = ({
 
     return (
         <Eapp
-            carrier={illustrationHandlerFactory.getCarrier()}
             label={illustrationHandlerFactory.getLabel()}
             planCode={illustrationHandlerFactory.getPlanCode()}
-            planType={illustrationHandlerFactory.getPlanType()}
             isEdit={isEdit}
             illustrationId={illustrationId}
         />
