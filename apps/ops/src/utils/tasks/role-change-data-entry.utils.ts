@@ -1,4 +1,6 @@
 import { Action } from '@deps/constants/policy';
+import { Party } from '@deps/containers/task-container/task-handlers/types';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 
 export interface RoleChangeActionItem {
     action: Action | string;
@@ -99,3 +101,15 @@ export function getDefaultRoleChangeParty() {
         phones: null,
     };
 }
+export const toFullName = (party: Party): string | null =>
+    toTitleCase(
+        [
+            party.prefix,
+            party.firstName,
+            party.middleName,
+            party.lastName,
+            party.suffix,
+        ]
+            .filter(Boolean)
+            .join(' ')
+    ) || null;

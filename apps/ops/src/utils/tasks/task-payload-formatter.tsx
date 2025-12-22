@@ -6,16 +6,17 @@ import {
     PotentialMatches,
 } from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask } from '@deps/models/case/task-instance';
+import { PartyType } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-
 import {
+    toFullName,
     detectRoleChangeRequestType,
     getDefaultRoleChangeParty,
     cleanAddresses,
     cleanEmails,
     cleanPhones,
     mergeIdentifications,
-} from './role-change-data-entry.utils';
+} from '@deps/utils/tasks/role-change-data-entry.utils';
 
 const getRelationship = (item: any) =>
     item?.party?.relationshipToTheCurrentOwner || null;
@@ -174,13 +175,21 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
         addresses: cleanAddresses(src.addresses),
         emails: cleanEmails(src.emails),
         phones: cleanPhones(src.phones),
+        firstName: src.firstName ?? null,
+        middleName: src.middleName ?? null,
+        lastName:
+            src.lastName ??
+            (src.partyType !== PartyType.INDIVIDUAL
+                ? src.fullName ?? null
+                : null) ??
+            null,
+        fullName: toFullName(src),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
     };
 
     const partyId =
         requestType === Action.ADD ? undefined : deletedItem?.party?.partyId;
-
     return {
         ...task,
         data: {
@@ -195,6 +204,9 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
             planCode: task.data.planCode,
             policyNumber: task.data.policyNumber,
             signatures: signatureData?.signatures ?? [],
+            partyRole: 'ThirdPartyDesignee',
+            documents: src?.documents,
+            supportingDocumentAttached: src?.supportingDocumentAttached,
         },
     };
 };
