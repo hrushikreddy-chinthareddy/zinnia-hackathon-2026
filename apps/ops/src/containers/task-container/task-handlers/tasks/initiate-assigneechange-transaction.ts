@@ -268,7 +268,7 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, ApiResponse> = {
 
     getPayload: (task: any) => {
         return {
-            category: ['Assignee Change'],
+            category: ['Assignee Change', 'Party Change', 'Notary Validation'],
             businessProcess: task?.process,
             carrier: task?.carrier,
             policyNumber: task?.data?.policyNumber,
