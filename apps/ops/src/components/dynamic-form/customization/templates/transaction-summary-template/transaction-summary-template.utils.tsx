@@ -172,6 +172,10 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                   addresses: cleanAddresses(uiParty.addresses),
                   emails: cleanEmails(uiParty.emails),
                   phones: cleanPhones(uiParty.phones),
+                  preferredCommunicationType:
+                      uiParty.preferredCommunicationType === 'null'
+                          ? null
+                          : uiParty.preferredCommunicationType,
                   startDate:
                       requestType === Action.ADD ||
                       requestType === Action.UPDATE

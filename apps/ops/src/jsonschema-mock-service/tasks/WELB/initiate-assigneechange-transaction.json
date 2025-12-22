@@ -351,9 +351,10 @@
                                                 "enum": [
                                                     "EMAIL",
                                                     "REGULARMAIL",
-                                                    null
+                                                    "null"
                                                 ],
-                                                "title": "Preferred contact method"
+                                                "title": "Preferred contact method",
+                                                "default": "null"
                                             },
                                             "addresses": {
                                                 "type": "array",
@@ -1033,7 +1034,7 @@
                                                     {
                                                         "properties": {
                                                             "preferredCommunicationType": {
-                                                                "const": null
+                                                                "const": "null"
                                                             }
                                                         }
                                                     }
