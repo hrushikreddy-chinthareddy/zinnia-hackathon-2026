@@ -193,6 +193,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             partyId,
             role: PolicyRole.ASSIGNEE,
             query: {
+                requestType,
                 collateralAmount: cleanedParty.collateralAmount,
                 effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                 caseId: customData?.caseId,
