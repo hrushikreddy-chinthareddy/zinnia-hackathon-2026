@@ -102,6 +102,10 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         phones: cleanPhones(src.phones),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
+        preferredCommunicationType:
+            src.preferredCommunicationType === 'null'
+                ? null
+                : src.preferredCommunicationType,
         fullName: getFullName(src),
         startDate:
             requestType === Action.ADD || requestType === Action.UPDATE
