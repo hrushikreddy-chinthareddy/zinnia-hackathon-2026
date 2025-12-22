@@ -187,4 +187,5 @@ export enum FEATURE_FLAGS {
     CASE_STATS_COUNT = 'case-stats-count',
     FINANCIAL_TRANSACTION = 'financial-transaction',
     DTCC_SECTION_ENABLED = 'dtcc_section_enabled',
+    DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
 }
