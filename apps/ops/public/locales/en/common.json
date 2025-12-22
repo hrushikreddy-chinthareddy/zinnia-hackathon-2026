@@ -27,6 +27,7 @@
     "cancel": "Cancel",
     "contractNumber": "Contract number",
     "illustrations": "Illustrations",
+    "notYetAvailable": "Not yet available",
     "transaction": {
         "toolTips": {
             "correlationId": "This identifier is assigned to linked transactions so they can be tracked together.",
@@ -40,10 +41,16 @@
             "modifiedEndowmentContractStatus": "MEC stands for Modified Endowment Contract. A policy becomes a MEC if it fails the 7-pay premium test. This can happen when an owner pays too much premium during an active 7-pay period.",
             "preTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis that predates the passing of the Tax Equity and Fiscal Responsibility Act.",
             "postTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis after the Tax Equity and Fiscal Responsibility Act passed in 1982.",
-            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988."
+            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988.",
+            "N": "Awaiting reconciliation means we’ve received the request in the payment system, but haven’t received confirmation from the bank.",
+            "R": "Reconciled means we’ve confirmed that we received the amount from the bank.  Unreconciled means there’s a mismatch or offage that needs review.",
+            "U": "Unreconciled means there’s a mismatch or offage that needs review",
+            "O": "Reviewing means the payment is going through final review.",
+            "C": "Cleared means the payment has been successfully resolved. The payment is complete."
         }
     },
     "allFields": {
+        "formValidationsEmail": "Email is required",
         "impactedParty": "Impacted party",
         "transactionBasics": "Transaction basics",
         "emptySearch": "No matches found",
@@ -1104,8 +1111,14 @@
         "MARRIED": "Married",
         "HEADOFHOUSEHOLD": "Head of household",
         "WIDOWED": "Widowed",
-        "DIVORCED": "Divorced"
+        "DIVORCED": "Divorced",
+        "R": "Reconciled",
+        "U": "Unreconciled",
+        "C": "Cleared",
+        "O": "Reviewing",
+        "N": "Awaiting reconciliation"
     },
+
     "site": {
         "name": "Zinnia Live",
         "home": {
@@ -3159,7 +3172,8 @@
                 "re-illustration": "Re-Illustration",
                 "linked case": "Linked Case",
                 "bene": "Notify",
-                "beneficiary": "Beneficiary"
+                "beneficiary": "Beneficiary",
+                "owner": "Owner"
             },
             "reviewIssues": "Review",
             "suitabilityReview": "suitability",
@@ -3180,6 +3194,7 @@
             "getPolicyNumber": "Getting policy number…",
             "getDetailsSubtext": "We're doing ongoing checks. You'll see it here once it's available.",
             "gettingPartyDetails": "Getting party details...",
+            "gettingFinancialTransaction": "Getting financial transaction...",
             "people": "People",
             "policyNumber": "Policy #:",
             "transactionDetails": "Transaction details",
@@ -5434,6 +5449,7 @@
     "label": {
         "findKeyValues": "Search key values",
         "transactionDetails": "Transaction details",
+        "viewAllDetails": "View all details",
         "findKeyValuesTitle": "Find key values",
         "findKeyValuesDate": "Display data from",
         "findKeyValuesDateError": "Unable to retrieve data for the selected date.",
@@ -8585,6 +8601,15 @@
         }
     },
     "operationsReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Operations Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "opsReview": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Operations Review was submitted.",
