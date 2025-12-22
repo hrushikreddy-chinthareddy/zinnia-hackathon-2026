@@ -1377,6 +1377,10 @@
                 "text": "Gérer les bénéficiaires",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
+            },
             "userMenu": {
                 "text": "Menu Utilisateur"
             }
@@ -2261,6 +2265,29 @@
                 "existing": "Existante",
                 "address": "Adresse",
                 "phone": "Téléphone"
+            }
+        }
+    },
+    "selfServeTransaction": {
+        "continue": "Continuer",
+        "cancel": "Annuler",
+        "confirm": {
+            "header": "Confirmer",
+            "tryAgain": "Réessayer",
+            "for": "pour",
+            "nigo": "Traitement NIGO.",
+            "goToCase": "Aller au dossier",
+            "gotIt": "Compris !",
+            "submit": "Envoyé !",
+            "backToHome": "Retour à l’accueil"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gérer les assignés",
+                "subTitle": "Ici, vous pouvez gérer les assignés"
+            },
+            "confirm": {
+                "subTitle": "Les mises à jour du changement d’assigné ont été envoyées."
             }
         }
     },

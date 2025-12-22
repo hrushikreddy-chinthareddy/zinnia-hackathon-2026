@@ -38,6 +38,8 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         featureFlags[FEATURE_FLAGS.THIRD_PARTY_DESIGNEE_TRANSACTION];
     const shouldShowBeneficiaryChange =
         featureFlags[FEATURE_FLAGS.BENEFICIARY_CHANGE_TRANSACTION];
+    const shouldShowAssigneeChange =
+        featureFlags[FEATURE_FLAGS.ASSIGNEE_CHANGE_TRANSACTION] ?? true;
 
     const useRoleManagementEligibility = (
         policy: { planCode?: string; policyNumber?: string },
@@ -98,6 +100,10 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         policy,
         PolicyRole.BENEFICIARY
     );
+    const { data: manageAssigneeEligibilty } = useRoleManagementEligibility(
+        policy,
+        PolicyRole.ASSIGNEE
+    );
 
     const links = [
         {
@@ -151,6 +157,16 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
             isEligible:
                 manageBeneficiaryEligibility?.isEligibleManageBeneficiary,
             shouldShow: shouldShowBeneficiaryChange,
+        },
+        {
+            href: t('site.navLinks.assignee.link', {
+                id: policy.policyNumber,
+                planCode: policy.planCode,
+            }),
+            name: t('site.navLinks.assignee.text'),
+            hideLabel: false,
+            isEligible: manageAssigneeEligibilty?.isEligibleManageAssignee,
+            shouldShow: shouldShowAssigneeChange,
         },
     ];
 

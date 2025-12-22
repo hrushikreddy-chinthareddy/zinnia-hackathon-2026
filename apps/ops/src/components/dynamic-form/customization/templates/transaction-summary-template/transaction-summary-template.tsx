@@ -1,7 +1,13 @@
 import { FieldTemplateProps } from '@rjsf/utils';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -20,6 +26,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { TaskType } from '@deps/models/case/task';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 
 import {
     getRoleLabel,
@@ -133,16 +140,37 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
         [formContext.customData]
     );
 
-    const hasFetchedValidation = useRef(false);
+    //const hasFetchedValidation = useRef(false);
+
+    const previousSummaryRef = useRef<TransactionResponse | null>(null);
+
+    const setValidationSummary = useCallback(
+        (summary: TransactionResponse | null) => {
+            const prev = previousSummaryRef.current;
+            if (!summary && !prev) return;
+            if (
+                summary &&
+                prev &&
+                JSON.stringify(summary) === JSON.stringify(prev)
+            ) {
+                return;
+            }
+            previousSummaryRef.current = summary;
+            if (formContext.setValidationSummary) {
+                formContext.setValidationSummary(summary);
+            }
+        },
+        [formContext]
+    );
 
     useEffect(() => {
         if (!url || !stableCustomData || !issueResolved || readonly) return;
 
-        if (hasFetchedValidation.current) {
-            return;
-        }
+        // if (hasFetchedValidation.current) {
+        //     return;
+        // }
 
-        hasFetchedValidation.current = true;
+        // hasFetchedValidation.current = true;
         setLoading(true);
         setValidationError(null);
 
@@ -150,16 +178,18 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
             .then((summary) => {
                 setValidationResponse(summary);
                 setLoading(false);
-                if (formContext.setValidationSummary) {
-                    formContext.setValidationSummary(summary);
-                }
+                // if (formContext.setValidationSummary) {
+                //     formContext.setValidationSummary(summary);
+                // }
+                setValidationSummary(summary as TransactionResponse);
             })
             .catch((err) => {
                 setValidationError(err?.message || t('failedToFetch'));
                 setLoading(false);
-                if (formContext.setValidationSummary) {
-                    formContext.setValidationSummary(null);
-                }
+                // if (formContext.setValidationSummary) {
+                //     formContext.setValidationSummary(null);
+                // }
+                setValidationSummary(null);
             });
     }, [
         url,
@@ -167,7 +197,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
         issueResolved,
         readonly,
         invokeNewBeneChangeApi,
-        formContext,
+        setValidationSummary,
         t,
     ]);
 

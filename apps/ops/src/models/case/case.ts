@@ -143,6 +143,7 @@ export enum Processes {
     FreeLookCancellation = 'Free Look Cancellation',
     PartialWithdrawal = 'Partial Withdrawal',
     FullSurrender = 'Full Surrender',
+    AssigneeChange = 'Assignee Change',
 }
 
 export enum Actions {
