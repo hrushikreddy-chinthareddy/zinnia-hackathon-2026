@@ -27,7 +27,7 @@ const SideSheetProductDetails = ({
                 className={styles.headerSection}
                 variant={TypographyVariant.H2}
             >
-                {t('allFields.dashboardProductDetails') as string}
+                {t('allFields.dashboardProductDetails') ?? ''}
             </Typography>
             <div className={styles.entryRow}>
                 <div className={styles.entryField}>
@@ -38,7 +38,7 @@ const SideSheetProductDetails = ({
                     <Content
                         details={
                             getCarrierNameByClientId(
-                                globalValues.carrierId as string
+                                globalValues.carrierId ?? ''
                             ) ||
                             globalValues.carrierId ||
                             DEFAULT_ERROR_STRING
@@ -64,9 +64,7 @@ const SideSheetProductDetails = ({
                     <Label
                         label={t('allFields.productName')}
                         tooltipTitle={t('allFields.productName')}
-                        tooltipBody={
-                            t('allFields.productNameTooltip') as string
-                        }
+                        tooltipBody={t('allFields.productNameTooltip') ?? ''}
                         variant={LabelVariant.FieldLabel}
                     />
                     <Content
@@ -84,7 +82,7 @@ const SideSheetProductDetails = ({
                             mapProductTypeToTranslation(
                                 globalValues.productType,
                                 t
-                            ).label as string
+                            ).label ?? ''
                         }
                         variant={ContentVariant.BodySm}
                     />
