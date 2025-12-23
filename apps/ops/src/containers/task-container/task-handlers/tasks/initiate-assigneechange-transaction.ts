@@ -140,6 +140,20 @@ const toFullName = (party: Party): string | null =>
             .join(' ')
     ) || null;
 
+const getCollateralAmount = (
+    party: Party,
+    policy: PolicyResponse
+): number | null => {
+    const partyRole = policy.partyRoles.find(
+        (r) =>
+            r.partyId === party.partyId &&
+            r.partyRole === Roles.ASSIGNEE &&
+            (!r.endDate || !isEndDated(r.endDate))
+    );
+    const collateralAmount = partyRole?.collateralAmount ?? null;
+    return collateralAmount;
+};
+
 const formatPartyForContract = (party: Party, role: string) => {
     const isIndividual = party.partyType === PartyType.INDIVIDUAL;
 
@@ -235,6 +249,8 @@ const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
                     phones: getPhones(party.phones),
                     emails: getEmails(party.emails),
                     identifications: getIdentifications(party.identifications),
+                    collateralAmount:
+                        getCollateralAmount(party, policy) ?? null,
                 },
             })
         );

@@ -16,7 +16,6 @@ import {
     cleanEmails,
     cleanPhones,
     mergeIdentifications,
-    getCollateralAmountValue,
 } from './role-change-data-entry.utils';
 
 const getRelationship = (item: any) =>
@@ -86,8 +85,6 @@ export const getPurchaseDocumentPayload = (
 export const getAssigneeChangePayload = (task: ManagementTask) => {
     const actionData = task?.data?.actionData || [];
     const signatureData = task?.data?.signatureData || [];
-
-    const collateralAmount = getCollateralAmountValue(actionData);
     const { requestType, addedItem, deletedItem } =
         detectRoleChangeRequestType(actionData);
 
@@ -97,6 +94,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
     const party = {
         ...base,
         ...src,
+        collateralAmount: src?.collateralAmount || null,
         addresses: cleanAddresses(src.addresses),
         emails: cleanEmails(src.emails),
         phones: cleanPhones(src.phones),
@@ -118,7 +116,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
     };
 
     const partyId =
-        requestType === Action.ADD ? undefined : deletedItem?.party?.partyId;
+        requestType === Action.ADD ? null : deletedItem?.party?.partyId;
 
     return {
         ...task,
@@ -135,7 +133,6 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
             policyNumber: task.data.policyNumber,
             signatures: signatureData?.signatures ?? [],
             notarySignatures: signatureData?.notarySignatures ?? [],
-            collateralAmount: collateralAmount,
             partyRole: PolicyRole.ASSIGNEE,
             signatureData: signatureData,
         },
