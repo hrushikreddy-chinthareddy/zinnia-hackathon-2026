@@ -184,6 +184,7 @@ export enum FEATURE_FLAGS {
     REVISED_HISTORY_TABLE = 'revised_history_table',
     OPS_REVIEW_REQUEST = 'ops_review_request',
     ILLUSTRATIONS_AS_IS_ILLUSTRATIONS = 'illustrations_as_is_illustrations',
+    ILLUSTRATIONS_IMPROVED_AGENT_SEARCH = 'improved_illustration_agent_search',
     CASE_STATS_COUNT = 'case-stats-count',
     FINANCIAL_TRANSACTION = 'financial-transaction',
     DTCC_SECTION_ENABLED = 'dtcc_section_enabled',
