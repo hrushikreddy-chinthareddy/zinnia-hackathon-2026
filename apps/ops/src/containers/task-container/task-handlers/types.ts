@@ -207,7 +207,7 @@ export type ActionDataItem = {
         phones: Phone[];
         emails: Email[];
         identifications: Identification[];
-        collateralAmount: number | null;
+        collateralAmount?: number | null;
     };
 };
 
