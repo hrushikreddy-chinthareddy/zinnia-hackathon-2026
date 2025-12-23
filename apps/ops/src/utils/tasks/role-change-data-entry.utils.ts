@@ -37,7 +37,7 @@ export function resolveRoleChangePartyId(
             return deletedItem?.party?.partyId ?? null;
         case Action.ADD:
         default:
-            return defaultPartyId;
+            return '';
     }
 }
 

@@ -367,8 +367,7 @@ const initiateAssigneeChangeTransactionHandler: TaskHandler<
                     },
                     effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
                     actionData,
-                    defaultPartyIdRoleChange:
-                        actionData?.[0]?.party?.partyId ?? '',
+                    defaultPartyIdRoleChange: '',
                 },
             });
         }
