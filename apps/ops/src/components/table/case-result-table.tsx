@@ -22,7 +22,6 @@ import ChipStatus from '@deps/components/chip-status/chip-status';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getValidFullName } from '@deps/helpers/case-management';
@@ -74,7 +73,7 @@ const PartyWithOthers = ({
     highlights,
     isOwner,
 }: PartyWithOthersProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
     const textWithHighlights =
         !!text && highlights && highlights.length ? (
             <Highlighter text={text} highlights={highlights} />
@@ -113,7 +112,7 @@ interface CaseTableRowProps {
 }
 
 const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
     const router = useRouter();
     const { sessionId, partyId } = usePermissionsContext();
 
@@ -411,7 +410,7 @@ const NoResultsRow = ({
     loadingMessage: string;
     caseSearchLoading: boolean;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
 
     return (
         <TableRow>
@@ -434,10 +433,17 @@ export const CaseResultTable = ({
     caseSearchLoading,
     loadingMessage,
 }: CaseResultTableProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
 
     return (
-        <Table className={styles.tableContainer}>
+        <Table
+            className={styles.tableContainer}
+            aria-describedby="cases-table-description"
+            role="table"
+        >
+            <caption id="cases-table-description" className="sr-only">
+                {t('allFields.tableCaptionsCasesTable') ?? ''}
+            </caption>
             <TableHeader>
                 <TableRow>
                     {/* This header cell is needed so the link can come first in the Table Row, without it the table body will shift right one column too far */}

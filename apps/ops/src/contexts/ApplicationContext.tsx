@@ -14,6 +14,7 @@ import { storage } from '@deps/helpers/sessionStorage.helpers';
 import { OptimizelyProvider } from './OptimizelyContext';
 import { PermissionsProvider } from './PermissionsContext';
 import { PolicySearchFiltersProvider } from './PolicySearchFilters';
+import { SearchBarProvider } from './SearchBarContext';
 import { SideSheetProvider } from './SideSheetContext';
 
 interface ApplicationData {
@@ -125,11 +126,15 @@ export const ApplicationDataProvider: React.FC<
                 <PermissionsProvider>
                     <ErrorBoundary>
                         <SideSheetProvider>
-                            <PolicySearchFiltersProvider>
-                                <ApplicationComponentWrapper>
-                                    <LayoutWrapper>{children}</LayoutWrapper>
-                                </ApplicationComponentWrapper>
-                            </PolicySearchFiltersProvider>
+                            <SearchBarProvider>
+                                <PolicySearchFiltersProvider>
+                                    <ApplicationComponentWrapper>
+                                        <LayoutWrapper>
+                                            {children}
+                                        </LayoutWrapper>
+                                    </ApplicationComponentWrapper>
+                                </PolicySearchFiltersProvider>
+                            </SearchBarProvider>
                         </SideSheetProvider>
                     </ErrorBoundary>
                 </PermissionsProvider>

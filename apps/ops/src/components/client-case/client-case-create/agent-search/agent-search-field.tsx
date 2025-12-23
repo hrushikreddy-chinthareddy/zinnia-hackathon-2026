@@ -7,6 +7,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { browserLogError } from '@deps/utils/browser-logging';
 
 import { useAgentFieldContext } from './agent-field-context';
 import { AgentSearchTextInput } from './agent-search-input';
@@ -38,7 +39,9 @@ export const AgentSearchField = ({ onCancel }: AgentSearchProps) => {
 
             if (!hasAgentOption) {
                 // Sanity check
-                console.error(`${agentOption} is not valid`);
+                browserLogError('Invalid agentOption selected', {
+                    agentOption,
+                });
                 return;
             }
 

@@ -267,6 +267,7 @@ export default function DocumentsTab({
                                             policy?.policyDates
                                                 ?.policyDeliveryDate
                                         }
+                                        context="case"
                                     />
                                 )}
 
@@ -319,6 +320,7 @@ export default function DocumentsTab({
                                             policy?.policyDates
                                                 ?.policyDeliveryDate
                                         }
+                                        context="case"
                                     />
                                 )}
                                 <DocumentResultsPagination

@@ -12,6 +12,10 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
+import {
+    getAdditionalActiveIdentifications,
+    getMainActiveIdentifications,
+} from '@deps/helpers/identification.helpers';
 import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { getStateName } from '@deps/helpers/states.helpers';
@@ -35,14 +39,6 @@ export interface IdentificationCardProps {
     selectedPolicyParty?: PolicyParty | AgentParty;
     isAnnuity?: boolean;
 }
-
-// The ID Types that are displayed in the main section of the card
-const MAIN_IDENTIFICATION_TYPES = [
-    IdentificationType.SSN,
-    IdentificationType.TIN,
-    IdentificationType.EXTERNAL,
-    IdentificationType.OTHER,
-];
 
 const formatIdentificationValue = (identification: Identification): string => {
     switch (identification?.identificationType) {
@@ -143,20 +139,10 @@ const IdentificationCard = ({
     const isAgent = selectedPolicyParty instanceof AgentParty;
     const isIndividualParty = !isOrganization && !isTrust && !isAgent;
 
-    const mainIdentifications =
-        identifications?.filter((identification) =>
-            MAIN_IDENTIFICATION_TYPES.includes(
-                identification?.identificationType ?? ('' as IdentificationType)
-            )
-        ) ?? [];
-    const additionalIdentifications =
-        identifications?.filter(
-            (identification) =>
-                !MAIN_IDENTIFICATION_TYPES.includes(
-                    identification?.identificationType ??
-                        ('' as IdentificationType)
-                )
-        ) ?? [];
+    const mainActiveIdentifications =
+        getMainActiveIdentifications(identifications);
+    const additionalActiveIdentifications =
+        getAdditionalActiveIdentifications(identifications);
 
     return (
         <CardContainer classNames="flex w-full flex-col items-start">
@@ -203,7 +189,7 @@ const IdentificationCard = ({
                                 )}
                             </FieldData>
                         )}
-                        {mainIdentifications.map((identification) => (
+                        {mainActiveIdentifications.map((identification) => (
                             <IdentificationDisplay
                                 key={identification.identificationType}
                                 identification={identification}
@@ -301,12 +287,14 @@ const IdentificationCard = ({
                                 </FieldData>
                             </>
                         )}
-                        {additionalIdentifications.map((identification) => (
-                            <IdentificationDisplay
-                                key={identification.identificationType}
-                                identification={identification}
-                            />
-                        ))}
+                        {additionalActiveIdentifications.map(
+                            (identification) => (
+                                <IdentificationDisplay
+                                    key={identification.identificationType}
+                                    identification={identification}
+                                />
+                            )
+                        )}
                     </div>
                 )}
             </div>

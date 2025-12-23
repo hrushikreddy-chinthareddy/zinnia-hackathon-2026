@@ -447,11 +447,7 @@
                                                 }
                                             }
                                         },
-                                        "required": [
-                                            "partyType",
-                                            "firstName",
-                                            "lastName"
-                                        ],
+                                        "required": ["partyType", "lastName"],
                                         "allOf": [
                                             {
                                                 "if": {
@@ -473,10 +469,11 @@
                                                             "title": "Prefix",
                                                             "enum": [
                                                                 null,
-                                                                "Dr.",
-                                                                "Mr.",
-                                                                "Mrs.",
-                                                                "Ms."
+                                                                "MR",
+                                                                "MS",
+                                                                "MISS",
+                                                                "MRS",
+                                                                "DR"
                                                             ],
                                                             "default": null
                                                         },
@@ -1181,10 +1178,11 @@
                                     "ui:options": {
                                         "enumNames": [
                                             "Select prefix",
-                                            "Dr.",
                                             "Mr.",
+                                            "Ms.",
+                                            "Miss.",
                                             "Mrs.",
-                                            "Ms."
+                                            "Dr."
                                         ]
                                     },
                                     "ui:placeholder": "Select prefix"

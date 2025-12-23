@@ -341,3 +341,55 @@ export const formatPartyLink = ({
 }) => {
     return `/policies/${planCode}/${policyNumber}/people/${partyId}`;
 };
+
+export const enumsMapping = ({
+    node,
+    t,
+    policyNomenclature,
+}: {
+    node: DataNode;
+    t: TFunction;
+    policyNomenclature?: string;
+}) => {
+    if (node.type === FieldType.field) {
+        const formattedValue =
+            t(`${policyNomenclature}.enums.${node.value}`, {
+                defaultValue: null,
+            }) ?? undefined;
+        return {
+            ...node,
+            value: formattedValue ?? node.value,
+        };
+    }
+    return node;
+};
+
+/**
+ * Adds a tooltip to a DataNode if it is a field
+ *
+ * @param node The node to add the tooltip to
+ * @param t The translation function
+ * @param policyNomenclature "policy" or "contract"
+ * @returns The node with the tooltip added
+ */
+export const getTooltipByValue = ({
+    node,
+    t,
+    policyNomenclature,
+}: {
+    node: DataNode;
+    t: TFunction;
+    policyNomenclature?: string;
+}) => {
+    if (node.type === FieldType.field) {
+        return {
+            ...node,
+            toolTip:
+                t(`${policyNomenclature}.toolTips.${node.value}`, {
+                    defaultValue: null,
+                    policyNomenclature,
+                }) ?? undefined,
+        };
+    }
+    return node;
+};

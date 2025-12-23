@@ -12,6 +12,7 @@ import IdentificationCard from '@deps/containers/people-data-cards/identificatio
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import UnderwritingCard from '@deps/containers/people-data-cards/underwriting-card/underwriting-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     findCoverageParticipant,
     getRiskClass,
@@ -57,7 +58,9 @@ export const PersonSubPage = ({
     const selectedPolicyPartyRoles = useMemo(() => {
         return (
             partyRoles?.filter(
-                (pr) => pr.partyId === selectedPolicyParty?.partyId
+                (pr) =>
+                    pr.partyId === selectedPolicyParty?.partyId &&
+                    !isEndDated(pr.endDate)
             ) || []
         );
     }, [partyRoles, selectedPolicyParty?.partyId]);
