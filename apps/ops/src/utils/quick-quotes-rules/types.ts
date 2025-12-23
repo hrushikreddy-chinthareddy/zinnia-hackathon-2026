@@ -1,10 +1,5 @@
 import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 import { TermFixedCostPeriod } from '@deps/queries/api/v3/illustrations';
-import {
-    NoParamRider,
-    PremiumFreeRider,
-    RiderWithFaceAmount,
-} from '@deps/types/quickQuote';
 
 export type ProductName =
     | 'Term Life 10 Yr'
@@ -52,7 +47,7 @@ export interface ClassEligibilityResult extends BaseEligibilityResult {
 
 export interface RiderEligibilityResult extends BaseEligibilityResult {
     riderName: string;
-    riderCode: string;
+    riderCode: RiderCode;
     evaluated: boolean;
 }
 
@@ -109,9 +104,7 @@ export type ProductClassResult = {
 };
 
 export type ProductClassResultRiders = {
-    [K in RiderWithFaceAmount | NoParamRider | PremiumFreeRider]+?:
-        | boolean
-        | NotAvailabilityReasonField;
+    [K in RiderCode]: RiderEligibilityResult;
 };
 
 export interface getEligibleClassProps {
@@ -129,7 +122,7 @@ type RiderName =
     | 'Accelerated Death Benefit Rider for Terminal Illness'
     | 'Charitable Giving Rider';
 
-type RiderCode =
+export type RiderCode =
     | 'Rider_ADR'
     | 'Rider_CTR'
     | 'Rider_WPR'

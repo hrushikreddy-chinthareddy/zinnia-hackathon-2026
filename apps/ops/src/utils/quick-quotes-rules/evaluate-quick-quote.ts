@@ -17,6 +17,8 @@ import type {
     RiderInputNormalized,
     RiderEligibilityResult,
     RiderAlternatives,
+    ProductClassResultRiders,
+    RiderCode,
 } from './types';
 
 /**
@@ -405,7 +407,7 @@ export class QuickQuoteProducts {
     private getEligibleRiders(
         input: QuickQuoteParams,
         productRiderRules: RiderRule[]
-    ) {
+    ): ProductClassResultRiders {
         const normalizedRidersInput = this.getRiderInputsNormalized(
             input,
             productRiderRules
@@ -416,12 +418,12 @@ export class QuickQuoteProducts {
         );
 
         const groupRiders = eligibileRiders.reduce<
-            Record<string, RiderEligibilityResult>
+            Partial<Record<RiderCode, RiderEligibilityResult>>
         >((acc, rider) => {
             acc[rider.riderCode] = rider;
             return acc;
         }, {});
 
-        return groupRiders;
+        return groupRiders as ProductClassResultRiders;
     }
 }
