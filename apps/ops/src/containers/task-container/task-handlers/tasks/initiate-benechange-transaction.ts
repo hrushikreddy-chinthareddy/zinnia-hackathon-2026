@@ -356,7 +356,7 @@ const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                           addressLine1: '',
                                           addressLine2: null,
                                           city: '',
-                                          state: '',
+                                          state: null,
                                           zipCode: '',
                                           zipCodeExtension: null,
                                       },

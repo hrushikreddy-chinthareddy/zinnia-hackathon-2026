@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     HTTPValidationError,
     UserTransactionInput,
@@ -22,13 +23,11 @@ export const getUserTransactionCounts = async (
             totalElements: response.totalElements,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getUserTransactionCounts::An error occurred while getting user transaction results',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
-        return error;
+
+        throw error;
     }
 };

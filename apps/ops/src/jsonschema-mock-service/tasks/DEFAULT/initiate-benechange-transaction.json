@@ -796,56 +796,159 @@
                             "title": "Beneficiaries",
                             "items": {
                                 "type": "object",
-                                "default": {
-                                    "action": "ADD",
-                                    "actionType": "BENE_CHANGE",
-                                    "isIrrevocable": false,
-                                    "isPerStirpes": false,
-                                    "preferredCommunicationType": null,
-                                    "party": {
-                                        "partyType": "INDIVIDUAL",
-                                        "firstName": "",
-                                        "lastName": "",
-                                        "middleName": null,
-                                        "gender": null,
-                                        "dateOfBirth": null,
-                                        "endDate": null,
-                                        "entityType": "Other",
-                                        "prefix": null,
-                                        "suffix": null,
-                                        "emails": [
-                                            {
-                                                "emailAddress": null,
-                                                "emailType": "PERSONAL"
+                                "allOf": [
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "preferredCommunicationType": {
+                                                    "enum": ["EMAIL"]
+                                                }
+                                            },
+                                            "required": [
+                                                "preferredCommunicationType"
+                                            ]
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "party": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "emails": {
+                                                            "type": "array",
+                                                            "contains": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "emailAddress": {
+                                                                        "type": "string",
+                                                                        "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+                                                                    },
+                                                                    "emailType": {
+                                                                        "type": "string"
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "emailAddress"
+                                                                ]
+                                                            },
+                                                            "minContains": 1
+                                                        }
+                                                    },
+                                                    "required": ["emails"]
+                                                }
                                             }
-                                        ],
-                                        "phones": [
-                                            {
-                                                "dialNumber": null,
-                                                "phoneType": "HOME"
+                                        }
+                                    },
+                                    {
+                                        "if": {
+                                            "properties": {
+                                                "preferredCommunicationType": {
+                                                    "enum": ["REGULARMAIL"]
+                                                }
+                                            },
+                                            "required": [
+                                                "preferredCommunicationType"
+                                            ]
+                                        },
+                                        "then": {
+                                            "properties": {
+                                                "party": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "addresses": {
+                                                            "type": "array",
+                                                            "contains": {
+                                                                "type": "object",
+                                                                "properties": {
+                                                                    "addressLine1": {
+                                                                        "type": [
+                                                                            "string"
+                                                                        ],
+                                                                        "minLength": 1
+                                                                    },
+                                                                    "city": {
+                                                                        "type": [
+                                                                            "string"
+                                                                        ],
+                                                                        "minLength": 1
+                                                                    },
+                                                                    "state": {
+                                                                        "type": [
+                                                                            "string"
+                                                                        ]
+                                                                    },
+                                                                    "zipCode": {
+                                                                        "type": [
+                                                                            "string"
+                                                                        ],
+                                                                        "minLength": 1
+                                                                    }
+                                                                },
+                                                                "required": [
+                                                                    "addressLine1",
+                                                                    "state",
+                                                                    "city",
+                                                                    "zipCode"
+                                                                ]
+                                                            },
+                                                            "minContains": 1
+                                                        }
+                                                    },
+                                                    "required": ["addresses"]
+                                                }
                                             }
-                                        ],
-                                        "addresses": [
+                                        }
+                                    }
+                                ],
+                                "dependencies": {
+                                    "preferredCommunicationType": {
+                                        "oneOf": [
                                             {
-                                                "addressType": "RESIDENCE",
-                                                "addressLine1": "",
-                                                "addressLine2": null,
-                                                "city": "",
-                                                "state": "",
-                                                "zipCode": "",
-                                                "zipCodeExtension": null
-                                            }
-                                        ],
-                                        "identifications": [
+                                                "properties": {
+                                                    "preferredCommunicationType": {
+                                                        "enum": ["EMAIL"]
+                                                    },
+                                                    "party": {
+                                                        "properties": {
+                                                            "emails": {
+                                                                "items": {
+                                                                    "required": [
+                                                                        "emailAddress"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
                                             {
-                                                "identificationValue": null,
-                                                "identificationType": "SSN"
+                                                "properties": {
+                                                    "preferredCommunicationType": {
+                                                        "enum": ["REGULARMAIL"]
+                                                    },
+                                                    "party": {
+                                                        "properties": {
+                                                            "addresses": {
+                                                                "items": {
+                                                                    "required": [
+                                                                        "state",
+                                                                        "addressLine1",
+                                                                        "city",
+                                                                        "zipCode"
+                                                                    ]
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            {
+                                                "properties": {
+                                                    "preferredCommunicationType": {
+                                                        "const": null
+                                                    }
+                                                }
                                             }
                                         ]
-                                    },
-                                    "partyRole": {
-                                        "partyRole": "PRIMARYBENEFICIARY",
-                                        "relationshipToParty": "OTHER"
                                     }
                                 },
                                 "properties": {
@@ -932,8 +1035,7 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Address line 1",
-                                                            "minLength": 1
+                                                            "title": "Address line 1"
                                                         },
                                                         "addressLine2": {
                                                             "type": [
@@ -1033,13 +1135,7 @@
                                                             ],
                                                             "title": "Zip+4"
                                                         }
-                                                    },
-                                                    "required": [
-                                                        "addressLine1",
-                                                        "city",
-                                                        "state",
-                                                        "zipCode"
-                                                    ]
+                                                    }
                                                 }
                                             },
                                             "phones": {
@@ -1119,10 +1215,7 @@
                                                             "default": null
                                                         },
                                                         "firstName": {
-                                                            "type": [
-                                                                "string",
-                                                                "null"
-                                                            ],
+                                                            "type": "string",
                                                             "title": "First name",
                                                             "minLength": 1
                                                         },
@@ -1134,10 +1227,7 @@
                                                             "title": "Middle name"
                                                         },
                                                         "lastName": {
-                                                            "type": [
-                                                                "string",
-                                                                "null"
-                                                            ],
+                                                            "type": "string",
                                                             "title": "Last name",
                                                             "minLength": 1
                                                         },
@@ -1671,7 +1761,8 @@
                                                     "WV",
                                                     "WY"
                                                 ]
-                                            }
+                                            },
+                                            "ui:placeholder": "Select State"
                                         },
                                         "zipCode": {
                                             "ui:widget": "NumbersWidget",

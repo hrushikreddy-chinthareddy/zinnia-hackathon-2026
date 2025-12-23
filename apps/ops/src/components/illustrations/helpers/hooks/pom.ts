@@ -8,16 +8,14 @@ import { first, groupBy, sortBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import {
-    wrapCombinedQueryResultsData,
-    CombinedQueryResult,
-} from '@deps/hooks/combined-query';
+import { wrapCombinedQueryResultsData } from '@deps/hooks/combined-query';
 import {
     getProducersByIdQuery,
     getProducersByNameAndCarrierCodeQuery,
     getUserDownlineBySellingCode,
     getUserHierarchyBySellingCode,
 } from '@deps/queries/tanstack/producerQueries/producerQueries';
+import { ApiGetProducerResponse } from '@deps/types/pom/get.types';
 import {
     GetDownlineResponse,
     GetHierarchyResponse,
@@ -190,6 +188,12 @@ export const useGetProducersListQuery = <MT>(
 // Producer by Id
 //
 
+export type GetProducerByIdWrappedResponse = {
+    lookupId: string;
+    carrierShortName: string;
+    response: ApiGetProducerResponse | null;
+};
+
 const buildGetProducerByIdQueryOptions = (
     lookupId: string | undefined,
     carrierShortName: string | undefined
@@ -202,7 +206,14 @@ const buildGetProducerByIdQueryOptions = (
             upperCarrierShortName,
             lookupId,
         ],
-        queryFn: () => getProducersByIdQuery(lookupId!, upperCarrierShortName!),
+        queryFn: async (): Promise<GetProducerByIdWrappedResponse> => ({
+            lookupId: lookupId!,
+            carrierShortName: upperCarrierShortName!,
+            response: await getProducersByIdQuery(
+                lookupId!,
+                upperCarrierShortName!
+            ),
+        }),
         enabled: !!(lookupId && carrierShortName),
     });
 };
@@ -211,6 +222,23 @@ export const useGetProducerById = (
     lookupId: string | undefined,
     carrierShortName: string | undefined
 ) => useQuery(buildGetProducerByIdQueryOptions(lookupId, carrierShortName));
+
+export const useGetProducersByIdListQuery = <MT>(
+    params: { lookupId: string; carrierShortName: string }[],
+    combine: (
+        results: UseQueryResult<GetProducerByIdWrappedResponse | null>[]
+    ) => MT
+) =>
+    useQueries({
+        queries: params.map(({ lookupId, carrierShortName }) =>
+            buildGetProducerByIdQueryOptions(lookupId, carrierShortName)
+        ),
+        combine: useCallback(
+            (results: UseQueryResult<GetProducerByIdWrappedResponse>[]) =>
+                wrapCombinedQueryResultsData(results, combine),
+            [combine]
+        ),
+    });
 
 //
 // Helpers
@@ -224,8 +252,9 @@ export const useAuthenticatedAgentSellingCodes = () => {
     return useMemo(() => getSellingCodesFromAliases(aliases), [aliases]);
 };
 
-export const isAgency = (uplineItem: UplineItem | null) =>
-    uplineItem?.role === MAIN_AGENCY_ROLE;
+export const isAgency = (
+    uplineItem: UplineItem | GetHierarchyResponse | null
+) => uplineItem?.role === MAIN_AGENCY_ROLE;
 
 /*
  * Returns the agencies from an upline that are at the lowest level available
@@ -249,58 +278,4 @@ export const getNearestAgenciesFromUpline = (upline: Upline | null) => {
     }
 
     return groupedAgencies[nearestHierarchyLevel] ?? [];
-};
-
-/**
- * Returns the agencies that an agent belongs to
- * that are at the nearest level in each of their uplines
- */
-export const useAuthenticatedAgentAgencies = () => {
-    const agentSellingCodes = useAuthenticatedAgentSellingCodes();
-
-    return useHierarchyListQuery(
-        agentSellingCodes,
-        useCallback(
-            (results: UseQueryResult<GetHierarchyResponse | null>[]) => {
-                const hierarchies = results
-                    .map((result) => result?.data)
-                    .filter((item): item is GetHierarchyResponse => !!item);
-
-                const rootAgencyHierarchies = hierarchies.filter(
-                    ({ role }) => role === MAIN_AGENCY_ROLE
-                );
-
-                if (rootAgencyHierarchies?.length) {
-                    // Return all rootAgencies if any is present
-                    return rootAgencyHierarchies.map((rootAgencyHierarchy) => ({
-                        agencies: [rootAgencyHierarchy],
-                        agentSellingCode: rootAgencyHierarchy?.sellingCode,
-                        carrierShortName:
-                            rootAgencyHierarchy.carrier.carrierShortName,
-                    }));
-                }
-
-                return hierarchies
-                    .map(
-                        (hierarchy) =>
-                            hierarchy && {
-                                agencies: getNearestAgenciesFromUpline(
-                                    hierarchy.upline ?? []
-                                ),
-                                agentSellingCode: hierarchy.sellingCode,
-                                carrierShortName:
-                                    hierarchy.carrier.carrierShortName,
-                            }
-                    )
-                    .filter((item) => item!.agencies.length);
-            },
-            []
-        )
-    ) as CombinedQueryResult<
-        {
-            agencies: UplineItem[];
-            agentSellingCode: string;
-            carrierShortName: string;
-        }[]
-    >;
 };
