@@ -77,7 +77,7 @@ export const TransactionAccordionTemplate = (
     }
 
     const isIrrevocable = formContext?.customData?.contractInfo?.parties?.some(
-        (party: any) => party.isIrrevocable === true
+        (party: any) => party.isIrrevocable === null
     );
     if (formContext?.customData?.signatureData) {
         formContext.customData.signatureData.signatures = isIrrevocable

@@ -208,6 +208,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 relationshipToTheCurrentOwner:
                     customData?.relationshipToTheCurrentOwner,
                 party: cleanedParty,
+                partyId,
             },
         };
     },

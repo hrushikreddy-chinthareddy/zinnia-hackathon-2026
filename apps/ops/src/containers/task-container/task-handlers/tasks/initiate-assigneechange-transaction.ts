@@ -173,7 +173,6 @@ const getContractInfo = (policy: PolicyResponse) => {
     const rolesToFormat: PartyRoleType[] = [
         PartyRoleType.OWNER,
         PartyRoleType.JOINTOWNER,
-        PartyRoleType.THIRDPARTYDESIGNEE,
         PartyRoleType.ASSIGNEE,
     ];
 
@@ -353,7 +352,7 @@ const initiateAssigneeChangeTransactionHandler: TaskHandler<
                     effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
                     actionData,
                     defaultPartyIdRoleChange:
-                        actionData?.[0]?.party?.partyId ?? '',
+                        actionData?.[0]?.party?.partyId ?? null,
                 },
             });
         }

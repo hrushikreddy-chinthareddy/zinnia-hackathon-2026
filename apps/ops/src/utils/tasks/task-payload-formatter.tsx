@@ -137,6 +137,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
             notarySignatures: signatureData?.notarySignatures ?? [],
             collateralAmount: collateralAmount,
             partyRole: PolicyRole.ASSIGNEE,
+            signatureData: signatureData,
         },
     };
 };
