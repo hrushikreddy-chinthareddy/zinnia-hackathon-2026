@@ -142,7 +142,6 @@ const toFullName = (party: Party): string | null =>
 
 const formatPartyForContract = (party: Party, role: string) => {
     const isIndividual = party.partyType === PartyType.INDIVIDUAL;
-    console.log('party', party);
 
     return {
         partyRoleId: party?.partyRoleId ?? null,
@@ -166,6 +165,7 @@ const formatPartyForContract = (party: Party, role: string) => {
         identifications: getIdentifications(party?.identifications),
         emails: getEmails(party?.emails),
         phones: getPhones(party?.phones),
+        isIrrevocable: party?.isIrrevocable ?? false,
     };
 };
 
@@ -213,7 +213,7 @@ const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
                 party: {
                     partyId: party.partyId ?? null,
                     partyType: party.partyType ?? null,
-                    prefix: getPrefix(party.prefix ?? null),
+                    prefix: party.prefix ?? null,
                     firstName: party.firstName ?? null,
                     middleName: party.middleName ?? null,
                     lastName:
