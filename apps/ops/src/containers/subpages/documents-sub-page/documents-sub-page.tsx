@@ -189,6 +189,7 @@ const NormalDocs = ({
                     results={policyDocuments ?? []}
                     planCode={policy.product?.planCode}
                     policyDeliveryDate={policy.policyDates?.policyDeliveryDate}
+                    context="policy"
                 />
             )}
             <DocumentResultsPagination

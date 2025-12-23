@@ -1,5 +1,6 @@
 import {
     queryOptions,
+    skipToken,
     useQueries,
     useQuery,
     UseQueryResult,
@@ -20,6 +21,8 @@ import {
     GetDownlineResponse,
     GetHierarchyResponse,
     MAIN_AGENCY_ROLE,
+    PRODUCER_ROLES,
+    ProducerRole,
     ProducersResponse,
     Upline,
     UplineItem,
@@ -27,6 +30,7 @@ import {
 
 import {
     getSellingCodesFromAliases,
+    IllustratorRole,
     useAllAliasesWithSellingCode,
 } from './user-identity';
 
@@ -38,6 +42,16 @@ export const POM_QUERY_PREFIXES = {
         'getProducersByNameAndCarrierCode',
     ],
     GET_PRODUCER_BY_ID: ['POM', 'getProducerById'],
+    GET_COMP_PRODUCER_BY_SELLING_CODE: [
+        'POM',
+        'comp',
+        'getProducerBySellingcode',
+    ],
+    GET_COMP_DOWNLINE_FOR_NEAREST_ROLE: [
+        'POM',
+        'comp',
+        'getdownlineForNearestRole',
+    ],
 } as const;
 
 //
@@ -88,7 +102,7 @@ const buildDownlineQueryOptions = (
     sellingCode: string | undefined,
     {
         carrierShortName,
-        partialFullName,
+        partialFullName = '',
     }: {
         carrierShortName: string | undefined;
         partialFullName: string | undefined;
@@ -194,7 +208,7 @@ export type GetProducerByIdWrappedResponse = {
     response: ApiGetProducerResponse | null;
 };
 
-const buildGetProducerByIdQueryOptions = (
+const buildGetWrappedProducerByIdQueryOptions = (
     lookupId: string | undefined,
     carrierShortName: string | undefined
 ) => {
@@ -218,12 +232,40 @@ const buildGetProducerByIdQueryOptions = (
     });
 };
 
-export const useGetProducerById = (
+const buildGetProducerByIdQueryOptions = (
+    lookupId: string | undefined,
+    carrierShortName: string | undefined
+) => {
+    const upperCarrierShortName = carrierShortName?.toUpperCase();
+
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID,
+            upperCarrierShortName,
+            lookupId,
+        ],
+        queryFn: () => getProducersByIdQuery(lookupId!, upperCarrierShortName!),
+        enabled: !!(lookupId && carrierShortName),
+    });
+};
+
+/**
+ * @deprecated use `useGetProducerById` instead
+ */
+export const useGetWrappedProducerByIdQuery = (
+    lookupId: string | undefined,
+    carrierShortName: string | undefined
+) =>
+    useQuery(
+        buildGetWrappedProducerByIdQueryOptions(lookupId, carrierShortName)
+    );
+
+export const useGetProducerByIdQuery = (
     lookupId: string | undefined,
     carrierShortName: string | undefined
 ) => useQuery(buildGetProducerByIdQueryOptions(lookupId, carrierShortName));
 
-export const useGetProducersByIdListQuery = <MT>(
+export const useGetWrappedProducersByIdListQuery = <MT>(
     params: { lookupId: string; carrierShortName: string }[],
     combine: (
         results: UseQueryResult<GetProducerByIdWrappedResponse | null>[]
@@ -231,10 +273,126 @@ export const useGetProducersByIdListQuery = <MT>(
 ) =>
     useQueries({
         queries: params.map(({ lookupId, carrierShortName }) =>
-            buildGetProducerByIdQueryOptions(lookupId, carrierShortName)
+            buildGetWrappedProducerByIdQueryOptions(lookupId, carrierShortName)
         ),
         combine: useCallback(
             (results: UseQueryResult<GetProducerByIdWrappedResponse>[]) =>
+                wrapCombinedQueryResultsData(results, combine),
+            [combine]
+        ),
+    });
+
+//
+// Composite queries
+//
+
+export const buildGetProducerBySellingCodeQueryOptions = ({
+    sellingCode,
+    carrierShortName,
+}: {
+    sellingCode: string | undefined;
+    carrierShortName: string | undefined;
+}) => {
+    carrierShortName = carrierShortName?.toUpperCase();
+
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_COMP_PRODUCER_BY_SELLING_CODE,
+            carrierShortName,
+            sellingCode,
+        ],
+        queryFn: !(sellingCode && carrierShortName)
+            ? skipToken
+            : async ({ client }) => {
+                  const hierarchy = await client.fetchQuery(
+                      buildHierarchyQueryOptions({
+                          sellingCode,
+                          carrierShortName,
+                      })
+                  );
+
+                  if (!hierarchy) {
+                      return null;
+                  }
+
+                  return await client.fetchQuery(
+                      buildGetProducerByIdQueryOptions(
+                          hierarchy?.producerLookupId,
+                          carrierShortName
+                      )
+                  );
+              },
+    });
+};
+
+export const buildGetDownlineForNearestRoleQueryOptions = ({
+    sellingCode,
+    role,
+    carrierShortName,
+    partialFullName = '',
+}: {
+    sellingCode: string | undefined;
+    role: ProducerRole | undefined;
+    carrierShortName: string | undefined;
+    partialFullName: string | undefined;
+}) => {
+    carrierShortName = carrierShortName?.toUpperCase();
+
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_COMP_DOWNLINE_FOR_NEAREST_ROLE,
+            carrierShortName,
+            sellingCode,
+            role,
+            { partialFullName },
+        ],
+        queryFn: !(sellingCode && role && carrierShortName)
+            ? skipToken
+            : async ({ client }) => {
+                  const hierarchy = await client.fetchQuery(
+                      buildHierarchyQueryOptions({
+                          sellingCode,
+                          carrierShortName,
+                      })
+                  );
+
+                  if (!hierarchy) {
+                      return null;
+                  }
+
+                  const nearestProducer = getNearestRoleFromHierarchy(
+                      hierarchy,
+                      role
+                  );
+
+                  if (!nearestProducer) {
+                      return null;
+                  }
+
+                  return await client.fetchQuery(
+                      buildDownlineQueryOptions(nearestProducer.sellingCode, {
+                          carrierShortName,
+                          partialFullName,
+                      })
+                  );
+              },
+    });
+};
+
+export const useGetProducersBySellingCodeListQuery = <MT>(
+    params: { sellingCode: string; carrierShortName: string }[] | undefined,
+    combine: (results: UseQueryResult<ApiGetProducerResponse | null>[]) => MT
+) =>
+    useQueries({
+        queries:
+            params?.map(({ sellingCode, carrierShortName }) =>
+                buildGetProducerBySellingCodeQueryOptions({
+                    sellingCode,
+                    carrierShortName,
+                })
+            ) ?? [],
+        combine: useCallback(
+            (results: UseQueryResult<ApiGetProducerResponse | null>[]) =>
                 wrapCombinedQueryResultsData(results, combine),
             [combine]
         ),
@@ -255,6 +413,47 @@ export const useAuthenticatedAgentSellingCodes = () => {
 export const isAgency = (
     uplineItem: UplineItem | GetHierarchyResponse | null
 ) => uplineItem?.role === MAIN_AGENCY_ROLE;
+
+/**
+ * Returns the nearest instance of an specific producer role in a hierarchy
+ */
+const getNearestRoleFromHierarchy = (
+    hierarchy: GetHierarchyResponse | null,
+    role: ProducerRole
+) => {
+    if (!hierarchy) {
+        return null;
+    }
+
+    if (hierarchy.role === role) {
+        return hierarchy;
+    }
+
+    const { upline } = hierarchy;
+    const uplineItems =
+        upline?.filter((uplineItem) => uplineItem.role === role) ?? [];
+
+    if (!uplineItems.length) {
+        return null;
+    }
+
+    const sortedItems = sortBy(uplineItems, 'level');
+
+    return first(sortedItems)!;
+};
+
+/*
+ * Returns the nearest agency from a hierarchy upline
+ */
+export const getHierarchyAgency = (hierarchy: GetHierarchyResponse | null) =>
+    getNearestRoleFromHierarchy(hierarchy, PRODUCER_ROLES.GENERAL_AGENCY);
+
+/*
+ * Returns the nearest BrokerDealer from a hierarchy upline
+ */
+export const getHierarchyBrokerDealer = (
+    hierarchy: GetHierarchyResponse | null
+) => getNearestRoleFromHierarchy(hierarchy, PRODUCER_ROLES.BROKER_DEALER);
 
 /*
  * Returns the agencies from an upline that are at the lowest level available
@@ -278,4 +477,42 @@ export const getNearestAgenciesFromUpline = (upline: Upline | null) => {
     }
 
     return groupedAgencies[nearestHierarchyLevel] ?? [];
+};
+
+/**
+ *
+ * Infers an illustrator role for an specific hierarchy
+ */
+export const getIllustratorRoleFromHierarchy = (
+    hierarchy: GetHierarchyResponse
+) => {
+    const agency = getHierarchyAgency(hierarchy);
+    const brokerDealer = getHierarchyBrokerDealer(hierarchy);
+
+    const isDistrictManager = hierarchy.role === PRODUCER_ROLES.BROKER_DEALER;
+    const isAgencyOwner = hierarchy.role === PRODUCER_ROLES.GENERAL_AGENCY;
+    const isDistrictStaff =
+        hierarchy.role === PRODUCER_ROLES.REP &&
+        agency == null &&
+        brokerDealer != null;
+    const isNormalAgent =
+        hierarchy.role === PRODUCER_ROLES.REP && agency != null;
+
+    if (isDistrictManager) {
+        return IllustratorRole.DISTRICT_MANAGER;
+    }
+
+    if (isAgencyOwner) {
+        return IllustratorRole.AGENCY_OWNER;
+    }
+
+    if (isDistrictStaff) {
+        return IllustratorRole.AGENCY_STAFF;
+    }
+
+    if (isNormalAgent) {
+        return IllustratorRole.AGENT;
+    }
+
+    return IllustratorRole.NO_ROLE;
 };

@@ -65,6 +65,7 @@ export interface PermissionsContextProps {
     isAllowOpsCaseReviewRequest: boolean;
     hasPermissionToPrioritizeCases: boolean;
     hasMarketConnectContacts: boolean;
+    isSuperIllustrator: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -237,6 +238,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         staleTime: FIFTEEN_MINUTES_IN_MS,
         initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
     });
+
+    const isSuperIllustrator = !!writeClientCaseCarriers.length;
 
     const { data: writeCasePriority } = useQuery({
         queryKey: ['writeCasePriority', partyId],
@@ -445,6 +448,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
                 isAllowOpsCaseReviewRequest: !!isAllowOpsCaseReviewRequest,
                 hasMarketConnectContacts,
+                isSuperIllustrator,
             }}
         >
             {children}
