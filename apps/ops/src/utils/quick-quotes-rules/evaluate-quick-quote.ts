@@ -133,18 +133,27 @@ export class QuickQuoteProducts {
     };
 
     /**
-     * Evaluates if a given class is eligible for the provided input.
+     * Evaluates the eligibility of a product class based on user input and class rule alternatives.
      *
-     * Conditions:
-     *  - nicotine usage must match
-     *  - age must be in range (ageMin, ageMax)
-     *  - face amount must be in range (faceMin, faceMax)
+     * This function validates all applicable eligibility dimensions for a class:
+     * - Age range
+     * - Face amount range
+     * - Nicotine usage compatibility
      *
-     * Also sets `rejectReasonFieldForClass` to:
-     *  - 'face' if face is out of range
-     *  - 'age' if age is out of range (takes precedence over face)
+     * All failed validations are accumulated and returned as structured ineligibility reasons.
+     * A class is considered eligible only if **all** eligibility checks pass.
+     *
+     * If required inputs are missing (age or face amount), the class is treated as not eligible
+     * and a deterministic ineligibility reason is returned.
+     *
+     * @param params.className - Identifier of the class being evaluated
+     * @param params.alternatives - Eligibility rules (age, face, nicotine) defined for the class
+     * @param params.age - Insured age
+     * @param params.isNicotineUser - Indicates whether the insured uses nicotine
+     * @param params.face - Requested face amount
+     *
+     * @returns The eligibility result for the evaluated class, including all ineligibility reasons
      */
-
     private getEligibleClass({
         className,
         alternatives,
@@ -195,7 +204,7 @@ export class QuickQuoteProducts {
             reasons.push({
                 field: 'nicotine',
                 expected: nicotine,
-                actual: !!isNicotineUser,
+                actual: isNicotineUser ? 'Y' : 'N',
             });
         }
 
@@ -228,6 +237,26 @@ export class QuickQuoteProducts {
         return { minIdx, maxIdx };
     }
 
+    /**
+     * Normalizes all rider-related user inputs into a single, deterministic structure
+     * that can be evaluated by the rider eligibility engine.
+     *
+     * This function is responsible for:
+     * - Mapping raw QuickQuoteParams into normalized rider inputs
+     * - Supporting both "regular" riders (with face amount and rules)
+     *   and "premium-free" riders (boolean-based, no face amount)
+     * - Decoupling input shape from evaluation logic
+     *
+     * Key design decisions:
+     * - Riders are always returned, even if not requested
+     * - "Not requested" or "no rules" riders can be safely skipped by the evaluator
+     * - Union types (boolean | number) are normalized upfront
+     * - The output is deterministic and safe for downstream eligibility evaluation
+     *
+     * @param input - Raw QuickQuote parameters provided by the user
+     * @param productRiderRules - Rider rules configured at the product level
+     * @returns A normalized list of rider inputs ready for eligibility evaluation
+     */
     private getRiderInputsNormalized(
         input: QuickQuoteParams,
         productRiderRules: RiderRule[]
@@ -236,6 +265,9 @@ export class QuickQuoteProducts {
             ({ riderName, riderCode, riderPath, riderNameCamelCase }) => {
                 const riderInputValue = get(input, riderPath);
                 const riderRequested = !!riderInputValue;
+                // Normalize face amount:
+                // - Only numeric values represent a valid face amount
+                // - Non-numeric values default to -1 to avoid union types
                 const faceAmount =
                     typeof riderInputValue === 'number' ? riderInputValue : -1;
                 const riderRule = productRiderRules.find(
@@ -254,8 +286,11 @@ export class QuickQuoteProducts {
         );
 
         const requestedPremiumRiders = input.premiumFreeRiders;
+
         const premiumFreeRiders = PREMIUM_RIDER_ELIGIBILITY_LIST.map(
             ({ riderName, riderCode, riderNameCamelCase }) => {
+                // Determine whether the premium-free rider was selected
+                // by checking its presence in the premiumFreeRiders input
                 const riderRequested = Object.keys(requestedPremiumRiders).find(
                     (riderKey) => riderKey === riderNameCamelCase
                 );
@@ -274,17 +309,23 @@ export class QuickQuoteProducts {
     }
 
     /**
-     * Evaluate if a rider is eligibile.
+     * Evaluates the eligibility of a single rider based on normalized rider input
+     * and the main QuickQuote parameters.
      *
-     * Core rider eligibility evaluation for riders with a face amount.
+     * This function:
+     * - Applies rider-specific eligibility rules (age, face amount)
+     * - Accumulates all ineligibility reasons (no short-circuiting)
+     * - Explicitly distinguishes between "not evaluated" and "evaluated but ineligible"
      *
-     * Conditions:
-     *  - if ageMin and faceMax are provided:
-     *      - age must be in range (ageMin, ageMax)
-     *  - if faceMin and faceMax are provided:
-     *      - face must be in range (faceMin, faceMax)
-     * Returns:
-     *  - TBD
+     * Important domain rules:
+     * - A rider is NOT evaluated if:
+     *   - It was not requested by the user
+     *   - It has no rule alternatives configured
+     * - A rider being "not evaluated" is NOT the same as being ineligible
+     *
+     * @param input - Raw QuickQuote parameters (used for cross-checks such as product face amount)
+     * @param riderInput - Normalized rider input ready for eligibility evaluation
+     * @returns The eligibility result for the rider
      */
     private isRiderEligible(
         input: QuickQuoteParams,
@@ -296,12 +337,10 @@ export class QuickQuoteProducts {
             riderName,
             riderCode,
             faceAmount: riderFaceAmount,
-            riderNameCamelCase,
         } = riderInput;
 
         if (!riderRequested || !riderRuleAlternatives) {
             return {
-                riderNameCamelCase,
                 riderName,
                 riderCode,
                 evaluated: false,
@@ -343,7 +382,6 @@ export class QuickQuoteProducts {
         }
 
         return {
-            riderNameCamelCase,
             riderName,
             riderCode,
             evaluated: true,
@@ -352,6 +390,18 @@ export class QuickQuoteProducts {
         };
     }
 
+    /**
+     * Orchestrates the full rider eligibility evaluation pipeline.
+     *
+     * This function:
+     * 1. Normalizes raw rider-related user inputs
+     * 2. Evaluates eligibility for each supported rider
+     * 3. Groups the results into an object keyed by rider identifier
+     *
+     * @param input - Raw QuickQuote parameters provided by the user
+     * @param productRiderRules - Rider rules configured at the product level
+     * @returns A map of rider eligibility results keyed by rider code identifier
+     */
     private getEligibleRiders(
         input: QuickQuoteParams,
         productRiderRules: RiderRule[]
@@ -368,7 +418,7 @@ export class QuickQuoteProducts {
         const groupRiders = eligibileRiders.reduce<
             Record<string, RiderEligibilityResult>
         >((acc, rider) => {
-            acc[rider.riderNameCamelCase] = rider;
+            acc[rider.riderCode] = rider;
             return acc;
         }, {});
 

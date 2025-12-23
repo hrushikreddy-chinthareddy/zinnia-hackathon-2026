@@ -38,7 +38,7 @@ export type IneligibilityReason =
     | {
           field: 'nicotine';
           expected: 'Y' | 'N';
-          actual: boolean;
+          actual: 'Y' | 'N';
       };
 
 export interface BaseEligibilityResult {
@@ -53,7 +53,6 @@ export interface ClassEligibilityResult extends BaseEligibilityResult {
 export interface RiderEligibilityResult extends BaseEligibilityResult {
     riderName: string;
     riderCode: string;
-    riderNameCamelCase: string;
     evaluated: boolean;
 }
 
@@ -148,7 +147,6 @@ export interface RiderEligibilityList extends PremiumRiderEligibilityList {
 }
 
 export interface RiderInputNormalized {
-    riderNameCamelCase: string;
     riderName: RiderName;
     riderCode: RiderCode;
     riderRequested: boolean;
