@@ -586,7 +586,15 @@
         "reinstatementPaymentTooltip": "Il s’agit du montant que le propriétaire doit payer en prime pour réactiver sa police.",
         "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}.",
         "year(s)": "année(s)",
-        "remove": "Supprimer"
+        "remove": "Supprimer",
+        "policyNumberSearchError": "Entrez un numéro de police pour obtenir les résultats de recherche",
+        "ssnSearchError": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
+        "firstNameSearchError": "Entrez un prénom pour obtenir les résultats de recherche",
+        "lastNameSearchError": "Entrez un nom de famille pour obtenir les résultats de recherche",
+        "fullNameSearchError": "Entrez le nom d'une fiducie ou d'une organisation pour obtenir les résultats de recherche",
+        "caseIdSearchError": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
+        "firmNameSearchError": "Entrez le nom d'une entreprise pour obtenir les résultats de recherche",
+        "documentNumberSearchError": "Entrez un numéro de document pour obtenir les résultats de recherche"
     },
     "enums": {
         "LIFE": "Vie",
@@ -2473,11 +2481,7 @@
                     "text": "Vous avez toujours des problèmes ? ",
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Soumettre un billet au centre d'assistance"
-                },
-                "policyNumber": "Entrez un numéro de police pour obtenir les résultats de recherche",
-                "ssn": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
-                "firstName": "Entrez un prénom pour obtenir les résultats de recherche",
-                "lastName": "Entrez un nom de famille pour obtenir les résultats de recherche"
+                }
             },
             "buttons": {
                 "policyNumber": "Numéro de police",

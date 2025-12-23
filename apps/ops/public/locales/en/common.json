@@ -585,7 +585,15 @@
         "reinstatementPaymentTooltip": "This is the amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
         "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}.",
         "year(s)": "year(s)",
-        "remove": "Remove"
+        "remove": "Remove",
+        "policyNumberSearchError": "Enter a policy/contract number to return search results",
+        "ssnSearchError": "Enter a Social Security number to return search results",
+        "firstNameSearchError": "Enter a first name to return search results",
+        "lastNameSearchError": "Enter a last name to return search results",
+        "fullNameSearchError": "Enter a trust or organization to return search results",
+        "caseIdSearchError": "Enter a Case Id to return search results",
+        "firmNameSearchError": "Enter a firm name to return search results",
+        "documentNumberSearchError": "Enter a document number to return search results"
     },
     "enums": {
         "LIFE": "Life",
@@ -2414,12 +2422,7 @@
                     "text": "Still having issues?",
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Submit a help desk ticket"
-                },
-                "policyNumber": "Enter a policy/contract number to return search results",
-                "ssn": "Enter a Social Security number to return search results",
-                "firstName": "Enter a first name to return search results",
-                "lastName": "Enter a last name to return search results",
-                "fullName": "Enter a trust or organization to return search results"
+                }
             },
             "buttons": {
                 "policyNumber": "Policy or contract number",
