@@ -41,11 +41,21 @@ export type IneligibilityReason =
           actual: boolean;
       };
 
-export type EligibilityResult = {
-    className: string;
+export interface BaseEligibilityResult {
     eligible: boolean;
     reasons: IneligibilityReason[];
-};
+}
+
+export interface ClassEligibilityResult extends BaseEligibilityResult {
+    className: string;
+}
+
+export interface RiderEligibilityResult extends BaseEligibilityResult {
+    riderName: string;
+    riderCode: string;
+    riderNameCamelCase: string;
+    evaluated: boolean;
+}
 
 export type ClassAlternatives = {
     nicotine: 'Y' | 'N';
@@ -56,8 +66,8 @@ export type ClassAlternatives = {
 };
 
 export type RiderAlternatives = {
-    ageMin: number;
-    ageMax: number;
+    ageMin?: number;
+    ageMax?: number;
     faceMin?: number;
     faceMax?: number;
 };
@@ -116,17 +126,29 @@ export interface getEligibleClassProps {
 type RiderName =
     | 'Accidental Death Benefit Rider'
     | "Children's Term Insurance Rider"
-    | 'Waiver of Premium Rider';
+    | 'Waiver of Premium Rider'
+    | 'Accelerated Death Benefit Rider for Terminal Illness'
+    | 'Charitable Giving Rider';
 
-type RiderCode = 'Rider_ADR' | 'Rider_CTR' | 'Rider_WPR';
+type RiderCode =
+    | 'Rider_ADR'
+    | 'Rider_CTR'
+    | 'Rider_WPR'
+    | 'Rider_ABRTRM'
+    | 'Rider_CGR';
 
-export interface RiderEligibilityList {
+export interface PremiumRiderEligibilityList {
     riderName: RiderName;
     riderCode: RiderCode;
+    riderNameCamelCase: string;
+}
+
+export interface RiderEligibilityList extends PremiumRiderEligibilityList {
     riderPath: string;
 }
 
 export interface RiderInputNormalized {
+    riderNameCamelCase: string;
     riderName: RiderName;
     riderCode: RiderCode;
     riderRequested: boolean;

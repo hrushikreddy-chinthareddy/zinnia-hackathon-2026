@@ -2,18 +2,21 @@ import { get } from 'lodash';
 
 import { QuickQuoteParams } from '@deps/types/quickQuote';
 
-import { RIDER_ELIGIBILITY_LIST } from './rules';
+import {
+    PREMIUM_RIDER_ELIGIBILITY_LIST,
+    RIDER_ELIGIBILITY_LIST,
+} from './rules';
 
 import type {
     ProductClassResult,
     RulesModel,
-    NotAvailabilityReasonField,
-    RiderAlternatives,
     RiderRule,
     IneligibilityReason,
-    EligibilityResult,
+    ClassEligibilityResult,
     getEligibleClassProps,
     RiderInputNormalized,
+    RiderEligibilityResult,
+    RiderAlternatives,
 } from './types';
 
 /**
@@ -59,41 +62,14 @@ export class QuickQuoteProducts {
             );
 
             // Evaluate each rider for this product
-            const resultRiders = {
-                accidentalDeathBenefit: this.isRiderEligible(
-                    input,
-                    input.riders.accidentalDeathBenefit,
-                    product.riders.find(
-                        (rider) => rider.riderCode === 'Rider_ADR'
-                    )
-                ),
-                childrensTerm: this.isRiderEligible(
-                    input,
-                    input.riders.childrensTerm,
-                    product.riders.find(
-                        (rider) => rider.riderCode === 'Rider_CTR'
-                    )
-                ),
-                waiverOfPremium: this.isRiderEligible(
-                    input,
-                    input.riders.waiverOfPremium,
-                    product.riders.find(
-                        (rider) => rider.riderCode === 'Rider_WPR'
-                    )
-                ),
-                // Premium-free riders has no rules to evaluate
-                ...input.premiumFreeRiders,
-            } as const;
-
-            // TODO: replace resultRiders object with this new way to evaluate normalized riders input.
-            const resultRidersNew = this.manageRiders(input, product.riders);
+            const resultRiders = this.getEligibleRiders(input, product.riders);
 
             // Determine min / max eligible class indexes for the product
             const { minIdx, maxIdx } = this.getClassRangeIndex(
                 eligibleClassByPosition
             );
 
-            // If there is a min class available, there is a max too and bot can be used
+            // If there is a min class available, there is a max too and both can be used
             if (minIdx !== -1) {
                 // Use the first and last eligible indexes as min/max class.
                 const minClass = product.classes[minIdx].classCode;
@@ -149,13 +125,11 @@ export class QuickQuoteProducts {
      * Retrieve all non eligible reasons for each product class.
      */
     private getNonEligibleReasonByClass = (
-        eligibleClasses: EligibilityResult[]
+        eligibleClasses: ClassEligibilityResult[]
     ) => {
-        return eligibleClasses.filter(({ className, reasons }) => {
-            if (reasons.length > 0) {
-                return { className, reasons };
-            }
-        });
+        return eligibleClasses.filter(
+            (elegibleClass) => !elegibleClass.eligible
+        );
     };
 
     /**
@@ -177,7 +151,7 @@ export class QuickQuoteProducts {
         age,
         isNicotineUser,
         face,
-    }: getEligibleClassProps): EligibilityResult {
+    }: getEligibleClassProps): ClassEligibilityResult {
         const reasons: IneligibilityReason[] = [];
 
         const { nicotine, ageMin, ageMax, faceMin, faceMax } = alternatives;
@@ -238,7 +212,9 @@ export class QuickQuoteProducts {
      *
      * If there are no eligible classes, both indexes are -1.
      */
-    private getClassRangeIndex(eligibleClassByPosition: EligibilityResult[]) {
+    private getClassRangeIndex(
+        eligibleClassByPosition: ClassEligibilityResult[]
+    ) {
         let minIdx = -1,
             maxIdx = -1;
 
@@ -252,86 +228,12 @@ export class QuickQuoteProducts {
         return { minIdx, maxIdx };
     }
 
-    /**
-     * Core rider eligibility evaluation for riders with a face amount.
-     *
-     * Conditions:
-     *  - age must be in range (ageMin, ageMax)
-     *  - if faceMin and faceMax are provided:
-     *      * face must be in range (faceMin, faceMax)
-     *
-     * Returns:
-     *  - true if the rider is eligible
-     *  - 'age' if age is out of range
-     *  - 'face' if face is out of range
-     */
-    private getRiderEligible(
-        alternatives: RiderAlternatives,
-        {
-            insuredAge,
-            faceAmount: productFaceAmount,
-        }: { insuredAge: number; faceAmount: number },
-        face: number
-    ): true | NotAvailabilityReasonField {
-        const { ageMin, ageMax, faceMin, faceMax } = alternatives;
-
-        const isAgeInRange = this.isWithin(insuredAge, ageMin, ageMax);
-        let isFaceInRange = true;
-
-        // Only validate face range if both min and max are defined
-        if (faceMin && faceMax) {
-            isFaceInRange = this.isWithin(
-                face,
-                faceMin,
-                Math.min(faceMax, productFaceAmount)
-            );
-
-            if (!isFaceInRange) {
-                return 'face';
-            }
-        }
-
-        // Age has higher priority as an error than face.
-        if (!isAgeInRange) {
-            return 'age';
-        }
-
-        return true; // this is always true based on the code above
-    }
-
-    /**
-     * Evaluate if a rider is eligibile.
-     *
-     * Validates if the rider is selected and has rules to be evaluated.
-     * Returns:
-     *  - false if there are no rules for the rider or the rider is not selected
-     *  - the result of `getRiderEligible` if rules and selection are present
-     */
-    private isRiderEligible(
-        productParams: { insuredAge: number; faceAmount: number },
-        rider: boolean | number,
-        riderRules: RiderRule | undefined
-    ) {
-        if (riderRules && rider) {
-            const { alternatives } = riderRules;
-            // `rider` here is expected to be a numeric face amount when used
-            return this.getRiderEligible(
-                alternatives,
-                productParams,
-                rider as number
-            );
-        }
-
-        // Rider either not selected or no rules for this product
-        return false;
-    }
-
     private getRiderInputsNormalized(
         input: QuickQuoteParams,
         productRiderRules: RiderRule[]
     ): RiderInputNormalized[] {
-        return RIDER_ELIGIBILITY_LIST.map(
-            ({ riderName, riderCode, riderPath }) => {
+        const regularRiders = RIDER_ELIGIBILITY_LIST.map(
+            ({ riderName, riderCode, riderPath, riderNameCamelCase }) => {
                 const riderInputValue = get(input, riderPath);
                 const riderRequested = !!riderInputValue;
                 const faceAmount =
@@ -341,6 +243,7 @@ export class QuickQuoteProducts {
                 );
 
                 return {
+                    riderNameCamelCase,
                     riderName,
                     riderCode,
                     riderRequested,
@@ -349,19 +252,126 @@ export class QuickQuoteProducts {
                 };
             }
         );
+
+        const requestedPremiumRiders = input.premiumFreeRiders;
+        const premiumFreeRiders = PREMIUM_RIDER_ELIGIBILITY_LIST.map(
+            ({ riderName, riderCode, riderNameCamelCase }) => {
+                const riderRequested = Object.keys(requestedPremiumRiders).find(
+                    (riderKey) => riderKey === riderNameCamelCase
+                );
+                return {
+                    riderNameCamelCase,
+                    riderName,
+                    riderCode,
+                    riderRequested: !!riderRequested,
+                    faceAmount: -1,
+                    riderRuleAlternatives: {} as RiderAlternatives,
+                };
+            }
+        );
+
+        return [...regularRiders, ...premiumFreeRiders];
     }
 
-    private manageRiders(
+    /**
+     * Evaluate if a rider is eligibile.
+     *
+     * Core rider eligibility evaluation for riders with a face amount.
+     *
+     * Conditions:
+     *  - if ageMin and faceMax are provided:
+     *      - age must be in range (ageMin, ageMax)
+     *  - if faceMin and faceMax are provided:
+     *      - face must be in range (faceMin, faceMax)
+     * Returns:
+     *  - TBD
+     */
+    private isRiderEligible(
+        input: QuickQuoteParams,
+        riderInput: RiderInputNormalized
+    ): RiderEligibilityResult {
+        const {
+            riderRequested,
+            riderRuleAlternatives,
+            riderName,
+            riderCode,
+            faceAmount: riderFaceAmount,
+            riderNameCamelCase,
+        } = riderInput;
+
+        if (!riderRequested || !riderRuleAlternatives) {
+            return {
+                riderNameCamelCase,
+                riderName,
+                riderCode,
+                evaluated: false,
+                eligible: false,
+                reasons: [],
+            };
+        }
+
+        const nonEligibleReasons: IneligibilityReason[] = [];
+        const { insuredAge, faceAmount: productFaceAmount } = input;
+        const { ageMin, ageMax, faceMin, faceMax } = riderRuleAlternatives;
+        let isAgeInRange = true;
+        let isFaceInRange = true;
+
+        if (ageMin && ageMax) {
+            isAgeInRange = this.isWithin(insuredAge, ageMin, ageMax);
+            if (!isAgeInRange) {
+                nonEligibleReasons.push({
+                    field: 'age',
+                    expected: [ageMin, ageMax],
+                    actual: insuredAge,
+                });
+            }
+        }
+
+        if (faceMin && faceMax) {
+            isFaceInRange = this.isWithin(
+                riderFaceAmount,
+                faceMin,
+                Math.min(faceMax, productFaceAmount)
+            );
+            if (!isFaceInRange) {
+                nonEligibleReasons.push({
+                    field: 'face',
+                    expected: [faceMin, Math.min(faceMax, productFaceAmount)],
+                    actual: riderFaceAmount,
+                });
+            }
+        }
+
+        return {
+            riderNameCamelCase,
+            riderName,
+            riderCode,
+            evaluated: true,
+            eligible: isAgeInRange && isFaceInRange,
+            reasons: nonEligibleReasons,
+        };
+    }
+
+    private getEligibleRiders(
         input: QuickQuoteParams,
         productRiderRules: RiderRule[]
     ) {
-        const normalizedRiderInputs = this.getRiderInputsNormalized(
+        const normalizedRidersInput = this.getRiderInputsNormalized(
             input,
             productRiderRules
         );
-        console.log(
-            '🚀 ~ evaluate-quick-quote.ts:376 ~ QuickQuoteProducts ~ manageRiders ~ normalizedRiderInputs:',
-            normalizedRiderInputs
+
+        const eligibileRiders = normalizedRidersInput.map((riderInput) =>
+            this.isRiderEligible(input, riderInput)
         );
+
+        const groupRiders = eligibileRiders.reduce<
+            Record<string, RiderEligibilityResult>
+        >((acc, rider) => {
+            acc[rider.riderNameCamelCase] = rider;
+            return acc;
+        }, {});
+
+        return groupRiders;
     }
 }
