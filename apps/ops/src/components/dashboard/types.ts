@@ -11,8 +11,8 @@ export const AnalyticsTabs = {
 export type TAnalyticsTab = keyof typeof AnalyticsTabs;
 
 export const TabTitles = {
-    OPEN: 'OPEN',
-    CLOSED: 'CLOSED',
+    OPEN: 'OPENCASES',
+    CLOSED: 'CLOSEDCASES',
     ISSUES: 'ISSUES',
     TASKS: 'TASKS',
 } as const;
