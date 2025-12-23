@@ -133,15 +133,17 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
         const { task } = customData;
         return {
-            correlationid: uuidv4(),
-            carrierId: task.carrier,
-            planCode: task.data?.planCode,
-            policyNumber: task.data?.policyNumber,
+            correlationid: customData?.correlationId ?? uuidv4(),
+            carrierId: task ? task.carrier : customData?.carrierId,
+            planCode: task ? task.data?.planCode : customData?.planCode,
+            policyNumber: task
+                ? task.data?.policyNumber
+                : customData?.policyNumber,
             contractInfo: customData?.contractInfo,
             actionData: customData?.actionData,
             signatureData: customData?.signatureData,
             policyStatus: customData?.policyStatus,
-            caseId: '',
+            caseId: customData?.caseId ?? '',
             sorSystem: SorSystem.Zahara,
             sourceSystem: 'ONBASE',
             channel: 'Phone',

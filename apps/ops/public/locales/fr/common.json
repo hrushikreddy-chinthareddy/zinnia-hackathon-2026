@@ -2289,6 +2289,15 @@
             "confirm": {
                 "subTitle": "Les mises à jour du changement d’assigné ont été envoyées."
             }
+        },
+        "beneChange": {
+            "start": {
+                "title": "Gérer les bénéficiaires",
+                "subTitle": "Vous pouvez gérer vos bénéficiaires ici"
+            },
+            "confirm": {
+                "subTitle": "Les bénéficiaires ont été mis à jour"
+            }
         }
     },
     "welcome": {

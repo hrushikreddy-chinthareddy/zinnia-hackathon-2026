@@ -1,5 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -14,10 +14,9 @@ import PolicyLayout from '@deps/components/policy-layout';
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
 import AnnuitizationSubPage from '@deps/containers/annuitization-sub-page';
-import BeneChangeContainer from '@deps/containers/bene-change/bene-change-container';
-import { BeneChangeProvider } from '@deps/containers/bene-change/bene-change-provider';
 import CoverageSubPage from '@deps/containers/coverage-sub-page';
 import LoansSubPage from '@deps/containers/loans-sub-page/loans-sub-page';
+import PeopleSubPage from '@deps/containers/people-sub-page';
 import PersonSubPage from '@deps/containers/person-sub-page';
 import PolicyDetailsContainer from '@deps/containers/policy-details/policy-details';
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
@@ -44,9 +43,12 @@ import {
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import { SorSystem } from '@deps/models/policy/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import Custom404Page from '@deps/pages/404s';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
+import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import {
     getPolicyQuery,
@@ -117,6 +119,8 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     const { partyId, sessionId } = usePermissionsContext();
     const { featureFlags } = useOptimizely();
     const [transactionData, setTransactionData] = useState<any | null>(null);
+    const [beneficiaryEligibility, setBeneficiaryEligibility] =
+        useState<boolean>(false);
 
     const {
         data: policy,
@@ -142,6 +146,19 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
 
+    const { data: beneficiaryEligibilityData } = useQuery({
+        queryKey: ['beneficiaryEligibility', planCode, policy?.policyNumber],
+        queryFn:
+            planCode && policy?.policyNumber
+                ? () =>
+                      checkBeneficiaryEligibilityQuery(
+                          planCode as string,
+                          policy?.policyNumber as string
+                      )
+                : skipToken,
+        enabled: !!planCode && !!policy?.policyNumber,
+    });
+
     useSegmentPageTracker(user, SegmentPageName.PolicyDetails, {
         planCode: planCode,
         policyNumber: id,
@@ -156,6 +173,9 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 case 'assigneechange':
                     transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
                     break;
+                case 'benechange':
+                    transactionType = SelfServeTransaction.BENE_CHANGE;
+                    break;
             }
             const transactionPayload = getSelfServeTransactionData(
                 transactionType as SelfServeTransaction,
@@ -166,10 +186,22 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         }
     }, [slug, policy, planCode]);
 
+    const getBeneficiaryEligibility = useCallback(() => {
+        if (!beneficiaryEligibilityData) return;
+        const sor = (beneficiaryEligibilityData?.sor ?? '').toLowerCase();
+        const isZahara = sor === SorSystem.Zahara.toLowerCase();
+        const isEligible = isZahara
+            ? beneficiaryEligibilityData?.status ===
+              TransactionResponseStatus.Success
+            : !!sor;
+        setBeneficiaryEligibility(isEligible);
+    }, [beneficiaryEligibilityData]);
+
     useEffect(() => {
         if (!policy || !planCode) return;
         getTransactionData();
-    }, [policy, planCode, getTransactionData]);
+        getBeneficiaryEligibility();
+    }, [policy, planCode, getTransactionData, getBeneficiaryEligibility]);
 
     if (loading) {
         return (
@@ -203,73 +235,61 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         // policies/id/slug
         switch (slug[0]) {
             case 'people':
-                subPageContent =
-                    slug[1] &&
-                    slug[1] != 'benechange' &&
-                    slug[1] != 'assigneechange' ? (
+                subPageContent = slug[1] ? (
+                    slug[1] === 'benechange' || slug[1] === 'assigneechange' ? (
+                        transactionData && (
+                            <SelfServeTransactionProvider>
+                                <SelfServeTransactionContainer
+                                    initialCustomData={
+                                        transactionData.initialCustomData
+                                    }
+                                    initialFormData={
+                                        transactionData.initialFormData
+                                    }
+                                    transactionType={
+                                        transactionData.transactionType
+                                    }
+                                    policy={policy}
+                                    planCode={planCode as string}
+                                    metaData={transactionData.metaData}
+                                    parentPage={transactionData.parentPage}
+                                    leaveTransactionLink={
+                                        transactionData.leaveTransactionLink
+                                    }
+                                    processType={transactionData.processType}
+                                    processSubType={
+                                        transactionData.processSubType
+                                    }
+                                    startStepTitle={t(
+                                        transactionData?.startStepTitle
+                                    )}
+                                    startStepSubtitle={
+                                        t(transactionData?.startStepSubtitle) ??
+                                        ''
+                                    }
+                                    submitResponseHandler={transactionData?.submitResponseHandler(
+                                        policy,
+                                        sessionId,
+                                        partyId
+                                    )}
+                                    confirmStepSubtitle={t(
+                                        transactionData?.confirmStepSubtitle
+                                    )}
+                                />
+                            </SelfServeTransactionProvider>
+                        )
+                    ) : (
                         <PersonSubPage
                             editable={canEditPolicy}
                             partyId={slug[1]}
                         />
-                    ) : (
-                        (subPageContent =
-                            slug[1] === 'assigneechange' ? (
-                                transactionData && (
-                                    <SelfServeTransactionProvider>
-                                        <SelfServeTransactionContainer
-                                            initialCustomData={
-                                                transactionData.initialCustomData
-                                            }
-                                            initialFormData={
-                                                transactionData.initialFormData
-                                            }
-                                            transactionType={
-                                                transactionData.transactionType
-                                            }
-                                            policy={policy}
-                                            planCode={planCode as string}
-                                            metaData={transactionData.metaData}
-                                            parentPage={
-                                                transactionData.parentPage
-                                            }
-                                            leaveTransactionLink={
-                                                transactionData.leaveTransactionLink
-                                            }
-                                            processType={
-                                                transactionData.processType
-                                            }
-                                            processSubType={
-                                                transactionData.processSubType
-                                            }
-                                            startStepTitle={t(
-                                                transactionData?.startStepTitle
-                                            )}
-                                            startStepSubtitle={
-                                                t(
-                                                    transactionData?.startStepSubtitle
-                                                ) ?? ''
-                                            }
-                                            submitResponseHandler={transactionData?.submitResponseHandler(
-                                                policy,
-                                                sessionId,
-                                                partyId
-                                            )}
-                                            confirmStepSubtitle={t(
-                                                transactionData?.confirmStepSubtitle
-                                            )}
-                                        />
-                                    </SelfServeTransactionProvider>
-                                )
-                            ) : (
-                                <BeneChangeProvider>
-                                    <BeneChangeContainer
-                                        policy={policy}
-                                        planCode={planCode as any}
-                                        isReReg={false}
-                                    />
-                                </BeneChangeProvider>
-                            ))
-                    );
+                    )
+                ) : (
+                    <PeopleSubPage
+                        isEligibleBeneficiary={beneficiaryEligibility}
+                    />
+                );
+
                 break;
             case 'transactions':
             case 'policy':

@@ -2230,6 +2230,15 @@
             "confirm": {
                 "subTitle": "Assignee Change updates were submitted."
             }
+        },
+        "beneChange": {
+            "start": {
+                "title": "Manage Beneficiaries",
+                "subTitle": "Here you can manage your beneficiaries"
+            },
+            "confirm": {
+                "subTitle": "Beneficiaries have been updated"
+            }
         }
     },
     "welcome": {

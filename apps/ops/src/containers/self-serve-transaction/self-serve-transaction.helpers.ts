@@ -10,7 +10,12 @@ import {
     assigneeChangeSubmitHandler,
     buildInitialAssigneeChangeFormData,
 } from './transactions/assignee-change-transaction';
+import {
+    beneChangeSubmitHandler,
+    buildInitialBeneChangeFormData,
+} from './transactions/bene-change-transaction';
 import { SelfServeTransaction } from './types';
+import beneChangeMetadata from '../../jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json';
 import assigneeChangeMetadata from '../../jsonschema-mock-service/tasks/WELB/initiate-assigneechange-transaction.json';
 
 const removeFirstTabSchema = (metadata: any) => ({
@@ -48,6 +53,34 @@ export const getSelfServeTransactionData = (
                 startStepSubtitle: 'assigneeChange.start.subTitle',
                 confirmStepSubtitle: 'assigneeChange.confirm.subTitle',
                 submitResponseHandler: assigneeChangeSubmitHandler,
+            };
+        }
+        case SelfServeTransaction.BENE_CHANGE: {
+            const metadata = removeFirstTabSchema(beneChangeMetadata);
+            return {
+                metaData: JSON.parse(JSON.stringify(metadata)),
+                initialCustomData: {
+                    policyNumber: policy.policyNumber,
+                    planCode,
+                    effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
+                    taskType: TaskType.Initiate_BeneChange_Transaction,
+                    carrierId: policy?.carrierId,
+                    policyStatus: policy?.policyStatus,
+                    issueResolved: true,
+                },
+                initialFormData: buildInitialBeneChangeFormData(policy),
+                transactionType: SelfServeTransaction.BENE_CHANGE,
+                processType: Processes.PolicyUpdate,
+                processSubType: [
+                    Processes.BeneficiaryChange,
+                    Processes.BeneficiaryUpdate,
+                ],
+                parentPage: ParentPage.CreateCase,
+                leaveTransactionLink: '/',
+                startStepTitle: 'beneChange.start.title',
+                startStepSubtitle: 'beneChange.start.subTitle',
+                confirmStepSubtitle: 'beneChange.confirm.subTitle',
+                submitResponseHandler: beneChangeSubmitHandler,
             };
         }
     }
