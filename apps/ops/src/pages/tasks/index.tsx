@@ -85,11 +85,11 @@ export default function TasksPage({
     );
 }
 
-function extractQueueName(role: string): string {
+function extractQueueNameFromRole(role: string): string {
     return role.slice(0, role.lastIndexOf(_QUEUE_ADMIN));
 }
 
-export function extractTaskListingParamsFromTuples(
+export function extractTaskListingParamsFromRolesMap(
     userRolesMap: UserRolesMap
 ): TaskListingParams {
     const carriers = new Set<string>();
@@ -100,7 +100,7 @@ export function extractTaskListingParamsFromTuples(
             for (const userRoleCarrier of roleCarriers) {
                 carriers.add(userRoleCarrier);
             }
-            queues.add(extractQueueName(roleOrQueue));
+            queues.add(extractQueueNameFromRole(roleOrQueue));
         }
     }
 
@@ -181,7 +181,7 @@ export const getServerSideProps = withPageAuthAndLogging(
 
             if (userRolesMap) {
                 taskListingParams =
-                    extractTaskListingParamsFromTuples(userRolesMap);
+                    extractTaskListingParamsFromRolesMap(userRolesMap);
             }
 
             //needed to generate assignee list for sidesheet

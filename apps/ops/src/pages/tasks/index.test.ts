@@ -37,8 +37,8 @@ jest.mock(
 );
 
 import {
-    extractTaskListingParamsFromTuples,
-    isAdminFromUserRolesMap,
+  extractTaskListingParamsFromRolesMap,
+  isAdminFromUserRolesMap,
 } from './index';
 
 describe('tasks/index helpers', () => {
@@ -74,7 +74,7 @@ describe('tasks/index helpers', () => {
     describe('extractTaskListingParamsFromTuples', () => {
         it('returns empty carriers and queues when no queue_admin roles are present', () => {
             expect(
-                extractTaskListingParamsFromTuples({
+                extractTaskListingParamsFromRolesMap({
                     admin: ['ABC'],
                     processor: ['DEF'],
                 })
@@ -83,7 +83,7 @@ describe('tasks/index helpers', () => {
 
         it('extracts carriers and queue names from *_queue_admin keys', () => {
             expect(
-                extractTaskListingParamsFromTuples({
+                extractTaskListingParamsFromRolesMap({
                     claims_queue_admin: ['abc', 'def'],
                 })
             ).toEqual({
@@ -93,7 +93,7 @@ describe('tasks/index helpers', () => {
         });
 
         it('dedupes carriers and queues across multiple queue_admin roles', () => {
-            const result = extractTaskListingParamsFromTuples({
+            const result = extractTaskListingParamsFromRolesMap({
                 claims_queue_admin: ['abc', 'abc', 'def'],
                 billing_queue_admin: ['def', 'ghi'],
                 // should be ignored
