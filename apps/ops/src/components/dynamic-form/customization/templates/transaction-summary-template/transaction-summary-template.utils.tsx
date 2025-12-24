@@ -185,6 +185,12 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                       requestType === Action.DELETE
                           ? dayjs().format(ZAHARA_API_DATE_FORMAT)
                           : null,
+                  collateralAmount:
+                      uiParty.collateralAmount === '' ||
+                      uiParty.collateralAmount === null ||
+                      uiParty.collateralAmount === undefined
+                          ? null
+                          : Number(uiParty.collateralAmount),
               }
             : null;
         return {
@@ -194,7 +200,6 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             role: PolicyRole.ASSIGNEE,
             query: {
                 requestType,
-                collateralAmount: cleanedParty.collateralAmount,
                 effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                 caseId: customData?.caseId,
                 correlationId: customData?.correlationId,
@@ -208,6 +213,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 relationshipToTheCurrentOwner:
                     customData?.relationshipToTheCurrentOwner,
                 party: cleanedParty,
+                partyId,
             },
         };
     },
