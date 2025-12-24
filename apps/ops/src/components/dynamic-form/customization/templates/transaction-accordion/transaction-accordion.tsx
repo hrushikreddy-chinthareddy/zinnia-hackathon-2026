@@ -98,7 +98,8 @@ export const TransactionAccordionTemplate = (
                 const isDeleted = itemAction === Action.DELETE;
 
                 const disableContent =
-                    allowContentDisabled && !isNew && !isSimpleAccordion;
+                    isDeleted ||
+                    (allowContentDisabled && !isNew && !isSimpleAccordion);
 
                 return (
                     <div key={index} className="mt-3 border-2 rounded-lg">

@@ -796,6 +796,51 @@
                             "title": "Beneficiaries",
                             "items": {
                                 "type": "object",
+                                "default": {
+                                    "action": "ADD",
+                                    "actionType": "BENE_CHANGE",
+                                    "isIrrevocable": false,
+                                    "isPerStirpes": false,
+                                    "isRestrictedBeneficiary": false,
+                                    "preferredCommunicationType": "EMAIL",
+                                    "party": {
+                                        "partyType": "INDIVIDUAL",
+                                        "gender": "MALE",
+                                        "preferredCommunicationType": "EMAIL",
+                                        "identifications": [
+                                            {
+                                                "identificationValue": ""
+                                            }
+                                        ],
+                                        "addresses": [
+                                            {
+                                                "addressLine1": null,
+                                                "addressLine2": null,
+                                                "addressLine3": null,
+                                                "addressType": "RESIDENCE",
+                                                "city": null,
+                                                "state": null,
+                                                "zipCode": null,
+                                                "zipCodeExtension": null
+                                            }
+                                        ],
+                                        "phones": [
+                                            {
+                                                "phoneType": "HOME",
+                                                "dialNumber": ""
+                                            }
+                                        ],
+                                        "emails": [
+                                            {
+                                                "emailAddress": ""
+                                            }
+                                        ]
+                                    },
+                                    "partyRole": {
+                                        "partyRole": "PRIMARYBENEFICIARY",
+                                        "relationshipToParty": "OTHER"
+                                    }
+                                },
                                 "allOf": [
                                     {
                                         "if": {
@@ -1472,7 +1517,8 @@
                             "showAddBtn": true,
                             "tabTitle": "Beneficiary Details",
                             "addButtonCTA": "Add Beneficiary",
-                            "showRemoveItemBtn": true
+                            "showRemoveItemBtn": true,
+                            "isMultiPartyTransaction": true
                         },
                         "items": {
                             "ui:order": [
