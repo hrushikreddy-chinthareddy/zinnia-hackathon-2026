@@ -50,18 +50,6 @@ interface TasksPageProps {
     isOpsManagerView: boolean;
 }
 
-type UserTuple = {
-    key: {
-        object: string;
-    };
-};
-
-type FGATuple = {
-    key: {
-        object: string;
-    };
-};
-
 export default function TasksPage({
     featureFlagDecisions,
     additionalData,
@@ -101,7 +89,7 @@ function extractQueueName(role: string): string {
     return role.slice(0, role.lastIndexOf(_QUEUE_ADMIN));
 }
 
-function extractTaskListingParamsFromTuples(
+export function extractTaskListingParamsFromTuples(
     userRolesMap: UserRolesMap
 ): TaskListingParams {
     const carriers = new Set<string>();
@@ -120,6 +108,13 @@ function extractTaskListingParamsFromTuples(
         carriers: Array.from(carriers),
         queues: Array.from(queues),
     };
+}
+
+export function isAdminFromUserRolesMap(userRolesMap?: UserRolesMap): boolean {
+    return Boolean(
+        userRolesMap &&
+            Object.keys(userRolesMap).some((role) => role.includes(ADMIN_ROLE))
+    );
 }
 
 export const getServerSideProps = withPageAuthAndLogging(
@@ -161,11 +156,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
-            const isAdmin =
-                userRolesMap &&
-                Object.keys(userRolesMap).some((role) =>
-                    role.includes(ADMIN_ROLE)
-                );
+            const isAdmin = isAdminFromUserRolesMap(userRolesMap);
 
             let taskListingParams: TaskListingParams = {
                 carriers: [],
