@@ -57,6 +57,8 @@ export const getUserRolesData = async (
 ) => {
     const user = await getUserData(context);
     const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
+
+    // TODO: cache for ~1 hour
     const userTuplesData = await readUserTuplesPage(
         context,
         tuplesQuery,

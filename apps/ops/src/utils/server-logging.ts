@@ -17,13 +17,13 @@ import {
 } from 'next';
 import { v4 as uuidV4 } from 'uuid';
 
-import { UserProfile } from '@deps/models/user-profile';
-
-import pino from './pino-server';
 import {
     getUserRolesData,
     UserRolesMap,
 } from '@deps/helpers/query-data.helpers';
+import { UserProfile } from '@deps/models/user-profile';
+
+import pino from './pino-server';
 
 type UserInfo = {
     sessionId: string;
@@ -363,7 +363,8 @@ export const withPageAuthAndLogging: WithPageAuthAndLogging = (
                 ...pageSpecificProps,
                 props: {
                     userRolesMap,
-                    ...('props' in pageSpecificProps &&
+                    ...(pageSpecificProps &&
+                        'props' in pageSpecificProps &&
                         pageSpecificProps.props),
                 },
             };

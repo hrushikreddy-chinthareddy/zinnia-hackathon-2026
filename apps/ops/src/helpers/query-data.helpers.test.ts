@@ -2,12 +2,14 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { cleanup } from '@testing-library/react';
 
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
+import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 
 import {
     doesUserHavePagePermissions,
     getCompany,
     getInitialData,
     getUserData,
+    getUserRolesData,
 } from './query-data.helpers';
 
 import type { GetServerSidePropsContext } from 'next';
@@ -21,6 +23,9 @@ jest.mock('cookies-next', () => ({
 }));
 jest.mock('@deps/queries/api/server/fga/listCarriers', () => ({
     listCarriersPage: jest.fn(),
+}));
+jest.mock('@deps/queries/api/server/fga/readTuples', () => ({
+    readUserTuplesPage: jest.fn(),
 }));
 jest.mock('@deps/types/constants', () => ({
     PRODUCTION_HOST_NAME: 'open.zinnia.com',
@@ -143,6 +148,67 @@ describe('helpers/query-data.helpers', () => {
             await expect(
                 doesUserHavePagePermissions(ctx, 'perm' as any, logging, 'B')
             ).resolves.toBe(false);
+        });
+    });
+
+    describe('getUserRolesData', () => {
+        const ctx = mkGsspCtx();
+        const logging = {} as any;
+
+        it('builds tuples query from partyId, calls readUserTuplesPage, and groups carrier codes by role type', async () => {
+            (getSession as jest.Mock).mockResolvedValue({
+                user: { partyId: 'party-1' },
+            });
+
+            (readUserTuplesPage as jest.Mock).mockResolvedValue({
+                tuples: [
+                    { key: { object: 'role:ABC_admin' } },
+                    { key: { object: 'role:XYZ_admin' } },
+                    { key: { object: 'role:ABC_viewer' } },
+                ],
+            });
+
+            const result = await getUserRolesData(ctx, logging);
+
+            expect(readUserTuplesPage).toHaveBeenCalledWith(
+                ctx,
+                'user=party:party-1&object=role:&pageSize=100',
+                logging
+            );
+            expect(result).toEqual({
+                admin: ['ABC', 'XYZ'],
+                viewer: ['ABC'],
+            });
+        });
+
+        it('ignores tuples with objects not matching expected role format', async () => {
+            (getSession as jest.Mock).mockResolvedValue({
+                user: { partyId: 'party-1' },
+            });
+
+            (readUserTuplesPage as jest.Mock).mockResolvedValue({
+                tuples: [
+                    { key: { object: 'role:ABC_admin' } },
+                    { key: { object: 'role:ABC' } },
+                    { key: { object: 'not-a-role' } },
+                ],
+            });
+
+            const result = await getUserRolesData(ctx, logging);
+
+            expect(result).toEqual({
+                admin: ['ABC'],
+            });
+        });
+
+        it('returns undefined when tuples response is undefined', async () => {
+            (getSession as jest.Mock).mockResolvedValue({
+                user: { partyId: 'party-1' },
+            });
+            (readUserTuplesPage as jest.Mock).mockResolvedValue(undefined);
+
+            const result = await getUserRolesData(ctx, logging);
+            expect(result).toBeUndefined();
         });
     });
 });

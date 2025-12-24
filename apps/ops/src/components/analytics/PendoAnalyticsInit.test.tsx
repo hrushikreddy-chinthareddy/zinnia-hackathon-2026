@@ -76,7 +76,7 @@ describe('PendoAnalyticsInit', () => {
     });
 
     it('calls window.pendo.initialize with initial options when user and carrier are present', () => {
-        render(<PendoAnalyticsInit />);
+        render(<PendoAnalyticsInit userRolesMap={{}} />);
 
         // Effect runs after initial render; let React flush effects.
         // If you have fake timers configured globally, you might need act() here.
@@ -101,11 +101,15 @@ describe('PendoAnalyticsInit', () => {
 
     it('logs an error if pendo is not loaded on initialize', () => {
         withPendoMissing(() => {
-            render(<PendoAnalyticsInit />);
+            render(<PendoAnalyticsInit userRolesMap={{}} />);
 
             expect(initializeMock).not.toHaveBeenCalled();
             expect(browserLogError).toHaveBeenCalledWith(
                 'pendo::Pendo not loaded, skipping initialization',
+                { user: 'party:123' }
+            );
+            expect(browserLogError).toHaveBeenCalledWith(
+                'pendo::Pendo not loaded, skipping option update',
                 { user: 'party:123' }
             );
         });
@@ -113,11 +117,15 @@ describe('PendoAnalyticsInit', () => {
 
     it('logs an error if pendo is not loaded on updateOptions', () => {
         withPendoMissing(() => {
-            render(<PendoAnalyticsInit />);
+            render(<PendoAnalyticsInit userRolesMap={{}} />);
 
             expect(updateOptionsMock).not.toHaveBeenCalled();
             expect(browserLogError).toHaveBeenCalledWith(
                 'pendo::Pendo not loaded, skipping option update',
+                { user: 'party:123' }
+            );
+            expect(browserLogError).toHaveBeenCalledWith(
+                'pendo::Pendo not loaded, skipping initialization',
                 { user: 'party:123' }
             );
         });
