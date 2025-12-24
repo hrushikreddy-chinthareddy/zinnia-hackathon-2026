@@ -24,6 +24,21 @@ const PendoAnalyticsInit = ({
     const initOptions = useMemo((): PendoOptions | undefined => {
         if (user?.partyId && carrier) {
             const isInternalUser = isInternalZinniaUser(user);
+            const roles = Object.keys(userRolesMap);
+
+            // Combine and deduplicate carriers
+            const carrierAccessList = Array.from(
+                new Set(Object.values(userRolesMap).flat())
+            );
+
+            // Create a flat list of role:carrier
+            const roleToCarrierMap = Object.entries(userRolesMap)
+                .map(([role, carriers]) =>
+                    carriers.map<`${string}:${string}`>(
+                        (carrier) => `${role}:${carrier}`
+                    )
+                )
+                .flat();
 
             return {
                 visitor: {
@@ -31,7 +46,9 @@ const PendoAnalyticsInit = ({
                     email: user.email ?? undefined,
                     firstLogin: user.updated_at ?? undefined,
                     isInternalZinniaUser: String(isInternalUser ?? false),
-                    userRolesMap,
+                    roles,
+                    carrierAccessList,
+                    roleToCarrierMap,
                 },
                 account: {
                     id: carrier, // Indicates the source of traffic (Zinnia Live vs 3rt party portal)

@@ -1,4 +1,3 @@
-import { UserRolesMap } from '@deps/helpers/query-data.helpers';
 
 export type PendoOptions = {
     visitor: {
@@ -9,7 +8,7 @@ export type PendoOptions = {
         isInternalZinniaUser?: string; // Optional
         roles?: string[]; // Optional
         carrierAccessList?: string[]; // Optional
-        userRolesMap?: UserRolesMap; // Optional
+        roleToCarrierMap?: `${string}:${string}`[]; // Optional
     };
 
     account: {
