@@ -13,18 +13,24 @@ import SystematicWithdrawalProgram from '@deps/components/otp-withdrawal-form/ss
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
 import getUsaaConfig from './usaa-ssw-form-helpers';
 
 export function UsaaSSWForm() {
+    const { featureFlags } = useOptimizely();
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+
+    const isDtccSectionEnabled =
+        featureFlags[FEATURE_FLAGS.DTCC_SECTION_ENABLED];
 
     const {
         formValidation,
@@ -36,7 +42,7 @@ export function UsaaSSWForm() {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         eSignatureFieldConfig,
-    } = getUsaaConfig(t);
+    } = getUsaaConfig(t, isDtccSectionEnabled);
     const {
         setFormValidator,
         formData,

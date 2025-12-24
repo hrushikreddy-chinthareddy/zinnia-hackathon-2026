@@ -7,10 +7,10 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { PolicySearchFiltersContext } from '@deps/contexts/PolicySearchFilters';
+import { useSearchBarcontext } from '@deps/contexts/SearchBarContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
@@ -33,7 +33,7 @@ export const SearchFieldContainer = ({
     inputClasses,
 }: SearchFieldProps) => {
     const inputRef = useRef<HTMLInputElement | null>(null);
-    const { showFieldErrorMessage } = useContext(PolicySearchFiltersContext);
+    const { showFieldErrorMessage } = useSearchBarcontext();
     const {
         value: policyKey,
         label = '',
@@ -62,6 +62,7 @@ export const SearchFieldContainer = ({
     };
 
     const [hasValue, setHasValue] = useState(false);
+
     useEffect(() => {
         setHasValue(!!inputValue);
     }, [inputValue]);

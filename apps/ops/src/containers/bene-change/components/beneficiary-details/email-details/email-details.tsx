@@ -39,7 +39,6 @@ export default function EmailDetails({
 
     //const [action, setAction] = useState(updateEmail ? NonFinancialTransactionActions.Edit : NonFinancialTransactionActions.Add);
     const [email, setEmail] = useState<Email>(updateEmail ?? INITIAL_EMAIL);
-
     const [currentErrors, setCurrentErrors] = useState<EmailErrors>({});
 
     useEffect(() => {
@@ -47,7 +46,6 @@ export default function EmailDetails({
             prevState.splice(index, 1, { ...prevState[index], ...email });
             return prevState;
         });
-
         const errors: EmailErrors = {};
         if (preferredContactMethod === PreferredCommunicationType.EMAIL) {
             if (!email.emailAddress || email.emailAddress.trim() === '') {

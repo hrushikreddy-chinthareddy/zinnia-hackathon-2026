@@ -27,6 +27,7 @@
     "cancel": "Cancelar",
     "contractNumber": "Contract number",
     "illustrations": "Ilustraciones",
+    "notYetAvailable": "No disponible",
     "transaction": {
         "toolTips": {
             "correlationId": "Este identificador se asigna a transacciones vinculadas para que puedan rastrearse en conjunto.",
@@ -40,7 +41,12 @@
             "modifiedEndowmentContractStatus": "MEC significa Contrato de Dotación Modificado. Una póliza se convierte en MEC si no cumple con la prueba de prima de 7 pagos. Esto puede ocurrir cuando el propietario paga demasiada prima durante un período activo de 7 pagos.",
             "preTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base que antecede a la promulgación de la Ley de Equidad Fiscal y Responsabilidad Financiera.",
             "postTaxEquityAndFiscalResponsibilityActBasis": "Este es el costo base después de la promulgación de la Ley de Equidad Fiscal y Responsabilidad Financiera en 1982.",
-            "postTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de la promulgación de la Ley Técnica y de Ingresos Misceláneos en 1988."
+            "postTechnicalAndMiscellaneousRevenueActAmount": "Este es el costo base después de la promulgación de la Ley Técnica y de Ingresos Misceláneos en 1988.",
+            "N": "Pendiente de conciliación significa que hemos recibido la solicitud en el sistema de pagos, pero aún no hemos recibido la confirmación del banco.",
+            "R": "Conciliado significa que hemos confirmado que recibimos el importe del banco. No conciliado significa que existe una discrepancia o diferencia que requiere revisión.",
+            "U": "No conciliado significa que existe una discrepancia o diferencia que requiere revisión.",
+            "O": "En revisión significa que el pago está pasando por una revisión final.",
+            "C": "Liquidado significa que el pago se ha resuelto correctamente. El pago está completo."
         }
     },
     "allFields": {
@@ -542,6 +548,15 @@
         "view": "Ver",
         "collapseAll": "Contraer todo",
         "expandAll": "Expandir todo",
+        "tableCaptionsCasesTable": "Lista de todos los casos, incluyendo estado, propietario, aseguradora, agente y fecha de creación",
+        "tableCaptionsSentCaseDocuments": "Lista de todos los documentos de caso enviados, incluyendo nombre, fecha de envío, tipo de archivo y opciones de descarga",
+        "tableCaptionsReceivedCaseDocuments": "Lista de todos los documentos de caso recibidos, incluyendo nombre, fecha de recepción, tipo de archivo y opciones de descarga",
+        "tableCaptionsSentPolicyDocuments": "Lista de todos los documentos de póliza enviados, incluyendo nombre, fecha de envío, tipo de archivo y opciones de descarga",
+        "tableCaptionsReceivedPolicyDocuments": "Lista de todos los documentos de póliza recibidos, incluyendo nombre, fecha de recepción, tipo de archivo y opciones de descarga",
+        "tableCaptionsTaxDocuments": "Documentos fiscales relacionados con la póliza, incluyendo nombre, año fiscal, ID de formulario y opciones de descarga",
+        "tableCaptionsElectedFunds": "Asignaciones de fondos elegidos, incluyendo nombre del fondo, tipo, período de garantía, tasa de interés, valor y porcentaje de asignación",
+        "tableCaptionsNotElectedFunds": "Fondos no elegidos, incluyendo nombre del fondo, tipo, período de garantía, tasa de interés y valor",
+        "tableCaptionsPoliciesTable": "Lista de todas las pólizas y contratos, incluyendo número de póliza o contrato, estado, SSN del propietario, casos abiertos y última actualización",
         "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
         "accountValue": "Valor de la cuenta",
         "accountValueTooltip": "Este es el valor en efectivo contenido dentro de la póliza de seguro de vida del propietario. El valor de la cuenta se acumula con el tiempo a medida que se pagan las primas y se ganan intereses.",
@@ -570,7 +585,15 @@
         "reinstatementPaymentTooltip": "Este es el monto que el propietario debe pagar en primas para que su póliza vuelva a estar activa.",
         "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}.",
         "year(s)": "año(s)",
-        "remove": "Eliminar"
+        "remove": "Eliminar",
+        "policyNumberSearchError": "Ingrese un número de póliza o contrato para mostrar resultados de búsqueda",
+        "ssnSearchError": "Ingrese un número de Seguro Social para mostrar resultados de búsqueda",
+        "firstNameSearchError": "Ingrese un nombre para mostrar resultados de búsqueda",
+        "lastNameSearchError": "Ingrese un apellido para mostrar resultados de búsqueda",
+        "fullNameSearchError": "Ingrese un fideicomiso u organización para mostrar resultados de búsqueda",
+        "caseIdSearchError": "Ingrese un Case Id para mostrar resultados de búsqueda",
+        "firmNameSearchError": "Ingrese el nombre de una firma para mostrar resultados de búsqueda",
+        "documentNumberSearchError": "Ingrese un número de documento para mostrar resultados de búsqueda"
     },
     "enums": {
         "LIFE": "Vida",
@@ -1105,7 +1128,12 @@
         "MARRIED": "Casado",
         "HEADOFHOUSEHOLD": "Jefe de hogar",
         "WIDOWED": "Viudo",
-        "DIVORCED": "Divorciado"
+        "DIVORCED": "Divorciado",
+        "R": "Conciliado",
+        "U": "No conciliado",
+        "C": "Liquidado",
+        "O": "En revisión",
+        "N": "Pendiente de conciliación"
     },
     "site": {
         "name": "Zinnia Live",
@@ -2425,11 +2453,7 @@
                     "text": "¿Sigue teniendo problemas?",
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Enviar un ticket de ayuda"
-                },
-                "policyNumber": "Ingrese un número de póliza o contrato para mostrar resultados de búsqueda",
-                "ssn": "Ingrese un número de Seguro Social para mostrar resultados de búsqueda",
-                "firstName": "Ingrese un nombre para mostrar resultados de búsqueda",
-                "lastName": "Ingrese un apellido para mostrar resultados de búsqueda"
+                }
             },
             "buttons": {
                 "policyNumber": "Número de póliza",
@@ -3211,6 +3235,7 @@
             "getPolicyNumber": "Obteniendo número de póliza…",
             "getDetailsSubtext": "Estamos realizando verificaciones continuas. Lo verá aquí una vez que esté disponible.",
             "gettingPartyDetails": "Obteniendo detalles del partenaire...",
+            "gettingFinancialTransaction": "Obteniendo la transacción financiera…",
             "people": "Personas",
             "policyNumber": "Póliza #:",
             "transactionDetails": "Detalles de la transacción",
@@ -5433,6 +5458,7 @@
     "label": {
         "findKeyValues": "Buscar valores clave",
         "transactionDetails": "Detalles de la transacción",
+        "viewAllDetails": "Ver todos los detalles",
         "findKeyValuesTitle": "Buscar valores clave",
         "findKeyValuesDate": "Mostrar datos desde",
         "findKeyValuesDateError": "No se pueden obtener datos para la fecha seleccionada.",
@@ -7791,6 +7817,15 @@
             "submitTask": "Entregar"
         }
     },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Entrada de Datos de Cambio de Cesionario fue enviada.",
+            "cta": "Ir al caso",
+            "secondaryCta": "De vuelta a casa",
+            "submitTask": "Entregar"
+        }
+    },
     "purchaseDocumentMatching": {
         "confirmStep": {
             "title": "¡Entendido!",
@@ -8458,6 +8493,15 @@
         }
     },
     "operationsReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Validar Operaciones fue enviada.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "opsReview": {
         "confirmStep": {
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Operaciones fue enviada.",

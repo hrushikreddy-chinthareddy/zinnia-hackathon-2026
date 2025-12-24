@@ -7,9 +7,13 @@ import {
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
-import { toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    isNullEmptyOrUndefined,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
+import { PartyType } from '@deps/models/policy/sor-policy';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { validateRoleChange } from '@deps/queries/api/role-change';
 import {
@@ -27,6 +31,7 @@ import {
     cleanPhones,
     detectRoleChangeRequestType,
     resolveRoleChangePartyId,
+    toFullName,
 } from '@deps/utils/tasks/role-change-data-entry.utils';
 
 export function getPartyMeta(item: SummaryItem) {
@@ -185,12 +190,11 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                       requestType === Action.DELETE
                           ? dayjs().format(ZAHARA_API_DATE_FORMAT)
                           : null,
-                  collateralAmount:
-                      uiParty.collateralAmount === '' ||
-                      uiParty.collateralAmount === null ||
-                      uiParty.collateralAmount === undefined
-                          ? null
-                          : Number(uiParty.collateralAmount),
+                  collateralAmount: isNullEmptyOrUndefined(
+                      uiParty.collateralAmount
+                  )
+                      ? null
+                      : Number(uiParty.collateralAmount),
               }
             : null;
         return {
@@ -251,6 +255,15 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                   addresses: cleanAddresses(uiParty.addresses),
                   emails: cleanEmails(uiParty.emails),
                   phones: cleanPhones(uiParty.phones),
+                  firstName: uiParty.firstName ?? null,
+                  middleName: uiParty.middleName ?? null,
+                  lastName:
+                      uiParty.lastName ??
+                      (uiParty.partyType !== PartyType.INDIVIDUAL
+                          ? uiParty.fullName ?? null
+                          : null) ??
+                      null,
+                  fullName: toFullName(uiParty),
               }
             : null;
         return {

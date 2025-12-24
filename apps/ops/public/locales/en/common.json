@@ -27,6 +27,7 @@
     "cancel": "Cancel",
     "contractNumber": "Contract number",
     "illustrations": "Illustrations",
+    "notYetAvailable": "Not yet available",
     "transaction": {
         "toolTips": {
             "correlationId": "This identifier is assigned to linked transactions so they can be tracked together.",
@@ -40,7 +41,12 @@
             "modifiedEndowmentContractStatus": "MEC stands for Modified Endowment Contract. A policy becomes a MEC if it fails the 7-pay premium test. This can happen when an owner pays too much premium during an active 7-pay period.",
             "preTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis that predates the passing of the Tax Equity and Fiscal Responsibility Act.",
             "postTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis after the Tax Equity and Fiscal Responsibility Act passed in 1982.",
-            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988."
+            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988.",
+            "N": "Awaiting reconciliation means we’ve received the request in the payment system, but haven’t received confirmation from the bank.",
+            "R": "Reconciled means we’ve confirmed that we received the amount from the bank.  Unreconciled means there’s a mismatch or offage that needs review.",
+            "U": "Unreconciled means there’s a mismatch or offage that needs review",
+            "O": "Reviewing means the payment is going through final review.",
+            "C": "Cleared means the payment has been successfully resolved. The payment is complete."
         }
     },
     "allFields": {
@@ -543,6 +549,15 @@
         "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
         "collapseAll": "Collapse all",
         "expandAll": "Expand all",
+        "tableCaptionsCasesTable": "List of all cases, including status, owner, carrier, agent, and creation time",
+        "tableCaptionsSentCaseDocuments": "List of all sent case documents, including name, sent date, file type, and download options",
+        "tableCaptionsReceivedCaseDocuments": "List of all received case documents, including name, receipt date, file type, and download options",
+        "tableCaptionsSentPolicyDocuments": "List of all sent policy documents, including name, sent date, file type, and download options",
+        "tableCaptionsReceivedPolicyDocuments": "List of all received policy documents, including name, receipt date, file type, and download options",
+        "tableCaptionsTaxDocuments": "Tax documents related to the policy, including name, tax year, form ID, and download options",
+        "tableCaptionsElectedFunds": "Elected fund allocations, including fund name, type, guarantee period, interest rate, value, and percentage of allocation",
+        "tableCaptionsNotElectedFunds": "Non-elected funds, including fund name, type, guarantee period, interest rate, and value",
+        "tableCaptionsPoliciesTable": "List of all policies and contracts, including policy or contract number, status, owner SSN, open cases, and last updated time",
         "accountValue": "Account value",
         "accountValueTooltip": "This is the cash value amount held within the owner's life insurance policy. The account value accumulates over time as premiums are paid and interest is earned.",
         "surrenderValueTooltip": "This is how much the owner or their payees can expect if the policy is surrendered. It's the current account value minus surrender charges, outstanding loans, and other fees.",
@@ -570,7 +585,15 @@
         "reinstatementPaymentTooltip": "This is the amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
         "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}.",
         "year(s)": "year(s)",
-        "remove": "Remove"
+        "remove": "Remove",
+        "policyNumberSearchError": "Enter a policy/contract number to return search results",
+        "ssnSearchError": "Enter a Social Security number to return search results",
+        "firstNameSearchError": "Enter a first name to return search results",
+        "lastNameSearchError": "Enter a last name to return search results",
+        "fullNameSearchError": "Enter a trust or organization to return search results",
+        "caseIdSearchError": "Enter a Case Id to return search results",
+        "firmNameSearchError": "Enter a firm name to return search results",
+        "documentNumberSearchError": "Enter a document number to return search results"
     },
     "enums": {
         "LIFE": "Life",
@@ -1105,8 +1128,14 @@
         "MARRIED": "Married",
         "HEADOFHOUSEHOLD": "Head of household",
         "WIDOWED": "Widowed",
-        "DIVORCED": "Divorced"
+        "DIVORCED": "Divorced",
+        "R": "Reconciled",
+        "U": "Unreconciled",
+        "C": "Cleared",
+        "O": "Reviewing",
+        "N": "Awaiting reconciliation"
     },
+
     "site": {
         "name": "Zinnia Live",
         "home": {
@@ -2420,12 +2449,7 @@
                     "text": "Still having issues?",
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Submit a help desk ticket"
-                },
-                "policyNumber": "Enter a policy/contract number to return search results",
-                "ssn": "Enter a Social Security number to return search results",
-                "firstName": "Enter a first name to return search results",
-                "lastName": "Enter a last name to return search results",
-                "fullName": "Enter a trust or organization to return search results"
+                }
             },
             "buttons": {
                 "policyNumber": "Policy or contract number",
@@ -3209,6 +3233,7 @@
             "getPolicyNumber": "Getting policy number…",
             "getDetailsSubtext": "We're doing ongoing checks. You'll see it here once it's available.",
             "gettingPartyDetails": "Getting party details...",
+            "gettingFinancialTransaction": "Getting financial transaction...",
             "people": "People",
             "policyNumber": "Policy #:",
             "transactionDetails": "Transaction details",
@@ -5463,6 +5488,7 @@
     "label": {
         "findKeyValues": "Search key values",
         "transactionDetails": "Transaction details",
+        "viewAllDetails": "View all details",
         "findKeyValuesTitle": "Find key values",
         "findKeyValuesDate": "Display data from",
         "findKeyValuesDateError": "Unable to retrieve data for the selected date.",
@@ -8623,6 +8649,15 @@
         }
     },
     "operationsReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Operations Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "opsReview": {
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Operations Review was submitted.",

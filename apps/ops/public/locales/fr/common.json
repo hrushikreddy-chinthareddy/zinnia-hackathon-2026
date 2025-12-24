@@ -27,6 +27,7 @@
     "cancel": "Annuler",
     "contractNumber": "Numéro de contrat",
     "illustrations": "Illustrations",
+    "notYetAvailable": "Pas encore disponible",
     "transaction": {
         "toolTips": {
             "correlationId": "Cet identifiant est attribué aux transactions liées afin qu'elles puissent être suivies ensemble.",
@@ -40,9 +41,15 @@
             "modifiedEndowmentContractStatus": "MEC signifie « Modified Endowment Contract » (contrat de dotation modifié). Une police devient un MEC si elle échoue au test de prime sur sept ans. Cela peut se produire lorsqu’un propriétaire paie trop de primes pendant une période de sept ans active.",
             "preTaxEquityAndFiscalResponsibilityActBasis": "C’est le coût de base antérieur à l’adoption de la loi sur l’équité et la responsabilité fiscales (Tax Equity and Fiscal Responsibility Act).",
             "postTaxEquityAndFiscalResponsibilityActBasis": "C’est le coût de base après l’adoption de la loi sur l’équité et la responsabilité fiscales en 1982.",
-            "postTechnicalAndMiscellaneousRevenueActAmount": "C’est le coût de base après l’adoption de la loi sur les recettes techniques et diverses (Technical and Miscellaneous Revenue Act) en 1988."
+            "postTechnicalAndMiscellaneousRevenueActAmount": "C’est le coût de base après l’adoption de la loi sur les recettes techniques et diverses (Technical and Miscellaneous Revenue Act) en 1988.",
+            "N": "En attente de rapprochement signifie que nous avons reçu la demande dans le système de paiement, mais que nous n’avons pas encore reçu la confirmation de la banque.",
+            "R": "Rapproché signifie que nous avons confirmé la réception du montant de la part de la banque. Non rapproché signifie qu’il existe une différence ou un écart nécessitant une révision.",
+            "U": "Non rapproché signifie qu’il existe une différence ou un écart nécessitant une révision.",
+            "O": "En cours de révision signifie que le paiement est soumis à une vérification finale.",
+            "C": "Soldé signifie que le paiement a été traité avec succès. Le paiement est terminé."
         }
     },
+
     "allFields": {
         "formValidationsEmail": "L'adresse e-mail est obligatoire",
         "impactedParty": "Partie concernée",
@@ -542,6 +549,15 @@
         "view": "Afficher",
         "collapseAll": "Tout réduire",
         "expandAll": "Tout développer",
+        "tableCaptionsCasesTable": "Liste de tous les cas, incluant le statut, le propriétaire, l'assureur, l'agent et la date de création",
+        "tableCaptionsSentCaseDocuments": "Liste de tous les documents de cas envoyés, incluant le nom, la date d'envoi, le type de fichier et les options de téléchargement",
+        "tableCaptionsReceivedCaseDocuments": "Liste de tous les documents de cas reçus, incluant le nom, la date de réception, le type de fichier et les options de téléchargement",
+        "tableCaptionsSentPolicyDocuments": "Liste de tous les documents de police envoyés, incluant le nom, la date d'envoi, le type de fichier et les options de téléchargement",
+        "tableCaptionsReceivedPolicyDocuments": "Liste de tous les documents de police reçus, incluant le nom, la date de réception, le type de fichier et les options de téléchargement",
+        "tableCaptionsTaxDocuments": "Documents fiscaux liés à la police, incluant le nom, l'année fiscale, l'ID du formulaire et les options de téléchargement",
+        "tableCaptionsElectedFunds": "Allocations de fonds élus, incluant le nom du fonds, le type, la période de garantie, le taux d'intérêt, la valeur et le pourcentage d'allocation",
+        "tableCaptionsNotElectedFunds": "Fonds non élus, incluant le nom du fonds, le type, la période de garantie, le taux d'intérêt et la valeur",
+        "tableCaptionsPoliciesTable": "Liste de toutes les polices et contrats, incluant le numéro de police ou de contrat, le statut, le SSN du propriétaire, les cas ouverts et la dernière mise à jour",
         "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
         "accountValue": "Valeur du compte",
         "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire. La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
@@ -570,7 +586,15 @@
         "reinstatementPaymentTooltip": "Il s’agit du montant que le propriétaire doit payer en prime pour réactiver sa police.",
         "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}.",
         "year(s)": "année(s)",
-        "remove": "Supprimer"
+        "remove": "Supprimer",
+        "policyNumberSearchError": "Entrez un numéro de police pour obtenir les résultats de recherche",
+        "ssnSearchError": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
+        "firstNameSearchError": "Entrez un prénom pour obtenir les résultats de recherche",
+        "lastNameSearchError": "Entrez un nom de famille pour obtenir les résultats de recherche",
+        "fullNameSearchError": "Entrez le nom d'une fiducie ou d'une organisation pour obtenir les résultats de recherche",
+        "caseIdSearchError": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
+        "firmNameSearchError": "Entrez le nom d'une entreprise pour obtenir les résultats de recherche",
+        "documentNumberSearchError": "Entrez un numéro de document pour obtenir les résultats de recherche"
     },
     "enums": {
         "LIFE": "Vie",
@@ -1073,7 +1097,12 @@
         "MARRIED": "Marié",
         "HEADOFHOUSEHOLD": "Chef de famille",
         "WIDOWED": "Veuf/veuve",
-        "DIVORCED": "Divorcé"
+        "DIVORCED": "Divorcé",
+        "R": "Rapproché",
+        "U": "Non rapproché",
+        "C": "Soldé",
+        "O": "En cours de révision",
+        "N": "En attente de rapprochement"
     },
     "site": {
         "name": "Zinnia",
@@ -2479,11 +2508,7 @@
                     "text": "Vous avez toujours des problèmes ? ",
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Soumettre un billet au centre d'assistance"
-                },
-                "policyNumber": "Entrez un numéro de police pour obtenir les résultats de recherche",
-                "ssn": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
-                "firstName": "Entrez un prénom pour obtenir les résultats de recherche",
-                "lastName": "Entrez un nom de famille pour obtenir les résultats de recherche"
+                }
             },
             "buttons": {
                 "policyNumber": "Numéro de police",
@@ -3175,6 +3200,7 @@
             "contractNumber": "Contrat #:",
             "getPolicyNumber": "Obtenir le numéro de police…",
             "gettingPartyDetails": "Obtenir les détails du partenaire...",
+            "gettingFinancialTransaction": "Obtention de la transaction financière…",
             "getDetailsSubtext": "Nous effectuons des contrôles continus. Vous le verrez ici une fois qu'il sera disponible.",
             "people": "Personnes",
             "policyNumber": "Police #:",
@@ -5390,6 +5416,7 @@
     "label": {
         "findKeyValues": "Trouver des valeurs clés",
         "transactionDetails": "Détails de la transaction",
+        "viewAllDetails": "Voir tous les détails",
         "findKeyValuesTitle": "Rechercher des valeurs clés",
         "findKeyValuesDate": "Afficher les données de",
         "findKeyValuesDateError": "Impossible de trouver des données pour la date choisie.",
@@ -7829,6 +7856,15 @@
             "submitTask": "Soumettre"
         }
     },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : La saisie des données de changement de cessionnaire a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à la maison",
+            "submitTask": "Soumettre"
+        }
+    },
     "purchaseDocumentMatching": {
         "confirmStep": {
             "title": "Compris!",
@@ -8501,6 +8537,15 @@
         }
     },
     "operationsReview": {
+        "confirmStep": {
+            "title": "C'est fait !",
+            "subTitle": "Tâche : Validation des opérations a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "opsReview": {
         "confirmStep": {
             "title": "C'est fait !",
             "subTitle": "Tâche : Validation des opérations a été soumise.",

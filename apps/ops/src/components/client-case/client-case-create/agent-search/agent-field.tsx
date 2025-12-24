@@ -10,13 +10,18 @@ import {
     POM_QUERY_PREFIXES,
     useAuthenticatedAgentSellingCodes,
     useDownlineListQuery,
-    useGetProducerById,
-    useGetProducersByIdListQuery,
+    useGetWrappedProducersByIdListQuery,
     useGetProducersListQuery,
     useHierarchyListQuery,
+    useGetProducerByIdQuery,
 } from '@deps/components/illustrations/helpers/hooks/pom';
+import { AGENT_SEARCH_QUERY_PREFIXES } from '@deps/components/illustrations/helpers/queries/agent-search/constants';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useReduceCombinedResults } from '@deps/hooks/combined-query';
+import {
+    CombinedQueryResult,
+    useReduceCombinedResults,
+} from '@deps/hooks/combined-query';
 import {
     Carrier,
     GetDownlineResponse,
@@ -25,10 +30,12 @@ import {
     ProducersResponse,
     UplineItem,
 } from '@deps/types/producers';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { AgentFieldContextProvider } from './agent-field-context';
 import { GenericAgentField } from './generic-agent-field';
 import { AgentOption } from './types';
+import { useAgentSearchResults } from './use-agent-search-results';
 
 const useAgentHierarchies = (
     params: { sellingCode: string; carrierShortName: string }[]
@@ -85,7 +92,7 @@ const useAgentOptionsFromSellingCodes = (
     params: { lookupId: string; carrierShortName: string }[],
     { partialFullName }: { partialFullName: string }
 ) =>
-    useGetProducersByIdListQuery(
+    useGetWrappedProducersByIdListQuery(
         params,
         useCallback(
             (
@@ -150,9 +157,11 @@ const useAgentOptionsFromSellingCodes = (
         )
     );
 
-const useNormalUserAgentOptions = (searchQuery: string) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
+/**
+ * @deprecated superseeded by `useAgentSearchResults`
+ */
+const useLegacyAgentSearchResults = (searchQuery: string) => {
+    const { isSuperIllustrator } = usePermissionsContext();
 
     const agentSellingCodes = useAuthenticatedAgentSellingCodes();
     const { data: { producerLookUpParams, agencyLookupParams } = {} } =
@@ -229,7 +238,7 @@ const useNormalUserAgentOptions = (searchQuery: string) => {
     );
 };
 
-const useSuperIllustratorAgentOptions = (searchQuery: string) => {
+const useAgentSearchResultsForSuperIllustrator = (searchQuery: string) => {
     const { writeClientCaseCarriers } = usePermissionsContext();
 
     return useGetProducersListQuery(writeClientCaseCarriers, {
@@ -273,17 +282,29 @@ const useSuperIllustratorAgentOptions = (searchQuery: string) => {
     });
 };
 
-const useAgentOptions = (searchQuery: string) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
+const useAgentOptions = (
+    searchQuery: string
+): CombinedQueryResult<AgentOption[] | undefined> => {
+    const { featureFlags } = useOptimizely();
+    const improvedAgentSearchEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_IMPROVED_AGENT_SEARCH];
+    const { isSuperIllustrator } = usePermissionsContext();
 
-    const normalUserAgentOptionsResult = useNormalUserAgentOptions(searchQuery);
-    const superIllustratorAgentOptionsResult =
-        useSuperIllustratorAgentOptions(searchQuery);
+    const legacyAgentSearchResults = useLegacyAgentSearchResults(searchQuery);
 
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
-    return isSuperIllustrator
-        ? superIllustratorAgentOptionsResult
-        : normalUserAgentOptionsResult;
+    const agentSearchResults = useAgentSearchResults(searchQuery);
+    const agentSearchResultsForSuperIllustrator =
+        useAgentSearchResultsForSuperIllustrator(searchQuery);
+
+    if (isSuperIllustrator) {
+        return agentSearchResultsForSuperIllustrator;
+    }
+
+    if (improvedAgentSearchEnabled) {
+        return agentSearchResults;
+    }
+
+    return legacyAgentSearchResults;
 };
 
 /**
@@ -295,7 +316,7 @@ const useSubscribeToProducerData = (
 ) => {
     const selectedAgentLookupId = selectedAgent?.lookupId || selectedAgent?.npn;
 
-    const { data: { response: agentData } = {} } = useGetProducerById(
+    const { data: agentData } = useGetProducerByIdQuery(
         selectedAgentLookupId,
         selectedAgent?.carrierShortName
     );
@@ -373,12 +394,11 @@ export const AgentField = ({
     const { data, isLoading, isFetching } = useAgentOptions(searchQuery);
 
     const handleSearch = useCallback((query: string) => {
-        queryClient.invalidateQueries({
-            queryKey: POM_QUERY_PREFIXES.GET_DOWNLINE_BY_SELLING_CODE,
-        });
-        queryClient.invalidateQueries({
-            queryKey: POM_QUERY_PREFIXES.GET_PRODUCERS_BY_NAME_AND_CARRIER,
-        });
+        [
+            POM_QUERY_PREFIXES.GET_DOWNLINE_BY_SELLING_CODE,
+            POM_QUERY_PREFIXES.GET_PRODUCERS_BY_NAME_AND_CARRIER,
+            AGENT_SEARCH_QUERY_PREFIXES.AGENT_SEARCH_PREFIX,
+        ].forEach((queryKey) => queryClient.invalidateQueries({ queryKey }));
 
         setSearchQuery(query);
         // eslint-disable-next-line react-hooks/exhaustive-deps

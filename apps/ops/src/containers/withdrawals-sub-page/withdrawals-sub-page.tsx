@@ -263,7 +263,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 isDisabled:
                                     !withdrawalEligibility?.isEligibleWithdrawal ||
                                     !withdrawalProgram?.nextProgramDate ||
-                                    isUserPermissionedToWithdraw,
+                                    !isUserPermissionedToWithdraw,
                                 tooltip: getWithdrawalTooltip(),
                             },
                             {
