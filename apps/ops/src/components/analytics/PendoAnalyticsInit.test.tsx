@@ -99,6 +99,40 @@ describe('PendoAnalyticsInit', () => {
         });
     });
 
+    it('includes roles and carrier metadata in visitor when userRolesMap contains role assignments', () => {
+        render(
+            <PendoAnalyticsInit
+                userRolesMap={{
+                    admin: ['ELIC', 'SBUL'],
+                    processor: ['SBUL'],
+                }}
+            />
+        );
+
+        expect(initializeMock).toHaveBeenCalledTimes(1);
+        const config = initializeMock.mock.calls[0][0];
+
+        expect(config).toMatchObject({
+            visitor: {
+                id: 'party:123',
+                email: 'user@example.com',
+                firstLogin: '2024-01-01T00:00:00.000Z',
+                // Internal flag comes from isInternalZinniaUser mock
+                isInternalZinniaUser: 'true',
+                roles: ['admin', 'processor'],
+                carrierAccessList: ['ELIC', 'SBUL'],
+                roleToCarrierMap: [
+                    'admin:ELIC',
+                    'admin:SBUL',
+                    'processor:SBUL',
+                ],
+            },
+            account: {
+                id: 'zinnia',
+            },
+        });
+    });
+
     it('logs an error if pendo is not loaded on initialize', () => {
         withPendoMissing(() => {
             render(<PendoAnalyticsInit userRolesMap={{}} />);
