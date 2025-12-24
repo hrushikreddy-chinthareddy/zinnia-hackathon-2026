@@ -1,6 +1,7 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect, useMemo } from 'react';
 
+import { UserRolesMap } from '@deps/helpers/query-data.helpers';
 import { isInternalZinniaUser } from '@deps/helpers/user.helpers';
 import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
 import { UserProfile as ZinniaUserProfile } from '@deps/models/user-profile';
@@ -12,7 +13,11 @@ declare module '@auth0/nextjs-auth0/client' {
     interface UserProfile extends ZinniaUserProfile {}
 }
 
-const PendoAnalyticsInit = () => {
+const PendoAnalyticsInit = ({
+    userRolesMap,
+}: {
+    userRolesMap: UserRolesMap;
+}) => {
     const { user } = useUser();
     const carrier = useUserCarrier();
 
@@ -26,13 +31,14 @@ const PendoAnalyticsInit = () => {
                     email: user.email ?? undefined,
                     firstLogin: user.updated_at ?? undefined,
                     isInternalZinniaUser: String(isInternalUser ?? false),
+                    userRolesMap,
                 },
                 account: {
                     id: carrier, // Indicates the source of traffic (Zinnia Live vs 3rt party portal)
                 },
             };
         }
-    }, [user, carrier]);
+    }, [user, carrier, userRolesMap]);
 
     useEffect(() => {
         if (initOptions) {

@@ -138,7 +138,9 @@ const App = (props: AppProps) => {
                         NODE_ENV_PRODUCTION && (
                         <GoogleAnalytics gaId="G-1NY7KTG7T3" />
                     )}
-                    <PendoAnalyticsInit />
+                    <PendoAnalyticsInit
+                        userRolesMap={props.pageProps.userRolesMap}
+                    />
                 </UserProvider>
                 <SegmentAnalyticsScript />
             </section>
