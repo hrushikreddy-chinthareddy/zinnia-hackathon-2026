@@ -12,12 +12,11 @@ import { TranslationFiles } from '@deps/config/translations';
 import TaskManagementQueue from '@deps/containers/task-management-queue/task-management-queue-container';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { _QUEUE_ADMIN, ADMIN_ROLE } from '@deps/helpers/ops-manager.helpers';
-import { getUserData } from '@deps/helpers/query-data.helpers';
+import { getUserData, UserRolesMap } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
-import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 import { FgaUiEntity } from '@deps/types/fga';
 import { FgaRelation } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -98,28 +97,22 @@ export default function TasksPage({
     );
 }
 
-function extractQueueName(object: string): string {
-    const parts = object.split(':')[1];
-    const start = parts.indexOf('_') + 1;
-    const end = parts.lastIndexOf(_QUEUE_ADMIN);
-    return parts.slice(start, end);
-}
-
-function extractCarrierName(object: string): string {
-    return object.split(':')[1].split('_')[0].toUpperCase();
+function extractQueueName(role: string): string {
+    return role.slice(0, role.lastIndexOf(_QUEUE_ADMIN));
 }
 
 function extractTaskListingParamsFromTuples(
-    tuples: FGATuple[]
+    userRolesMap: UserRolesMap
 ): TaskListingParams {
     const carriers = new Set<string>();
     const queues = new Set<string>();
 
-    for (const tuple of tuples) {
-        const object = tuple.key.object;
-        if (object.includes(_QUEUE_ADMIN)) {
-            carriers.add(extractCarrierName(object));
-            queues.add(extractQueueName(object));
+    for (const [roleOrQueue, roleCarriers] of Object.entries(userRolesMap)) {
+        if (roleOrQueue.includes(_QUEUE_ADMIN)) {
+            for (const userRoleCarrier of roleCarriers) {
+                carriers.add(userRoleCarrier);
+            }
+            queues.add(extractQueueName(roleOrQueue));
         }
     }
 
@@ -133,7 +126,8 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (
             context: GetServerSidePropsContext,
-            loggingContext: LoggingContext
+            loggingContext: LoggingContext,
+            userRolesMap?: UserRolesMap
         ) => {
             const { locale = DEFAULT_LOCALE, res, req } = context;
             const user = await getUserData(context);
@@ -167,16 +161,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
-            const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
-            const userTuplesData: any = await readUserTuplesPage(
-                context,
-                tuplesQuery,
-                loggingContext
-            );
-
-            const isAdmin = userTuplesData?.tuples?.some((tuple: UserTuple) =>
-                tuple?.key?.object.includes(ADMIN_ROLE)
-            );
+            const isAdmin =
+                userRolesMap &&
+                Object.keys(userRolesMap).some((role) =>
+                    role.includes(ADMIN_ROLE)
+                );
 
             let taskListingParams: TaskListingParams = {
                 carriers: [],
@@ -199,10 +188,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                 isOpsManagerView = isAdmin;
             }
 
-            if (userTuplesData?.tuples) {
-                taskListingParams = extractTaskListingParamsFromTuples(
-                    userTuplesData?.tuples
-                );
+            if (userRolesMap) {
+                taskListingParams =
+                    extractTaskListingParamsFromTuples(userRolesMap);
             }
 
             //needed to generate assignee list for sidesheet
@@ -252,6 +240,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 UserPermission.AllowReadCaseManagement,
                 loggingContext
             );
+
             const translations = await serverSideTranslations(
                 locale,
                 [TranslationFiles.COMMON],

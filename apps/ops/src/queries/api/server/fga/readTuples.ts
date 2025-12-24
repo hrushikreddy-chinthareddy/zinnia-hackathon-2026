@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { AxiosResponse } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -13,20 +12,35 @@ import {
 
 const readUsersTuplesUrlSsr = `${apiServerBaseUrl}/fga/v1/tuples`;
 
+type TuplesData = {
+    tuples: {
+        key: {
+            user: string;
+            object: string;
+            relation: string;
+            condition: string;
+        };
+        timestamp: string;
+    }[];
+};
+
+// FIXME: the results may be paginated, and this would only read the first page
 export const readUserTuples = async (
     accessToken: string,
     queryString: string,
     logCtx: LoggingContext
 ) => {
     if (!accessToken) {
-        return {
-            data: false,
+        const ret: ApiResponse<TuplesData> = {
+            data: null,
             error: {
                 status: 400,
                 message: 'Missing partyId or accessToken',
                 name: 'Error reading tuple',
             },
         };
+
+        return ret;
     }
 
     const loggingContext = {
@@ -37,7 +51,7 @@ export const readUserTuples = async (
     const url = `${readUsersTuplesUrlSsr}?${queryString}`;
 
     try {
-        const usersTuples = await serverApi.get<any, AxiosResponse>(
+        const usersTuples = await serverApi.get<TuplesData>(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -45,8 +59,8 @@ export const readUserTuples = async (
             loggingContext
         );
 
-        const response: ApiResponse<any> = {
-            data: usersTuples?.data || false,
+        const response: ApiResponse<TuplesData> = {
+            data: usersTuples?.data,
             error: null,
         };
 
@@ -77,14 +91,16 @@ export const readUserTuples = async (
             inputs: {},
         });
 
-        return {
-            data: false,
+        const ret: ApiResponse<TuplesData> = {
+            data: null,
             error: {
                 status: 500,
                 message: error.message,
                 name: 'Error checking tuple',
             },
         };
+
+        return ret;
     }
 };
 
@@ -124,6 +140,6 @@ export const readUserTuplesPage = async (
                 },
             }
         );
-        return false;
     }
+    return null;
 };

@@ -12,6 +12,7 @@ import { DocumentContext } from 'next/document';
 
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
+import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 import { PRODUCTION_HOST_NAME } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 
@@ -46,6 +47,42 @@ export const getUserData = async (ctx: GetServerSidePropsContext) => {
     const user = auth?.user as UserProfile;
 
     return user;
+};
+
+export type UserRolesMap = Record<string, string[]>;
+
+export const getUserRolesData = async (
+    context: GetServerSidePropsContext,
+    loggingContext: LoggingContext
+) => {
+    const user = await getUserData(context);
+    const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
+    const userTuplesData = await readUserTuplesPage(
+        context,
+        tuplesQuery,
+        loggingContext
+    );
+
+    const userRolesMap = userTuplesData?.tuples.reduce<UserRolesMap>(
+        (acc, { key: { object } }) => {
+            const [_, carrierCode, roleType] =
+                object.match(/^role:([^_]+)_(.+)$/) ?? [];
+
+            if (!roleType) {
+                return acc;
+            }
+
+            return {
+                ...acc, // Existing roles
+                [roleType]: [
+                    ...(acc[roleType] || []), // Existing carrier codes
+                    carrierCode,
+                ],
+            };
+        },
+        {}
+    );
+    return userRolesMap;
 };
 
 export const doesUserHavePagePermissions = async (

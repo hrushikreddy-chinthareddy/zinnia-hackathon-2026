@@ -20,6 +20,10 @@ import { v4 as uuidV4 } from 'uuid';
 import { UserProfile } from '@deps/models/user-profile';
 
 import pino from './pino-server';
+import {
+    getUserRolesData,
+    UserRolesMap,
+} from '@deps/helpers/query-data.helpers';
 
 type UserInfo = {
     sessionId: string;
@@ -83,7 +87,8 @@ export type RouteHandlerWithLoggingContext = (
 export type GetServerSidePropsWithLoggingContext = (
     ...args: [
         ...Parameters<GetServerSideProps>,
-        ...[loggingContext: LoggingContext]
+        ...[loggingContext: LoggingContext],
+        userRolesMap?: UserRolesMap
     ]
 ) => ReturnType<GetServerSideProps>;
 
@@ -342,7 +347,26 @@ export const withPageAuthAndLogging: WithPageAuthAndLogging = (
                 func
             );
             logTrace('next-server page view', loggingContext);
-            return getServerSideProps(context, loggingContext);
+
+            const userRolesMap = await getUserRolesData(
+                context,
+                loggingContext
+            );
+
+            const pageSpecificProps = await getServerSideProps(
+                context,
+                loggingContext,
+                userRolesMap
+            );
+
+            return {
+                ...pageSpecificProps,
+                props: {
+                    userRolesMap,
+                    ...('props' in pageSpecificProps &&
+                        pageSpecificProps.props),
+                },
+            };
         },
     });
 };
