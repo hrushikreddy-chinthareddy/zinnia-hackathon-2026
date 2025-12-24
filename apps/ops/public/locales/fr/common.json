@@ -7829,6 +7829,15 @@
             "submitTask": "Soumettre"
         }
     },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : La saisie des données de changement de cessionnaire a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à la maison",
+            "submitTask": "Soumettre"
+        }
+    },
     "purchaseDocumentMatching": {
         "confirmStep": {
             "title": "Compris!",

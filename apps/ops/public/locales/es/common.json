@@ -7790,6 +7790,15 @@
             "submitTask": "Entregar"
         }
     },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Entrada de Datos de Cambio de Cesionario fue enviada.",
+            "cta": "Ir al caso",
+            "secondaryCta": "De vuelta a casa",
+            "submitTask": "Entregar"
+        }
+    },
     "purchaseDocumentMatching": {
         "confirmStep": {
             "title": "¡Entendido!",
