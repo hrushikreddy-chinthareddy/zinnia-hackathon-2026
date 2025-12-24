@@ -1,3 +1,8 @@
+import {
+    extractTaskListingParamsFromRolesMap,
+    isAdminFromUserRolesMap,
+} from './index';
+
 jest.mock('@deps/utils/optimizely/optimizely', () => ({
     optimizelyService: {
         getFeatureFlagDecisions: jest.fn(),
@@ -35,11 +40,6 @@ jest.mock(
         };
     }
 );
-
-import {
-  extractTaskListingParamsFromRolesMap,
-  isAdminFromUserRolesMap,
-} from './index';
 
 describe('tasks/index helpers', () => {
     describe('isAdminFromUserRolesMap', () => {
