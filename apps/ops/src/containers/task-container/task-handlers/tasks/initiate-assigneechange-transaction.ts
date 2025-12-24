@@ -19,7 +19,6 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 
-import { PREFIX_MAP } from '../constants';
 import {
     TaskHandler,
     Reason,
@@ -44,9 +43,6 @@ const ensureSingle = <T>(items: T[], fallback: T): T[] =>
 
 const normalizeNullableString = (v?: string | null): string | null =>
     isNullEmptyOrUndefined(v) ? null : String(v);
-
-const getPrefix = (prefix?: string | null): string | null =>
-    prefix ? PREFIX_MAP[prefix] ?? null : null;
 
 const formatAddress = (address?: Partial<Address>): Address => ({
     addressType: address?.addressType ?? AddressType.RESIDENCE,
@@ -161,7 +157,7 @@ const formatPartyForContract = (party: Party, role: string) => {
         partyRoleId: party?.partyRoleId ?? null,
         partyRole: role,
         partyType: party?.partyType,
-        prefix: getPrefix(party?.prefix ?? null),
+        prefix: party?.prefix ?? null,
         firstName: isIndividual
             ? normalizeNullableString(party?.firstName)
             : null,
