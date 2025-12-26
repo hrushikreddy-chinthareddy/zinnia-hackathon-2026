@@ -17,6 +17,11 @@ jest.mock('next-i18next', () => ({
     }),
 }));
 describe('CreateDisclosure', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('should render the component without crashing when disclosure is an empty array', () => {
         const discloureData: Disclosure = {
             proposedAnnuitizationQuote: {} as any,

@@ -586,6 +586,7 @@
         "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}.",
         "year(s)": "year(s)",
         "remove": "Remove",
+        "openInNewWindow": "Open in new window",
         "policyNumberSearchError": "Enter a policy/contract number to return search results",
         "ssnSearchError": "Enter a Social Security number to return search results",
         "firstNameSearchError": "Enter a first name to return search results",

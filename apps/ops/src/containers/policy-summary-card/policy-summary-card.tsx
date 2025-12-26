@@ -12,6 +12,7 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 
@@ -63,6 +64,7 @@ import {
     toTitleCase,
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
+import useNavLink from '@deps/hooks/useNavLink';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
@@ -298,6 +300,8 @@ export const StatusBanner = ({
     casesTotal,
 }: BasePolicyComponentArgs & { casesTotal?: number }) => {
     const { t } = useTranslation();
+    const { setAriaLabelToChildLinks } = useNavLink();
+    const bannerRef = useRef<HTMLDivElement | null>(null);
     const policyStatus = policy.policyStatus;
     const { featureFlags } = useOptimizely();
     const freeLookEnabled =
@@ -376,10 +380,21 @@ export const StatusBanner = ({
         },
     });
 
+    useEffect(() => {
+        // Adding necessary logic to set aria-label to BannerAlert since it is not a component property
+        if (bannerRef.current) {
+            setAriaLabelToChildLinks(
+                bannerRef,
+                t('dashboard.search.results.policySummaryCard.caseBannerLink')
+            );
+        }
+    }, [showCaseBanner, setAriaLabelToChildLinks, t]);
+
     return (
         <div className={styles.bannerContainer}>
             {showCaseBanner && (
                 <BannerAlert
+                    ref={bannerRef}
                     variant={BannerVariant.Information}
                     bodyText={t(
                         'dashboard.search.results.policySummaryCard.caseBannerText',
