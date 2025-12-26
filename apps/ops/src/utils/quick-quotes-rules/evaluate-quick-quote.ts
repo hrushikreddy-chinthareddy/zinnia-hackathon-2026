@@ -62,10 +62,6 @@ export class QuickQuoteProducts {
                         face: input.faceAmount,
                     })
             );
-            console.log(
-                '🚀 ~ QuickQuoteProducts ~ getProductsAvailableFor ~ eligibleClassByPosition:',
-                eligibleClassByPosition
-            );
 
             // Evaluate each rider for this product
             const resultRiders = this.getEligibleRiders(input, product.riders);
@@ -82,17 +78,12 @@ export class QuickQuoteProducts {
                 const maxClass = product.classes[maxIdx].classCode;
                 const nonEligibleReasonByClass =
                     this.getNonEligibleReasonByClass(eligibleClassByPosition);
-                console.log(
-                    '🚀 ~ QuickQuoteProducts ~ getProductsAvailableFor ~ nonEligibleReasonByClass:',
-                    nonEligibleReasonByClass
-                );
 
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [minClass, maxClass],
                     notAvailabilityReasonField: nonEligibleReasonByClass,
-                    available: eligibleClassByPosition.some((c) => c.eligible),
                     riders: {
                         ...resultRiders,
                     },
@@ -101,17 +92,12 @@ export class QuickQuoteProducts {
                 // If no eligible classes; propagate the rejection reason field
                 const nonEligibleReasonByClass =
                     this.getNonEligibleReasonByClass(eligibleClassByPosition);
-                console.log(
-                    '🚀 ~ QuickQuoteProducts ~ getProductsAvailableFor ~ nonEligibleReasonByClass:',
-                    nonEligibleReasonByClass
-                );
 
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [],
                     notAvailabilityReasonField: nonEligibleReasonByClass,
-                    available: eligibleClassByPosition.some((c) => c.eligible),
                     riders: {
                         ...resultRiders,
                     },

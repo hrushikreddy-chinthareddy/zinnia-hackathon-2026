@@ -214,7 +214,6 @@ export const expandQuickQuoteVariants = (
             termLength,
             classCodes,
             notAvailabilityReasonField,
-            available,
             riders,
         }) =>
             classCodes?.length
@@ -223,7 +222,7 @@ export const expandQuickQuoteVariants = (
                           planCode,
                           termLength,
                           classCode,
-                          available,
+                          available: true,
                           notAvailabilityReasonField,
                           riders,
                       };

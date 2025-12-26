@@ -46,7 +46,7 @@ export const buildNewTermQuickQuoteOptions = (
         queryFn: async () => {
             const logPrefix =
                 'illustrations::QuickQuote::buildNewTermQuickQuoteOptions::queryFn';
-            console.info('AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII');
+
             if (!variantParams.available) {
                 throw new VariantNotAvailableError(
                     'QuickQuote is not available for these values',
@@ -60,19 +60,11 @@ export const buildNewTermQuickQuoteOptions = (
                 quickQuoteParams,
                 variantParams
             );
-            console.info(
-                '🚀 ~ buildNewTermQuickQuoteOptions ~ payload:',
-                payload
-            );
 
             let response;
 
             try {
                 response = await createNewTermLifeIllustration(payload);
-                console.info(
-                    '🚀 ~ buildNewTermQuickQuoteOptions ~ response:',
-                    response
-                );
             } catch (e) {
                 browserLogError(`${logPrefix} Error fetching quick quote`, {
                     ...parseErrorInformation(e),
