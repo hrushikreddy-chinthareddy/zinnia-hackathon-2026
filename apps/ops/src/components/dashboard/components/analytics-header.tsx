@@ -16,7 +16,7 @@ const AnalyticsHeader = (props: AnalyticsHeaderProps) => {
     const { t } = useTranslation();
 
     const subtitle = (
-        <div className={`${isLoading ? 'blur' : ''}`}>
+        <div data-testid="subtitle" className={`${isLoading ? 'blur' : ''}`}>
             <p className={'typography-titles-subtitle'}>
                 {total.toLocaleString()} {t(`allFields.${chartName}Unit`)}
             </p>
