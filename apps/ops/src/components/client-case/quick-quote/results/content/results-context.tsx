@@ -58,6 +58,10 @@ export const QuickQuoteResultsProvider = ({
     quickQuoteParams,
     children,
 }: QuickQuoteResultsProviderProps) => {
+    console.log(
+        '🚀 ~ QuickQuoteResultsProvider ~ quickQuoteParams:',
+        quickQuoteParams
+    );
     // TODO: Get real variations based on params
     const variants = useMemo(
         () =>
@@ -66,6 +70,7 @@ export const QuickQuoteResultsProvider = ({
             ),
         [quickQuoteParams]
     );
+    console.log('🚀 ~ QuickQuoteResultsProvider ~ variants:', variants);
 
     const { data: products, isFetching: isFetchingProducts } =
         useQueryProductsByCarrier({

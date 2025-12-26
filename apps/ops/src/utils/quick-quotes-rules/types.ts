@@ -101,6 +101,7 @@ export type ProductClassResult = {
     classCodes: UnderwritingClass[];
     notAvailabilityReasonField: nonEligibleReasonByClass[];
     riders: ProductClassResultRiders;
+    available: boolean;
 };
 
 export type ProductClassResultRiders = {
