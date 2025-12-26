@@ -591,6 +591,7 @@
         "productMarketingName": "Product marketing name",
         "productName": "Product name",
         "productNameTooltip": "This is the product name that you'll see referenced in internal documentation. It's different from the product marketing name that's used in correspondence and will be familiar to the owner.",
+        "openInNewWindow": "Open in new window",
         "policyNumberSearchError": "Enter a policy/contract number to return search results",
         "ssnSearchError": "Enter a Social Security number to return search results",
         "firstNameSearchError": "Enter a first name to return search results",
@@ -8376,6 +8377,15 @@
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Beneficary Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Assignee Change Data Entry was submitted.",
             "cta": "Go to Case",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"

@@ -592,6 +592,7 @@
         "productMarketingName": "Nom commercial du produit",
         "productName": "Nom du produit",
         "productNameTooltip": "Il s'agit du nom du produit que vous verrez référencé dans la documentation interne. Il est différent du nom commercial du produit qui est utilisé dans la correspondance et qui sera familier au titulaire.",
+        "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
         "policyNumberSearchError": "Entrez un numéro de police pour obtenir les résultats de recherche",
         "ssnSearchError": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
         "firstNameSearchError": "Entrez un prénom pour obtenir les résultats de recherche",
@@ -7829,6 +7830,15 @@
         "confirmStep": {
             "title": "J'ai compris!",
             "subTitle": "Tâche : La saisie des données de modification des bénéficiaires a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à la maison",
+            "submitTask": "Soumettre"
+        }
+    },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : La saisie des données de changement de cessionnaire a été soumise.",
             "cta": "Aller au cas",
             "secondaryCta": "Retour à la maison",
             "submitTask": "Soumettre"

@@ -591,6 +591,7 @@
         "productMarketingName": "Nombre comercial del producto",
         "productName": "Nombre del producto",
         "productNameTooltip": "Este es el nombre del producto que verá referenciado en la documentación interna. Es diferente del nombre comercial del producto que se usa en la correspondencia y que será familiar para el propietario.",
+        "openInNewWindow": "Abre en nueva ventana",
         "policyNumberSearchError": "Ingrese un número de póliza o contrato para mostrar resultados de búsqueda",
         "ssnSearchError": "Ingrese un número de Seguro Social para mostrar resultados de búsqueda",
         "firstNameSearchError": "Ingrese un nombre para mostrar resultados de búsqueda",
@@ -7790,6 +7791,15 @@
         "confirmStep": {
             "title": "¡Entiendo!",
             "subTitle": "Tarea: Se envió la entrada de datos de cambio de beneficiario.",
+            "cta": "Ir al caso",
+            "secondaryCta": "De vuelta a casa",
+            "submitTask": "Entregar"
+        }
+    },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Entrada de Datos de Cambio de Cesionario fue enviada.",
             "cta": "Ir al caso",
             "secondaryCta": "De vuelta a casa",
             "submitTask": "Entregar"
