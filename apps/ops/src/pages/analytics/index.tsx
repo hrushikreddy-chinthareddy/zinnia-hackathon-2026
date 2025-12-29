@@ -57,8 +57,6 @@ const AnalyticsPage = ({
         (value) => value === tabParam
     );
 
-    console.log({ tabParam, isTabValid });
-
     const {
         isIntersecting: carrierHeaderIsIntersecting,
         ref: tabContentRef,
