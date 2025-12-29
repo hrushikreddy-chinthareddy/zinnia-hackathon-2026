@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -14,6 +13,7 @@ import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkManagRoleEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface IThirdPartyProps {
     policy: Policy;
