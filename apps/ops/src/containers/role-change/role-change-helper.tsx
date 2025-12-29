@@ -28,7 +28,7 @@ import {
     ZAHARA_API_DATE_FORMAT,
     DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
-import { DEFAULT_ERROR_STRING , capitalize } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 import {
     Country,
     IdentificationType,

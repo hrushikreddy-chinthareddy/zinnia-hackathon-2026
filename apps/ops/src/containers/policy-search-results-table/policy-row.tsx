@@ -45,7 +45,7 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
-import { DEFAULT_ERROR_STRING , toSentenceCase } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@deps/utils/strings';
 import { PartyRole, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { PolicyActionCell } from './policy-action-cell';

@@ -31,7 +31,7 @@ import {
     IllustrationsClientCase,
     TransactionType,
 } from '@deps/types/illustrations';
-import { DEFAULT_ERROR_STRING , capitalize } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 
 import styles from './case-summary.module.css';
 

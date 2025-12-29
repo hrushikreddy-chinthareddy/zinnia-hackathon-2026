@@ -14,7 +14,7 @@ import {
 } from '@deps/helpers/numbers.helpers';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { withdrawalDetailsTransactions } from '@deps/helpers/transaction-types.helpers';
-import { DEFAULT_ERROR_STRING , toTitleCase } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, toTitleCase } from '@deps/utils/strings';
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalSideSheetValues } from './types';

@@ -14,7 +14,7 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DEFAULT_DATE_FORMAT } from '@deps/types/constants';
-import { DEFAULT_ERROR_STRING , convertToCamelCase } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, convertToCamelCase } from '@deps/utils/strings';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 export type WithdrawalRulesProps = {
