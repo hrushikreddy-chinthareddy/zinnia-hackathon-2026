@@ -72,15 +72,26 @@ export function IllustrationsClientCaseProvider({
     const [filters, setFiltersState] =
         useState<ClientCaseSearchInputs>(parseFilters);
 
-    const setFilters = (newFilter: ClientCaseSearchInputs) => {
-        const cleanFilters = Object.fromEntries(
-            Object.entries(newFilter).filter(
+    const removeEmptyFilters = (fullFilters: ClientCaseSearchInputs) =>
+        Object.fromEntries(
+            Object.entries(fullFilters).filter(
                 ([_, value]) =>
                     value !== '' && value !== undefined && value !== null
             )
         );
+    const setFilters = (newFilter: ClientCaseSearchInputs) => {
+        let newFilters = removeEmptyFilters(newFilter);
 
-        const params = new URLSearchParams(cleanFilters);
+        if (
+            Object.hasOwn(newFilters, 'sortBy') &&
+            Object.hasOwn(newFilters, 'sortDir')
+        ) {
+            const { offset, limit, ...currentFiltersClear } =
+                removeEmptyFilters(parseFilters);
+            newFilters = { ...currentFiltersClear, ...newFilters };
+        }
+
+        const params = new URLSearchParams(newFilters);
         router.push(`?${params.toString()}`);
     };
 
