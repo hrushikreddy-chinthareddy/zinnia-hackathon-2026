@@ -20,6 +20,8 @@ interface fundProps {
 
 const FundTransfer = ({ policy }: fundProps) => {
     const router = useRouter();
+    const { replace } = router;
+
     const [isLoading, setIsLoading] = useState(true);
 
     const checkFundAllocationEligibility = useCallback(async () => {
@@ -48,17 +50,17 @@ const FundTransfer = ({ policy }: fundProps) => {
                     ]);
 
                 if (!isAllocationEligible || !isTransferEligible) {
-                    router.replace('/403');
+                    replace('/403');
                 } else {
                     setIsLoading(false);
                 }
             } catch (error) {
-                router.replace('/403');
+                replace('/403');
             }
         };
 
         checkEligibility();
-    }, [checkFundAllocationEligibility, checkFundTransferEligibility]);
+    }, [checkFundAllocationEligibility, checkFundTransferEligibility, replace]);
 
     if (isLoading) {
         return <PageLoader variant={PageLoaderVariant.Center} />;
