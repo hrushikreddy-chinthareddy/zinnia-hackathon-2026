@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import PageLoader, {
     PageLoaderVariant,
@@ -22,21 +22,21 @@ const FundTransfer = ({ policy }: fundProps) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
 
-    const checkFundAllocationEligibility = async () => {
+    const checkFundAllocationEligibility = useCallback(async () => {
         const response = await checkEligibilityFundAllocation(
             policy.product?.planCode,
             policy.policyNumber
         );
         return response?.status === 'success';
-    };
+    }, [policy.product?.planCode, policy.policyNumber]);
 
-    const checkFundTransferEligibility = async () => {
+    const checkFundTransferEligibility = useCallback(async () => {
         const response = await checkEligibilityFundTransfer(
             policy.product?.planCode,
             policy.policyNumber
         );
         return response?.status === TransactionResponseStatus.Success;
-    };
+    }, [policy.product?.planCode, policy.policyNumber]);
 
     useEffect(() => {
         const checkEligibility = async () => {
@@ -58,7 +58,7 @@ const FundTransfer = ({ policy }: fundProps) => {
         };
 
         checkEligibility();
-    }, [policy.product?.planCode, policy.policyNumber]);
+    }, [checkFundAllocationEligibility, checkFundTransferEligibility]);
 
     if (isLoading) {
         return <PageLoader variant={PageLoaderVariant.Center} />;
