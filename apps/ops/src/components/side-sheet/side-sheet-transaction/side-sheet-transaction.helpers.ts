@@ -2,8 +2,8 @@ import { TFunction } from 'next-i18next';
 
 import { getPaymentMethods } from '@deps/components/history-event-card/history-event-card.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Policy,
     Transaction,

@@ -36,7 +36,6 @@ import {
     DEFAULT_DATE_FORMAT,
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { ConfiguredSettingId } from '@deps/types/product-config-settings';
 import {
     BenefitId,
@@ -45,6 +44,7 @@ import {
     RiderBenefit,
 } from '@deps/types/product-rate';
 import { formatTimestamp } from '@deps/utils/dates';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     PartyStatus,
     PolicyFeature,

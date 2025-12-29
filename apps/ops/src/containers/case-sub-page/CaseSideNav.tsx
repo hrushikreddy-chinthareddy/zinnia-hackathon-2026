@@ -20,11 +20,11 @@ import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as TimeIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import CaseDetailsSideNav from './case-details-side-nav';

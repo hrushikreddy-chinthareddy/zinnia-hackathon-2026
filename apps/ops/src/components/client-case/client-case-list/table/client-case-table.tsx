@@ -24,11 +24,10 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useIllustrationsClientCase } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductType, ProductTypeLabel } from '@deps/types/product';
 import { formatRelativeTime } from '@deps/utils/dates';
-import { capitalize } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING , capitalize } from '@deps/utils/strings';
 
 import styles from './client-case-table.module.css';
 import TableHeaderSortWrapper from './table-header-sort-wrapper.tsx/table-header-sort-wrapper';

@@ -4,8 +4,8 @@ import {
     isNullEmptyOrUndefined,
     toSentenceCase,
 } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { DataDefinition } from '@deps/types/data';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     FundAccountType,
     Policy,

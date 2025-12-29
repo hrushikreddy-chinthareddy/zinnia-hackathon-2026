@@ -7,8 +7,8 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { mapProductTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 interface SideSheetProductDetailsProps {
     globalValues: GlobalValues;

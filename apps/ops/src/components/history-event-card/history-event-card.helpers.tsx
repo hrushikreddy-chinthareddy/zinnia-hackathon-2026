@@ -9,8 +9,7 @@ import {
 import { PeopleChangeTransactionTypes } from '@deps/helpers/transaction-types.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
 import { Payor } from '@deps/models/policy-sor-touchups/Transaction';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { toSentenceCase, toTitleCase } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING , toSentenceCase, toTitleCase } from '@deps/utils/strings';
 import {
     BankAccount,
     Policy,

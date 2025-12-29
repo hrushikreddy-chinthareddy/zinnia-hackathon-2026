@@ -17,13 +17,13 @@ import {
 } from '@deps/queries/api/fund-information';
 import { getCurrentInterestRate } from '@deps/queries/api/product-rate';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     FundInformationByFundId,
     FundInformationByFundIdResponse,
     FundInformationByPlanCode,
     Funds,
 } from '@deps/types/fund-information';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Fund,
     FundAccountType,

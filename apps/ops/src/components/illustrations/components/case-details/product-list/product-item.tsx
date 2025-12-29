@@ -7,13 +7,13 @@ import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     IllustrationsClientCase,
     IllustrationSummary,
 } from '@deps/types/illustrations';
 import { Product, ProductTypeLabel } from '@deps/types/product';
 import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import CarrierIcon from './carrier-icon';
 import styles from './product-item.module.css';

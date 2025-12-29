@@ -35,8 +35,8 @@ import {
     DEFAULT_DATE_FORMAT,
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DisbursementType,
     TaxWithholdingType,

@@ -5,11 +5,11 @@ import { v4 as uuid } from 'uuid';
 
 import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { getRiderNames } from 'components/illustrations/helpers/get-rider-names';
 
 import {
