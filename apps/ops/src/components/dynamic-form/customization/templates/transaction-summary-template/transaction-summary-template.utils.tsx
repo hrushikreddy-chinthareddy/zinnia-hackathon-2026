@@ -192,6 +192,11 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                           : null) ??
                       null,
                   fullName: toFullName(uiParty),
+                  entityType:
+                      uiParty.partyType === PartyType.ORGANIZATION &&
+                      !uiParty.entityType
+                          ? 'UNKNOWN'
+                          : uiParty.entityType,
               }
             : null;
         return {

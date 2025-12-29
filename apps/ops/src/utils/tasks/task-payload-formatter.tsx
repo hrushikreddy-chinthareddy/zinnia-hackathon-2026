@@ -186,6 +186,10 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
         fullName: toFullName(src),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
+        entityType:
+            src.partyType === PartyType.ORGANIZATION && !src.entityType
+                ? 'UNKNOWN'
+                : src.entityType,
     };
 
     const partyId =

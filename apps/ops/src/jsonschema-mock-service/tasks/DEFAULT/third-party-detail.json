@@ -211,7 +211,8 @@
                                                 "addressType": "RESIDENCE",
                                                 "city": "",
                                                 "state": null,
-                                                "zipCode": ""
+                                                "zipCode": "",
+                                                "isPreferred": true
                                             }
                                         ],
                                         "identifications": [
