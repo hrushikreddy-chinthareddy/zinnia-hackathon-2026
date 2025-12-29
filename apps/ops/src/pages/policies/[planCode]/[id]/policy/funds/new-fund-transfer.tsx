@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
@@ -13,6 +12,7 @@ import { checkEligibilityFundAllocation } from '@deps/queries/api/fund-allocatio
 import { checkEligibilityFundTransfer } from '@deps/queries/api/fund-transfer';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface fundProps {
     policy: Policy;
