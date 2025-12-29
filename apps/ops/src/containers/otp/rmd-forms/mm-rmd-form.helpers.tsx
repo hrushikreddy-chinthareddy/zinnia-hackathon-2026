@@ -21,7 +21,6 @@ import {
     PaymentMailType,
     PartyRoles,
     PhoneTypes,
-    AddressTypes,
     AccountType,
     FormDisbursement,
     SignVerificationReason,
@@ -513,10 +512,6 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                     fieldLabel: t('personalDetails.lastName'),
                 },
                 {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
-                },
-                {
                     fieldName: PartyFields.TaxId,
                     fieldLabel: t('personalDetails.ssn'),
                 },
@@ -530,12 +525,6 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                             fieldLabel: t('phoneDetails.telephoneNumber'),
                         },
                     ],
-                },
-            ],
-            addressFields: [
-                {
-                    addressType: AddressTypes.DEFAULT,
-                    title: t('addressDetails.title'),
                 },
             ],
         },
@@ -554,10 +543,6 @@ export default function useMassMutualRmdConfig(t: TFunction) {
                 {
                     fieldName: PartyFields.LastName,
                     fieldLabel: t('personalDetails.lastName'),
-                },
-                {
-                    fieldName: PartyFields.Dob,
-                    fieldLabel: t('personalDetails.dob'),
                 },
                 {
                     fieldName: PartyFields.TaxId,

@@ -1,8 +1,3 @@
-import {
-    Identification,
-    IdentificationType,
-    PartyType,
-} from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
@@ -15,9 +10,12 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import EmptyCard from '@deps/containers/people-data-cards/empty-card/empty-card';
+import {
+    getAdditionalActiveIdentifications,
+    getMainActiveIdentifications,
+} from '@deps/helpers/identification.helpers';
 import AgentParty from '@deps/helpers/policy-sor/AgentParty';
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { getStateName } from '@deps/helpers/states.helpers';
@@ -25,23 +23,22 @@ import {
     convertKebabedDateString,
     formatSSN,
     safeString,
+    toSentenceCase,
+    trimStringByCharacterCount,
 } from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    Identification,
+    IdentificationType,
+    PartyType,
+} from '@zinnia/api-types/types/sor';
 
 export interface IdentificationCardProps {
     editable?: boolean;
     selectedPolicyParty?: PolicyParty | AgentParty;
     isAnnuity?: boolean;
 }
-
-// The ID Types that are displayed in the main section of the card
-const MAIN_IDENTIFICATION_TYPES = [
-    IdentificationType.SSN,
-    IdentificationType.TIN,
-    IdentificationType.EXTERNAL,
-    IdentificationType.OTHER,
-];
 
 const formatIdentificationValue = (identification: Identification): string => {
     switch (identification?.identificationType) {
@@ -74,13 +71,11 @@ const IdentificationDisplay = ({
 }: {
     identification: Identification;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'people.card.identification.types',
-    });
+    const { t } = useTranslation();
     return (
         <FieldData
             label={t(
-                `${identification.identificationType}`,
+                `people.card.identification.types.${identification.identificationType}`,
                 identification.identificationType || 'Unknown'
             )}
             sentenceCase={
@@ -118,9 +113,7 @@ const IdentificationCard = ({
     selectedPolicyParty,
     isAnnuity,
 }: IdentificationCardProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'people.card.identification',
-    });
+    const { t } = useTranslation();
 
     const {
         entityType,
@@ -132,29 +125,24 @@ const IdentificationCard = ({
         citizenCountry,
         isUSCitizen,
         fullName,
+        gender,
+        genderIdentity,
     } = selectedPolicyParty ?? {};
 
-    const isUSCitizenText = isUSCitizen ? t('yes') : t('no');
+    const isUSCitizenText = isUSCitizen
+        ? t('people.card.identification.yes')
+        : t('people.card.identification.no');
 
     const isOrganization = partyType === PartyType.ORGANIZATION;
     const isTrust = partyType === ('Trust' as PartyType);
 
     const isAgent = selectedPolicyParty instanceof AgentParty;
+    const isIndividualParty = !isOrganization && !isTrust && !isAgent;
 
-    const mainIdentifications =
-        identifications?.filter((identification) =>
-            MAIN_IDENTIFICATION_TYPES.includes(
-                identification?.identificationType ?? ('' as IdentificationType)
-            )
-        ) ?? [];
-    const additionalIdentifications =
-        identifications?.filter(
-            (identification) =>
-                !MAIN_IDENTIFICATION_TYPES.includes(
-                    identification?.identificationType ??
-                        ('' as IdentificationType)
-                )
-        ) ?? [];
+    const mainActiveIdentifications =
+        getMainActiveIdentifications(identifications);
+    const additionalActiveIdentifications =
+        getAdditionalActiveIdentifications(identifications);
 
     return (
         <CardContainer classNames="flex w-full flex-col items-start">
@@ -165,7 +153,7 @@ const IdentificationCard = ({
                             variant={TypographyVariant.H2}
                             className="mr-5"
                         >
-                            {t('heading')}
+                            {t('people.card.identification.heading')}
                         </Typography>
                         {editable && (
                             <NavElement
@@ -174,18 +162,34 @@ const IdentificationCard = ({
                                 variant={NavElementVariant.Default}
                                 startIcon={<AddIcon width={20} height={20} />}
                             >
-                                {t('add')}
-                                {isTrust && ` ${t('trustee').toLowerCase()}`}
+                                {t('people.card.identification.add')}
+                                {isTrust &&
+                                    ` ${t(
+                                        'people.card.identification.trustee'
+                                    ).toLowerCase()}`}
                             </NavElement>
                         )}
                     </div>
                 </div>
 
                 {identifications?.length === 0 ? (
-                    <EmptyCard text={t('empty')} />
+                    <EmptyCard text={t('people.card.identification.empty')} />
                 ) : (
                     <div className="grid grid-cols-[repeat(2,minmax(min-content,max-content))] gap-x-8 gap-y-4 md:flex md:flex-wrap">
-                        {mainIdentifications.map((identification) => (
+                        {isIndividualParty && gender && (
+                            <FieldData label={t('allFields.sex')}>
+                                {t(`allFields.${gender.toLowerCase()}`)}
+                            </FieldData>
+                        )}
+                        {isIndividualParty && genderIdentity && (
+                            <FieldData label={t('allFields.genderIdentity')}>
+                                {trimStringByCharacterCount(
+                                    toSentenceCase(genderIdentity),
+                                    50
+                                )}
+                            </FieldData>
+                        )}
+                        {mainActiveIdentifications.map((identification) => (
                             <IdentificationDisplay
                                 key={identification.identificationType}
                                 identification={identification}
@@ -194,13 +198,23 @@ const IdentificationCard = ({
                         {isOrganization && (
                             <>
                                 <FieldData
-                                    label={t('options.orgCode')}
-                                    tooltipBody={t('options.orgCodeTooltip')}
-                                    tooltipTitle={t('options.orgCode')}
+                                    label={t(
+                                        'people.card.identification.options.orgCode'
+                                    )}
+                                    tooltipBody={t(
+                                        'people.card.identification.options.orgCodeTooltip'
+                                    )}
+                                    tooltipTitle={t(
+                                        'people.card.identification.options.orgCode'
+                                    )}
                                 >
                                     {safeString(organizationCode)}
                                 </FieldData>
-                                <FieldData label={t('options.entityType')}>
+                                <FieldData
+                                    label={t(
+                                        'people.card.identification.options.entityType'
+                                    )}
+                                >
                                     {safeString(entityType)}
                                 </FieldData>
                             </>
@@ -208,13 +222,26 @@ const IdentificationCard = ({
 
                         {isTrust && (
                             <>
-                                <FieldData label={t('options.trustDate')}>
+                                <FieldData
+                                    label={t(
+                                        'people.card.identification.options.trustDate'
+                                    )}
+                                >
                                     {convertKebabedDateString(trustDate)}
                                 </FieldData>
-                                <FieldData label={t('options.trustType')}>
+                                <FieldData
+                                    label={t(
+                                        'people.card.identification.options.trustType'
+                                    )}
+                                >
                                     {safeString(trustType)}
                                 </FieldData>
-                                <FieldData editable label={t('trustee')}>
+                                <FieldData
+                                    editable
+                                    label={t(
+                                        'people.card.identification.trustee'
+                                    )}
+                                >
                                     <PiiWrapper>{fullName}</PiiWrapper>
                                 </FieldData>
                             </>
@@ -222,14 +249,18 @@ const IdentificationCard = ({
                         {isAnnuity && (
                             <>
                                 <FieldData
-                                    label={t('options.usCitizen')}
+                                    label={t(
+                                        'people.card.identification.options.usCitizen'
+                                    )}
                                     sentenceCase={false}
                                 >
                                     {isUSCitizenText}
                                 </FieldData>
                                 {!isUSCitizen && (
                                     <FieldData
-                                        label={t('options.citizenCountry')}
+                                        label={t(
+                                            'people.card.identification.options.citizenCountry'
+                                        )}
                                     >
                                         {citizenCountry}
                                     </FieldData>
@@ -239,25 +270,31 @@ const IdentificationCard = ({
                         {isAgent && (
                             <>
                                 <FieldData
-                                    label={t('types.EXTERNAL')}
+                                    label={t(
+                                        'people.card.identification.types.EXTERNAL'
+                                    )}
                                     sentenceCase={false}
                                 >
                                     {selectedPolicyParty?.party.agentExternalId}
                                 </FieldData>
                                 <FieldData
-                                    label={t('options.channel')}
+                                    label={t(
+                                        'people.card.identification.options.channel'
+                                    )}
                                     sentenceCase={false}
                                 >
                                     {selectedPolicyParty?.channel}
                                 </FieldData>
                             </>
                         )}
-                        {additionalIdentifications.map((identification) => (
-                            <IdentificationDisplay
-                                key={identification.identificationType}
-                                identification={identification}
-                            />
-                        ))}
+                        {additionalActiveIdentifications.map(
+                            (identification) => (
+                                <IdentificationDisplay
+                                    key={identification.identificationType}
+                                    identification={identification}
+                                />
+                            )
+                        )}
                     </div>
                 )}
             </div>

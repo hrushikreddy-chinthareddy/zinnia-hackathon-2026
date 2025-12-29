@@ -1,10 +1,10 @@
-import { toTitleCase } from '@xd/utils/dist';
 import { useTranslation } from 'next-i18next';
 
 import { FieldSize, FieldVariant } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
 import { AccountType } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
+import { toTitleCase } from '@deps/utils/strings';
 
 const AccountTypes = ({
     fieldLabel,

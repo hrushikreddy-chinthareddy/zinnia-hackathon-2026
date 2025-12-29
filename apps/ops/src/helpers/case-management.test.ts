@@ -1,3 +1,11 @@
+import { cleanup } from '@testing-library/react';
+
+// Hoist dayjs mock before importing module under test so formatting returns deterministic values
+jest.mock('dayjs', () => () => ({
+    startOf: () => ({ format: () => 'START' }),
+    endOf: () => ({ format: () => 'END' }),
+}));
+
 import { CaseSearchAdditionalFilters } from '@deps/contexts/CaseManagementFilters';
 import { Case, Metadata, Processes, Statuses } from '@deps/models/case/case';
 import { StageInstance } from '@deps/models/case/stage-instance';
@@ -9,7 +17,14 @@ import {
     getAdditionalFilters,
     isSearchValueObjectEmpty,
     insertStepDetails,
+    toggleLabels,
+    calculateDaysAgo,
+    formatCaseTotals,
+    getCaseIdentifierValue,
+    getValidFullName,
 } from './case-management';
+
+import type { TFunction } from 'next-i18next';
 
 const baseFilters = {
     processTypes: new Set([]),
@@ -18,6 +33,11 @@ const baseFilters = {
 };
 
 describe('case-management.ts helper functions', () => {
+    afterEach(() => {
+        jest.clearAllMocks();
+        cleanup();
+    });
+
     describe('getSearchValueObject', () => {
         it('should return an object with policyNumber when toggleValue is policyNumber and a policy number is provided', () => {
             const searchValue: SearchViewQuery = {
@@ -39,6 +59,14 @@ describe('case-management.ts helper functions', () => {
             const result = getSearchValueObject(searchValue, toggleValue);
 
             expect(result).toEqual({ ssn: '123456789' });
+        });
+
+        it('should return an object with agentSsn stripped of hyphens', () => {
+            const searchValue: SearchViewQuery = {
+                agentSsn: '987-65-4321',
+            };
+            const result = getSearchValueObject(searchValue, 'agentSsn');
+            expect(result).toEqual({ agentSsn: '987654321' });
         });
 
         it('should return an object with ownerName when toggleValue is ownerFirstName and ownerFirstName and ownerLastName are provided', () => {
@@ -79,6 +107,65 @@ describe('case-management.ts helper functions', () => {
 
             expect(result).toEqual({});
         });
+
+        it('should return caseIds array when caseId provided', () => {
+            const result = getSearchValueObject(
+                { caseId: 'CID-1' } as any,
+                'caseId'
+            );
+            expect(result).toEqual({ caseIds: ['CID-1'] });
+        });
+
+        it('should return identifiers when documentNumber provided', () => {
+            const result = getSearchValueObject(
+                { documentNumber: 'DOC123' } as any,
+                'documentNumber'
+            );
+            expect(result).toEqual({
+                identifiers: [
+                    { identifier: 'documentNumber', value: 'DOC123' },
+                ],
+            });
+        });
+
+        it('should return agent name fields when agentName toggle with partial inputs', () => {
+            expect(
+                getSearchValueObject(
+                    { agentFirstName: 'Ann' } as any,
+                    'agentName'
+                )
+            ).toEqual({ agentFirstName: 'Ann' });
+            expect(
+                getSearchValueObject(
+                    { agentLastName: 'Lee' } as any,
+                    'agentName'
+                )
+            ).toEqual({ agentLastName: 'Lee' });
+        });
+
+        it('should trim firmName and map to brokerDealerName', () => {
+            const out = getSearchValueObject(
+                { firmName: '  Big Firm  ' } as any,
+                'firmName'
+            );
+            expect(out).toEqual({ brokerDealerName: 'Big Firm' });
+        });
+
+        it('should include fullName and owner names when provided under ownerFirstName toggle', () => {
+            const out = getSearchValueObject(
+                {
+                    ownerFirstName: 'Al',
+                    ownerLastName: 'B',
+                    fullName: 'Trust',
+                } as any,
+                'ownerFirstName'
+            );
+            expect(out).toEqual({
+                ownerFirstName: 'Al',
+                ownerLastName: 'B',
+                fullName: 'Trust',
+            });
+        });
     });
 
     describe('isSearchValueObjectEmpty', () => {
@@ -106,12 +193,12 @@ describe('case-management.ts helper functions', () => {
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: '2022-01-01T00:00:00.000Z',
-                createdDateEnd: '2022-12-31T00:00:00.000Z',
+                createdDateStart: 'START',
+                createdDateEnd: 'END',
             });
         });
 
-        it.skip('should return an object with updatedDateStart and updatedDateEnd when additionalFilters include updatedDateStart and updatedDateEnd', () => {
+        it('should return an object with updatedDateStart and updatedDateEnd when additionalFilters include updatedDateStart and updatedDateEnd', () => {
             const additionalFilters: CaseSearchAdditionalFilters = {
                 ...baseFilters,
                 updatedDateStart: '01012022',
@@ -121,138 +208,64 @@ describe('case-management.ts helper functions', () => {
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                updatedDateStart: '2022-01-01T00:00:00.000Z',
-                updatedDateEnd: '2022-12-31T00:00:00.000Z',
+                updatedDateStart: 'START',
+                updatedDateEnd: 'END',
             });
         });
 
-        it.skip('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 7', () => {
+        it('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 7', () => {
             const additionalFilters: CaseSearchAdditionalFilters = {
                 ...baseFilters,
                 age: '7',
             };
 
-            const startDate = new Date();
-            startDate.setDate(startDate.getDate() - 7);
-            const endDate = new Date();
-
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(
-                    startDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${startDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(
-                    endDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${endDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
+                createdDateStart: 'START',
+                createdDateEnd: 'END',
             });
         });
 
-        it.skip('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 14', () => {
+        it('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 14', () => {
             const additionalFilters: CaseSearchAdditionalFilters = {
                 ...baseFilters,
                 age: '14',
             };
 
-            const startDate = new Date();
-            startDate.setDate(startDate.getDate() - 14);
-            const endDate = new Date();
-            endDate.setDate(endDate.getDate() - 7);
-
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(
-                    startDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${startDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(
-                    endDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${endDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
+                createdDateStart: 'START',
+                createdDateEnd: 'END',
             });
         });
 
-        it.skip('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 30', () => {
+        it('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 30', () => {
             const additionalFilters: CaseSearchAdditionalFilters = {
                 ...baseFilters,
                 age: '30',
             };
 
-            const startDate = new Date();
-            startDate.setDate(startDate.getDate() - 30);
-            const endDate = new Date();
-            endDate.setDate(endDate.getDate() - 15);
-
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(
-                    startDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${startDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(
-                    endDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${endDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
+                createdDateStart: 'START',
+                createdDateEnd: 'END',
             });
         });
 
-        it.skip('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 31', () => {
+        it('should return an object with createdDateStart and createdDateEnd when additionalFilters include age 31', () => {
             const additionalFilters: CaseSearchAdditionalFilters = {
                 ...baseFilters,
                 age: '31',
             };
 
-            const startDate = new Date('01/01/1970');
-            const endDate = new Date();
-            endDate.setDate(endDate.getDate() - 31);
-
             const result = getAdditionalFilters(additionalFilters);
 
             expect(result).toEqual({
-                createdDateStart: `${startDate.getFullYear()}-${(
-                    startDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${startDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
-                createdDateEnd: `${endDate.getFullYear()}-${(
-                    endDate.getMonth() + 1
-                )
-                    .toString()
-                    .padStart(2, '0')}-${endDate
-                    .getDate()
-                    .toString()
-                    .padStart(2, '0')}T00:00:00.000Z`,
+                createdDateStart: 'START',
+                createdDateEnd: 'END',
             });
         });
 
@@ -379,6 +392,121 @@ describe('case-management.ts helper functions', () => {
             expect(targetStageSteps[0].info).not.toEqual(undefined);
             expect(targetStageSteps[1].info).not.toEqual(undefined);
             expect(targetStageSteps[2].info).toEqual(undefined);
+        });
+    });
+
+    describe('toggleLabels', () => {
+        const t: TFunction = ((key: any) =>
+            `t:${Array.isArray(key) ? key[0] : key}`) as any;
+
+        it('should include trust/org fields when feature flag is enabled', () => {
+            const flags = {
+                enterprise_search_trust_or_organization: true,
+            } as any;
+            const labels = toggleLabels(flags)(t);
+            const owner = labels.find(
+                (l) => l.value === 'ownerFirstName'
+            ) as any;
+            expect(owner.group.length).toBe(3);
+            expect(owner.group[2].value).toBe('fullName');
+        });
+
+        it('should include only first/last name when feature flag is disabled', () => {
+            const flags = {
+                enterprise_search_trust_or_organization: false,
+            } as any;
+            const labels = toggleLabels(flags)(t);
+            const owner = labels.find(
+                (l) => l.value === 'ownerFirstName'
+            ) as any;
+            expect(owner.group.length).toBe(2);
+            expect(owner.group[0].value).toBe('firstName');
+            expect(owner.group[1].value).toBe('lastName');
+        });
+    });
+
+    describe('calculateDaysAgo', () => {
+        beforeAll(() => {
+            jest.useFakeTimers({ now: new Date('2024-02-15T12:00:00Z') });
+        });
+        afterAll(() => {
+            jest.useRealTimers();
+        });
+
+        it('returns 0 when same day and less than 24 hours', () => {
+            // Use a time safely earlier on the same calendar day in local time
+            const date = new Date('2024-02-15T11:00:00Z');
+            expect(calculateDaysAgo(date)).toBe(0);
+        });
+
+        it('returns 1 when different calendar day but less than 24 hours', () => {
+            // Choose a time that is previous local calendar day
+            // At now=2024-02-15T12:00:00Z, using 2024-02-14T18:00:00Z is <24h and previous local date
+            const date = new Date('2024-02-14T18:00:00Z');
+            expect(calculateDaysAgo(date)).toBe(1);
+        });
+
+        it('returns 2 when 49 hours ago', () => {
+            const date = new Date('2024-02-13T11:00:00Z');
+            expect(calculateDaysAgo(date)).toBe(2);
+        });
+    });
+
+    describe('formatCaseTotals', () => {
+        it('maps stat counts and falls back to 0 for missing labels', () => {
+            const out = formatCaseTotals(10, {
+                counts: [
+                    { label: Statuses.InProgress, value: 2 },
+                    { label: Statuses.Exception, value: 3 },
+                ],
+            } as any);
+            expect(out.All).toBe(10);
+            expect(out[Statuses.InProgress]).toBe(2);
+            expect(out[Statuses.Exception]).toBe(3);
+            expect(out[Statuses.NotStarted]).toBe(0);
+            expect(out[Statuses.Completed]).toBe(0);
+            expect(out[Statuses.Canceled]).toBe(0);
+        });
+    });
+
+    describe('getCaseIdentifierValue', () => {
+        it('returns identifier value when present', () => {
+            const out = getCaseIdentifierValue(
+                [
+                    { identifier: 'x', value: '1' },
+                    { identifier: 'target', value: 'FOUND' },
+                ] as any,
+                'target'
+            );
+            expect(out).toBe('FOUND');
+        });
+        it('returns empty string when not found or list undefined', () => {
+            expect(getCaseIdentifierValue(undefined as any, 'x')).toBe('');
+            expect(
+                getCaseIdentifierValue(
+                    [{ identifier: 'y', value: '2' }] as any,
+                    'x'
+                )
+            ).toBe('');
+        });
+    });
+
+    describe('getValidFullName', () => {
+        it('returns provided fullName if present', () => {
+            expect(getValidFullName({ fullName: 'John Q Public' } as any)).toBe(
+                'John Q Public'
+            );
+        });
+        it('constructs full name from parts, tolerating missing middle/last', () => {
+            expect(
+                getValidFullName({ firstName: 'Ann', lastName: 'Lee' } as any)
+            ).toBe('Ann  Lee');
+            expect(getValidFullName({ firstName: 'Solo' } as any)).toBe(
+                'Solo  '
+            );
+        });
+        it('returns undefined when owner is undefined', () => {
+            expect(getValidFullName(undefined as any)).toBeUndefined();
         });
     });
 });

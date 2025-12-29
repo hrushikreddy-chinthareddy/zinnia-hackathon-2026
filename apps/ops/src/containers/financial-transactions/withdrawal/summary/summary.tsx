@@ -1,13 +1,3 @@
-import {
-    DisbursementType,
-    TaxWithholdingType,
-} from '@zinnia/api-types/types/bpm';
-import {
-    Address,
-    Policy,
-    TaxWithheldAmount,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -44,6 +34,16 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    DisbursementType,
+    TaxWithholdingType,
+} from '@zinnia/api-types/types/bpm';
+import {
+    Address,
+    Policy,
+    TaxWithheldAmount,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { WithdrawalType } from '../amount/types';
 import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helpers';

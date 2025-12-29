@@ -1,9 +1,13 @@
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import { MeResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 
 import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
 import { createNewChatSession } from '@deps/queries/api/knowledge-base';
-import { BOT_ERROR_MESSAGE_ID, MessageRole } from '@deps/types/knowledge-base';
+import {
+    AnswerMode,
+    BOT_ERROR_MESSAGE_ID,
+    MessageRole,
+} from '@deps/types/knowledge-base';
+import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import ChatInput from './chat-input';
 
@@ -63,6 +67,8 @@ describe('ChatInput', () => {
             startNewChatSession: jest.fn(),
             viewChatHistory: jest.fn(),
             currentMessages: [],
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
         (useChatStream as jest.Mock).mockReturnValue({
@@ -116,7 +122,8 @@ describe('ChatInput', () => {
             expect(mockSendMessage).toHaveBeenCalledWith(
                 '1234567890',
                 mockMessage,
-                expect.any(String)
+                expect.any(String),
+                AnswerMode.Short
             );
         });
     });
@@ -130,6 +137,8 @@ describe('ChatInput', () => {
             currentMessages: [],
             chatHistoryReloadTrigger: 0,
             setChatHistoryReloadTrigger: mockSetChatHistoryReloadTrigger,
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
         const { getByRole } = render(
@@ -150,7 +159,8 @@ describe('ChatInput', () => {
             expect(mockSendMessage).toHaveBeenCalledWith(
                 'existing-session',
                 mockMessage,
-                expect.any(String)
+                expect.any(String),
+                AnswerMode.Short
             );
         });
     });
@@ -225,6 +235,8 @@ describe('ChatInput', () => {
             currentMessages: [],
             chatHistoryReloadTrigger: 0,
             setChatHistoryReloadTrigger: mockSetChatHistoryReloadTrigger,
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
         const { getByRole } = render(
@@ -248,7 +260,8 @@ describe('ChatInput', () => {
             expect(mockSendMessage).toHaveBeenCalledWith(
                 'existing-session',
                 mockMessage,
-                expect.any(String)
+                expect.any(String),
+                AnswerMode.Short
             );
         });
     });
@@ -276,6 +289,8 @@ describe('ChatInput', () => {
             ],
             chatHistoryReloadTrigger: 0,
             setChatHistoryReloadTrigger: jest.fn(),
+            answerMode: AnswerMode.Short,
+            setAnswerMode: jest.fn(),
         });
 
         const { getByRole } = render(
@@ -299,7 +314,8 @@ describe('ChatInput', () => {
             expect(mockSendMessage).toHaveBeenCalledWith(
                 '1234567890',
                 mockMessage,
-                expect.any(String)
+                expect.any(String),
+                AnswerMode.Short
             );
 
             expect(mockSetCurrentMessagesLocal).toHaveBeenCalled();

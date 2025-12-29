@@ -93,7 +93,6 @@ const mockDeathAuditQualificationData = {
 
 describe('##DeathAuditQualification', () => {
     let consoleErrorSpy: jest.SpyInstance;
-
     beforeAll(() => {
         consoleErrorSpy = jest
             .spyOn(console, 'error')
@@ -106,6 +105,7 @@ describe('##DeathAuditQualification', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
     });
 
     it('#should render the no data message when no qualification data available', () => {

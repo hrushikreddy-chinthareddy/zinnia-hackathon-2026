@@ -27,6 +27,7 @@
     "cancel": "Cancel",
     "contractNumber": "Contract number",
     "illustrations": "Illustrations",
+    "notYetAvailable": "Not yet available",
     "transaction": {
         "toolTips": {
             "correlationId": "This identifier is assigned to linked transactions so they can be tracked together.",
@@ -40,10 +41,17 @@
             "modifiedEndowmentContractStatus": "MEC stands for Modified Endowment Contract. A policy becomes a MEC if it fails the 7-pay premium test. This can happen when an owner pays too much premium during an active 7-pay period.",
             "preTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis that predates the passing of the Tax Equity and Fiscal Responsibility Act.",
             "postTaxEquityAndFiscalResponsibilityActBasis": "This is the cost basis after the Tax Equity and Fiscal Responsibility Act passed in 1982.",
-            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988."
+            "postTechnicalAndMiscellaneousRevenueActAmount": "This is the cost basis after the Technical and Miscellaneous Revenue Act passed in 1988.",
+            "N": "Awaiting reconciliation means we’ve received the request in the payment system, but haven’t received confirmation from the bank.",
+            "R": "Reconciled means we’ve confirmed that we received the amount from the bank.  Unreconciled means there’s a mismatch or offage that needs review.",
+            "U": "Unreconciled means there’s a mismatch or offage that needs review",
+            "O": "Reviewing means the payment is going through final review.",
+            "C": "Cleared means the payment has been successfully resolved. The payment is complete."
         }
     },
     "allFields": {
+        "formValidationsEmail": "Email is required",
+        "impactedParty": "Impacted party",
         "transactionBasics": "Transaction basics",
         "emptySearch": "No matches found",
         "policyBasics": "{{policyNomenclature, capitalize}} basics",
@@ -65,6 +73,7 @@
         "currency": "Currency",
         "fixedCostPeriod": "Fixed cost period",
         "totalCoverageAmount": "Total coverage amount",
+        "deathBenefit": "Death benefit",
         "cumulativeGrossDeathBenefitAmount": "Cumulative gross death benefit amount",
         "netDeathBenefit": "Estimated net death benefit",
         "minimumCoverageAmount": "Minimum coverage amount",
@@ -123,6 +132,11 @@
         "generalLedgerFundCode": "General ledger fund code",
         "totalFundValue": "Total fund value",
         "guaranteedMinimumInterestRate": "Guaranteed minimum interest rate",
+        "sex": "Sex",
+        "genderIdentity": "Gender identity",
+        "male": "Male",
+        "female": "Female",
+        "unisex": "Unisex",
         "lineOfBusiness": "Line of business",
         "planName": "Plan name",
         "productType": "Product type",
@@ -268,6 +282,8 @@
         "marketValueAdjustmentIndicator": "MVA indicator",
         "marketValueAdjustmentAmount": "MVA amount",
         "marketValueAdjustmentPeriod": "MVA period",
+        "marketValueAdjustmentBaseRate": "MVA base rate",
+        "marketValueAdjustmentTransactionRate": "MVA transaction rate",
         "requiredMinimumDistribution": "Required minimum distribution",
         "priorYearRequiredMinimumDistributionAmount": "Prior year RMD amount",
         "totalRequiredMinimumDistributionAnnualAmount": "Total RMD annual amount ",
@@ -310,7 +326,7 @@
         "totalPremiumBonus": "Total premium bonus",
         "unvestedPremiumBonus": "Unvested premium bonus",
         "coveredParties": "Covered parties",
-        "Riders": "Riders",
+        "riders": "Riders",
         "timestamp": "Timestamp",
         "riderName": "Rider name",
         "underwritingStatus": "Underwriting status",
@@ -456,7 +472,129 @@
         "disbursementAmount": "Disbursement amount",
         "payeeGrossAmount": "Payee gross amount",
         "timeline": "Timeline",
-        "taxes": "Taxes"
+        "taxes": "Taxes",
+        "invalidDateFormat": "Invalid date format. Please use: ##/##/####",
+        "selectDateInRange": "Please select a date within range:",
+        "zinniaLiveTransactionActivityTitle": "Self-Serve Transaction Activity",
+        "zinniaLiveTransactionActivityDescription": "Shows the total self-serve transaction activity for roles listed in the filter.",
+        "activityTooltipDescription": "Click a transaction type for more details on counts. Use the breadcrumb above the chart to return to all transaction types.",
+        "illustrationsActivityTitle": "Illustrations Activity",
+        "illustrationsActivityDescription": "Compares illustrations created with those selected for application over time.",
+        "illustrationsActivityTooltip": "This chart compares illustrations created with those selected for application. 'Selected' may be higher than 'Created' because an illustration was created earlier but selected in the displayed timeframe.",
+        "exportToCsv": "Export to CSV",
+        "total": "Total",
+        "to": "to",
+        "date": "Date",
+        "created": "Created",
+        "selected": "Selected",
+        "completedTaskTimesTitle": "Median Processing Times",
+        "completedTaskTimesDescription": "Median processing times for tasks over a selected time range.",
+        "caseType": "Case type",
+        "medianProcessingTime": "Median processing time",
+        "maxProcessingTime": "Max processing time",
+        "minProcessingTime": "Min. processing time",
+        "task": "Task",
+        "totalTasks": "Total tasks",
+        "allTasks": "All tasks",
+        "exportCSV": "Export to CSV",
+        "unknownTask": "Unknown task",
+        "minute": "minute",
+        "hour": "hour",
+        "day": "day",
+        "allCarriers": "All Carriers",
+        "medianTaskProcessingTimesFilename": "{{carrierName}} Median Task Processing Times {{fromDate}} to {{toDate}}",
+        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+        "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
+        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements.",
+        "formSelection": "Form Selection",
+        "correspondence": "Correspondence",
+        "confirm": "Confirm",
+        "email": "Email",
+        "fax": "Fax",
+        "mail": "Mail",
+        "max5Emails": "Maximum 5 emails allowed.",
+        "invalidEmail": "Please enter valid email address.",
+        "invalidDomain": "Only Zinnia emails are allowed.",
+        "emailRequired": "Email is required.",
+        "selectAddressToContinue": "Select an address to continue.",
+        "recipientRequiredToContinue": "Recipient is required to continue.",
+        "duplicateRecipientEmail": "Email already exists in the list.",
+        "emailAddress": "Email Address",
+        "selectEmailsOnFile": "Select emails on file",
+        "noRecordsFound": "No records found.",
+        "enterEmailInstructions": "Enter email addresses separated by commas or semicolons with a maximum of 5.",
+        "addUpTo5Recipients": "You may add up to 5 additional recipients.",
+        "selectFormToContinue": "Select a form to continue.",
+        "sendAnotherDocument": "Send another document",
+        "transaction": "Transaction",
+        "subtype": "Subtype",
+        "noFormsFound": "No forms found.",
+        "goToCase": "Go to case",
+        "hasBeen": "has been",
+        "submitted": "Submitted!",
+        "sendChannel_paper_mail": "mailed to",
+        "sendChannel_fax": "faxed to",
+        "sendChannel_email": "emailed to",
+        "whereShouldDocsBeSent": "Where should the document(s) be sent",
+        "firstNameRequired": "First name is required.",
+        "lastNameRequired": "Last name is required.",
+        "verifyAndSelectAddressToContinue": "Verify & select the address to continue.",
+        "firstName": "First Name",
+        "lastName": "Last Name",
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "sendToDifferentAddress": "Send to a different address",
+        "formsToUpdate": "Form(s) to update",
+        "view": "View",
+        "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
+        "collapseAll": "Collapse all",
+        "expandAll": "Expand all",
+        "tableCaptionsCasesTable": "List of all cases, including status, owner, carrier, agent, and creation time",
+        "tableCaptionsSentCaseDocuments": "List of all sent case documents, including name, sent date, file type, and download options",
+        "tableCaptionsReceivedCaseDocuments": "List of all received case documents, including name, receipt date, file type, and download options",
+        "tableCaptionsSentPolicyDocuments": "List of all sent policy documents, including name, sent date, file type, and download options",
+        "tableCaptionsReceivedPolicyDocuments": "List of all received policy documents, including name, receipt date, file type, and download options",
+        "tableCaptionsTaxDocuments": "Tax documents related to the policy, including name, tax year, form ID, and download options",
+        "tableCaptionsElectedFunds": "Elected fund allocations, including fund name, type, guarantee period, interest rate, value, and percentage of allocation",
+        "tableCaptionsNotElectedFunds": "Non-elected funds, including fund name, type, guarantee period, interest rate, and value",
+        "tableCaptionsPoliciesTable": "List of all policies and contracts, including policy or contract number, status, owner SSN, open cases, and last updated time",
+        "accountValue": "Account value",
+        "accountValueTooltip": "This is the cash value amount held within the owner's life insurance policy. The account value accumulates over time as premiums are paid and interest is earned.",
+        "surrenderValueTooltip": "This is how much the owner or their payees can expect if the policy is surrendered. It's the current account value minus surrender charges, outstanding loans, and other fees.",
+        "upcomingPremium": "Upcoming {{frequency}} premium",
+        "upcomingPremiumNoPayment": "No payment scheduled",
+        "makePayment": "Make payment",
+        "baseDeathBenefit": "Base death benefit",
+        "baseDeathBenefitTooltip": "This is the death benefit amount related to the owner's base coverage. It reflects the current figure, so it accounts for any changes to the death benefit that have occurred due to withdrawals or loans. (Note: This figure may differ from total gross death benefit if there are additional lines of coverage or riders that add to the death benefit.)",
+        "account": "Acct",
+        "endingIn": "{{accountType}} ending in {{accountNumber}}",
+        "freeLookCancelDate": "Free look end date",
+        "gracePeriod": "Grace period before lapse",
+        "gracePeriodTooltip": "These dates tell you how long the owner has to make the required grace payment to keep the policy active. The first date is when the policy went into pending lapse status, and the second is the deadline to make the required grace payment.",
+        "gracePeriodMinPayment": "Grace period min payment",
+        "gracePeriodMinPaymentTooltip": "This is the minimum amount the owner must pay in premium before the grace period ends to keep their policy active (and their coverage and account value intact.)",
+        "guaranteePeriod": "Guarantee period",
+        "lapseEffectiveDate": "Lapse effective date",
+        "lapseEffectiveDateTooltip": "This is the date when the policy lapsed. The owner didn’t make a grace payment, so now the policy is officially inactive.",
+        "reinstatementPeriod": "Reinstatement period",
+        "reinstatementPeriodTooltip": "This tells you how much time following lapse date the owner has to begin the process to reinstate the policy. Some policies don't have a reinstatement period. In that case, a lapsed policy has ended for good.",
+        "underwritingDecisionTooltip": "Lapsed policies must be approved via underwriting to be reinstated. During underwriting, the carrier assesses the risk of insuring the owner based on their health and lifestyle and determines the cost of their insurance. Once approved, the owner may make the required payment to get their policy back to active.",
+        "reinstatementPaymentPeriod": "Reinstatement payment period",
+        "reinstatementPaymentPeriodTooltip": "These dates tell you how long the owner has to make the required reinstatement payment once approved via underwriting. The first date is when the owner was approved for reinstatement, and the second is the deadline to make the required reinstatement payment.",
+        "reinstatementPayment": "Reinstatement payment",
+        "reinstatementPaymentTooltip": "This is the amount the owner must pay in premium within the reinstatement approval period to get their policy back to active.",
+        "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}.",
+        "year(s)": "year(s)",
+        "remove": "Remove",
+        "openInNewWindow": "Open in new window",
+        "policyNumberSearchError": "Enter a policy/contract number to return search results",
+        "ssnSearchError": "Enter a Social Security number to return search results",
+        "firstNameSearchError": "Enter a first name to return search results",
+        "lastNameSearchError": "Enter a last name to return search results",
+        "fullNameSearchError": "Enter a trust or organization to return search results",
+        "caseIdSearchError": "Enter a Case Id to return search results",
+        "firmNameSearchError": "Enter a firm name to return search results",
+        "documentNumberSearchError": "Enter a document number to return search results"
     },
     "enums": {
         "LIFE": "Life",
@@ -730,7 +868,7 @@
         "FundAllocationsChange": "Fund allocations change",
         "FundTransfer": "Fund transfer",
         "GrantorChange": "Grantor change",
-        "PaymentInitialPremium": "Payment initial premium",
+        "PaymentInitialPremium": "Initial premium payment",
         "IdentifierChange": "Identifier change",
         "InitialPremium": "Initial premium",
         "InterestCredit": "Interest credit",
@@ -741,7 +879,7 @@
         "Lapse": "Lapse",
         "LapseAssessment": "Lapse assessment",
         "LoanAnniversaryTrueUp": "Loan anniversary true up",
-        "LoanRepaymentOneTime": "Loan repayment one time",
+        "LoanRepaymentOneTime": "One-time loan repayment",
         "MatchBonusVesting": "Match bonus vesting",
         "MultipleBeneficiaryChange": "Multiple beneficiary change",
         "MultipleEmailChange": "Multiple email change",
@@ -749,14 +887,14 @@
         "MultiplePhoneNumberChange": "Multiple phone number change",
         "NewLoan": "New loan",
         "NotificationOfDeathClaim": "Notification of death claim",
-        "OneTimePremium": "One time premium",
+        "OneTimePremium": "One-time premium",
         "OwnerChange": "Owner change",
-        "PartialWithdrawalOneTime": "Partial withdrawal one time",
+        "PartialWithdrawalOneTime": "One-time partial withdrawal",
         "PayeeChange": "Payee change",
         "PaymentExpiration": "Payment expiration",
-        "PaymentLoanRepaymentOneTime": "Payment loan repayment one time",
-        "PaymentOneTimePremium": "Payment one time premium",
-        "PaymentSystematicLoanRepayment": "Payment systematic loan repayment",
+        "PaymentLoanRepaymentOneTime": "One-time loan repayment",
+        "PaymentOneTimePremium": "One-time premium",
+        "PaymentSystematicLoanRepayment": "Systematic loan repayment",
         "PayorChange": "Payor change",
         "PhoneNumberChange": "Phone number change",
         "RateRenewal": "Rate renewal",
@@ -774,13 +912,13 @@
         "SystematicLoanRepaymentSetup": "Systematic loan repayment setup",
         "SystematicPartialWithdrawal": "Systematic partial withdrawal",
         "SystematicPartialWithdrawalSetup": "Systematic partial withdrawal setup",
-        "SystematicRequiredMinimumDistribution": "Systematic required minimum distribution",
-        "SystematicRequiredMinimumDistributionSetup": "Systematic required minimum distribution setup",
+        "SystematicRequiredMinimumDistribution": "Systematic RMD",
+        "SystematicRequiredMinimumDistributionSetup": "Systematic RMD setup",
         "SystematicPaymentSetup": "Systematic payment setup",
         "SystematicAnnuityPayout": "Systematic annuity payout",
         "SystematicAnnuityPayoutSetup": "Systematic annuity payout setup",
         "SystematicProgramUpdate": "Systematic program update",
-        "TPDChange": "Tpd change",
+        "TPDChange": "TPD change",
         "TrusteeChange": "Trustee change",
         "UnitExpenseCharge": "Unit expense charge",
         "ValueAdjustment": "Value adjustment",
@@ -833,7 +971,7 @@
         "GuaranteedIndexRates": "Guaranteed index rates",
         "BailoutRenewal": "Bailout renewal",
         "NonLifeAnnuitization": "Non life annuitization",
-        "AdditionalBenefitReCertification": "Additional benefit re certification",
+        "AdditionalBenefitReCertification": "Additional benefit recertification",
         "CostBasisReceived": "Cost basis received",
         "FreeWithdrawalRecalculation": "Free withdrawal recalculation",
         "YearEndGain": "Year end gain",
@@ -991,8 +1129,14 @@
         "MARRIED": "Married",
         "HEADOFHOUSEHOLD": "Head of household",
         "WIDOWED": "Widowed",
-        "DIVORCED": "Divorced"
+        "DIVORCED": "Divorced",
+        "R": "Reconciled",
+        "U": "Unreconciled",
+        "C": "Cleared",
+        "O": "Reviewing",
+        "N": "Awaiting reconciliation"
     },
+
     "site": {
         "name": "Zinnia Live",
         "home": {
@@ -1071,7 +1215,8 @@
             "tasks": "Tasks",
             "payorChange": "Payor Change",
             "thirdPartyDesigneeChange": "Third Party Designee Change",
-            "nigoSelected": "Nigo Selected"
+            "nigoSelected": "Nigo Selected",
+            "operationsReview": "Request Operations Review"
         },
         "navLinks": {
             "accessManagement": {
@@ -1327,7 +1472,9 @@
         "minItems": "Please select atleast {{limit}} item(s).",
         "patternSsn": "Please enter valid SSN.",
         "maximum": "Field must not be more than {{limit}}.",
-        "inValidDomain": "Only Zinnia emails are allowed."
+        "inValidDomain": "Only Zinnia emails are allowed.",
+        "patternEmail": "Please enter valid email.",
+        "minContains": "At least {{limit}} valid {{ item}} must be present."
     },
     "beneChange": {
         "tabs": {
@@ -1621,7 +1768,16 @@
             "isIrrevocableBene": "Is there an irrevocable beneficiary ?",
             "leaveTransaction": "Leave this transaction",
             "signatureShouldBePresent": "Signature present option must be selected",
-            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box."
+            "spouseConsentText": "If you do not have a spouse, or if your spouse is deceased, check this box.",
+            "selectOption": "Select",
+            "trustee": "Trustee",
+            "executor": "Executor",
+            "custodian": "Custodian",
+            "guardian": "Guardian",
+            "attorneyInFact": "Attorney-in-fact",
+            "assignee": "Assignee",
+            "authorizedSignatory": "Authorized signatory",
+            "na": "NA"
         },
         "summary": {
             "allocation": {
@@ -1837,6 +1993,7 @@
             "custodian": "Custodian",
             "guardian": "Guardian",
             "attorneyInFact": "Attorney-in-fact",
+            "authorizedSignatory": "Authorized signatory",
             "assignee": "Assignee",
             "poa": "POA",
             "na": "NA",
@@ -2102,6 +2259,7 @@
         "preview": "Preview",
         "rate": "rate",
         "draft": "Save as Draft",
+        "send": "Send",
         "submitPayment": "Submit payment",
         "successExclamation": "Success!",
         "total": "Total",
@@ -2265,12 +2423,7 @@
                     "text": "Still having issues?",
                     "link": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
                     "linkText": "Submit a help desk ticket"
-                },
-                "policyNumber": "Enter a policy/contract number to return search results",
-                "ssn": "Enter a Social Security number to return search results",
-                "firstName": "Enter a first name to return search results",
-                "lastName": "Enter a last name to return search results",
-                "fullName": "Enter a trust or organization to return search results"
+                }
             },
             "buttons": {
                 "policyNumber": "Policy or contract number",
@@ -2321,12 +2474,14 @@
         "assignTaskError": "Assign task error",
         "unassignTask": "Unassign Task",
         "unassign": "Unassign",
+        "assign": "Assign",
         "startTask": "Start Task",
         "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
         "assigned": "Assigned",
         "queue": "Queue",
         "lastUpdated": "Last Updated",
+        "prioritized": " Prioritized",
         "updateTaskStatusDrawer": {
             "updateTaskStatus": "Update Task Status",
             "setTaskAsPending": "Set Task as Scheduled",
@@ -2405,6 +2560,11 @@
     "caseManagementDashboard": {
         "h1": "Cases",
         "h2": "Search Results",
+        "loadingMessage": {
+            "gatheringYourResults": "Gathering your results…",
+            "organizingYourResults": "Organizing your results…",
+            "takingLongerThanUsual": "This is taking longer than usual. Try adjusting your filters."
+        },
         "case": {
             "createdAt": "Created",
             "updatedAt": "Updated",
@@ -2430,6 +2590,7 @@
         "results": "Results",
         "refineResults": "Refine results",
         "addFilters": "Add filters",
+        "filters": "Filters",
         "refineResultsOptions": {
             "carrier": "Carriers",
             "caseType": "Case type",
@@ -2452,7 +2613,12 @@
             "requestSubtype": "Case types",
             "taskStatus": "Task Status",
             "group": "Group",
-            "assignee": "Assignee"
+            "assignee": "Assignee",
+            "priority": "Priority status",
+            "selectPriority": "Select priority",
+            "onlyPrioritized": "Prioritized cases",
+            "any": "All cases",
+            "notPrioritized": "Regular cases"
         },
         "refineResultsErrors": {
             "caseType": "Please select at least one case type",
@@ -2473,6 +2639,11 @@
                 "Withdrawal": "Withdrawals",
                 "New Business": "New Business",
                 "Renewal": "Renewals"
+            },
+            "escalated": {
+                "onlyPrioritized": "Prioritized cases",
+                "allCases": "All cases",
+                "notPrioritized": "Regular cases"
             }
         },
         "selectStatus": "Select status",
@@ -2503,8 +2674,7 @@
                 }
             },
             "empty": {
-                "title": "We couldn't find a case that matches your search.",
-                "titleFilters": "We couldn't find a case that matches your filters.",
+                "title": "Nothing to show.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
                     "text": "Still having issues?",
@@ -2848,6 +3018,36 @@
     },
     "caseOverview": {
         "headerText": "Case Overview",
+        "prioritizeCase": {
+            "prioritized": "Prioritized",
+            "quickActions": "Quick Actions",
+            "title": "Prioritize Case",
+            "detailsHeader": "Details",
+            "detailsBody": "A prioritized case will be moved up as a work item for expedited processing.",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "errorForbidden": "You do not have permission to perform this action.",
+            "successMessage": "Case ID: {{caseId}} has been prioritized.",
+            "simpleTooltipBody": "This case is prioritized.",
+            "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
+        },
+        "deprioritizeCase": {
+            "title": "De-prioritize Case",
+            "detailsHeader": "Details",
+            "detailsBody": "A de-prioritized case will be moved back as a regular work item for normal processing.",
+            "cancel": "Cancel",
+            "submit": "Submit",
+            "success": "Success!",
+            "close": "Close",
+            "error": "Error",
+            "errorMessage": "Error: {{error}}",
+            "successMessage": "Case ID: {{caseId}} was deprioritized",
+            "tooltipBody": "This case is deprioritized."
+        },
         "navDrawer": {
             "topStatus": "Top Status",
             "stage": "Stage",
@@ -2898,6 +3098,8 @@
                 "reasonNoExceptions": "TBD",
                 "badgeText": "Canceled",
                 "tooltip": "This {{processSubType}} was canceled on ",
+                "leadExpired": "The lead expired due to 30 days of inactivity.",
+                "leadWithdrawn": "The applicant withdrew this lead.",
                 "application expired": "The application expired due to 30 days of inactivity.",
                 "application withdrawn": "The applicant withdrew this application.",
                 "underwriting declined": "The underwriter denied this application.",
@@ -2983,14 +3185,16 @@
                 "re-illustration": "Re-Illustration",
                 "linked case": "Linked Case",
                 "bene": "Notify",
-                "beneficiary": "Beneficiary"
+                "beneficiary": "Beneficiary",
+                "owner": "Owner"
             },
             "reviewIssues": "Review",
             "suitabilityReview": "suitability",
             "commonTaskIssues": "Issue: One or more {{taskType}} issues found.",
             "standardDocumentMatching": "Match Document",
             "toaNigo": "Review Transfer Issues",
-            "applicationReview": "Validate Application Details"
+            "applicationReview": "Validate Application Details",
+            "aiIndicatorTooltip": "Form data automatically extracted via AI."
         },
         "processDate": {
             "canceled": "Canceled on",
@@ -3003,6 +3207,7 @@
             "getPolicyNumber": "Getting policy number…",
             "getDetailsSubtext": "We're doing ongoing checks. You'll see it here once it's available.",
             "gettingPartyDetails": "Getting party details...",
+            "gettingFinancialTransaction": "Getting financial transaction...",
             "people": "People",
             "policyNumber": "Policy #:",
             "transactionDetails": "Transaction details",
@@ -3218,7 +3423,8 @@
                     "married": "Married",
                     "widowed": "Widowed"
                 },
-                "ssn": "SSN"
+                "ssn": "SSN",
+                "trustDate": "Trust date"
             },
             "jointOwner": {
                 "title": "Joint Owner Information"
@@ -3466,14 +3672,16 @@
                 "cedingCompanySignature": {
                     "title": "Ceding Company Signature",
                     "qualType": "Qualification type",
-                    "isQualTypeNotValid": "Unable to determine the Qualification type",
-                    "isCorporateResolutionPresent": "Is corporate resolution present?",
+                    "multipleQualType": "Unable to determine the Qualification type",
                     "isSignatureAuthorized": "Is signature of authorized officer valid?",
+                    "isSignatureValid": "Is signature of authorized officer valid based on corporate resolution?",
                     "isLoaAttached": "Is letter of acceptance attached?",
-                    "validOwnerRegType": "Valid owner/registration type",
+                    "registrationType": "Valid owner/registration type",
                     "isTitlePresent": "Is title present?",
                     "loaSignDate": "LOA Sign Date",
                     "authPersonSignPresent": "Authorized Person’s signature is present",
+                    "isCorporateResolutionPresent": "Is corporate resolution present?",
+                    "isAuthSignValid": "Is signature of authorized officer valid based on corporate resolution?",
                     "signDate": "Signature date"
                 },
                 "nonRegTypeReason": {
@@ -3876,7 +4084,8 @@
                 "fboDetails": "FBO detail is required",
                 "accountTypeMustBeSelected": "Please choose an account type to proceed with your request.",
                 "participantIdCannotBeSubmitted": "Participant ID 0000 cannot be submitted",
-                "contractNumberRequired": "Contract number/BIN number is required"
+                "contractNumberRequired": "Contract number/BIN number is required",
+                "charityNameRequired": "Charity name is required"
             },
             "formSubtype": {
                 "formType": "Form type",
@@ -3969,77 +4178,6 @@
             "receivedDate": "Received Date",
             "createdDate": "Created date",
             "actions": "Actions"
-        }
-    },
-    "sendDocument": {
-        "tabs": {
-            "formSelection": "Form Selection",
-            "correspondence": "Correspondence",
-            "confirm": "Confirm"
-        },
-        "formSelection": {
-            "label": "Select the appropriate form that needs to be updated.",
-            "transactionType": "Transaction",
-            "transactionSubType": "Subtype",
-            "documentsTitle": "Form(s) to update",
-            "view": "View",
-            "noFormsFound": "No forms found",
-            "addNewDocument": "Send another document"
-        },
-        "correspondence": {
-            "label": "Where should the document(s)  be sent",
-            "addAdditionalRecipient": "+ Add additional recipient",
-            "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
-            "additionalRecipientTooltip": "You can add up to 5 email addresses in the CC field. Use a comma(,), semicolon(;), or Enter to separate them",
-            "emailMessage": "Enter email addresses separated by commas or semicolons with a maximum of 5.",
-            "emailWarning": "You may add upto 5 additional recipients",
-            "emailLabel": "Select emails on file",
-            "noEmails": "No records found",
-            "email": "Email",
-            "ccEmail": "CC Emails",
-            "fax": "Fax",
-            "mail": "Mail",
-            "emailAddress": "Email Address",
-            "faxNumber": "Fax Number",
-            "edit": "Edit",
-            "mailDetails": {
-                "sendToDifferentAddress": "Send to a different address",
-                "firstName": "First Name",
-                "lastName": "Last Name",
-                "addressType": "Address type"
-            }
-        },
-        "confirm": {
-            "cta": "Go to case",
-            "secondaryCta": "Close",
-            "subtitle": {
-                "0": "The documents have been",
-                "1": "and cc'd"
-            },
-            "channel": {
-                "paper_mail": "mailed to",
-                "fax": "faxed to",
-                "email": "emailed to"
-            },
-            "title": "Submitted!"
-        },
-        "formActions": {
-            "continue": "Continue",
-            "cancel": "Cancel"
-        },
-        "errors": {
-            "formId": "Select a form to continue.",
-            "recipient": "Recipient is required to continue",
-            "inValidDomain": "Only Zinnia emails are allowed",
-            "mailDetails": "Select a address to continue.",
-            "inValidEmail": "Please enter valid email address",
-            "firstName": "First name is required",
-            "lastName": "Last name is required",
-            "address": "Verify & select the address to continue.",
-            "maxEmails": "Maximum 5 emails allowed",
-            "duplicateRecipientEmail": "Email already exist in the list",
-            "duplicateEmail": "Please ensure the email address is unique between the Recipient and CC fields.",
-            "emailRequired": "Email is required"
         }
     },
     "contactCenter": {
@@ -4297,6 +4435,10 @@
         "pndAwaitingFunds": "Awaiting Funds",
         "canceledNoPremium": "No Premium"
     },
+    "button": {
+        "showLess": "Show less",
+        "showAll": "Show all"
+    },
     "placeHolder": {
         "globalSelectSearch": "Start typing to find values..."
     },
@@ -4341,7 +4483,7 @@
             "cumulativeGrossDeathBenefitAmount": "This is what the {{policyNomenclature}} pays out when the insured dies. It's usually the same as the base death benefit (also known as the face amount) but it can include additions (like returned premiums) in some cases.",
             "netDeathBenefit": "This is roughly how much the beneficiaries will receive from a death claim. The amount reflects the total gross death benefit minus outstanding loans. It doesn't include interest charges that can only be calculated at the time a death claim processes. Consider it a helpful, but inexact amount. ",
             "minimumCoverageAmount": "This is the lowest amount that an owner can reduce their death benefit to. Less coverage may lead to lower premiums—and negative tax consequences. If the decrease creates a large enough gap between the death benefit and the premiums paid in, the policy may fail guidelines tests and cease to offer tax advantages.  All changes reset the seven year period for the 7-pay test.",
-            "maximumCoverageAmount": "This is the highest amount that an owner can increase their death benefit to. Increase requests must go through the underwriting process for approval. All changes reset the seven year period for the 7-pay test.",
+            "maximumCoverageAmount": "This is the highest amount that an owner can increase their death benefit to. Increase requests must go through the underwriting process for approval. All changes reset the seven year period for the 7-pay test.",
             "minimumCoverageDecreaseAmount": "This refers to the smallest reduction in coverage that an owner is allowed to make per {{policyNomenclature}} year.",
             "maximumCoverageDecreaseAmount": "This refers to the largest reuction in coverage an owner can make per {{policyNomenclature}} year.",
             "minimumCoverageIncreaseAmount": "This refers to the smallest increment by which an owner can increase their coverage in a single {{policyNomenclature}} year.",
@@ -4573,7 +4715,8 @@
                 "policyLengthTooltip": "Policy length is just what it sounds like: it's how long the policy lasts. Some policies have a set term (shown in number of years) and end date, while others last until death of the insured.",
                 "policyTimeline": "Policy Timeline",
                 "freeLookExpiration": "Free look expiration",
-                "freeLookEndDate": "Free look end date"
+                "freeLookEndDate": "Free look end date",
+                "deliveryDate": "Acknowledgement date"
             },
             "applicationDetails": {
                 "agentEmailAddress": "Agent email address",
@@ -4840,6 +4983,25 @@
                 "tierOneCriticalRiderPaymentAmount": "Tier one payment amount",
                 "tierTwoCriticalRiderPaymentDate": "Tier two payment date",
                 "tierTwoCriticalRiderPaymentAmount": "Tier two payment amount",
+                "remainingBenefit": "Remaining benefit",
+                "additionalBenefitUsedUp": "Additional benefit used up",
+                "payoutOption": "Payout option",
+                "benefitPercent": "Benefit percent",
+                "annualBenefitLimit": "Annual benefit limit",
+                "currentAnnualLimit": "Current annual limit",
+                "remainingAnnualLimit": "Remaining annual limit",
+                "hypotheticalAnnualLimit": "Hypothetical annual limit",
+                "lastResetDate": "Last reset date",
+                "totalBenefit": "Total benefit",
+                "phase": "Phase",
+                "base_currentBase": "Current base",
+                "base_ratchetBase": "Ratchet base",
+                "base_growthBase": "Growth base",
+                "base_deferralBonus": "Base deferral bonus",
+                "base_deferralBonusBase": "Base deferral bonus base",
+                "base_simpleInterestBase": "Base simple interest base",
+                "charge_riderExerciseCharge": "Charge rider exercise charge",
+                "charge_riderExerciseChargeRate": "Charge rider exercise charge rate",
                 "coverageType": "Coverage type",
                 "coverageName": "Coverage name",
                 "productCode": "Product code",
@@ -4895,17 +5057,7 @@
                 "flatExtraTypeValues": {
                     "TEMPORARY": "Temporary",
                     "PERMANENT": "Permanent"
-                },
-                "remainingBenefit": "Remaining benefit",
-                "benefitPercent": "Benefit percent",
-                "annualBenefitLimit": "Annual benefit limit",
-                "payoutOption": "Payout option",
-                "currentAnnualLimit": "Current annual limit",
-                "phase": "Phase",
-                "totalBenefit": "Total benefit",
-                "remainingAnnualLimit": "Remaining annual limit",
-                "additionalBenefitUsedUp": "Additional benefit used up",
-                "hypotheticalAnnualLimit": "Hypothetical annual limit"
+                }
             },
             "coverageID": {
                 "Rider_ADR": "Provides an additional death benefit if the insured dies due to a covered accident.",
@@ -4924,7 +5076,10 @@
                 "Rider_WDR": "The Owner must be aged 18-55 to select Owner Waiver of Deduction Rider.",
                 "Rider_WPR": "Waives policy premiums if the insured becomes totally disabled.",
                 "Rider_WCR": "Waives certain policy charges during periods of the insured's total disability.",
-                "Rider_OWCR": "Waives policy charges if the policy owner becomes disabled or meets specific criteria."
+                "Rider_OWCR": "Waives policy charges if the policy owner becomes disabled or meets specific criteria.",
+                "Rider_BONUS": "Increases the contract’s accumulation value by applying a bonus to new premium.",
+                "Rider_GAB": "Triggers a single true-up at the end of the GAP period to bring the accumulation value up to the guaranteed GAP amount when needed.",
+                "Rider_GWB": "Guarantees lifetime withdrawals from an annuity, subject to the rider’s terms."
             }
         },
         "history": {
@@ -5307,6 +5462,7 @@
     "label": {
         "findKeyValues": "Search key values",
         "transactionDetails": "Transaction details",
+        "viewAllDetails": "View all details",
         "findKeyValuesTitle": "Find key values",
         "findKeyValuesDate": "Display data from",
         "findKeyValuesDateError": "Unable to retrieve data for the selected date.",
@@ -6200,7 +6356,8 @@
         "cardDisableTooltip": "We're still working on this page. For now, head to MCS directly to see agent contact information and identification details.",
         "other": "Other",
         "otherTooltip": "Other agents on the policy don't earn commission, but may also be authorized to make changes or discuss this policy. For example, the servicing agent on the policy is the agent who works directly with the owner now that the policy is active.",
-        "managePeople": "Manage people"
+        "managePeople": "Manage people",
+        "irrevocable": "Irrevocable"
     },
     "annuitization": {
         "title": "$t(pageHeader.annuitization.headerText)",
@@ -6352,6 +6509,7 @@
         },
         "type": "Type",
         "submissionType": "Submission Type",
+        "transactionId": "Transaction ID",
         "submissionSource": "Submission Source",
         "submittedBy": "Submitted By",
         "caseId": "Parent Case ID",
@@ -6363,7 +6521,9 @@
         "fax": "Fax",
         "name": "Name",
         "socialSecurityNumber": "Social Security Number",
-        "nationalProducerNumber": "National Producer Number"
+        "nationalProducerNumber": "National Producer Number",
+        "estimatedCompletion": "Estimated Completion",
+        "estimatedCompletionToolTip": "AI-generated prediction based on historical completion times for similar cases. The estimate is set when the case is created and does not change as the case progresses."
     },
     "bannerAlert": {
         "close": "Close"
@@ -7092,6 +7252,7 @@
         },
         "additionalActions": {
             "label": "Additional Actions",
+            "createAsIsIllustration": "Create as-is illustration PDF",
             "serviceRequestForm": "Raise a Service Request"
         },
         "transactions": {
@@ -7105,6 +7266,9 @@
             "newDeathClaim": "New Death Claim",
             "surrender": "Surrender policy",
             "freeLookCancel": "Free look cancel"
+        },
+        "requestOperationReview": {
+            "label": "Request Operations Review"
         }
     },
     "historyEventCard": {
@@ -7131,163 +7295,6 @@
         "surrender": "Surrender",
         "toBanking": "To {{accountType}} ending in {{lastFour}}",
         "withdrawal": "Withdrawal",
-        "transactionTypes": {
-            "Activation": "Policy activation",
-            "AddOwner": "Add owner",
-            "AddressChange": "Address change",
-            "AgentChange": "Agent change",
-            "AnnuitantChange": "Annuitant change",
-            "Anniversary": "Policy anniversary",
-            "AnnualPolicyRefreshAndRecalculation": "Annual policy refresh and recalculation",
-            "AssigneeChange": "Assignee change",
-            "BankAccountChange": "Bank account change",
-            "BeneficiaryChange": "Beneficiary change",
-            "CancelNoPremium": "Cancellation without premium",
-            "CalendarProcessing": "Calendar processing",
-            "ClaimPayout": "Claim payout",
-            "CommunicationPreferenceChange": "Communication preference change",
-            "ConversionActivation": "Conversion activation",
-            "CostOfInsurance": "Cost of insurance",
-            "CoverageCharge": "Coverage charge",
-            "CoverageCredit": "Coverage credit",
-            "DeathClaim": "Death claim",
-            "DeliveryDateSetup": "Delivery date setup",
-            "Disbursement": "Disbursement",
-            "EmailChange": "Email change",
-            "ExistingPartyNameChange": "Existing party name change",
-            "ExpenseCharge": "Expense charge",
-            "FaceAmountChange": "Face amount change",
-            "FaceAmountDecrease": "Face amount decrease",
-            "FaceAmountIncrease": "Face amount increase",
-            "FeatureChange": "Feature change",
-            "ForceOut": "Force out",
-            "FreeLookExpiration": "Free look expiration",
-            "FreeLookCancellation": "Free look cancellation",
-            "FullSurrender": "Full surrender",
-            "FundAllocationsChange": "Fund allocations change",
-            "FundTransfer": "Fund transfer",
-            "GrantorChange": "Grantor change",
-            "PaymentInitialPremium": "Payment initial premium",
-            "IdentifierChange": "Identifier change",
-            "InitialPremium": "Initial premium",
-            "InterestCredit": "Interest credit",
-            "InterestCreditLoan": "Interest credit on loan",
-            "InterestCreditMatch": "Interest credit match",
-            "InterestLoan": "Interest loan",
-            "Lapse": "Policy lapse",
-            "LapseAssessment": "Lapse assessment",
-            "LoanAnniversaryTrueUp": "Loan anniversary true-up",
-            "LoanRepaymentOneTime": "One-time loan repayment",
-            "MatchBonusVesting": "Match bonus vesting",
-            "MultipleEmailChange": "Multiple email change",
-            "MultiplePayeeChange": "Multiple payee change",
-            "MultiplePhoneNumberChange": "Multiple phone number change",
-            "NewLoan": "New loan",
-            "NotificationOfDeathClaim": "Notification of death claim",
-            "OneTimePremium": "One-time premium",
-            "OwnerChange": "Owner change",
-            "PartialWithdrawalOneTime": "One-time partial withdrawal",
-            "PayeeChange": "Payee change",
-            "PaymentExpiration": "Payment expiration",
-            "PaymentLoanRepaymentOneTime": "One-time loan repayment payment",
-            "PaymentOneTimePremium": "One-time premium payment",
-            "PaymentSystematicLoanRepayment": "Systematic loan repayment payment",
-            "PayorChange": "Payor change",
-            "PhoneNumberChange": "Phone number change",
-            "RateRenewal": "Rate renewal",
-            "RemoveOwner": "Remove owner",
-            "Rescission": "Rescission",
-            "Issuance": "Policy issuance",
-            "ValueAdjustment": "Value adjustment",
-            "PreferredMailingAddressChange": "Preferred mailing address change",
-            "Reinstatement": "Policy reinstatement",
-            "ReinstatementApproved": "Reinstatement approved",
-            "RequiredMinimumDistributionOneTime": "Required minimum distribution one time",
-            "SubsequentPayment": "Subsequent payment",
-            "SubsequentPremium": "Subsequent premium",
-            "Sweep": "Sweep",
-            "SystematicLoanRepayment": "Systematic loan repayment",
-            "SystematicLoanRepaymentSetup": "Systematic loan repayment setup",
-            "SystematicPartialWithdrawal": "Systematic partial withdrawal",
-            "SystematicPartialWithdrawalSetup": "Systematic partial withdrawal setup",
-            "SystematicProgramUpdate": "Systematic program update",
-            "SystematicRequiredMinimumDistribution": "Systematic RMD update",
-            "SystematicRequiredMinimumDistributionSetup": "Systematic RMD setup",
-            "SystematicPaymentSetup": "Systemic payment setup",
-            "SystematicAnnuityPayout": "Systematic annuity payout",
-            "SystematicAnnuityPayoutSetup": "Systematic annuity payout setup",
-            "TPDChange": "Third party designee change",
-            "UnitExpenseCharge": "Unit expense charge",
-            "MultipleBeneficiaryChange": "Multiple beneficiary change",
-            "PowerOfAttorneyChange": "Power of attorney change",
-            "TrusteeChange": "Trustee change",
-            "YearBeginningRefreshAndRecalculation": "Year beginning refresh and recalculation",
-            "WithdrawnApplication": "Withdrawn application",
-            "DollarCostAverage": "Dollar cost average",
-            "ProcessingDate": "Dollar cost average",
-            "ServiceCharge": "Service charge",
-            "TransferCharge": "Transfer charge",
-            "RiderAddition": "Rider addition",
-            "Annuitization": "Annuitization",
-            "AnnuityBenefitReduction": "Annuity benefit reduction",
-            "Reclassification": "Reclassification",
-            "FlatExtraChange": "Flat extra change",
-            "Commutation": "Commutation",
-            "DividendFeatureCharge": "Dividend feature charge",
-            "MarketTimerFee": "Market timer fee",
-            "InterimAnnualProcessing": "Interim annual processing",
-            "HardshipWithdrawal": "Hardship withdrawal",
-            "HardshipEnd": "Hardship end",
-            "ResetBenefitAmounts": "Reset benefit amounts",
-            "GainLossChargeBack": "Gain loss charge back",
-            "PeriodicCharge": "Periodic charge",
-            "DeathBenefitLockIn": "Death benefit lock in",
-            "RatchetLockIn": "Ratchet lock in",
-            "GrowthDeathBenefitLockIn": "Growth death benefit lock in",
-            "DateOfDeath": "Date of death",
-            "SpousalContinuation": "Spousal continuation",
-            "BenefitAmountAutoAdjustment": "Benefit amount auto adjustment",
-            "NotificationOfRiderClaimStart": "Notification of rider claim start",
-            "LongTermCareBenefitStartStop": "Long term care benefit start stop",
-            "Dividend": "Dividend",
-            "DailyRatchet": "Daily ratchet",
-            "AnnuitizationAnniversary": "Annuitization anniversary",
-            "DeclineFeeChange": "Decline fee change",
-            "GuaranteedWithdrawalBenefitPaymentLockIn": "Guaranteed withdrawal benefit payment lock in",
-            "ExcessInterestCredit": "Excess interest credit",
-            "LongTermCareWithdrawal": "Long term care withdrawal",
-            "GuaranteedAccumulationBenefitPeriodEnd": "Guaranteed accumulation benefit period end",
-            "GuaranteedWithdrawalBenefitInterestAdjustment": "Guaranteed withdrawal benefit interest adjustment",
-            "InvestmentAdvisorFee": "Investment advisor fee",
-            "PayoutAmountChange": "Payout amount change",
-            "AdditionalBenefitStart": "Additional benefit start",
-            "AdditionalBenefitEnd": "Additional benefit end",
-            "RiderActivationAnniversary": "Rider activation anniversary",
-            "AdditionalBenefitRenew": "Additional benefit renew",
-            "QualifiedPlanChange": "Qualified plan change",
-            "AdvanceAnnuityPayment": "Advance annuity payment",
-            "PartialCommutation": "Partial commutation",
-            "GuaranteedIndexRates": "Guaranteed index rates",
-            "BailoutRenewal": "Bailout renewal",
-            "NonLifeAnnuitization": "Non life annuitization",
-            "AdditionalBenefitReCertification": "Additional benefit re certification",
-            "CostBasisReceived": "Cost basis received",
-            "FreeWithdrawalRecalculation": "Free withdrawal recalculation",
-            "YearEndGain": "Year end gain",
-            "LongTermCareCertificationDate": "Long term care certification date",
-            "QuarterlyProcessing": "Quarterly processing",
-            "BenefitBaseAdjustment": "Benefit base adjustment",
-            "RiderBenefitBaseLockIn": "Rider benefit base lock in",
-            "GuaranteedDeathBenefitRollUpRenew": "Guaranteed death benefit roll up renew",
-            "GuaranteedWithdrawalBenefitRollUpRenew": "Guaranteed withdrawal benefit roll up renew",
-            "RiderCharge": "Rider charge",
-            "LongTermCareFeeStartStop": "Long term care fee start stop",
-            "LongTermCareAssessmentCharge": "Long term care assessment charge",
-            "RoleBirthday": "Role birthday",
-            "PendingUnclaimedProperty": "Pending unclaimed property",
-            "PendingPartialUnclaimedProperty": "Pending partial unclaimed property",
-            "LiquidatedUnclaimedProperty": "Liquidated unclaimed property"
-        },
         "transactionType": "Transaction type",
         "requestDate": "Request date",
         "processDate": "Process date",
@@ -7372,7 +7379,8 @@
         },
         "filters": {
             "buttons": {
-                "addFilter": "Add filter"
+                "addFilter": "Add filter",
+                "addFilters": "Add filters"
             },
             "headers": {
                 "title": "Refine Results"
@@ -7914,9 +7922,11 @@
                 "matchDocument": "Match Document",
                 "beneficiaryStatus": "Beneficiary Status",
                 "addressChange": "Address Change",
-                "call": "Call"
+                "call": "Call",
+                "formReview": "Form Review"
             },
-            "nextTask": "Continue to Next Task"
+            "nextTask": "Continue to Next Task",
+            "summaryNigoError": "Submit with errors and create a NIGO task for the appropriate team to follow up on."
         },
         "formErrors": {
             "caseNotFound": "Case not found",
@@ -8358,6 +8368,56 @@
             "submitTask": "Submit"
         }
     },
+    "initiateBenechangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Beneficary Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "initiateAssigneechangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Assignee Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "agentChangeDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Agent updates were submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        },
+        "summary": {
+            "agentType": "Agent type",
+            "allocation": "Allocation",
+            "externalId": "External ID",
+            "bpm500Error": "BPM 500 error",
+            "header": "Summary",
+            "reviewMessage": "Looking good! Be sure to review your entries before submitting.",
+            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "tag": {
+                "new": "Added",
+                "none": "None",
+                "removed": "Removed",
+                "updated": "Updated"
+            },
+            "validation": "Validation API is Running...."
+        },
+        "agentDetails": {
+            "allocationErr": "Allocations must equal 100%"
+        }
+    },
+    "transactionAccordion": {
+        "remove": "Remove"
+    },
     "fundAllocation": {
         "submitted": "Submitted!",
         "editAllocationNigoSummary1": "We submitted this request for ",
@@ -8562,6 +8622,15 @@
             "submitTask": "Submit"
         }
     },
+    "operationsReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Operations Review was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
     "opsReview": {
         "confirmStep": {
             "title": "Got It!",
@@ -8723,6 +8792,31 @@
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
+    "caseStats": {
+        "tabs": {
+            "issue": "Issues",
+            "tasks": "Tasks"
+        },
+        "tasks": {
+            "title": "Task Volume",
+            "description": "Volume of tasks created over a selected time range, grouped by case type and task.",
+            "filters": {
+                "status": {
+                    "label": "Status",
+                    "placeholder": "All"
+                }
+            },
+            "table": {
+                "headers": {
+                    "caseType": "Case type",
+                    "task": "Task",
+                    "totalTasks": "Total tasks"
+                },
+                "allTasks": "All tasks",
+                "exportCSV": "Export to CSV"
+            }
+        }
+    },
     "usage": {
         "date": "Date",
         "exportToCSV": "Export to CSV",
@@ -8752,15 +8846,6 @@
             "zinniaLiveCaseViews": {
                 "title": "Zinnia Live Top Case Views",
                 "description": "Shows number of case views for selected user groups only."
-            }
-        },
-        "activity": {
-            "zinniaLiveTransactionActivity": {
-                "title": "Self-Serve Transaction Activity",
-                "description": "Shows the total self-serve transaction activity for roles listed in the filter."
-            },
-            "toolTip": {
-                "description": "Click a transaction type for more details on counts. Use the breadcrumb above the chart to return to all transaction types."
             }
         }
     },
@@ -8880,7 +8965,7 @@
                 "title": "Net Surrender Value",
                 "atNYears": "At {{years}} years"
             },
-            "unArchive": "Un-archive",
+            "unArchive": "Unarchive",
             "selected": "Selected",
             "archived": "Archived",
             "expired": "Expired",
@@ -8898,9 +8983,7 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive",
-            "unsatisfiedSolveMessage": "The illustration cannot satisfy the requested solves; it is using the best available results.",
-            "unreachDesiredSolutionMessage": "The illustration cannot reach the desired solution, and the selected solve type failed."
+            "archive": "Archive"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",
@@ -9002,10 +9085,14 @@
     },
     "zinniaAiAssistant": {
         "header": "Zinnia AI Assistant",
+        "betaBadge": "Beta",
+        "chatHeader": "Zinnia AI",
         "chat": {
             "startingMessage": "Hello, I am a virtual agent. Please note that this feature is currently in beta.\nHow can I help you today?",
+            "startingMessageBetaPrefix": "Hello, {{name}}",
+            "startingMessageBetaSuffix": "How can I assist you today?",
             "inputPlaceholder": "Ask me anything",
-            "footerText": "Disclaimer: Zinnia chat can make mistakes.",
+            "footerText": "Disclaimer: Zinnia AI can make mistakes.",
             "errorMsg": "Sorry, I couldn’t get a response. Please try again later.",
             "send": "Send",
             "stop": "Stop",
@@ -9056,7 +9143,13 @@
             "followUpButton": "Ask your follow up questions here",
             "definitiveAnswerNotFound": "I couldn’t find a definitive answer in the client-specific documents. Would you like me to check the common reference also?",
             "yes": "Yes",
-            "no": "No"
+            "no": "No",
+            "answerMode": "Answer Mode",
+            "client": "Client",
+            "answerModeOptions": {
+                "short": "Short and Crisp",
+                "long": "Long and Detailed"
+            }
         },
         "documents": {
             "recentlyAdded": "Recently added files",
@@ -9108,11 +9201,23 @@
             "recentlyModified": "Recently modified",
             "allDocs": "All documents",
             "recentChat": "Recent chat",
-            "search": "Search",
+            "search": "Search recent chats",
             "noResultsFound": "No results found",
             "noRecentChats": "No recent chats",
             "loadingChats": "Loading chats...",
-            "settings": "Settings"
+            "settings": "Settings",
+            "quiz": {
+                "header": "Take a Quiz",
+                "noQuestionsAvailable": "No quiz questions available.",
+                "quizPassed": "Congratulations, you have passed",
+                "quizFailed": "Sorry, you have not achieved the passing score of {{passPercentage}}%",
+                "correctAnswer": "Correct Answer",
+                "wrongAnswer": "Wrong Answer",
+                "yourScore": "You have scored {{score}} out of {{total}}",
+                "readMore": "Read this document to gain knowledge on the topic",
+                "submit": "Submit",
+                "tryAgain": "Try Again"
+            }
         }
     },
     "updateSuitabilityDataEntry": {
@@ -9165,5 +9270,36 @@
         "environment": "Environment",
         "variableSearchPlaceholder": "Search feature variables...",
         "flagQueueSearchPlaceholder": "Search feature flags..."
+    },
+    "successErrorSidesheet": {
+        "successTitle": "Success",
+        "errorTitle": "Error",
+        "closeButton": "Close"
+    },
+    "transactionSummary": {
+        "tag": {
+            "new": "Added",
+            "none": "None",
+            "removed": "Removed",
+            "updated": "Updated"
+        },
+        "noSummary": "No transaction summary available.",
+        "primaryBene": "Primary beneficiary",
+        "contingentBene": "Contingent beneficiary",
+        "loading": "Validation API is Running....",
+        "successMessage": "Looking good! Be sure to review your entries before submitting",
+        "errorMessage": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+        "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+        "internalServerError": "Internal Server Error",
+        "failedToFetch": "Failed to fetch validation summary"
+    },
+    "thirdPartyDetail": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Third party detail form was submitted successfully.",
+            "cta": "Go to case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }

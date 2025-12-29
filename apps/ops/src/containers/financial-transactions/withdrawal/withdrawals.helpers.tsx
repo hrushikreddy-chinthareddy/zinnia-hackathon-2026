@@ -1,10 +1,3 @@
-import {
-    AllocationOption,
-    AmountType,
-    FullSurrenderRequest,
-    PartialWithdrawalOneTimeRequest,
-    PaymentForm,
-} from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { v4 as uuidV4 } from 'uuid';
@@ -12,6 +5,13 @@ import { v4 as uuidV4 } from 'uuid';
 import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext.types';
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
+import {
+    AllocationOption,
+    AmountType,
+    FullSurrenderRequest,
+    PartialWithdrawalOneTimeRequest,
+    PaymentForm,
+} from '@zinnia/api-types/types/bpm';
 
 dayjs.extend(utc);
 

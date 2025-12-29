@@ -2,7 +2,6 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { AxiosResponse } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
-import { getUserData } from '@deps/helpers/query-data.helpers';
 import { apiServerBaseUrl, baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
@@ -118,7 +117,6 @@ export const searchedUsersPage = async (
     };
 
     try {
-        const user = await getUserData(ctx);
         const accessToken = (await getAccessToken(ctx.req, ctx.res))
             .accessToken;
         const result = await searchedUsers(

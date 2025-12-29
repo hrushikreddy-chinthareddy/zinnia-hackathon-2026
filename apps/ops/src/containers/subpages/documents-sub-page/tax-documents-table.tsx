@@ -1,4 +1,3 @@
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
@@ -17,6 +16,7 @@ import TaxFormPreviewer from '@deps/components/document-viewer/tax-form-previewe
 import Popover from '@deps/components/popover/popover';
 import { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
 
@@ -33,29 +33,40 @@ export default function TaxDocumentsTable({
     policyNumber,
     results,
 }: TaxDocumentsTableProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
+    const { t } = useTranslation();
 
     return (
-        <Table className="my-8" stickyColumn={TableStickyColumn.End}>
-            <caption className="hidden">{`${policyNumber} ${t(
-                'documents'
-            )}`}</caption>
+        <Table
+            className="my-8"
+            stickyColumn={TableStickyColumn.End}
+            aria-describedby="tax-documents-table-description"
+            role="table"
+        >
+            <caption id="tax-documents-table-description" className="sr-only">
+                {t('allFields.tableCaptionsTaxDocuments') ?? ''}
+            </caption>
             <TableHeader className="typography-content-body-sm-bold">
                 <TableRow>
-                    <TableHeaderCell>{t('name')}</TableHeaderCell>
-                    <TableHeaderCell>{t('taxYear')}</TableHeaderCell>
-                    <TableHeaderCell>{t('formId')}</TableHeaderCell>
+                    <TableHeaderCell>
+                        {t('policy.documents.name')}
+                    </TableHeaderCell>
+                    <TableHeaderCell>
+                        {t('policy.documents.taxYear')}
+                    </TableHeaderCell>
+                    <TableHeaderCell>
+                        {t('policy.documents.formId')}
+                    </TableHeaderCell>
                     <TableHeaderCell>
                         <div className="flex flex-row items-center gap-1">
-                            {t('actions')}
+                            {t('policy.documents.actions')}
                             <Popover
-                                body={t('actionsTooltip')}
-                                title={t('actions') as string}
+                                body={t('policy.documents.actionsTooltip')}
+                                title={t('policy.documents.actions') ?? ''}
                                 placement={PopoverPlacement.TopLeft}
                             >
                                 <Icon
                                     type={IconType.CIRCLE_INFO}
-                                    color="var(--color-primary-color-primary)"
+                                    color="var(--color-base-icon-icon-action-text-link)"
                                     height={16}
                                     width={16}
                                 />
@@ -97,7 +108,7 @@ export default function TaxDocumentsTable({
                                     policyNumber={policyNumber}
                                     taxForm={document}
                                 >
-                                    {t('view')}
+                                    {t('policy.documents.view')}
                                 </TaxFormPreviewer>
                             </TableCell>
                         </TableRow>
@@ -112,7 +123,7 @@ export default function TaxDocumentsTable({
                             )}
                             colSpan={5}
                         >
-                            {t('noResults')}
+                            {t('policy.documents.noResults')}
                         </TableCell>
                     </TableRow>
                 )}

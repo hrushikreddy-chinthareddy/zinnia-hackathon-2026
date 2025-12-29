@@ -1,10 +1,12 @@
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { TaskType } from '@deps/models/case/task';
 
+import { getAgentChangeSteps } from './agent-change-steps';
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
 import { getBeneAddressVerificationSteps } from './bene-address-verification';
 import { getBeneCallSteps } from './bene-call-steps';
+import { getBeneChangeSteps } from './bene-change-steps';
 import { getClaimBeneReviewSteps } from './claim-bene-review-steps';
 import { getClaimUncashTxnIdentifySteps } from './claim-uncash-txn-identify';
 import { getDay150ReviewSteps } from './claims-day-150-review';
@@ -16,6 +18,7 @@ import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-rev
 import { getQualityAuditSteps } from './quality-audit-steps';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
+import { getThirdPartyDetailSteps } from './third-party-detail';
 import { getTOANigoSteps } from './toa-nigo';
 import { GetStepsProps } from './types';
 import { getUpdateSuitabilityDataSteps } from './update-suitability-data';
@@ -106,6 +109,16 @@ export const getFormSteps = (
             break;
         case TaskType.Update_Suitability_DataEntry:
             steps = getUpdateSuitabilityDataSteps(props);
+            break;
+        case TaskType.Third_Party_Detail:
+            steps = getThirdPartyDetailSteps(props);
+            break;
+        case TaskType.Initiate_BeneChange_Transaction:
+        case TaskType.Initiate_AssigneeChange_Transaction:
+            steps = getBeneChangeSteps(props);
+            break;
+        case TaskType.Agent_Change_Detail:
+            steps = getAgentChangeSteps(props);
             break;
         default:
             steps = getDefaultTaskSteps(props);

@@ -103,16 +103,16 @@ const PrdnRmdWithdrawalForm = () => {
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}
             />
-            <IrsWithholding
-                signatureFields={irsSignatureConfig}
-                isFormStateReadOnly={isFormStateReadOnly}
-            />
             {shouldStateW4pRender && (
                 <StateW4Form
                     isFormStateReadOnly={isFormStateReadOnly}
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
+            <IrsWithholding
+                signatureFields={irsSignatureConfig}
+                isFormStateReadOnly={isFormStateReadOnly}
+            />
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}

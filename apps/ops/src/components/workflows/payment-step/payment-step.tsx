@@ -1,4 +1,3 @@
-import { ArrangementType, Policy, Status } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -18,6 +17,7 @@ import { isEndDated } from '@deps/helpers/date.helpers';
 import { convertAggregationAccountTypeToPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { ArrangementType, Policy, Status } from '@zinnia/api-types/types/sor';
 
 import PaymentStepUS from './payment-step-us';
 import { PaymentMethodType, PaymentStepProps } from './types';

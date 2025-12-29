@@ -1,4 +1,3 @@
-import { Phone } from '@xd/api-types/dist/generated-types/sor';
 import { countries } from 'countries-list';
 import { TFunction } from 'i18next';
 import { useCallback } from 'react';
@@ -15,6 +14,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
+import { Phone } from '@zinnia/api-types/types/sor';
 
 import {
     CallEntry,
@@ -82,7 +82,7 @@ export function CallForInformationFunctions({
             label: t('contactRoles.agent'),
 
             textValue: t('contactRoles.agent'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
+            disabled: !task?.data?.details?.[dynamicKey]?.callLogs?.some(
                 (log: CallLog) => log.partyRoleCategory === ContactRole.AGENT
             ),
         },
@@ -92,7 +92,7 @@ export function CallForInformationFunctions({
             label: t('contactRoles.beneficiary'),
 
             textValue: t('contactRoles.beneficiary'),
-            disabled: !task?.data?.details?.beneCall?.callLogs?.some(
+            disabled: !task?.data?.details?.[dynamicKey]?.callLogs?.some(
                 (log: CallLog) =>
                     log.partyRole === ContactRole.PRIMARYBENEFICIARY
             ),

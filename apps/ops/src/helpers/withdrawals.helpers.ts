@@ -1,5 +1,6 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
+
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface MapWithdrawalsSubPage {
     isEligible: boolean;

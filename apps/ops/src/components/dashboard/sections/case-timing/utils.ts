@@ -1,6 +1,7 @@
-import { CompletedCaseTimeOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
+
+import { CompletedCaseTimeOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 dayjs.extend(duration);
 

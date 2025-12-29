@@ -5,7 +5,7 @@
     "status": "NEW",
     "externalId": "d70df390-ac81-4b12-a1f5-e4473a05bb72",
     "taskName": "Match Death Case",
-    "process": "Claims",
+    "process": "Matching",
     "source": "BPM.ClaimProcessing",
     "data": {
         "details": {

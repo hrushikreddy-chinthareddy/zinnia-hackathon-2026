@@ -54,7 +54,8 @@ export default function ClientCaseIllustrations({
     const carrierProductId = searchParams.get('planCode') || '';
     useSegmentPageTracker(
         additionalData.user,
-        SegmentPageName.IllustrationsDetails
+        SegmentPageName.IllustrationsDetails,
+        { client_case_id: clientCaseId }
     );
 
     const {

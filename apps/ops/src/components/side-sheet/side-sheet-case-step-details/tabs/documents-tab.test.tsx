@@ -70,11 +70,11 @@ jest.mock('next-i18next', () => ({
     }),
 }));
 
-// Mock the createAction function
+// Mock the createViewDownloadAction function
 jest.mock(
     '@deps/containers/subpages/documents-sub-page/documents-results-table',
     () => ({
-        createAction: jest.fn((document: DocumentView) => {
+        createViewDownloadAction: jest.fn((document: DocumentView) => {
             if (document.fileType === 'pdf') {
                 return <button data-testid="view-document-button">View</button>;
             }

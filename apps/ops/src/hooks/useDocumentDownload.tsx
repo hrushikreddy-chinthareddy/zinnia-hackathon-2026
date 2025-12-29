@@ -1,5 +1,4 @@
 import { useMutation } from '@tanstack/react-query';
-import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import { saveAs } from 'file-saver';
 
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
@@ -14,6 +13,7 @@ import {
 import { getDocumentDownloadQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 export const isPreviewSupported = (
     document: PolicyDocument | MetadataSearchResponse
 ): boolean => {

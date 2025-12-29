@@ -266,45 +266,7 @@
                                 }
                             }
                         }
-                    },
-                    "allOf": [
-                        {
-                            "if": {
-                                "properties": {
-                                    "auditDetails": {
-                                        "items": {
-                                            "properties": {
-                                                "auditCompleted": {
-                                                    "const": true
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            },
-                            "then": {
-                                "properties": {
-                                    "isOwnerContractConfirmed": {
-                                        "type": "boolean",
-                                        "default": false,
-                                        "title": "Confirm if the updated contract has been sent to the owner"
-                                    }
-                                },
-                                "if": {
-                                    "properties": {
-                                        "required": ["isOwnerContractConfirmed"]
-                                    }
-                                },
-                                "then": {
-                                    "properties": {
-                                        "isOwnerContractConfirmed": {
-                                            "const": true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    ]
+                    }
                 },
                 "uiSchema": {
                     "ui:order": [
@@ -312,8 +274,7 @@
                         "details",
                         "auditDetails",
                         "additionalNotes",
-                        "additionalAttachments",
-                        "isOwnerContractConfirmed"
+                        "additionalAttachments"
                     ],
                     "ui:globalOptions": {
                         "duplicateKeySuffixSeparator": "_",
@@ -582,12 +543,6 @@
                                 }
                             }
                         }
-                    },
-                    "isOwnerContractConfirmed": {
-                        "ui:options": {
-                            "omitValue": true
-                        },
-                        "ui:hideError": true
                     }
                 }
             }

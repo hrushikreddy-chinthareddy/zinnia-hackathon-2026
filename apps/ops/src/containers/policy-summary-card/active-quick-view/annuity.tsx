@@ -24,7 +24,10 @@ export default function AnnuityQuickView({ policy }: BasePolicyComponentArgs) {
         TranslationFiles.COMMON,
         TranslationFiles.COLDEFS,
     ]);
-    const qualificationTypeTranslationKey = `dashboard.search.results.policySummaryCard.${policy?.qualificationType?.toLowerCase()}`;
+    const qualificationTypeTranslationKey = `enums.${
+        policy?.qualificationType || ''
+    }`;
+
     const qualificationTypeTranslatedText = t(qualificationTypeTranslationKey);
 
     const Fields: AnnuityQuickViewFields = {

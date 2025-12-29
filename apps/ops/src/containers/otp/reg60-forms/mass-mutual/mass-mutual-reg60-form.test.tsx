@@ -229,6 +229,11 @@ describe('MassMutualReg60Form', () => {
         setDisclosureAuthorization: jest.fn(),
     };
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('renders without crashing', () => {
         render(
             <Reg60FormContext.Provider value={mockContext as any}>

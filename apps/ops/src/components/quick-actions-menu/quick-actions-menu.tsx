@@ -1,9 +1,7 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import { Reason } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
-import { TFunction, useTranslation } from 'next-i18next';
+import { useTranslation, TFunction } from 'next-i18next';
 import React from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
@@ -35,7 +33,6 @@ import {
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { searchPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
-import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import { Source } from '@deps/types/search';
 import {
@@ -43,28 +40,16 @@ import {
     PolicyClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { TransactionPermission } from '@deps/utils/auth';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { Reason } from '@zinnia/api-types/types/sor';
 
-import styles from './quick-actions-menu.module.css';
-
+import { TextButton } from './quick-action-text-button';
 interface TranslateProps {
     t: TFunction;
 }
-
-const TextButton = ({ t }: TranslateProps) => {
-    return (
-        <div className={clsx('md:flex', styles.quickActions)}>
-            <p className="text-links">{t('label')}</p>
-            <ChevronDown
-                className="simple-transition group-data-[state=open]:rotate-180"
-                height={16}
-                width={16}
-            />
-        </div>
-    );
-};
 
 const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
     function iconButtonForwardRef(props, forwardRef) {
@@ -107,6 +92,8 @@ export const MenuContextualContent = ({
         featureFlags[FEATURE_FLAGS.POLICY_FREE_LOOK_CANCELLATION];
     const loanPaymentEnabled =
         featureFlags[FEATURE_FLAGS.LOAN_PAYMENT_TRANSACTION];
+    const asIsIllustrationsEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_AS_IS_ILLUSTRATIONS];
 
     const isNewDeathClaimEnabled =
         policy.carrierId &&
@@ -338,6 +325,15 @@ export const MenuContextualContent = ({
         },
         enabled: !isDemo(), //TODO: Remove this check when demo endpoint is available
     });
+
+    const { data: BPMEligibility } = useQuery({
+        queryKey: ['checkBPMAsIsIllustrationEligibility'],
+        queryFn: () => {
+            // This is a placeholder variable, should be replaced with a BPM call to check eligibility
+            return false;
+        },
+    });
+
     const { data: freelookCancellation } = useFreelookCancellation(
         policy?.product?.planCode,
         policy.policyNumber
@@ -516,6 +512,35 @@ export const MenuContextualContent = ({
         );
     }
 
+    const additionalItems: JSX.Element[] = [];
+
+    if (serviceRequestFormEnabled) {
+        additionalItems.push(
+            <MenuContextualItem
+                key="serviceRequestForm"
+                content={t('additionalActions.serviceRequestForm')}
+                href={`/policies/${policy.planCode}/${policy.policyNumber}/service-request/`}
+                onClick={() => {
+                    trackClick(
+                        'Raise a Service Request',
+                        `/policies/${policy.planCode}/${policy.policyNumber}/service-request/`
+                    );
+                }}
+                openInNewTab={true}
+            />
+        );
+    }
+
+    if (BPMEligibility && asIsIllustrationsEnabled) {
+        additionalItems.push(
+            <MenuContextualItem
+                key="createAsIsIllustration"
+                content={t('additionalActions.createAsIsIllustration')}
+                onClick={() => console.log('generate PDF')}
+            />
+        );
+    }
+
     return (
         <>
             {transactionItems.length > 0 && (
@@ -590,19 +615,9 @@ export const MenuContextualContent = ({
                 </>
             </MenuContextualLabel>
 
-            {serviceRequestFormEnabled && (
+            {additionalItems.length > 0 && (
                 <MenuContextualLabel label={t('additionalActions.label')}>
-                    <MenuContextualItem
-                        content={t('additionalActions.serviceRequestForm')}
-                        href={`/policies/${policy.planCode}/${policy.policyNumber}/service-request/`}
-                        onClick={() => {
-                            trackClick(
-                                'Raise a Service Request',
-                                `/policies/${policy.planCode}/${policy.policyNumber}/service-request/`
-                            );
-                        }}
-                        openInNewTab={true}
-                    />
+                    <>{additionalItems}</>
                 </MenuContextualLabel>
             )}
         </>
@@ -621,11 +636,10 @@ const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
     return (
         <>
             <div className="hidden md:block">
-                <MenuContextual trigger={<TextButton t={t} />}>
+                <MenuContextual trigger={<TextButton label={t('label')} />}>
                     <MenuContextualContent policy={policy} t={t} />
                 </MenuContextual>
             </div>
-
             {/* small viewports */}
             <div className="md:hidden">
                 <ReactTooltip.Provider>

@@ -1,14 +1,14 @@
-import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
 
 import { friendlyDateFormat } from '@deps/components/dashboard/utils';
+import { CaseCountOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 export enum ActiveAgingTimeRange {
-    TWENTY_EIGHT_PLUS = '28+D',
-    FOURTEEN_TO_TWENTYSEVEN = '14-27D',
-    SEVEN_TO_THIRTEEN = '7-13D',
     ZERO_TO_SIX = '0-6D',
+    SEVEN_TO_THIRTEEN = '7-13D',
+    FOURTEEN_TO_TWENTYSEVEN = '14-27D',
+    TWENTY_EIGHT_PLUS = '28+D',
 }
 
 export interface TimeOrganizedData {

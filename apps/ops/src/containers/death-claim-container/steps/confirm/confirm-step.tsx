@@ -1,7 +1,6 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import NavElement, {
@@ -14,7 +13,7 @@ import PageLoader, {
 } from '@deps/components/page-loader/page-loader';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
+import { buildClaimPayload } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -27,13 +26,15 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface ConfirmStepProps {
     policy: Policy;
     user: UserProfile;
+    correlationId: string;
 }
 
-const ConfirmStep = ({ policy, user }: ConfirmStepProps) => {
+const ConfirmStep = ({ policy, user, correlationId }: ConfirmStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.confirmStep',
     });
@@ -52,18 +53,27 @@ const ConfirmStep = ({ policy, user }: ConfirmStepProps) => {
     } = useDeathClaim();
     const [isLoading, setIsLoading] = useState(false);
 
-    const submit = async () => {
+    const submit = useCallback(async () => {
+        if (caseId) {
+            browserLogInfo('ConfirmStep::Claim already submitted', {
+                caseId,
+                policy: policy?.policyNumber,
+            });
+            return;
+        }
         setIsLoading(true);
-        const payload = buildClaimPaylod(
-            policy,
-            null,
-            notifiers,
-            owners,
-            beneficiaries,
-            onbaseCaseId,
-            onbaseDocumentNumber,
-            user
-        );
+        const payload = buildClaimPayload({
+            policy: policy,
+            document: null,
+            selNotifiers: notifiers,
+            selOwners: owners,
+            selBeneficiaries: beneficiaries,
+            onbaseCaseId: onbaseCaseId,
+            onbaseDocumentNumber: onbaseDocumentNumber,
+            user: user,
+            correlationId: correlationId,
+        });
+
         browserLogInfo('ConfirmStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
@@ -91,7 +101,21 @@ const ConfirmStep = ({ policy, user }: ConfirmStepProps) => {
         }
 
         setIsLoading(false);
-    };
+    }, [
+        beneficiaries,
+        caseId,
+        correlationId,
+        notifiers,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+        owners,
+        partyId,
+        policy,
+        sessionId,
+        setCaseId,
+        setSubmitFailed,
+        user,
+    ]);
 
     if (isLoading) {
         return (

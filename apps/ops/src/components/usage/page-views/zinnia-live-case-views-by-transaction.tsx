@@ -1,6 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { UserViewsGroupByEnum } from '@xd/api-types/dist/generated-types/analytics';
-import { startOfTomorrowLocalIso } from '@xd/utils/dist';
 import { useTranslation } from 'react-i18next';
 
 import { GroupedColumnsChart } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
@@ -13,20 +11,26 @@ import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-
+import { TotalCount } from '@deps/components/usage//total-count';
+import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
 import {
+    colors,
+    generateCSVFileName,
+    ApiRoles,
     startDates,
     TimeframeFilterOptions,
+} from '@deps/components/usage/utils';
+import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
+
+import {
     toProcessRoleRows,
     top5ProcessesByVisibleRoles,
     toGroupedBarSeriesFromRows,
     PrepareTop5CaseViewsCSV,
     categoryValueTooltip,
 } from './utils';
-import { TotalCount } from '../total-count';
-import UsageHeaderLayout from '../usage-common-header';
-import { colors, generateCSVFileName, ApiRoles } from '../utils';
 
 export const ZinniaLiveCaseViewsByTransaction = ({
     title,
@@ -99,10 +103,10 @@ export const ZinniaLiveCaseViewsByTransaction = ({
                     t('usage.pageViews.zinniaLiveCaseViews.description') ?? ''
                 )}
                 data={zinniaLiveCaseViewsByTransactionData?.data || []}
-                csvFileName={generateCSVFileName(
-                    'usage.pageViews.zinniaLiveCaseViews.title',
-                    timerange
-                )}
+                csvFileName={generateCSVFileName({
+                    title: t('usage.pageViews.zinniaLiveCaseViews.title'),
+                    timerange,
+                })}
                 csvFunction={PrepareTop5CaseViewsCSV}
             />
             <div className="flex items-center justify-between gap-4 w-full">

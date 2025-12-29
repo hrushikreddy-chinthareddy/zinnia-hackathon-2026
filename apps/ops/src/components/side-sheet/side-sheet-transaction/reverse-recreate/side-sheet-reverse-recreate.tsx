@@ -1,4 +1,3 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -30,6 +29,7 @@ import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 import { HELP_DESK_LINK } from '../non-financial-transactions/states/api-error-state';
 import LoadingState from '../non-financial-transactions/states/loading-state';

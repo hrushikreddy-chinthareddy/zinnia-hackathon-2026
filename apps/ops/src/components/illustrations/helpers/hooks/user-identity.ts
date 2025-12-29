@@ -1,14 +1,24 @@
-import {
-    AliasModel,
-    PartyReferenceDataModel,
-} from '@xd/api-types/dist/generated-types/partyreference';
-import { identity, uniq } from 'lodash';
+import { uniq } from 'lodash';
 import { useMemo } from 'react';
 import { SetRequired } from 'type-fest';
 
 import { Brand } from '@deps/utils/types';
+import {
+    AliasModel,
+    PartyReferenceDataModel,
+} from '@zinnia/api-types/types/partyreference';
 
 const SELLING_CODE_FIELD = 'SELLING_CODE';
+
+export enum IllustratorRole {
+    SUPER_ILLUSTRATOR = 'SUPER_ILLUSTRATOR',
+    DISTRICT_MANAGER = 'DISTRICT_MANAGER',
+    DISTRICT_STAFF = 'DISTRICT_STAFF',
+    AGENCY_OWNER = 'AGENCY_OWNER',
+    AGENCY_STAFF = 'AGENCY_STAFF',
+    AGENT = 'AGENT',
+    NO_ROLE = 'NO_ROLE',
+}
 
 /**
  * To brand aliases that we know have an external party identifier with a

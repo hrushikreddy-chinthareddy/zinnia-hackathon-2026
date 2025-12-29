@@ -7,6 +7,7 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 interface MultiselectFieldProps {
     isLoading: boolean;
     label: string;
+    className?: string;
     options: string[];
     disabled?: boolean;
     value: Set<string>;
@@ -16,6 +17,7 @@ interface MultiselectFieldProps {
 
 export default function MultiselectField({
     isLoading,
+    className,
     label,
     options,
     value,
@@ -57,7 +59,7 @@ export default function MultiselectField({
                 </div>
             ) : (
                 !!options.length && (
-                    <div className="mt-6">
+                    <div className={className ? `mt-6 ${className}` : 'mt-6'}>
                         <Select
                             isMultiselect
                             label={label}

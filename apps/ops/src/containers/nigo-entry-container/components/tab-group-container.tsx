@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState, useCallback } from 'react';
 
@@ -33,6 +32,7 @@ import { CaseSearchQuery } from '@deps/queries/cases';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 import { ReactComponent as MenuIcon } from '@deps/styles/elements/icons/navigation/menu.svg';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { useNigoEntry } from './nigo-entry-provider';
 import DocumentPortalPanel from './side-panel/document-portal-panel';

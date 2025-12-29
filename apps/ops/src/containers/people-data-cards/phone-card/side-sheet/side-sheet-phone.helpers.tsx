@@ -1,4 +1,3 @@
-import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import { countries } from 'countries-list';
 import { TFunction, useTranslation } from 'next-i18next';
 
@@ -10,6 +9,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { TimeZoneAbbreviations } from '@deps/data/time-zones';
 import { formatPhoneNumberWithExtension } from '@deps/helpers/phone.helpers';
 import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 interface CountryCodeLabelProps {
     countryCode: keyof typeof countries;

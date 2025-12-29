@@ -1,4 +1,4 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-./scripts/branch-naming-policy.sh && npx turbo pre-commit --filter="[HEAD^1]"
+./scripts/branch-naming-policy.sh && npx turbo pre-commit

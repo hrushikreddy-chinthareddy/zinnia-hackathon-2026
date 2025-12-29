@@ -1,9 +1,3 @@
-import {
-    DistributionType,
-    FeatureType,
-    PolicyFeatureBase,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/types';
@@ -20,6 +14,12 @@ import {
     translateYearOrYears,
 } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import {
+    DistributionType,
+    FeatureType,
+    PolicyFeatureBase,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 const distributionMapping: { [key: DistributionType | string]: string } = {
     [DistributionType.AFFILIATEDAGENCY]:
@@ -203,8 +203,14 @@ export const mapPolicyTimelineValues = (
     policy: PolicyDetails,
     t: TFunction
 ): PolicyTimelineCardData => {
-    const { policyTerm, policyYear, fixedCostPeriod, issueDate, maturityDate } =
-        policy;
+    const {
+        policyTerm,
+        policyYear,
+        fixedCostPeriod,
+        issueDate,
+        maturityDate,
+        deliveryDate,
+    } = policy;
 
     const freeLookFeature = policy.features.getFirstFeatureByType(
         FeatureType.FREELOOK
@@ -243,6 +249,7 @@ export const mapPolicyTimelineValues = (
         policyAge: toSentenceCase(policyYear?.toString()),
         policyLength,
         policyYearsLeft,
+        deliveryDate: convertKebabedDateString(deliveryDate),
     };
 };
 
@@ -286,7 +293,9 @@ export const getApplicationDetailsData = (
         issueState: getStateName(policy?.issueState),
         salesChannel: mapDistribution(policy.distribution, t),
         originalPolicyNumber:
-            policy?.policy?.parentPolicyNumber ?? DEFAULT_ERROR_STRING,
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            policy?.policy?.priorPolicyNumber ?? DEFAULT_ERROR_STRING,
         applicationSource: policy?.policy?.policySource ?? DEFAULT_ERROR_STRING,
         applicationSourceDetails:
             policy?.policy?.policySourceDescription ?? DEFAULT_ERROR_STRING,

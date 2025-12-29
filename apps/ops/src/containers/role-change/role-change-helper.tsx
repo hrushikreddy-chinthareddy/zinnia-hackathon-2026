@@ -1,14 +1,3 @@
-import { capitalize } from '@xd/utils/dist';
-import {
-    Country,
-    IdentificationType,
-    Party,
-    PartyRole,
-    PartyType,
-    Policy,
-    PolicyPartyRoles,
-    PreferredCommunicationType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { TFunction } from 'next-i18next';
@@ -40,6 +29,17 @@ import {
     ZAHARA_API_DATE_FORMAT,
     DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
+import { capitalize } from '@deps/utils/strings';
+import {
+    Country,
+    IdentificationType,
+    Party,
+    PartyRole,
+    PartyType,
+    Policy,
+    PolicyPartyRoles,
+    PreferredCommunicationType,
+} from '@zinnia/api-types/types/sor';
 
 import { newTrustOptions } from '../bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 
@@ -483,27 +483,26 @@ export const buildRoleChangeRequestBody = (
     } = roleData || {};
 
     const { partyType = PartyType.INDIVIDUAL } = party || {};
-
-    const isRoleCheck = [PolicyRole.OWNER, PolicyRole.JOINTOWNER].includes(
-        role
-    );
     const isRolePartyCheck =
         [PolicyRole.OWNER, PolicyRole.JOINTOWNER].includes(role) &&
         [PartyType.TRUST, PartyType.ORGANIZATION].includes(partyType);
 
     let {
         firstName,
-        lastName,
         fullName,
         middleName,
         prefix,
         suffix,
-        trustType,
-        dateOfBirth,
-        gender = null,
         phones = [],
         emails = [],
         addresses = [],
+    } = party;
+
+    const {
+        lastName,
+        trustType,
+        dateOfBirth,
+        gender = null,
         identifications = [],
         preferredCommunicationType = null,
         trustDate = null,
@@ -630,7 +629,8 @@ export const validate = (
     removeRole: boolean,
     t: TFunction,
     roleLabel: RoleLabel,
-    role: PartyRole
+    role: PartyRole,
+    removedTpdIndex?: number | null
 ) => {
     const currentErrors: Record<string, string> = {};
     const { party } = roleData;
@@ -649,7 +649,14 @@ export const validate = (
         Roles.NEWTHIRDPARTYDESIGNEE,
     ];
 
-    if (addRole === true) {
+    if (
+        allowedRolesForRemove.includes(role) &&
+        addRole &&
+        removedTpdIndex !== null
+    ) {
+        return currentErrors;
+    }
+    if (addRole) {
         currentErrors['owner'] = t('formValidations.addRole', { roleLabel });
         return currentErrors;
     }

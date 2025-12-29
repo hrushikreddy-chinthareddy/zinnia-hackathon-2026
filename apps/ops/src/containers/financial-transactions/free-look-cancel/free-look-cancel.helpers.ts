@@ -1,12 +1,12 @@
-import {
-    FreeLookCancellationRequest,
-    PaymentForm,
-} from '@zinnia/api-types/types/bpm';
 import { v4 as uuidV4 } from 'uuid';
 
 import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext.types';
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
+import {
+    FreeLookCancellationRequest,
+    PaymentForm,
+} from '@zinnia/api-types/types/bpm';
 
 export const buildFreeLookCancelRequestBody = (
     withdrawal: Withdrawal,

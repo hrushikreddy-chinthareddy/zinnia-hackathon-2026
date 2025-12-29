@@ -9,7 +9,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 
 function SideSheetDocument({
     document,
@@ -46,7 +46,7 @@ function SideSheetDocument({
                 </div>
             </div>
 
-            {createAction(
+            {createViewDownloadAction(
                 {
                     ...document?.previewDocProps,
                     documentSource: document?.previewDocProps?.activeDocType,

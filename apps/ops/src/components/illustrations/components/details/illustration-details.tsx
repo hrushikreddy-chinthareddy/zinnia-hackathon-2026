@@ -103,7 +103,7 @@ export default function IllustrationDetails({
                         planCode={product.planCode}
                     />
                 </Skeleton>
-                <IllustrationDetailsContent isLoading={true} />
+                <IllustrationDetailsContent />
             </IllustrationDetailProvider>
         </EAppProviders>
     );

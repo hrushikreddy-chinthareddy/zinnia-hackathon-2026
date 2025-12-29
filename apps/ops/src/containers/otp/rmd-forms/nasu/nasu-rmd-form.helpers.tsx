@@ -39,7 +39,10 @@ import {
 
 import { createValidator } from '../../utils/helper-utils';
 import { defaultDisbursmentConsent } from '../../withdrawal-forms/rsln/rsln-withdrawal-form.helpers';
-import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import {
+    validateQcdDetails,
+    validateSignESign,
+} from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getNasuRmdConfig(t: TFunction) {
     const formPartyConfigs: PartyConfig[] = [
@@ -549,6 +552,14 @@ export default function getNasuRmdConfig(t: TFunction) {
             t,
             validateDesignationPresent: false,
         });
+
+        const qcd = formProgram?.qcd;
+
+        if (qcd && qcd.length > 0) {
+            const qcdErrors = validateQcdDetails(t, qcd);
+
+            return { ...errors, ...signESignValidate, ...qcdErrors };
+        }
 
         return { ...errors, ...signESignValidate };
     };

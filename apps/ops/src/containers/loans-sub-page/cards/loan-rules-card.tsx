@@ -1,4 +1,3 @@
-import { LoanValues } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -14,6 +13,7 @@ import {
     toSentenceCase,
 } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { LoanValues } from '@zinnia/api-types/types/sor';
 
 export interface LoanRulesCardProps {
     currency?: string;

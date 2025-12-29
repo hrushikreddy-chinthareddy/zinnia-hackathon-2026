@@ -1,7 +1,7 @@
 import { PopoverPlacement } from './popover';
 
 export const commonPopoverClasses =
-    'z-40 max-w-[195px] overflow-hidden rounded bg-gray-900 p-3 text-left leading-4 tracking-[.00357em] text-white shadow-elevation-dark-08 sm:max-w-[320px] w-max';
+    'z-40 max-w-[195px] sm:max-h-[65vh] md:max-h-[40vh] overflow-y-auto rounded bg-gray-900 p-3 text-left leading-4 tracking-[.00357em] text-white shadow-elevation-dark-08 sm:max-w-[320px] w-max';
 
 export const commonTriggerClasses =
     'default-focus group relative inline-block rounded-xl';

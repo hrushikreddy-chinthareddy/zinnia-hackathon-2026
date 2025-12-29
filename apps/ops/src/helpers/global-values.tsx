@@ -1,4 +1,3 @@
-import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import {
@@ -11,6 +10,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { FeatureType, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 export const getTotalMinRequiredAmount = (
     policy: PolicyDetails

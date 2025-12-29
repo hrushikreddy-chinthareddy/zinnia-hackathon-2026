@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { LoanSegment } from '@zinnia/api-types/types/sor';
 
 import { PopoverTest } from '@deps/jest/constants/test-id-constants';
+import { LoanSegment } from '@zinnia/api-types/types/sor';
 
 import OutstandingLoansCard from './outstanding-loans-card';
 

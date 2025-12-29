@@ -1,5 +1,4 @@
 import { Transition } from '@headlessui/react';
-import { Address, AddressType } from '@zinnia/api-types/types/sor';
 import { TFunction, useTranslation } from 'next-i18next';
 
 import AssistiveText, {
@@ -15,6 +14,7 @@ import Label, { LabelVariant } from '@deps/components/label/label';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
+import { Address, AddressType } from '@zinnia/api-types/types/sor';
 
 interface AdditionalAddressLineProps {
     disabled: boolean;

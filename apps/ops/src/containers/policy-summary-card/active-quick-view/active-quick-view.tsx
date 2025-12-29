@@ -1,7 +1,7 @@
-import { ProductType } from '@xd/api-types/dist/generated-types/sor';
 import { useTranslation } from 'react-i18next';
 
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
+import { ProductType } from '@zinnia/api-types/types/sor';
 
 import EverlyIul from './everly-iul';
 import EverlyUl from './everly-ul';

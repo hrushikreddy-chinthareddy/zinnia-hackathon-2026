@@ -1,8 +1,3 @@
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import {
-    TransactionStatus,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import { Button, Loader, LoaderVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
@@ -19,8 +14,13 @@ import { withdrawalFinancialTransactions } from '@deps/helpers/transaction-types
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { Statuses } from '@deps/models/case/case';
 import { getPolicyTransactions } from '@deps/queries/api/policies';
+import { TransactionPermission } from '@deps/utils/auth';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
 import SidesheetCancelPending from '../cancel-pending/side-sheet-cancel-pending';

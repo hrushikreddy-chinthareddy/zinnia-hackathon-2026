@@ -1,6 +1,5 @@
-import { PartyRole } from '@zinnia/api-types/types/sor';
-
 import { ColumnType } from '@deps/components/table-v2/table.types';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 export const AllowedRoleTypes: string[] = [
     PartyRole.JOINTOWNER,

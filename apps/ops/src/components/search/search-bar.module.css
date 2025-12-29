@@ -1,6 +1,9 @@
 .formContainer {
     margin-top: var(--measure-dimension-gap-lg);
-    margin-bottom: var(--measure-dimension-gap-2xl);
+    margin-bottom: var(--measure-dimension-gap-xl);
+    @media (max-width: 1024px) {
+        margin-bottom: 5px;
+    }
 }
 
 .searchRow {
@@ -10,7 +13,8 @@
     flex-wrap: wrap;
     gap: var(--measure-dimension-gap-lg);
 
-    @media (min-width: 768px) {
+    flex-wrap: nowrap;
+    @media (min-width: 1024px) {
         flex-direction: row;
         column-gap: var(--measure-dimension-gap-md);
         row-gap: var(--measure-dimension-gap-lg);
@@ -23,11 +27,13 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-
-    @media (min-width: 768px) {
+    flex: 1 1 0;
+    min-width: 0;
+    @media (min-width: 1024px) {
         align-items: start;
         flex-direction: row;
         width: auto;
+        flex: 0 1 auto;
     }
 }
 
@@ -62,7 +68,7 @@
         outline: none;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
         border-radius: var(--measure-dimension-radius-md) 0px 0px
             var(--measure-dimension-radius-md);
         width: 220px;

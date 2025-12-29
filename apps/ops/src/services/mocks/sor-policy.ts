@@ -1,3 +1,4 @@
+import { PolicySearchResult } from '@deps/types/search';
 import {
     AccountStatus,
     AccountType,
@@ -44,8 +45,6 @@ import {
     IdentificationType,
     RelationshipToParty,
 } from '@zinnia/api-types/types/sor';
-
-import { PolicySearchResult } from '@deps/types/search';
 
 export const mockPolicy: Policy = {
     coverage: {

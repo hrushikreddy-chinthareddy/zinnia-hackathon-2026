@@ -17,6 +17,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import useNavLink from '@deps/hooks/useNavLink';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
 
@@ -41,6 +42,7 @@ export default function IllustrationDetailsHeader({
     hasIllustrationSelected,
 }: IllustrationDetailsHeaderProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { buildOpenInNewWindowLinkText } = useNavLink();
     const { selectedIllustration } = useSelectedIllustration();
     const { product } = selectedIllustration ?? {};
     const planType =
@@ -52,9 +54,9 @@ export default function IllustrationDetailsHeader({
             aria-disabled={hasIllustrationSelected}
             key={'eapp-link'}
             data-testid="eapp-link"
-            aria-label={
+            aria-label={buildOpenInNewWindowLinkText(
                 t('clientCase.illustrationDetails.ariaGoToEApp') as string
-            }
+            )}
             className={clsx(
                 style.goToSureify,
                 hasIllustrationSelected && style.enabled

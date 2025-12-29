@@ -13,8 +13,7 @@ type GenericAgentFieldProps = {
 };
 
 export const GenericAgentField = ({ editable }: GenericAgentFieldProps) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
+    const { isSuperIllustrator } = usePermissionsContext();
 
     const { agentDetails } = useAgentFieldContext();
     const [state, setState] = useState<'INACTIVE' | 'SEARCH'>(

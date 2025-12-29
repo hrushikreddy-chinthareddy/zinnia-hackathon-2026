@@ -5,8 +5,10 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
+import useNavLink from '@deps/hooks/useNavLink';
 
 function InstructionsTemplate(props: ObjectFieldTemplateProps) {
+    const { buildOpenInNewWindowLinkText } = useNavLink();
     const { title, uiSchema, formContext, description } = props;
     const { linkName, linkUrl } = getUiOptions(uiSchema);
     const { customData } = formContext;
@@ -42,6 +44,9 @@ function InstructionsTemplate(props: ObjectFieldTemplateProps) {
                                         href={resolvedUrl}
                                         target="_blank"
                                         rel="noreferrer"
+                                        aria-label={buildOpenInNewWindowLinkText(
+                                            linkName as string
+                                        )}
                                     >
                                         {linkName as string}
                                     </a>
