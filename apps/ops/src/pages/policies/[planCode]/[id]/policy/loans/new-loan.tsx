@@ -55,7 +55,7 @@ const NewLoan = ({ policy }: NewLoanProps) => {
         } else {
             setIsLoading(false);
         }
-    }, [newLoanEligibility, router]);
+    }, [newLoanEligibility, isFetched, router]);
 
     if (isLoading) {
         return <PageLoader variant={PageLoaderVariant.Center} />;
