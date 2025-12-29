@@ -1,6 +1,5 @@
-import { Policy, RiderType } from '@zinnia/api-types/types/sor';
-
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
+import { Policy, RiderType } from '@zinnia/api-types/types/sor';
 
 import { Coverage } from './Coverage';
 

@@ -1,8 +1,8 @@
 import { Meta } from '@storybook/react';
-import { RelationshipToParty } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import { getRelationshipToInsured } from '@deps/helpers/party-info-helpers';
+import { RelationshipToParty } from '@zinnia/api-types/types/sor';
 
 import AllocationCard from './allocation-card';
 

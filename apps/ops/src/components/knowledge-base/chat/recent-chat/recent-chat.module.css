@@ -6,3 +6,9 @@
 .activeItem {
     color: var(--color-nav-drawer-2-nav-drawer-item-2-active-border) !important;
 }
+.selectedClient {
+    background: hsl(var(--color-black));
+    color: var(--color-base-surface-surface-primary);
+    padding: 5px 10px;
+    font-size: 12px;
+}

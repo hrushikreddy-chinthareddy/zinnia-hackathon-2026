@@ -1,12 +1,16 @@
-import { UserTransactionOutputLevel1 } from '@xd/api-types/dist/generated-types/analytics';
-
 import {
     aggregateByCategory,
     getTransactionTypesByCategory,
     buildTopLevelSeries,
     buildDrilldownSeries,
-} from './utlis';
-import { colors } from '../utils';
+    formatIllustrationActivity,
+    mergeDuplicatedIntoCreated,
+} from '@deps/components/usage/activity/utils';
+import { colors } from '@deps/components/usage/utils';
+import {
+    UserTransactionOutputLevel1,
+    UserIllustrationActivityOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 const mockTransactionData: UserTransactionOutputLevel1[] = [
     {
@@ -80,21 +84,21 @@ describe('aggregateByCategory', () => {
         // Should be sorted by count descending
         expect(result[0]).toEqual({
             category: 'financial',
-            displayName: 'Financial',
+            displayName: 'Payments & Distributions',
             count: 500, // 300 + 200
             color: colors[0],
         });
 
         expect(result[1]).toEqual({
             category: 'policy_update',
-            displayName: 'Policy Update',
+            displayName: 'Party Management',
             count: 250, // 150 + 100
             color: colors[1],
         });
 
         expect(result[2]).toEqual({
             category: 'non_financial',
-            displayName: 'Non-Financial',
+            displayName: 'Policy & Contract Servicing',
             count: 50,
             color: colors[2],
         });
@@ -230,7 +234,7 @@ describe('buildDrilldownSeries', () => {
         expect(result[0]).toEqual({
             type: 'column',
             id: 'financial',
-            name: 'Financial',
+            name: 'Payments & Distributions',
             data: [
                 { name: 'Premium', y: 270 },
                 { name: 'Loan', y: 100 },
@@ -241,7 +245,7 @@ describe('buildDrilldownSeries', () => {
         expect(result[1]).toEqual({
             type: 'column',
             id: 'policy_update',
-            name: 'Policy Update',
+            name: 'Party Management',
             data: [
                 { name: 'Email', y: 80 },
                 { name: 'Address', y: 70 },
@@ -252,5 +256,188 @@ describe('buildDrilldownSeries', () => {
     it('should handle empty data', () => {
         const result = buildDrilldownSeries({});
         expect(result).toEqual([]);
+    });
+});
+
+describe('mergeDuplicatedIntoCreated', () => {
+    it('merges duplicated counts into creted when dates overlap', () => {
+        const data = [
+            {
+                key: 'activityType',
+                name: 'Created',
+                values: [{ name: '2025-01-01', key: 'activityDay', count: 5 }],
+            },
+            {
+                name: 'Duplicated',
+                key: 'activityType',
+                values: [{ name: '2025-01-01', key: 'activityDay', count: 3 }],
+            },
+            {
+                name: 'Selected',
+                key: 'activityType',
+                values: [{ name: '2025-01-01', key: 'activityDay', count: 9 }],
+            },
+        ] as UserIllustrationActivityOutputLevel1[];
+
+        const normalized = mergeDuplicatedIntoCreated(data);
+        const created = normalized.find((d) => d.name === 'Created');
+        const selected = normalized.find((d) => d.name === 'Selected');
+
+        expect(created?.values).toEqual([
+            { key: 'activityDay', name: '2025-01-01', count: 8 },
+        ]);
+        expect(selected?.values).toEqual([
+            { key: 'activityDay', name: '2025-01-01', count: 9 },
+        ]);
+    });
+
+    it('adds duplicated dates that do not exist in created', () => {
+        const data = [
+            {
+                key: 'activityType',
+                name: 'Created',
+                values: [{ name: '2025-01-01', key: 'activityDay', count: 5 }],
+            },
+            {
+                name: 'Duplicated',
+                key: 'activityType',
+                values: [{ name: '2025-01-02', key: 'activityDay', count: 3 }],
+            },
+        ] as UserIllustrationActivityOutputLevel1[];
+
+        const normalized = mergeDuplicatedIntoCreated(data);
+        const created = normalized.find((d) => d.name === 'Created');
+
+        expect(created?.values).toEqual([
+            { key: 'activityDay', name: '2025-01-01', count: 5 },
+            { key: 'activityDay', name: '2025-01-02', count: 3 },
+        ]);
+    });
+});
+
+describe('formatIllustrationActivity', () => {
+    it('combines correctly Created and Selected by data', () => {
+        const data = [
+            {
+                key: 'activityType',
+                name: 'Created',
+                count: 34,
+                values: [
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-23',
+                        count: 5,
+                    },
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-24',
+                        count: 2,
+                    },
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-25',
+                        count: 0,
+                    },
+                    {
+                        key: 'activityDay',
+                        name: '2025-11-20',
+                        count: 27,
+                    },
+                ],
+            },
+            {
+                key: 'activityType',
+                name: 'Selected',
+                count: 52,
+                values: [
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-22',
+                        count: 1,
+                    },
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-23',
+                        count: 5,
+                    },
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-24',
+                        count: 10,
+                    },
+                    {
+                        key: 'activityDay',
+                        name: '2025-11-20',
+                        count: 22,
+                    },
+                ],
+            },
+        ] as UserIllustrationActivityOutputLevel1[];
+
+        const rows = formatIllustrationActivity(data);
+
+        expect(rows.length).toBe(5);
+
+        expect(rows[0]).toEqual({
+            date: '2025-10-22',
+            created: 0,
+            selected: 1,
+        });
+        expect(rows.find((r) => r.date === '2025-10-23')).toEqual({
+            date: '2025-10-23',
+            created: 5,
+            selected: 5,
+        });
+        expect(rows.find((r) => r.date === '2025-10-24')).toEqual({
+            date: '2025-10-24',
+            created: 2,
+            selected: 10,
+        });
+        expect(rows.find((r) => r.date === '2025-10-25')).toEqual({
+            date: '2025-10-25',
+            created: 0,
+            selected: 0,
+        });
+        expect(rows.find((r) => r.date === '2025-11-20')).toEqual({
+            date: '2025-11-20',
+            created: 27,
+            selected: 22,
+        });
+    });
+
+    it('ignores unknown activityType from data', () => {
+        const data = [
+            {
+                key: 'activityType',
+                name: 'Created',
+                count: 5,
+                values: [
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-23',
+                        count: 5,
+                    },
+                ],
+            },
+            {
+                key: 'activityType',
+                name: 'Duplicated',
+                count: 15,
+                values: [
+                    {
+                        key: 'activityDay',
+                        name: '2025-10-22',
+                        count: 15,
+                    },
+                ],
+            },
+        ] as UserIllustrationActivityOutputLevel1[];
+
+        const [row] = formatIllustrationActivity(data);
+        expect(row).toEqual({
+            date: '2025-10-23',
+            created: 5,
+            selected: 0,
+        });
     });
 });

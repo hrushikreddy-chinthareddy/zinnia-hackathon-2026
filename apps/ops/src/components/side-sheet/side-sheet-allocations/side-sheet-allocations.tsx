@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -16,6 +15,7 @@ import PageLoader, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import BeneficiaryAllocator from './beneficiary-allocator';
 import {

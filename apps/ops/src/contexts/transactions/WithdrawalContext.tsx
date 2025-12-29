@@ -1,8 +1,3 @@
-import {
-    DisbursementType,
-    FilingStatus,
-    TaxWithholdingType,
-} from '@zinnia/api-types/types/bpm';
 import dayjs from 'dayjs';
 import {
     Dispatch,
@@ -15,6 +10,11 @@ import {
 
 import { WithdrawalType } from '@deps/containers/financial-transactions/withdrawal/amount/types';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DisbursementType,
+    FilingStatus,
+    TaxWithholdingType,
+} from '@zinnia/api-types/types/bpm';
 
 import { Withdrawal } from './WithdrawalContext.types';
 

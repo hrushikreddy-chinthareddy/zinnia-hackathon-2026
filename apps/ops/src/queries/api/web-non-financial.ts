@@ -128,6 +128,64 @@ export const validateBeneChangeTransaction = async (
     }
 };
 
+export const validateAgentTransaction = async (body: any): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
+
+    const validateAgentUrl = `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/multi-agent/validation`;
+    try {
+        browserLogInfo('AgentChange::Validating a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAgentUrl,
+            function: 'webnonfinancial.validateAgentTransaction',
+        });
+        const { data } = await client.post<any, AxiosResponse>(
+            validateAgentUrl,
+            body
+        );
+
+        return data;
+    } catch (error: any) {
+        browserLogError('AgentChange::Failed to validate transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAgentUrl,
+            function: 'webnonfinancial.validateAgentTransaction',
+        });
+        return error;
+    }
+};
+
+export const validateAssigneeChangeTransaction = async (
+    body: any
+): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
+
+    const validateAssigneeUrl = `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/parties/Assignee/validation`;
+    try {
+        browserLogInfo('AssigneeChange::Validating a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAssigneeUrl,
+            function: 'webnonfinancial.validateAssigneeChangeTransaction',
+        });
+        const { data } = await client.post<any, AxiosResponse>(
+            validateAssigneeUrl,
+            body
+        );
+
+        return data;
+    } catch (error: any) {
+        browserLogError('AssigneeChange::Failed to validate transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAssigneeUrl,
+            function: 'webnonfinancial.validateAssigneeChangeTransaction',
+        });
+        return error;
+    }
+};
+
 export const initialDeathClaimExists = async (
     contractNumber: string | undefined,
     clientId: string | undefined
@@ -174,10 +232,13 @@ export const submitDeathClaim = async (body: any): Promise<any> => {
     try {
         browserLogInfo('webnonfinancial::Submitting claim', {
             url: url,
+            policyNumber: body?.policyNumber,
+            correlationid: body?.correlationid,
             function: 'webnonfinancial.submitClaim',
         });
         const { data } = await client.put<any, AxiosResponse>(url, body);
         browserLogInfo('webNonFinancial::Successfully submitted claim', {
+            policyNumber: body?.policyNumber,
             correlationid: body?.correlationid,
             url: url,
             function: 'webnonfinancial.submitClaim',

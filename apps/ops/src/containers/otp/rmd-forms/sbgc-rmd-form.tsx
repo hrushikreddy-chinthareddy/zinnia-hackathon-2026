@@ -89,7 +89,10 @@ export default function SbgcRmdWithdrawalForm() {
                         ? RmdFormType.QCD
                         : RmdFormType.RMD,
             },
-            qcd: formProgram.qcd ? [...formProgram.qcd] : [],
+            qcd:
+                rmdFormType === RmdFormType.QCD && formProgram.qcd
+                    ? [...formProgram.qcd]
+                    : [],
         };
 
         setFormProgram(newRMDFormType);

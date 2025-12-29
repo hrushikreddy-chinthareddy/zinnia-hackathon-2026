@@ -126,6 +126,7 @@ const mockAsSuperIllustrator = () => {
         () =>
             ({
                 writeClientCaseCarriers: ['FNWL'],
+                isSuperIllustrator: true,
             } as unknown as PermissionsContextProps)
     );
 };

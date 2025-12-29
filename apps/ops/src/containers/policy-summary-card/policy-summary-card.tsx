@@ -1,17 +1,5 @@
 import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
-import {
-    Address,
-    Email,
-    EmailType,
-    LineOfBusiness,
-    Phone,
-    PhoneType,
-    Policy,
-    FeatureType,
-    PolicyStatus,
-} from '@zinnia/api-types/types/sor';
 import {
     Icon,
     IconType,
@@ -24,6 +12,7 @@ import {
     useContext,
     useEffect,
     useMemo,
+    useRef,
     useState,
 } from 'react';
 
@@ -33,14 +22,12 @@ import {
 } from '@deps/components/badge/badge.helpers';
 import CardInfo from '@deps/components/card/card-info/card-info';
 import Content, { ContentVariant } from '@deps/components/content/content';
-import { FieldSize } from '@deps/components/fields/field';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PopoverPlacement } from '@deps/components/popover/popover';
-import SelectSearch from '@deps/components/select-search/select-search';
 import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import {
@@ -57,21 +44,7 @@ import QuickLinks from '@deps/containers/quick-links/quick-links';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import {
-    AnnuityDetailsViewInfo,
-    AnnuityViewDetailsDto,
-} from '@deps/data/annuity-details-view';
-import {
-    generatePolicyAnnuityDetailsDto,
-    isTermLifeProduct,
-} from '@deps/data/details-view';
-import {
-    PolicyDetailsViewInfo,
-    PolicyViewDetailsDto,
-    TermLifeDetailsViewInfo,
-} from '@deps/data/policy-details-view';
 import { getSearchValueObject } from '@deps/helpers/case-management';
-import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import {
     getTotalMinRequiredAmount,
     policyDataToGlobalValues,
@@ -91,6 +64,7 @@ import {
     toTitleCase,
 } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
+import useNavLink from '@deps/hooks/useNavLink';
 import { usePolicyQuickLinks } from '@deps/hooks/usePolicyQuickLinks';
 import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
@@ -99,6 +73,7 @@ import { Statuses } from '@deps/models/case/case';
 import { ProcessType } from '@deps/models/case/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import { DashboardContext } from '@deps/pages/policies';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -108,6 +83,10 @@ import {
     getCaseSearchQuery,
     getCasesQuery,
 } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import {
+    checkEmailChangeEligibilityQuery,
+    checkPhoneChangeEligibilityQuery,
+} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import {
     getPolicyQuery,
@@ -124,8 +103,19 @@ import {
     PolicySearchResult,
     SearchViewQuery,
 } from '@deps/types/search';
+import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import {
+    Address,
+    Email,
+    EmailType,
+    Phone,
+    PhoneType,
+    Policy,
+    FeatureType,
+    PolicyStatus,
+} from '@zinnia/api-types/types/sor';
 
 import { ActiveQuickView } from './active-quick-view/active-quick-view';
 import AnnuityQuickView from './active-quick-view/annuity';
@@ -147,11 +137,6 @@ import SideSheetPeopleHeader from '../people-data-cards/side-sheet-people-header
 interface SummaryCardProps extends PropsWithChildren {
     policySearchResult: PolicySearchResult;
     showKeyValues?: boolean;
-}
-
-interface KeyValuesBarProps {
-    policy: Policy;
-    loadingPolicyDetails?: boolean;
 }
 
 enum SideSheetViews {
@@ -310,63 +295,13 @@ const QuickViewHeader = ({
     );
 };
 
-function KeyValuesBar({
-    policy,
-    loadingPolicyDetails = false,
-}: KeyValuesBarProps) {
-    const { t } = useTranslation([
-        TranslationFiles.COMMON,
-        TranslationFiles.COLDEFS,
-    ]);
-    const { partyId: userPartyId, sessionId } = usePermissionsContext();
-    const searchableDetailsDto = generatePolicyAnnuityDetailsDto(policy);
-    const colDefFunction =
-        policy.product?.lineOfBusiness === LineOfBusiness.LIFE
-            ? isTermLifeProduct(policy)
-                ? TermLifeDetailsViewInfo
-                : PolicyDetailsViewInfo
-            : AnnuityDetailsViewInfo;
-    const searchableDetailsData = fillColDefs<
-        PolicyViewDetailsDto | AnnuityViewDetailsDto
-    >(searchableDetailsDto, colDefFunction(), t, 'colDefs:policyDetails');
-
-    return (
-        <div>
-            <hr className="mb-4 h-0.5 border-none bg-gray-100 md:mb-6 lg:mb-4" />
-            <div className="relative flex items-center">
-                {loadingPolicyDetails ? (
-                    <Skeleton
-                        loading={loadingPolicyDetails}
-                        width="300px"
-                        height="38px"
-                    />
-                ) : (
-                    <SelectSearch
-                        classNames="flex flex-col gap-1 max-w-[328px] w-full relative"
-                        labelClassNames="mr-4 hidden md:block"
-                        size={FieldSize.Small}
-                        label={t('dashboard.quickSearch.label') || ''}
-                        placeHolder={
-                            t('dashboard.quickSearch.placeholder') || ''
-                        }
-                        values={searchableDetailsData}
-                        errorMessageLink={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`}
-                        group={true}
-                        dropUp
-                        sessionId={sessionId}
-                        userPartyId={userPartyId}
-                    />
-                )}
-            </div>
-        </div>
-    );
-}
-
 export const StatusBanner = ({
     policy,
     casesTotal,
 }: BasePolicyComponentArgs & { casesTotal?: number }) => {
     const { t } = useTranslation();
+    const { setAriaLabelToChildLinks } = useNavLink();
+    const bannerRef = useRef<HTMLDivElement | null>(null);
     const policyStatus = policy.policyStatus;
     const { featureFlags } = useOptimizely();
     const freeLookEnabled =
@@ -445,10 +380,21 @@ export const StatusBanner = ({
         },
     });
 
+    useEffect(() => {
+        // Adding necessary logic to set aria-label to BannerAlert since it is not a component property
+        if (bannerRef.current) {
+            setAriaLabelToChildLinks(
+                bannerRef,
+                t('dashboard.search.results.policySummaryCard.caseBannerLink')
+            );
+        }
+    }, [showCaseBanner, setAriaLabelToChildLinks, t]);
+
     return (
         <div className={styles.bannerContainer}>
             {showCaseBanner && (
                 <BannerAlert
+                    ref={bannerRef}
                     variant={BannerVariant.Information}
                     bodyText={t(
                         'dashboard.search.results.policySummaryCard.caseBannerText',
@@ -676,6 +622,47 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
         placeholderData: (previousData) => previousData,
         staleTime: FIFTEEN_MINUTES_IN_MS,
     });
+    const { data: phoneChangeEligibility } = useQuery({
+        queryKey: [
+            'checkPhoneChangeEligibilityQuery',
+            policy.planCode,
+            policy.policyNumber,
+            policy.policyNumber,
+        ],
+        queryFn: () =>
+            checkPhoneChangeEligibilityQuery(
+                policy.planCode as string,
+                policy.policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligiblePhoneChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+    const { data: emailChangeEligibility } = useQuery({
+        queryKey: [
+            'emailChangeEligibility',
+            policy.planCode,
+            policy.policyNumber,
+        ],
+        queryFn: () =>
+            checkEmailChangeEligibilityQuery(
+                policy.planCode as string,
+                policy.policyNumber as string
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleEmailChange:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
 
     const emails = owner?.bestAvailableEmail
         ? [owner?.bestAvailableEmail]
@@ -811,6 +798,9 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
         party: owner?.party,
     });
 
+    const handleEditEmailClick = () => onEditClick(SideSheetViews.EMAIL);
+    const handleEditPhoneClick = () => onEditClick(SideSheetViews.PHONE);
+
     return (
         <QuickViewRoot
             title={t('dashboard.search.results.policySummaryCard.header1')}
@@ -837,10 +827,24 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         label={t('colDefs:owner.email')}
                     />
                     {bestAvailEmail?.isPending && <PendingTag />}
-                    {canEditPolicy && bestAvailEmail && (
+                    {canEditPolicy &&
+                    bestAvailEmail &&
+                    emailChangeEligibility?.isEligibleEmailChange ? (
                         <IconButton
                             aria-describedby="policy-owner-email"
-                            onClick={() => onEditClick(SideSheetViews.EMAIL)}
+                            onClick={handleEditEmailClick}
+                        >
+                            <Icon
+                                type={IconType.EDIT_ALT}
+                                height={16}
+                                width={16}
+                            />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            aria-describedby="policy-owner-email"
+                            onClick={handleEditEmailClick}
+                            disabled={true}
                         >
                             <Icon
                                 type={IconType.EDIT_ALT}
@@ -877,10 +881,24 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                         label={contactNumberLabel}
                     />
                     {bestAvailPhone?.isPending && <PendingTag />}
-                    {canEditPolicy && bestAvailPhone && (
+                    {canEditPolicy &&
+                    bestAvailPhone &&
+                    phoneChangeEligibility?.isEligiblePhoneChange ? (
                         <IconButton
                             aria-describedby="policy-owner-phone"
-                            onClick={() => onEditClick(SideSheetViews.PHONE)}
+                            onClick={handleEditPhoneClick}
+                        >
+                            <Icon
+                                type={IconType.EDIT_ALT}
+                                height={16}
+                                width={16}
+                            />
+                        </IconButton>
+                    ) : (
+                        <IconButton
+                            aria-describedby="policy-owner-phone"
+                            onClick={handleEditPhoneClick}
+                            disabled={true}
                         >
                             <Icon
                                 type={IconType.EDIT_ALT}

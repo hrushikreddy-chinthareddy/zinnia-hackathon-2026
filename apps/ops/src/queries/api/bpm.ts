@@ -1,17 +1,3 @@
-import {
-    FreeLookCancellationRequest,
-    FullSurrenderRequest,
-    PartialWithdrawalOneTimeRequest,
-} from '@zinnia/api-types/types/bpm';
-import {
-    AdhocSystematicProgram,
-    FullSurrenderQuoteResponse,
-    OneTimePremiumRequest,
-    PartialWithdrawalOneTimeQuoteResponse,
-    SystematicProgramUpdateRequest,
-    LoanRepaymentOneTimeRequest,
-    NewLoanRequest,
-} from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 import dayjs from 'dayjs';
 import { v4 as uuidV4 } from 'uuid';
@@ -21,6 +7,21 @@ import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import {
+    FreeLookCancellationRequest,
+    FullSurrenderRequest,
+    PartialWithdrawalOneTimeRequest,
+} from '@zinnia/api-types/types/bpm';
+import { Signature } from '@zinnia/api-types/types/case';
+import {
+    AdhocSystematicProgram,
+    FullSurrenderQuoteResponse,
+    OneTimePremiumRequest,
+    PartialWithdrawalOneTimeQuoteResponse,
+    SystematicProgramUpdateRequest,
+    LoanRepaymentOneTimeRequest,
+    NewLoanRequest,
+} from '@zinnia/api-types/types/sor';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
 
@@ -102,6 +103,12 @@ export interface TransactionSubmitResponse {
 export interface TransactionRequest {
     effectiveDate: string;
 }
+
+export type deleteRoleBodyProps = {
+    effectiveDate: string;
+    party: Record<string, never>;
+    signatures: Signature[];
+};
 
 export interface FullSurrenderEligibilityRequest {
     correlationId: string;

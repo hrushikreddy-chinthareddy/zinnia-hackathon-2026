@@ -1,0 +1,37 @@
+.skipLink {
+    /* This style overrides a bloom style but contact management includes bloom again and overrides this */
+    /* The !important is a temp fix to resolve the issue */
+    position: fixed !important;
+    top: 1.5rem;
+    left: 2rem;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.1s ease-out;
+    pointer-events: none;
+}
+
+.skipLink::before {
+    position: absolute;
+    content: '';
+    top: calc(-1 * var(--measure-dimension-margin-xxs));
+    left: calc(-1 * var(--measure-dimension-margin-xs));
+    right: calc(-1 * var(--measure-dimension-margin-xs));
+    bottom: calc(-1 * var(--measure-dimension-margin-xxs));
+    background-color: var(--color-base-surface-surface-primary);
+    border-radius: var(--measure-dimension-radius-md);
+    box-shadow: var(--shadow-elevation-elevation-light-md);
+    z-index: -1;
+}
+
+.skipLink:focus,
+.skipLink:focus-visible {
+    opacity: 1;
+    pointer-events: auto;
+    outline-offset: 4px;
+    outline-color: var(--color-base-border-border-secondary-color);
+    border-radius: var(--measure-dimension-radius-md);
+}
+
+.skipLink:hover {
+    outline: none;
+}

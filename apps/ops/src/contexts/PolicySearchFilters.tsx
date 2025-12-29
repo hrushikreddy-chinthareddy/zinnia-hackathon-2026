@@ -8,6 +8,8 @@ import {
     isResetQueryParam,
 } from '@deps/types/constants';
 import { PolicySearchKeys, SearchViewQuery } from '@deps/types/search';
+
+import { useSearchBarcontext } from './SearchBarContext';
 export interface PolicySearchFilters {
     searchValue: SearchViewQuery;
     limit: number;
@@ -42,9 +44,10 @@ export const PolicySearchFiltersContext =
     });
 
 export const PolicySearchFiltersProvider = ({ children }: any) => {
+    const { showFieldErrorMessage, setShowFieldErrorMessage } =
+        useSearchBarcontext();
     const [policySearchFilters, setPolicySearchFilters] =
         useState(initialFilters);
-    const [showFieldErrorMessage, setShowFieldErrorMessage] = useState(false);
     const router = useRouter();
 
     const clearFilters = () => {

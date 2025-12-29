@@ -1,0 +1,190 @@
+/* StartButton */
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes path {
+    0%,
+    34%,
+    71%,
+    100% {
+        transform: scale(1);
+    }
+    17% {
+        transform: scale(var(--scale_path_1, 1));
+    }
+    49% {
+        transform: scale(var(--scale_path_2, 1));
+    }
+    83% {
+        transform: scale(var(--scale_path_3, 1));
+    }
+}
+
+.actionButton {
+    --transition: 0.3s ease-in-out;
+    --offset: 2px;
+
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    padding: 0.35rem 1.75rem !important;
+    background-color: transparent;
+    border: none !important;
+    border-radius: var(--measure-dimension-radius-lg);
+
+    transform-origin: center;
+    transform: scale(1);
+    transition: none;
+}
+
+.actionButton::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-base-text-text-carrier);
+    border-radius: var(--measure-dimension-radius-lg);
+    z-index: 0;
+}
+
+.actionButton::after {
+    display: none;
+}
+
+.dotsBorder {
+    --size_border: calc(100% + 2px);
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: var(--size_border);
+    height: var(--size_border);
+    background-color: transparent;
+    border-radius: var(--measure-dimension-radius-lg);
+    z-index: -10;
+}
+
+.sparkle {
+    position: relative;
+    z-index: 10;
+    width: 1.75rem;
+}
+
+.path {
+    fill: currentColor;
+    stroke: currentColor;
+    transform-origin: center;
+    color: var(--color-base-surface-surface-primary);
+}
+
+.actionButton:disabled {
+    .textButton {
+        color: var(--color-base-text-text-secondary);
+    }
+
+    .path {
+        color: var(--color-base-text-text-secondary);
+    }
+
+    &:before {
+        background-color: var(
+            --color-states-inactive-surface-inactive-fill
+        ) !important;
+    }
+}
+
+.actionButton:is(:hover, :focus):not(:disabled) {
+    .dotsBorder::before {
+        content: '';
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform-origin: left;
+        width: 100%;
+        height: 2rem;
+        background: var(--bg-color-gradient-linear);
+        mask: linear-gradient(
+            transparent 0%,
+            var(--color-base-surface-surface-primary) 120%
+        );
+        animation: rotate 2s linear infinite;
+    }
+
+    .path {
+        animation: path 1.5s linear 0.5s infinite;
+        box-shadow: 0 0 32px 10px hsl(260 97% 60% / 0.35);
+    }
+}
+
+.path:nth-child(1) {
+    --scale_path_1: 1.2;
+}
+.path:nth-child(2) {
+    --scale_path_2: 1.2;
+}
+.path:nth-child(3) {
+    --scale_path_3: 1.2;
+}
+
+.textButton {
+    position: relative;
+    z-index: 10;
+    font-size: 1rem;
+    color: var(--color-base-surface-surface-primary);
+}
+
+@media screen and (max-width: 768px) {
+    .textButton {
+        display: none;
+    }
+
+    .actionButton {
+        padding-right: var(--measure-dimension-radius-md) !important;
+        padding-left: var(--measure-dimension-radius-md) !important;
+    }
+}
+
+/* StopButton */
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.stopIconWrap {
+    position: relative;
+    width: 1.5rem;
+    height: 1.5rem;
+    z-index: 10;
+}
+
+.stopIconWrap::after {
+    content: '';
+    position: absolute;
+    inset: -0.1rem;
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    border-top-color: hsla(255, 15%, 95%, 0.8);
+    animation: spin 1s linear infinite;
+}
+
+.stopIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-base-surface-surface-primary);
+}
+
+.stopButton:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

@@ -1,6 +1,5 @@
-import { Phone } from '@zinnia/api-types/types/sor';
-
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { Phone } from '@zinnia/api-types/types/sor';
 
 import {
     calculateAge,
@@ -21,6 +20,7 @@ import {
     toTitleCase,
     trimStringByCharacterCount,
     hasDigitsRegex,
+    capitalizeAfterPeriod,
 } from './string.helpers';
 
 describe('String Helper', () => {
@@ -378,6 +378,43 @@ describe('String Helper', () => {
             const str = '1999/09/09';
             const result = hasDigitsRegex.test(str);
             expect(result).toBe(true);
+        });
+    });
+
+    describe('> capitalizeAfterPeriod', () => {
+        it('should capitalize letters after periods', () => {
+            const text = 'hello. this is a test. another sentence.';
+            const result = capitalizeAfterPeriod(text);
+
+            expect(result).toBe('Hello. This is a test. Another sentence.');
+        });
+
+        it('should handle empty string', () => {
+            const text = '';
+            const result = capitalizeAfterPeriod(text);
+
+            expect(result).toBe('');
+        });
+
+        it('should capitalize first letter of string', () => {
+            const text = 'this is a test.';
+            const result = capitalizeAfterPeriod(text);
+
+            expect(result).toBe('This is a test.');
+        });
+
+        it('should handle strings with spaces before periods', () => {
+            const text = 'hello . test . example';
+            const result = capitalizeAfterPeriod(text);
+
+            expect(result).toBe('Hello . Test . Example');
+        });
+
+        it('should convert entire string to lowercase first', () => {
+            const text = 'HELLO. THIS IS A TEST.';
+            const result = capitalizeAfterPeriod(text);
+
+            expect(result).toBe('Hello. This is a test.');
         });
     });
 });

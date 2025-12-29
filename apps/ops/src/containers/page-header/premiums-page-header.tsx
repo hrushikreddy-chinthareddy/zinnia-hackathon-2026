@@ -1,9 +1,3 @@
-import {
-    AccountValues,
-    CostBasis,
-    PolicyFeature,
-    PolicyStatus,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
@@ -16,6 +10,12 @@ import {
     DEFAULT_ERROR_STRING,
     DEFAULT_EXTENDED_DATE_FORMAT,
 } from '@deps/types/constants';
+import {
+    AccountValues,
+    CostBasis,
+    PolicyFeature,
+    PolicyStatus,
+} from '@zinnia/api-types/types/sor';
 
 interface PremiumsPageHeaderContainerProps {
     costBasis?: CostBasis;
@@ -63,7 +63,7 @@ const GracePeriodValues = ({ values }: GracePeriodValuesProps) => {
                             <CircleInfoIcon
                                 height={13}
                                 width={13}
-                                className="text-primary"
+                                className="tooltip-primary"
                             />
                         </span>
                     </Popover>
@@ -106,7 +106,7 @@ const GracePeriodValues = ({ values }: GracePeriodValuesProps) => {
                             <CircleInfoIcon
                                 height={13}
                                 width={13}
-                                className="text-primary"
+                                className="tooltip-primary"
                             />
                         </span>
                     </Popover>
@@ -227,7 +227,7 @@ const PremiumsPageHeaderContainer = ({
                                 <CircleInfoIcon
                                     height={13}
                                     width={13}
-                                    className="text-primary"
+                                    className="tooltip-primary"
                                 />
                             </span>
                         </Popover>
@@ -267,7 +267,7 @@ const PremiumsPageHeaderContainer = ({
                                     <CircleInfoIcon
                                         height={13}
                                         width={13}
-                                        className="text-primary"
+                                        className="tooltip-primary"
                                     />
                                 </span>
                             </Popover>

@@ -98,6 +98,7 @@ export const TransactionsStepAdditionalData = ({
                     />
                 );
             case TransactionsAdditionalDataStepIds.receiveNewDocument:
+            case TransactionsAdditionalDataStepIds.receiveNewDocument2:
                 return (
                     <ReceiveNewDocument
                         stepAdditionalData={stepAdditionalData}

@@ -1,11 +1,3 @@
-import {
-    Policy,
-    EmailType,
-    Email,
-    PartyType,
-    PhoneType,
-    IdentificationType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { v4 as uuid4 } from 'uuid';
 
@@ -30,6 +22,14 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { SorSystem } from '@deps/models/policy/enums';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    Policy,
+    EmailType,
+    Email,
+    PartyType,
+    PhoneType,
+    IdentificationType,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ENTERPRISE_ADDRESS_TYPE,
@@ -272,12 +272,8 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
     const selectedParty = parties?.find((selectedItem: any) =>
         selectedItem?.partyRoleIds?.includes(item?.partyRole?.partyRoleId)
     );
-    let {
-        emails = [],
-        addresses = [],
-        phones = [],
-        partyType,
-    } = selectedParty || {};
+    const { emails = [], addresses = [], phones = [] } = selectedParty || {};
+    let partyType = selectedParty?.partyType;
     const currentEmails: Email[] = getPersonalEmails({ emails });
     const currentPhones: EnterprisePhone[] = getPhones({ phones });
     const currentAddresses: EnterpriseAddress[] = getAddresses({ addresses });

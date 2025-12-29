@@ -1,6 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
-import { SearchRequest } from '@xd/api-types/dist/generated-types/documents-v3';
 import {
     CarrierAvatar,
     CarrierName,
@@ -46,6 +45,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './index.module.css';
@@ -110,8 +110,7 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
         isFetching,
     } = useQuery({
         queryKey: ['commissionsStatements', searchBody, limit, offset],
-        queryFn: () =>
-            getDocumentSearchResultsQuery(searchBody, limit, offset, true),
+        queryFn: () => getDocumentSearchResultsQuery(searchBody, limit, offset),
         enabled:
             !!searchBody.masterAgentNumber && !!searchBody.parentCarrierCode,
         placeholderData: (previousData) => previousData,

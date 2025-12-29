@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { v4 as uuid4 } from 'uuid';
 
 import {
@@ -8,6 +7,7 @@ import {
     NotificationsTransactionData,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
 import { ChangeTypeEnum } from '@deps/containers/task-container/components/steps/claims/claims.type';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import {
     ClaimActionTypes,

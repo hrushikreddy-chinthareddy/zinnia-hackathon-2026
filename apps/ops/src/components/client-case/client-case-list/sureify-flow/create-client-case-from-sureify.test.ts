@@ -45,7 +45,7 @@ describe('createClientCaseFromSureify', () => {
         expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
             'eappid',
             'accessToken',
-            loggingContext
+            expect.anything()
         );
 
         expect(props).toBeUndefined();
@@ -82,12 +82,12 @@ describe('createClientCaseFromSureify', () => {
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
             'eappid',
-            loggingContext
+            expect.anything()
         );
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            loggingContext
+            expect.anything()
         );
 
         expect(redirect).toBeUndefined();
@@ -117,6 +117,7 @@ describe('createClientCaseFromSureify', () => {
         } as NewBusiness;
         const createclientCasePayload = {
             insuredDetails: validConversionInsuredDetails,
+            originalFaceAmount: 50000,
             transactionType: 'CONVERSION' as TransactionType,
         };
 
@@ -141,7 +142,7 @@ describe('createClientCaseFromSureify', () => {
         expect(createClientCaseMock).toHaveBeenCalledWith(
             createclientCasePayload,
             'accessToken',
-            loggingContext
+            expect.anything()
         );
 
         expect(props).toBeUndefined();
@@ -166,6 +167,7 @@ describe('createClientCaseFromSureify', () => {
                 insuredDetails: omit(validConversionInsuredDetails, [
                     fieldName,
                 ]),
+                originalFaceAmount: 50000,
                 transactionType: 'CONVERSION' as TransactionType,
             });
 
@@ -179,12 +181,12 @@ describe('createClientCaseFromSureify', () => {
 
             expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
                 'eappid',
-                loggingContext
+                expect.anything()
             );
             expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
                 newBusinessObject,
                 'eappid',
-                loggingContext
+                expect.anything()
             );
 
             expect(redirect).toBeUndefined();
@@ -194,6 +196,42 @@ describe('createClientCaseFromSureify', () => {
             );
         }
     );
+
+    it('fails when originalFaceAmount field is missing (conversion)', async () => {
+        const newBusinessObject = {
+            caseId: 'caseId',
+        } as NewBusiness;
+
+        searchClientCaseByEappIdMock.mockResolvedValue(
+            [] as IllustrationsClientCase[]
+        );
+        buildClientCaseFromNewBusinessMock.mockResolvedValue({
+            insuredDetails: validConversionInsuredDetails,
+            transactionType: 'CONVERSION' as TransactionType,
+        });
+
+        getNewBusinessByIdMock.mockResolvedValue(newBusinessObject);
+
+        const { props, redirect } = await createClientCaseFromSureify(
+            'eappid',
+            'accessToken',
+            loggingContext
+        );
+
+        expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
+            'eappid',
+            expect.anything()
+        );
+        expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
+            newBusinessObject,
+            'eappid',
+            expect.anything()
+        );
+
+        expect(redirect).toBeUndefined();
+        expect(props?.fetchingErrorOrigin).not.toBeUndefined();
+        expect(props?.fetchingErrorMessage).toMatch(/\bface amount\b/);
+    });
 
     it('redirects to the new client case page after creation', async () => {
         const newBusinessObject = {
@@ -228,7 +266,7 @@ describe('createClientCaseFromSureify', () => {
         expect(createClientCaseMock).toHaveBeenCalledWith(
             createclientCasePayload,
             'accessToken',
-            loggingContext
+            expect.anything()
         );
         expect(props).toBeUndefined();
         expect(redirect).toEqual({

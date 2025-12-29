@@ -1,4 +1,3 @@
-import { toSentenceCase } from '@xd/utils/dist';
 import {
     FieldData,
     FieldSize,
@@ -35,6 +34,7 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { Statuses } from '@deps/models/case/case';
+import { toSentenceCase } from '@deps/utils/strings';
 
 enum SortByOptions {
     NAME = 'name',
@@ -194,7 +194,10 @@ export const TransactionTrendsTable = () => {
                                         carrierOrProductName: item.name,
                                         updatedDateStart: timerange.from,
                                         updatedDateEnd: timerange.to,
-                                        status: [Statuses.Completed],
+                                        status: [
+                                            Statuses.Completed,
+                                            Statuses.Canceled,
+                                        ],
                                         groupBy,
                                         carrier: filter.carrier,
                                         brokerDealer: filter.brokerDealerName,

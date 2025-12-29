@@ -12,27 +12,28 @@ jest.mock('@deps/models/case/withdrawal/case', () => ({
     },
 }));
 
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const { getPolicyNotesInfo } = require('@deps/queries/api/policies');
 
 const mockFASTNotes = [
     {
         type: 'POLICYISSUED',
         alertIndicator: true,
-        createdDate: '2025-10-15T00:00:00Z',
-        message: 'Future note',
+        createdDate: '2023-10-15T00:00:00Z',
+        message: 'Past note',
     },
     {
         type: 'ADMINISTRATIVE',
         alertIndicator: false,
-        createdDate: '2025-10-10T00:00:00Z',
-        message: 'Past note',
+        createdDate: '2023-10-10T00:00:00Z',
+        message: 'Older note',
     },
 ];
 
 const mockLCNotes = {
     Items: [
-        { NoteDate: '2025-10-15T00:00:00Z', NoteText: 'Future note' },
-        { NoteDate: '2025-10-10T00:00:00Z', NoteText: 'Past note' },
+        { NoteDate: '2023-10-15T00:00:00Z', NoteText: 'Past note' },
+        { NoteDate: '2023-10-10T00:00:00Z', NoteText: 'Older note' },
     ],
     Count: 2,
 };
@@ -58,7 +59,8 @@ describe('useDiaryNotes', () => {
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.diaryNotes.length).toBe(2);
         expect(result.current.totalLogs).toBe(2);
-        expect(result.current.diaryNotes[0].NoteText).toBe('Future note');
+        expect(result.current.diaryNotes[0].NoteText).toBe('Past note');
+        expect(result.current.diaryNotes[1].NoteText).toBe('Older note');
     });
 
     it('loads LC notes directly when isLC is true', async () => {
@@ -76,7 +78,8 @@ describe('useDiaryNotes', () => {
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(result.current.diaryNotes.length).toBe(2);
         expect(result.current.totalLogs).toBe(2);
-        expect(result.current.diaryNotes[0].NoteText).toBe('Future note');
+        expect(result.current.diaryNotes[0].NoteText).toBe('Past note');
+        expect(result.current.diaryNotes[1].NoteText).toBe('Older note');
     });
 
     it('handles missing policyNumber/clientCode gracefully', async () => {

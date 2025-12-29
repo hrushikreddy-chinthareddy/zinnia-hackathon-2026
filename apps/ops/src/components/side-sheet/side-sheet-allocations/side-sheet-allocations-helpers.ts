@@ -1,10 +1,9 @@
+import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import {
     PartyRole,
     Policy,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 
 export interface AllocationPercentage {
     allocationPercentage: number;

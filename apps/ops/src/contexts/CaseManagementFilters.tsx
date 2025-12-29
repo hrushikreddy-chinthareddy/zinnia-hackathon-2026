@@ -32,6 +32,7 @@ export interface CaseSearchAdditionalFilters {
     products: Set<string>;
     category?: string;
     reason?: string;
+    escalated?: boolean | null;
     detailedReason?: string;
     issueStatus?: ExceptionStatus[];
 }

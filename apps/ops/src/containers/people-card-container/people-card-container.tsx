@@ -1,14 +1,14 @@
-import { POM_Models_ProducerType } from '@xd/api-types/dist/generated-types/pom';
-import { PartyType } from '@zinnia/api-types/types/sor';
 import { useContext } from 'react';
 
 import CardPeople from '@deps/components/card/card-people/card-people';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { goTo } from '@deps/helpers/routing.helpers';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
-import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
+import { tagsToBeneficiaryType } from './people-card-container.helpers';
 import {
     BeneficiaryType,
     PeopleCardContainerProps,
@@ -27,39 +27,6 @@ interface MapDataToPeopleProps {
     cardDisableTooltip?: string;
     type?: BeneficiaryType | AgentType;
 }
-
-const tagsToBeneficiaryType = (tags: TagKey[]) => {
-    const isPrimary = tags.filter(
-        (tag) => tag.text?.toLocaleLowerCase().indexOf('primary') !== -1
-    )?.length;
-    const isContigent = tags.filter(
-        (tag) => tag.text?.toLocaleLowerCase().indexOf('contigent') !== -1
-    )?.length;
-    const isPrimaryAgent = tags.filter(
-        (tag) => tag.text?.toLocaleLowerCase().indexOf('agent of record') !== -1
-    )?.length;
-    const isAgent = tags.filter(
-        (tag) =>
-            tag.text?.toLocaleLowerCase().indexOf('agent') ||
-            tag.text?.toLocaleLowerCase().indexOf('servicing agent') !== -1
-    )?.length;
-
-    if (isPrimary) {
-        return BeneficiaryType.PRIMARY;
-    }
-    if (isContigent) {
-        return BeneficiaryType.CONTIGENT;
-    }
-    if (isPrimaryAgent) {
-        return AgentType.PRIMARY;
-    }
-    if (isAgent) {
-        return AgentType.AGENT;
-    }
-
-    return BeneficiaryType.NONE;
-};
-
 const mapDataToPeopleCard = ({
     chipEntered,
     index,
@@ -79,6 +46,7 @@ const mapDataToPeopleCard = ({
         agentPercentage,
         producerType,
         producerName,
+        isIrrevocable,
     } = party;
     const {
         selectedTagList,
@@ -162,6 +130,7 @@ const mapDataToPeopleCard = ({
             }}
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
+            isIrrevocable={isIrrevocable}
         />
     );
 };

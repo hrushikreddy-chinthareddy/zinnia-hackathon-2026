@@ -2,109 +2,167 @@ import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     FieldData,
-    FieldSize,
     FieldTypes,
     Icon,
     IconType,
     Label,
     FieldSize as BloomFieldSize,
+    FieldDateSingle,
+    FieldStatus,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
-import { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import { useEffect, useState, ChangeEvent, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FieldType, FieldVariant } from '@deps/components/fields/field';
-import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
+import {
+    groupSectionsForPolicy,
+    groupBasicsForPolicy,
+} from '@deps/components/find-key-values-sidesheet/transformations/section-grouping';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { filterAppliedTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
+import { Expand, useTreeState } from '@deps/hooks/useTreeState';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
-import { KeyValueBasics } from '../components/key-value-basics';
-import { KeyValueSections } from '../components/key-value-sections';
-import styles from '../find-all-key-values-sidesheet.module.css';
-import { preparePolicy } from '../transformations';
+import { DataNodesRenderer } from '../components/data-node-renderer';
 import {
-    Collapse,
-    Expand,
-    FindAllKeyValuesSidebarProps,
-    NestedData,
-} from '../types';
+    applyTransformationsToNodes,
+    buildRenderTreeFromSourceData,
+    transformNodes,
+} from '../data-node-helpers/mutations';
+import styles from '../find-all-key-values-sidesheet.module.css';
+import { addToolTip, formatNode } from '../transformations/formatters';
+import {
+    excludeNodeByCarrierRules,
+    excludeNodesByLabel,
+    searchNodes,
+} from '../transformations/node-visibility';
+import { FindAllKeyValuesSidebarProps } from '../types';
 
 export const PolicySidesheetContent = ({
     planCode,
     policyNumber,
+    container,
+    handleCalendarOpen,
 }: FindAllKeyValuesSidebarProps) => {
     const [date, setDate] = useState('');
-    const [treeState, setTreeState] = useState(Collapse);
+    const { treeState, setTreeState, searchValue, setSearchValue } =
+        useTreeState();
     const [fieldError, setFieldError] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
     const queryClient = useQueryClient();
     const [enableQuery, setEnableQuery] = useState(false);
     const { t } = useTranslation();
     const { sessionId: authSessionId } = usePermissionsContext();
-
     const {
         data: policy,
         isFetching,
         isError,
     } = usePolicyQuery(planCode, policyNumber, date, queryClient, enableQuery);
+    const rangeErrorMsg = `${t('allFields.selectDateInRange')} ${dayjs(
+        policy?.policyDates?.issueDate
+    ).format('L')} - ${dayjs().format('L')}`;
 
     const isDateAllowed = (date: Dayjs) => {
         const policyIssuanceDate = dayjs(
             policy?.policyDates?.issueDate as string
         );
-        return (
-            date.isAfter(policyIssuanceDate) &&
-            date.isBefore(dayjs().add(1, 'day'))
-        );
+        return date.isBetween(dayjs(policyIssuanceDate), dayjs(), 'day', '[]');
     };
 
-    const handleDateChange = (e: ChangeEvent<HTMLInputElement>) => {
-        // if value isnt a number, early return
-        const numberRegex = /^\d+$/;
-        if (!numberRegex.test(e.target.value)) {
+    const handleDateChange = (date?: Date) => {
+        if (date === undefined) {
             return;
         }
-        const day = dayjs(e.target.value, NUMERIC_DATE_FORMAT);
+        const day = dayjs(date);
 
         if (day.isValid() && isDateAllowed(day)) {
             setDate(day.format(NUMERIC_DATE_FORMAT));
             setEnableQuery(true);
             setFieldError(false);
         } else {
-            setDate(e.target.value);
+            setDate(date.toString());
             setEnableQuery(false);
             setFieldError(true);
         }
     };
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
+    const lineOfBusiness = policy?.product?.lineOfBusiness;
+    const productType = policy?.product?.productType;
+    const policyNomenclature =
+        lineOfBusiness === LineOfBusiness.LIFE
+            ? t('policy.nomenclature.policy')
+            : t('policy.nomenclature.contract');
 
-    // This retains all the persistent extracted data on the policy
-    const preparedPolicy = useMemo(
+    const policyNodes = useMemo(
         () =>
-            policy
-                ? preparePolicy({
-                      policy,
-                      t,
-                      searchValue: debouncedSearchValue,
-                  })
-                : null,
-        [policy, debouncedSearchValue, t]
+            // Chains transformations for the entire tree
+            applyTransformationsToNodes(
+                // buildRenderTreeFromSourceData will take an arbitrary data structure, and
+                // convert it into a structure that can be rendered
+                // Full docs here: https://zinnia.atlassian.net/wiki/spaces/AU/pages/5738889232/Rendering+Data+Trees
+                (nodes) => buildRenderTreeFromSourceData(nodes, t),
+                (nodes) => groupBasicsForPolicy(nodes), // Groups all top-level DataField nodes into a section
+                (nodes) =>
+                    // Groups various data into sections, as defined by Policy FKV business rules
+                    groupSectionsForPolicy({
+                        nodes,
+                        t,
+                        planCode,
+                        policyNumber,
+                    }),
+                (nodes) =>
+                    // Transforms the entire tree, chaining transformations on *each node*
+                    transformNodes({
+                        nodes,
+                        transforms: [
+                            (node) =>
+                                // Excludes sections and fields that are required to be hidden specifically by carrier/product
+                                excludeNodeByCarrierRules({
+                                    node,
+                                    lineOfBusiness,
+                                    productType,
+                                    planCode,
+                                }),
+                            (node) =>
+                                // Excludes sections and fields that are required to be hidden across all data
+                                excludeNodesByLabel({
+                                    node,
+                                }),
+                            (node) =>
+                                // Adds a tooltip to the node if it exists in the tooltip mapping
+                                addToolTip({
+                                    node,
+                                    t,
+                                    policyNomenclature,
+                                }),
+                            (node) =>
+                                // Applies translations and formats dates, currencies, etc.
+                                formatNode({
+                                    node,
+                                    t,
+                                    policyNomenclature,
+                                }),
+                        ],
+                    })
+            )(policy),
+        [
+            policy,
+            t,
+            planCode,
+            policyNumber,
+            lineOfBusiness,
+            policyNomenclature,
+            productType,
+        ]
     );
 
-    const { basics, sections } = useMemo(
-        () =>
-            preparedPolicy
-                ? preparedPolicy.toSections()
-                : {
-                      basics: null,
-                      sections: null,
-                  },
-        [preparedPolicy]
+    const matches = useMemo(
+        () => searchNodes(policyNodes, debouncedSearchValue),
+        [policyNodes, debouncedSearchValue]
     );
 
     // If the search value changes to non-empty, expand the tree
@@ -119,43 +177,49 @@ export const PolicySidesheetContent = ({
             planCode: planCode,
         });
         setTreeState(Expand);
-    }, [debouncedSearchValue, authSessionId, planCode, policyNumber]);
+        setSearchValue(debouncedSearchValue);
+    }, [
+        debouncedSearchValue,
+        authSessionId,
+        planCode,
+        policyNumber,
+        setTreeState,
+        setSearchValue,
+    ]);
 
-    if (!preparedPolicy) return null; //TODO: DEPU-XXXX add loading state
     return (
         <div className={styles.keyValuesContainer}>
-            <FieldDateSelect
-                label={t('label.findKeyValuesDate') as string}
-                className={styles.datePicker}
-                id="start-date"
-                isFutureDateDisabled={true}
-                onChange={handleDateChange}
-                size={FieldSize.Small}
-                type={FieldType.BaseActive}
-                message={
-                    fieldError || isError
-                        ? (t('label.findKeyValuesDateError') as string)
-                        : ''
+            <FieldDateSingle
+                name={'select-date'}
+                label={
+                    <Label labelFor="select-date">
+                        {t('label.findKeyValuesDate') || ''}
+                    </Label>
                 }
-                variant={
-                    fieldError || isError
-                        ? FieldVariant.Error
-                        : FieldVariant.Default
+                disableAfterDate={new Date()}
+                disableBeforeDate={
+                    new Date(policy?.policyDates?.issueDate || '')
                 }
-                value={date || dayjs().format(NUMERIC_DATE_FORMAT)}
-                showMonths={true}
-                isDateAllowed={isDateAllowed}
+                defaultDate={new Date()}
+                onDateSelect={(date: Date | undefined) =>
+                    handleDateChange(date)
+                }
+                container={container}
+                fieldStatus={fieldError ? FieldStatus.ERROR : undefined}
+                formatErrorMsg={t('allFields.invalidDateFormat') || ''}
+                rangeErrorMsg={rangeErrorMsg}
+                handleCalendarOpen={handleCalendarOpen}
             />
-
             <FieldData
-                onChange={(e) => setSearchValue(e.target.value)}
+                onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                    setSearchValue(e.target.value)
+                }
                 handleClear={() => setSearchValue('')}
                 value={searchValue}
                 fieldType={FieldTypes.Search}
                 fieldSize={BloomFieldSize.Small}
                 placeholder="Search"
             />
-
             <BlurOverlayLoader loading={fieldError || isFetching || isError}>
                 <div className={styles.container}>
                     <div className={styles.treeControl}>
@@ -174,28 +238,12 @@ export const PolicySidesheetContent = ({
                                 className={styles.treeControlIcon}
                             />
                             {treeState === Expand
-                                ? 'Collapse all'
-                                : 'Expand all'}
+                                ? t('allFields.collapseAll')
+                                : t('allFields.expandAll')}
                         </Button>
                     </div>
-                    {basics && (
-                        <KeyValueBasics
-                            policyBasics={basics as NestedData[]}
-                            searchValue={searchValue}
-                            treeState={treeState}
-                        />
-                    )}
-
-                    {!!sections?.length && (
-                        <KeyValueSections
-                            preparedData={preparedPolicy}
-                            sections={sections}
-                            searchValue={searchValue}
-                            treeState={treeState}
-                        />
-                    )}
-
-                    {!basics && !sections?.length && (
+                    <DataNodesRenderer nodes={matches} />
+                    {!matches.length && (
                         <div className={styles.emptySearch}>
                             <Label>
                                 <Icon

@@ -1,9 +1,3 @@
-import {
-    PaymentForm,
-    ArrangementType,
-    Status,
-    SystematicProgram,
-} from '@zinnia/api-types/types/sor';
 import { FieldData, FieldSize, Radio } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -23,6 +17,12 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { usePaymentFormsQuery } from '@deps/hooks/usePaymentFormsQuery';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
+import {
+    PaymentForm,
+    ArrangementType,
+    Status,
+    SystematicProgram,
+} from '@zinnia/api-types/types/sor';
 
 import { BankDetailsCards } from './bank-details-cards';
 import { PaymentMethodType, PaymentStepProps } from './types';
@@ -68,6 +68,7 @@ const PaymentStepMoneyOut = ({
         data: bankDetails,
         isLoading: bankDetailsLoading,
         isError: bankDetailsError,
+        error: paymentMethodsError,
     } = usePaymentMethods({
         state,
         policy,
@@ -351,6 +352,9 @@ const PaymentStepMoneyOut = ({
                                     <BankDetailsCards
                                         bankDetails={bankDetails}
                                         bankDetailsError={bankDetailsError}
+                                        bankDetailsErrorDetails={
+                                            paymentMethodsError
+                                        }
                                         bankDetailsLoading={bankDetailsLoading}
                                         paymentBankId={paymentBankId}
                                         dataTestid="payment-methods-money-out"

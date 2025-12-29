@@ -18,19 +18,14 @@ beforeEach(() => {
 });
 
 const validateAxiosParams =
-    (expectedConfig: AxiosAuthRequestConfig, expectedLogCtx: LoggingContext) =>
-    (
-        {
-            url,
-            method,
-            params,
-            headers,
-            authorization,
-            validateStatus,
-            data,
-        }: AxiosAuthRequestConfig,
-        logCtx: LoggingContext
-    ) => {
+    (expectedConfig: AxiosAuthRequestConfig) =>
+    ({
+        url,
+        method,
+        params,
+        authorization,
+        validateStatus,
+    }: AxiosAuthRequestConfig) => {
         expect(validateStatus?.(500)).toEqual(true);
 
         expect(url).toEqual(expectedConfig.url);
@@ -75,13 +70,10 @@ describe('createProxyRequestHandler', () => {
         });
 
         serverApiMock.request.mockImplementationOnce((config, _logCtx) => {
-            validateAxiosParams(
-                {
-                    url: 'https://test.com/test',
-                    method: 'GET',
-                },
-                logCtx
-            )(config, _logCtx);
+            validateAxiosParams({
+                url: 'https://test.com/test',
+                method: 'GET',
+            })(config);
 
             return Promise.resolve({
                 status: 200,
@@ -115,16 +107,13 @@ describe('createProxyRequestHandler', () => {
         });
 
         serverApiMock.request.mockImplementationOnce((config, _logCtx) => {
-            validateAxiosParams(
-                {
-                    url: 'https://test.com/test',
-                    method: 'POST',
-                    data: {
-                        payload: 'test-payload',
-                    },
+            validateAxiosParams({
+                url: 'https://test.com/test',
+                method: 'POST',
+                data: {
+                    payload: 'test-payload',
                 },
-                logCtx
-            )(config, _logCtx);
+            })(config);
 
             return Promise.resolve({
                 status: 200,
@@ -181,16 +170,13 @@ describe('createProxyRequestHandler', () => {
         });
 
         serverApiMock.request.mockImplementationOnce((config, _logCtx) => {
-            validateAxiosParams(
-                {
-                    url: 'https://test.com/test',
-                    method: 'GET',
-                    params: {
-                        search: 'test-query',
-                    },
+            validateAxiosParams({
+                url: 'https://test.com/test',
+                method: 'GET',
+                params: {
+                    search: 'test-query',
                 },
-                logCtx
-            )(config, _logCtx);
+            })(config);
 
             return Promise.resolve({
                 status: 200,
@@ -220,15 +206,13 @@ describe('createProxyRequestHandler', () => {
             url: '/api/test',
         });
 
-        serverApiMock.request.mockImplementationOnce(
-            async (config, _logCtx) => ({
-                status: 404,
-                statusText: 'Not Found',
-                data: {
-                    message: 'Item Not Found',
-                },
-            })
-        );
+        serverApiMock.request.mockImplementationOnce(async (_, _logCtx) => ({
+            status: 404,
+            statusText: 'Not Found',
+            data: {
+                message: 'Item Not Found',
+            },
+        }));
 
         await routeHandler(req, res, logCtx);
 
@@ -246,7 +230,7 @@ describe('createProxyRequestHandler', () => {
             url: '/api/test',
         });
 
-        serverApiMock.request.mockImplementationOnce(async (config, logCtx) => {
+        serverApiMock.request.mockImplementationOnce(async (_, _logCtx) => {
             throw new Error('Some error');
         });
 
@@ -271,16 +255,14 @@ describe('createProxyRequestHandler', () => {
             url: '/api/test',
         });
 
-        serverApiMock.request.mockImplementationOnce(
-            async (config, _logCtx) => ({
-                status: 200,
-                data: {
-                    success: true,
-                },
-            })
-        );
+        serverApiMock.request.mockImplementationOnce(async (_, _logCtx) => ({
+            status: 200,
+            data: {
+                success: true,
+            },
+        }));
 
-        const onProxyRes = jest.fn((proxyRes, req, res, logCtx) => {
+        const onProxyRes = jest.fn((proxyRes, _, res, __) => {
             expect(proxyRes.status).toEqual(200);
             expect(proxyRes.data).toEqual({
                 success: true,
@@ -317,17 +299,15 @@ describe('createProxyRequestHandler', () => {
             url: '/api/test',
         });
 
-        serverApiMock.request.mockImplementationOnce(
-            async (config, _logCtx) => ({
-                status: 404,
-                data: {
-                    message: 'Not Found',
-                },
-            })
-        );
+        serverApiMock.request.mockImplementationOnce(async (_, _logCtx) => ({
+            status: 404,
+            data: {
+                message: 'Not Found',
+            },
+        }));
 
         const onProxyRes = jest.fn();
-        const onProxyErr = jest.fn((proxyRes, req, res, logCtx) => {
+        const onProxyErr = jest.fn((proxyRes, _, res, __) => {
             expect(proxyRes.status).toEqual(404);
             expect(proxyRes.data).toEqual({
                 message: 'Not Found',

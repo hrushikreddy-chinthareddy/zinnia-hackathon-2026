@@ -1,9 +1,11 @@
+import { AxiosResponse } from 'axios';
+
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     HTTPValidationError,
     UserTransactionInput,
     UserTransactionOutput,
 } from '@zinnia/api-types/types/analytics';
-import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -21,13 +23,11 @@ export const getUserTransactionCounts = async (
             totalElements: response.totalElements,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getUserTransactionCounts::An error occurred while getting user transaction results',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
-        return error;
+
+        throw error;
     }
 };

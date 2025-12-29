@@ -1,4 +1,3 @@
-import { TransactionStatus } from '@xd/api-types/dist/generated-types/sor';
 import { Loader } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 
@@ -8,6 +7,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 import { TransactionSideSheetValues } from '../types';
 

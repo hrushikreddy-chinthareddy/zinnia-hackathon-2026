@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
-import { removeAllFilters } from '@deps/components/history/filters/filter.helpers';
 import TransactionStatusFilter from '@deps/components/history/filters/status-filter';
 import TypeFilters from '@deps/components/history/filters/type-filters';
 import YearFilter from '@deps/components/history/filters/year-filter';
@@ -14,6 +13,7 @@ import SideSheet from '@deps/components/side-sheet/side-sheet';
 import { TranslationFiles } from '@deps/config/translations';
 import {
     HistoryFilters,
+    initialFilter,
     useHistoryFiltersContext,
 } from '@deps/contexts/HistoryFiltersContext';
 
@@ -47,7 +47,7 @@ const SideSheetHistory = ({
     };
 
     const handleClear = () => {
-        removeAllFilters(setHistoryFilters);
+        setHistoryFilters(initialFilter);
         setIsSideSheetOpen(false);
     };
 

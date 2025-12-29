@@ -9,10 +9,6 @@
     gap: var(--measure-dimension-gap-2xl);
 }
 
-.datePicker {
-    width: 295px;
-}
-
 .treeControl {
     margin-bottom: var(--measure-dimension-margin-xs);
 
@@ -23,16 +19,6 @@
         transform: rotate(-90deg);
         padding: 0 var(--measure-dimension-padding-xs);
     }
-}
-
-.itemsList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.subSectionStd > .itemsList {
-    padding-bottom: var(--measure-dimension-padding-lg);
 }
 
 .fieldLabel {
@@ -48,28 +34,54 @@
     z-index: 600;
 }
 
-.subSectionContainer:has(.subSectionStd) {
-    border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
-    border-radius: var(--measure-dimension-radius-sm);
+.itemsList,
+.subSectionContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-md);
 }
 
-.subSectionContainer > .subSectionStd {
-    margin: var(--measure-dimension-padding-xl);
+.itemsList > .subSectionContainer {
+    padding: var(--measure-dimension-padding-xl);
+    gap: var(--measure-dimension-margin-xs);
+
+    &:first-child {
+        border: var(--measure-dimension-stroke-sm) solid
+            var(--color-base-border-border-light);
+        border-radius: var(--measure-dimension-radius-sm);
+    }
+}
+
+.subSectionStd > .itemsList {
+    padding-bottom: var(--measure-dimension-padding-lg);
 }
 
 .subSectionStd + .subSectionStd {
     border-top: var(--measure-dimension-stroke-sm) solid
         var(--color-base-border-border-light);
     padding-top: var(--measure-dimension-padding-xl);
+    &:last-child {
+        padding-bottom: 0;
+    }
 }
 
-.subSectionBoxed {
+.subSection .subSection {
     padding: var(--measure-dimension-padding-xl);
     gap: var(--measure-dimension-margin-xs);
     border: var(--measure-dimension-stroke-sm) solid
         var(--color-base-border-border-light);
     border-radius: var(--measure-dimension-radius-sm);
+}
+
+.subSectionContainer > .subSectionStd {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-md);
+}
+
+.subSectionStd > .subSection {
+    padding: var(--measure-dimension-padding-xl);
+    gap: var(--measure-dimension-margin-xs);
 
     &:not(:last-child) {
         margin-bottom: var(--measure-dimension-margin-xs);

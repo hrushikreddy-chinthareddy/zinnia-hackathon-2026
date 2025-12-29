@@ -216,8 +216,7 @@ export function useServiceFormReview({
             successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm.taskId,
-                buildFormV2(TaskStatus.Completed, document, formState),
-                timer
+                buildFormV2(TaskStatus.Completed, document, formState)
             );
             browserLogInfo(
                 successfulCaseUpdate && successfulCaseUpdate.id
@@ -234,8 +233,7 @@ export function useServiceFormReview({
             successfulCaseUpdate = await updateTask(
                 initialForm.caseId,
                 initialForm.taskId,
-                buildRenewalFormV2(TaskStatus.Completed),
-                timer
+                buildRenewalFormV2(TaskStatus.Completed)
             );
             browserLogInfo(
                 successfulCaseUpdate && successfulCaseUpdate.id

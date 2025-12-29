@@ -1,8 +1,5 @@
-import {
-    UserActivityOutputLevel1,
-    UserViewsOutputLevel1,
-} from '@xd/api-types/dist/generated-types/analytics';
-import { Icon, IconType, Link, Tooltip } from '@zinnia/bloom/components';
+import { Icon, IconType, Tooltip, Button } from '@zinnia/bloom/components';
+import { TFunction } from 'i18next';
 import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -10,14 +7,23 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import {
+    UserActivityOutputLevel1,
+    UserIllustrationActivityOutputLevel1,
+    UserViewsOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 type UsageCommonLayoutProps = {
     title: string;
     data: UserActivityOutputLevel1[] | UserViewsOutputLevel1[];
     csvFileName: string;
     csvFunction: (
-        data: UserActivityOutputLevel1[] | UserViewsOutputLevel1[],
-        csvFileName: string
+        data:
+            | UserActivityOutputLevel1[]
+            | UserViewsOutputLevel1[]
+            | UserIllustrationActivityOutputLevel1[],
+        csvFileName: string,
+        t?: TFunction
     ) => void;
     description?: string;
     titleToolTip?: ReactNode;
@@ -45,7 +51,8 @@ const UsageHeaderLayout = ({
                                 <CircleInfoIcon
                                     height={'16px'}
                                     width={'16px'}
-                                    className="text-secondary"
+                                    className="tooltip-secondary"
+                                    color="var(--color-links-color-global-link)"
                                 />
                             }
                         >
@@ -61,15 +68,16 @@ const UsageHeaderLayout = ({
                         description
                     ))}
             </div>
-            <div
-                className="flex items-center gap-2"
+            <Button
+                mode="link"
+                size="small"
                 onClick={() => {
-                    data.length && csvFunction(data, csvFileName);
+                    data.length && csvFunction(data, csvFileName, t);
                 }}
             >
-                <Icon type={IconType.DOWNLOAD} />
-                <Link href={'#'} text={t('usage.logins.exportToCSV')} />
-            </div>
+                <Icon type={IconType.DOWNLOAD} color="black" />
+                <span>{t('allFields.exportToCsv')}</span>
+            </Button>
         </div>
     );
 };

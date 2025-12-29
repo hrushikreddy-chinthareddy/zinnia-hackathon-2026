@@ -3,7 +3,7 @@ import { HttpStatusCode } from 'axios';
 
 import { HttpMethod } from '@deps/constants/policy';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
-import { SSEEventType } from '@deps/types/knowledge-base';
+import { AnswerMode, SSEEventType } from '@deps/types/knowledge-base';
 import {
     logError,
     logTrace,
@@ -11,8 +11,9 @@ import {
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
 
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { createSSEEventHandler, handleSSEChunk, sendSSE } from '../utils';
+
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 export const config = {
     api: {
@@ -29,7 +30,13 @@ export default withAuthAndLogging(
                 .json({ error: 'Method not allowed' });
         }
 
-        const { sessionId, question, messageId, commonClientId } = req.query;
+        const {
+            sessionId,
+            question,
+            messageId,
+            commonClientId,
+            responseType = AnswerMode.Short,
+        } = req.query;
         if (!sessionId || !question || !messageId || !commonClientId) {
             logError(
                 `Missing sessionId, question, messageId or commonClientId:: sessionId=${sessionId}, question=${question}, messageId=${messageId}, commonClientId=${commonClientId}`,
@@ -51,7 +58,11 @@ export default withAuthAndLogging(
                     'content-type': 'application/json',
                     Authorization: `Bearer ${accessToken} `,
                 },
-                body: JSON.stringify({ question, clientId: commonClientId }),
+                body: JSON.stringify({
+                    question,
+                    clientId: commonClientId,
+                    responseType,
+                }),
             });
 
             logTrace('Upstream response received', {
@@ -98,10 +109,14 @@ export default withAuthAndLogging(
                     definitiveAnswerFound = event.definitiveAnswerFound;
                 },
             });
-
-            while (true) {
+            let readerDone = false;
+            while (!readerDone) {
                 const { done, value } = await reader.read();
-                if (done) break;
+                readerDone = done === true;
+
+                if (done) {
+                    break;
+                }
 
                 buffer += decoder.decode(value, { stream: true });
                 const parts = buffer.split('\n\n');

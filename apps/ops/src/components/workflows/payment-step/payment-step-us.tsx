@@ -39,6 +39,7 @@ const PaymentStepUS = ({
         data: paymentMethods = [],
         isLoading: paymentMethodsLoading,
         isError: paymentMethodsError,
+        error: paymentMethodsErrorData,
     } = usePaymentMethods({
         state,
         policy,
@@ -160,6 +161,7 @@ const PaymentStepUS = ({
                             handleSelection={handleSelection}
                             t={t}
                             dataTestid="payment-methods"
+                            bankDetailsErrorDetails={paymentMethodsErrorData}
                         />
                     </div>
                 </div>

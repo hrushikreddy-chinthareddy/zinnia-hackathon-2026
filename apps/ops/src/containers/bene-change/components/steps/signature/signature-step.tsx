@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useState, useCallback, useEffect, ChangeEvent } from 'react';
@@ -25,6 +24,7 @@ import {
 } from '@deps/models/case/renewal/signature-validation';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import { TransactionResponse } from '@deps/queries/api/bpm';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { useReRegSignatureStepConfig } from './signature-step-helpers';
 import { useBeneChange } from '../../../bene-change-provider';
@@ -38,7 +38,6 @@ interface SignatureStepProps {
 }
 const SignatureStep = ({
     policy,
-    parentPage,
     leaveTransactionLink,
     validateTransaction,
 }: SignatureStepProps) => {
@@ -85,8 +84,6 @@ const SignatureStep = ({
         formErrors,
         setFormErrors,
         setValidationResponse,
-        validationResponse,
-        ownerInfo,
     } = useBeneChange();
 
     const [spousalConsent, setSpousalConsent] = useState(

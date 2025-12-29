@@ -1,18 +1,15 @@
-import { SourceDocument } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Loader, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
-import Button from '@deps/components/button/button';
 import ChatResponse from '@deps/components/knowledge-base/chat/chat-response/chat-response';
 import { TranslationFiles } from '@deps/config/translations';
-import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { useChatStream } from '@deps/hooks/knowledge-base/useChatStream';
 import { useScroll } from '@deps/hooks/useScroll';
 import { getFollowupMessages } from '@deps/queries/api/knowledge-base';
-import { ReactComponent as SendButton } from '@deps/styles/elements/icons/knowledge-base/send.svg';
 import {
+    AnswerMode,
     ChatbotMessage,
     FeedbackType,
     KeyboardEvents,
@@ -20,8 +17,11 @@ import {
     UserMessage,
 } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './follow-up.module.css';
+import ActionButton from '../action-button/action-button';
+import AnswerModeSelect from '../answer-mode-select/answer-mode-select';
 import ChatQuestion from '../chat-question/chat-question';
 
 type FollowUpProps = {
@@ -32,6 +32,8 @@ type FollowUpProps = {
     sourceDocuments?: SourceDocument[];
     submittedFeedbackType?: FeedbackType | null;
     submittedFeedbackComment?: string | null;
+    selectedClientId: string;
+    commonClientId: string;
 };
 type FollowUpChainMessage = {
     id: string;
@@ -47,11 +49,12 @@ const FollowUp = ({
     sourceDocuments = [],
     submittedFeedbackType = null,
     submittedFeedbackComment = null,
+    selectedClientId,
+    commonClientId,
 }: FollowUpProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
-    const { selectedClientId } = useKnowledgeBaseContext();
     const {
         response: chatbotResponse,
         status,
@@ -59,9 +62,10 @@ const FollowUp = ({
         isStreaming,
         followUpId,
         sendFollowUp,
+        stopStreaming,
         definitiveAnswerFound,
         getCommonClientFollowUp,
-    } = useChatStream(selectedClientId);
+    } = useChatStream(selectedClientId, commonClientId);
     const [loading, setLoading] = useState<boolean>(false);
     const [followUpQuestion, setFollowUpQuestion] = useState<string>('');
     const [followUpChain, setFollowUpChain] = useState<FollowUpChainMessage[]>(
@@ -74,6 +78,7 @@ const FollowUp = ({
     const { handleContainerScroll, scrollContainerRef, endref } =
         useScroll(followUpChain);
     const botMsgIdRef = useRef<string | null>(null);
+    const [answerMode, setAnswerMode] = useState<AnswerMode>(AnswerMode.Short);
 
     const MAX_FOLLOWUPS_ALLOWED = 5;
 
@@ -146,6 +151,7 @@ const FollowUp = ({
             await sendFollowUp(
                 questionId,
                 userMessage.content,
+                answerMode,
                 parentFollowUpId
             );
             const botMsgId = uuidv4();
@@ -186,7 +192,8 @@ const FollowUp = ({
         );
         await getCommonClientFollowUp(
             botMsgIdRef.current,
-            lastFollowUp?.user?.content
+            lastFollowUp?.user?.content,
+            answerMode
         );
 
         const chatbotMessage: ChatbotMessage = {
@@ -202,6 +209,10 @@ const FollowUp = ({
                     : msg
             )
         );
+    };
+
+    const handleStopResponse = () => {
+        stopStreaming();
     };
 
     useEffect(() => {
@@ -265,7 +276,7 @@ const FollowUp = ({
 
     return (
         <div
-            className="w-full pt-4 flex flex-col gap-4 h-full"
+            className="w-full p-4 flex flex-col gap-4 h-full"
             data-testid="followup-modal"
         >
             {loading ? (
@@ -340,44 +351,53 @@ const FollowUp = ({
                     </div>
 
                     <div className={`${styles.textboxContainer}`}>
-                        <textarea
-                            className={`!outline-none !ring-0 ${styles.textarea}`}
-                            value={followUpQuestion}
-                            onChange={(e) =>
-                                setFollowUpQuestion(e.target.value)
-                            }
-                            onKeyDown={(e) => {
-                                if (e.key === KeyboardEvents.Enter) {
-                                    handleFollowUpQuestionSend();
+                        <div className="w-full flex flex-col">
+                            <textarea
+                                className={`!outline-none !ring-0 ${styles.textarea}`}
+                                value={followUpQuestion}
+                                onChange={(e) =>
+                                    setFollowUpQuestion(e.target.value)
                                 }
-                            }}
-                            disabled={
-                                isStreaming ||
-                                totalFollowUps >= MAX_FOLLOWUPS_ALLOWED
-                            }
-                            placeholder={t('chat.followUpPlaceholder') || ''}
-                        ></textarea>
+                                rows={2}
+                                onKeyDown={(e) => {
+                                    if (e.key === KeyboardEvents.Enter) {
+                                        handleFollowUpQuestionSend();
+                                    }
+                                }}
+                                disabled={
+                                    isStreaming ||
+                                    totalFollowUps >= MAX_FOLLOWUPS_ALLOWED
+                                }
+                                placeholder={
+                                    t('chat.followUpPlaceholder') || ''
+                                }
+                            ></textarea>
+                            <AnswerModeSelect
+                                isStreaming={isStreaming}
+                                modeSelected={answerMode}
+                                onModeSelectedChange={setAnswerMode}
+                            />
+                        </div>
                         <Tooltip
                             placement={TooltipPlacement.CenterLeft}
                             triggerClassName="!w-auto"
                             tooltipClassName="!w-auto !p-0 !px-2 z-50"
                             trigger={
-                                <Button
-                                    aria-label="send-followup"
-                                    className="!bg-transparent !border-none !pl-2 !p-0"
-                                    onClick={handleFollowUpQuestionSend}
-                                >
-                                    <SendButton
-                                        className={`!w-[30px] transition-all duration-300 ${
-                                            isStreaming ||
-                                            totalFollowUps >=
-                                                MAX_FOLLOWUPS_ALLOWED ||
-                                            !followUpQuestion.trim()
-                                                ? 'text-gray-400'
-                                                : 'text-gray-700'
-                                        }`}
-                                    />
-                                </Button>
+                                <ActionButton
+                                    ariaLabel="send-followup"
+                                    message={followUpQuestion}
+                                    disabled={
+                                        totalFollowUps >=
+                                            MAX_FOLLOWUPS_ALLOWED ||
+                                        (!isStreaming &&
+                                            !followUpQuestion.trim())
+                                    }
+                                    isStreaming={isStreaming}
+                                    handleMessageSend={
+                                        handleFollowUpQuestionSend
+                                    }
+                                    handleStopResponse={handleStopResponse}
+                                />
                             }
                         >
                             {t('chat.send')}

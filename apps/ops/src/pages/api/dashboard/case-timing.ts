@@ -1,13 +1,13 @@
-import {
-    CompletedCaseTimeOutput,
-    HTTPValidationError,
-} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    CompletedCaseTimeOutput,
+    HTTPValidationError,
+} from '@zinnia/api-types/types/analytics';
 
 export default withAuthAndLogging(
     async (

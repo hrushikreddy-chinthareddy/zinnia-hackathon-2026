@@ -24,6 +24,7 @@ const mockBrowserLogError = jest.fn();
 jest.mock('@deps/queries/api/knowledge-base', () => ({
     getDocumentPreview: jest.fn(),
 }));
+
 jest.mock('next-i18next', () => ({
     useTranslation: () => ({
         t: (key: string) => key,

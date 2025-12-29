@@ -1,4 +1,3 @@
-import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Icon,
     IconType,
@@ -13,6 +12,7 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { TFunction, useTranslation } from 'next-i18next';
+import { v4 as uuidV4 } from 'uuid';
 
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import NavElement, {
@@ -26,6 +26,7 @@ import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
@@ -40,6 +41,7 @@ import {
     CaseDocumentClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
 import { DocumentWithSource } from './documents-sub-page';
@@ -50,6 +52,13 @@ type DocumentsResultsTableProps = {
     linkedDocumentIdentifiers?: string[];
     policyNumber: string;
     results: DocumentWithSource[] | V3DocumentWithSource[];
+    planCode: string | undefined;
+    policyDeliveryDate: string | undefined;
+    /**
+     * Indicates whether this table is showing case-level or policy-level documents.
+     * Defaults to 'policy' for backward compatibility.
+     */
+    context?: 'case' | 'policy';
 };
 
 const DownloadItem = ({
@@ -88,7 +97,10 @@ const DownloadItem = ({
 
     return (
         <NavElement
-            className="text-left underline underline-offset-2"
+            className={clsx(
+                'text-left underline underline-offset-2',
+                styles.actionPadding
+            )}
             onClick={downloadDocument}
             size={NavElementSize.Small}
             title={`${t('general.download')} ${doc.displayName}`}
@@ -105,7 +117,7 @@ const DownloadItem = ({
     );
 };
 
-export const createAction = (
+export const createViewDownloadAction = (
     doc: DocumentWithSource | V3DocumentWithSource,
     carrierCode: string,
     t: TFunction,
@@ -113,7 +125,7 @@ export const createAction = (
 ) => {
     return isPreviewSupported(doc) ? (
         <DocumentPreviewer
-            className="!underline-offset-2"
+            className={clsx('!underline-offset-2', styles.actionPadding)}
             carrier={carrierCode}
             displayName={
                 (doc.displayName || doc.documentId) ??
@@ -132,20 +144,92 @@ export const createAction = (
     );
 };
 
+export const createSendAction = (
+    policyNumber: string,
+    planCode: string | undefined,
+    policyDeliveryDate: string | undefined,
+    t: TFunction
+) => {
+    return (
+        <NavElement
+            className={clsx(
+                'text-left underline underline-offset-2',
+                styles.actionPadding,
+                !policyDeliveryDate && styles.disabled
+            )}
+            href={`/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+            size={NavElementSize.Small}
+            title={`${t('general.send')}`}
+            type={NavElementType.Link}
+            disabled={!policyDeliveryDate}
+        >
+            {t('general.send')}
+        </NavElement>
+    );
+};
+
 export default function DocumentsResultsTable({
     carrierCode,
     documentType,
     linkedDocumentIdentifiers = [],
     policyNumber,
     results,
+    planCode,
+    policyDeliveryDate,
+    context,
 }: DocumentsResultsTableProps) {
-    const { t } = useTranslation(undefined, { keyPrefix: 'policy.documents' });
+    const { featureFlags } = useOptimizely();
+    const pd = 'policy.documents';
+    const { t } = useTranslation();
+
+    const isSent = documentType === DocumentTypeView.Correspondence;
+    // Explicitly check for 'case' context, default to 'policy' if undefined or not 'case'
+    const isCaseContext = context === 'case';
+
+    // Determine caption based on context and document type using switch
+    const contextType = isCaseContext ? 'case' : 'policy';
+    const documentDirection = isSent ? 'sent' : 'received';
+    const captionKey = `${contextType}-${documentDirection}`;
+
+    let translationKey: string;
+    let captionId: string;
+
+    switch (captionKey) {
+        case 'case-sent':
+            translationKey = 'allFields.tableCaptionsSentCaseDocuments';
+            captionId = 'sent-case-documents-table-description';
+            break;
+        case 'case-received':
+            translationKey = 'allFields.tableCaptionsReceivedCaseDocuments';
+            captionId = 'received-case-documents-table-description';
+            break;
+        case 'policy-sent':
+            translationKey = 'allFields.tableCaptionsSentPolicyDocuments';
+            captionId = 'sent-policy-documents-table-description';
+            break;
+        case 'policy-received':
+            translationKey = 'allFields.tableCaptionsReceivedPolicyDocuments';
+            captionId = 'received-policy-documents-table-description';
+            break;
+        default:
+            // Fallback to policy-received if something unexpected happens
+            translationKey = 'allFields.tableCaptionsReceivedPolicyDocuments';
+            captionId = 'received-policy-documents-table-description';
+            break;
+    }
+
+    const captionText = t(translationKey);
 
     return (
-        <Table className="my-8" stickyColumn={TableStickyColumn.End}>
-            <caption className="hidden">{`${policyNumber} ${t(
-                'documents'
-            )}`}</caption>
+        <Table
+            className="my-8"
+            stickyColumn={TableStickyColumn.End}
+            aria-describedby={captionId}
+            role="table"
+        >
+            <caption id={captionId} className="sr-only">
+                {captionText ?? ''}
+            </caption>
             <TableHeader className="typography-content-body-sm-bold">
                 <TableRow>
                     <TableHeaderCell>
@@ -154,18 +238,18 @@ export default function DocumentsResultsTable({
                                 variant={TypographyVariant.BodySmBold}
                                 asTag="h3"
                             >
-                                {t('documentId')}
+                                {t(`${pd}.documentId`)}
                             </Typography>
                             {documentType !==
                                 DocumentTypeView.Correspondence && (
                                 <Popover
-                                    body={t('documentIdentifierTooltip')}
-                                    title={t('documentId') as string}
+                                    body={t(`${pd}.documentIdentifierTooltip`)}
+                                    title={t(`${pd}.documentId`) ?? ''}
                                     placement={PopoverPlacement.TopRight}
                                 >
                                     <Icon
                                         type={IconType.CIRCLE_INFO}
-                                        color="var(--color-primary-color-primary)"
+                                        color="var(--color-base-icon-icon-action-text-link)"
                                         height={16}
                                         width={16}
                                     />
@@ -176,27 +260,32 @@ export default function DocumentsResultsTable({
                     <TableHeaderCell>
                         {t(
                             documentType === DocumentTypeView.Correspondence
-                                ? 'sentDate'
-                                : 'receivedDate'
+                                ? `${pd}.sentDate`
+                                : `${pd}.receivedDate`
                         )}
                     </TableHeaderCell>
-                    <TableHeaderCell>{t('fileType')}</TableHeaderCell>
+                    <TableHeaderCell>{t(`${pd}.fileType`)}</TableHeaderCell>
                     <TableHeaderCell>
-                        <div className="flex flex-row items-center gap-1">
+                        <div
+                            className={clsx(
+                                'flex flex-row items-center gap-1',
+                                styles.actionPadding
+                            )}
+                        >
                             <Typography
                                 variant={TypographyVariant.BodySmBold}
                                 asTag="h3"
                             >
-                                {t('actions')}
+                                {t(`${pd}.actions`)}
                             </Typography>
                             <Popover
-                                body={t('actionsTooltip')}
-                                title={t('actions') as string}
+                                body={t(`${pd}.actionsTooltip`)}
+                                title={t(`${pd}.actions`) ?? ''}
                                 placement={PopoverPlacement.TopLeft}
                             >
                                 <Icon
                                     type={IconType.CIRCLE_INFO}
-                                    color="var(--color-primary-color-primary)"
+                                    color="var(--color-base-icon-icon-action-text-link)"
                                     height={16}
                                     width={16}
                                 />
@@ -232,11 +321,11 @@ export default function DocumentsResultsTable({
                                         ) ? (
                                             <Tooltip
                                                 body={
-                                                    t('linkedTo', {
+                                                    t(`${pd}.linkedTo`, {
                                                         type:
                                                             document.documentType?.toLowerCase() ||
                                                             DEFAULT_ERROR_STRING,
-                                                    }) as string
+                                                    }) ?? ''
                                                 }
                                                 placement={
                                                     PopoverPlacement.TopRight
@@ -269,7 +358,21 @@ export default function DocumentsResultsTable({
                                 <span>{document.fileType}</span>
                             </TableCell>
                             <TableCell>
-                                {createAction(document, carrierCode, t)}
+                                {createViewDownloadAction(
+                                    document,
+                                    carrierCode,
+                                    t
+                                )}
+
+                                {featureFlags.send_policy_pages &&
+                                document.documentType === 'POLPG'
+                                    ? createSendAction(
+                                          policyNumber,
+                                          planCode,
+                                          policyDeliveryDate,
+                                          t
+                                      )
+                                    : null}
                             </TableCell>
                         </TableRow>
                     );
@@ -283,7 +386,7 @@ export default function DocumentsResultsTable({
                             )}
                             colSpan={5}
                         >
-                            {t('noResults')}
+                            {t(`${pd}.noResults`)}
                         </TableCell>
                     </TableRow>
                 )}

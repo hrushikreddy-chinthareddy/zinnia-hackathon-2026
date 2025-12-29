@@ -16,13 +16,15 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
+import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getCallLogsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { ReactComponent as VolumeUp } from '@deps/styles/elements/icons/icons_outlined/volume-up.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { AudioDetailsContent } from './audio-details-content';
+import styles from './call-logs.module.css';
+
 export const NoSummaryCard = ({ content }: { content: string }) => (
     <div className="flex items-center gap-1 rounded-sm border border-dashed border-gray-100 bg-gray-50 p-4">
         <Icon type={IconType.PHONE} height={16} width={16} />
@@ -194,12 +196,7 @@ export default function CallLogsTab({
     });
 
     return (
-        <CardContainer>
-            <div>
-                <Typography variant={TypographyVariant.H2}>
-                    {toTitleCase(`${t('caseOverview.tabs.call-logs')}`)}
-                </Typography>
-            </div>
+        <CardContainer classNames={styles.callLogsContainer}>
             {callLogsLoading ? (
                 <div className="p-8">
                     <PageLoader variant={PageLoaderVariant.Center} />

@@ -1,7 +1,6 @@
 // https://qa.api.zinnia.io/aggregation/v1/policies/{planCode}/{policyNumber}/paymentmethods
 
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { BankAccount } from '@xd/api-types/dist/generated-types/sor';
 import { AxiosResponse } from 'axios';
 import { NextApiRequest, NextApiResponse } from 'next';
 
@@ -14,20 +13,32 @@ import {
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { BankAccount } from '@zinnia/api-types/types/sor';
 
-type PaymentMethodResponse =
+export type PaymentMethodError = {
+    data: null;
+    error: {
+        status: number;
+        name: string;
+        message: string;
+    };
+};
+
+export type PaymentMethodResponse =
     | {
           data: BankAccount[];
           error: null;
       }
-    | {
-          data: null;
-          error: {
-              status: number;
-              name: string;
-              message: string;
-          };
-      };
+    | PaymentMethodError;
+
+export type IError = {
+    status: number;
+    name: string;
+    message: string;
+    data: {
+        message: string;
+    };
+};
 export default withAuthAndLogging(
     async (
         req: NextApiRequest,
@@ -92,14 +103,18 @@ export default withAuthAndLogging(
                 ...loggingContext,
             });
 
-            return res.status(500).json({
+            return res.status((error as IError).status || 500).json({
                 data: null,
                 error: {
-                    status: 500,
-                    name: 'Internal Server Error',
-                    message: 'Internal Server Error',
+                    status: (error as IError).status || 500,
+                    name:
+                        (error as IError).data.message ||
+                        'Internal Server Error',
+                    message:
+                        (error as IError).data.message ||
+                        'Internal Server Error',
                 },
-            });
+            } as PaymentMethodError);
         }
     },
     {

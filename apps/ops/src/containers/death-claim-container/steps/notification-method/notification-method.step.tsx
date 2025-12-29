@@ -1,11 +1,10 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
     Loader,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { RadioItem } from '@deps/components/radio/radio';
 import TransactionNavigationButtons, {
@@ -15,13 +14,14 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
-import { buildClaimPaylod } from '@deps/containers/death-claim-container/death-claim.helpers';
+import { buildClaimPayload } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { getBeneficiariesByRole } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
 import { useDeathClaim } from '@deps/contexts/DeathClaimContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import NotificationCard from './notification-card';
 import {
@@ -34,12 +34,14 @@ type NotificationMethodStepProps = {
     communicationOptions: RadioItem[];
     policy: Policy;
     user: UserProfile;
+    correlationId: string;
 };
 
 const NotificationMethodStep = ({
     policy,
     communicationOptions,
     user,
+    correlationId,
 }: NotificationMethodStepProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'deathClaims.notificationMethod',
@@ -54,6 +56,7 @@ const NotificationMethodStep = ({
         formErrors,
         onbaseCaseId,
         onbaseDocumentNumber,
+        caseId,
     } = useDeathClaim();
     const { goToNext } = useWorkflow();
     const [isLoading, setIsLoading] = useState(false);
@@ -80,20 +83,6 @@ const NotificationMethodStep = ({
         }
     }, [beneficiaries.length, policyBeneficiaries, setBeneficiaries]);
 
-    const handleStepContinue = async () => {
-        const asArray = Object.entries(formErrors);
-        const filterCb = asArray.filter(
-            ([key, value]) => value !== '' || key === 'submit'
-        );
-        const filteredErrors = Object.fromEntries(filterCb);
-        if (Object.keys(filteredErrors).length > 0) {
-            return;
-        } else {
-            await submit();
-            goToNext();
-        }
-    };
-
     const handleNotification = (data: any, index: number) => {
         setBeneficiaries((prevState) => {
             const newState = prevState;
@@ -105,18 +94,27 @@ const NotificationMethodStep = ({
         });
     };
 
-    const submit = async () => {
+    const submit = useCallback(async () => {
+        if (caseId) {
+            browserLogInfo('NotificationMethodStep::Claim already submitted', {
+                caseId,
+                policy: policy?.policyNumber,
+            });
+            return;
+        }
         setIsLoading(true);
-        const payload = buildClaimPaylod(
-            policy,
-            null,
-            notifiers,
-            owners,
-            beneficiaries,
-            onbaseCaseId,
-            onbaseDocumentNumber,
-            user
-        );
+        const payload = buildClaimPayload({
+            policy: policy,
+            document: null,
+            selNotifiers: notifiers,
+            selOwners: owners,
+            selBeneficiaries: beneficiaries,
+            onbaseCaseId: onbaseCaseId,
+            onbaseDocumentNumber: onbaseDocumentNumber,
+            user: user,
+            correlationId: correlationId,
+        });
+
         browserLogInfo('NotificationMethodStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
@@ -132,7 +130,33 @@ const NotificationMethodStep = ({
         }
 
         setIsLoading(false);
-    };
+    }, [
+        beneficiaries,
+        caseId,
+        correlationId,
+        notifiers,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+        owners,
+        policy,
+        setCaseId,
+        setSubmitFailed,
+        user,
+    ]);
+
+    const handleStepContinue = useCallback(async () => {
+        const asArray = Object.entries(formErrors);
+        const filterCb = asArray.filter(
+            ([key, value]) => value !== '' || key === 'submit'
+        );
+        const filteredErrors = Object.fromEntries(filterCb);
+        if (Object.keys(filteredErrors).length > 0) {
+            return;
+        } else {
+            await submit();
+            goToNext();
+        }
+    }, [formErrors, goToNext, submit]);
 
     return (
         <WorkflowCard

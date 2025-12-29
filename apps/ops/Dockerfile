@@ -13,8 +13,6 @@ COPY turbo.json turbo.json
 COPY pnpm-workspace.yaml pnpm-workspace.yaml
 # Copy only the ops app
 COPY apps/ops apps/ops
-# Copy shared packages (dependencies for ops)
-COPY packages packages
 # Prune the monorepo to only include ops and its dependencies
 RUN turbo prune ops --docker
 

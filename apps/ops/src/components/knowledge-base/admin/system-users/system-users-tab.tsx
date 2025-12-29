@@ -1,5 +1,3 @@
-import { UserResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
-import { formatDateTime } from '@xd/utils/src/dates';
 import {
     Pagination,
     Table,
@@ -26,6 +24,8 @@ import {
 } from '@deps/queries/api/knowledge-base';
 import { SortBy, SortDirection, SortFields } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { formatDateTime } from '@deps/utils/dates';
+import { UserResponse } from '@zinnia/api-types/types/knowledgebase';
 
 const PAGE_SIZE = 10;
 const MIN_SEARCH_TERM_LENGTH = 3;

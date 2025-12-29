@@ -1,9 +1,8 @@
-import { Party, Policy } from '@xd/api-types/dist/generated-types/sor';
-
 import {
     BeneChangePayload,
     ExtendedParty,
 } from '@deps/contexts/BeneChangeContext';
+import { Party, Policy } from '@zinnia/api-types/types/sor';
 
 export function updateIdentificationsFromPolicy(
     policy: Policy | null,

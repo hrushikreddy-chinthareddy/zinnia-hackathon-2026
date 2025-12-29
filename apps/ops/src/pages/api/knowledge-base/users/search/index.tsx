@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { UserResponse } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { AxiosResponse } from 'axios';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
@@ -9,6 +8,7 @@ import {
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { UserResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 

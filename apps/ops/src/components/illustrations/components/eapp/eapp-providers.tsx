@@ -59,17 +59,19 @@ export const EAppProviders: FC<PropsWithChildren<EAppProvidersProps>> = ({
                 />
             )}
             {illustrationHandlerFactory && (
-                <QuestionnaireEngineProvider
-                    blueprint={illustrationHandlerFactory.getBlueprint()}
-                    clientCase={clientCase || ({} as IllustrationsClientCase)}
-                    planCode={planCode}
-                    language={Language.en}
-                    versionedAnswers={versionedAnswers}
-                    subscribers={[]}
-                    timezone={timezoneResult.value}
-                    prePopulateData={illustrationHandlerFactory?.mapClientCaseInsuredData()}
-                >
-                    <EAppProvider>
+                <EAppProvider>
+                    <QuestionnaireEngineProvider
+                        factoryHandler={illustrationHandlerFactory}
+                        clientCase={
+                            clientCase || ({} as IllustrationsClientCase)
+                        }
+                        planCode={planCode}
+                        language={Language.en}
+                        versionedAnswers={versionedAnswers}
+                        subscribers={[]}
+                        timezone={timezoneResult.value}
+                        prePopulateData={illustrationHandlerFactory?.mapClientCaseInsuredData()}
+                    >
                         <SubmitProvider
                             factoryHandler={illustrationHandlerFactory}
                             submitCallback={submitCallback}
@@ -80,8 +82,8 @@ export const EAppProviders: FC<PropsWithChildren<EAppProvidersProps>> = ({
                                 {children}
                             </ActiveSectionProvider>
                         </SubmitProvider>
-                    </EAppProvider>
-                </QuestionnaireEngineProvider>
+                    </QuestionnaireEngineProvider>
+                </EAppProvider>
             )}
         </>
     );

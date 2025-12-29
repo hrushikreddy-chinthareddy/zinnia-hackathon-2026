@@ -1,7 +1,7 @@
 import { Meta, StoryObj } from '@storybook/react';
-import { Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
 
 import { mockPolicy } from '@deps/services/mocks/sor-policy';
+import { Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
 
 import DividerLabel, { DividerLabelProps } from './divider-label';
 import HistoryEventCard from '../history-event-card/history-event-card';

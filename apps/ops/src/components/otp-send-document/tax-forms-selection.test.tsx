@@ -1,5 +1,4 @@
 import '@testing-library/jest-dom';
-import { Client } from '@optimizely/optimizely-sdk';
 import { render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -38,20 +37,6 @@ afterEach(() => {
 });
 
 describe('TaxFormsSelection component', () => {
-    let mockClient: jest.Mocked<Client>;
-
-    beforeEach(() => {
-        mockClient = {
-            onReady: jest.fn().mockResolvedValue({ success: true }),
-            createUserContext: jest.fn().mockReturnValue({
-                decideAll: jest.fn().mockReturnValue({
-                    flag1: { enabled: true },
-                    flag2: { enabled: false },
-                }),
-            }),
-        } as unknown as jest.Mocked<Client>;
-    });
-
     const currentYear = new Date().getFullYear();
     const mockTaxYears = Array.from(
         { length: 5 },

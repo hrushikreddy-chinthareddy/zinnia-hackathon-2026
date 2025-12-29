@@ -1,3 +1,5 @@
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     PartyRole,
     Policy,
@@ -5,9 +7,6 @@ import {
     TaxWithholdingInstructions,
     TaxWithholdingType,
 } from '@zinnia/api-types/types/sor';
-
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 
 export interface Errors {
     federalBothCheckboxes?: boolean;

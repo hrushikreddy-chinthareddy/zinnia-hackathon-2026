@@ -1,4 +1,3 @@
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -26,13 +25,14 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import CaseDetailsSideNav from './case-details-side-nav';
 import { getSideNavData } from './case-helpers';
+import CaseSideNavFinancialTransaction from './case-side-nav-financial-transaction';
 import { PartiesProps } from './CaseSideNavParties';
 import CaseSideNavTabs from './CaseSideNavTabs';
 import Transactions from './CaseSideNavTransactions';
-
 export interface CaseSideNavProps {
     data: {
         carrier: string;
@@ -43,6 +43,7 @@ export interface CaseSideNavProps {
         productName: string;
         status: string;
         updatedDate: string;
+        estimatedCompletionAt?: string | null;
     };
 }
 
@@ -219,12 +220,24 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
 // #endregion
 
 // #region Case Side Nav
-const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
+const CaseSideNav = ({
+    caseDetails,
+    estimatedCompletionAt,
+}: {
+    caseDetails: Case;
+    estimatedCompletionAt?: string | null;
+}) => {
     const { t } = useTranslation();
     const caseActivityContext = useCaseActivityContext();
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const data = getSideNavData(caseDetails, caseActivityContext, t);
     const shouldShowCaseInsights = useCaseInsightsPermission();
+
+    const {
+        financialTransaction,
+        financialTransactionLoading,
+        isFinancialTransaction,
+    } = useCaseActivityContext();
 
     const getOpenAiSummary = async (caseDetails: Case) => {
         if (!caseDetails) {
@@ -270,6 +283,7 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                         carrier={caseDetails?.carrier}
                         process={caseDetails.process}
                         applicationType={caseDetails.applicationType}
+                        estimatedCompletionAt={estimatedCompletionAt}
                         caseProcessingDetails={
                             caseDetails.caseProcessingDetails
                         }
@@ -299,7 +313,16 @@ const CaseSideNav = ({ caseDetails }: { caseDetails: Case }) => {
                             </div>
                         </div>
                     )}
-                    <Transactions caseDetails={caseDetails} />
+                    {isFinancialTransaction ? (
+                        <CaseSideNavFinancialTransaction
+                            financialTransaction={financialTransaction}
+                            financialTransactionLoading={
+                                financialTransactionLoading
+                            }
+                        />
+                    ) : (
+                        <Transactions caseDetails={caseDetails} />
+                    )}
                 </div>
                 {caseDetails.process !== Processes.AgentOnboarding && (
                     <CaseSideNavTabs

@@ -9,6 +9,11 @@ jest.mock('next/router', () => ({
 }));
 
 describe('HyperLink Component', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('should render link with label', () => {
         render(
             <HyperLink

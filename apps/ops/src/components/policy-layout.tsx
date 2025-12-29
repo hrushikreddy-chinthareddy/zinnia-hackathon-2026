@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import React, { PropsWithChildren, useMemo } from 'react';
 
@@ -11,6 +10,7 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { PolicySearchResult } from '@deps/types/search';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 interface PageLayoutProps extends PropsWithChildren {
     policyDetails?: Policy;
@@ -29,7 +29,6 @@ const PolicyLayout: React.FC<PageLayoutProps> = ({
     hideSearch,
     showJointOwner,
     showLink,
-    policyReference,
 }) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();

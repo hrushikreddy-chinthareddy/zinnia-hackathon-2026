@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -20,6 +19,7 @@ import {
 import { getCases } from '@deps/queries/api/cases';
 import { fetchPolicy } from '@deps/queries/api/policies';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { useNigoEntry } from './nigo-entry-provider';
 import ConfirmStep from './steps/confirm/confirm-step';

@@ -1,7 +1,3 @@
-import {
-    Party,
-    PolicyPartyRoles,
-} from '@xd/api-types/dist/generated-types/sor';
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
@@ -56,6 +52,7 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 import { PartyRole, PartyType } from '@deps/models/policy/sor-policy';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../utils/form-validator.helpers';

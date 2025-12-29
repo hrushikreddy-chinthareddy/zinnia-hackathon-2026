@@ -115,6 +115,30 @@ describe('QuickQuoteProducts', () => {
         expect(tl10!.riders.accidentalDeathBenefit).toBe('age');
     });
 
+    it('marks Accidental Death rider as "face" when rider face amount is greater than product one', () => {
+        const engine = new QuickQuoteProducts(RULES_MODEL);
+        const params = createParams({
+            insuredAge: 65,
+            nicotineUser: false,
+            faceAmount: 50_000,
+            riders: {
+                accidentalDeathBenefit: 60_000,
+                childrensTerm: 10_000,
+                waiverOfPremium: true,
+            },
+        });
+
+        const result = engine.getProductsAvailableFor(params);
+
+        // Term Life 10 Yr
+        const tl10 = result.find(
+            (p) => p.planCode === 'TL0101' && p.termLength === 10
+        );
+        expect(tl10).toBeDefined();
+
+        expect(tl10!.riders.accidentalDeathBenefit).toBe('face');
+    });
+
     it('returns false for a rider that is not selected', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
