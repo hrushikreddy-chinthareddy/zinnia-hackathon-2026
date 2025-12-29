@@ -248,3 +248,9 @@ export const wholeNumberFormatify = (
 
     return new Intl.NumberFormat('en-US', options).format(numberValue);
 };
+
+export const normalizeNumber = (
+    value: number | string | null | undefined
+): number => {
+    return Number(String(value ?? 0).replace(/[$,]/g, '')) || 0;
+};
