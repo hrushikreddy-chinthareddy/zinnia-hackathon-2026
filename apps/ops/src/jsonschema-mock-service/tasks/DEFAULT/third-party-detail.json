@@ -199,7 +199,7 @@
                                         "phones": [
                                             {
                                                 "dialNumber": "",
-                                                "phoneType": "HOME",
+                                                "phoneType": "MOBILE",
                                                 "isPreferred": true
                                             }
                                         ],
@@ -393,7 +393,7 @@
                                                     "type": "object",
                                                     "default": {
                                                         "dialNumber": "",
-                                                        "phoneType": "HOME",
+                                                        "phoneType": "MOBILE",
                                                         "isPreferred": false
                                                     },
                                                     "properties": {
