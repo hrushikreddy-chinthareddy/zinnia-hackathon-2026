@@ -79,6 +79,11 @@ jest.mock('@optimizely/optimizely-sdk', () => ({
 }));
 
 describe('SideSheetDocumentItem', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('renders text for unsupported document types', () => {
         const testDate = new Date();
         testDate.setMonth(testDate.getMonth() - 10);

@@ -586,6 +586,7 @@
         "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}.",
         "year(s)": "año(s)",
         "remove": "Eliminar",
+        "openInNewWindow": "Abre en nueva ventana",
         "policyNumberSearchError": "Ingrese un número de póliza o contrato para mostrar resultados de búsqueda",
         "ssnSearchError": "Ingrese un número de Seguro Social para mostrar resultados de búsqueda",
         "firstNameSearchError": "Ingrese un nombre para mostrar resultados de búsqueda",
