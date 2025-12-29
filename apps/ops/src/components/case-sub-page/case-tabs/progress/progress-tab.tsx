@@ -23,7 +23,7 @@ import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     CaseStageAccordionClickedEvent,
     SegmentTrackedEventName,

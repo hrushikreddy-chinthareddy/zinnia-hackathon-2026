@@ -20,10 +20,8 @@ import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
 } from '@deps/queries/api/web-non-financial';
-import {
-    DEFAULT_ERROR_STRING,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import {
     cleanAddresses,

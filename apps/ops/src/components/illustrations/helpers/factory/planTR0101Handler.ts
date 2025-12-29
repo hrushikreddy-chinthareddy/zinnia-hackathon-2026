@@ -4,7 +4,7 @@ import { t, Result, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import { browserLogInfo } from '@deps/utils/browser-logging';

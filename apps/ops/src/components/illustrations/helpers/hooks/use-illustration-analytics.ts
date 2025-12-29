@@ -4,7 +4,7 @@ import { AgentOption } from '@deps/components/client-case/client-case-create/age
 import { AgencyOption } from '@deps/components/client-case/client-case-create/create-client-case-form/create-client-case-form.helpers';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Product, ProductTypeLabel } from '@deps/types/product';
 import {
     IllustrationAddProductClickedEvent,

@@ -1,7 +1,7 @@
 import { i18n, I18n } from 'next-i18next';
 
 import { WithdrawalQuoteResponse } from '@deps/components/side-sheet/side-sheet-transaction/withdrawal/types';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     AdhocTaxWithholdingInstructions,
     TaxRateToUse,

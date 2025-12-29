@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { ProductTypes } from '@deps/types/product';
 import { Prettify } from '@deps/utils/types';
 

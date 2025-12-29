@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 
 import { useIllustrationDetail } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { ProductTypes } from '@deps/types/product';
 
 import ContentEntry from './content-entry';

@@ -28,7 +28,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
 import { formatUTCDate } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,

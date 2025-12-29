@@ -25,7 +25,7 @@ import {
     checkFullSurrenderWithdrawal,
     checkPartialWithdrawalOneTimeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { Policy as SorPolicy } from '@zinnia/api-types/types/sor';

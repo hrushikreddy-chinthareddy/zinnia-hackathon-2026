@@ -14,7 +14,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getStateName } from '@deps/helpers/states.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export const CostBasisQualificationCard = ({
     policy,

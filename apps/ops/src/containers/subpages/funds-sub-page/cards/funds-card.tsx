@@ -17,7 +17,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { checkEligibilityFundAllocation } from '@deps/queries/api/fund-allocation';
 import { ReactComponent as SettingsIcon } from '@deps/styles/elements/icons/icons_outlined/settings.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import FundsTable from './funds-table';

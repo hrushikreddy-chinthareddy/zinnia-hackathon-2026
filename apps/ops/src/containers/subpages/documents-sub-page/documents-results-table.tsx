@@ -35,7 +35,7 @@ import {
     useDocumentDownload,
 } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import {
     CaseDocumentClickedEvent,

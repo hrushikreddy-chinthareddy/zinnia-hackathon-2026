@@ -35,8 +35,8 @@ import {
 import {
     DEFAULT_DATE_FORMAT,
     ZAHARA_API_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
 } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { ConfiguredSettingId } from '@deps/types/product-config-settings';
 import {
     BenefitId,

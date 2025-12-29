@@ -27,7 +27,7 @@ import { CaseAction } from '@deps/models/case/enums';
 import { PolicyStatus } from '@deps/models/policy/sor-policy';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DropdownClickedEvent,
     PolicyClickedEvent,

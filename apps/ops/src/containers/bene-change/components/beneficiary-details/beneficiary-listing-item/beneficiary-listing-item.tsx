@@ -10,6 +10,7 @@ import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider
 import { getName } from '@deps/helpers/party-info-helpers';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import BeneficiaryDetails from '../beneficiary-details';
@@ -143,7 +144,8 @@ export default function BeneficiaryListingItem({
                             {!isCurrentRemoved
                                 ? ` (${
                                       currentBene?.party?.allocation
-                                          ?.beneficiaryPercentage ?? '--'
+                                          ?.beneficiaryPercentage ??
+                                      DEFAULT_ERROR_STRING
                                   }) %`
                                 : '(--)%'}
                         </span>

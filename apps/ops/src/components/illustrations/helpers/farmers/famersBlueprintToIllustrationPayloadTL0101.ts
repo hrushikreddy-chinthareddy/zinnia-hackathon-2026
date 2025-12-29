@@ -1,7 +1,7 @@
 import { t, Result, failure, success, Infer } from 'typegate';
 import { v4 as uuid } from 'uuid';
 
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 

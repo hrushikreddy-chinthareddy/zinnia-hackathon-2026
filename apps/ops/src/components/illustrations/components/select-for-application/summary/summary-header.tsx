@@ -3,7 +3,7 @@ import { CarrierAvatar } from '@zinnia/bloom/components';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import { getProductCarrierName } from '@deps/components/illustrations/helpers/get-product-carrier-name';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Product, ProductTypeLabel, ProductTypes } from '@deps/types/product';
 
 import styles from './summary.module.css';

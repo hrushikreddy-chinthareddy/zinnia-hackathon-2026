@@ -25,10 +25,10 @@ import { isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
     DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { capitalize } from '@deps/utils/strings';
 import {
     Country,

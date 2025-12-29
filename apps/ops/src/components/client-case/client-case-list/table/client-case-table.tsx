@@ -24,7 +24,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useIllustrationsClientCase } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductType, ProductTypeLabel } from '@deps/types/product';
 import { formatRelativeTime } from '@deps/utils/dates';

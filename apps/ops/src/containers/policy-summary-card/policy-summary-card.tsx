@@ -93,10 +93,8 @@ import {
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { ReactComponent as CogIcon } from '@deps/styles/elements/icons/icons_outlined/cog.svg';
-import {
-    DEFAULT_ERROR_STRING,
-    FIFTEEN_MINUTES_IN_MS,
-} from '@deps/types/constants';
+import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     CaseSearchErrorResponse,
     CaseSearchResponse,

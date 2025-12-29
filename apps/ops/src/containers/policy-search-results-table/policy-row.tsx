@@ -37,10 +37,10 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     FIFTEEN_MINUTES_IN_MS,
     FIVE_MINUTES_IN_MS,
 } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { PolicySearchResult } from '@deps/types/search';
 import {
     getCarrierLogoByClientId,

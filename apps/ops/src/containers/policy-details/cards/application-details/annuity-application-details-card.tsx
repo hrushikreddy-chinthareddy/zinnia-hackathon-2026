@@ -26,7 +26,7 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { AgentData } from '@deps/types/agents';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { PartyType, Policy, PartyRole } from '@zinnia/api-types/types/sor';
 
 import { getApplicationDetailsData } from '../../policy-details.helpers';
