@@ -211,7 +211,8 @@
                                                 "addressType": "RESIDENCE",
                                                 "city": "",
                                                 "state": null,
-                                                "zipCode": ""
+                                                "zipCode": "",
+                                                "isPreferred": true
                                             }
                                         ],
                                         "identifications": [
@@ -482,7 +483,8 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "First name"
+                                                            "title": "First name",
+                                                            "minLength": 1
                                                         },
                                                         "middleName": {
                                                             "type": [
@@ -496,7 +498,8 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Last name"
+                                                            "title": "Last name",
+                                                            "minLength": 1
                                                         },
                                                         "suffix": {
                                                             "type": [
@@ -536,7 +539,8 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Trust name"
+                                                            "title": "Trust name",
+                                                            "minLength": 1
                                                         },
                                                         "trustType": {
                                                             "type": [
@@ -612,7 +616,8 @@
                                                                 "string",
                                                                 "null"
                                                             ],
-                                                            "title": "Company name"
+                                                            "title": "Company name",
+                                                            "minLength": 1
                                                         },
                                                         "entityType": {
                                                             "type": "string",
