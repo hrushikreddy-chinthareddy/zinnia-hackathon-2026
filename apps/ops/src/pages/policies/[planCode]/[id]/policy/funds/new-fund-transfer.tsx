@@ -24,12 +24,21 @@ const FundTransfer = ({ policy }: fundProps) => {
 
     const [isLoading, setIsLoading] = useState(true);
 
+    const isTransactionResponseStatus = (
+        status: any
+    ): status is TransactionResponseStatus => {
+        return Object.values(TransactionResponseStatus).includes(status);
+    };
+
     const checkFundAllocationEligibility = useCallback(async () => {
         const response = await checkEligibilityFundAllocation(
             policy.product?.planCode,
             policy.policyNumber
         );
-        return response?.status === 'success';
+        return (
+            isTransactionResponseStatus(response?.status) &&
+            response.status === TransactionResponseStatus.Success
+        );
     }, [policy.product?.planCode, policy.policyNumber]);
 
     const checkFundTransferEligibility = useCallback(async () => {
