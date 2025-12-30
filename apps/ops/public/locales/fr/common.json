@@ -95,6 +95,7 @@
         "cancel": "Annuler",
         "carrierId": "ID du transporteur",
         "caseId": "ID del caso",
+        "cases": "Cas",
         "caseIdSearchError": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
         "caseType": "Type de dossier",
         "certifiedReceivedDate": "Date de réception certifiée",

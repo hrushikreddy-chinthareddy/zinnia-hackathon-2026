@@ -93,6 +93,7 @@
         "cancel": "Cancel",
         "carrierId": "Carrier ID",
         "caseId": "Case ID",
+        "cases": "Cases",
         "caseIdSearchError": "Enter a Case Id to return search results",
         "caseType": "Case type",
         "certifiedReceivedDate": "Certified received date",
