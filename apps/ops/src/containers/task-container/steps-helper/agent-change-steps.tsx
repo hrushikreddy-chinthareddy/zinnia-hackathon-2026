@@ -14,13 +14,12 @@ export const getAgentChangeSteps = ({
     isContinueButtonEnabled,
 }: GetStepsProps) => {
     const readOnly = task.status === TaskStatus.Completed;
-
+    const isIssueResolved = task.data.issueResolved;
     const isSignaturePresent = task.data.signatures.some(
         (signature: { isSignedPresent: any }) => signature.isSignedPresent
     );
 
     const issueResolved = task.data.issueResolved;
-
     const isIGO = isSignaturePresent && issueResolved;
 
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
@@ -33,7 +32,10 @@ export const getAgentChangeSteps = ({
             <TaskFormStep
                 readonly={readOnly}
                 taskInfoLink={taskInfoLink}
-                isSubmit={!readOnly && index === taskMetadata.length - 1}
+                isSubmit={
+                    (!readOnly && index === taskMetadata.length - 1) ||
+                    !isIssueResolved
+                }
                 taskMetadata={metadata}
                 key={`step_${index}`}
                 isContinueButtonEnabled={isContinueButtonEnabled}
