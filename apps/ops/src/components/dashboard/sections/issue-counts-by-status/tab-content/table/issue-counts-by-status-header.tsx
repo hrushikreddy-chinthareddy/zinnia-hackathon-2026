@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { IssueCountsByStatusContext } from '../../context/issue-counts-by-status-context';
 import { getIssueStatusText } from '../../utlis';

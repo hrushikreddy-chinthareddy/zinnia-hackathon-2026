@@ -12,7 +12,7 @@ import {
 } from '@deps/contexts/HistoryFiltersContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 export const getYearOptions = (policyIssueDate: string | undefined) => {

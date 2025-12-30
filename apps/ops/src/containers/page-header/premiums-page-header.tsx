@@ -6,10 +6,8 @@ import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import {
-    DEFAULT_ERROR_STRING,
-    DEFAULT_EXTENDED_DATE_FORMAT,
-} from '@deps/types/constants';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     AccountValues,
     CostBasis,

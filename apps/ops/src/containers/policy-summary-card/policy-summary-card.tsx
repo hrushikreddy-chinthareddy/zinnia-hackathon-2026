@@ -93,10 +93,7 @@ import {
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { ReactComponent as CogIcon } from '@deps/styles/elements/icons/icons_outlined/cog.svg';
-import {
-    DEFAULT_ERROR_STRING,
-    FIFTEEN_MINUTES_IN_MS,
-} from '@deps/types/constants';
+import { FIFTEEN_MINUTES_IN_MS } from '@deps/types/constants';
 import {
     CaseSearchErrorResponse,
     CaseSearchResponse,
@@ -106,6 +103,7 @@ import {
 import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Address,
     Email,

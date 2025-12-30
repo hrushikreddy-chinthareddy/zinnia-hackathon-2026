@@ -1,5 +1,3 @@
-export const DEFAULT_ERROR_STRING = '--';
-export const SPLITTER = '|||';
 export enum SCREEN_BREAKPOINTS {
     xs = 320,
     sm = 500,

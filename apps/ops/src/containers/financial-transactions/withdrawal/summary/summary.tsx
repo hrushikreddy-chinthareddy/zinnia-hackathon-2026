@@ -33,10 +33,10 @@ import { getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DisbursementType,
     TaxWithholdingType,

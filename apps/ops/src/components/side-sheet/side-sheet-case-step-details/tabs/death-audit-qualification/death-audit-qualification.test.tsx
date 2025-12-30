@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 
 import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import DeathAuditQualification from './detah-audit-qualification';
 
