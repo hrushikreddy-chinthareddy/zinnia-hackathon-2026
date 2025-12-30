@@ -101,52 +101,48 @@ export const CaseTimingChart: FC = () => {
         <CardContainer fullWidth={false}>
             <CaseTimingHeader />
             <BlurOverlayLoader loading={caseTimingDataFetching}>
-                <div className=" flex flex-col bg-[--color-base-surface-surface-primary">
+                <div className={sharedStyles.chartContainer}>
                     {caseTimingDataError ? (
                         <ErrorMessage />
                     ) : (
-                        <>
-                            <div
-                                className={clsx(
-                                    sharedStyles.chartContainer,
-                                    sharedStyles.noBorder
-                                )}
-                            >
-                                <CaseTimingFilters />
-                                {caseTimingData?.length === 0 ? (
-                                    <NoDataMessage />
-                                ) : (
-                                    <Carousel
-                                        slideStyle="my-8 pt-6"
-                                        slides={chartConfig.map(
-                                            (chartConfig, index) => {
-                                                return (
-                                                    <HighchartsReact
-                                                        key={`submission-type-slide-${index}`}
-                                                        highcharts={Highcharts}
-                                                        options={chartConfig}
-                                                    />
-                                                );
-                                            }
-                                        )}
-                                        bottomContent={
-                                            <div className={styles.legend}>
-                                                <p
-                                                    className={
-                                                        'typography-labels-label-sm'
-                                                    }
-                                                >
-                                                    Processing time
-                                                </p>
-                                            </div>
+                        <div
+                            className={clsx(
+                                sharedStyles.chartColumn,
+                                sharedStyles.noBorder
+                            )}
+                        >
+                            <CaseTimingFilters />
+                            {caseTimingData?.length === 0 ? (
+                                <NoDataMessage />
+                            ) : (
+                                <Carousel
+                                    slideStyle="my-8 pt-6"
+                                    slides={chartConfig.map(
+                                        (chartConfig, index) => {
+                                            return (
+                                                <HighchartsReact
+                                                    key={`submission-type-slide-${index}`}
+                                                    highcharts={Highcharts}
+                                                    options={chartConfig}
+                                                />
+                                            );
                                         }
-                                        slideItemsCount={
-                                            eachChunkPortionOfTotal
-                                        }
-                                    />
-                                )}
-                            </div>
-                        </>
+                                    )}
+                                    bottomContent={
+                                        <div className={styles.legend}>
+                                            <p
+                                                className={
+                                                    'typography-labels-label-sm'
+                                                }
+                                            >
+                                                Processing time
+                                            </p>
+                                        </div>
+                                    }
+                                    slideItemsCount={eachChunkPortionOfTotal}
+                                />
+                            )}
+                        </div>
                     )}
                 </div>
             </BlurOverlayLoader>

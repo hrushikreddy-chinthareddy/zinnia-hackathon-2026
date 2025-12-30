@@ -1,7 +1,22 @@
 .chartContainer {
-    padding: 0 0 0 var(--measure-dimension-padding-4xl);
-    border-left: 1px solid var(--color-base-border-border-light);
-    flex: 1 auto;
+    display: block;
+
+    @media screen and (min-width: 1560px) {
+        display: grid;
+        grid-template-rows: 1fr;
+    }
+}
+
+.chartContainerRightAlign {
+    @media screen and (min-width: 1560px) {
+        grid-template-columns: minmax(0, 1fr) minmax(0, 25%);
+    }
+}
+
+.chartContainerLeftAlign {
+    @media screen and (min-width: 1560px) {
+        grid-template-columns: minmax(0, 25%) minmax(0, 1fr);
+    }
 }
 
 .noBorder {
@@ -23,26 +38,50 @@
     border-top-right-radius: 0;
 }
 
-.filterContainer {
+.filterContainer,
+.timeFilterContainer {
     display: flex;
-    justify-content: space-between;
+    flex: 1;
+    flex-direction: column;
+    flex-wrap: wrap;
     margin: var(--measure-dimension-gap-lg) 0;
+    gap: var(--measure-dimension-gap-lg);
+
+    @media screen and (min-width: 1024px) {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+
+.filterGroup {
+    display: flex;
+    flex-basis: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--measure-dimension-gap-lg);
+
+    @media screen and (min-width: 1024px) {
+        flex-basis: 50%;
+    }
 }
 
 .multiselectDropdowns {
-    width: 150px;
-    min-width: 150px;
+    @media screen and (min-width: 1024px) {
+        width: 150px;
+        min-width: 150px;
+    }
+}
+
+.filterItem {
+    @media screen and (min-width: 1024px) {
+        flex: 1 1 auto;
+        width: auto;
+    }
 }
 
 .aiInsightsContainer {
     padding-top: var(--measure-dimension-padding-4xl);
     padding-right: var(--measure-dimension-padding-lg);
-}
-
-.timeFilterContainer {
-    display: flex;
-    justify-content: space-between;
-    align-items: end;
 }
 
 .tableContainer,
@@ -65,13 +104,21 @@
 }
 
 .pieChartColumn {
+    align-items: center;
     border-radius: 1px 4px 4px 1px;
-    border-left: 2px solid var(--color-base-border-border-light, #ededed);
     background: var(--color-base-surface-surface-secondary, #f8f8f8);
+    padding: var(--measure-dimension-padding-4xl);
+
+    @media screen and (min-width: 1560px) {
+        border-left: 2px solid var(--color-base-border-border-light, #ededed);
+        padding: var(--measure-dimension-padding-5xl) 0 0 0;
+    }
 }
 
 .chartColumn {
-    max-width: 940px;
+    flex: 1;
+    /* max-width: 940px; */
+    min-width: 0;
 }
 
 .tableCellMaxWidth {

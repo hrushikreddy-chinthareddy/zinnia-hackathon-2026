@@ -66,11 +66,7 @@ export const TransactionTrendsChart = () => {
     return (
         <CardContainer>
             <TransactionTrendsHeader />
-
-            <div className="w-3/4">
-                <TransactionTrendsFilters />
-            </div>
-
+            <TransactionTrendsFilters />
             <BlurOverlayLoader loading={transactionTrendsDataFetching}>
                 <div className="flex">
                     <div className="basis-3/4 grow">

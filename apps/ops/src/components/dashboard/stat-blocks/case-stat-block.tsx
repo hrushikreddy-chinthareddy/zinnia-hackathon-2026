@@ -206,19 +206,6 @@ const CaseStatBlock = ({
         );
     };
 
-    const getWidthClassName = () => {
-        switch (variant) {
-            case 'double':
-                return 'w-1/2';
-            case 'full':
-                return 'w-full';
-            case 'single':
-                return 'w-1/4';
-            default:
-                return '';
-        }
-    };
-
     useEffect(() => {
         if (!shouldShowCaseInsights) {
             return;
@@ -238,10 +225,7 @@ const CaseStatBlock = ({
     }, [dashboardStatsResponse, loading, shouldShowCaseInsights]);
 
     return (
-        <CardContainer
-            fullWidth={false}
-            containerClassNames={clsx(classNames, getWidthClassName())}
-        >
+        <CardContainer fullWidth={false} containerClassNames={clsx(classNames)}>
             {variant === 'single' && renderSingleStatBlock()}
             {variant === 'double' && renderDoubleStatBlock()}
         </CardContainer>
