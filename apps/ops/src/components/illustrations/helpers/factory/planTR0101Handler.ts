@@ -9,6 +9,7 @@ import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { getRiderNames } from 'components/illustrations/helpers/get-rider-names';
 
 import {
     IllustrationHandler,
@@ -25,7 +26,6 @@ import {
     InsuredRoleCodes,
     SubStandardRating,
 } from '../illustrationApiSchemas';
-import { riderNamesMap } from '../rider-names-map';
 
 const baseCoverageSchema = t.object(
     // TODO: change to not optional once we understand how to get amount when solve for is face amount
@@ -466,24 +466,17 @@ export class PlanTR0101Handler extends IllustrationHandler<FarmersEntities> {
 
     public generateTitle(data: any, formInputs: any): string {
         const assumed = data.assumed;
-        const createDate = new Date().toLocaleDateString();
+        const creationDate = new Date().toLocaleDateString();
 
-        const getRidersText = () => {
-            const hasRiders = Object.keys(assumed.coverages).length > 1;
-            if (!hasRiders) {
-                return '';
-            }
+        const riderNames = getRiderNames(data);
 
-            const riders = Object.keys(assumed.coverages)
-                .filter((coverage) => coverage !== 'base')
-                .map((riderName) => riderNamesMap?.[riderName] ?? riderName)
-                .join(', ');
-
-            return `, ${riders}`;
-        };
-
-        return `${createDate}, Face Amount ${numberFormatify(
-            assumed.initial.totalFaceAmount
-        )}, ${formInputs.fixedCostPeriod} yr${getRidersText()}`;
+        return [
+            creationDate,
+            `Face Amount ${numberFormatify(assumed.initial.totalFaceAmount)}`,
+            `${formInputs.fixedCostPeriod} yr`,
+            ...riderNames,
+        ]
+            .filter((x) => x)
+            .join(', ');
     }
 }

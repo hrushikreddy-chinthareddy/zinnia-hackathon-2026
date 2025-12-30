@@ -1,9 +1,9 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react';
 
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { policyDataToGlobalValues } from '../../helpers/global-values';
 

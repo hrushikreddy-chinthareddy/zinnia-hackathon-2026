@@ -1,4 +1,3 @@
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 import {
     Table,
     TableHeader,
@@ -22,6 +21,7 @@ import NavElement, {
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TaxForm } from '@deps/models/case/send-tax-forms';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
 
 const toggleFormSelection = (
     selectedForm: TaxForm | TaxformResponse,
@@ -95,7 +95,7 @@ const TaxFormsListing = ({
                         details={
                             t(
                                 'contactCenter.sendTaxForms.taxFormDetails.title'
-                            ) as string
+                            ) ?? ''
                         }
                         variant={ContentVariant.BodyBold}
                     />
@@ -110,7 +110,7 @@ const TaxFormsListing = ({
                                         details={
                                             t(
                                                 'contactCenter.sendTaxForms.taxFormDetails.documentType'
-                                            ) as string
+                                            ) ?? ''
                                         }
                                         variant={ContentVariant.BodySmBold}
                                     />
@@ -121,7 +121,7 @@ const TaxFormsListing = ({
                                         details={
                                             t(
                                                 'contactCenter.sendTaxForms.taxFormDetails.periodYear'
-                                            ) as string
+                                            ) ?? ''
                                         }
                                         variant={ContentVariant.BodySmBold}
                                     />
@@ -131,7 +131,7 @@ const TaxFormsListing = ({
                                         details={
                                             t(
                                                 'contactCenter.sendTaxForms.taxFormDetails.actions'
-                                            ) as string
+                                            ) ?? ''
                                         }
                                         variant={ContentVariant.BodySmBold}
                                     />
@@ -173,7 +173,7 @@ const TaxFormsListing = ({
                                                         }
                                                         height={'16px'}
                                                         width={'16px'}
-                                                        className="text-primary"
+                                                        className="tooltip-primary"
                                                     />
                                                 }
                                             >
@@ -207,15 +207,11 @@ const TaxFormsListing = ({
                                             isNewPage={false}
                                             size={NavElementSize.Small}
                                             target="_blank"
-                                            title={`${t(
-                                                'sendDocument.formSelection.view'
-                                            )} `}
+                                            title={`${t('allFields.view')} `}
                                             type={NavElementType.Link}
                                             onClick={() => setCookies(form)}
                                         >
-                                            {t(
-                                                'sendDocument.formSelection.view'
-                                            )}
+                                            {t('allFields.view')}
                                         </NavElement>
                                     </TableCell>
                                 </TableRow>
@@ -240,7 +236,7 @@ const TaxFormsListing = ({
                     details={
                         t(
                             'contactCenter.sendTaxForms.taxFormDetails.noTaxForms'
-                        ) as string
+                        ) ?? ''
                     }
                     variant={ContentVariant.BodySm}
                 />

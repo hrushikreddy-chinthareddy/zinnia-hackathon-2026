@@ -1,4 +1,3 @@
-import { convertToCamelCase } from '@zinnia/utils';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useContext, useState } from 'react';
@@ -18,6 +17,7 @@ import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { convertToCamelCase } from '@deps/utils/strings';
 
 interface ConfirmStepProps {
     taskType: TaskType;

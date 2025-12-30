@@ -1,26 +1,27 @@
-import {
-    CaseCountGroupByEnum,
-    CaseCountInputFilter,
-    CaseCountOutputLevel1,
-    ExceptionCountGroupByEnum,
-    TaskCountGroupByEnum,
-} from '@zinnia/api-types/types/analytics';
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 
 import { dashboardChartTitleFormat } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { getCaseDashboardStatsQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
+import {
+    CaseCountGroupByEnum,
+    CaseCountInputFilter,
+    CaseCountOutputLevel1,
+    CompletedTaskTimeGroupByEnum,
+    ExceptionCountGroupByEnum,
+    TaskCountGroupByEnum,
+} from '@zinnia/api-types/types/analytics';
 
 import { SimpleOption } from '../autocomplete/autocomplete.types';
 import { ExtendedProcesses } from './filters/case-type-filter';
 
 export enum TimeframeFilterOptions {
-    Trailing12Months = '12M',
-    Last6Months = '6M',
-    Last3Months = '3M',
-    Last1Month = '1M',
     LastWeek = '1W',
+    Last1Month = '1M',
+    Last3Months = '3M',
+    Last6Months = '6M',
+    Trailing12Months = '12M',
 }
 
 export const caseStatusMap = {
@@ -283,7 +284,10 @@ export const generateCaseLink = ({
 };
 
 export const friendlyGroupByName: Record<
-    CaseCountGroupByEnum | ExceptionCountGroupByEnum | TaskCountGroupByEnum,
+    | CaseCountGroupByEnum
+    | ExceptionCountGroupByEnum
+    | TaskCountGroupByEnum
+    | CompletedTaskTimeGroupByEnum,
     string
 > = {
     [CaseCountGroupByEnum.APPLICATION_TYPE]: 'Application type',
@@ -307,6 +311,7 @@ export const friendlyGroupByName: Record<
     [TaskCountGroupByEnum.TASK_STATUS]: 'Task status',
     [TaskCountGroupByEnum.TASK_CREATED_DAY]: 'Task created date',
     [TaskCountGroupByEnum.TASK_UPDATED_DAY]: 'Task updated date',
+    [CompletedTaskTimeGroupByEnum.TASK_TYPE]: 'Task type',
 };
 
 /**

@@ -1,4 +1,3 @@
-import { Policy, PartyRole } from '@zinnia/api-types/types/sor';
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -16,6 +15,7 @@ import {
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { sortByAndThenBy } from '@deps/helpers/sort.helpers';
+import { Policy, PartyRole } from '@zinnia/api-types/types/sor';
 
 import { validateBeneData } from './bene-details-step.helpers';
 import { useBeneChange } from '../../../bene-change-provider';
@@ -35,6 +35,9 @@ const BeneDetailsStep = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.beneDetails',
     });
+    const { t: t1 } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'allFields',
+    });
 
     const { t: tBene } = useTranslation();
     const { carrierId } = policy;
@@ -50,6 +53,7 @@ const BeneDetailsStep = ({
     const errorKeys = [
         'firstNamesRequired',
         'addressesRequired',
+        'emailRequired',
         'allocationRequired',
         'relationshipRequired',
         'primaryBeneficiaryAllocationsSum',
@@ -57,7 +61,7 @@ const BeneDetailsStep = ({
     ];
 
     const handleStepContinue = useCallback(() => {
-        const formErrors = validateBeneData(beneData, t);
+        const formErrors = validateBeneData(beneData, t, t1);
         if (Object.keys(formErrors).length > 0) {
             setFormErrors(formErrors);
         } else {

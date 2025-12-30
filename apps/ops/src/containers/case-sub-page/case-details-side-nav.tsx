@@ -1,5 +1,4 @@
 import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
-import { formatTimestamp, toSentenceCase } from '@zinnia/utils';
 import { setCookie } from 'cookies-next';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
@@ -14,6 +13,7 @@ import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getValidFullName } from '@deps/helpers/case-management';
 import {
     convertKebabedDateString,
@@ -28,6 +28,8 @@ import { Processes } from '@deps/models/case/case';
 import { TransactionTypes } from '@deps/models/case/correspondence';
 import { CaseSource } from '@deps/models/case/enums';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import { formatTimestamp } from '@deps/utils/dates';
+import { toSentenceCase } from '@deps/utils/strings';
 
 type CaseDetailsSideNavProps = {
     CaseAdditionalDetails: AdditionalDataInstance;
@@ -60,9 +62,11 @@ const CaseDetailsSideNav = ({
     applicationType,
     caseProcessingDetails,
 }: CaseDetailsSideNavProps) => {
+    const { hasCaseInsightPermission } = usePermissionsContext();
+
     const { t } = useTranslation();
     const submissionDetails = caseProcessingDetails?.[0]?.details;
-    const { agentFirstName, agentLastName, agentNPN, agentSSN } =
+    const { agentFirstName, agentLastName, agentNPN, agentSSN, transactionId } =
         CaseAdditionalDetails;
     const displayAgentDetails = !!(
         agentFirstName ||
@@ -151,6 +155,21 @@ const CaseDetailsSideNav = ({
                             </Typography>
                             <Content
                                 details={toSentenceCase(submissionType)}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
+
+                    {transactionId && (
+                        <>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-[--color-base-text-text-secondary]"
+                            >
+                                {t('sidenav.transactionId')}
+                            </Typography>
+                            <Content
+                                details={toSentenceCase(transactionId)}
                                 variant={ContentVariant.BodySm}
                             />
                         </>
@@ -303,7 +322,7 @@ const CaseDetailsSideNav = ({
                                 </React.Fragment>
                             )
                         )}
-                    {estimatedCompletionAt && (
+                    {estimatedCompletionAt && hasCaseInsightPermission && (
                         <>
                             <div className="flex items-center gap-1">
                                 <Typography

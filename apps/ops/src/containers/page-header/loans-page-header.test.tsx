@@ -1,11 +1,11 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, act } from '@testing-library/react';
-import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { LoansTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import * as BpmQueries from '@deps/queries/api/bpm';
 import * as ProductRateQueries from '@deps/queries/api/product-rate';
+import { PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import LoansPageHeaderContainer from './loans-page-header';
 const queryClient = new QueryClient();
@@ -35,7 +35,10 @@ describe('verify correct labels and fields are present', () => {
         );
         mockedInterestRate.mockResolvedValue(Promise.resolve(2));
         mockedCreditRate.mockResolvedValue(Promise.resolve(3));
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
     });
+
     afterEach(() => {
         jest.clearAllMocks();
     });

@@ -33,6 +33,7 @@ import {
 
 import { createValidator } from '../utils/helper-utils';
 import getSbgcConfig from '../withdrawal-forms/sbgc-withdrawal-form.helpers';
+import { validateQcdDetails } from '../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getSbgcRmdConfig(t: TFunction) {
     const { formValidation, signaturesConfig } = getSbgcConfig(t);
@@ -54,6 +55,14 @@ export default function getSbgcRmdConfig(t: TFunction) {
             errors['rmdMinimumRequiredProgram'] = t(
                 'rmdMethod.rmdWarnings.minimumRequiredProgram'
             );
+        }
+
+        const qcd = formProgram?.qcd;
+
+        if (qcd && qcd.length > 0) {
+            const qcdErrors = validateQcdDetails(t, qcd);
+
+            return { ...errors, ...qcdErrors };
         }
 
         return errors;

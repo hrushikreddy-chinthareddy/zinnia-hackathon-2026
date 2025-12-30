@@ -48,30 +48,25 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         >
     ) => {
         const eligibilityKey = `isEligibleManage${role}` as const;
+        const planCode = policy.planCode ?? '';
+        const policyNumber = policy.policyNumber ?? '';
 
         return useQuery({
             queryKey:
                 role === PolicyRole.BENEFICIARY
-                    ? [
-                          'beneficiaryEligibility',
-                          policy.planCode ?? '',
-                          policy.policyNumber ?? '',
-                      ]
+                    ? ['beneficiaryEligibility', planCode, policyNumber]
                     : [
                           `checkManage${role}EligibilityQuery`,
-                          policy.planCode ?? '',
-                          policy.policyNumber ?? '',
+                          planCode,
+                          policyNumber,
                           role,
                       ],
             queryFn: () =>
                 role === PolicyRole.BENEFICIARY
-                    ? checkBeneficiaryEligibilityQuery(
-                          policy.planCode ?? '',
-                          policy.policyNumber ?? ''
-                      )
+                    ? checkBeneficiaryEligibilityQuery(planCode, policyNumber)
                     : checkManagRoleEligibilityQuery(
-                          policy.planCode ?? '',
-                          policy.policyNumber ?? '',
+                          planCode,
+                          policyNumber,
                           role
                       ),
             placeholderData: (previousData) => previousData,

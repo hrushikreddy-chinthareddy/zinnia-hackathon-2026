@@ -1,4 +1,3 @@
-import { PartyType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
@@ -37,6 +36,7 @@ import {
     TrustType,
 } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import {
     countryOptions,
@@ -85,7 +85,6 @@ const RoleIdentification = ({
     handleIdentificationChange,
     isReadOnly,
     role,
-    policy,
     existingRoleData,
     index,
     handleFilesChange,
@@ -99,14 +98,7 @@ const RoleIdentification = ({
         keyPrefix: 'beneChange.beneDetails.identification',
     });
 
-    const {
-        roleData,
-        setRoleData,
-        currentErrors,
-        setCurrentErrors,
-        addRole,
-        removeRole,
-    } = useRoleChange();
+    const { roleData, setRoleData, currentErrors } = useRoleChange();
     const newRole = role.toLowerCase().includes('new');
 
     const party = newRole
@@ -118,7 +110,7 @@ const RoleIdentification = ({
         : existingRoleData?.party?.identifications?.[0] || [];
 
     const genderOptions = genderOption(t2);
-    const partyTypeOptions = getPartyTypeOptions(t, role);
+    const partyTypeOptions = getPartyTypeOptions(t);
 
     const relationshipToPartyOptions = getRelationshipOptions(t);
 
@@ -130,7 +122,6 @@ const RoleIdentification = ({
 
     const firstNameExist =
         party?.firstName && party?.firstName.trim().length > 0;
-    const lastNameExist = party?.lastName && party?.lastName.trim().length > 0;
 
     const { partyType = '' } = party || {};
     let dob = '';

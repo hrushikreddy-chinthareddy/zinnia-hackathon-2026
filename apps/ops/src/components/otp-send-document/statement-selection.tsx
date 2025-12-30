@@ -19,9 +19,6 @@ import {
     StatementTypes,
 } from '@deps/models/case/send-statement';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-
-import { Policy } from '@zinnia/api-types/types/sor';
-
 import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search';
 import { getCorrespondenceDocsV2 } from '@deps/queries/api/documents';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
@@ -29,6 +26,8 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import StatementListing from './components/statement-listing';
@@ -45,8 +44,6 @@ import {
 import { FieldSize, FieldType } from '../fields/field';
 import FieldDateSelect from '../fields/field-date-select/field-date-select';
 import WorkflowCard from '../workflows/workflow-card/workflow-card';
-
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 const toggleStatement = (
     val: StatementTypes,

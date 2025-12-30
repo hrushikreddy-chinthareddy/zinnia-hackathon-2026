@@ -1,5 +1,3 @@
-import { ClientDetailsDto } from '@xd/api-types/dist/generated-types/knowledgebase';
-import { formatDateTime } from '@xd/utils/src/dates';
 import {
     Pagination,
     Table,
@@ -23,6 +21,8 @@ import { TranslationFiles } from '@deps/config/translations';
 import { getAllClientDetails } from '@deps/queries/api/knowledge-base';
 import { SortDirection } from '@deps/types/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { formatDateTime } from '@deps/utils/dates';
+import { ClientDetailsDto } from '@zinnia/api-types/types/knowledgebase';
 
 const PAGE_SIZE = 10;
 

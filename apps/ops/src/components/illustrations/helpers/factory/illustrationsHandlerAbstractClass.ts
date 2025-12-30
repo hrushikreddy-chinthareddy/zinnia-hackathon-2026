@@ -22,6 +22,7 @@ export class OutputDataParsingError extends Error {
 }
 
 // Shared interface for all client cases
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export abstract class IllustrationHandler<TOutputEntities> {
     protected clientCase: IllustrationsClientCase;
 

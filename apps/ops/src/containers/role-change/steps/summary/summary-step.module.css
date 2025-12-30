@@ -1,0 +1,17 @@
+.summaryContainer {
+    margin: 1rem 0;
+    width: 100%;
+    border-radius: 0.125rem;
+    border-width: 2px;
+    border-style: solid;
+    border-color: #f3f4f6;
+    padding: 2rem;
+}
+
+.summaryDivider {
+    width: 100%;
+    border-style: solid;
+    border-color: #f3f4f6;
+    border-width: 1px;
+    border-bottom-width: 2px;
+}

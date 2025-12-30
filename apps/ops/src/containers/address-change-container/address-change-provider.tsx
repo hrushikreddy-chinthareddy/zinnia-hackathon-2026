@@ -1,8 +1,3 @@
-import {
-    Phone,
-    PhoneType,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
 import { useContext, useState } from 'react';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
@@ -11,6 +6,11 @@ import {
     FormValidationErrors,
     Address,
 } from '@deps/models/case/withdrawal/case';
+import {
+    Phone,
+    PhoneType,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ApplyToRolesState,

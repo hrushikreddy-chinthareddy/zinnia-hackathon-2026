@@ -64,96 +64,19 @@
                                     }
                                 }
                             }
+                        },
+                        "issueResolved": {
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": [
+                                "All sections are complete and ready for data entry.",
+                                "All sections are not complete."
+                            ],
+                            "title": "Is the Paper application form complete?",
+                            "default": true
                         }
                     },
                     "dependencies": {
-                        "processSubType": {
-                            "if": {
-                                "properties": {
-                                    "processSubType": {
-                                        "const": "Free Look Cancellation"
-                                    }
-                                },
-                                "required": ["processSubType"]
-                            },
-                            "then": {
-                                "properties": {
-                                    "issueResolved": {
-                                        "type": "boolean",
-                                        "enum": [true],
-                                        "enumNames": [
-                                            "All sections are complete and ready for data entry."
-                                        ],
-                                        "title": "Is the Paper application form complete?",
-                                        "default": true
-                                    }
-                                },
-                                "required": ["issueResolved"]
-                            },
-                            "else": {
-                                "properties": {
-                                    "issueResolved": {
-                                        "type": "boolean",
-                                        "enum": [true, false],
-                                        "enumNames": [
-                                            "All sections are complete and ready for data entry.",
-                                            "All sections are not complete."
-                                        ],
-                                        "title": "Is the Paper application form complete?",
-                                        "default": true
-                                    }
-                                },
-                                "required": ["issueResolved"],
-                                "dependencies": {
-                                    "issueResolved": {
-                                        "oneOf": [
-                                            {
-                                                "properties": {
-                                                    "issueResolved": {
-                                                        "const": true
-                                                    }
-                                                }
-                                            },
-                                            {
-                                                "properties": {
-                                                    "issueResolved": {
-                                                        "const": false
-                                                    },
-                                                    "declineReason": {
-                                                        "title": "What is the issue with the form?",
-                                                        "type": "array",
-                                                        "items": {
-                                                            "type": "object",
-                                                            "properties": {
-                                                                "value": {
-                                                                    "type": "string"
-                                                                },
-                                                                "exceptionSubRefs": {
-                                                                    "type": "array",
-                                                                    "minItems": 1,
-                                                                    "items": {
-                                                                        "type": "object",
-                                                                        "additionalProperties": {
-                                                                            "type": "string"
-                                                                        }
-                                                                    }
-                                                                }
-                                                            },
-                                                            "required": [
-                                                                "value",
-                                                                "exceptionSubRefs"
-                                                            ]
-                                                        },
-                                                        "minItems": 1
-                                                    }
-                                                },
-                                                "required": ["declineReason"]
-                                            }
-                                        ]
-                                    }
-                                }
-                            }
-                        },
                         "issueResolved": {
                             "oneOf": [
                                 {

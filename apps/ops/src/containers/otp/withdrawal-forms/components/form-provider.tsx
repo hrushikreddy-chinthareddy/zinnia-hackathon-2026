@@ -1,4 +1,3 @@
-import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 import { useSearchParams } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 
@@ -26,6 +25,7 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { FormSubtype } from '../flic-withdrawal-form.helpers';
 

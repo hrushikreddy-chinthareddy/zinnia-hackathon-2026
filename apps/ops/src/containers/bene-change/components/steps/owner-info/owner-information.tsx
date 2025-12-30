@@ -1,9 +1,3 @@
-import {
-    IdentificationType,
-    PartyType,
-    PhoneBase,
-    Policy,
-} from '@zinnia/api-types/types/sor';
 import { FieldSize } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
@@ -36,6 +30,12 @@ import {
     PhoneTypes,
 } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    IdentificationType,
+    PartyType,
+    PhoneBase,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import {
     ENTERPRISE_ADDRESS_TYPE,

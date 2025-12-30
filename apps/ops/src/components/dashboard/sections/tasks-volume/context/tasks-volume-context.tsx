@@ -1,27 +1,30 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    TaskCountGroupByEnum,
-    TaskCountInputFilter,
-    TaskCountOutputLevel1,
-} from '@xd/api-types/dist/generated-types/analytics';
 import { createContext, FC, PropsWithChildren, useMemo, useState } from 'react';
 
 import { useTimeRangeFilter } from '@deps/components/dashboard/filters/time-filter/useTimeRangeFilter';
 import {
     defaultDateFormat,
     formatProcessFilter,
-    startDates,
-    TimeframeFilterOptions,
 } from '@deps/components/dashboard/utils';
 import { Processes } from '@deps/models/case/case';
 import { getTaskCountQuery } from '@deps/queries/tanstack/dashboard/dashboardQueries';
 import { useDashboardStore } from '@deps/store/store';
+import {
+    TaskCountGroupByEnum,
+    TaskCountInputFilter,
+    TaskCountOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
-import { TaskStatus, TaskVolumeData } from '../utils';
+import {
+    TaskStatus,
+    TaskVolumeData,
+    taskVolumeStartDates,
+    TaskVolumeTimeframeOptions,
+} from '../utils';
 
 interface TaskVolumeContextTypes {
-    timeframeRadio: TimeframeFilterOptions | undefined;
-    handleTimeframeRadioChange: (value: TimeframeFilterOptions) => void;
+    timeframeRadio: TaskVolumeTimeframeOptions | undefined;
+    handleTimeframeRadioChange: (value: TaskVolumeTimeframeOptions) => void;
     timerange: { from: string; to: string };
     handleRangeChange: (value: { from: string; to: string }) => void;
     selectedStatus: TaskStatus[];
@@ -37,7 +40,7 @@ interface TaskVolumeContextTypes {
 }
 
 const defaultState: TaskVolumeContextTypes = {
-    timeframeRadio: TimeframeFilterOptions.Trailing12Months,
+    timeframeRadio: TaskVolumeTimeframeOptions.Last6Months,
     handleTimeframeRadioChange: () => {},
     timerange: { from: '', to: '' },
     handleRangeChange: () => {},
@@ -85,9 +88,9 @@ export const TasksVolumeProvider: FC<PropsWithChildren> = ({ children }) => {
         timerange,
         handleTimeframeRadioChange,
         handleRangeChange,
-    } = useTimeRangeFilter<TimeframeFilterOptions>({
-        startDates,
-        defaultOption: TimeframeFilterOptions.Trailing12Months,
+    } = useTimeRangeFilter<TaskVolumeTimeframeOptions>({
+        startDates: taskVolumeStartDates,
+        defaultOption: TaskVolumeTimeframeOptions.Last6Months,
         dateFormat: defaultDateFormat,
     });
 

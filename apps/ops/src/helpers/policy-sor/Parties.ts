@@ -1,3 +1,6 @@
+import { isEndDated } from '@deps/helpers/date.helpers';
+import { getPartyFullName } from '@deps/helpers/party-info-helpers';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import {
     Address,
     BankAccount,
@@ -15,10 +18,6 @@ import {
     Policy,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { isEndDated } from '@deps/helpers/date.helpers';
-import { getPartyFullName } from '@deps/helpers/party-info-helpers';
-import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 
 import { calculateAgeNumber } from '../age.helpers';
 import { Addresses } from './party-items/Addresses';
@@ -67,6 +66,7 @@ export class PolicyParty {
     public fullName: string;
     public formattedBirthDate: string | undefined;
     public gender: Gender | undefined;
+    public genderIdentity: string | undefined;
     public entityType: EntityType | undefined;
     public organizationCode: string | undefined;
     public partyType: PartyType | undefined;
@@ -98,6 +98,7 @@ export class PolicyParty {
         this.emails = new Emails(party.emails);
         this.entityType = this.party.entityType;
         this.gender = this.party.gender;
+        this.genderIdentity = this.party.genderIdentity;
         this.identifications = this.party.identifications;
         this.organizationCode = this.party.organizationCode;
         this.partyType = this.party.partyType;

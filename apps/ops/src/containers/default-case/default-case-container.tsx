@@ -1,16 +1,23 @@
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
-import { FormMetadata } from '@deps/models/case/task';
+import { FormMetadata, TaskType } from '@deps/models/case/task';
 
 import DefaultCaseWorkflowContent from './default-case-workflow-content';
 
 type DefaultCaseContainerProps = {
     taskMetadata: FormMetadata[];
+    taskType: TaskType;
 };
 
-const DefaultCaseContainer = ({ taskMetadata }: DefaultCaseContainerProps) => {
+const DefaultCaseContainer = ({
+    taskMetadata,
+    taskType,
+}: DefaultCaseContainerProps) => {
     return (
         <WorkflowProvider>
-            <DefaultCaseWorkflowContent taskMetadata={taskMetadata} />
+            <DefaultCaseWorkflowContent
+                taskMetadata={taskMetadata}
+                taskType={taskType}
+            />
         </WorkflowProvider>
     );
 };

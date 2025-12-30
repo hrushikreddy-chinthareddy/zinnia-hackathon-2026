@@ -11,7 +11,7 @@ import { getClasses } from './button-group.helpers';
 export type ButtonGroupSize = 'none' | 'xxs' | 'xs' | 'sm' | 'md' | 'lg' | 'xl';
 
 interface ButtonGroupProps {
-    activeValue: string;
+    activeValue: string | boolean;
     className?: string;
     disabled?: boolean;
     labels: LabelValue<string>[];

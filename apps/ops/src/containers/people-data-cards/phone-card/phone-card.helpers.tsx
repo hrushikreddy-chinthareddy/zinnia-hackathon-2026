@@ -1,4 +1,3 @@
-import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { v4 as uuid4 } from 'uuid';
@@ -19,6 +18,7 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
+import { Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 interface FormattedPhoneProps {
     phone: Phone;

@@ -1,19 +1,21 @@
+import { TagVariant } from '@zinnia/bloom/components';
+import { TFunction } from 'next-i18next';
+
+import { Roles } from '@deps/constants/policy';
+import {
+    BeneficiaryItem,
+    ExtendedParty,
+} from '@deps/contexts/BeneChangeContext';
+import { RoleData } from '@deps/contexts/RoleChangeContext';
+import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
+import { getFullName } from '@deps/helpers/party-info-helpers';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
     IdentificationType,
     Party,
     PartyType,
     Policy,
 } from '@zinnia/api-types/types/sor';
-import { TagVariant } from '@zinnia/bloom/components';
-import { TFunction } from 'next-i18next';
-
-import {
-    BeneficiaryItem,
-    ExtendedParty,
-} from '@deps/contexts/BeneChangeContext';
-import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
-import { getFullName } from '@deps/helpers/party-info-helpers';
-import { toTitleCase } from '@deps/helpers/string.helpers';
 
 import { getFormattedAddress, getFormattedPhone } from './beneficiary-summary';
 import { ENTERPRISE_ADDRESS_TYPE } from '../../beneficiary-details/address-details/address-details.helpers';
@@ -28,7 +30,7 @@ export const getTagVariant = (action: string, t: TFunction) => {
         tagVariant = TagVariant.Information;
         tagText = t('tag.updated');
     } else if (action === 'DELETE') {
-        tagVariant = TagVariant.White;
+        tagVariant = TagVariant.Information;
         tagText = t('tag.removed');
     } else if (action === 'ADD') {
         tagVariant = TagVariant.Information;
@@ -143,4 +145,25 @@ export const hasBeneficiaryChanged = (
         relationshipChanged ||
         entityChanged
     );
+};
+
+export const getExistingPartyIndex = (
+    role: string,
+    removedTpdIndex: number | null,
+    existingRoleData: RoleData[] | []
+): number | null => {
+    const isThirdPartyDesignee =
+        role.toUpperCase() === Roles.THIRDPARTYDESIGNEE;
+
+    if (removedTpdIndex !== null && isThirdPartyDesignee) {
+        return existingRoleData?.[removedTpdIndex]?.party
+            ? removedTpdIndex
+            : null;
+    }
+
+    if (removedTpdIndex === null && !isThirdPartyDesignee) {
+        return existingRoleData?.[0]?.party ? 0 : null;
+    }
+
+    return null;
 };

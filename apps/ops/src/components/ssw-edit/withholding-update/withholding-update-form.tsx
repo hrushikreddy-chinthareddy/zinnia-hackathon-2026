@@ -53,7 +53,6 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
     });
     const [isLoading, setIsLoading] = useState(false);
     const source = getDocumentSource(initialForm?.data?.documentNumber);
-    const [timer] = useState(performance.now());
 
     const handleBackRoute = () => {
         setIsLoading(true);
@@ -74,8 +73,7 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
                 formSignature,
                 formTaxWithholding,
                 document
-            ),
-            timer
+            )
         );
         if (successfulCaseUpdate) {
             setIsLoading(false);

@@ -10,3 +10,42 @@
         min-height: 100vh;
     }
 }
+
+.searchContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: start;
+    gap: 1rem;
+    @media (max-width: 1024px) {
+        display: block;
+    }
+}
+
+.searchActions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-top: calc(
+        var(--measure-dimension-gap-lg) + var(--measure-dimension-z-space-1)
+    );
+
+    @media (min-width: 768px) {
+        width: auto;
+    }
+}
+
+.statusRow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    margin-bottom: 1.5rem;
+
+    @media (min-width: 640px) {
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        flex-direction: row;
+        align-items: center;
+    }
+}

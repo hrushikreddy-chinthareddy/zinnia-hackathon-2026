@@ -1,6 +1,5 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
-
 import { UserProfile } from '@deps/models/user-profile';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 export interface SegmentTrackedPageProps {
     user: UserProfile;
@@ -37,6 +36,7 @@ export enum SegmentPageName {
     IllustrationsClientCase = 'Client Case Table',
     IllustrationsNewClientCase = 'New Client Case Form',
     IllustrationsDetails = 'Client Case Illustrations',
+    OperationsReview = 'Request Operations Review',
 }
 /*
     Per Analytics Team: event names should not be customized to use case;
@@ -152,12 +152,17 @@ export type CaseClickedEvent = BaseSegmentEventProps & {
 
 export type IllustrationsClickedEvent = BaseSegmentEventProps & {
     productName: string;
+    productMarketingName: string;
     productType: string;
     carrier: string;
 };
 
 export type IllustrationAddProductClickedEvent = BaseSegmentEventProps & {
     carrier: string;
+};
+
+export type IllustrationCalculateEvent = IllustrationsClickedEvent & {
+    illustrationId: string;
 };
 
 export type CaseTabClickedEvent = BaseSegmentEventProps & {

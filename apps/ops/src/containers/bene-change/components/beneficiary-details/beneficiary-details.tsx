@@ -1,9 +1,3 @@
-import {
-    Email,
-    PartyRole,
-    Policy,
-    PreferredCommunicationType,
-} from '@zinnia/api-types/types/sor';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -26,6 +20,12 @@ import { ReactComponent as ChevronUp } from '@deps/styles/elements/icons/icons_o
 import { ReactComponent as FingerprintIcon } from '@deps/styles/elements/icons/icons_outlined/fingerprint.svg';
 import { ReactComponent as ContactIcon } from '@deps/styles/elements/icons/icons_outlined/phone.svg';
 import { ReactComponent as LocationIcon } from '@deps/styles/elements/icons/navigation/location.svg';
+import {
+    Email,
+    PartyRole,
+    Policy,
+    PreferredCommunicationType,
+} from '@zinnia/api-types/types/sor';
 
 import AddressDetails from './address-details/address-details';
 import {
@@ -128,7 +128,9 @@ export default function BeneficiaryDetails({
         currentBene?.party?.info || {}
     );
 
-    const [preferedOption, setPreferredOption] = useState<string | null>(null);
+    const [preferedOption, setPreferredOption] = useState<string>(
+        currentBene.party.preferredCommunicationType || ''
+    );
 
     const preferedOptions = [
         {
@@ -308,6 +310,7 @@ export default function BeneficiaryDetails({
                             index={0}
                             isReadOnly={isReadOnly}
                             partyType={currentParty?.partyType}
+                            preferredContactMethod={preferedOption ?? undefined}
                         />
                     </div>
                 </div>
@@ -357,6 +360,7 @@ export default function BeneficiaryDetails({
                             updateEmail={currentEmails?.[0]}
                             index={0}
                             isReadOnly={isReadOnly}
+                            preferredContactMethod={preferedOption ?? undefined}
                         />
                     </div>
                 </div>

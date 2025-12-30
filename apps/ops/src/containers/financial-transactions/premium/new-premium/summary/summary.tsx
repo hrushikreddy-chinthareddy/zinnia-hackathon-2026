@@ -1,4 +1,3 @@
-import { Address, Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -34,6 +33,7 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { Address, Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;

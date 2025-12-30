@@ -5,7 +5,6 @@ import {
     TabList,
     TabTrigger,
 } from '@zinnia/bloom/components';
-import { toTitleCase } from '@zinnia/utils';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { CSSProperties, FC, PropsWithChildren, useState } from 'react';
@@ -13,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { toTitleCase } from '@deps/utils/strings';
 
 export enum DashboardTabs {
     ACTIVE_APPLICATIONS = 'active-applications',

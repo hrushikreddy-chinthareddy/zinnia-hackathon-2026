@@ -1,9 +1,9 @@
-import { ArrangementType } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
+import { ArrangementType } from '@zinnia/api-types/types/sor';
 
 export const BPMErrorContent = ({
     effectiveDate,

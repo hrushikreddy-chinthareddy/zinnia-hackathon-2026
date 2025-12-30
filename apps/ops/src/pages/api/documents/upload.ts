@@ -4,8 +4,8 @@ import { AxiosResponse } from 'axios';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import {
-    logCompliance,
     logError,
+    logInfo,
     parseErrorInformation,
     withAuthAndLogging,
 } from '@deps/utils/server-logging';
@@ -29,10 +29,14 @@ export default withAuthAndLogging(
         loggingContext
     ) => {
         const accessToken = (await getAccessToken(req, res)).accessToken;
-
+        const correlationId = req.body.metadata.correlationId;
         const url = `${baseUrl}/documents`;
 
-        logCompliance('Document Upload Attempt', loggingContext);
+        logInfo(`Document upload: requesting: correlationID=${correlationId}`, {
+            ...loggingContext,
+            url,
+            correlationId,
+        });
         const response = await fetch(req.body.file);
         const blob = await response.blob();
         if (!blob) return;
@@ -49,21 +53,33 @@ export default withAuthAndLogging(
                     authorization: 'Bearer ' + accessToken,
                     headers: {
                         'Content-type': 'multipart/form-data',
+                        'x-correlation-id': correlationId,
                     },
                 },
-                loggingContext
+                {
+                    ...loggingContext,
+                    correlationId,
+                }
             );
 
-            logCompliance(
-                'Document Upload request successful.',
-                loggingContext
+            logInfo(
+                `Document upload request: success: correlationID=${correlationId}`,
+                {
+                    ...loggingContext,
+                    correlationId,
+                }
             );
             res.json({ ...data });
         } catch (error) {
-            logError('documents/upload:: error', {
-                ...parseErrorInformation(error),
-                ...loggingContext,
-            });
+            logError(
+                `Document upload:: error: correlationID=${correlationId}`,
+                {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                    correlationId,
+                    url,
+                }
+            );
             res.status(500).json(null);
         }
     },

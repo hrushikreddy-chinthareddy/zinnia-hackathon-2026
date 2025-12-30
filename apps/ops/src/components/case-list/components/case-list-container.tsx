@@ -10,7 +10,10 @@ import {
 
 import { ButtonSize } from '@deps/components/button/button';
 import { Loading } from '@deps/components/loading';
-import { CaseTypeToProcessesMap } from '@deps/constants/case';
+import {
+    CaseTypeToProcessesMap,
+    disableCreateCase,
+} from '@deps/constants/case';
 import SearchResultsErrorCard from '@deps/containers/search-results/search-results-error-card/search-results-error-card';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { useFetchCases } from '@deps/hooks/useFetchCases';
@@ -116,10 +119,14 @@ export const CaseListContainer = ({
         const completedCases = cases?.filter(
             (item) => item.caseStatus == Statuses.Completed
         );
-        if (completedCases && completedCases.length === total) {
+        if (
+            completedCases &&
+            completedCases.length === total &&
+            !disableCreateCase.includes(caseType)
+        ) {
             setShowCreateCase(true);
         }
-    }, [cases, setShowCreateCase, total]);
+    }, [cases, setShowCreateCase, total, caseType]);
 
     const caseClickHandler = useCallback(
         (caseData: Case) => {

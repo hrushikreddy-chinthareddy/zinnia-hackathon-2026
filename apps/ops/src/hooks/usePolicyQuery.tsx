@@ -1,5 +1,4 @@
 import { QueryClient, useQuery } from '@tanstack/react-query';
-import { Policy } from '@xd/api-types/dist/generated-types/sor';
 import dayjs from 'dayjs';
 
 import { DATE_PICKER_FORMAT } from '@deps/components/fields/field-date-select/field-date-select';
@@ -7,6 +6,8 @@ import {
     getPolicyQuery,
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 export const usePolicyQuery = (
     planCode: string,
@@ -21,7 +22,7 @@ export const usePolicyQuery = (
             getPolicyQuery(
                 policyNumber,
                 planCode,
-                dayjs(date, DATE_PICKER_FORMAT).format('YYYY-MM-DD')
+                dayjs(date, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT)
             ),
         placeholderData: () => {
             const initialData = queryClient.getQueryData<Policy>([

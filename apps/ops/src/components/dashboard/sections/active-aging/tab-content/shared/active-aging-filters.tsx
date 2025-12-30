@@ -1,4 +1,3 @@
-import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { FC, useContext } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
@@ -12,6 +11,7 @@ import { ActiveAgingContext } from '@deps/components/dashboard/sections/active-a
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { Statuses } from '@deps/models/case/case';
+import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import { getFormattedDateRange, ActiveAgingTimeRange } from '../../utils';
 

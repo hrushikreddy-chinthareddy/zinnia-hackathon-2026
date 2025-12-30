@@ -1,5 +1,4 @@
 import { Meta } from '@storybook/react';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 
 import {
@@ -8,6 +7,7 @@ import {
     toPolicySummaryColDto,
 } from '@deps/data/policy-summary';
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import DescriptionList from './description-list';
 import DescriptionLists from './description-lists';

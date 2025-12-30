@@ -1,7 +1,4 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { Policy } from '@xd/api-types/dist/generated-types/sor';
-import { Accordion } from '@xd/components/Accordion/Accordion';
-import useDebounce from '@xd/xd-components/src/hooks/useDebounce';
 import {
     SideSheet,
     Icon,
@@ -11,18 +8,21 @@ import {
     FieldData,
     FieldTypes,
     FieldSize as BloomFieldSize,
+    Accordion,
 } from '@zinnia/bloom/components';
 import dayjs, { Dayjs } from 'dayjs';
 import { ChangeEvent, FC, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { filterOnSearchHandler } from '@deps/helpers/search.helpers';
+import { useDebounce } from '@deps/hooks/useDebounce';
 import {
     getPolicyQueryKey,
     getPolicyQuery,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import styles from './find-key-values-sidesheet.module.css';
 import { generateKeyValueGroups, prepareSearchableData } from './utils';
@@ -203,7 +203,7 @@ export const FindKeyValuesSidesheet: FC<FindKeyValuesSidebarProps> = ({
                                                             <CircleInfoIcon
                                                                 height={'16px'}
                                                                 width={'16px'}
-                                                                className="text-primary"
+                                                                className="tooltip-primary"
                                                             />
                                                         </Popover>
                                                     )}

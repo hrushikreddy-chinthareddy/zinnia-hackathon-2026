@@ -12,6 +12,7 @@ export enum ProcessType {
     SUITABILITY = 'Suitability',
     DEFAULT_CASE = 'Operations Review',
     IDN_DEATH_CLAIM = 'IDN_DEATH_CLAIM',
+    RMD = 'RMD',
 }
 
 export enum TypeOfPayment {
@@ -89,5 +90,10 @@ export enum CaseSource {
     ZinniaLive = 'Zinnia Live',
     MyPolicyView = 'My Policy View',
     FarmersNewWorldLifeInsurance = "Farmer's New World Life Insurance",
-    DeathAuditScrub = 'Death Audit Scrub',
+    DeathAudit = 'Death Audit',
+}
+
+export enum CaseAction {
+    Prioritize = 'prioritize',
+    Deprioritize = 'deprioritize',
 }

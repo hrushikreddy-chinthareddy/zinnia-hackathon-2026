@@ -1,13 +1,3 @@
-import {
-    CaseCountInput,
-    CaseCountOutput,
-    CaseTimePredictInput,
-    CaseTimePredictOutput,
-    CompletedCaseTimeInput,
-    CompletedCaseTimeOutput,
-    CompletedCaseTimeOutputLevel1,
-    HTTPValidationError,
-} from '@zinnia/api-types/types/analytics';
 import { AxiosResponse } from 'axios';
 
 import {
@@ -42,6 +32,15 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import {
+    CaseCountInput,
+    CaseCountOutput,
+    CaseTimePredictInput,
+    CaseTimePredictOutput,
+    CompletedCaseTimeInput,
+    CompletedCaseTimeOutput,
+    CompletedCaseTimeOutputLevel1,
+} from '@zinnia/api-types/types/analytics';
 
 import {
     baseAppUrl,
@@ -168,11 +167,11 @@ export const getCaseStats = async (
 
 export const getCaseDashboardStats = async (
     query: CaseCountInput
-): Promise<CaseCountOutput | HTTPValidationError> => {
+): Promise<CaseCountOutput> => {
     try {
         const { data: response } = await client.post<
             CaseCountInput,
-            AxiosResponse<CaseCountOutput, HTTPValidationError>
+            AxiosResponse<CaseCountOutput>
         >(`${baseAppUrl}/api/dashboard/case-count`, query);
 
         return {
@@ -180,37 +179,32 @@ export const getCaseDashboardStats = async (
             totalElements: response.totalElements,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getCaseDashboardStats::An error occurred while getting case dashboard stats results',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
-        return error;
+
+        throw error;
     }
 };
 
 export const getCaseTimingData = async (
     query: CompletedCaseTimeInput
-): Promise<CaseTimingResponse | HTTPValidationError> => {
+): Promise<CaseTimingResponse> => {
     try {
         const response = await client.post<
             CompletedCaseTimeInput,
-            AxiosResponse<CompletedCaseTimeOutput, HTTPValidationError>
+            AxiosResponse<CompletedCaseTimeOutput>
         >(`${baseAppUrl}/api/dashboard/case-timing`, query);
 
         return {
             data: response.data.data,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getCaseTimingData::An error occurred while getting case dashboard stats results',
             error
         );
-        if ('detail' in error) {
-            return error.detail;
-        }
 
         return error;
     }
@@ -282,7 +276,16 @@ export const getCaseDetailsSSR = async (
 
         return caseSanitizer(data);
     } catch (error: any) {
-        logError('getCaseDetailsSSR', {
+        let logAppropriateLevel = logError;
+        switch (error?.status) {
+            case 403:
+                logAppropriateLevel = logWarn;
+                break;
+            case 404:
+                logAppropriateLevel = logInfo;
+                break;
+        }
+        logAppropriateLevel('getCaseDetailsSSR', {
             ...parseErrorInformation(error),
             ...loggingContext,
             file: 'queries/api/cases',
@@ -508,5 +511,32 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
             error
         );
         return error.response;
+    }
+};
+
+export const escalateCase = async (
+    caseId: string,
+    escalate: boolean
+): Promise<AxiosResponse | null> => {
+    try {
+        const url = `${baseCasesUrl2}/${caseId}/escalate`;
+
+        const response = await client.patch(url, {
+            escalated: escalate,
+        });
+        browserLogInfo('cases::Successfully created a case', {
+            url: baseCasesUrl,
+            caseId,
+            function: 'cases.escalateCase',
+        });
+        return response;
+    } catch (error: any) {
+        browserLogError('cases::Failed to create a case', {
+            ...parseErrorInformation(error),
+            url: baseCasesUrl,
+            caseId,
+            function: 'cases.escalateCase',
+        });
+        return error;
     }
 };

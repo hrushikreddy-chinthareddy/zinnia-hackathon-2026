@@ -15,6 +15,14 @@
         --color-primary-color-primary-lightest
     );
     --bg-primary-lightest: var(--color-base-surface-surface-secondary);
+    --bg-color-gradient-linear: linear-gradient(
+        0.26turn,
+        #ffc600 -12.77%,
+        #ec6c00 39.25%,
+        #ff1822 124.05%
+    );
+    --knowledge-base-sidenav-expanded-width: 250px;
+    --knowledge-base-sidenav-collapsed-width: 65px;
 }
 
 @layer base {
@@ -218,6 +226,10 @@ body {
             font: var(--typography-mobile-headline-1-m);
         }
     }
+    .tooltip-primary {
+        color: var(--color-base-icon-icon-action-text-link);
+    }
+
     .subtitle {
         font: var(--typography-titles-subtitle);
     }

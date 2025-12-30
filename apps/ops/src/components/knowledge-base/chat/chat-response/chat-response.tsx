@@ -1,10 +1,4 @@
-import { SourceDocument } from '@xd/api-types/dist/generated-types/knowledgebase';
-import {
-    Icon,
-    IconType,
-    Loader,
-    LoaderVariant,
-} from '@zinnia/bloom/components';
+import { Icon, IconType } from '@zinnia/bloom/components';
 import DOMPurify from 'dompurify';
 import { marked } from 'marked';
 import { useEffect, useRef, useState } from 'react';
@@ -12,23 +6,27 @@ import { useTranslation } from 'react-i18next';
 
 import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import FieldLabel from '@deps/components/fields/field-label';
-import { Modal } from '@deps/components/modal/modal';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import useNavLink from '@deps/hooks/useNavLink';
 import { sendResponseFeedback } from '@deps/queries/api/knowledge-base';
 import { ReactComponent as Dislike } from '@deps/styles/elements/icons/icons_outlined/thumb-down.svg';
 import { ReactComponent as Like } from '@deps/styles/elements/icons/icons_outlined/thumb-up.svg';
 import {
+    AnswerMode,
     DislikeReasonsPayload,
     FeedbackType,
 } from '@deps/types/knowledge-base';
 import { browserLogError, browserLogTrace } from '@deps/utils/browser-logging';
+import { SourceDocument } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './chat-response.module.css';
 import DislikeReasons from './dislike-reasons/dislike-reasons';
+import AiLogo from '../ai-logo/ai-logo';
 import FollowUp from '../follow-up/follow-up';
 
 type ChatResponseProps = {
@@ -47,7 +45,8 @@ type ChatResponseProps = {
     getCommonClientResponse?: (
         sessionId: string,
         questionId: string,
-        messageId: string
+        messageId: string,
+        responseType: AnswerMode
     ) => void;
 };
 
@@ -64,34 +63,35 @@ const ChatResponse = ({
     isFollowUp = false,
     searchCommonClientFollowUp = () => {},
     isStreaming,
-    getCommonClientResponse = (
-        sessionId: string,
-        questionId: string,
-        messageId: string
-    ) => {},
+    getCommonClientResponse = () => {},
 }: ChatResponseProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
-    const { sessionId } = useKnowledgeBaseContext();
+    const { buildOpenInNewWindowLinkText } = useNavLink();
+    const { sessionId, selectedClientId, commonClientId, answerMode } =
+        useKnowledgeBaseContext();
     const [feedbackType, setFeedbackType] = useState<FeedbackType | null>(null);
     const [feedbackComment, setFeedbackComment] = useState('');
     const [feedbackTypeSubmitted, setFeedbackTypeSubmitted] = useState(false);
     const [feedbackMessageSubmitted, setFeedbackMessageSubmitted] =
         useState(false);
     const [showFeedbackTextbox, setShowFeedbackTextbox] = useState(false);
-    const [showFollowUp, setShowFollowUp] = useState(false);
     const [dislikeReason, setDislikeReason] =
         useState<DislikeReasonsPayload | null>(null);
     const [
         showDefinitiveAnswerNotFoundControls,
         setShowDefinitiveAnswerNotFoundControls,
     ] = useState(definitiveAnswerFound === false);
+    const [feedbackSubmitLoading, setFeedbackSubmitLoading] = useState(false);
     const endref = useRef<HTMLDivElement | null>(null);
     const html = DOMPurify.sanitize(marked.parse(response || '') as string);
 
     const markdownRef = useRef<HTMLDivElement | null>(null);
     const likeTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+    const sidesheet = useSideSheetContext();
+
     const validateFeedbackPayload = () => {
         if (feedbackComment.trim().length < 1) return false;
 
@@ -175,6 +175,7 @@ const ChatResponse = ({
     const handleSendFeedbackMessage = async () => {
         const isFeedbackValidated = validateFeedbackPayload();
         if (!isFeedbackValidated) return;
+        setFeedbackSubmitLoading(true);
         if (
             feedbackType === FeedbackType.Like ||
             (feedbackType === FeedbackType.Dislike &&
@@ -200,13 +201,15 @@ const ChatResponse = ({
             } catch (error) {
                 browserLogError('Error sending feedback message::', { error });
                 return;
+            } finally {
+                setFeedbackSubmitLoading(false);
             }
         }
     };
 
     const renderFeedbackComment = (feedbackComment: string) => {
         return (
-            <div className={`${styles.submitFeedback}`}>
+            <div className={`${styles.submitFeedback} mt-4`}>
                 <Typography variant={TypographyVariant.BodyParagraph}>
                     {t('chat.feedback.thanksMsg')}: {feedbackComment}
                 </Typography>
@@ -218,7 +221,12 @@ const ChatResponse = ({
         if (isFollowUp) {
             searchCommonClientFollowUp();
         } else {
-            await getCommonClientResponse(sessionId, questionId, responseId);
+            await getCommonClientResponse(
+                sessionId,
+                questionId,
+                responseId,
+                answerMode
+            );
         }
     };
 
@@ -264,6 +272,23 @@ const ChatResponse = ({
         );
     };
 
+    const handleOpenFollowUpSidesheet = () => {
+        sidesheet.changeSideSheetContent(
+            t('chat.followUpButton'),
+            <FollowUp
+                email={email}
+                questionId={questionId}
+                responseId={responseId}
+                response={response}
+                sourceDocuments={sourceDocuments || []}
+                selectedClientId={selectedClientId}
+                commonClientId={commonClientId || ''}
+            />,
+            true
+        );
+        sidesheet.handleOpen(true, 1100);
+    };
+
     useEffect(() => {
         endref.current?.scrollIntoView({ behavior: 'smooth' });
     }, [feedbackType]);
@@ -286,18 +311,13 @@ const ChatResponse = ({
 
     if (!response?.trim()) {
         return (
-            <div>
-                <Loader variant={LoaderVariant.CTA} />
-            </div>
+            <AiLogo width="30px" height="30px" autoPlay={true} loop={true} />
         );
     }
 
     return (
-        <div className="flex gap-2 items-start">
-            <div className={`${styles.avatar}`} data-testid="response-avatar">
-                <Icon type={IconType.ANNOTATION} />
-            </div>
-            <div className="flex-1 flex flex-col gap-4">
+        <div className="w-full flex gap-2 items-start">
+            <div className="w-full flex-1 flex flex-col">
                 <div className={`${styles.messageContainer}`}>
                     <div className={`${styles.responseContainer}`}>
                         {showDefinitiveAnswerNotFoundControls ? (
@@ -352,6 +372,9 @@ const ChatResponse = ({
                                                         href={doc.web_url}
                                                         target="_blank"
                                                         rel="noreferrer"
+                                                        aria-label={buildOpenInNewWindowLinkText(
+                                                            doc.file_name
+                                                        )}
                                                     >
                                                         {doc.file_name}
                                                     </a>
@@ -382,9 +405,7 @@ const ChatResponse = ({
                                     <button
                                         aria-label="followup-button"
                                         type="button"
-                                        onClick={() => {
-                                            setShowFollowUp(true);
-                                        }}
+                                        onClick={handleOpenFollowUpSidesheet}
                                     >
                                         <Typography
                                             variant={
@@ -395,23 +416,6 @@ const ChatResponse = ({
                                             {t('chat.followUpButton')}
                                         </Typography>
                                     </button>
-                                    <Modal
-                                        open={showFollowUp}
-                                        onCancel={() => setShowFollowUp(false)}
-                                        closeIcon="X"
-                                        bigSize
-                                        content={
-                                            <FollowUp
-                                                email={email}
-                                                questionId={questionId}
-                                                responseId={responseId}
-                                                response={response}
-                                                sourceDocuments={
-                                                    sourceDocuments || []
-                                                }
-                                            />
-                                        }
-                                    />
                                 </div>
                             </div>
                         )}
@@ -431,7 +435,7 @@ const ChatResponse = ({
                                       renderFeedbackComment(feedbackComment)
                                   ) : (
                                       <div
-                                          className={`${styles.submitFeedback} flex flex-col gap-4`}
+                                          className={`${styles.submitFeedback} mt-4 flex flex-col gap-4`}
                                       >
                                           <FieldLabel
                                               label={
@@ -487,6 +491,9 @@ const ChatResponse = ({
                                                           onClick={
                                                               handleCancelFeedbackMessage
                                                           }
+                                                          disabled={
+                                                              feedbackSubmitLoading
+                                                          }
                                                       >
                                                           {t(
                                                               'chat.feedback.cancel'
@@ -501,7 +508,8 @@ const ChatResponse = ({
                                                               handleSendFeedbackMessage
                                                           }
                                                           disabled={
-                                                              !validateFeedbackPayload()
+                                                              !validateFeedbackPayload() ||
+                                                              feedbackSubmitLoading
                                                           }
                                                       >
                                                           {t(

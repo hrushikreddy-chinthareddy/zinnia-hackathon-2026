@@ -15,7 +15,7 @@ import AssistiveText, {
 } from '@deps/components/assistive-text/assistive-text';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import { TaskDocument } from '@deps/models/case/task-instance';
 
 import { useGetCaseDocs } from '../steps/task-review/task-review.helpers';
@@ -75,7 +75,11 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
                     </div>
                 </div>
                 <div className="flex items-center">
-                    {createAction(document, clientCode.toUpperCase(), t)}
+                    {createViewDownloadAction(
+                        document,
+                        clientCode.toUpperCase(),
+                        t
+                    )}
                 </div>
             </div>
         );

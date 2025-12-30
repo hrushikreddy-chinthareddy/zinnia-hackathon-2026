@@ -1,3 +1,14 @@
+import { TFunction } from 'i18next';
+
+import { friendlyGroupByName } from '@deps/components/dashboard/utils';
+import { Statuses } from '@deps/models/case/case';
+import {
+    getCaseDashboardStats,
+    getCaseTimingData,
+} from '@deps/queries/api/cases';
+import { getCompletedTaskTimeData } from '@deps/queries/api/completed-task-times';
+import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
+import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
 import {
     CaseCountGroupByEnum,
     CaseCountInput,
@@ -7,14 +18,9 @@ import {
     ExceptionCountGroupByEnum,
     TaskCountGroupByEnum,
     TaskCountInputFilter,
+    CompletedTaskTimeInputFilter,
+    CompletedTaskTimeGroupByEnum,
 } from '@zinnia/api-types/types/analytics';
-
-import { friendlyGroupByName } from '@deps/components/dashboard/utils';
-import { Statuses } from '@deps/models/case/case';
-import { getDashboardExceptionStats } from '@deps/queries/api/exception-refs';
-import { getTaskCountData } from '@deps/queries/api/tasks-volume-count';
-
-import { getCaseDashboardStats, getCaseTimingData } from '../../api/cases';
 
 export const getCaseDashboardStatsQuery = async (
     baseFilter: CaseCountInputFilter,
@@ -24,12 +30,9 @@ export const getCaseDashboardStatsQuery = async (
         filter: baseFilter,
         groupBy,
     });
-    if (
-        !statsResponse ||
-        'detail' in statsResponse ||
-        !('data' in statsResponse)
-    ) {
-        throw statsResponse;
+
+    if (!statsResponse || !('data' in statsResponse)) {
+        throw new Error('statsResponse is undefined or empty');
     }
 
     statsResponse.data = statsResponse.data
@@ -53,12 +56,8 @@ export const getCaseDashboardTimingQuery = async (
         filter: baseFilter,
         groupBy,
     });
-    if (
-        !statsResponse ||
-        'detail' in statsResponse ||
-        !('data' in statsResponse)
-    ) {
-        throw statsResponse;
+    if (!statsResponse || !('data' in statsResponse)) {
+        throw new Error('timingResponse is undefined or empty');
     }
 
     statsResponse.data = statsResponse.data.map((item) => {
@@ -80,12 +79,8 @@ export const getExceptionCountQuery = async (
         filter: baseFilter,
         groupBy,
     });
-    if (
-        !exceptionResponse ||
-        'detail' in exceptionResponse ||
-        !('data' in exceptionResponse)
-    ) {
-        throw exceptionResponse;
+    if (!exceptionResponse || !('data' in exceptionResponse)) {
+        throw new Error('exceptionCountResponse is undefined or empty');
     }
 
     exceptionResponse.data = exceptionResponse.data.map((item) => {
@@ -112,13 +107,10 @@ export const getTaskCountQuery = async (
         groupBy: groupBy,
     });
 
-    if (
-        !taskCountResponse ||
-        'detail' in taskCountResponse ||
-        !('data' in taskCountResponse)
-    ) {
-        throw taskCountResponse;
+    if (!taskCountResponse || !('data' in taskCountResponse)) {
+        throw new Error('taskCountResponse is undefined or empty');
     }
+
     taskCountResponse.data = taskCountResponse.data
         .filter((item) => item.name !== null && item.name !== 'null')
         .map((item) => {
@@ -149,6 +141,61 @@ export const getTaskCountQuery = async (
     return taskCountResponse;
 };
 
+export const getCompletedTaskTimeQuery = async (
+    baseFilter: CompletedTaskTimeInputFilter,
+    groupBy: CompletedTaskTimeGroupByEnum[],
+    t: TFunction
+) => {
+    const completedTaskTimesResponse = await getCompletedTaskTimeData({
+        filter: baseFilter,
+        groupBy: groupBy,
+    });
+
+    // If the response of throws an error, it will just propagate;
+    // If the response is undefined or empty, throw an error
+    if (
+        !completedTaskTimesResponse ||
+        !('data' in completedTaskTimesResponse)
+    ) {
+        throw new Error('completedTaskTimesResponse is undefined or empty');
+    }
+
+    completedTaskTimesResponse.data = completedTaskTimesResponse.data
+        .filter((item) => item.name !== null && item.name !== 'null')
+        .map((item) => {
+            // Handle empty names
+            if (item.name === '') {
+                const friendlyName = friendlyGroupByName[groupBy[0]];
+                item.name = `No ${friendlyName.toLowerCase()} name`;
+            }
+
+            // Filter nested values as well
+            if (item.values && item.values.length > 0) {
+                item.values = item.values
+                    .filter((value) => value?.name)
+                    .map((value) => {
+                        // Handle empty or missing task names
+                        if (!value?.name) {
+                            value.name = t('allFields.unknownTask');
+                        }
+                        return value;
+                    });
+            }
+
+            // Sort tasks by total
+            const sortedItem = {
+                ...item,
+                values: item?.values
+                    ? [...item.values].sort((a, b) => b.count - a.count)
+                    : [],
+            };
+
+            return sortedItem;
+        });
+
+    return completedTaskTimesResponse;
+};
+
 /**************************
  * ****Sankey Chart Queries
  * *************************
@@ -174,12 +221,8 @@ export const getStatsFromSelectionQuery = async (
     };
 
     const statsResponse = await getCaseDashboardStats(query);
-    if (
-        !statsResponse ||
-        'detail' in statsResponse ||
-        !('data' in statsResponse)
-    ) {
-        throw statsResponse;
+    if (!statsResponse || !('data' in statsResponse)) {
+        throw new Error('statsFromSelectionResponse is undefined or empty');
     }
     return statsResponse;
 };

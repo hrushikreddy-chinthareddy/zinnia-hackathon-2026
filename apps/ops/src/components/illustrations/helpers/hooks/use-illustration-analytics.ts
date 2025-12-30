@@ -18,6 +18,7 @@ import {
     IllustrationsSearchSubmittedEvent,
     SegmentTrackedEventName,
     SelectAgencyEvent,
+    IllustrationCalculateEvent,
 } from '@deps/types/segment-analytics';
 
 type SearchType = 'caseTitle' | 'agentName' | 'insuredName';
@@ -53,9 +54,31 @@ export const useIllustrationAnalytics = () => {
             segmentAnalyticsTrackEvent<IllustrationsClickedEvent>(eventName, {
                 productName,
                 productType: product.productType,
+                productMarketingName: product.productMarketingName,
                 carrier: product.carrier,
                 ...baseSegmentEventProps,
             });
+        },
+        [baseSegmentEventProps]
+    );
+
+    const sendCalculateIllustrationEvent = useCallback(
+        (product: Product, illustrationId: string) => {
+            const productName =
+                ProductTypeLabel.get(product.productType) ??
+                DEFAULT_ERROR_STRING;
+
+            segmentAnalyticsTrackEvent<IllustrationCalculateEvent>(
+                IllustrationsSegmentTrackedEventName.calculateIllustration,
+                {
+                    productName,
+                    productMarketingName: product.productMarketingName,
+                    productType: product.productType,
+                    carrier: product.carrier,
+                    illustrationId,
+                    ...baseSegmentEventProps,
+                }
+            );
         },
         [baseSegmentEventProps]
     );
@@ -249,6 +272,7 @@ export const useIllustrationAnalytics = () => {
         sendAgencySelection,
         sendClientCaseEdited,
         sendIllustrationsClickedEvent,
+        sendCalculateIllustrationEvent,
         sendAddProductToIllustrateEvent,
         // actions
         setSearchText,

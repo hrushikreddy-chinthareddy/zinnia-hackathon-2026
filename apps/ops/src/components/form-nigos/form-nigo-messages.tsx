@@ -27,7 +27,9 @@ function getFilteredSubExceptions(
         return acc;
     }, {} as Record<string, string[]>);
     return nigoExceptions
-        .filter((exception) => exceptionMap.hasOwnProperty(exception.nmId))
+        .filter((exception) =>
+            Object.prototype.hasOwnProperty.call(exceptionMap, exception.nmId)
+        )
         .flatMap((exception) =>
             exception.exceptionSubRefs.filter((sub) =>
                 exceptionMap[exception.nmId].includes(sub.subNmId)

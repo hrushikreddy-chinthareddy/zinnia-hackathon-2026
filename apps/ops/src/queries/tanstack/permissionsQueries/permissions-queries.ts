@@ -1,11 +1,10 @@
-import { FGA_Tuple, BulkCheckTuple } from '@zinnia/utils';
-
 import { UserPermission } from '@deps/models/user-profile';
 import {
     bulkCheckResponseClient,
     checkTuple,
     getCarrierList,
 } from '@deps/queries/api/fga';
+import { BulkCheckTuple, FGA_Tuple } from '@deps/utils/auth';
 import {
     checkPermissionsCookieForTuple,
     doesPermissionsHaveCarrierRelation,
