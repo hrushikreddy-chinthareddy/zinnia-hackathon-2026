@@ -10,6 +10,12 @@ import clsx from 'clsx';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import styles from './field-template.module.css';
+import { TransactionSummaryTemplate } from '../transaction-summary-template/transaction-summary-template';
+
+export enum FieldTemplateType {
+    SummaryCard = 'summaryCard',
+    Table = 'table',
+}
 
 export const helpInformation = (helpText: string) => {
     if (!helpText) {
@@ -22,7 +28,7 @@ export const helpInformation = (helpText: string) => {
                     onClick={(e) => e.preventDefault()}
                     height={'16px'}
                     width={'16px'}
-                    className="text-primary"
+                    className="tooltip-primary"
                 />
             }
             placement={TooltipPlacement.TopRight}
@@ -36,7 +42,6 @@ export function FieldTemplate(props: FieldTemplateProps) {
         id,
         label,
         required,
-        description,
         errors,
         children,
         readonly,
@@ -56,6 +61,9 @@ export function FieldTemplate(props: FieldTemplateProps) {
 
     if (uiOptions.label === false) {
         displayLabel = false;
+    }
+    if (uiOptions.templateType === FieldTemplateType.SummaryCard) {
+        return <TransactionSummaryTemplate {...props} />;
     }
 
     const fieldLabel = label ? (
@@ -109,7 +117,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                     <div>{fieldLabel}</div>
                     {renderCheckBoxesSelectWidgetList(formData)}
                 </div>
-            ) : uiOptions?.templateType === 'table' ? (
+            ) : uiOptions?.templateType === FieldTemplateType.Table ? (
                 readonly && typeof formData === 'string' ? (
                     formData
                 ) : (

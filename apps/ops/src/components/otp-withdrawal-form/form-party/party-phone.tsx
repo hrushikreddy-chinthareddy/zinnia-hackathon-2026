@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import Field, { FieldSize, FieldType } from '@deps/components/fields/field';
 import { FormValidationErrors, Phone } from '@deps/models/case/withdrawal/case';
@@ -91,14 +91,13 @@ const PartyPhone = ({
     return (
         <div className="my-4 grid w-full grid-cols-2  gap-2">
             {fields?.map((field, index) => {
-                if (field.fieldName === PhoneFields.phoneNumber)
+                if (field?.fieldName === PhoneFields.phoneNumber)
                     return (
                         <div key={index}>
-                            {' '}
                             {phoneNumberField({
-                                label: field.fieldLabel,
+                                label: field?.fieldLabel,
                                 isFormStateReadOnly,
-                            })}{' '}
+                            })}
                         </div>
                     );
                 else null;

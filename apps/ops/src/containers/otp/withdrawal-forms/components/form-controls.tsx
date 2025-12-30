@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { TFunction } from 'next-i18next';
-import { FormEvent, useContext, useEffect, useState } from 'react';
+import { FormEvent, useContext, useEffect } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -45,7 +45,6 @@ export function FormControls({
     setTaskApiError,
     document,
 }: FormControlsProps) {
-    const [timer] = useState(performance.now());
     const router = useRouter();
     const { action } = router.query;
     const formState = useContext(FormDataContext);
@@ -154,8 +153,7 @@ export function FormControls({
                     : TaskStatus.New,
                 document,
                 formState
-            ),
-            timer
+            )
         );
 
         if (!successfulCaseUpdate) {
@@ -173,8 +171,7 @@ export function FormControls({
             const successfulCaseUpdate = await updateTask(
                 formState.initialForm.caseId,
                 formState.initialForm?.taskId,
-                buildFormV2(TaskStatus.Completed, document, formState),
-                timer
+                buildFormV2(TaskStatus.Completed, document, formState)
             );
 
             if (successfulCaseUpdate) {

@@ -1,5 +1,4 @@
 import { Meta } from '@storybook/react';
-import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 import { t } from 'i18next';
 
 import {
@@ -16,6 +15,7 @@ import NavElement, {
 } from '@deps/components/nav-element/nav-element';
 import { formatDate } from '@deps/helpers/string.helpers';
 import { generateParty } from '@deps/utils/mock/mockParty';
+import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
 export default {
     title: 'Components/GlobalValues/GlobalValuesBar',

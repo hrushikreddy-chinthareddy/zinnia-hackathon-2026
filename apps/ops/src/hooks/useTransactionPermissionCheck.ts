@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/src/auth/auth';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { checkTransactionPermissionQuery } from '@deps/queries/api/fga';
 import { FIVE_MINUTES_IN_MS } from '@deps/types/constants';
+import { TransactionPermission } from '@deps/utils/auth';
 
 export const useTransactionPermissionCheck = (
     relation: TransactionPermission,

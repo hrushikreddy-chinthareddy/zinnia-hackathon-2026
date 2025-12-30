@@ -17,6 +17,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { CaseType, Processes } from '@deps/models/case/case';
 import {
     AmountType,
     Frequency,
@@ -27,7 +28,6 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as RemoveIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import ExistingPrograms from './existing-programs';
 import RMDCalculator, { findOverlaps } from './rmd-calculator';
@@ -54,6 +54,7 @@ export const DEFAULT_RMD = {
     isJointLifeExpectancy: false,
     rmdPrograms: [],
     taxId: { text: null },
+    rmdMethod: null,
 };
 
 export interface RMDMethodId extends RMDProgram {
@@ -104,16 +105,12 @@ export default function RMDMethod({
     const { formProgram, setFormProgram, formErrors } =
         useContext(FormDataContext);
 
-    browserLogInfo('RMDMethod::render', {
-        rmdType: formProgram?.rmd?.rmdType,
-    });
-
     const [rmdRows, setrmdRows] = useState<RMDMethodId[]>(
         getrmdRows(formProgram?.rmd?.rmdPrograms || [DEFAULT_RMD_PROGRAM])
     );
     const [terminated, setTerminated] = useState<Terminateprogram[]>([]);
-    const [rmdType, setRmdType] = useState(
-        formProgram?.rmd?.rmdType || RMDType.AutoRMD
+    const [rmdMethod, setRmdMethod] = useState(
+        formProgram?.rmd?.rmdMethod || RMDType.AutoRMD
     );
     const [overlappingRmds, setOverlappingRmds] = useState<string[]>([]);
 
@@ -197,20 +194,26 @@ export default function RMDMethod({
             ...DEFAULT_RMD,
             ...formProgram?.rmd,
             rmdPrograms: programs,
-            rmdType,
+            rmdMethod: rmdMethod,
         };
-
         setFormProgram((prevFormProgram) => ({
             ...prevFormProgram,
             withdrawType: { text: WithdrawalType.Gross },
+            program:
+                prevFormProgram?.program?.text === Processes.QCD
+                    ? { text: Processes.QCD }
+                    : { text: Processes.RequiredMinimumDistribution },
+            programType: prevFormProgram?.programType?.text
+                ? prevFormProgram?.programType
+                : { text: CaseType.Rmd },
             rmd: {
                 ...rmd,
-                isOneTimeWithdrawal: rmdType === RMDType.OneTimeRMD,
+                rmdType: null,
+                isOneTimeWithdrawal: rmdMethod === RMDType.OneTimeRMD,
             },
             terminateprograms: terminated,
         }));
-    }, [rmdRows, terminated, rmdType]);
-
+    }, [rmdRows, terminated, rmdMethod]);
     const validateDuration = (programs: RMDProgram[]) => {
         return programs.some((program) => program?.duration?.text === '0');
     };
@@ -228,7 +231,7 @@ export default function RMDMethod({
     };
 
     if (!isLC) {
-        if (rmdType === RMDType.AutoRMD) {
+        if (rmdMethod === RMDType.AutoRMD) {
             rmdOptionsFieldsConfig = {
                 startDate: true,
                 frequency: true,
@@ -236,7 +239,7 @@ export default function RMDMethod({
                 amount: false,
             };
         }
-        if (rmdType === RMDType.OneTimeRMD) {
+        if (rmdMethod === RMDType.OneTimeRMD) {
             rmdOptionsFieldsConfig = {
                 startDate: true,
                 frequency: false,
@@ -253,10 +256,10 @@ export default function RMDMethod({
             </Typography>
             <div>
                 <ButtonGrp
-                    activeValue={rmdType || ''}
+                    activeValue={rmdMethod || ''}
                     groupLabel=""
                     toggle={(val) => {
-                        setRmdType(val as RMDType);
+                        setRmdMethod(val as RMDType);
                     }}
                     labels={rmdTypeOptions ?? RmdMultipleTypeOptions}
                     disabled={isFormStateReadOnly}
@@ -269,14 +272,16 @@ export default function RMDMethod({
                 disableAllPrograms={true}
                 isLC={isLC}
             />
-            {rmdType === RMDType.CalculateRMD && <RMDCalculator />}
+            {rmdMethod === RMDType.CalculateRMD && !isFormStateReadOnly && (
+                <RMDCalculator />
+            )}
             {!isQCD && (
                 <div className="p-2">
                     <Typography
                         variant={TypographyVariant.BodyBold}
                         className="my-2"
                     >
-                        {rmdType === RMDType.AutoRMD
+                        {rmdMethod === RMDType.AutoRMD
                             ? t(`newRmdProgram`)
                             : t(`oneTimeRmd`)}
                     </Typography>
@@ -325,7 +330,11 @@ export default function RMDMethod({
                             size={ButtonSize.Small}
                             type={ButtonType.Primary}
                             className="my-4"
-                            disabled={validateDuration(rmdRows) ? true : false}
+                            disabled={
+                                validateDuration(rmdRows) || isFormStateReadOnly
+                                    ? true
+                                    : false
+                            }
                             variant={
                                 validateDuration(rmdRows) || isFormStateReadOnly
                                     ? ButtonVariant.Inactive

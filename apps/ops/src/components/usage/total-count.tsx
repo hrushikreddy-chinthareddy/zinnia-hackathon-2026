@@ -1,9 +1,10 @@
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import {
     UserActivityOutput,
     UserViewsOutput,
-} from '@xd/api-types/dist/generated-types/analytics';
-
-import Typography, { TypographyVariant } from '../typography/typography';
+} from '@zinnia/api-types/types/analytics';
 
 type TotalCountProps = {
     isDataFetching: boolean;

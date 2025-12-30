@@ -120,8 +120,7 @@ describe('FileSearchField Component', () => {
                     parentCarrierCode: 'carrier-xyz',
                 },
                 25,
-                0,
-                true
+                0
             );
         });
     });

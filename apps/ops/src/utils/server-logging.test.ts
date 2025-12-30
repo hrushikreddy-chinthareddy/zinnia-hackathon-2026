@@ -5,7 +5,6 @@ import {
 } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-import pino from './pino-server';
 import logger from './pino-server';
 import {
     logError,
@@ -66,7 +65,7 @@ describe('server-logging', () => {
     describe('logError', () => {
         it('should use the appropriate pino method to log', () => {
             logError('error', mockLoggingContext);
-            expect(pino.error).toHaveBeenCalledWith(
+            expect(logger.error).toHaveBeenCalledWith(
                 mockLoggingContext,
                 'error'
             );
@@ -75,19 +74,25 @@ describe('server-logging', () => {
     describe('logWarn', () => {
         it('should use the appropriate pino method to log', () => {
             logWarn('warn', mockLoggingContext);
-            expect(pino.warn).toHaveBeenCalledWith(mockLoggingContext, 'warn');
+            expect(logger.warn).toHaveBeenCalledWith(
+                mockLoggingContext,
+                'warn'
+            );
         });
     });
     describe('logInfo', () => {
         it('should use the appropriate pino method to log', () => {
             logInfo('info', mockLoggingContext);
-            expect(pino.info).toHaveBeenCalledWith(mockLoggingContext, 'info');
+            expect(logger.info).toHaveBeenCalledWith(
+                mockLoggingContext,
+                'info'
+            );
         });
     });
     describe('logTrace', () => {
         it('should use the appropriate pino method to log', () => {
             logTrace('trace', mockLoggingContext);
-            expect(pino.trace).toHaveBeenCalledWith(
+            expect(logger.trace).toHaveBeenCalledWith(
                 mockLoggingContext,
                 'trace'
             );
@@ -105,7 +110,7 @@ describe('server-logging', () => {
     describe('logErrorWithoutContext', () => {
         it('should use the appropriate pino method to log', () => {
             logErrorWithoutContext('error', mockLoggingContext);
-            expect(pino.error).toHaveBeenCalledWith(
+            expect(logger.error).toHaveBeenCalledWith(
                 mockLoggingContext,
                 'error'
             );
@@ -147,7 +152,7 @@ describe('server-logging', () => {
                 email: 'email',
             });
             expect(handler.mock.calls[0][2].correlationId).toEqual('uuid');
-            expect(pino.trace).toHaveBeenCalled();
+            expect(logger.trace).toHaveBeenCalled();
         });
 
         it('should use a correlationId from the request body if present', async () => {
@@ -221,7 +226,7 @@ describe('server-logging', () => {
                 email: 'email',
             });
             expect(handler.mock.calls[0][1].correlationId).toEqual('uuid');
-            expect(pino.trace).toHaveBeenCalled();
+            expect(logger.trace).toHaveBeenCalled();
         });
     });
 });

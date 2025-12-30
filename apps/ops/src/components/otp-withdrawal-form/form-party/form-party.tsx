@@ -177,7 +177,16 @@ export default function FormParties({
         party: Party,
         phoneIndex: number
     ) => {
-        const phones = party.phones;
+        if (!party.phones) {
+            party.phones = [
+                {
+                    ...DEFAULT_PHONE,
+                    phoneType: { text: 'Owner_Phone_Day' as PhoneTypes },
+                    phoneNumber: null,
+                },
+            ];
+        }
+        const phones = party?.phones;
         phones[phoneIndex] = phone;
         const updatedParty = { ...party, phones };
         setPartyInformation(updatedParty);

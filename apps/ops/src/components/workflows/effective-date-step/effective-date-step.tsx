@@ -1,5 +1,4 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import React, { useCallback, useState } from 'react';
 
@@ -20,6 +19,11 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    FeatureType,
+    Policy,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 const EffectiveDate = ({
     policy,
@@ -55,6 +59,14 @@ const EffectiveDate = ({
 
         goToNext();
     }, [effectiveDate, goToNext, invalidDate]);
+
+    const isDateAllowed = (date: Dayjs) => {
+        const freeLookStartDate =
+            policy.policyFeatures?.find(
+                (feature) => feature.featureType === FeatureType.FREELOOK
+            )?.startDate || policy.policyDates?.issueDate;
+        return date.isBetween(dayjs(freeLookStartDate), dayjs(), 'day', '[]');
+    };
 
     return (
         <WorkflowCard
@@ -92,6 +104,7 @@ const EffectiveDate = ({
                     message={
                         isDateValid(effectiveDate) ? undefined : invalidDate
                     }
+                    isDateAllowed={isDateAllowed}
                 />
                 {!!formError && formError !== invalidDate && (
                     <AssistiveText

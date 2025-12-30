@@ -1,5 +1,4 @@
 import { UseQueryResult } from '@tanstack/react-query';
-import { AliasModel } from '@xd/api-types/dist/generated-types/partyreference';
 // AgencyOption should be in types directory not in a helpers module
 import { useCallback, useDebugValue, useMemo } from 'react';
 
@@ -23,8 +22,7 @@ export const useAgencyOptions = (
     agentOption: AgentOption | undefined,
     aliasesWithSellingCodes: AliasWithSellingCode[] | undefined
 ) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
+    const { isSuperIllustrator } = usePermissionsContext();
     // TODO: Add client case agent selling code retrival logic
 
     const authUserAliases = aliasesWithSellingCodes?.map((alias) => ({

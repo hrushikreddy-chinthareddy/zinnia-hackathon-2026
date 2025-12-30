@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -26,6 +25,7 @@ import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { updateNotificationMethod } from '@deps/queries/api/web-non-financial';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import AddressCard from './address-card';
 import EmailCard from './email-card';

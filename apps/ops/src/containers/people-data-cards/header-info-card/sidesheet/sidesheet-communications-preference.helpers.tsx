@@ -1,8 +1,8 @@
-import { Address, Email, Policy } from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 import { Dispatch, SetStateAction } from 'react';
 
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
+import { Address, Email, Policy } from '@zinnia/api-types/types/sor';
 export type SideSheetCommnunicationPreferenceProps = {
     addresses: Address[];
     emails: Email[];

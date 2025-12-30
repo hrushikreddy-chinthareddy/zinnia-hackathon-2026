@@ -22,19 +22,6 @@ import {
 } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 
-function parseFilterString(filter: string): Record<string, string> {
-    const conditions = filter.split('&&').map((c) => c.trim());
-
-    const result: Record<string, string> = {};
-    for (const cond of conditions) {
-        const [key, val] = cond.split('==').map((s) => s.trim());
-        if (key && val) {
-            result[key] = val.toLowerCase();
-        }
-    }
-    return result;
-}
-
 export function filterClientCaseDataFromQueryString(
     data: IllustrationsClientCase[],
     filter: ClientCaseSearchInputs
@@ -123,7 +110,12 @@ export const getIllustrationQueryOptions = (
     illustrationType: IllustrationType = 'NEW_BUSINESS'
 ) => {
     return queryOptions({
-        queryKey: ['illustrationData', illustrationId],
+        queryKey: [
+            'illustrationData',
+            illustrationId,
+            illustrationType,
+            productType,
+        ],
         queryFn: async () => {
             if (illustrationType === 'INFORCE') {
                 throw Error('Not implemented');

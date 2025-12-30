@@ -14,20 +14,17 @@ export const replacePlaceholders = (
                 keys = keys.slice(1);
             }
 
-            const result = keys.reduce(
-                (obj: any, key: string, index: number) => {
-                    if (obj === undefined || obj === null) return undefined;
-                    const numericKey = Number(key);
+            const result = keys.reduce((obj: any, key: string) => {
+                if (obj === undefined || obj === null) return undefined;
+                const numericKey = Number(key);
 
-                    // Check if the key is an array index
+                // Check if the key is an array index
 
-                    if (!isNaN(numericKey)) {
-                        return obj[numericKey];
-                    }
-                    return obj[key];
-                },
-                data
-            );
+                if (!isNaN(numericKey)) {
+                    return obj[numericKey];
+                }
+                return obj[key];
+            }, data);
 
             if (result === undefined) {
                 return returnEmptyOnNoMatch ? '' : match;
@@ -46,7 +43,11 @@ export const replacePlaceholders = (
         const result: Record<string, any> = {};
         for (const key in template) {
             if (Object.prototype.hasOwnProperty.call(template, key)) {
-                result[key] = replacePlaceholders(template[key], data);
+                result[key] = replacePlaceholders(
+                    template[key],
+                    data,
+                    returnEmptyOnNoMatch
+                );
             }
         }
         return result;

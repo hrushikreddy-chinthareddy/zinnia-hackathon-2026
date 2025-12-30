@@ -1,4 +1,3 @@
-import { Policy } from '@zinnia/api-types/types/sor';
 import { Loader } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
@@ -16,6 +15,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';
 import { updateNotificationMethod } from '@deps/queries/api/web-non-financial';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { buildUpdateNotificationMethodPayload } from './update-notification-method-helper';
 

@@ -1,7 +1,6 @@
-import { FeatureType } from '@zinnia/api-types/types/sor';
-
 import FixedCostPeriod from '@deps/containers/policy-details/cards/display-fields/fixed-cost-period';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
+import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import AccountValue from '../display-fields/account-value';
 import BaseDeathBenefit from '../display-fields/base-death-benefit';

@@ -15,6 +15,7 @@ import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
+import { ProcessType } from '@deps/models/case/enums';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -40,10 +41,13 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import { createValidator } from '../../utils/helper-utils';
+import { createDtccValidator, createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
 
-export default function getUsaaConfig(t: TFunction) {
+export default function getUsaaConfig(
+    t: TFunction,
+    isDtccSectionEnabled: boolean
+) {
     const formValidation = ({
         formSignature,
         formDisbursement,
@@ -465,6 +469,82 @@ export default function getUsaaConfig(t: TFunction) {
                 };
             },
         },
+        ...(isDtccSectionEnabled
+            ? [
+                  {
+                      label: t('distributionMethod.dtcc'),
+                      value: FormDisbursementSelections.DTCC,
+                      fields: [
+                          {
+                              fieldName: BankingFields.PayeeName,
+                              fieldLabel: t('distributionMethod.payeeName'),
+                              component: DisbursementFields.BankTextField,
+                              classNames: 'col-start-1',
+                              maxLength: 40,
+                          },
+                          {
+                              fieldName: BankingFields.ParticipantId,
+                              fieldLabel: t('distributionMethod.participantId'),
+                              component: DisbursementFields.SelectParticipantId,
+                          },
+                          {
+                              fieldName: BankingFields.ContractNumber,
+                              fieldLabel: t(
+                                  'distributionMethod.onlyContractNumber'
+                              ),
+                              component: DisbursementFields.BankTextField,
+                              maxLength: 30,
+                              validator: createDtccValidator(
+                                  t,
+                                  ProcessType.SSW
+                              ),
+                          },
+                      ],
+                      getDefaultPayload({
+                          paymentMethod,
+                          payee,
+                          participantId,
+                          bank,
+                      }: FormDisbursement) {
+                          if (
+                              paymentMethod.text !==
+                              FormDisbursementSelections.DTCC
+                          ) {
+                              return DEFAULT_DISBURSEMENT_UPDATE;
+                          }
+                          return {
+                              ...DEFAULT_DISBURSEMENT_UPDATE,
+                              payeeName: payee?.name.text ?? '',
+                              address: payee?.addresses?.[0] ?? DEFAULT_ADDRESS,
+                              contractNumber: bank?.[0]?.accountNumber ?? '',
+                              participantId: participantId?.text ?? '',
+                          };
+                      },
+                      generatePayloadFromSelection: ({
+                          payeeName,
+                          participantId,
+                          contractNumber,
+                      }: DisbursementParts) => {
+                          return {
+                              ...getDefaultFormDisbursementValues(),
+                              paymentMethod: { text: PaymentMethod.DTCC },
+                              participantId: { text: participantId ?? null },
+                              payee: {
+                                  name: { text: payeeName ?? null },
+                                  addresses: [],
+                                  contractNumber: { text: null },
+                              },
+                              bank: [
+                                  {
+                                      ...DEFAULT_BANK_DETAILS,
+                                      accountNumber: contractNumber ?? '',
+                                  },
+                              ],
+                          };
+                      },
+                  },
+              ]
+            : []),
     ];
 
     const signaturesConfig: SignatureValidationConfig[] = [

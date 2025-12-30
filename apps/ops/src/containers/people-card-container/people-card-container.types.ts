@@ -26,7 +26,7 @@ export interface PeopleCardData {
 export enum BeneficiaryType {
     NONE = '',
     PRIMARY = 'BENEFICIARY',
-    CONTIGENT = 'CONTINGENTBENEFICIARY',
+    CONTINGENT = 'CONTINGENTBENEFICIARY',
 }
 
 export enum AgentType {

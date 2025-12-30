@@ -6,13 +6,14 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { TaskType } from '@deps/models/case/task';
 import {
     Carrier,
+    filterParticipantIdRules,
     ParticipantCompanies,
 } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
 
 type FilterParticipantIdRules = {
     clients: Carrier;
-    taskType: TaskType;
+    taskType: TaskType | TaskType[];
     excludeParticipantCodes: string[];
 };
 
@@ -31,19 +32,11 @@ const SelectParticipantId = ({
     const { initialForm } = useContext(FormDataContext);
     const value = disbursementInformation.participantId ?? '';
 
-    const filterParticipantIdRules: FilterParticipantIdRules[] = [
-        {
-            clients: Carrier.FLIC,
-            taskType: TaskType.OFT,
-            excludeParticipantCodes: ['0226'],
-        },
-    ];
-
     const participantIdOptions = () => {
         const matchedRule = filterParticipantIdRules.find(
             (rule: FilterParticipantIdRules) =>
                 rule.clients === initialForm?.carrier &&
-                rule.taskType === initialForm?.taskType
+                rule.taskType.includes(initialForm?.taskType)
         );
 
         return matchedRule

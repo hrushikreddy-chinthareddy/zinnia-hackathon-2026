@@ -10,6 +10,13 @@ export const NEA_PLAN_CODES = [
     '014',
     '016',
 ];
+export const disableCreateCase = [
+    CaseType.Oft,
+    CaseType.Rmd,
+    CaseType.SSW,
+    CaseType.Renewal,
+    CaseType.Withdrawal,
+] as CaseType[];
 
 export const CaseTypeToProcessesMap: Record<CaseType, Processes> = {
     [CaseType.Oft]: Processes.OutgoingFundTransfer,

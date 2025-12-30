@@ -16,25 +16,29 @@ jest.mock('@deps/utils/carriers', () => ({
     getCarrierNameByClientId: (id: string) => `Carrier ${id}`,
 }));
 
-jest.mock('@deps/components/select/select', () => (props: any) => {
-    const { label, onChange, value, options, disabled } = props;
-    return (
-        <label>
-            {label}
-            <select
-                data-testid={label}
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                disabled={disabled}
-            >
-                {options.map((option: any) => (
-                    <option key={option.value} value={option.value}>
-                        {option.label}
-                    </option>
-                ))}
-            </select>
-        </label>
-    );
+jest.mock('@deps/components/select/select', () => {
+    const MockSelect = (props: any) => {
+        const { label, onChange, value, options, disabled } = props;
+        return (
+            <label>
+                {label}
+                <select
+                    data-testid={label}
+                    value={value}
+                    onChange={(e) => onChange(e.target.value)}
+                    disabled={disabled}
+                >
+                    {options.map((option: any) => (
+                        <option key={option.value} value={option.value}>
+                            {option.label}
+                        </option>
+                    ))}
+                </select>
+            </label>
+        );
+    };
+    MockSelect.displayName = 'MockSelect';
+    return MockSelect;
 });
 
 describe('CreateCaseForm', () => {

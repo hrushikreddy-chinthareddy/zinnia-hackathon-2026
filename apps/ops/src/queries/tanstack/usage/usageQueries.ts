@@ -1,19 +1,21 @@
 import {
-    UserActivityGroupByEnum,
-    UserActivityInputFilter,
-    UserTransactionGroupByEnum,
-    UserTransactionInputFilter,
-    UserViewsGroupByEnum,
-    UserViewsInputFilter,
-} from '@xd/api-types/dist/generated-types/analytics';
-
-import {
     friendlyGroupByName,
     friendlyGroupByNameForUserViews,
 } from '@deps/components/usage/utils';
 import { getUserActivityCounts } from '@deps/queries/api/user-actvity-count';
+import { getUserIllustrationActivityCount } from '@deps/queries/api/user-illustration-activity-count';
 import { getUserTransactionCounts } from '@deps/queries/api/user-transaction-count';
 import { getUserViewsCounts } from '@deps/queries/api/user-views-count';
+import {
+    UserActivityGroupByEnum,
+    UserActivityInputFilter,
+    UserIllustrationActivityGroupByEnum,
+    UserIllustrationActivityInputFilter,
+    UserTransactionGroupByEnum,
+    UserTransactionInputFilter,
+    UserViewsGroupByEnum,
+    UserViewsInputFilter,
+} from '@zinnia/api-types/types/analytics';
 
 export const getUserActivityCountsQuery = async (
     filter: UserActivityInputFilter,
@@ -24,21 +26,24 @@ export const getUserActivityCountsQuery = async (
         groupBy,
     });
 
-    if (
-        !userActivityResponse ||
-        'detail' in userActivityResponse ||
-        !('data' in userActivityResponse)
-    ) {
-        throw userActivityResponse;
+    if (!userActivityResponse || !('data' in userActivityResponse)) {
+        throw new Error('userActivityResponse is undefined or empty');
     }
-    userActivityResponse.data = userActivityResponse.data.map((item) => {
-        if (item.name === '') {
-            const friendlyName = friendlyGroupByName[groupBy[0]];
-            item.name = `No ${friendlyName.toLowerCase()} name`;
-        }
-        return item;
+    const formattedData = userActivityResponse.data.map((item) => {
+        const friendlyName = friendlyGroupByName[groupBy[0]];
+
+        return {
+            ...item,
+            name: item?.name
+                ? item.name
+                : `No ${friendlyName.toLowerCase()} name`,
+        };
     });
-    return userActivityResponse;
+
+    return {
+        ...userActivityResponse,
+        data: formattedData,
+    };
 };
 
 export const getUserViewsCountsQuery = async (
@@ -49,21 +54,24 @@ export const getUserViewsCountsQuery = async (
         filter,
         groupBy,
     });
-    if (
-        !userViewsResponse ||
-        'detail' in userViewsResponse ||
-        !('data' in userViewsResponse)
-    ) {
-        throw userViewsResponse;
+    if (!userViewsResponse || !('data' in userViewsResponse)) {
+        throw new Error('userViewsResponse is undefined or empty');
     }
-    userViewsResponse.data = userViewsResponse.data.map((item) => {
-        if (item.name === '') {
-            const friendlyName = friendlyGroupByNameForUserViews[groupBy[0]];
-            item.name = `No ${friendlyName.toLowerCase()} name`;
-        }
-        return item;
+    const formattedData = userViewsResponse.data.map((item) => {
+        const friendlyName = friendlyGroupByNameForUserViews[groupBy[0]];
+
+        return {
+            ...item,
+            name: item?.name
+                ? item.name
+                : `No ${friendlyName.toLowerCase()} name`,
+        };
     });
-    return userViewsResponse;
+
+    return {
+        ...userViewsResponse,
+        data: formattedData,
+    };
 };
 
 export const getUserTransactionCountsQuery = async (
@@ -74,20 +82,44 @@ export const getUserTransactionCountsQuery = async (
         filter,
         groupBy,
     });
-    if (
-        !userTransactionResponse ||
-        'detail' in userTransactionResponse ||
-        !('data' in userTransactionResponse)
-    ) {
-        throw userTransactionResponse;
+    if (!userTransactionResponse || !('data' in userTransactionResponse)) {
+        throw new Error('userTransactionResponse is undefined or empty');
     }
 
-    userTransactionResponse.data = userTransactionResponse.data.map((item) => {
-        if (item.name === '') {
-            item.name = 'Unknown';
-        }
-        return item;
+    const formattedData = userTransactionResponse.data.map((item) => {
+        return {
+            ...item,
+            name: item?.name ?? 'Unknown',
+        };
     });
 
-    return userTransactionResponse;
+    return {
+        ...userTransactionResponse,
+        data: formattedData,
+    };
+};
+
+export const getUserIllustrationActivityCountQuery = async (
+    filter: UserIllustrationActivityInputFilter,
+    groupBy: UserIllustrationActivityGroupByEnum[]
+) => {
+    const userTransactionResponse = await getUserIllustrationActivityCount({
+        filter,
+        groupBy,
+    });
+    if (!userTransactionResponse || !('data' in userTransactionResponse)) {
+        throw new Error('userTransactionResponse is undefined or empty');
+    }
+
+    const formattedData = userTransactionResponse.data.map((item) => {
+        return {
+            ...item,
+            name: item?.name ?? 'Unknown',
+        };
+    });
+
+    return {
+        ...userTransactionResponse,
+        data: formattedData,
+    };
 };

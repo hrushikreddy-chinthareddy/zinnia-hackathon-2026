@@ -1,13 +1,12 @@
-import {
-    PartySearchRequest,
-    PartySearchResponse,
-} from '@xd/api-types/dist/generated-types/partyreference';
-
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
 import { EnterpriseTokenApi } from '@deps/services/enterprise-api-token-http';
 import { PartyReference } from '@deps/types/party-reference';
 import { LoggingContext } from '@deps/utils/server-logging';
+import {
+    PartySearchRequest,
+    PartySearchResponse,
+} from '@zinnia/api-types/types/partyreference';
 
 export const PARTY_REFERENCE_API_ORIGIN = 'party-reference-api';
 

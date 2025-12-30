@@ -1,6 +1,5 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useQuery } from '@tanstack/react-query';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import {
     Button,
     Icon,
@@ -31,14 +30,9 @@ import { DocumentTypeView } from '@deps/components/side-sheet/documents/Document
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { createAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
+import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
@@ -73,18 +67,17 @@ import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outli
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
+import { formatTimestamp } from '@deps/utils/dates';
 import { isProd } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import {
     isAPIErrorInformation,
     isClaimNextTask,
     RequestData,
 } from './type-guards';
-import { formatTimestamp } from '../../../../../../packages/utils/src/dates';
 
 export enum TabOptions {
     Details = 'Details',
@@ -138,7 +131,7 @@ const DocumentItem = ({ document, taskCarrier, t }: DocumentItemProps) => {
                 </div>
             </div>
             <div className="ml-auto">
-                {createAction(
+                {createViewDownloadAction(
                     document as V3DocumentWithSource,
                     taskCarrier.toUpperCase(),
                     t,
@@ -157,7 +150,7 @@ const DocumentsListComponent = ({
     t,
     documentsListType,
 }: {
-    documentsList: DocumentWithSource[] | V3DocumentWithSource[];
+    documentsList: V3DocumentWithSource[];
     task: { carrier: string };
     t: TFunction;
     documentsListType?: string;
@@ -216,20 +209,11 @@ export default function GlobalTaskSideSheet({
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
-    const { featureFlagVariables } = useOptimizely();
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
-    const [timer] = useState(performance.now());
     const { isZinniaInternalProcessor } = usePermissionsContext();
     const limit = 25;
     const offset = 0;
-
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        task?.carrier?.toLocaleLowerCase() || ''
-    );
 
     const { user } = useUser();
     const sideSheet = useSideSheetContext();
@@ -267,14 +251,12 @@ export default function GlobalTaskSideSheet({
             caseDocumentSearchBody,
             limit,
             offset,
-            useV3,
         ],
         queryFn: () =>
             getDocumentSearchResultsQuery(
                 caseDocumentSearchBody,
                 limit,
-                offset,
-                useV3
+                offset
             ),
     });
 
@@ -403,8 +385,7 @@ export default function GlobalTaskSideSheet({
                 const response = await updateTask(
                     taskData.caseId,
                     taskData.id,
-                    body,
-                    timer
+                    body
                 );
                 if (response) {
                     await router.push(url);

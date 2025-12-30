@@ -1,9 +1,3 @@
-import {
-    BankAccount,
-    Policy,
-    FeatureType,
-    Reason,
-} from '@zinnia/api-types/types/sor';
 import { TFunction } from 'next-i18next';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -15,6 +9,12 @@ import {
 } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { DataDefinition } from '@deps/types/data';
+import {
+    BankAccount,
+    Policy,
+    FeatureType,
+    Reason,
+} from '@zinnia/api-types/types/sor';
 
 export interface PolicySummaryColDto {
     freeLookExpirationDate?: string;

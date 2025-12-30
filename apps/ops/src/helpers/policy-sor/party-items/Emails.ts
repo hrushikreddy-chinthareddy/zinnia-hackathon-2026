@@ -1,6 +1,5 @@
-import { Email } from '@zinnia/api-types/types/sor';
-
 import { sortEmailsByType } from '@deps/containers/people-data-cards/email-card/email-card.helpers';
+import { Email } from '@zinnia/api-types/types/sor';
 
 import { BasePartyItems } from './BasePartyItems';
 

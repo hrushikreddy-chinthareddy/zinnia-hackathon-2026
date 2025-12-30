@@ -10,13 +10,17 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { Case } from '@deps/models/case/case';
+import { Case, shouldShowEscalationBadge } from '@deps/models/case/case';
 import { baseAppUrl } from '@deps/queries/api-config';
-import { getCaseDetailsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
+import {
+    getCaseDetailsQuery,
+    getCaseTimePredictQuery,
+} from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import { getEstimatedCompletionAt } from './case-helpers';
 import CasePageHeader from './CasePageHeader';
 import CaseSideNav from './CaseSideNav';
 import styles from './styles.module.css';
@@ -31,7 +35,11 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     const [tabVal, setTabVal] = useState(tab);
     const { featureFlags } = useOptimizely();
     const { policy } = useCaseActivityContext();
-    const { hasCallLogsAccess, hasNotesAccess } = usePermissionsContext();
+    const {
+        hasCallLogsAccess,
+        hasNotesAccess,
+        hasPermissionToPrioritizeCases,
+    } = usePermissionsContext();
     const router = useRouter();
     const { query } = router;
 
@@ -46,6 +54,20 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
                 : false,
     });
 
+    const { data: caseTimePrediction } = useQuery({
+        queryKey: ['caseTimePredict', caseDetails?.id],
+        queryFn: () => getCaseTimePredictQuery(caseDetails?.id),
+        enabled:
+            !!caseDetails?.id &&
+            featureFlags[FEATURE_FLAGS.CASE_ESTIMATED_COMPLETION],
+        staleTime: 5 * 60 * 1000, // 5 minutes - predictions don't change
+    });
+
+    const estimatedCompletionAt = getEstimatedCompletionAt(
+        caseTimePrediction,
+        caseDetailsModel?.createdAt
+    );
+
     const handleTabChange = (val: string) => {
         // We do not want to send the user to a new page, just update the URL in response to a user action
         window.history.replaceState(
@@ -59,6 +81,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     useEffect(() => {
         browserLogInfo('CaseOverview_Permission_Check', {
             pathname: router.pathname,
+            hasPermissionToPrioritizeCases,
             hasCallLogsAccess,
             hasNotesAccess,
             caseId: caseDetails?.id,
@@ -87,7 +110,10 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         t,
         issueDate: policy?.issueDate,
     });
-
+    const showBadge = shouldShowEscalationBadge(
+        caseDetailsModel?.escalated ?? false,
+        caseDetailsModel?.caseStatus
+    );
     return (
         <div className={styles.container}>
             <CasePageHeader
@@ -97,9 +123,15 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
                 status={statusDetails.statusText}
                 statusTooltip={statusDetails.statusTooltip}
                 statusVariant={statusDetails.statusVariant as BadgeVariant}
+                escalated={showBadge ?? false}
+                hasPermissionToPrioritizeCases={hasPermissionToPrioritizeCases}
+                caseProcessingDetails={caseDetailsModel.caseProcessingDetails}
             />
             <div className="flex w-full flex-col justify-between gap-2 pt-2 lg:flex-row">
-                <CaseSideNav caseDetails={caseDetailsModel} />
+                <CaseSideNav
+                    caseDetails={caseDetailsModel}
+                    estimatedCompletionAt={estimatedCompletionAt}
+                />
                 <CaseSubPage
                     caseDetails={caseDetailsModel}
                     tab={tabVal}

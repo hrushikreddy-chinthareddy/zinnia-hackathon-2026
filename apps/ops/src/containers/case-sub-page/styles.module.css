@@ -5,3 +5,38 @@
 .breadcrumb:hover:after {
     content: none;
 }
+
+.transactionSection {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1 0 0;
+}
+
+.transactionLayout {
+    padding: 16px;
+    flex-direction: column;
+}
+
+.transactionLayoutAccordion {
+    border: 1px solid rgb(var(--color-100-gray));
+    flex-direction: column;
+    padding: 16px 0 16px 0;
+}
+
+.transactionAccordionHeader {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    padding: 0px 16px 0px 16px;
+}
+
+.itemsList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px;
+}

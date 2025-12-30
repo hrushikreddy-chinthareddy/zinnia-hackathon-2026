@@ -3,7 +3,6 @@ import dayjs from 'dayjs';
 
 import { PolicyRole } from '@deps/constants/policy';
 import * as RoleChangeContext from '@deps/contexts/RoleChangeContext';
-import documents from '@deps/pages/api/document/v2/documents';
 
 import ContactDetailsComponent from './contact-details-component';
 jest.mock('@deps/contexts/RoleChangeContext');
@@ -85,6 +84,8 @@ describe('ContactDetailsComponent', () => {
                 setAddRole: jest.fn(),
                 removeRole: false,
                 setRemoveRole: jest.fn(),
+                removedTpdIndex: null,
+                setRemovedTpdIndex: jest.fn(),
                 currentErrors: {},
                 setCurrentErrors: jest.fn(),
             })
@@ -123,6 +124,14 @@ describe('ContactDetailsComponent', () => {
                 party: {},
             },
             setExistingRoleData: mockSetExistingRoleData,
+            addRole: true,
+            setAddRole: jest.fn(),
+            removeRole: false,
+            setRemoveRole: jest.fn(),
+            removedTpdIndex: null,
+            setRemovedTpdIndex: jest.fn(),
+            currentErrors: {},
+            setCurrentErrors: jest.fn(),
         });
         render(
             <ContactDetailsComponent roleData={roleData} {...defaultProps} />
@@ -167,6 +176,14 @@ describe('ContactDetailsComponent', () => {
                 party: {},
             },
             setExistingRoleData: mockSetExistingRoleData,
+            addRole: true,
+            setAddRole: jest.fn(),
+            removeRole: false,
+            setRemoveRole: jest.fn(),
+            removedTpdIndex: null,
+            setRemovedTpdIndex: jest.fn(),
+            currentErrors: {},
+            setCurrentErrors: jest.fn(),
         });
         render(<ContactDetailsComponent roleData={undefined} {...baseProps} />);
         expect(

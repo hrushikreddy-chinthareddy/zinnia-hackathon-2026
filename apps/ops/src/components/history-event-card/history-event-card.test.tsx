@@ -1,10 +1,4 @@
 import { render, screen } from '@testing-library/react';
-import {
-    Transaction,
-    TransactionStatus,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
-import { toTitleCase } from '@zinnia/utils';
 
 import { MittEvents, SideSheetContext } from '@deps/contexts/SideSheetContext';
 import useEmitter from '@deps/hooks/useEmitter';
@@ -12,6 +6,12 @@ import {
     mockPolicy,
     mockPremiumSystematicProgram,
 } from '@deps/jest/data/mockPolicy';
+import { toTitleCase } from '@deps/utils/strings';
+import {
+    Transaction,
+    TransactionStatus,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import HistoryEventCard from './history-event-card';
 import { getHistoryEventCardValues } from './history-event-card.helpers';
@@ -110,9 +110,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBe(86753.09);
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBe('historyEventCard.bankingBody');
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.PaymentInitialPremium'
-            );
+            expect(eventTitle).toBe('enums.PaymentInitialPremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(true);
         });
@@ -134,9 +132,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBe(86753.09);
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBe('historyEventCard.bankingBody');
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.PaymentOneTimePremium'
-            );
+            expect(eventTitle).toBe('enums.PaymentOneTimePremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(true);
         });
@@ -162,9 +158,7 @@ describe('getEventCardValues', () => {
                     mockPremiumSystematicProgram.frequency
                 )} | historyEventCard.bankingBody`
             );
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.SubsequentPayment'
-            );
+            expect(eventTitle).toBe('enums.SubsequentPayment');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(true);
         });
@@ -186,9 +180,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBe(100000.0);
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBe('historyEventCard.bankingBody');
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.InitialPremium'
-            );
+            expect(eventTitle).toBe('enums.InitialPremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(false);
         });
@@ -210,9 +202,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBe(100000.0);
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBe('historyEventCard.bankingBody');
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.OneTimePremium'
-            );
+            expect(eventTitle).toBe('enums.OneTimePremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(false);
         });
@@ -238,9 +228,7 @@ describe('getEventCardValues', () => {
                     mockPremiumSystematicProgram.frequency
                 )} | historyEventCard.bankingBody`
             );
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.SubsequentPremium'
-            );
+            expect(eventTitle).toBe('enums.SubsequentPremium');
             expect(isClickable).toBe(true);
             expect(isPending).toBe(false);
         });
@@ -262,9 +250,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBeUndefined();
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBeUndefined();
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.Anniversary'
-            );
+            expect(eventTitle).toBe('enums.Anniversary');
             expect(isClickable).toBe(false);
             expect(isPending).toBe(false);
         });
@@ -286,9 +272,7 @@ describe('getEventCardValues', () => {
             expect(amount).toBeUndefined();
             expect(caption).toBe('6/26/2023');
             expect(eventBody).toBeUndefined();
-            expect(eventTitle).toBe(
-                'historyEventCard.transactionTypes.Activation'
-            );
+            expect(eventTitle).toBe('enums.Activation');
             expect(isClickable).toBe(false);
             expect(isPending).toBe(true);
         });

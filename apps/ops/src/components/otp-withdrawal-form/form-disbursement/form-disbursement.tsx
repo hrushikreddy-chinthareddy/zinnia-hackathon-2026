@@ -1,4 +1,3 @@
-import { BankAccountBase } from '@zinnia/api-types/types/sor';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
@@ -27,6 +26,7 @@ import {
     PaymentMethodAdditionalOptions,
     PaymentMethodOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
+import { BankAccountBase } from '@zinnia/api-types/types/sor';
 
 import AutofillAccountToggle from './form-disbursement-parts/autofill-account-toggle';
 import { ConsentAvailable } from './form-disbursement-parts/consent-available';

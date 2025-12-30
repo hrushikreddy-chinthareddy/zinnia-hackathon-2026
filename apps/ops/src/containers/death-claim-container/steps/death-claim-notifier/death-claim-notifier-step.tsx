@@ -1,11 +1,10 @@
-import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
     Loader,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import TransactionNavigationButtons, {
     ParentPage,
@@ -13,7 +12,7 @@ import TransactionNavigationButtons, {
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
 import {
-    buildClaimPaylod,
+    buildClaimPayload,
     validateOtherNotifier,
 } from '@deps/containers/death-claim-container/death-claim.helpers';
 import { getPolicyOwnersByRole } from '@deps/containers/death-claim-container/steps/death-claim-notifier/death-claim-notifier.helpers';
@@ -28,6 +27,7 @@ import { PartyType } from '@deps/models/policy/sor-policy';
 import { UserProfile } from '@deps/models/user-profile';
 import { submitDeathClaim } from '@deps/queries/api/web-non-financial';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { PartyRole, PhoneType, Policy } from '@zinnia/api-types/types/sor';
 
 import { DeathClaim } from './death-claim';
 import { DeceasedDetails } from './deceased-details';
@@ -41,6 +41,7 @@ interface DeathClaimNotificationStepProps {
     policy: Policy;
     showNotification: boolean;
     user: UserProfile;
+    correlationId: string;
 }
 
 export const checkNewPhone = (notifierPhone: any, party: any) => {
@@ -62,6 +63,7 @@ export const DeathClaimNotificationStep = ({
     policy,
     showNotification,
     user,
+    correlationId,
 }: DeathClaimNotificationStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'deathClaims.deathClaimNotification',
@@ -79,6 +81,7 @@ export const DeathClaimNotificationStep = ({
         setCaseId,
         onbaseCaseId,
         onbaseDocumentNumber,
+        caseId,
     } = useDeathClaim();
     const [isNewBene, setIsNewBene] = useState<boolean>(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -161,18 +164,27 @@ export const DeathClaimNotificationStep = ({
         }));
     }, [notifiers, isNewBene, setFormErrors, t]);
 
-    const submit = async () => {
+    const submit = useCallback(async () => {
+        if (caseId) {
+            browserLogInfo('DeathClaimNotifierStep::Claim already submitted', {
+                caseId,
+                policy: policy?.policyNumber,
+            });
+            return;
+        }
         setIsLoading(true);
-        const payload = buildClaimPaylod(
-            policy,
-            null,
-            notifiers,
-            owners,
-            beneficiaries,
-            onbaseCaseId,
-            onbaseDocumentNumber,
-            user
-        );
+        const payload = buildClaimPayload({
+            policy: policy,
+            document: null,
+            selNotifiers: notifiers,
+            selOwners: owners,
+            selBeneficiaries: beneficiaries,
+            onbaseCaseId: onbaseCaseId,
+            onbaseDocumentNumber: onbaseDocumentNumber,
+            user: user,
+            correlationId: correlationId,
+        });
+
         browserLogInfo('DeathClaimNotifierStep::Submit claim payload', {
             payload,
             policy: policy?.policyNumber,
@@ -191,9 +203,21 @@ export const DeathClaimNotificationStep = ({
         }
 
         setIsLoading(false);
-    };
+    }, [
+        beneficiaries,
+        caseId,
+        correlationId,
+        notifiers,
+        onbaseCaseId,
+        onbaseDocumentNumber,
+        owners,
+        policy,
+        setCaseId,
+        setSubmitFailed,
+        user,
+    ]);
 
-    const handleStepContinue = async () => {
+    const handleStepContinue = useCallback(async () => {
         const errors: FormValidationErrors = {};
         if (!isNullEmptyOrUndefined(notifiers?.notifierRole)) {
             if (
@@ -237,7 +261,18 @@ export const DeathClaimNotificationStep = ({
             }
             goToNext();
         }
-    };
+    }, [
+        formErrors,
+        goToNext,
+        isNewBene,
+        notifiers?.notifierRole,
+        notifiers?.party?.partyId,
+        owners,
+        setFormErrors,
+        showNotification,
+        submit,
+        t,
+    ]);
 
     const handleOwners = (owner: DeceasedParty, position: number) => {
         setOwners((prevState: DeceasedParty[]) => {

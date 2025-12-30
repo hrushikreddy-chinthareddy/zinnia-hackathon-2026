@@ -9,7 +9,6 @@ import {
     Frequency,
     RMDType,
 } from '@deps/models/case/withdrawal/case';
-import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import { findOverlaps } from './rmd-calculator';
 import RMDMethod, {
@@ -21,10 +20,6 @@ import RMDMethod, {
 // Mock dependencies
 jest.mock('next-i18next', () => ({
     useTranslation: jest.fn(),
-}));
-
-jest.mock('@deps/utils/browser-logging', () => ({
-    browserLogInfo: jest.fn(),
 }));
 
 jest.mock('./existing-programs', () => {
@@ -115,7 +110,7 @@ const defaultFormProgram = {
     rmd: {
         ...DEFAULT_RMD,
         rmdPrograms: [DEFAULT_RMD_PROGRAM],
-        rmdType: RMDType.AutoRMD,
+        rmdMethod: RMDType.AutoRMD,
     },
 };
 
@@ -177,7 +172,7 @@ describe('RMDMethod Component', () => {
                     ...defaultFormProgram,
                     rmd: {
                         ...defaultFormProgram.rmd,
-                        rmdType: RMDType.CalculateRMD,
+                        rmdMethod: RMDType.CalculateRMD,
                     },
                 },
             };
@@ -205,7 +200,7 @@ describe('RMDMethod Component', () => {
                     ...defaultFormProgram,
                     rmd: {
                         ...defaultFormProgram.rmd,
-                        rmdType: RMDType.OneTimeRMD,
+                        rmdMethod: RMDType.OneTimeRMD,
                     },
                 },
             };
@@ -388,7 +383,7 @@ describe('RMDMethod Component', () => {
                     ...defaultFormProgram,
                     rmd: {
                         ...defaultFormProgram.rmd,
-                        rmdType: RMDType.OneTimeRMD,
+                        rmdMethod: RMDType.OneTimeRMD,
                     },
                 },
             };
@@ -516,7 +511,7 @@ describe('RMDMethod Component', () => {
                     ...defaultFormProgram,
                     rmd: {
                         ...defaultFormProgram.rmd,
-                        rmdType: RMDType.OneTimeRMD,
+                        rmdMethod: RMDType.OneTimeRMD,
                     },
                 },
             };
@@ -540,16 +535,6 @@ describe('RMDMethod Component', () => {
                 expect(mockSetFormProgram).toHaveBeenCalledWith(
                     expect.any(Function)
                 );
-            });
-        });
-    });
-
-    describe('Browser Logging', () => {
-        it('should log component render information', () => {
-            renderWithContext(<RMDMethod isFormStateReadOnly={false} />);
-
-            expect(browserLogInfo).toHaveBeenCalledWith('RMDMethod::render', {
-                rmdType: RMDType.AutoRMD,
             });
         });
     });
@@ -619,6 +604,7 @@ describe('Utility Functions', () => {
                 isJointLifeExpectancy: false,
                 rmdPrograms: [],
                 taxId: { text: null },
+                rmdMethod: null,
             });
         });
     });

@@ -1,9 +1,5 @@
-import {
-    IdentificationType,
-    Policy,
-} from '@xd/api-types/dist/generated-types/sor';
-
 import { SorSystem } from '@deps/models/policy/enums';
+import { IdentificationType, Policy } from '@zinnia/api-types/types/sor';
 
 import { updateIdentificationsFromPolicy } from './policy-helper';
 

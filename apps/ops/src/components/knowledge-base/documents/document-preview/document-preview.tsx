@@ -1,4 +1,3 @@
-import { ClientDocumentDto } from '@xd/api-types/dist/generated-types/knowledgebase';
 import { Loader } from '@zinnia/bloom/components';
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { getDocumentPreview } from '@deps/queries/api/knowledge-base';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { ClientDocumentDto } from '@zinnia/api-types/types/knowledgebase';
 
 type DocumentPreviewProps = {
     document: ClientDocumentDto | null;
@@ -59,7 +59,7 @@ const DocumentPreview = ({
             className="flex flex-1 gap-4 px-4 py-2 w-full h-full"
             data-testid="doc-preview"
         >
-            <div className="flex-1 bg-gray-50 p-4 rounded-md h-full ">
+            <div className="flex-1 bg-gray-50 p-4 rounded-md h-full flex flex-col">
                 <Typography variant={TypographyVariant.BodySm} className="mb-2">
                     {t('documents.docPreview')}
                 </Typography>
@@ -71,12 +71,14 @@ const DocumentPreview = ({
                         <Loader />
                     </div>
                 ) : document ? (
-                    <iframe
-                        src={document}
-                        width="100%"
-                        height="100%"
-                        data-testid="doc-preview-iframe"
-                    />
+                    <div className="flex-1 overflow-hidden rounded-md border">
+                        <iframe
+                            src={document}
+                            width="100%"
+                            height="100%"
+                            data-testid="doc-preview-iframe"
+                        />
+                    </div>
                 ) : (
                     <div className="w-full h-full flex items-center justify-center p-8">
                         <Typography

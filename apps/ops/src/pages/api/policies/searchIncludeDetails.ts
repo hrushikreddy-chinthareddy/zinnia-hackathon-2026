@@ -1,5 +1,4 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { Policy } from '@zinnia/api-types/types/sor';
 
 import { policyApiBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
@@ -16,6 +15,7 @@ import {
     withAuthAndLogging,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 

@@ -1,4 +1,3 @@
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 import { AssistiveTextVariant, FieldSize } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import router from 'next/router';
@@ -32,6 +31,7 @@ import { DefaultValue } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
+import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 interface TransferProps {
     policy: Policy;

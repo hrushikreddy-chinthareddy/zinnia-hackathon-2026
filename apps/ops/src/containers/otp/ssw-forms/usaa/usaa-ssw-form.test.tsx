@@ -53,7 +53,6 @@ describe('UsaaRmdForm', () => {
     const formErrors = {};
     const formFullSurrenderAck = data.formFullSurrenderAck;
     const formLoan = data.formLoan;
-    const formParty = data.formParty;
     const formProgram = data.formProgram;
     const formRestriction = data.formRestriction;
     const formSignature = data.formSignature;

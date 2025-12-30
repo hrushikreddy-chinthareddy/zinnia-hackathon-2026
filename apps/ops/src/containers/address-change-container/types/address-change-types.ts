@@ -1,12 +1,11 @@
+import { DocumentData } from '@deps/models/case/document';
+import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import {
     PartyRole,
     Phone,
     Policy,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
-
-import { DocumentData } from '@deps/models/case/document';
-import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 
 export type ApplyToRolesState = {
     policyNumber: string;

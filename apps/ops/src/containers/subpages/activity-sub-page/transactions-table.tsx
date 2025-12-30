@@ -1,4 +1,3 @@
-import { Transaction } from '@xd/api-types/dist/generated-types/sor';
 import {
     Table,
     TableBody,
@@ -13,9 +12,9 @@ import { useTranslation } from 'react-i18next';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import styles from './transaction-wrapper.module.css';
 
@@ -32,9 +31,7 @@ export const TransactionsTable = ({
     limit: number;
     onTableRowClick: (transaction: Transaction) => void;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: undefined,
-    });
+    const { t } = useTranslation();
     const currencyFormat: Intl.NumberFormatOptions = {
         style: 'currency',
         currency: 'USD',
@@ -75,12 +72,23 @@ export const TransactionsTable = ({
                         <>
                             {paginatedData.map((transaction, index) => (
                                 <TableRow
+                                    tabIndex={0}
                                     key={`${transaction.transactionId}-${index}`}
                                     onClick={() => onTableRowClick(transaction)}
+                                    onKeyDown={(e) => {
+                                        if (
+                                            e.key === 'Enter' ||
+                                            e.key === ' '
+                                        ) {
+                                            e.preventDefault();
+                                            onTableRowClick(transaction);
+                                        }
+                                    }}
                                 >
                                     <TableCell>
                                         {t(
-                                            `historyEventCard.transactionTypes.${transaction.transactionType}`
+                                            `enums.${transaction.transactionType}`,
+                                            transaction.transactionType ?? ''
                                         )}
                                     </TableCell>
                                     <TableCell>

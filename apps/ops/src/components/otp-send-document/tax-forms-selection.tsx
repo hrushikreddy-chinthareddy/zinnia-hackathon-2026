@@ -1,6 +1,4 @@
 import 'react-pdf/dist/Page/TextLayer.css';
-import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
-import { Policy } from '@zinnia/api-types/types/sor';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -10,10 +8,6 @@ import { useTranslation } from 'next-i18next';
 import { SetStateAction, useEffect, useRef, useState } from 'react';
 
 import Select from '@deps/components/select/select';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import {
     TaxForm,
@@ -22,8 +16,8 @@ import {
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { ContactCenterTransactionType } from '@deps/types/segment-analytics';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+import { TaxformResponse } from '@zinnia/api-types/types/documents-v3';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
 import { MultiselectOption } from '../autocomplete/autocomplete.types';
@@ -55,7 +49,6 @@ const TaxFormsSelection = ({
     const [error, setError] = useState<FormValidationErrors>({});
     const [loader, setLoader] = useState(false);
     const { goToNext } = useWorkflow();
-    const { featureFlagVariables } = useOptimizely();
     const abortControllerRef = useRef<Map<string, AbortController>>(new Map());
 
     const handleContinue = async () => {
@@ -89,15 +82,8 @@ const TaxFormsSelection = ({
             };
             abortControllerRef.current.set(selected, newAbortController);
 
-            const useV3 = isFeatureFlagVariableActive(
-                featureFlagVariables,
-                FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-                OptimizelyVariableKey.Clients,
-                policy?.carrierId?.toLocaleLowerCase() || ''
-            );
             const response = await searchTaxForms(
                 requestData,
-                useV3,
                 newAbortController.signal
             );
             if (!response?.data?.items?.length) {

@@ -2,7 +2,7 @@ import {
     ClientDetailsDto,
     SourceDocument,
     UserResponse,
-} from '@xd/api-types/dist/generated-types/knowledgebase';
+} from '@zinnia/api-types/types/knowledgebase';
 
 export enum KnowledgeBasePages {
     CHAT = 'chat',
@@ -31,6 +31,11 @@ export type ChatbotMessage = {
     feedbackComment?: string | null;
     definitiveAnswerFound?: boolean | null;
 };
+
+export enum AnswerMode {
+    Short = 'SHORT_AND_CRISP',
+    Long = 'LONG_AND_DETAILED',
+}
 
 export const BOT_ERROR_MESSAGE_ID = 'bot_error';
 export const COMMON_CLIENT_NAME = 'common';
@@ -105,4 +110,25 @@ export type OpsIntakeFormPayload = {
     priority: string;
     requestFrequency: string;
     benefitMetrics: string;
+};
+
+export type UserAnswer = {
+    questionId: string;
+    selectedAnswerIndex: number;
+};
+
+export type UserResult = {
+    scorePercentage: number;
+    totalQuestions: number;
+    correctAnswers: number;
+    results: [
+        {
+            questionId: string;
+            selectedAnswerIndex: number;
+            correctAnswerIndex: number;
+            isCorrect: boolean;
+            documentWebUrl: string;
+            documentName: string;
+        }
+    ];
 };

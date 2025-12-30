@@ -18,20 +18,19 @@ import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
 import IconButton from '@deps/components/icon-button/icon-button';
+import NavLink from '@deps/components/nav-element/nav-link/nav-link';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import {
     getUserNameFromEmail,
     NO_ASSIGNEE,
 } from '@deps/hooks/useTaskManagementQueue';
-import { CaseIdentifier } from '@deps/models/case/case';
 import { EarlyTaskType } from '@deps/models/case/task';
 import {
     AssignedTask,
@@ -47,6 +46,7 @@ import {
 } from '@deps/queries/api/v1/task-admin';
 import { getTaskInstance } from '@deps/queries/api/v2/task';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
+import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
@@ -64,7 +64,6 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 import AssigneePopover from './table-elements/assignee-popover';
 import styles from './task-management-queue.module.css';
 import TaskQueueDrawer from './task-queue-drawer';
-
 type TaskQueueTableRowProps = {
     task: AssignedTask | UnassignedTask;
     featureFlagDecisions: FeatureFlags;
@@ -93,7 +92,7 @@ export const Assignee = ({
     const [assigneeLoading, setAssigneeLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
-    const handleClick = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    const handleClick = async () => {
         if (task.status === TaskStatus.Completed) {
             return;
         }
@@ -201,38 +200,20 @@ export const Assignee = ({
 const TaskQueueTableRow = ({
     task,
     featureFlagDecisions,
-    tabIndex,
     getTasks,
     setErrorMessage,
     isOpsManagerView,
     manageTableAfterAction,
-    setTaskDetails,
 }: TaskQueueTableRowProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagementQueue',
     });
     const router = useRouter();
     const [_timer] = useState(performance.now());
-    const policyNumber = getCaseIdentifierValue(
-        task.identifiers,
-        CaseIdentifier.PolicyNumber
-    );
-    const _documentNumber = getCaseIdentifierValue(
-        task.identifiers,
-        CaseIdentifier.DocumentNumber
-    );
     const [actionLoader, setActionLoader] = useState(false);
 
     const [_loader, setLoader] = useState(false);
-    const {
-        taskName,
-        taskType: _taskType,
-        createdAt,
-        status: _status,
-        carrier,
-        assignee,
-        queue,
-    } = task;
+    const { taskType: _taskType, status: _status, carrier } = task;
     const carrierName =
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
 
@@ -476,6 +457,10 @@ const TaskQueueTableRow = ({
             handleLinkClick(undefined);
         }
     };
+    const showBadge =
+        task.escalated &&
+        task.status !== TaskStatus.Canceled &&
+        task.status !== TaskStatus.Completed;
 
     return (
         <TableRow className={styles.row} key={`task_queue_row_${task.id}`}>
@@ -489,27 +474,24 @@ const TaskQueueTableRow = ({
                     {''}
                 </Link>
             </TableCell>
-            <TableCell
-                onClick={handleLinkClick}
-                onKeyDown={handleLinkKeyDown}
-                role="button"
-                className="cursor-pointer"
-            >
-                <Content
-                    contentClassName="relative z-10"
-                    triggerClassName="text-left"
-                    truncate={true}
-                    details={toSentenceCase(task.taskName)}
-                    variant={ContentVariant.BodySm}
-                />
-                <Content
-                    truncate={true}
-                    contentClassName="relative z-10"
-                    triggerClassName="text-left"
-                    className={`${styles.fadedText} truncate w-full`}
-                    details={toSentenceCase(task.process)}
-                    variant={ContentVariant.BodySm}
-                />
+            <TableCell>
+                <NavLink onClick={handleLinkClick}>
+                    <Content
+                        contentClassName="relative z-0"
+                        triggerClassName="text-left"
+                        truncate={true}
+                        details={toSentenceCase(task.taskName)}
+                        variant={ContentVariant.BodySm}
+                    />
+                    <Content
+                        truncate={true}
+                        contentClassName="relative z-0"
+                        triggerClassName="text-left"
+                        className={`${styles.fadedText} truncate w-full`}
+                        details={toSentenceCase(task.process)}
+                        variant={ContentVariant.BodySm}
+                    />
+                </NavLink>
             </TableCell>
             <TableCell>
                 {task?.status === TaskStatus.InProgress &&
@@ -520,7 +502,7 @@ const TaskQueueTableRow = ({
                 ) ? (
                     <div
                         className={`relative ${
-                            isOpsManagerView ? 'z-10' : 'z-5'
+                            isOpsManagerView ? 'z-10' : 'z-0'
                         }`}
                     >
                         {task?.status === TaskStatus.InProgress && (
@@ -581,6 +563,26 @@ const TaskQueueTableRow = ({
                                     details={'-'}
                                     variant={ContentVariant.BodySm}
                                 />
+                            )}
+                            {showBadge && (
+                                <div>
+                                    <Tooltip
+                                        placement={TooltipPlacement.TopRight}
+                                        tooltipClassName="!w-auto"
+                                        triggerClassName="!z-10  justify-end"
+                                        trigger={
+                                            <Warning
+                                                height={16}
+                                                width={16}
+                                                className="ml-2"
+                                            />
+                                        }
+                                    >
+                                        <span className="text-md">
+                                            {t('prioritized')}
+                                        </span>
+                                    </Tooltip>
+                                </div>
                             )}
                         </div>
                     </div>

@@ -1,8 +1,8 @@
-import { Address } from '@zinnia/api-types/types/sor';
 import { AxiosResponse } from 'axios';
 
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { Address } from '@zinnia/api-types/types/sor';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';

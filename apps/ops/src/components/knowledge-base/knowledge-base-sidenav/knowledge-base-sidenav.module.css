@@ -13,7 +13,197 @@
 }
 
 .itemhover:hover {
-    color: var(--color-base-text-text-link);
-    background-color: var(--color-base-surface-surface-secondary);
-    border-radius: var(--measure-dimension-z-space-1);
+    color: hsl(var(--color-black));
+    background-color: var(--color-grayscale-color-white);
+}
+
+/* SideNav Section */
+.sidenav {
+    transition: width 500ms ease;
+    position: absolute;
+    right: calc(0px - var(--measure-dimension-z-space-6));
+    top: calc(0px - var(--measure-dimension-z-space-6));
+    transform: translateX(0);
+    background-color: var(--color-grayscale-color-white);
+    z-index: 1;
+}
+
+.sidenavContent {
+    transition: width 0.3s ease;
+    justify-content: start;
+    display: flex;
+    flex-flow: column;
+    align-items: flex-end;
+}
+
+.navButtonWrapper {
+    background-color: hsl(var(--color-black));
+    color: var(--color-grayscale-color-white);
+}
+
+.navButtonWrapper:hover {
+    background-color: var(--color-grayscale-color-white) !important;
+    color: hsl(var(--color-black)) !important;
+}
+
+.sidenavWrapper {
+    width: calc(var(--knowledge-base-sidenav-expanded-width));
+    text-wrap: nowrap;
+    overflow: hidden;
+    border-left-width: 1px;
+}
+
+.smallSidenavWrapper {
+    width: calc(var(--knowledge-base-sidenav-collapsed-width));
+    text-wrap: nowrap;
+}
+
+.smallSidenavWrapper .navButtonWrapper {
+    color: hsl(var(--color-black));
+    border: none;
+    background-color: transparent;
+
+    &:hover {
+        background-color: var(--color-grayscale-color-100-gray) !important;
+    }
+}
+
+/* Logo section */
+
+.headerExpanded {
+    padding-bottom: var(--measure-dimension-z-space-4);
+
+    .collapseBtn {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        flex-grow: 1;
+        svg {
+            transform: rotate(270deg);
+        }
+    }
+
+    .expandBtn {
+        display: none;
+    }
+}
+
+.headerCollapsed {
+    justify-content: flex-end;
+    position: relative;
+    padding-bottom: var(--measure-dimension-z-space-4);
+
+    .expandBtn,
+    .collapseBtn {
+        display: none !important;
+    }
+
+    .sidenavLogo:hover {
+        .sidenavLogoIcon {
+            opacity: 0;
+            z-index: -1;
+        }
+        .expandBtn {
+            background: transparent;
+            border: 0;
+            flex-grow: 1;
+            display: flex !important;
+            align-items: center;
+            transform: rotate(90deg);
+            position: absolute;
+            left: 8px;
+        }
+    }
+}
+
+/* Documents section */
+
+.sharepointWrap {
+    position: relative;
+    display: table;
+    text-align: -webkit-right;
+}
+
+.sharepointButton {
+    position: relative;
+    z-index: 2;
+}
+
+.floatingZone {
+    position: absolute;
+    top: 22px;
+    left: 0px;
+    width: 90px;
+    height: 44px;
+    transform: translate(-85px, -50%);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.floatingZone::before {
+    content: '';
+    position: absolute;
+    right: -12px;
+    top: 0;
+    width: 12px;
+    height: 100%;
+}
+
+.sharepointWrap:hover .floatingZone,
+.sharepointWrap:focus-within .floatingZone {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.floatingInner {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    transform: translateX(12px);
+    opacity: 0;
+    transition: transform 200ms ease-out, opacity 200ms ease-out;
+    will-change: transform, opacity;
+}
+
+.floatingInner svg:hover {
+    color: var(--color-nav-drawer-2-nav-drawer-item-2-active-border);
+}
+
+.sharepointWrap:hover .floatingInner,
+.sharepointWrap:focus-within .floatingInner {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.floatingInner button {
+    border: 0;
+    padding: 6px;
+    border-radius: 999px;
+    background: hsl(var(--color-black));
+    color: var(--color-base-text-text-white);
+    cursor: pointer;
+}
+
+@media screen and (min-width: 1023px) {
+    .sidenav {
+        right: calc(0px - var(--measure-dimension-z-space-12)) !important;
+        top: calc(0px - var(--measure-dimension-z-space-12)) !important;
+        height: calc(100vh - (var(--measure-dimension-z-space-2) * 2));
+        border-left-width: 1px;
+    }
+}
+
+@media screen and (max-width: 1023px) {
+    .smallSidenavWrapper {
+        .sidenavContent {
+            display: none;
+        }
+    }
+
+    .sidenavWrapper {
+        width: 100% !important;
+        max-width: 20rem !important;
+    }
 }

@@ -60,4 +60,5 @@ export enum SignatureDesignation {
     Assignee = 'Assignee',
     NA = 'NA',
     Unselected = 'Unselected',
+    AuthorizedSignatory = 'AUTHORIZEDSIGNATORY',
 }

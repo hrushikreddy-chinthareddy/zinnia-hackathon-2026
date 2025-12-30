@@ -25,6 +25,8 @@ export const DefaultCaseForm = React.forwardRef(
             policy,
             setSubmitFailed,
             correlationId,
+            caseDetails,
+            requestType,
         } = useDefaultCase();
         const [formSchema, setFormSchema] = useState(taskMetadata);
 
@@ -34,7 +36,10 @@ export const DefaultCaseForm = React.forwardRef(
                 return;
             }
             const defaultCasePayload = cleanForm(defaultCaseData, taskMetadata);
-            const success = await submitServiceRequestForm(defaultCasePayload);
+            const success = await submitServiceRequestForm(
+                defaultCasePayload,
+                requestType
+            );
             setSubmitFailed(!success);
             onSubmit('');
         }, [
@@ -43,14 +48,17 @@ export const DefaultCaseForm = React.forwardRef(
             defaultCaseData,
             taskMetadata,
             setSubmitFailed,
+            requestType,
         ]);
 
         const handleChange = useCallback(
             (event: IChangeEvent<any, RJSFSchema, GenericObjectType>) => {
-                setDefaultCaseData((ogDefaultCaseData: any) => ({
-                    ...ogDefaultCaseData,
-                    ...event.formData,
-                }));
+                setDefaultCaseData((ogDefaultCaseData: any) => {
+                    return {
+                        ...ogDefaultCaseData,
+                        ...event.formData,
+                    };
+                });
             },
             [setDefaultCaseData]
         );
@@ -93,7 +101,8 @@ export const DefaultCaseForm = React.forwardRef(
                 formContext={{
                     customData: {
                         ...defaultCaseData,
-                        carrier: policy.carrierId,
+                        carrier:
+                            (policy?.carrierId || caseDetails?.carrier) ?? '',
                         correlationId,
                     },
                     setCustomData: setFormContext,

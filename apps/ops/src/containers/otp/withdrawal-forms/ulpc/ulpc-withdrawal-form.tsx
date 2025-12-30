@@ -42,7 +42,6 @@ export default function UlpcWithdrawalForm() {
         formESignatureData,
         setFormESignatureData,
         formErrors,
-        isLC,
     } = useContext(FormDataContext);
 
     const {
@@ -62,7 +61,7 @@ export default function UlpcWithdrawalForm() {
         w4pSignaturesConfig,
         eSignatureFieldConfig,
         reasonOptions,
-    } = getUlpcConfig(t, isLC ?? false);
+    } = getUlpcConfig(t);
 
     const isMaritalStatusAllowances = contractIssueState
         ? validateMaritalStatusAllowances(contractIssueState as USStates)
@@ -141,16 +140,16 @@ export default function UlpcWithdrawalForm() {
                 isMaritalStatusAllowances={isMaritalStatusAllowances}
                 meritalStatusAllowanceConfig={maritalStatusAllowanceConfig}
             />
-            <IrsWithholding
-                isFormStateReadOnly={isFormStateReadOnly}
-                signatureFields={irsSignatureConfig}
-            />
             {shouldStateW4pRender && (
                 <StateW4Form
                     isFormStateReadOnly={isFormStateReadOnly}
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
+            <IrsWithholding
+                isFormStateReadOnly={isFormStateReadOnly}
+                signatureFields={irsSignatureConfig}
+            />
             <FormDisbursement
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}

@@ -3,20 +3,21 @@ import { FC } from 'react';
 
 import { FlattenedDashboardStatsElement } from './sections/issue-counts-by-status/tab-content/table/issue-counts-by-status-table';
 
-export interface Columns {
+export interface Columns<T = any> {
     label: string;
-    key: keyof FlattenedDashboardStatsElement;
+    key: keyof T;
 }
+
 interface DownloadCSVProps {
     sortedData: FlattenedDashboardStatsElement[];
     csvFileName: string;
-    columns: Columns[];
+    columns: Columns<FlattenedDashboardStatsElement>[];
 }
 
-export const downloadCSV = (
-    data: FlattenedDashboardStatsElement[],
-    filename: string = 'Issue Counts.csv',
-    columns: Columns[]
+export const downloadCSV = <T extends Record<string, any>>(
+    data: T[],
+    filename: string = 'data.csv',
+    columns: Columns<T>[]
 ): void => {
     if (!data.length) return;
 
@@ -39,6 +40,7 @@ export const downloadCSV = (
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+    URL.revokeObjectURL(url);
 };
 
 export const DownloadCSV: FC<DownloadCSVProps> = ({

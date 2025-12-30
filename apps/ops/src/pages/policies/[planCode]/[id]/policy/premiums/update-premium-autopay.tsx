@@ -1,11 +1,4 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
-import { TransactionPermission } from '@xd/utils/dist';
-import {
-    ArrangementType,
-    Policy,
-    Reason,
-    Status,
-} from '@zinnia/api-types/types/sor';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -19,8 +12,15 @@ import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
+import {
+    ArrangementType,
+    Policy,
+    Reason,
+    Status,
+} from '@zinnia/api-types/types/sor';
 
 interface UpdateAutopayProps {
     policy: Policy;

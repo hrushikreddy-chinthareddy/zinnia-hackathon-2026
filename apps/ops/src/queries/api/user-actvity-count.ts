@@ -1,9 +1,10 @@
+import { AxiosResponse } from 'axios';
+
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     UserActivityInput,
     UserActivityOutput,
-    HTTPValidationError,
 } from '@zinnia/api-types/types/analytics';
-import { AxiosResponse } from 'axios';
 
 import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -14,7 +15,7 @@ export const getUserActivityCounts = async (
     try {
         const { data: response } = await client.post<
             UserActivityInput,
-            AxiosResponse<UserActivityOutput, HTTPValidationError>
+            AxiosResponse<UserActivityOutput>
         >(`${baseAppUrl}/api/dashboard/user-activity-count`, query);
 
         return {
@@ -22,13 +23,11 @@ export const getUserActivityCounts = async (
             totalElements: response.totalElements,
         };
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'getUserActivityCounts::An error occurred while getting user activity results',
             error
         );
-        if ('detail' in error) {
-            return error.response;
-        }
-        return error;
+
+        throw error;
     }
 };

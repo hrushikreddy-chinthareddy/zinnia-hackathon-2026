@@ -1,13 +1,3 @@
-import {
-    DisbursementType,
-    TaxWithholdingType,
-} from '@zinnia/api-types/types/bpm';
-import {
-    Address,
-    Policy,
-    TaxWithheldAmount,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -33,7 +23,10 @@ import PayeeSummaryCard, {
 } from '@deps/containers/payee-summary-card/payee-summary-card';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    normalizeNumber,
+    numberFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { getRequestedWithheldTaxesDisplay } from '@deps/helpers/tax-withholdings.helpers';
 import { getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-withholdings.helpers';
@@ -44,6 +37,16 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import {
+    DisbursementType,
+    TaxWithholdingType,
+} from '@zinnia/api-types/types/bpm';
+import {
+    Address,
+    Policy,
+    TaxWithheldAmount,
+    TransactionType,
+} from '@zinnia/api-types/types/sor';
 
 import { WithdrawalType } from '../amount/types';
 import { getOwnersTaxJurisdictionState } from '../taxes/taxes.helpers';
@@ -82,14 +85,18 @@ const Summary = ({ policy }: SummaryProps) => {
         [validationResponse]
     );
     const ownerTaxState = getOwnersTaxJurisdictionState(policy);
-    const totalWithdrawalAmount = numberFormatify(
+
+    const withdrawalAmount =
         validationResponse?.quoteResponse?.payeeOrBeneficiary?.[0]
-            .disbursementAmount
-    );
+            .disbursementAmount;
+
+    const totalWithdrawalAmount = numberFormatify(withdrawalAmount);
+
     const totalPayment =
-        totalWithdrawalAmount < numberFormatify(amount)
+        normalizeNumber(withdrawalAmount) < normalizeNumber(amount)
             ? totalWithdrawalAmount
             : numberFormatify(amount);
+
     const appliedAmount = validationResponse?.quoteResponse?.transactionAmounts
         ?.appliedAmount
         ? numberFormatify(

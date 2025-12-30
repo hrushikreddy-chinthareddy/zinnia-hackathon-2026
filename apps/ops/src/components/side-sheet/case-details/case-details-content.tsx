@@ -1,4 +1,3 @@
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 import {
     TabContent,
     TabGroup,
@@ -14,6 +13,7 @@ import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
 import { DocumentData } from '@deps/models/case/document';
 import { AddressTypes } from '@deps/models/case/withdrawal/case';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
+import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import AddressTab from './address-tab';
 import DetailsTab from './details-tab';

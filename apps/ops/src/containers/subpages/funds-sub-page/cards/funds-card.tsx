@@ -31,6 +31,10 @@ interface FundsCardProps {
     titleTooltip?: string;
     policy: PolicyDetails;
     notElectedfunds?: FundViewModel[];
+    /**
+     * Optional accessible caption passed through to the underlying table.
+     */
+    caption?: string;
 }
 
 const getAllocationColors = (funds?: FundViewModel[]): AllocationColor[] => {
@@ -57,6 +61,7 @@ const FundsCard = ({
     titleTooltip,
     policy,
     notElectedfunds,
+    caption,
 }: FundsCardProps) => {
     const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
@@ -110,7 +115,7 @@ const FundsCard = ({
                 >
                     <Icon
                         type={IconType.CIRCLE_INFO}
-                        color="var(--color-primary-color-primary)"
+                        color="var(--color-base-icon-icon-action-text-link)"
                         height={16}
                         width={16}
                     />
@@ -160,7 +165,12 @@ const FundsCard = ({
                     <AllocationColorBar colors={getAllocationColors(funds)} />
                 </div>
             )}
-            <FundsTable funds={funds} loading={loading} policy={policy} />
+            <FundsTable
+                funds={funds}
+                loading={loading}
+                policy={policy}
+                caption={caption}
+            />
         </div>
     );
 };

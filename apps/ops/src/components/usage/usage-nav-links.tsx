@@ -1,4 +1,3 @@
-import { toTitleCase } from '@xd/utils/dist';
 import {
     Icon,
     IconType,
@@ -10,6 +9,8 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { CSSProperties, FC, PropsWithChildren, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+
+import { toTitleCase } from '@deps/utils/strings';
 
 export enum UsageTabs {
     LOGINS = 'logins',

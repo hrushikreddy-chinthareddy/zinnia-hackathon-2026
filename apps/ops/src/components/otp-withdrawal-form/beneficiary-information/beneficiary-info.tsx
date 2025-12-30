@@ -325,7 +325,7 @@ const BeneficiaryInfo: React.FC<BeneficiaryInfoProps> = ({
             <div className="flex items-center mb-5">
                 <InputCheckBox
                     checked={beneInfo?.isBeneInfoProvided || false}
-                    onChange={(e) =>
+                    onChange={() =>
                         handleBeneChange(!beneInfo?.isBeneInfoProvided)
                     }
                     isDisabled={isFormStateReadOnly}

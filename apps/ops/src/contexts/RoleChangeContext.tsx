@@ -1,16 +1,3 @@
-import {
-    Address,
-    AddressType,
-    Country,
-    Email,
-    EmailType,
-    IdentificationType,
-    Phone,
-    PhoneType,
-    PartyType,
-    State,
-    PartyBase,
-} from '@zinnia/api-types/types/sor';
 import dayjs from 'dayjs';
 import {
     Dispatch,
@@ -25,6 +12,19 @@ import { EntityTypeValue } from '@deps/constants/policy';
 import { Signature } from '@deps/models/case/task';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    Address,
+    AddressType,
+    Country,
+    Email,
+    EmailType,
+    IdentificationType,
+    Phone,
+    PhoneType,
+    PartyType,
+    State,
+    PartyBase,
+} from '@zinnia/api-types/types/sor';
 
 export type RoleIdentification = {
     permanentResident?: string | null;
@@ -84,11 +84,12 @@ type RoleChangeContextType = {
     setAddRole: Dispatch<SetStateAction<boolean>>;
     removeRole: boolean;
     setRemoveRole: Dispatch<SetStateAction<boolean>>;
+    removedTpdIndex: number | null;
+    setRemovedTpdIndex: Dispatch<SetStateAction<number | null>>;
 };
 
 export const defaultRoleValue: RoleChangeContextType = {
     roleData: {
-        signatures: [],
         documents: null,
         party: {
             partyId: '',
@@ -147,6 +148,8 @@ export const defaultRoleValue: RoleChangeContextType = {
     setAddRole: () => {},
     removeRole: false,
     setRemoveRole: () => {},
+    removedTpdIndex: null,
+    setRemovedTpdIndex: () => {},
 };
 
 const RoleChangeContext = createContext<RoleChangeContextType | null>(null);
@@ -159,6 +162,7 @@ export const RoleChangeProvider = ({ children }: PropsWithChildren) => {
     const [currentErrors, setCurrentErrors] = useState<any>({});
     const [addRole, setAddRole] = useState<boolean>(true);
     const [removeRole, setRemoveRole] = useState<boolean>(false);
+    const [removedTpdIndex, setRemovedTpdIndex] = useState<number | null>(null);
 
     return (
         <RoleChangeContext.Provider
@@ -173,6 +177,8 @@ export const RoleChangeProvider = ({ children }: PropsWithChildren) => {
                 setAddRole,
                 removeRole,
                 setRemoveRole,
+                removedTpdIndex,
+                setRemovedTpdIndex,
             }}
         >
             {children}

@@ -27,12 +27,8 @@ interface SuccessStateProps {
 }
 
 const SuccessState = ({
-    action,
     isNigo,
-    name,
     onCancel,
-    transaction,
-    type,
     caseId,
     oldName,
     newName,

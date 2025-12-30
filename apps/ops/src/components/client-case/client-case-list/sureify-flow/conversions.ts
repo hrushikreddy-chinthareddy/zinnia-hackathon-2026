@@ -32,18 +32,28 @@ const inferNicotineUse = (underwritingClass?: UnderwritingClass) => {
 export const validateConversionPayload = (
     payload: Partial<IllustrationsClientCase>
 ) => {
-    const missingFields = validateRequiredFields(payload.insuredDetails, {
-        sexAtBirth: 'Insured sex at birth',
-        underwritingClass: 'Insured risk class',
-        state: 'State',
-        dateOfBirth: 'Date of birth',
-    } satisfies Partial<Record<keyof IllustrationInsuredDetails, string>>);
+    const insuredDetailsMissingFields = validateRequiredFields(
+        payload.insuredDetails,
+        {
+            sexAtBirth: 'Insured sex at birth',
+            underwritingClass: 'Insured risk class',
+            state: 'State',
+            dateOfBirth: 'Date of birth',
+        } satisfies Partial<Record<keyof IllustrationInsuredDetails, string>>
+    );
 
-    if (missingFields.length) {
+    if (insuredDetailsMissingFields.length) {
         throwTypedError(
-            `There are missing insured required fields: ${missingFields.join(
+            `There are missing insured required fields: ${insuredDetailsMissingFields.join(
                 ', '
             )}`,
+            NEW_BUSINESS_API_ORIGIN
+        );
+    }
+
+    if (!payload.originalFaceAmount) {
+        throwTypedError(
+            `Conversion client cases require a "face amount" value`,
             NEW_BUSINESS_API_ORIGIN
         );
     }

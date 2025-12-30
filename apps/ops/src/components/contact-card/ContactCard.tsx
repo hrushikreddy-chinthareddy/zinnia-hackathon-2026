@@ -1,9 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import {
-    Address,
-    ContactSearchResponse,
-    PersonalInfo,
-} from '@zinnia/api-types/types/contact-management';
 import { Icon, IconType, Link } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 
@@ -17,6 +12,11 @@ import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
 import { getCaseSearchQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { getPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    Address,
+    ContactSearchResponse,
+    PersonalInfo,
+} from '@zinnia/api-types/types/contact-management';
 
 import CaseCard from './case-card/CaseCard';
 import styles from './ContactCard.module.css';

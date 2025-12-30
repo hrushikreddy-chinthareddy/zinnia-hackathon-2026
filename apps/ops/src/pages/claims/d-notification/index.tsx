@@ -1,6 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { Policy } from '@zinnia/api-types/types/sor';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { v4 as uuidv4 } from 'uuid';
 
 import { TranslationFiles } from '@deps/config/translations';
 import DeathClaimContainer from '@deps/containers/death-claim-container/death-claim-container';
@@ -26,6 +26,7 @@ import {
     logInfo,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
 interface DeathClaimNotificationProps {
@@ -37,10 +38,15 @@ const DeathClaimNotification = ({
     policy,
     user,
 }: DeathClaimNotificationProps) => {
+    const correlationId = uuidv4();
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
             <DeathClaimProvider>
-                <DeathClaimContainer policy={policy} user={user} />
+                <DeathClaimContainer
+                    policy={policy}
+                    user={user}
+                    correlationId={correlationId}
+                />
             </DeathClaimProvider>
         </div>
     );
