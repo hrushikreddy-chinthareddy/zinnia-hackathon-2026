@@ -15,7 +15,6 @@ import { useQuickQuoteResults } from '../results-context';
 export const QuickQuoteTotalPremiumRangeSection = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const { results } = useQuickQuoteResults();
-    console.log('🚀 ~ QuickQuoteTotalPremiumRangeSection ~ results:', results);
 
     if (!results) {
         return null;
@@ -79,8 +78,7 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                 };
 
                 if (item && item.range) return record;
-                if (item && item.range == null)
-                    getNotAvailabilityFields(item.notAvailabilityReasonField);
+
                 return {
                     ...record,
                     notAvailabilityReason:
