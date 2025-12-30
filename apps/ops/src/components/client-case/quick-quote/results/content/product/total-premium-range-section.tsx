@@ -6,6 +6,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { isTermResult } from '@deps/types/quickQuote';
+import { nonEligibleReasonByClass } from '@deps/utils/quick-quotes-rules/types';
 
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { QuickQuoteResultTableSection } from '../base/result-table-section';
@@ -14,6 +15,7 @@ import { useQuickQuoteResults } from '../results-context';
 export const QuickQuoteTotalPremiumRangeSection = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const { results } = useQuickQuoteResults();
+    console.log('🚀 ~ QuickQuoteTotalPremiumRangeSection ~ results:', results);
 
     if (!results) {
         return null;
@@ -33,6 +35,26 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
         return null;
     }
 
+    const getNotAvailabilityFields = (
+        reasons: nonEligibleReasonByClass[] | undefined
+    ) => {
+        if (!reasons || reasons.length === 0) return [];
+
+        const filteredReasons = reasons
+            .flatMap((reason) => reason.reasons)
+            .filter(
+                (reason, index, self) =>
+                    index === self.findIndex((t) => t.field == reason.field)
+            );
+
+        filteredReasons.forEach((fr, i) => {
+            reasons.forEach((reason) => {
+                if (!reason.reasons.some((r) => r.field === fr.field))
+                    filteredReasons.splice(i, 1);
+            });
+        });
+    };
+
     const rows = termLengths?.map((termLength) => (
         <QuickQuoteResultTableRow
             key={termLength}
@@ -51,13 +73,20 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                         totalPremiumRange.termLength === termLength
                 );
 
-                return {
+                const record = {
                     value: item?.range,
+                    period: 'mo.',
+                };
+
+                if (item && item.range) return record;
+                if (item && item.range == null)
+                    getNotAvailabilityFields(item.notAvailabilityReasonField);
+                return {
+                    ...record,
                     notAvailabilityReason:
                         item && item.range == null
                             ? item.notAvailabilityReasonField
                             : undefined,
-                    period: 'mo.',
                 };
             })}
         />
