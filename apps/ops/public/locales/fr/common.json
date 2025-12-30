@@ -7901,7 +7901,7 @@
             "title": "Soumise!",
             "subTitle": "Les données d'adéquation des entrées ont été soumises.",
             "cta": "Aller au virement entrant",
-            "secondaryCta": "Retourner à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre les détails de l'adéquation"
         }
     },
@@ -7934,7 +7934,7 @@
             "title": "Soumise!",
             "subTitle": "La pertinence de l'avis a été soumise.",
             "cta": "Aller à l'examen d'adéquation",
-            "secondaryCta": "Retourner à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre les détails de l'examen d'adéquation"
         }
     },
@@ -7977,7 +7977,7 @@
             "title": "Compris!",
             "subTitle": "Tâche: Appariement de Document a été soumise.",
             "cta": "Aller à la Qualification",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         },
         "formErrors": {
@@ -7991,7 +7991,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8008,7 +8008,7 @@
             "title": "Compris !",
             "subTitle": "Tâche : Examen de la prime initiale soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8017,7 +8017,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8026,7 +8026,7 @@
             "title": "Compris!",
             "subTitle": "Tâche: Document de correspondance a été soumise.",
             "cta": "Aller à la Qualification",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8035,7 +8035,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8044,7 +8044,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'OFAC a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8053,7 +8053,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8062,7 +8062,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8071,7 +8071,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8080,7 +8080,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider les détails de l'application a été soumise.",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8089,7 +8089,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8098,7 +8098,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8107,7 +8107,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8116,7 +8116,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8340,7 +8340,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8353,7 +8353,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8362,7 +8362,7 @@
             "title": "C'est compris !",
             "subTitle": "Tâche : Post Issue NIGO Review a été soumis.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8371,7 +8371,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Traitement de saisie de données de transaction postérieure à la délivrance soumis.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8380,7 +8380,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : la révision du changement de nom a été soumise.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8480,7 +8480,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Le retour de paiement a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8489,7 +8489,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Le retour de paiement a été soumis.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8498,7 +8498,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes de vérification des antécédents a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8507,7 +8507,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Validation de la vérification des antécédents a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8516,7 +8516,7 @@
             "title": "Compris!",
             "subTitle": "Tâche: Le chèque d'enrichissement d'achat a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8525,7 +8525,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Claims Ops To Finance Escheatment soumis.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8534,7 +8534,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Les réclamations FI en déshérence ont été soumises.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8543,7 +8543,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Match Death Case soumises.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8552,7 +8552,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Vérification des bénéficiaires de réclamations a été soumise.",
             "cta": "Aller au dossier de réclamation",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8561,7 +8561,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Vérification de la vérification des antécédents a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8574,7 +8574,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Le formulaire de demande de service a été soumis.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8639,7 +8639,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : La demande de prise de contact avec les bénéficiaires a été soumise.",
             "cta": "Ir al expediente de reclamación",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8648,7 +8648,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Validation des opérations a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8657,7 +8657,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Validation des opérations a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8666,7 +8666,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Opération Review a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8675,7 +8675,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : La dernière demande de prise de contact avec les bénéficiaires a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         },
         "callForInformation": {
@@ -8761,7 +8761,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le document Claim Match Bene a été soumis.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8780,7 +8780,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Envoyer la communication NIGO a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8789,7 +8789,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Un examen de la base des coûts a été soumis.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8798,7 +8798,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Une nouvelle transaction est initiée.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9245,7 +9245,7 @@
             "title": "Compris !",
             "subTitle": "Les données d'adéquation ont été soumises.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9254,7 +9254,7 @@
             "title": "Compris!",
             "subTitle": "Le document Review Quality Audit a été soumis.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9263,7 +9263,7 @@
             "title": "Compris!",
             "subTitle": "Le document Rework on Quality Audit a été soumis.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9272,7 +9272,7 @@
             "title": "Compris!",
             "subTitle": "Le document Review Quality Audit Rework a été soumis.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9313,7 +9313,7 @@
             "title": "Compris!",
             "subTitle": "Le formulaire de détails du tiers a été soumis avec succès.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     }
