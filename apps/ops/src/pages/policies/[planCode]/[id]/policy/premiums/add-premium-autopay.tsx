@@ -92,9 +92,9 @@ const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
         }
     }, [
         setUpAutopayProgramsEligibility,
-        isFetched,
-        router,
         isUserPermissionedToAutopay,
+        router,
+        isFetched,
     ]);
 
     if (isLoading) {

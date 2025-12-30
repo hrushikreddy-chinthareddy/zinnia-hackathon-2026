@@ -63,7 +63,12 @@ const NewPremium = ({ policy }: NewPremiumProps) => {
         } else {
             setIsLoading(false);
         }
-    }, [oneTimePremiumEligibility, isUserPermissionedToAutopay, router]);
+    }, [
+        oneTimePremiumEligibility,
+        isUserPermissionedToAutopay,
+        router,
+        isFetched,
+    ]);
 
     if (isLoading) {
         return <PageLoader variant={PageLoaderVariant.Center} />;
