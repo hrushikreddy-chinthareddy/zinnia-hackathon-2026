@@ -225,7 +225,7 @@ export const PremiumsSubPage = () => {
             isDisabled:
                 !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
                 !premiumSetOrCancelAutopayEnabled ||
-                upcomingPayment?.nextProgramDate ||
+                !upcomingPayment?.nextProgramDate ||
                 !isUserPermissionedToAutopay,
             tooltip: !isUserPermissionedToAutopay
                 ? t('transactions.permissionDeniedTooltip', {

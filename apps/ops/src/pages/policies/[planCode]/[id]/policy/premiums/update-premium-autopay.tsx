@@ -81,7 +81,11 @@ const UpdateAutopay = ({ policy }: UpdateAutopayProps) => {
             systematicProgramsEligibility?.isEligibleManageAutopay || false;
         const isPermissioned = isUserPermissionedToAutopay || false;
 
-        if (!isEligible || !isPermissioned) {
+        if (
+            !isEligible ||
+            !upcomingPayment?.nextProgramDate ||
+            !isPermissioned
+        ) {
             router.replace('/403');
         } else {
             setIsLoading(false);
@@ -91,6 +95,7 @@ const UpdateAutopay = ({ policy }: UpdateAutopayProps) => {
         isUserPermissionedToAutopay,
         router,
         isFetched,
+        upcomingPayment,
     ]);
 
     if (isLoading) {

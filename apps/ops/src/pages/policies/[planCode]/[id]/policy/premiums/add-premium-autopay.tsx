@@ -8,11 +8,13 @@ import PageLoader, {
 import { PageHead } from '@deps/components/page-title';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import AutopayContainer from '@deps/containers/financial-transactions/autopay/autopay-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { TransactionPermission } from '@deps/utils/auth';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import {
@@ -29,6 +31,7 @@ interface UpdateAutopayProps {
 const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
     const [isLoading, setIsLoading] = useState(true);
     const router = useRouter();
+    const { featureFlags } = useOptimizely();
 
     const { systematicPrograms, policyNumber } = policy;
     const { planCode } = policy.product ?? {};
@@ -41,6 +44,9 @@ const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
             ),
         [systematicPrograms]
     );
+
+    const premiumSetOrCancelAutopayEnabled =
+        featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
 
     const { data: setUpAutopayProgramsEligibility, isFetched } = useQuery({
         queryKey: [
@@ -85,7 +91,12 @@ const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
             setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay || false;
         const isPermissioned = isUserPermissionedToAutopay || false;
 
-        if (!isEligible || !isPermissioned) {
+        if (
+            !isEligible ||
+            !premiumSetOrCancelAutopayEnabled ||
+            !upcomingPayment?.nextProgramDate ||
+            !isPermissioned
+        ) {
             router.replace('/403');
         } else {
             setIsLoading(false);
@@ -95,6 +106,8 @@ const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
         isUserPermissionedToAutopay,
         router,
         isFetched,
+        premiumSetOrCancelAutopayEnabled,
+        upcomingPayment,
     ]);
 
     if (isLoading) {
