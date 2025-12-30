@@ -102,6 +102,10 @@ const BeneChangeContainer = ({
             : !!sor;
         setEligibility(isEligible);
         setSOR(SOR_MAP[sor.toLowerCase()] || SorSystem.LifeCad);
+
+        if (!isEligible) {
+            router.replace('/403');
+        }
     }, [data, setEligibility, setSOR, policyNumber]);
 
     const validateCall = useCallback(async () => {
