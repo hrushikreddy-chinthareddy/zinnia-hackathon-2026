@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import dayjs from 'dayjs';
 import relativeTime from 'dayjs/plugin/relativeTime';
 import Highcharts from 'highcharts';
@@ -68,23 +69,26 @@ export const TransactionTrendsChart = () => {
             <TransactionTrendsHeader />
             <TransactionTrendsFilters />
             <BlurOverlayLoader loading={transactionTrendsDataFetching}>
-                <div className="flex">
-                    <div className="basis-3/4 grow">
-                        {transactionTrendsDataError ? (
-                            <ErrorMessage />
-                        ) : series?.length === 0 ? (
-                            <NoDataMessage />
-                        ) : (
-                            <DateTimeLineChart
-                                series={series}
-                                tickInterval={tickInterval}
-                                tooltipFormatter={tooltipFormatter}
-                                xAxisLabelFormatter={xAxisLabelFormatter}
-                                yAxisTitle="case volume"
-                            />
-                        )}
-                    </div>
-                    <div className={`w-1/4 pl-8 ${sharedStyles.sidebar}`}>
+                <div
+                    className={clsx(
+                        sharedStyles.chartContainer,
+                        sharedStyles.chartContainerRightAlign
+                    )}
+                >
+                    {transactionTrendsDataError ? (
+                        <ErrorMessage />
+                    ) : series?.length === 0 ? (
+                        <NoDataMessage />
+                    ) : (
+                        <DateTimeLineChart
+                            series={series}
+                            tickInterval={tickInterval}
+                            tooltipFormatter={tooltipFormatter}
+                            xAxisLabelFormatter={xAxisLabelFormatter}
+                            yAxisTitle="case volume"
+                        />
+                    )}
+                    <div className={sharedStyles.sidebar}>
                         {series?.length !== 0 && (
                             <Legend
                                 title={friendlyGroupByName[groupBy]}

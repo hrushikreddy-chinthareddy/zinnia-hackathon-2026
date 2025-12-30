@@ -132,6 +132,7 @@
 }
 
 .sidebar {
+    padding-left: var(--measure-dimension-padding-4xl);
     &:empty {
         display: none;
     }
