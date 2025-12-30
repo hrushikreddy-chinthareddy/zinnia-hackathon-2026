@@ -202,12 +202,7 @@ export function CallForInformationFunctions({
             );
 
             // Check if this is a legacy task created before the 'contactEstablished' was introduced
-            if (
-                latestCallLog &&
-                !Object.hasOwn(latestCallLog, 'contactEstablished')
-            ) {
-                return true;
-            }
+            return latestCallLog?.contactEstablished;
         }
 
         const showChangeRequireField =
