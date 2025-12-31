@@ -281,9 +281,9 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 changeReason: customData?.changeReason,
                 signatures: customData?.signatureData?.signatures,
                 beneDetailsReqInd: customData?.beneDetailsReqInd || false,
-                documents: customData?.documents,
+                documents: uiParty?.documents,
                 supportingDocumentAttached:
-                    customData?.supportingDocumentAttached || null,
+                    uiParty?.supportingDocumentAttached || null,
                 relationshipToParty: customData?.relationshipToParty,
                 party: cleanedParty,
             },
