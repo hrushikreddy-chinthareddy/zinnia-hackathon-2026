@@ -1,4 +1,4 @@
-import { queryOptions, skipToken } from '@tanstack/react-query';
+import { QueryClient, queryOptions, skipToken } from '@tanstack/react-query';
 
 import { PRODUCER_ROLES } from '@deps/types/producers';
 
@@ -43,3 +43,23 @@ export const buildAgencyAgentsQuery = ({
                   });
               },
     });
+
+export const fetchAgencyAgents = (
+    client: QueryClient,
+    {
+        sellingCode,
+        carrierShortName,
+        partialFullName = '',
+    }: {
+        sellingCode: string;
+        carrierShortName: string;
+        partialFullName: string | undefined;
+    }
+) =>
+    client.fetchQuery(
+        buildAgencyAgentsQuery({
+            sellingCode,
+            carrierShortName,
+            partialFullName,
+        })
+    );
