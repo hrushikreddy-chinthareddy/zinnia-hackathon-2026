@@ -30,7 +30,7 @@ export async function applyDynamicOptions(
             throw new Error(`Handler not found for task: ${validatedTaskType}`);
 
         // Pass the full task object to the handler so it can construct the correct payload
-        const payload = handler.getPayload(task);
+        const payload = handler.getPayload(task, logCtx);
         const response = await handler.api(payload, accessToken);
         handler.transformResponse(response, currentTaskMetadata, task, logCtx);
     } catch (error) {
