@@ -67,6 +67,26 @@ export function ChangeAddressTemplate({
         ? DynamicKey.BENE_ADDRESS
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
 
+    const updateBenefinalcontactattempt = (addressChangeRequire: boolean) => {
+        setTask((previousTask) => {
+            return {
+                ...previousTask,
+                data: {
+                    ...previousTask.data,
+                    details: {
+                        ...previousTask.data.details,
+                        benefinalcontactattempt: {
+                            ...previousTask.data.details
+                                .benefinalcontactattempt,
+                            subTaskBeneAddressChangeRequire:
+                                addressChangeRequire,
+                        },
+                    },
+                },
+            };
+        });
+    };
+
     useEffect(() => {
         const updatedCustomData = customData;
         if (
@@ -85,22 +105,7 @@ export function ChangeAddressTemplate({
             updatedCustomData.task.data.details[
                 dynamicKey
             ].subTaskBeneAddressChangeRequire = false;
-            setTask((previousTask) => {
-                return {
-                    ...previousTask,
-                    data: {
-                        ...previousTask.data,
-                        details: {
-                            ...previousTask.data.details,
-                            benefinalcontactattempt: {
-                                ...previousTask.data.details
-                                    .benefinalcontactattempt,
-                                subTaskBeneAddressChangeRequire: false,
-                            },
-                        },
-                    },
-                };
-            });
+            updateBenefinalcontactattempt(false);
         }
         if (
             !updatedCustomData.task.data.details[dynamicKey]
@@ -257,22 +262,7 @@ export function ChangeAddressTemplate({
                 updatedCustomData.task.data.details[
                     dynamicKey
                 ].beneficiaryChangeDetail.changeRequire = true;
-                setTask((previousTask) => {
-                    return {
-                        ...previousTask,
-                        data: {
-                            ...previousTask.data,
-                            details: {
-                                ...previousTask.data.details,
-                                benefinalcontactattempt: {
-                                    ...previousTask.data.details
-                                        .benefinalcontactattempt,
-                                    subTaskBeneAddressChangeRequire: true,
-                                },
-                            },
-                        },
-                    };
-                });
+                updateBenefinalcontactattempt(true);
             }
         }
 
