@@ -152,7 +152,7 @@ export const validateAgentTransaction = async (body: any): Promise<any> => {
             url: validateAgentUrl,
             function: 'webnonfinancial.validateAgentTransaction',
         });
-        return error;
+        return error?.data;
     }
 };
 
