@@ -1,4 +1,4 @@
-import { skipToken, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 
@@ -11,7 +11,7 @@ import AutopayContainer from '@deps/containers/financial-transactions/autopay/au
 import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { checkSystematicProgramsEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { TransactionPermission } from '@deps/utils/auth';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
@@ -42,26 +42,30 @@ const UpdateAutopay = ({ policy }: UpdateAutopayProps) => {
         [systematicPrograms]
     );
 
-    const { data: systematicProgramsEligibility, isFetched } = useQuery({
+    const { data: setUpAutopayProgramsEligibility, isFetched } = useQuery({
         queryKey: [
-            'checkSystematicProgramsEligibility',
+            'checkSetUpAutopayProgramsEligibility',
             planCode,
             policyNumber,
             upcomingPayment?.arrangementId,
         ],
-        queryFn: upcomingPayment?.arrangementId
-            ? () =>
-                  checkSystematicProgramsEligibilityQuery(
-                      planCode as string,
-                      policyNumber as string,
-                      upcomingPayment?.arrangementId as string
-                  )
-            : skipToken,
+        queryFn: () =>
+            checkSystematicProgramEligibilityQuery(
+                planCode as string,
+                policyNumber as string,
+                upcomingPayment?.arrangementId ?? '',
+
+                {
+                    systematicProgram: {
+                        arrangementType: ArrangementType.PAYMENT,
+                    },
+                }
+            ),
         placeholderData: (previousData) => previousData,
         select: (data) => {
             return {
                 ...data,
-                isEligibleManageAutopay:
+                isEligibleSetUpAutopay:
                     data?.status === TransactionResponseStatus.Success,
             };
         },
@@ -78,7 +82,7 @@ const UpdateAutopay = ({ policy }: UpdateAutopayProps) => {
         if (!isFetched) return;
 
         const isEligible =
-            systematicProgramsEligibility?.isEligibleManageAutopay || false;
+            setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay || false;
         const isPermissioned = isUserPermissionedToAutopay || false;
 
         if (
@@ -91,7 +95,7 @@ const UpdateAutopay = ({ policy }: UpdateAutopayProps) => {
             setIsLoading(false);
         }
     }, [
-        systematicProgramsEligibility,
+        setUpAutopayProgramsEligibility,
         isUserPermissionedToAutopay,
         router,
         isFetched,
