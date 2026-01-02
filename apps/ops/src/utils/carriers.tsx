@@ -115,7 +115,7 @@ export const carrierNames: Record<CarrierCode, string> = {
 };
 
 export const getCarrierNameByClientId = (
-    clientId: string,
+    clientId: string | undefined,
     showClientCode: boolean = false
 ): string => {
     if (!clientId) return '';
