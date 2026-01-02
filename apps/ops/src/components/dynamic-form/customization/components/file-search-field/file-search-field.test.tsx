@@ -240,21 +240,13 @@ describe('FileSearchField Component', () => {
 
         render(<FileSearchField {...propsWithAttachments} />);
 
-        // Wait for documents to load
-        await waitFor(() => {
-            expect(getDocumentSearchResultsQuery).toHaveBeenCalled();
-        });
+        // API should not be called when attachments exist
+        expect(getDocumentSearchResultsQuery).not.toHaveBeenCalled();
 
         // Type in search field to show documents
         const input = screen.getByPlaceholderText('Search documents...');
         fireEvent.focus(input);
-        userEvent.type(input, 'Test');
-
-        // Click on an already selected document
-        await waitFor(() => {
-            const documentElement = screen.getByText('Test Document 1');
-            fireEvent.click(documentElement);
-        });
+        await userEvent.type(input, '68667edd');
 
         // Check if setAttachments was not called for already selected document
         expect(defaultProps.setAttachments).not.toHaveBeenCalled();

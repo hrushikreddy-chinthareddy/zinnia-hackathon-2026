@@ -38,6 +38,6 @@ export const submitServiceRequestForm = async (
             function: 'process.submitServiceRequestForm',
         });
 
-        return null;
+        return e;
     }
 };

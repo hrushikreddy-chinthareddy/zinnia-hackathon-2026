@@ -387,6 +387,22 @@
         "partyPolicyNewReferenceId": "Registro actualizado",
         "partyRole": "Rôle de la personne",
         "payeeGrossAmount": "Monto bruto del beneficiario",
+        "details": "Détails",
+        "overviewText": "Veuillez sélectionner le type de correction dans la liste, fournir une raison claire pour votre demande et joindre un document justificatif. Les trois champs sont obligatoires. Une fois soumise, une demande de correction sera créée et acheminée à l'équipe des opérations appropriée pour examen et traitement.",
+        "correctionType": "Type de correction",
+        "selectCorrectionType": "Sélectionner le type de correction",
+        "correctionReason": "Raison de la correction",
+        "selectCorrectionReason": "Sélectionner la raison de la correction",
+        "linkOrUploadDocument": "Lier ou télécharger un document",
+        "findExistingDocuments": "Trouver des documents existants...",
+        "or": "ou",
+        "submit": "Soumettre",
+        "upload": "Télécharger",
+        "uploadDocument": "Télécharger un document",
+        "requestCorrectionSuccess": "Demande de correction soumise pour le cas",
+        "requestCorrrectionFail": "Échec de la soumission de la demande de correction. Veuillez réessayer ou contacter le support.",
+        "additionalNotes": "Notes complémentaires",
+        "addNotes": "Ajouter des notes",
         "payeeOrBeneficiaries": "Beneficiario(s)",
         "paymentAmount": "Montant du paiement",
         "paymentForm": "Mode de paiement",
@@ -1069,6 +1085,21 @@
         "SystematicRequiredMinimumDistribution": "Distribution minimale systématique requise",
         "SystematicRequiredMinimumDistributionSetup": "Mise en place de la distribution minimale systématique requise",
         "TAKEINPUTTEDVALUE": "Utiliser la valeur saisie",
+        "licensing": "Licences",
+        "financial": "Finances",
+        "tax": "Impôts",
+        "nonFinancial": "Non-Finances",
+        "death": "Décès",
+        "maturity": "Échéance",
+        "complianceRequirementChange": "Modification des exigences de conformité",
+        "customerCorrectionRequest": "Demande de correction client",
+        "dataEntryError": "Erreur de saisie de données",
+        "deathEventDetailsIncorrect": "Détails de l'événement de décès incorrects",
+        "documentationMissingOrInvalid": "Documentation manquante ou invalide",
+        "maturityEventIncorrect": "Événement d'échéance incorrect",
+        "onboardingDataIncorrect": "Données d'intégration incorrectes",
+        "submittedVsProcessedMismatch": "Incohérence entre les données soumises et traitées",
+        "systemError": "Erreur système",
         "TARGETBENEFITPLAN": "Plan à prestations cibles",
         "TENYEARTAXOPTION": "Option fiscale sur dix ans",
         "TERM": "Temporaire",
@@ -7166,6 +7197,15 @@
             "cancelPolicy": "Annuler la police",
             "newDeathClaim": "Nouvelle réclamation pour décès",
             "surrender": "Politique de reddition"
+        },
+        "cases": {
+            "requestCorrection": "Demander une correction",
+            "deprioritize": {
+                "title": "De-prioriser le Dossier"
+            },
+            "prioritize": {
+                "title": "Prioriser le Dossier"
+            }
         },
         "requestOperationReview": {
             "label": "Demande de révision des opérations"

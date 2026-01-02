@@ -4,7 +4,7 @@ import { FC, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
-import { MenuContextualContent } from '@deps/components/quick-actions-menu/quick-actions-menu';
+import { PolicyMenuContextualContent } from '@deps/components/quick-actions-menu/quick-actions-menu';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import {
@@ -40,7 +40,7 @@ export const PolicyActionCell: FC<PolicyActionCellProps> = ({
             trigger={<Icon type={IconType.MENU_VERTICAL} />}
             onOpenChange={setMenuOpen}
         >
-            <MenuContextualContent policy={policyDetails} t={t} />
+            <PolicyMenuContextualContent policy={policyDetails} t={t} />
         </MenuContextual>
     );
 };

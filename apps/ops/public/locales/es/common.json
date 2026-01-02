@@ -386,6 +386,22 @@
         "partyPolicyNewReferenceId": "Enregistrement mis à jour",
         "partyRole": "Rol de la parte",
         "payeeGrossAmount": "Montant brut du bénéficiaire",
+        "details": "Detalles",
+        "overviewText": "Seleccione el tipo de corrección de la lista, indique claramente el motivo de su solicitud y adjunte un documento justificativo. Los tres campos son obligatorios. Una vez enviado, se creará una solicitud de corrección y se enviará al equipo de operaciones correspondiente para su revisión y procesamiento.",
+        "correctionType": "Tipo de corrección",
+        "selectCorrectionType": "Seleccione el tipo de corrección",
+        "correctionReason": "Motivo de la corrección",
+        "selectCorrectionReason": "Seleccione el motivo de la corrección",
+        "linkOrUploadDocument": "Enlace o subir documento",
+        "findExistingDocuments": "Encuentra documentos existentes...",
+        "or": "o",
+        "submit": "Entregar",
+        "upload": "Subir",
+        "uploadDocument": "Cargar documento",
+        "requestCorrectionSuccess": "Solicitud de corrección presentada para el caso",
+        "requestCorrrectionFail": "No se pudo enviar la solicitud de corrección. Inténtelo de nuevo o póngase en contacto con el servicio de asistencia.",
+        "additionalNotes": "Notas adicionales",
+        "addNotes": "Agregar notas",
         "payeeOrBeneficiaries": "Bénéficiaire ou bénéficiaires",
         "paymentAmount": "Monto del pago",
         "paymentForm": "Forma de pago",
@@ -1099,6 +1115,21 @@
         "SystematicRequiredMinimumDistribution": "Distribución mínima requerida sistemática",
         "SystematicRequiredMinimumDistributionSetup": "Configuración de distribución mínima requerida sistemática",
         "TAKEINPUTTEDVALUE": "Usar valor ingresado",
+        "licensing": "Licencias",
+        "financial": "Financiero",
+        "tax": "Impuesto",
+        "nonFinancial": "No financiero",
+        "death": "Muerte",
+        "maturity": "Vencimiento",
+        "complianceRequirementChange": "Cambio en el requisito de cumplimiento",
+        "customerCorrectionRequest": "Solicitud de corrección del cliente",
+        "dataEntryError": "Error de entrada de datos",
+        "deathEventDetailsIncorrect": "Detalles del evento de muerte incorrectos",
+        "documentationMissingOrInvalid": "Documentación faltante/inválida",
+        "maturityEventIncorrect": "Evento de vencimiento incorrecto",
+        "onboardingDataIncorrect": "Datos de incorporación incorrectos",
+        "submittedVsProcessedMismatch": "Discordancia entre enviados y procesados",
+        "systemError": "Error del sistema",
         "TARGETBENEFITPLAN": "Plan de beneficio objetivo",
         "TENYEARTAXOPTION": "Opción fiscal a diez años",
         "TERM": "Plazo",
@@ -7120,6 +7151,15 @@
             "cancelPolicy": "Cancelar póliza",
             "newDeathClaim": "Nuevo reclamo por muerte",
             "surrender": "Política de rendición"
+        },
+        "cases": {
+            "requestCorrection": "Solicitar corrección",
+            "deprioritize": {
+                "title": "De-priorizar Caso"
+            },
+            "prioritize": {
+                "title": "Priorizar Caso"
+            }
         },
         "requestOperationReview": {
             "label": "Solicitud de revisión de operaciones"
