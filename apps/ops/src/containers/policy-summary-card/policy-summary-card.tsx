@@ -28,6 +28,7 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PopoverPlacement } from '@deps/components/popover/popover';
+import { QuickActionsType } from '@deps/components/quick-actions-menu/quick-actions-menu';
 import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
 import PendingTag from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/pending-tag';
 import {
@@ -283,6 +284,7 @@ const QuickViewHeader = ({
                                 policy={policy}
                                 links={quickLinks || []}
                                 sessionId={sessionId}
+                                type={QuickActionsType.Policy}
                             />
                         </Skeleton>
                     </div>

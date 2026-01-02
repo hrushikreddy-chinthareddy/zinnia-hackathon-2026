@@ -386,6 +386,22 @@
         "partyPolicyNewReferenceId": "Updated record",
         "partyRole": "Party role",
         "payeeGrossAmount": "Payee gross amount",
+        "details": "Details",
+        "overviewText": "Please select the type of correction from the list, provide a clear reason for your request, and attach a supporting document. All three fields are required. Once submitted, a correction request case will be created and routed to the appropriate operations team for review and processing.",
+        "correctionType": "Correction type",
+        "selectCorrectionType": "Select correction type",
+        "correctionReason": "Correction reason",
+        "selectCorrectionReason": "Select correction reason",
+        "linkOrUploadDocument": "Link or upload document",
+        "findExistingDocuments": "Find existing documents...",
+        "or": "or",
+        "submit": "Submit",
+        "upload": "Upload",
+        "uploadDocument": "Upload Document",
+        "requestCorrectionSuccess": "Correction request submitted for Case",
+        "requestCorrrectionFail": "Failed to submit correction request. Please try again or contact support.",
+        "additionalNotes": "Additional notes",
+        "addNotes": "Add notes",
         "payeeOrBeneficiaries": "Payee or beneficiaries",
         "paymentAmount": "Payment amount",
         "paymentForm": "Payment form",
@@ -1099,6 +1115,21 @@
         "SystematicRequiredMinimumDistribution": "Systematic RMD",
         "SystematicRequiredMinimumDistributionSetup": "Systematic RMD setup",
         "TAKEINPUTTEDVALUE": "Use inputted value",
+        "licensing": "Licensing",
+        "financial": "Financial",
+        "tax": "Tax",
+        "nonFinancial": "Non-Financial",
+        "death": "Death",
+        "maturity": "Maturity",
+        "complianceRequirementChange": "Compliance requirement change",
+        "customerCorrectionRequest": "Customer correction request",
+        "dataEntryError": "Data entry error",
+        "deathEventDetailsIncorrect": "Death event details incorrect",
+        "documentationMissingOrInvalid": "Documentation missing/invalid",
+        "maturityEventIncorrect": "Maturity event incorrect",
+        "onboardingDataIncorrect": "Onboarding data incorrect",
+        "submittedVsProcessedMismatch": "Submitted vs. processed mismatch",
+        "systemError": "System error",
         "TARGETBENEFITPLAN": "Target Benefit Plan",
         "TENYEARTAXOPTION": "Ten-year tax option",
         "TERM": "Term",
@@ -7266,6 +7297,15 @@
             "newDeathClaim": "New Death Claim",
             "surrender": "Surrender policy",
             "freeLookCancel": "Free look cancel"
+        },
+        "cases": {
+            "requestCorrection": "Request Correction",
+            "deprioritize": {
+                "title": "De-prioritize Case"
+            },
+            "prioritize": {
+                "title": "Prioritize Case"
+            }
         },
         "requestOperationReview": {
             "label": "Request Operations Review"
