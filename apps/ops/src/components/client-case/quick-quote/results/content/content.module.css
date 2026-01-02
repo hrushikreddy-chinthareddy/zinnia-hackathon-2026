@@ -162,3 +162,9 @@
 .premiumFreeRiderContent {
     grid-column: 2 / -1;
 }
+
+.noBulletList {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}

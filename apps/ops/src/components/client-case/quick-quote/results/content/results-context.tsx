@@ -19,6 +19,10 @@ import {
     TermQuickQuoteResult,
     QuickQuoteParams,
 } from '@deps/types/quickQuote';
+import {
+    IneligibilityReason,
+    nonEligibleReasonByClass,
+} from '@deps/utils/quick-quotes-rules/types';
 
 import {
     asNumberOrRange,
@@ -32,6 +36,9 @@ type QuickQuoteResultsContextState = {
     isFetching: boolean;
     isPending: boolean;
     results: QuickQuoteResult[] | undefined;
+    filterIneligibilityReasons: (
+        reasons: nonEligibleReasonByClass[] | undefined
+    ) => IneligibilityReason[];
 };
 
 const QuickQuoteResultsContext =
@@ -81,6 +88,11 @@ export const QuickQuoteResultsProvider = ({
         { quickQuoteParams, variants },
         useCallback(
             (results) => {
+                console.log(
+                    '🚀 ~ QuickQuoteResultsProvider ~ variants - context:',
+                    variants
+                );
+
                 const items = zip(results, variants)
                     .map(([result, variant]) => {
                         if (!result || !variant) {
@@ -109,8 +121,8 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
-
-                return Object.entries(groupBy(items, 'planCode'))
+                console.log('🚀 ~ QuickQuoteResultsProvider ~ items:', items);
+                const result = Object.entries(groupBy(items, 'planCode'))
                     .map(
                         ([planCode, sameProductData]):
                             | TermQuickQuoteResult
@@ -164,6 +176,10 @@ export const QuickQuoteResultsProvider = ({
                                 'assumed' in item &&
                                 item.assumed != null;
 
+                            console.log(
+                                '🚀 ~ isAvailableResponse ~ sameProductData:',
+                                sameProductData
+                            );
                             return {
                                 product,
                                 productType: ProductTypes.TERM,
@@ -248,6 +264,10 @@ export const QuickQuoteResultsProvider = ({
                                                             riderName
                                                         ]?.modalPremium
                                                 );
+                                            console.log(
+                                                '🚀 ~ QuickQuoteResultsProvider ~ groupedByTermLength:',
+                                                groupedByTermLength
+                                            );
 
                                             if (
                                                 includes(
@@ -277,9 +297,39 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
+                console.log(
+                    '🚀 ~ QuickQuoteResultsProvider ~ result - context:',
+                    result
+                );
+                return result;
             },
             [products, variants]
         )
+    );
+
+    const filterIneligibilityReasons = useCallback(
+        (
+            reasons: nonEligibleReasonByClass[] | undefined
+        ): IneligibilityReason[] => {
+            if (!reasons || reasons.length === 0) return [];
+
+            const filteredReasons = reasons
+                .flatMap((reason) => reason.reasons)
+                .filter(
+                    (reason, index, self) =>
+                        index === self.findIndex((t) => t.field == reason.field)
+                );
+
+            filteredReasons.forEach((fr, i) => {
+                reasons.forEach((reason) => {
+                    if (!reason.reasons.some((r) => r.field === fr.field))
+                        filteredReasons.splice(i, 1);
+                });
+            });
+
+            return filteredReasons;
+        },
+        []
     );
 
     const value = useMemo(
@@ -288,8 +338,16 @@ export const QuickQuoteResultsProvider = ({
             isFetching: isFetching || isFetchingProducts,
             isPending,
             results: results?.length ? results : placeholderData,
+            filterIneligibilityReasons,
         }),
-        [results, isLoading, isFetching, isFetchingProducts, isPending]
+        [
+            results,
+            isLoading,
+            isFetching,
+            isFetchingProducts,
+            isPending,
+            filterIneligibilityReasons,
+        ]
     );
 
     return (

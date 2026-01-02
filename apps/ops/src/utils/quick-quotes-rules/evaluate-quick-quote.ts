@@ -104,10 +104,7 @@ export class QuickQuoteProducts {
                 });
             }
         }
-        console.log(
-            '🚀 ~ QuickQuoteProducts ~ getProductsAvailableFor ~ result:',
-            result
-        );
+
         return result;
     }
 

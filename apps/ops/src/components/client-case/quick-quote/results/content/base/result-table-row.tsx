@@ -2,6 +2,7 @@ import { ReactNode } from 'react';
 
 import { TypographyVariant } from '@deps/components/typography/typography';
 import { NumberOrRange } from '@deps/types/quickQuote';
+import { IneligibilityReason } from '@deps/utils/quick-quotes-rules/types';
 
 import { QuickQuoteRangeCell } from './range-cell';
 import styles from '../content.module.css';
@@ -10,7 +11,7 @@ import { QuickQuoteNotAvailableReasonCell } from './not-available-reason-cell';
 type DataItem = {
     period?: string;
     value: NumberOrRange | undefined;
-    notAvailabilityReason?: string;
+    notAvailabilityReasons?: IneligibilityReason[];
 };
 
 type QuickQuoteResultTableRowProps = {
@@ -27,9 +28,10 @@ export const QuickQuoteResultTableRow = ({
     cellsVariant,
 }: QuickQuoteResultTableRowProps) => {
     const isAllDataUnAvailable = data?.every(({ value }) => value == null);
-    const notAvailabilityReasons = data?.map(
-        ({ notAvailabilityReason }) => notAvailabilityReason
-    );
+    const notAvailabilityReasons = data?.map(({ notAvailabilityReasons }) => {
+        return notAvailabilityReasons;
+    });
+
     const hasSameNotAvailabilityReason =
         isAllDataUnAvailable && new Set(notAvailabilityReasons).size === 1;
 
@@ -38,10 +40,10 @@ export const QuickQuoteResultTableRow = ({
           hasSameNotAvailabilityReason ? (
             <QuickQuoteNotAvailableReasonCell
                 className={styles.fullDataCell}
-                reason={data[0].notAvailabilityReason}
+                reasons={data[0].notAvailabilityReasons}
             />
         ) : (
-            data?.map(({ value, period, notAvailabilityReason }, idx) =>
+            data?.map(({ value, period, notAvailabilityReasons }, idx) =>
                 value != null ? (
                     <QuickQuoteRangeCell
                         key={idx}
@@ -52,7 +54,7 @@ export const QuickQuoteResultTableRow = ({
                 ) : (
                     <QuickQuoteNotAvailableReasonCell
                         key={idx}
-                        reason={notAvailabilityReason}
+                        reasons={notAvailabilityReasons}
                     />
                 )
             )

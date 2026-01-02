@@ -5,19 +5,22 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { NotAvailabilityReasonField } from '@deps/utils/quick-quotes-rules/types';
+import {
+    IneligibilityReason,
+    NotAvailabilityReasonField,
+} from '@deps/utils/quick-quotes-rules/types';
 
 import { useQuickQuoteParams } from '../../params-context';
 import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
     className?: string;
-    reason?: string;
+    reasons?: IneligibilityReason[];
 };
 
 export const QuickQuoteNotAvailableReasonCell = ({
     className,
-    reason,
+    reasons,
 }: QuickQuoteNotAvailableReasonCellProps) => {
     const { insuredAge } = useQuickQuoteParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
@@ -36,13 +39,28 @@ export const QuickQuoteNotAvailableReasonCell = ({
 
     return (
         <div className={clsx(styles.notAvailableReasonCell, className)}>
-            <Typography
-                className={styles.notAvailableText}
-                variant={TypographyVariant.BodySm}
-            >
-                {reasonMessageMap[reason as string] ??
-                    t('clientCase.quickQuoteResults.notAvailable')}
-            </Typography>
+            <ul className={styles.noBulletList}>
+                <li>
+                    <Typography
+                        className={styles.notAvailableText}
+                        variant={TypographyVariant.BodySm}
+                    >
+                        {t('clientCase.quickQuoteResults.notAvailable')}
+                    </Typography>
+                </li>
+                {reasons?.map((reason) => {
+                    return (
+                        <li key={`${reason.field}`}>
+                            <Typography
+                                className={styles.notAvailableText}
+                                variant={TypographyVariant.BodySm}
+                            >
+                                {reasonMessageMap[reason.field]}
+                            </Typography>
+                        </li>
+                    );
+                })}
+            </ul>
         </div>
     );
 };
