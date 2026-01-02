@@ -10,7 +10,7 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleExclamationIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { BankAccount } from '@zinnia/api-types/types/sor';
 
 const BankingDetails = ({ bankDetails }: { bankDetails?: BankAccount }) => {

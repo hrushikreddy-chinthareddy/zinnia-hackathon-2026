@@ -8,10 +8,8 @@ import { TranslationFiles } from '@deps/config/translations';
 import { DashboardContext } from '@deps/contexts/DashboardContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
-import {
-    DEFAULT_ERROR_STRING,
-    DEFAULT_EXTENDED_DATE_FORMAT,
-} from '@deps/types/constants';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { FeatureType } from '@zinnia/api-types/types/sor';
 
 import BaseDeathBenefit from './display-fields/base-death-benefit';

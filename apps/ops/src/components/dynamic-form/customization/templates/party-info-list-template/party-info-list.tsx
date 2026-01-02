@@ -1,44 +1,93 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { useState, useRef, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
+import { useRef, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import { TranslationFiles } from '@deps/config/translations';
+import { ActionDataItem } from '@deps/containers/task-container/task-handlers/types';
 
 import styles from './party-info-list.module.css';
 
+type PartyArrayKey = 'emails' | 'phones' | 'addresses';
+
+const suffixToKey: Record<string, PartyArrayKey> = {
+    _emails: 'emails',
+    _phones: 'phones',
+    _addresses: 'addresses',
+};
 export default function PartyInfoListTemplate(
     props: ArrayFieldTemplateProps<any, RJSFSchema, any>
 ) {
-    const { canAdd, items, onAddClick, readonly, title, uiSchema } = props;
+    const {
+        canAdd,
+        items,
+        onAddClick,
+        readonly,
+        title,
+        uiSchema,
+        formContext,
+        formData,
+        idSchema,
+    } = props;
+    const { setCustomData } = formContext;
 
     const uiOptions = getUiOptions(uiSchema);
     const {
         addButtonCTA = 'Add',
         title: overrideTitle,
-        showRemoveItemBtn = true,
         showDeleteBtn = true,
         prefferedCTA = 'Preferred',
     } = uiOptions;
 
-    const [disabledSet, setDisabledSet] = useState(new Set<number>());
     const prevLengthRef = useRef(items.length);
-    const [newlyAddedSet, setNewlyAddedSet] = useState(new Set<number>());
-    const [preferredIndex, setPreferredIndex] = useState(0);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
+    const contacts = Array.isArray(formData) ? formData : [];
 
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'transactionAccordion',
-    });
+    const updatedActionDataRef = useRef<ActionDataItem[]>(
+        formContext.parentActionData
+    );
 
-    const toggleDisable = (index: number) => {
-        setDisabledSet((prev) => {
-            const copy = new Set(prev);
-            copy.has(index) ? copy.delete(index) : copy.add(index);
-            return copy;
-        });
+    useEffect(() => {
+        updatedActionDataRef.current = formContext.parentActionData;
+    }, [formContext.parentActionData]);
+
+    const safeStringify = (v: any) => JSON.stringify(v ?? []);
+
+    const toggleIsPreferred = (index: number) => {
+        const id = idSchema?.$id ?? '';
+        const match = id.match(/actionData_(\d+)/);
+        const partyIndex = match ? Number(match[1]) : 0;
+        const updatedList = contacts.map((item: any, idx: number) => ({
+            ...item,
+            isPreferred: idx === index,
+        }));
+
+        const updatedActionData = [...updatedActionDataRef.current];
+
+        const entry = updatedActionData[partyIndex] ?? {};
+        const party = entry.party ?? {};
+
+        let updatedParty = { ...party };
+        let hasChanged = false;
+        const suffix = Object.keys(suffixToKey).find((s) => id.endsWith(s));
+        if (suffix) {
+            const key = suffixToKey[suffix];
+            if (safeStringify(party[key]) !== safeStringify(updatedList)) {
+                updatedParty = { ...party, [key]: updatedList };
+                hasChanged = true;
+            }
+        }
+
+        if (!hasChanged) return;
+
+        updatedActionData[partyIndex] = {
+            ...entry,
+            party: updatedParty,
+        };
+
+        updatedActionDataRef.current = updatedActionData;
+
+        setCustomData({ actionData: updatedActionData });
     };
 
     useEffect(() => {
@@ -47,12 +96,6 @@ export default function PartyInfoListTemplate(
 
         if (newLen > prevLen) {
             const addedIndex = newLen - 1;
-
-            setNewlyAddedSet((prev) => {
-                const copy = new Set(prev);
-                copy.add(addedIndex);
-                return copy;
-            });
 
             requestAnimationFrame(() => {
                 const el = itemRefs.current[addedIndex];
@@ -94,7 +137,9 @@ export default function PartyInfoListTemplate(
             </div>
 
             {items.map((element, index) => {
-                const isDisabled = disabledSet.has(index);
+                const isPreferred = !!contacts[index]?.isPreferred;
+                //allow all items to be removable except the first one
+                const isRemovable = index > 0;
 
                 return (
                     <>
@@ -104,55 +149,25 @@ export default function PartyInfoListTemplate(
                                 itemRefs.current[index] = el;
                             }}
                             className={`${styles.card} ${
-                                newlyAddedSet.has(index)
-                                    ? styles.animateSlideUp
-                                    : ''
+                                isRemovable ? styles.animateSlideUp : ''
                             }`}
-                            style={{ opacity: isDisabled ? 0.5 : 1 }}
+                            style={{ opacity: 1 }}
                         >
                             <div className="flex justify-between items-start gap-4 flex-wrap">
-                                <div
-                                    className={`flex-1 min-w-[70%] ${
-                                        isDisabled ? 'pointer-events-none' : ''
-                                    }`}
-                                >
+                                <div className={styles.container}>
                                     {element.children}
                                 </div>
                                 <div className="flex flex-col gap-3 items-end">
-                                    {showRemoveItemBtn &&
-                                        !readonly &&
-                                        !newlyAddedSet.has(index) && (
-                                            <CheckboxText
-                                                id={`remove-address-${index}`}
-                                                label={t('remove')}
-                                                checked={isDisabled}
-                                                onChange={() =>
-                                                    toggleDisable(index)
-                                                }
-                                            />
-                                        )}
                                     {showDeleteBtn &&
                                         !readonly &&
-                                        newlyAddedSet.has(index) && (
+                                        isRemovable && (
                                             <button
                                                 type="button"
                                                 onClick={element.onDropIndexClick(
                                                     element.index
                                                 )}
                                             >
-                                                <svg
-                                                    className="w-5 h-5"
-                                                    fill="none"
-                                                    stroke="currentColor"
-                                                    viewBox="0 0 24 24"
-                                                >
-                                                    <path
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                        strokeWidth={4}
-                                                        d="M6 18L18 6M6 6l12 12"
-                                                    />
-                                                </svg>
+                                                <Icon type={IconType.CLOSE} />
                                             </button>
                                         )}
                                 </div>
@@ -160,8 +175,9 @@ export default function PartyInfoListTemplate(
                             <CheckboxText
                                 id={`preferred-${index}`}
                                 label={prefferedCTA as string}
-                                checked={preferredIndex === index}
-                                onChange={() => setPreferredIndex(index)}
+                                checked={isPreferred}
+                                isDisabled={readonly || isPreferred}
+                                onChange={() => toggleIsPreferred(index)}
                             />
                         </div>
                     </>

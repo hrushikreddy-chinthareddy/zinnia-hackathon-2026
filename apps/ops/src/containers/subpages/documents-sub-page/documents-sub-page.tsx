@@ -12,10 +12,7 @@ import SelectSimple from '@deps/components/select/select';
 import { SimpleOption } from '@deps/components/select/select.helpers';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import CardContainer from '@deps/containers/card-container/card-container';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
@@ -28,12 +25,8 @@ import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import {
-    DEFAULT_ERROR_STRING,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     SearchRequest,
     TaxformResponse,
@@ -79,14 +72,8 @@ const NormalDocs = ({
     isFirstYearSelected: boolean;
 }) => {
     const { t } = useTranslation();
-    const { featureFlagVariables } = useOptimizely();
     const { isZinniaInternalProcessor } = usePermissionsContext();
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        policy?.carrierId?.toLocaleLowerCase() || ''
-    );
+
     const limit = 25;
     const [offset, setOffset] = useState(0);
 
@@ -167,9 +154,9 @@ const NormalDocs = ({
         } = {},
         isLoading,
     } = useQuery({
-        queryKey: ['documentSearch', searchParams, limit, offset, useV3],
+        queryKey: ['documentSearch', searchParams, limit, offset],
         queryFn: () =>
-            getDocumentSearchResultsQuery(searchParams, limit, offset, useV3),
+            getDocumentSearchResultsQuery(searchParams, limit, offset),
         enabled: !!policy?.policyNumber,
     });
 
@@ -200,6 +187,7 @@ const NormalDocs = ({
                     results={policyDocuments ?? []}
                     planCode={policy.product?.planCode}
                     policyDeliveryDate={policy.policyDates?.policyDeliveryDate}
+                    context="policy"
                 />
             )}
             <DocumentResultsPagination
@@ -249,15 +237,7 @@ const TaxDocs = ({
             } else {
                 taxQueryParams.taxYear = Number(yearSelection);
             }
-
-            const useV3 = isFeatureFlagVariableActive(
-                featureFlagVariables,
-                FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-                OptimizelyVariableKey.Clients,
-                policy?.carrierId?.toLocaleLowerCase() || ''
-            );
-
-            const response = await searchTaxForms(taxQueryParams, useV3);
+            const response = await searchTaxForms(taxQueryParams);
             setDocs(response?.data?.items ?? null);
             setTotal(response?.data?.count ?? 0);
             setLoading(false);

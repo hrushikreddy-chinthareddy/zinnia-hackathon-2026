@@ -35,7 +35,10 @@ describe('verify correct labels and fields are present', () => {
         );
         mockedInterestRate.mockResolvedValue(Promise.resolve(2));
         mockedCreditRate.mockResolvedValue(Promise.resolve(3));
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
     });
+
     afterEach(() => {
         jest.clearAllMocks();
     });

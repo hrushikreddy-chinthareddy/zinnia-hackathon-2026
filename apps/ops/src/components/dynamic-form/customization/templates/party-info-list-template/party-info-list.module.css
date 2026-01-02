@@ -42,3 +42,7 @@
     font-weight: 700;
     line-height: 22px;
 }
+.container {
+    flex: 1;
+    min-width: 70%;
+}

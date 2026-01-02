@@ -15,7 +15,7 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { SPLITTER } from '@deps/types/constants';
+import { SPLITTER } from '@deps/utils/strings';
 import {
     Phone,
     Email,

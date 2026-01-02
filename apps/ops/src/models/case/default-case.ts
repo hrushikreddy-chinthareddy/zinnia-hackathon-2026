@@ -4,7 +4,7 @@ export type DefaultDataEntryTask = {
         caseSubType: string;
         contractNumber: string;
         carrier: string;
-        customerDetails: {
+        customerDetails?: {
             firstName: string;
             lastName: string;
             taxId: string;
@@ -53,6 +53,13 @@ export type DefaultDataEntryTask = {
         };
     };
     attachments?: any[];
+    correctionDetails?: {
+        reason: string;
+        referenceCaseId: string;
+        requestedBy: string;
+        requestedOn: string;
+        note: string;
+    };
 };
 
 export enum RequestType {

@@ -31,13 +31,8 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
@@ -75,8 +70,6 @@ import { removeFromCache, writeToCache } from '@deps/utils/cache';
 import { formatTimestamp } from '@deps/utils/dates';
 import { isProd } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
@@ -157,7 +150,7 @@ const DocumentsListComponent = ({
     t,
     documentsListType,
 }: {
-    documentsList: DocumentWithSource[] | V3DocumentWithSource[];
+    documentsList: V3DocumentWithSource[];
     task: { carrier: string };
     t: TFunction;
     documentsListType?: string;
@@ -216,19 +209,11 @@ export default function GlobalTaskSideSheet({
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
-    const { featureFlagVariables } = useOptimizely();
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
     const { isZinniaInternalProcessor } = usePermissionsContext();
     const limit = 25;
     const offset = 0;
-
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        task?.carrier?.toLocaleLowerCase() || ''
-    );
 
     const { user } = useUser();
     const sideSheet = useSideSheetContext();
@@ -266,14 +251,12 @@ export default function GlobalTaskSideSheet({
             caseDocumentSearchBody,
             limit,
             offset,
-            useV3,
         ],
         queryFn: () =>
             getDocumentSearchResultsQuery(
                 caseDocumentSearchBody,
                 limit,
-                offset,
-                useV3
+                offset
             ),
     });
 

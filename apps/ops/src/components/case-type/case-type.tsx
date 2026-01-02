@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { toTitleCase } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { getCaseTypeText } from './case-type.helpers';
 

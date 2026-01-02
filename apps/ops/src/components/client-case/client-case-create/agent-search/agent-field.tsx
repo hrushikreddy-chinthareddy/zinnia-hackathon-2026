@@ -1,189 +1,50 @@
-import { useQueryClient, UseQueryResult } from '@tanstack/react-query';
-import { groupBy, sortBy, uniqBy, zip } from 'lodash';
+import { useQueryClient } from '@tanstack/react-query';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import {
-    getNearestAgenciesFromUpline,
     POM_QUERY_PREFIXES,
-    useAuthenticatedAgentAgencies,
-    useDownlineListQuery,
-    useGetProducerById,
-    useGetProducersListQuery,
-    useHierarchyListQuery,
+    useGetProducerByIdQuery,
 } from '@deps/components/illustrations/helpers/hooks/pom';
+import { AGENT_SEARCH_QUERY_PREFIXES } from '@deps/components/illustrations/helpers/queries/agent-search/constants';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useReduceCombinedResults } from '@deps/hooks/combined-query';
-import {
-    GetDownlineResponse,
-    GetHierarchyResponse,
-    PRODUCER_SEARCH_RESULT_TYPES,
-    ProducersResponse,
-} from '@deps/types/producers';
+import { CombinedQueryResult } from '@deps/hooks/combined-query';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { AgentFieldContextProvider } from './agent-field-context';
 import { GenericAgentField } from './generic-agent-field';
 import { AgentOption } from './types';
+import { useLegacyAgentSearchResults } from './use-agent-options-from-selling-codes';
+import { useAgentSearchResults } from './use-agent-search-results';
+import { useAgentSearchResultsForSuperIllustrator } from './use-agent-search-results-for-super-illustrator';
 
-/**
- * Returns the nearest agencies for each hierarchy of an agent
- *
- * @param sellingCodes Agent selling codes
- */
-const useAgentAgencyIds = (
-    params: { sellingCode: string; carrierShortName: string }[]
-) =>
-    useHierarchyListQuery(
-        params,
-        useCallback(
-            (results: UseQueryResult<GetHierarchyResponse | null>[]) => {
-                const agencyIds = results
-                    .map((result) => result?.data)
-                    .filter((data): data is GetHierarchyResponse => !!data)
-                    .map(({ upline, carrier }) => ({
-                        agencies: getNearestAgenciesFromUpline(upline),
-                        carrier,
-                    }))
-                    .flatMap(({ agencies, carrier }) =>
-                        agencies.map((agency) => ({
-                            sellingCode: agency.sellingCode,
-                            carrierShortName: carrier.carrierShortName,
-                        }))
-                    );
+const useAgentOptions = (
+    searchQuery: string
+): CombinedQueryResult<AgentOption[] | undefined> => {
+    const { featureFlags } = useOptimizely();
+    const improvedAgentSearchEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_IMPROVED_AGENT_SEARCH];
+    const { isSuperIllustrator } = usePermissionsContext();
 
-                return uniqBy(agencyIds, 'sellingCode');
-            },
-            []
-        )
-    );
+    const legacyAgentSearchResults = useLegacyAgentSearchResults(searchQuery);
 
-const useNormalUserAgentOptions = (searchQuery: string) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
+    const agentSearchResults = useAgentSearchResults(searchQuery);
+    const agentSearchResultsForSuperIllustrator =
+        useAgentSearchResultsForSuperIllustrator(searchQuery);
 
-    const { data: authAgencyData } = useAuthenticatedAgentAgencies();
+    if (isSuperIllustrator) {
+        return agentSearchResultsForSuperIllustrator;
+    }
 
-    const sellingCodes =
-        authAgencyData?.map((agency) => ({
-            sellingCode: agency.agentSellingCode,
-            carrierShortName: agency.carrierShortName,
-        })) ?? [];
+    if (improvedAgentSearchEnabled) {
+        return agentSearchResults;
+    }
 
-    const agencyIdsCombinedResult = useAgentAgencyIds(sellingCodes);
-
-    const { data: agencyIds } = agencyIdsCombinedResult;
-
-    const agentOptionsCombinedResult = useDownlineListQuery(
-        !isSuperIllustrator ? agencyIds ?? [] : [],
-        {
-            partialFullName: searchQuery,
-            combine: useCallback(
-                (
-                    results: UseQueryResult<GetDownlineResponse[][] | null>[]
-                ): AgentOption[] => {
-                    const downlines = zip(results, authAgencyData!).flatMap(
-                        ([result, authAgencyData]) =>
-                            (result?.data?.flat(2) ?? []).map((downline) => ({
-                                ...downline,
-                                carrierShortName:
-                                    authAgencyData!.carrierShortName,
-                            }))
-                    );
-
-                    const agentOptions = Object.entries(
-                        groupBy(downlines, 'npn')
-                    ).map(([npn, downline]) => {
-                        const downlineWithDetails = downline.find(
-                            ({ firstName, lastName, emailAddress }) =>
-                                firstName && lastName && emailAddress
-                        );
-
-                        return {
-                            firstName: downlineWithDetails?.firstName,
-                            lastName: downlineWithDetails?.lastName,
-                            email: downlineWithDetails?.emailAddress,
-                            npn,
-                            carrierShortName: downline[0].carrierShortName,
-                            sellingCodes: downline
-                                .map(({ sellingCode }) => sellingCode)
-                                .filter(
-                                    (sellingCode): sellingCode is string =>
-                                        !!sellingCode
-                                ),
-                        };
-                    });
-
-                    return agentOptions;
-                },
-                [authAgencyData]
-            ),
-        }
-    );
-
-    return useReduceCombinedResults(
-        agencyIdsCombinedResult,
-        agentOptionsCombinedResult
-    );
-};
-
-const useSuperIllustratorAgentOptions = (searchQuery: string) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
-
-    return useGetProducersListQuery(writeClientCaseCarriers, {
-        partialFullName: searchQuery,
-        combine: useCallback(
-            (results: UseQueryResult<ProducersResponse>[]) =>
-                sortBy(
-                    uniqBy(
-                        zip(results, writeClientCaseCarriers)
-                            .flatMap(
-                                ([result, carrierShortName]) =>
-                                    result?.data?.producers.map((producer) => ({
-                                        ...producer,
-                                        carrierShortName: carrierShortName!,
-                                    })) ?? []
-                            )
-                            .filter(
-                                (producer) =>
-                                    producer.type ===
-                                    PRODUCER_SEARCH_RESULT_TYPES.INDIVIDUAL
-                            )
-                            .map(
-                                ({ lookupId, name, email, carrierShortName }) =>
-                                    ({
-                                        lookupId,
-                                        firstName: name,
-                                        email,
-                                        carrierShortName,
-                                        // This endpoint does not return any agent selling
-                                        // code this is not a problem because we are gonna
-                                        // request them later
-                                        sellingCodes: [] as string[],
-                                    } as AgentOption)
-                            ),
-                        'lookupId'
-                    ),
-                    'firstName'
-                ),
-            [writeClientCaseCarriers]
-        ),
-    });
-};
-
-const useAgentOptions = (searchQuery: string) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
-
-    const normalUserAgentOptionsResult = useNormalUserAgentOptions(searchQuery);
-    const superIllustratorAgentOptionsResult =
-        useSuperIllustratorAgentOptions(searchQuery);
-
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
-    return isSuperIllustrator
-        ? superIllustratorAgentOptionsResult
-        : normalUserAgentOptionsResult;
+    return legacyAgentSearchResults;
 };
 
 /**
- *
+ * Effect that fetches the missing selling codes for the selected agent
  */
 const useSubscribeToProducerData = (
     selectedAgent: AgentOption | undefined,
@@ -191,7 +52,7 @@ const useSubscribeToProducerData = (
 ) => {
     const selectedAgentLookupId = selectedAgent?.lookupId || selectedAgent?.npn;
 
-    const { data: agentData } = useGetProducerById(
+    const { data: agentData } = useGetProducerByIdQuery(
         selectedAgentLookupId,
         selectedAgent?.carrierShortName
     );
@@ -269,12 +130,11 @@ export const AgentField = ({
     const { data, isLoading, isFetching } = useAgentOptions(searchQuery);
 
     const handleSearch = useCallback((query: string) => {
-        queryClient.invalidateQueries({
-            queryKey: POM_QUERY_PREFIXES.GET_DOWNLINE_BY_SELLING_CODE,
-        });
-        queryClient.invalidateQueries({
-            queryKey: POM_QUERY_PREFIXES.GET_PRODUCERS_BY_NAME_AND_CARRIER,
-        });
+        [
+            POM_QUERY_PREFIXES.GET_DOWNLINE_BY_SELLING_CODE,
+            POM_QUERY_PREFIXES.GET_PRODUCERS_BY_NAME_AND_CARRIER,
+            AGENT_SEARCH_QUERY_PREFIXES.AGENT_SEARCH_PREFIX,
+        ].forEach((queryKey) => queryClient.invalidateQueries({ queryKey }));
 
         setSearchQuery(query);
         // eslint-disable-next-line react-hooks/exhaustive-deps

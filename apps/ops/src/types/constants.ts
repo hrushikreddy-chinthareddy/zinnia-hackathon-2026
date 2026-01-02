@@ -1,5 +1,3 @@
-export const DEFAULT_ERROR_STRING = '--';
-export const SPLITTER = '|||';
 export enum SCREEN_BREAKPOINTS {
     xs = 320,
     sm = 500,
@@ -77,3 +75,6 @@ export const CLIENT_COPY = 'CLIENT_COPY';
 export const NEW_BUSINESS = 'NEW_BUSINESS';
 export const DISPLAY_NAME = 'Name Change Supporting Document';
 export const SOURCE = 'Self-Service Portal';
+
+export const NOT_YET_AVAILABLE = 'notYetAvailable';
+export const DEBOUNCE_INTERVAL_200 = 200;

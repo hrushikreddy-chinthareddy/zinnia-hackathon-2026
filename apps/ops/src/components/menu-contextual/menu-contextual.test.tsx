@@ -36,6 +36,11 @@ describe('MenuContextual', () => {
         );
     };
 
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('renders the trigger content', () => {
         renderMenuContextual();
 

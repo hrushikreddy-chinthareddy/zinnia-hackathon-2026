@@ -12,7 +12,7 @@ interface LabelData {
 
 interface Props {
     labelData: LabelData[];
-    dateStr: string;
+    dateStr?: string;
     total: number;
     isTooltipColorCircle?: boolean;
 }

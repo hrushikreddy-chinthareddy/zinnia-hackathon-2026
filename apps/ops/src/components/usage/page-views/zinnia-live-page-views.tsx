@@ -7,6 +7,7 @@ import {
     xAxisLabelFormatter,
 } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
+import { tooltipFormatter } from '@deps/components/dashboard/charts/date-time-chart/line-chart-label';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
 import {
     ErrorMessage,
@@ -21,21 +22,20 @@ import {
 import { FieldSize } from '@deps/components/fields/field';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import SelectComponent from '@deps/components/select/select';
-import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
-import { startOfTomorrowLocalIso } from '@deps/utils/dates';
-import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
-
-import { tooltipFormatter } from './page-views-tooltip';
-import { generateSeries, PrepareUserViewsCSV, roles } from './utils';
-import { TotalCount } from '../total-count';
-import UsageHeaderLayout from '../usage-common-header';
+import { TotalCount } from '@deps/components/usage/total-count';
+import UsageHeaderLayout from '@deps/components/usage/usage-common-header';
 import {
     colors,
     generateCSVFileName,
     PageType,
     startDates,
     TimeframeFilterOptions,
-} from '../utils';
+} from '@deps/components/usage/utils';
+import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueries';
+import { startOfTomorrowLocalIso } from '@deps/utils/dates';
+import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
+
+import { generateSeries, PrepareUserViewsCSV, roles } from './utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
     const { t } = useTranslation();
@@ -151,7 +151,10 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
                             xAxisTitle={'Date'}
                             xAxisLabelFormatter={xAxisLabelFormatter}
                             tickInterval={tickInterval}
-                            tooltipFormatter={tooltipFormatter}
+                            tooltipFormatter={tooltipFormatter({
+                                timerange,
+                                isTooltipColorCircle: false,
+                            })}
                             yAxisOpposite={false}
                         />
                     )}
