@@ -25,7 +25,11 @@ import {
     MatchingCase,
     TransactionData,
 } from '@deps/models/case/task/doc-matching-payment';
-import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
+import {
+    ManagementTask,
+    TaskDocument,
+    TaskStatus,
+} from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
@@ -256,7 +260,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 );
                 const success = await updateTask(
                     { ...taskPayload, mappedDocuments },
-                    correlationId
+                    correlationId,
+                    TaskStatus.Completed
                 );
                 removeFromCache('getTaskInstance', { taskId: task.id });
                 setSubmitFailed(!success);

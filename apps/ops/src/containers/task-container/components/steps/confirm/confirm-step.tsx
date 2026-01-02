@@ -16,6 +16,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { TaskType } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { convertToCamelCase } from '@deps/utils/strings';
 
@@ -45,7 +46,11 @@ const ConfirmStep = ({
 
     const submit = useCallback(async () => {
         setIsLoading(true);
-        const success = await updateTask(task, correlationId);
+        const success = await updateTask(
+            task,
+            correlationId,
+            TaskStatus.Completed
+        );
         setSubmitFailed(!success);
         setIsLoading(false);
     }, [correlationId, setSubmitFailed, task]);
