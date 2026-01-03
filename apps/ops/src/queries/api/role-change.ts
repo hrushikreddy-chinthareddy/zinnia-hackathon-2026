@@ -106,46 +106,6 @@ export const submitRoleChange = async (
     }
 };
 
-export const deleteAssignee = async (
-    planCode: string | undefined,
-    policyNumber: string | undefined,
-    partyId: string | undefined = '',
-    query: any
-): Promise<TransactionResponse> => {
-    const method = HttpMethod.DELETE;
-    const url = `${baseAppUrl}/api/policies/${planCode}/${policyNumber}/parties/${partyId}/Assignee`;
-
-    browserLogInfo(`deleteAssignee::Starting deletion for Assignee`, {
-        method,
-        url,
-        planCode,
-        policyNumber,
-        partyId,
-        role: PolicyRole.ASSIGNEE,
-        payload: JSON.stringify(query),
-        timestamp: new Date().toISOString(),
-    });
-
-    try {
-        const response = await client.delete<
-            TransactionResponse,
-            AxiosResponse
-        >(url, { data: query });
-
-        return { status: response.status, data: response.data };
-    } catch (error: any) {
-        browserLogError('deleteRole::an error occurred during deletion', {
-            ...parseErrorInformation(error),
-            method,
-            planCode,
-            policyNumber,
-            partyId,
-            role: PolicyRole.ASSIGNEE,
-        });
-        return error?.data;
-    }
-};
-
 export const deleteTPDRole = async (
     planCode: string | undefined,
     id: string | undefined,

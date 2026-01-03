@@ -8,10 +8,7 @@ import { PolicyResponse } from '@deps/containers/task-container/task-handlers/ty
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
-import {
-    deleteAssignee,
-    submitRoleChange,
-} from '@deps/queries/api/role-change';
+import { deleteTPDRole, submitRoleChange } from '@deps/queries/api/role-change';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     SegmentTrackedEventName,
@@ -28,9 +25,10 @@ export const assigneeChangeSubmitHandler =
         try {
             const response =
                 requestBody?.query?.requestType === Action.DELETE
-                    ? await deleteAssignee(
+                    ? await deleteTPDRole(
                           requestBody?.planCode,
                           requestBody?.policyNumber,
+                          requestBody?.role,
                           requestBody?.partyId,
                           requestBody?.query
                       )
