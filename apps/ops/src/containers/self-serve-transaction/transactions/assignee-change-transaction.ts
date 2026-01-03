@@ -1,4 +1,5 @@
 import { buildValidationRequestBody } from '@deps/components/dynamic-form/customization/templates/transaction-summary-template/transaction-summary-template.utils';
+import { Action } from '@deps/constants/policy';
 import {
     formatPartyData,
     getContractInfo,
@@ -7,7 +8,10 @@ import { PolicyResponse } from '@deps/containers/task-container/task-handlers/ty
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
-import { submitRoleChange } from '@deps/queries/api/role-change';
+import {
+    deleteAssignee,
+    submitRoleChange,
+} from '@deps/queries/api/role-change';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     SegmentTrackedEventName,
@@ -22,13 +26,21 @@ export const assigneeChangeSubmitHandler =
     async (payload: any) => {
         const requestBody = buildValidationRequestBody(payload);
         try {
-            const response = await submitRoleChange(
-                requestBody?.planCode,
-                requestBody?.policyNumber,
-                requestBody?.role,
-                requestBody?.partyId,
-                requestBody?.query
-            );
+            const response =
+                requestBody?.query?.requestType === Action.DELETE
+                    ? await deleteAssignee(
+                          requestBody?.planCode,
+                          requestBody?.policyNumber,
+                          requestBody?.partyId,
+                          requestBody?.query
+                      )
+                    : await submitRoleChange(
+                          requestBody?.planCode,
+                          requestBody?.policyNumber,
+                          requestBody?.role,
+                          requestBody?.partyId,
+                          requestBody?.query
+                      );
             if (response?.status !== StatusCode.Accepted) {
                 return {
                     response: null,
