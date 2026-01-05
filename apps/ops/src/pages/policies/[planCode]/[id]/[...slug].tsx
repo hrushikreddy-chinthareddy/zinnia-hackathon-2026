@@ -227,7 +227,6 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                                                 transactionData.transactionType
                                             }
                                             policy={policy}
-                                            planCode={planCode as string}
                                             metaData={transactionData.metaData}
                                             parentPage={
                                                 transactionData.parentPage

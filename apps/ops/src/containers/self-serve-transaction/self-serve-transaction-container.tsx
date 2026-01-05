@@ -30,7 +30,6 @@ type SelfServeTransactionContainerProps = {
     initialFormData: any;
     transactionType: SelfServeTransaction;
     policy: Policy;
-    planCode: string;
     metaData: any;
     parentPage: ParentPage;
     leaveTransactionLink: string;
@@ -49,7 +48,6 @@ const SelfServeTransactionContainer = ({
     initialFormData,
     transactionType,
     policy,
-    planCode,
     metaData,
     parentPage,
     leaveTransactionLink,
