@@ -3217,7 +3217,25 @@
                 "linked case": "Linked Case",
                 "bene": "Notify",
                 "beneficiary": "Beneficiary",
-                "owner": "Owner"
+                "owner": "Owner",
+                "payee": "Payee",
+                "payor": "Payor",
+                "assignee": "Assignee",
+                "jointowner": "Joint Owner",
+                "thirdpartydesignee": "Third Party Designee",
+                "primarybeneficiary": "Primary Beneficiary",
+                "contingentbeneficiary": "Contingent Beneficiary",
+                "primarywritingagent": "Primary Writing Agent",
+                "additionalwritingagent": "Additional Writing Agent",
+                "primaryservicingagent": "Primary Servicing Agent",
+                "additionalservicingagent": "Additional Servicing Agent",
+                "annuitant": "Annuitant",
+                "jointannuitant": "Joint Annuitant",
+                "trustee": "Trustee",
+                "grantor": "Grantor",
+                "powerofattorney": "Power of Attorney",
+                "coveragejointinsured": "Coverage Joint Insured",
+                "insured": "Insured"
             },
             "reviewIssues": "Review",
             "suitabilityReview": "suitability",
@@ -7922,7 +7940,7 @@
             "title": "Submitted!",
             "subTitle": "Input suitability data was submitted.",
             "cta": "Go to incoming transfer",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit suitability details"
         }
     },
@@ -7941,7 +7959,7 @@
             "title": "Submitted!",
             "subTitle": "Review suitability was submitted.",
             "cta": "Go to suitability review",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit suitability review details"
         }
     },
@@ -7979,7 +7997,7 @@
             "title": "Got It!",
             "subTitle": "Task: Match Document was submitted.",
             "cta": "Go to Qualification ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -7988,7 +8006,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review Agent Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -7997,7 +8015,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back"
         }
     },
     "nbPaymentProcessingNigo": {
@@ -8005,7 +8023,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review initial premium was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8014,7 +8032,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review Application Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8023,7 +8041,7 @@
             "title": "Got It!",
             "subTitle": "Task: Match Document was submitted.",
             "cta": "Go to qualification",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8032,7 +8050,7 @@
             "title": "Got It!",
             "subTitle": "Task: Validate Agent was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8041,7 +8059,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review OFAC Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8050,7 +8068,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review Onboarding Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8059,7 +8077,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review Transfer was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8068,7 +8086,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review Transfer was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8077,7 +8095,7 @@
             "title": "Got It!",
             "subTitle": "Task: Validate Application Details was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8087,7 +8105,7 @@
             "subTitle": "Task: Validate Onboarding Issues was submitted.",
             "cta": "Go to incoming transfer ",
             "submitTask": "Submit",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back"
         }
     },
     "claimsIdentifyUncashedTransactions": {
@@ -8095,7 +8113,7 @@
             "title": "Got It!",
             "subTitle": "Task: Identify Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8104,7 +8122,7 @@
             "title": "Got It!",
             "subTitle": "Task: Stop Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8113,7 +8131,7 @@
             "title": "Got It!",
             "subTitle": "Task: Reverse Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8264,7 +8282,7 @@
             "submitClaim": "Submit Claim",
             "subTitle": "Death claim notification was submitted successfully for {{caseId}}.",
             "cta": "Go to Death Claim Case",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back"
         },
         "documentSelection": {
             "title": "Select Supporting Document",
@@ -8333,7 +8351,7 @@
             "updateNotificationMethod": "Update Notification Method",
             "subTitle": "Notification method for beneficiary was updated successfully for {{caseId}}.",
             "cta": "Go to case",
-            "secondaryCta": "Back to home"
+            "secondaryCta": "Back"
         }
     },
     "nbAppDataEntry": {
@@ -8341,7 +8359,7 @@
             "title": "Got It!",
             "subTitle": "Task: New Business Data Entry was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8350,7 +8368,7 @@
             "title": "Got It!",
             "subTitle": "Task: Post Issue NIGO Review was submitted.",
             "cta": "Go to Case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8359,7 +8377,7 @@
             "title": "Got It!",
             "subTitle": "Task: New Business Data Entry was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8368,7 +8386,7 @@
             "title": "Got It!",
             "subTitle": "Task: Post-Issue Transaction Data Entry Processing was submitted.",
             "cta": "Go to Case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8377,7 +8395,7 @@
             "title": "Got It!",
             "subTitle": "Task: Name Change Review was submitted.",
             "cta": "Go to Case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8386,7 +8404,7 @@
             "title": "Got It!",
             "subTitle": "Task: New Business Data Entry was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8395,7 +8413,7 @@
             "title": "Got It!",
             "subTitle": "Task: New Business Data Entry was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8404,7 +8422,7 @@
             "title": "Got It!",
             "subTitle": "Task: New Business Data Entry was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8413,7 +8431,7 @@
             "title": "Got It!",
             "subTitle": "Task: Beneficary Change Data Entry was submitted.",
             "cta": "Go to Case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8431,7 +8449,7 @@
             "title": "Got It!",
             "subTitle": "Agent updates were submitted.",
             "cta": "Go to Case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         },
         "summary": {
@@ -8495,7 +8513,7 @@
             "title": "Got It!",
             "subTitle": "Task: Return Payment was submitted.",
             "cta": "Go to case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8504,7 +8522,7 @@
             "title": "Got It!",
             "subTitle": "Task: Suitability Data Entry NIGO was submitted.",
             "cta": "Go to case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8513,7 +8531,7 @@
             "title": "Got It!",
             "subTitle": "Task: Review Background Check Issues was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8522,7 +8540,7 @@
             "title": "Got It!",
             "subTitle": "Task: Validate Background Check was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8531,7 +8549,7 @@
             "title": "Got It!",
             "subTitle": "Task: Claims Ops To Finance Escheatment was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8540,7 +8558,7 @@
             "title": "Got It!",
             "subTitle": "Task: Claims FI Escheatment was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8549,7 +8567,7 @@
             "title": "Got It!",
             "subTitle": "Task: Match Death Case was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8558,7 +8576,7 @@
             "title": "Got It!",
             "subTitle": "Task: Purchase Enrichment Check was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8567,7 +8585,7 @@
             "title": "Got It!",
             "subTitle": "Task: Claims Beneficiary Review was submitted.",
             "cta": "Go to Claim Case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8636,7 +8654,7 @@
             "title": "Got It!",
             "subTitle": "Task: Beneficiary outreach was submitted.",
             "cta": "Go to case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8645,7 +8663,7 @@
             "title": "Got It!",
             "subTitle": "Task: Beneficiary Address Verification was submitted.",
             "cta": "Go to Claim Case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8658,7 +8676,7 @@
             "title": "Got It!",
             "subTitle": "Task: Service Request Form was submitted.",
             "cta": "Go to case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8667,7 +8685,7 @@
             "title": "Got It!",
             "subTitle": "Task: Operations Review was submitted.",
             "cta": "Go to Case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8676,7 +8694,7 @@
             "title": "Got It!",
             "subTitle": "Task: Operations Review was submitted.",
             "cta": "Go to Case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8685,7 +8703,7 @@
             "title": "Got It!",
             "subTitle": "Task: Operation Review was submitted.",
             "cta": "Go to Case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8694,7 +8712,7 @@
             "title": "Got It!",
             "subTitle": "Task: Final beneficiary outreach was submitted.",
             "cta": "Go to Case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         },
         "callForInformation": {
@@ -8780,7 +8798,7 @@
             "title": "Got It!",
             "subTitle": "Task: Claim Match Bene Document was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8799,7 +8817,7 @@
             "title": "Got It!",
             "subTitle": "Task: Send Nigo Communication was submitted.",
             "cta": "Go to case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8808,7 +8826,7 @@
             "title": "Got It!",
             "subTitle": "Task: Cost Basis Review was submitted.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -8817,7 +8835,7 @@
             "title": "Got It!",
             "subTitle": "Task: A new transaction is initiated.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -9265,7 +9283,7 @@
             "title": "Got It!",
             "subTitle": "Update suitability data was submitted.",
             "cta": "Go to case ",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -9274,7 +9292,7 @@
             "title": "Got It!",
             "subTitle": "Review Quality Audit was submitted.",
             "cta": "Go to Quality Audit",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -9283,7 +9301,7 @@
             "title": "Got It!",
             "subTitle": "Rework on Quality Audit was submitted.",
             "cta": "Go to Quality Audit",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -9292,7 +9310,7 @@
             "title": "Got It!",
             "subTitle": "Review Quality Audit Rework was submitted.",
             "cta": "Go to Quality Audit",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     },
@@ -9338,7 +9356,7 @@
             "title": "Got It!",
             "subTitle": "Third party detail form was submitted successfully.",
             "cta": "Go to case",
-            "secondaryCta": "Back to home",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     }

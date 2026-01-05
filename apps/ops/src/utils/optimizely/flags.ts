@@ -191,4 +191,5 @@ export enum FEATURE_FLAGS {
     DTCC_SECTION_ENABLED = 'dtcc_section_enabled',
     DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
     ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN = 'enable_bene_change_paper_form_summary_screen',
+    USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
 }

@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { FC, useContext } from 'react';
 
@@ -23,6 +22,7 @@ import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loade
 import CardContainer from '@deps/containers/card-container/card-container';
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
 import { chunkArray } from '@deps/utils/array';
+import Highcharts from '@deps/utils/highcharts';
 import { CompletedCaseTimeOutputLevel1 } from '@zinnia/api-types/types/analytics';
 
 import styles from './case-timing-chart.module.css';
