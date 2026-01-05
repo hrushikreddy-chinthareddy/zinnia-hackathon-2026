@@ -11,10 +11,8 @@ import {
 import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
-import {
-    DEFAULT_ERROR_STRING,
-    DEFAULT_EXTENDED_DATE_FORMAT,
-} from '@deps/types/constants';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { SystematicProgramsTerminatedTableProps } from '../card-systematic-programs.types';
 import styles from '../systematic-programs-table.module.css';
