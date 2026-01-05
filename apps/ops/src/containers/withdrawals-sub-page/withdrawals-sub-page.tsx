@@ -91,6 +91,8 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const hasRmdProgram =
         !!rmdProgram && rmdProgram.arrangementId !== undefined;
 
+    console.log(withdrawalProgram?.arrangementId);
+
     const { data: withdrawalEligibility } = useQuery({
         queryKey: [
             'checkEligibilityWithdrawal',
@@ -263,7 +265,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 isDisabled:
                                     !withdrawalEligibility?.isEligibleWithdrawal ||
                                     !withdrawalProgram?.nextProgramDate ||
-                                    isUserPermissionedToWithdraw,
+                                    !isUserPermissionedToWithdraw,
                                 tooltip: getWithdrawalTooltip(),
                             },
                             {
@@ -271,7 +273,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                                 text: t('setUpAutopay'),
                                 isDisabled:
                                     !withdrawalEligibility?.isEligibleWithdrawal ||
-                                    !!withdrawalProgram?.nextProgramDate ||
+                                    !withdrawalProgram?.nextProgramDate ||
                                     !isUserPermissionedToWithdraw,
                                 tooltip: getWithdrawalTooltip(),
                             },

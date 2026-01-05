@@ -1,6 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import {
     PageLoader,
@@ -9,14 +9,15 @@ import {
 import { PageHead } from '@deps/components/page-title';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import AutopayContainer from '@deps/containers/financial-transactions/autopay/autopay-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
+import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
+import { Status } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import {
-    checkFullSurrenderWithdrawal,
-    checkPartialWithdrawalOneTimeEligibilityQuery,
-} from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { TransactionPermission } from '@deps/utils/auth';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import { ArrangementType, Policy, Reason } from '@zinnia/api-types/types/sor';
@@ -38,32 +39,99 @@ const UpdateWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
 
     const [isLoading, setIsLoading] = useState(true);
 
-    const { policyNumber } = policy;
+    const { policyNumber, systematicPrograms } = policy;
     const { planCode } = policy.product ?? {};
 
+    const withdrawalProgram = useMemo(
+        () =>
+            systematicPrograms?.find(
+                (sp) =>
+                    sp.reason === Reason.WITHDRAWAL &&
+                    sp.status === Status.ACTIVE
+            ),
+        [systematicPrograms]
+    );
+
+    const rmdProgram = useMemo(
+        () =>
+            systematicPrograms?.find(
+                (sp) =>
+                    sp.reason === Reason.REQUIREDMINIMUMDISTRIBUTION &&
+                    sp.status === Status.ACTIVE
+            ),
+        [systematicPrograms]
+    );
+
+    const { featureFlags } = useOptimizely();
+    const withdrawalEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_WITHDRAWAL_TRANSACTION];
+
+    const rmdEnabled = featureFlags[FEATURE_FLAGS.SYSTEMATIC_RMD_TRANSACTION];
+
     const {
-        data: partialWithdrawalOneTimeEligibility,
+        data: withdrawalEligibility,
         isFetched: isPartialWithdrawalOneTimeEligibilityFetched,
     } = useQuery({
         queryKey: [
-            'checkPartialWithdrawalOneTimeEligibility',
+            'checkEligibilityWithdrawal',
             planCode,
             policyNumber,
+            withdrawalProgram?.arrangementId,
         ],
-        queryFn: () =>
-            checkPartialWithdrawalOneTimeEligibilityQuery(
-                planCode as string,
-                policyNumber as string
+        queryFn:
+            withdrawalEnabled && planCode && policyNumber
+                ? () =>
+                      checkSystematicProgramEligibilityQuery(
+                          planCode,
+                          policyNumber,
+                          withdrawalProgram?.arrangementId ?? '',
+                          {
+                              systematicProgram: {
+                                  arrangementType: ArrangementType.WITHDRAWAL,
+                              },
+                          }
+                      )
+                : skipToken,
+        select: (data) => ({
+            isEligibleWithdrawal:
+                data?.status === TransactionResponseStatus.Success,
+            ineligibleWithdrawalReason: formatValidationResult(
+                data?.validationResult
             ),
-        placeholderData: (previousData) => previousData,
-        select: (data) => {
-            return {
-                ...data,
-                isEligiblePartialWithdrawalOneTime:
-                    data?.status === TransactionResponseStatus.Success,
-            };
-        },
+        }),
     });
+
+    const { data: rmdEligibility, isFetched: isRmdEligibilityFetched } =
+        useQuery({
+            queryKey: [
+                'checkEligibilityRmd',
+                planCode,
+                policyNumber,
+                rmdProgram?.arrangementId,
+            ],
+            queryFn:
+                planCode && policyNumber && rmdEnabled
+                    ? () =>
+                          checkSystematicProgramEligibilityQuery(
+                              planCode,
+                              policyNumber,
+                              rmdProgram?.arrangementId ?? '',
+                              {
+                                  systematicProgram: {
+                                      arrangementType:
+                                          ArrangementType.REQUIREDMINIMUMDISTRIBUTION,
+                                  },
+                              }
+                          )
+                    : skipToken,
+            select: (data) => ({
+                isEligibleRmd:
+                    data?.status === TransactionResponseStatus.Success,
+                ineligibleRmdReason: formatValidationResult(
+                    data?.validationResult
+                ),
+            }),
+        });
 
     const { isPermissioned: isUserPermissionedToWithdraw } =
         useTransactionPermissionCheck(
@@ -72,53 +140,34 @@ const UpdateWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
             planCode
         );
 
-    const {
-        data: fullSurrenderEligibility,
-        isFetched: isFullSurrenderEligibilityFetched,
-    } = useQuery({
-        queryKey: ['checkFullSurrenderEligibility', planCode, policyNumber],
-        queryFn: () =>
-            checkFullSurrenderWithdrawal(
-                planCode as string,
-                policyNumber as string
-            ),
-        placeholderData: (previousData) => previousData,
-        select: (data) => {
-            return {
-                ...data,
-                isEligibleFullSurrender:
-                    data?.status === TransactionResponseStatus.Success,
-            };
-        },
-    });
-
     useEffect(() => {
         if (
             !isPartialWithdrawalOneTimeEligibilityFetched ||
-            !isFullSurrenderEligibilityFetched
+            !isRmdEligibilityFetched
         )
             return;
 
-        const isEligible =
-            partialWithdrawalOneTimeEligibility?.isEligiblePartialWithdrawalOneTime ||
-            false;
-        const isEligibleFullSurrender =
-            fullSurrenderEligibility?.isEligibleFullSurrender || false;
+        const isEligible = withdrawalEligibility?.isEligibleWithdrawal || false;
+        const isRmdEligible = rmdEligibility?.isEligibleRmd || false;
 
-        const isPermissioned = isUserPermissionedToWithdraw || false;
-
-        if (!isEligible || !isEligibleFullSurrender || !isPermissioned) {
+        if (
+            (!isEligible && type !== 'RMD') || // Check withdrawal eligibility if type is not RMD
+            (!isRmdEligible && type === 'RMD') || // Check RMD eligibility only if type is RMD
+            !withdrawalProgram?.nextProgramDate ||
+            !isUserPermissionedToWithdraw
+        ) {
             router.replace('/403');
         } else {
             setIsLoading(false);
         }
     }, [
-        partialWithdrawalOneTimeEligibility,
+        planCode,
+        policyNumber,
+        withdrawalEligibility,
+        rmdEligibility,
         isUserPermissionedToWithdraw,
         router,
-        fullSurrenderEligibility,
-        isPartialWithdrawalOneTimeEligibilityFetched,
-        isFullSurrenderEligibilityFetched,
+        isRmdEligibilityFetched,
     ]);
 
     if (isLoading) {
