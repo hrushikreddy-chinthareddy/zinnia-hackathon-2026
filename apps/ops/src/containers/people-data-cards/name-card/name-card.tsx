@@ -60,11 +60,15 @@ export const NameCard: FC<INameCardProps> = ({
                         size={NavElementSize.Small}
                         tabIndex={0}
                         className=" h-4"
+                        onClick={handleEditClick}
+                        aria-label={
+                            t('people.sideSheet.name.editName') as string
+                        }
                     >
                         <EditIcon
                             height={16}
-                            onClick={handleEditClick}
                             data-testid="edit-icon-permissioned"
+                            aria-hidden="true"
                         />
                     </NavElement>
                 ) : (

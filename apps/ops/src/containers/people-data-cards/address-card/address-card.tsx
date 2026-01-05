@@ -137,6 +137,7 @@ const AddressCard = ({
                             startIcon={<AddIcon height={20} width={20} />}
                             type={NavElementType.Button}
                             variant={NavElementVariant.Default}
+                            aria-label={`${t('general.add')} ${t('label')}`}
                         >
                             {t('general.add')}
                         </NavElement>

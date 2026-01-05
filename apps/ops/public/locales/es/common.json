@@ -5709,6 +5709,7 @@
         "clearFilter": "Borrar filtro de {{filter}}",
         "clearInput": "Borrar filtro de {{label}}",
         "clickToOpenCaseDetails": "Resumen del caso para {{caseId}}. Haz clic para abrir los detalles del caso.",
+        "closeDialog": "Cerrar diálogo",
         "closeSideSheet": "Cerrar ficha lateral",
         "createdAt": "Creado el {{date}}",
         "currentStage": "Etapa actual {{currentStageValue}}",

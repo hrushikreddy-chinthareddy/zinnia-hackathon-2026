@@ -135,6 +135,7 @@ const EmailCard = ({
                             startIcon={<AddIcon width={20} height={20} />}
                             type={NavElementType.Button}
                             variant={NavElementVariant.Default}
+                            aria-label={`${t('general.add')} ${t('label')}`}
                         >
                             {t('general.add')}
                         </NavElement>

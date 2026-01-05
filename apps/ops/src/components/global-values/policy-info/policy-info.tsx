@@ -181,11 +181,12 @@ export const PolicyProductMarketingName = ({
             type={NavElementType.Button}
             className={classes}
             onClick={openSideSheet}
+            aria-haspopup="dialog"
         >
             {marketingName}
         </NavElement>
     ) : (
-        <Typography variant={TypographyVariant.LabelMd} className={classes}>
+        <Typography variant={TypographyVariant.H3} className={classes}>
             {marketingName}
         </Typography>
     );

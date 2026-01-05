@@ -121,6 +121,7 @@ export const BankCard = ({
                                 type={NavElementType.Button}
                                 variant={NavElementVariant.Default}
                                 disabled={!isEligible}
+                                aria-label={`${t('general.add')} ${t('label')}`}
                             >
                                 {t('general.add')}
                             </NavElement>

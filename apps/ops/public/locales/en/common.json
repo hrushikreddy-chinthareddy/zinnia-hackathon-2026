@@ -5749,6 +5749,7 @@
         "clearFilter": "Clear {{filter}} filter",
         "clearInput": "Clear {{label}} filter",
         "clickToOpenCaseDetails": "Case overview for {{caseId}}. Click to open case details.",
+        "closeDialog": "Close dialog",
         "closeSideSheet": "Close Side Sheet",
         "createdAt": "Created at {{date}}",
         "currentStage": "Current Stage {{currentStageValue}}",

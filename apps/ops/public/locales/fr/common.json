@@ -5677,6 +5677,7 @@
         "clearFilter": "Effacer {{filter}} filtre",
         "clearInput": "Effacer le champ du {{label}}",
         "clickToOpenCaseDetails": "Aperçu du cas pour {{caseId}}. Cliquer pour ouvrir les dossiers.",
+        "closeDialog": "Fermer le dialogue",
         "closeSideSheet": "Fermer la fiche latérale",
         "createdAt": "Créé le {{date}}",
         "currentStage": "Étape actuelle {{currentStageValue}}",
