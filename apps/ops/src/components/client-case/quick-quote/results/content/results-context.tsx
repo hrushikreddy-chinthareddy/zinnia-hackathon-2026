@@ -38,7 +38,7 @@ type QuickQuoteResultsContextState = {
     results: QuickQuoteResult[] | undefined;
     filterIneligibilityReasons: (
         reasons: nonEligibleReasonByClass[] | undefined
-    ) => IneligibilityReason[];
+    ) => IneligibilityReason[] | undefined;
 };
 
 const QuickQuoteResultsContext =
@@ -65,6 +65,34 @@ export const QuickQuoteResultsProvider = ({
     quickQuoteParams,
     children,
 }: QuickQuoteResultsProviderProps) => {
+    const filterIneligibilityReasons = useCallback(
+        (
+            reasons: nonEligibleReasonByClass[] | undefined
+        ): IneligibilityReason[] | undefined => {
+            if (!reasons || reasons.length === 0) return [];
+
+            const filteredReasons = reasons
+                .flatMap((reason) => reason.reasons)
+                .filter(
+                    (reason, index, self) =>
+                        index === self.findIndex((t) => t.field == reason.field)
+                );
+
+            filteredReasons.forEach((fr, i) => {
+                reasons.forEach((reason) => {
+                    if (!reason.reasons.some((r) => r.field === fr.field))
+                        filteredReasons.splice(i, 1);
+                });
+            });
+
+            if (!filteredReasons || filteredReasons.length === 0)
+                return undefined;
+
+            return filteredReasons;
+        },
+        []
+    );
+
     // TODO: Get real variations based on params
     const variants = useMemo(
         () =>
@@ -88,11 +116,6 @@ export const QuickQuoteResultsProvider = ({
         { quickQuoteParams, variants },
         useCallback(
             (results) => {
-                console.log(
-                    '🚀 ~ QuickQuoteResultsProvider ~ variants - context:',
-                    variants
-                );
-
                 const items = zip(results, variants)
                     .map(([result, variant]) => {
                         if (!result || !variant) {
@@ -121,7 +144,7 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
-                console.log('🚀 ~ QuickQuoteResultsProvider ~ items:', items);
+                // console.log('🚀 ~ QuickQuoteResultsProvider ~ items:', items);
                 const result = Object.entries(groupBy(items, 'planCode'))
                     .map(
                         ([planCode, sameProductData]):
@@ -176,10 +199,6 @@ export const QuickQuoteResultsProvider = ({
                                 'assumed' in item &&
                                 item.assumed != null;
 
-                            console.log(
-                                '🚀 ~ isAvailableResponse ~ sameProductData:',
-                                sameProductData
-                            );
                             return {
                                 product,
                                 productType: ProductTypes.TERM,
@@ -264,10 +283,34 @@ export const QuickQuoteResultsProvider = ({
                                                             riderName
                                                         ]?.modalPremium
                                                 );
-                                            console.log(
-                                                '🚀 ~ QuickQuoteResultsProvider ~ groupedByTermLength:',
-                                                groupedByTermLength
-                                            );
+
+                                            const reasonsByTermLength =
+                                                Object.fromEntries(
+                                                    Object.entries(
+                                                        groupedByTermLength
+                                                    )
+                                                        .map(
+                                                            ([
+                                                                termLength,
+                                                                data,
+                                                            ]) => {
+                                                                return [
+                                                                    termLength,
+                                                                    filterIneligibilityReasons(
+                                                                        extractNotAvailabilityReason(
+                                                                            data
+                                                                        )
+                                                                    ),
+                                                                ] as const;
+                                                            }
+                                                        )
+                                                        .filter(
+                                                            ([_, value]) =>
+                                                                value &&
+                                                                value?.length >
+                                                                    0
+                                                        )
+                                                );
 
                                             if (
                                                 includes(
@@ -277,15 +320,33 @@ export const QuickQuoteResultsProvider = ({
                                             ) {
                                                 return [
                                                     riderName,
-                                                    values.some(
-                                                        (v) => v != null
-                                                    ),
+                                                    {
+                                                        range: values.some(
+                                                            (v) => v != null
+                                                        ),
+                                                        notAvailabilityReasonField:
+                                                            Object.keys(
+                                                                reasonsByTermLength
+                                                            ).length > 0
+                                                                ? reasonsByTermLength
+                                                                : undefined,
+                                                    },
                                                 ] as const;
                                             }
 
                                             return [
                                                 riderName,
-                                                asNumberOrRange(values),
+                                                {
+                                                    range: asNumberOrRange(
+                                                        values
+                                                    ),
+                                                    notAvailabilityReasonField:
+                                                        Object.keys(
+                                                            reasonsByTermLength
+                                                        ).length > 0
+                                                            ? reasonsByTermLength
+                                                            : undefined,
+                                                },
                                             ] as const;
                                         })
                                     ),
@@ -297,39 +358,11 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
-                console.log(
-                    '🚀 ~ QuickQuoteResultsProvider ~ result - context:',
-                    result
-                );
+
                 return result;
             },
-            [products, variants]
+            [products, variants, filterIneligibilityReasons]
         )
-    );
-
-    const filterIneligibilityReasons = useCallback(
-        (
-            reasons: nonEligibleReasonByClass[] | undefined
-        ): IneligibilityReason[] => {
-            if (!reasons || reasons.length === 0) return [];
-
-            const filteredReasons = reasons
-                .flatMap((reason) => reason.reasons)
-                .filter(
-                    (reason, index, self) =>
-                        index === self.findIndex((t) => t.field == reason.field)
-                );
-
-            filteredReasons.forEach((fr, i) => {
-                reasons.forEach((reason) => {
-                    if (!reason.reasons.some((r) => r.field === fr.field))
-                        filteredReasons.splice(i, 1);
-                });
-            });
-
-            return filteredReasons;
-        },
-        []
     );
 
     const value = useMemo(

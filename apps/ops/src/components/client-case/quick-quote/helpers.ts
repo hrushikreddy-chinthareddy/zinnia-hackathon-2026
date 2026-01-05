@@ -103,7 +103,6 @@ export const buildRangeText = (
         const formatted = numberFormatify(value);
         return withPeriodText(formatted, period);
     }
-
     const formatted = value.map((x) => numberFormatify(x));
     return withPeriodText(formatted.join(' — '), period);
 };
@@ -380,9 +379,18 @@ export const placeholderData = [
                 },
             ],
             riders: {
-                accidentalDeathBenefit: undefined,
-                acceleratedDeathBenefitForTerminalIllness: true,
-                charitableGiving: true,
+                accidentalDeathBenefit: {
+                    range: undefined,
+                    notAvailabilityReasonField: undefined,
+                },
+                acceleratedDeathBenefitForTerminalIllness: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
+                charitableGiving: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
             },
         },
     },
@@ -420,9 +428,18 @@ export const placeholderData = [
                 },
             ],
             riders: {
-                accidentalDeathBenefit: undefined,
-                acceleratedDeathBenefitForTerminalIllness: true,
-                charitableGiving: true,
+                accidentalDeathBenefit: {
+                    range: undefined,
+                    notAvailabilityReasonField: undefined,
+                },
+                acceleratedDeathBenefitForTerminalIllness: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
+                charitableGiving: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
             },
         },
     },

@@ -8864,6 +8864,7 @@
         },
         "quickQuoteResults": {
             "notAvailable": "Pas disponible",
+            "notAvailableByTermLength": "Pas disponible pour la période {{termLength}}:",
             "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
             "title": "Devis rapide",
             "coverage": {

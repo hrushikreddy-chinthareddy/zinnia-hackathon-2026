@@ -15,13 +15,33 @@ import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
     className?: string;
-    reasons?: IneligibilityReason[];
+    reasons?:
+        | IneligibilityReason[]
+        | Partial<Record<number, IneligibilityReason[]>>;
 };
 
-export const QuickQuoteNotAvailableReasonCell = ({
-    className,
-    reasons,
-}: QuickQuoteNotAvailableReasonCellProps) => {
+const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
+    const { t } = useTranslation();
+
+    return (
+        <Typography
+            className={styles.notAvailableText}
+            variant={TypographyVariant.BodySm}
+        >
+            {!termLength
+                ? t('clientCase.quickQuoteResults.notAvailable')
+                : t('clientCase.quickQuoteResults.notAvailableByTermLength', {
+                      termLength: termLength,
+                  })}
+        </Typography>
+    );
+};
+
+const NotAvailabilityReasonLabel = ({
+    reason,
+}: {
+    reason: IneligibilityReason;
+}) => {
     const { insuredAge } = useQuickQuoteParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
@@ -38,29 +58,63 @@ export const QuickQuoteNotAvailableReasonCell = ({
     > as Record<string, string>;
 
     return (
+        <Typography
+            className={styles.notAvailableText}
+            variant={TypographyVariant.BodySm}
+        >
+            {reasonMessageMap[reason.field]}
+        </Typography>
+    );
+};
+
+export const QuickQuoteNotAvailableReasonCell = ({
+    className,
+    reasons,
+}: QuickQuoteNotAvailableReasonCellProps) => {
+    return (
         <div className={clsx(styles.notAvailableReasonCell, className)}>
-            <ul className={styles.noBulletList}>
-                <li>
-                    <Typography
-                        className={styles.notAvailableText}
-                        variant={TypographyVariant.BodySm}
-                    >
-                        {t('clientCase.quickQuoteResults.notAvailable')}
-                    </Typography>
-                </li>
-                {reasons?.map((reason) => {
+            {Array.isArray(reasons) ? (
+                <ul className={styles.noBulletList}>
+                    <li>
+                        <NotAvailableLabel />
+                    </li>
+                    {reasons?.map((reason) => {
+                        return (
+                            <li key={`${reason.field}`}>
+                                <NotAvailabilityReasonLabel reason={reason} />
+                            </li>
+                        );
+                    })}
+                </ul>
+            ) : typeof reasons === 'object' ? (
+                // TODO: Is it possible that a rider is not available  by itself?
+                Object.entries(reasons).map(([termLength, reasons]) => {
+                    // TODO: Refactor to align list vertically, use display flex...
                     return (
-                        <li key={`${reason.field}`}>
-                            <Typography
-                                className={styles.notAvailableText}
-                                variant={TypographyVariant.BodySm}
-                            >
-                                {reasonMessageMap[reason.field]}
-                            </Typography>
-                        </li>
+                        <ul
+                            key={`${termLength}`}
+                            className={styles.noBulletList}
+                        >
+                            <li>
+                                <NotAvailableLabel termLength={termLength} />
+                            </li>
+                            {reasons && (
+                                <ul>
+                                    {reasons.map((reason) => (
+                                        <li key={`${reason.field}`}>
+                                            <NotAvailabilityReasonLabel
+                                                reason={reason}
+                                            />
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
+                        </ul>
                     );
-                })}
-            </ul>
+                })
+            ) : (
+                <NotAvailableLabel />
+            )}
         </div>
     );
 };

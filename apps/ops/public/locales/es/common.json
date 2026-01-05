@@ -8880,6 +8880,7 @@
                 "title": "Cobertura y resumen"
             },
             "notAvailable": "No disponible",
+            "notAvailableByTermLength": "No disponible para el periodo {{termLength}}:",
             "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailableReason": {
                 "age": "No disponible para la edad {{age}}.",

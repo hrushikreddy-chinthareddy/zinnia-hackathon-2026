@@ -37,7 +37,7 @@ export const QuickQuoteRangeCellText = ({
             )}
             variant={value != null ? variant : TypographyVariant.BodySm}
         >
-            {value != null
+            {value !== null && value !== undefined
                 ? buildRangeText(value, period)
                 : notAvailableText ||
                   t('clientCase.quickQuoteResults.notAvailable')}
