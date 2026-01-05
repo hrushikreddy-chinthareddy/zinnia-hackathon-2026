@@ -241,7 +241,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         isDisabled:
             !withdrawalEligibility?.isEligibleWithdrawal ||
             !withdrawalProgram?.nextProgramDate ||
-            isUserPermissionedToWithdraw,
+            !isUserPermissionedToWithdraw,
         tooltip: getWithdrawalTooltip(),
     };
     const withdrawCancelAutopay = {
@@ -262,7 +262,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             !withdrawalEligibility?.isEligibleWithdrawal ||
             !!withdrawalProgram?.nextProgramDate ||
             !isUserPermissionedToWithdraw,
-        tooltip: getRmdTooltip(),
+        tooltip: getWithdrawalTooltip(),
     };
     const withdrawFooterLinks = [
         withdrawManageAutopay,

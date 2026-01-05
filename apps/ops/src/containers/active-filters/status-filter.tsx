@@ -20,7 +20,7 @@ interface StatusChipProps {
     onClick: (value: string, displayText: string) => void;
     total: string;
     tabIndex: number;
-    onKeyDown: (event: React.KeyboardEvent, value: string) => void;
+    setChipRef?: (value: string, el: HTMLButtonElement | null) => void;
 }
 
 const StatusChip = ({
@@ -30,15 +30,10 @@ const StatusChip = ({
     displayText,
     total,
     tabIndex,
-    onKeyDown,
+    setChipRef,
 }: StatusChipProps) => {
-    const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
     const handleClick = () => {
         onClick(value, displayText);
-    };
-
-    const handleKeyDownInternal = (event: React.KeyboardEvent) => {
-        onKeyDown(event, value);
     };
 
     const chipClasses = [
@@ -47,13 +42,14 @@ const StatusChip = ({
     ].join(' ');
 
     const refHandler = (el: HTMLButtonElement | null) => {
-        chipRefs.current[value] = el;
+        if (setChipRef) {
+            setChipRef(value, el);
+        }
     };
     return (
         <Button
             ref={refHandler}
             onClick={handleClick}
-            onKeyDown={handleKeyDownInternal}
             className={chipClasses}
             tabIndex={tabIndex}
             aria-pressed={isSelected ? 'true' : 'false'}
@@ -92,9 +88,9 @@ export default function StatusFilter({
     const statusOptions = useMemo(
         () => [
             {
-                total: (caseTotals[Statuses.All] ?? 0).toLocaleString(),
+                total: (caseTotals['All'] ?? 0).toLocaleString(),
                 displayText: t('status.all'),
-                value: Statuses.All,
+                value: 'All',
             },
             {
                 total: (caseTotals[Statuses.InProgress] ?? 0).toLocaleString(),
@@ -119,6 +115,7 @@ export default function StatusFilter({
         ],
         [caseTotals, t]
     );
+    const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
     const [selected, setSelected] = useState<{ [key: string]: string }>(
         statusOptions.reduce((acc, option) => {
@@ -130,7 +127,6 @@ export default function StatusFilter({
 
     const [showMore, setShowMore] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
-    const chipRefs = useRef<Record<string, HTMLButtonElement | null>>({});
 
     const mobileBreakpoint = 767;
     useEffect(() => {
@@ -192,69 +188,17 @@ export default function StatusFilter({
                     userId,
                 }
             );
-
+            const allDeselectedItems = Object.keys(prev)
+                .filter((key) => !newSelections[key])
+                .map((key) => ({
+                    value: key,
+                    displayText: prev[key],
+                }));
+            allDeselectedItems.length > 0 &&
+                chipRefs.current[allDeselectedItems[0].value]?.blur();
             return newSelections;
         });
     };
-
-    const handleKeyDown = (event: React.KeyboardEvent, value: string) => {
-        const currentIndex = statusOptions.findIndex(
-            (option) => option.value === value
-        );
-
-        switch (event.key) {
-            case 'Enter':
-            case ' ': {
-                event.preventDefault();
-                const option = statusOptions.find((opt) => opt.value === value);
-                if (option) {
-                    handleSelection(value, option.displayText);
-                }
-                break;
-            }
-
-            case 'ArrowRight':
-            case 'ArrowDown': {
-                event.preventDefault();
-                const nextIndex = (currentIndex + 1) % statusOptions.length;
-                const nextChip =
-                    chipRefs.current[statusOptions[nextIndex].value];
-                nextChip?.focus();
-                break;
-            }
-
-            case 'ArrowLeft':
-            case 'ArrowUp': {
-                event.preventDefault();
-                const prevIndex =
-                    currentIndex === 0
-                        ? statusOptions.length - 1
-                        : currentIndex - 1;
-                const prevChip =
-                    chipRefs.current[statusOptions[prevIndex].value];
-                prevChip?.focus();
-                break;
-            }
-
-            case 'Home': {
-                event.preventDefault();
-                const firstChip = chipRefs.current[statusOptions[0].value];
-                firstChip?.focus();
-                break;
-            }
-
-            case 'End': {
-                event.preventDefault();
-                const lastChip =
-                    chipRefs.current[
-                        statusOptions[statusOptions.length - 1].value
-                    ];
-                lastChip?.focus();
-                break;
-            }
-        }
-    };
-
     useEffect(() => {
         const statusValues = Object.keys(selected).filter(
             (key) => selected[key]
@@ -302,6 +246,9 @@ export default function StatusFilter({
         }
     };
 
+    const setChipRef = (value: string, el: HTMLButtonElement | null) => {
+        chipRefs.current[value] = el;
+    };
     const renderStatusChips = (options: typeof statusOptions) => {
         return options.map((option) => (
             <StatusChip
@@ -314,13 +261,19 @@ export default function StatusFilter({
                         : !!selected[option.value]
                 }
                 onClick={handleSelection}
-                onKeyDown={handleKeyDown}
                 total={option.total}
+                setChipRef={setChipRef}
                 tabIndex={0}
             />
         ));
     };
-
+    useEffect(() => {
+        if (Object.keys(selected).length === 0) {
+            requestAnimationFrame(() => {
+                chipRefs.current[statusOptions[0].value]?.focus();
+            });
+        }
+    }, [selected]);
     const renderButton = () => {
         return (
             <div

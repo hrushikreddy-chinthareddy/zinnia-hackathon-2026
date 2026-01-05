@@ -35,6 +35,9 @@ const BeneDetailsStep = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'beneChange.beneDetails',
     });
+    const { t: t1 } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'allFields',
+    });
 
     const { t: tBene } = useTranslation();
     const { carrierId } = policy;
@@ -50,6 +53,7 @@ const BeneDetailsStep = ({
     const errorKeys = [
         'firstNamesRequired',
         'addressesRequired',
+        'emailRequired',
         'allocationRequired',
         'relationshipRequired',
         'primaryBeneficiaryAllocationsSum',
@@ -57,7 +61,7 @@ const BeneDetailsStep = ({
     ];
 
     const handleStepContinue = useCallback(() => {
-        const formErrors = validateBeneData(beneData, t);
+        const formErrors = validateBeneData(beneData, t, t1);
         if (Object.keys(formErrors).length > 0) {
             setFormErrors(formErrors);
         } else {

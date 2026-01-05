@@ -2,8 +2,8 @@ import { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypes } from '@deps/types/product';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Prettify } from '@deps/utils/types';
 
 import ContentEntry from './illustration-details-content-entry';

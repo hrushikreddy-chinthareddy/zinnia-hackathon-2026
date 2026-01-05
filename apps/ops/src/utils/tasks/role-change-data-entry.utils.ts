@@ -1,4 +1,6 @@
 import { Action } from '@deps/constants/policy';
+import { Party } from '@deps/containers/task-container/task-handlers/types';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 
 export interface RoleChangeActionItem {
     action: Action | string;
@@ -29,7 +31,7 @@ export function detectRoleChangeRequestType(
 export function resolveRoleChangePartyId(
     requestType: Action,
     deletedItem: RoleChangeActionItem | null,
-    defaultPartyId: string | null
+    _defaultPartyId: string | null
 ) {
     switch (requestType) {
         case Action.UPDATE:
@@ -37,7 +39,7 @@ export function resolveRoleChangePartyId(
             return deletedItem?.party?.partyId ?? null;
         case Action.ADD:
         default:
-            return defaultPartyId;
+            return '';
     }
 }
 
@@ -97,5 +99,20 @@ export function getDefaultRoleChangeParty() {
         addresses: null,
         emails: null,
         phones: null,
+        collateralAmount: null,
+        startDate: null,
+        endDate: null,
     };
 }
+export const toFullName = (party: Party): string | null =>
+    toTitleCase(
+        [
+            party.prefix,
+            party.firstName,
+            party.middleName,
+            party.lastName,
+            party.suffix,
+        ]
+            .filter(Boolean)
+            .join(' ')
+    ) || null;

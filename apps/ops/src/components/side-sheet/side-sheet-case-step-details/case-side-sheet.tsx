@@ -13,7 +13,7 @@ import StepAdditionalData, {
     hasTransactionalAdditionalDataSideSheet,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/step-additional-data';
 import { AdditionalDataStepIds } from '@deps/models/case/additional-data-instance';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import DocumentsTab from './tabs/documents-tab';
 import MultiInstanceTab from './tabs/multi-instance-tab';

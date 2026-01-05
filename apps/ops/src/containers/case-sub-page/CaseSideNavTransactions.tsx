@@ -9,7 +9,7 @@ import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { Case, CaseIdentifier, Processes } from '@deps/models/case/case';
 import { getPolicyTransaction } from '@deps/queries/api/policies';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 type TransactionDetails = {
     effectiveDate: string;

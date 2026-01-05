@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import PlusOthers from '../plus-others/plus-others';
 

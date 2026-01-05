@@ -334,6 +334,27 @@ export enum AgingTimeRanges {
 export type AgingTimeRangesKeys = keyof typeof AgingTimeRanges;
 export type AgingTimeRangesKeysExtended = keyof typeof AgingTimeRanges | 'All';
 
+export enum CorrectionType {
+    Licensing = 'Licensing',
+    Financial = 'Financial',
+    Tax = 'Tax',
+    NonFinancial = 'Non-Financial',
+    Death = 'Death',
+    Maturity = 'Maturity',
+}
+
+export enum CorrectionReason {
+    ComplianceRequirementChange = 'Compliance requirement change',
+    CustomerCorrectionRequest = 'Customer correction request',
+    DataEntryError = 'Data entry error',
+    DeathEventDetailsIncorrect = 'Death event details incorrect',
+    DocumentationMissingOrInvalid = 'Documentation missing/invalid',
+    MaturityEventIncorrect = 'Maturity event incorrect',
+    OnboardingDataIncorrect = 'Onboarding data incorrect',
+    SubmittedVsProcessedMismatch = 'Submitted vs. processed mismatch',
+    SystemError = 'System error',
+}
+
 export enum LOADING_TIME_CONFIG {
     NO_MESSAGE_THRESHOLD = 500,
     GATHERING_THRESHOLD = 2000,

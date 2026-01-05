@@ -49,11 +49,16 @@ export const TransactionsWrapper = () => {
         to:
             historyFilters?.datesFilter?.to.format(
                 DEFAULT_DATE_DISPLAY_FORMAT
-            ) ?? dayjs().format(DEFAULT_DATE_DISPLAY_FORMAT),
+            ) ??
+            dayjs()
+                .add(1, 'month')
+                .endOf('month')
+                .format(DEFAULT_DATE_DISPLAY_FORMAT),
     };
     const {
         data: filteredTransactions = initialFilterTransactions,
         isLoading,
+        refetch,
     } = useTransactions(
         policy,
         {
@@ -107,6 +112,11 @@ export const TransactionsWrapper = () => {
     const [isSideSheetOpen, setIsSideSheetOpen] = useState(false);
     const prevActiveElement = useRef<HTMLElement | null>(null);
 
+    const onTransactionSubmit = useCallback(() => {
+        refetch();
+        setIsSideSheetOpen(false);
+    }, [refetch, setIsSideSheetOpen]);
+
     useEffect(() => {
         // Restore focus to row on sidesheet close
         if (!isSideSheetOpen) {
@@ -140,6 +150,7 @@ export const TransactionsWrapper = () => {
                         }))
                     }
                     timerange={selectedDateRange}
+                    disableFutureDates={false}
                 />
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">
@@ -201,6 +212,7 @@ export const TransactionsWrapper = () => {
                         transaction={selectedTransaction}
                         open={isSideSheetOpen}
                         onOpenChange={setIsSideSheetOpen}
+                        onTransactionSubmit={onTransactionSubmit}
                     />
                 </>
             ) : (

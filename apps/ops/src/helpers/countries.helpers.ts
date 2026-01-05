@@ -1,6 +1,6 @@
 import { countries as Countries } from 'countries-list';
 
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 interface Country {
     Name: string;

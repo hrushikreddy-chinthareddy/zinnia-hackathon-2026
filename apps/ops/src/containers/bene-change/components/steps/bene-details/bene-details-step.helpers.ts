@@ -1,12 +1,21 @@
 import { TFunction } from 'next-i18next';
 
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { PartyType, PartyRole } from '@zinnia/api-types/types/sor';
+import {
+    PartyType,
+    PartyRole,
+    PreferredCommunicationType,
+} from '@zinnia/api-types/types/sor';
 
-export const validateBeneData = (beneData: any, t: TFunction) => {
+export const validateBeneData = (
+    beneData: any,
+    t: TFunction,
+    t1: TFunction
+) => {
     const errors = {} as FormValidationErrors;
     let firstNameErrors: number = 0;
     let addressErrors: number = 0;
+    let emailErrors: number = 0;
     let allocationErrors: number = 0;
     let relationshipErrors: number = 0;
 
@@ -19,6 +28,38 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
 
             const relationshipToParty =
                 item?.party?.allocation?.relationshipToParty ?? '';
+
+            const preferredCommunicationType =
+                item?.party?.preferredCommunicationType;
+
+            if (
+                preferredCommunicationType ===
+                PreferredCommunicationType.REGULARMAIL
+            ) {
+                if (!address.addressLine1 || !address.addressLine1.trim()) {
+                    addressErrors++;
+                }
+                if (address.addressLine1 || address.addressLine2) {
+                    if (!address.zipCode) {
+                        addressErrors++;
+                    }
+                    if (!address.state) {
+                        addressErrors++;
+                    }
+                    if (!address.city) {
+                        addressErrors++;
+                    }
+                }
+            }
+
+            if (
+                preferredCommunicationType === PreferredCommunicationType.EMAIL
+            ) {
+                const email = item.party.emails?.[0]?.emailAddress || '';
+                if (!email || !email.trim()) {
+                    emailErrors++;
+                }
+            }
 
             if (partyType === PartyType.INDIVIDUAL) {
                 if (
@@ -45,22 +86,6 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
             if (!relationshipToParty) {
                 relationshipErrors++;
             }
-
-            if (!address.addressLine1 || !address.addressLine1.trim()) {
-                addressErrors++;
-            }
-
-            if (address.addressLine1 || address.addressLine2) {
-                if (!address.zipCode) {
-                    addressErrors++;
-                }
-                if (!address.state) {
-                    addressErrors++;
-                }
-                if (!address.city) {
-                    addressErrors++;
-                }
-            }
         }
     });
 
@@ -69,6 +94,9 @@ export const validateBeneData = (beneData: any, t: TFunction) => {
     }
     if (addressErrors > 0) {
         errors['addressesRequired'] = t('formValidations.addressDetails');
+    }
+    if (emailErrors > 0) {
+        errors['emailRequired'] = t1('formValidationsEmail');
     }
     if (allocationErrors > 0) {
         errors['allocationRequired'] = t('formValidations.allocationRequired');
