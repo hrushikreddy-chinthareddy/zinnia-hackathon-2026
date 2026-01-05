@@ -187,16 +187,22 @@ export function CallForInformationFunctions({
         contactEstablished,
     ]);
 
+    const getMaxCallSequenceObject = (arr: CallLog[]) =>
+        arr
+            .filter((obj: CallLog) => typeof obj.callSequence === 'number')
+            .reduce((maxObj: CallLog | null, curr: CallLog) => {
+                if (!maxObj) return curr;
+                return curr.callSequence > maxObj?.callSequence ? curr : maxObj;
+            }, null);
+
     const shouldRenderChangeRequire = () => {
         if (task.status === TaskStatus.Completed) {
-            const latestCallLog =
-                task.data?.details?.[dynamicKey]?.callLogs?.at(-1);
+            const latestCallLog = getMaxCallSequenceObject(
+                task.data?.details?.[dynamicKey]?.callLogs
+            );
 
             // Check if this is a legacy task created before the 'contactEstablished' was introduced
-            if (!Object.hasOwn(latestCallLog, 'contactEstablished')) {
-                return true;
-            }
-            return latestCallLog.contactEstablished;
+            return latestCallLog?.contactEstablished;
         }
 
         const showChangeRequireField =
