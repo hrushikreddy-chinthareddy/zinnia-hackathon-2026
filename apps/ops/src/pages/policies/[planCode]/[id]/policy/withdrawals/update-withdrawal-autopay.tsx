@@ -26,16 +26,22 @@ export interface WithdrawalAutopayProps {
     policy: Policy;
 }
 
+enum ProgramType {
+    RMD = 'RMD',
+}
+
 const UpdateWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
     const router = useRouter();
     const { type } = router.query;
 
     const arrangementType =
-        type === 'RMD'
+        type === ProgramType.RMD
             ? ArrangementType.REQUIREDMINIMUMDISTRIBUTION
             : ArrangementType.WITHDRAWAL;
     const reason =
-        type === 'RMD' ? Reason.REQUIREDMINIMUMDISTRIBUTION : Reason.WITHDRAWAL;
+        type === ProgramType.RMD
+            ? Reason.REQUIREDMINIMUMDISTRIBUTION
+            : Reason.WITHDRAWAL;
 
     const [isLoading, setIsLoading] = useState(true);
 
@@ -151,8 +157,8 @@ const UpdateWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
         const isRmdEligible = rmdEligibility?.isEligibleRmd || false;
 
         if (
-            (!isEligible && type !== 'RMD') || // Check withdrawal eligibility if type is not RMD
-            (!isRmdEligible && type === 'RMD') || // Check RMD eligibility only if type is RMD
+            (!isEligible && type !== ProgramType.RMD) ||
+            (!isRmdEligible && type === ProgramType.RMD) ||
             !withdrawalProgram?.nextProgramDate ||
             !isUserPermissionedToWithdraw
         ) {

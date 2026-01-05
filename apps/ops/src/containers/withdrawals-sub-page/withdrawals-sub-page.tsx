@@ -91,8 +91,6 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const hasRmdProgram =
         !!rmdProgram && rmdProgram.arrangementId !== undefined;
 
-    console.log(withdrawalProgram?.arrangementId);
-
     const { data: withdrawalEligibility } = useQuery({
         queryKey: [
             'checkEligibilityWithdrawal',
