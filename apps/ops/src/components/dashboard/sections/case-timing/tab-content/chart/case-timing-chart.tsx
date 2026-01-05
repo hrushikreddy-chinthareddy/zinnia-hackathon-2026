@@ -2,6 +2,7 @@ import clsx from 'clsx';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { FC, useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Carousel } from '@deps/components/carousel/carousel';
 import {
@@ -36,6 +37,8 @@ export const CaseTimingChart: FC = () => {
         caseTimingData || [],
         5
     );
+
+    const { t } = useTranslation();
 
     // When generating the time axis, we take raw time in seconds, but we convert the seconds to hours or days and display that on the chart.
     const chartConfig = chunkedResponse.map((chunk) => {
@@ -130,12 +133,8 @@ export const CaseTimingChart: FC = () => {
                                     )}
                                     bottomContent={
                                         <div className={styles.legend}>
-                                            <p
-                                                className={
-                                                    'typography-labels-label-sm'
-                                                }
-                                            >
-                                                Processing time
+                                            <p className="typography-labels-label-sm">
+                                                {t('allFields.processingTime')}
                                             </p>
                                         </div>
                                     }

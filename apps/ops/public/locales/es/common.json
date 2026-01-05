@@ -426,6 +426,7 @@
         "priorYearEndAccountValue": "Valor de cuenta de fin de año previo",
         "priorYearRequiredMinimumDistributionAmount": "Monto de RMD del año previo",
         "processDate": "Date de traitement",
+        "processingTime": "Tiempo de procesamiento",
         "product": "Producto",
         "productCode": "Código del producto",
         "productType": "Tipo de producto",
