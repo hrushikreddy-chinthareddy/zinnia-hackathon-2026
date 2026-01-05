@@ -89,10 +89,14 @@
 .contentDataCell,
 .notAvailableReasonCell {
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: start;
 
     padding: var(--measure-dimension-padding-lg, 8px)
         var(--measure-dimension-padding-3xl, 24px);
+
+    gap: var(--measure-dimension-gap-sm, 4px)
+        var(--measure-dimension-gap-lg, 24px);
 }
 
 .fullDataCell {
@@ -163,8 +167,12 @@
     grid-column: 2 / -1;
 }
 
-.noBulletList {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
+.reasonList {
+    display: flex;
+    list-style-type: disc;
+
+    li {
+        display: list-item;
+        margin-left: 20px;
+    }
 }
