@@ -10,10 +10,8 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'react-i18next';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import {
-    DEFAULT_ERROR_STRING,
-    DEFAULT_EXTENDED_DATE_FORMAT,
-} from '@deps/types/constants';
+import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { ArrangementType } from '@zinnia/api-types/types/bpm';
 
 import FooterAction from '../../card-footer-action/card-footer-action';
