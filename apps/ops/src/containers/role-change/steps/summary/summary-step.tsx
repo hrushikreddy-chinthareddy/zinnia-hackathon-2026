@@ -219,7 +219,7 @@ const SummaryStep = ({
                 </div>
             )}
             {existingRoleData &&
-                Object.keys(existingRoleData).length &&
+                Object.keys(existingRoleData).length > 0 &&
                 (!showRemoveTPDInfoTag ? (
                     <div className="flex">
                         <div className="flex w-full flex-row pb-4">
