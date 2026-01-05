@@ -168,6 +168,9 @@ const UpdateWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
         isUserPermissionedToWithdraw,
         router,
         isRmdEligibilityFetched,
+        isPartialWithdrawalOneTimeEligibilityFetched,
+        type,
+        withdrawalProgram?.nextProgramDate,
     ]);
 
     if (isLoading) {
