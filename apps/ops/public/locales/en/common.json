@@ -8976,7 +8976,7 @@
             "title": "Quick Quote",
             "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
             "notAvailable": "Not Available",
-            "notAvailableByTermLength": "Not available for {{termLength}} period:",
+            "notAvailableByTermLength": "Not available for {{termLength}}-year term:",
             "product": {
                 "title": "Product",
                 "totalPremiumRange": "Total Premium Range",

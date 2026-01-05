@@ -28,11 +28,16 @@ const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
             className={styles.notAvailableText}
             variant={TypographyVariant.BodySm}
         >
-            {!termLength
-                ? t('clientCase.quickQuoteResults.notAvailable')
-                : t('clientCase.quickQuoteResults.notAvailableByTermLength', {
-                      termLength: termLength,
-                  })}
+            <b>
+                {!termLength
+                    ? t('clientCase.quickQuoteResults.notAvailable')
+                    : t(
+                          'clientCase.quickQuoteResults.notAvailableByTermLength',
+                          {
+                              termLength: termLength,
+                          }
+                      )}
+            </b>
         </Typography>
     );
 };
@@ -91,7 +96,6 @@ export const QuickQuoteNotAvailableReasonCell = ({
             ) : typeof reasons === 'object' ? (
                 // TODO: Is it possible that a rider is not available  by itself?
                 Object.entries(reasons).map(([termLength, reasons]) => {
-                    // TODO: Refactor to align list vertically, use display flex...
                     return (
                         <div key={`${termLength}`}>
                             <NotAvailableLabel termLength={termLength} />
