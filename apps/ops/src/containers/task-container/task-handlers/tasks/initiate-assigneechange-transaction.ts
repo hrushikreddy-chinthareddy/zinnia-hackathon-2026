@@ -68,7 +68,7 @@ const getAddresses = (addresses?: Party['addresses']): Address[] => {
 };
 
 const formatPhone = (phone?: Partial<Phone>): Phone => ({
-    phoneType: (phone?.phoneType as string) ?? PhoneType.HOME,
+    phoneType: (phone?.phoneType as string) ?? PhoneType.MOBILE,
     dialNumber: phone?.dialNumber ?? null,
     areaCode: phone?.areaCode ?? null,
     countryCode: phone?.countryCode ?? 'USA',

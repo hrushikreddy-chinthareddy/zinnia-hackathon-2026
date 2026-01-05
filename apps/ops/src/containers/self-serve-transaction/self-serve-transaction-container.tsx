@@ -65,6 +65,8 @@ const SelfServeTransactionContainer = ({
     const { currentStepIndex, setCurrentStepIndex, goToNext } = useWorkflow();
     const { formData, setFormData } = useSelfServeTransactionContext();
     const [validationSummary, setValidationSummary] = useState<any>(null);
+    const [hasValidationErrors, setHasValidationErrors] =
+        useState<boolean>(false);
 
     const steps = schemaContent.tabSchemas;
     const formRefs = useMemo(
@@ -112,6 +114,13 @@ const SelfServeTransactionContainer = ({
             ...formData,
             ...event.formData,
         }));
+        const currentRef = formRefs[currentStepIndex];
+        if (currentRef?.current) {
+            setTimeout(() => {
+                const isValid = currentRef.current?.validateForm?.() || false;
+                setHasValidationErrors(!isValid);
+            }, 0);
+        }
     };
 
     const handleStepChange = (step: Step) => {
@@ -138,6 +147,7 @@ const SelfServeTransactionContainer = ({
                             submitLabel={t('continue') ?? ''}
                             cancelLabel={t('cancel') ?? ''}
                             isSubmit={false}
+                            disableContinue={hasValidationErrors}
                             handleContinue={() =>
                                 handleStepContinue(
                                     step.title,
