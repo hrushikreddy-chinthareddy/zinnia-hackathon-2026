@@ -182,6 +182,7 @@ export enum FEATURE_FLAGS {
     FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT = 'fga_entity_zinnia_live_policy_management',
     FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT = 'fga_entity_zinnia_live_case_management',
     REVISED_HISTORY_TABLE = 'revised_history_table',
+    WRITE_REQUEST_CASE_CORRECTION = 'write_request_case_correction',
     OPS_REVIEW_REQUEST = 'ops_review_request',
     ILLUSTRATIONS_AS_IS_ILLUSTRATIONS = 'illustrations_as_is_illustrations',
     ILLUSTRATIONS_IMPROVED_AGENT_SEARCH = 'improved_illustration_agent_search',
@@ -189,4 +190,5 @@ export enum FEATURE_FLAGS {
     FINANCIAL_TRANSACTION = 'financial-transaction',
     DTCC_SECTION_ENABLED = 'dtcc_section_enabled',
     DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
+    USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
 }

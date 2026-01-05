@@ -388,6 +388,22 @@
         "partyPolicyNewReferenceId": "Enregistrement mis à jour",
         "partyRole": "Rol de la parte",
         "payeeGrossAmount": "Montant brut du bénéficiaire",
+        "details": "Detalles",
+        "overviewText": "Seleccione el tipo de corrección de la lista, indique claramente el motivo de su solicitud y adjunte un documento justificativo. Los tres campos son obligatorios. Una vez enviado, se creará una solicitud de corrección y se enviará al equipo de operaciones correspondiente para su revisión y procesamiento.",
+        "correctionType": "Tipo de corrección",
+        "selectCorrectionType": "Seleccione el tipo de corrección",
+        "correctionReason": "Motivo de la corrección",
+        "selectCorrectionReason": "Seleccione el motivo de la corrección",
+        "linkOrUploadDocument": "Enlace o subir documento",
+        "findExistingDocuments": "Encuentra documentos existentes...",
+        "or": "o",
+        "submit": "Entregar",
+        "upload": "Subir",
+        "uploadDocument": "Cargar documento",
+        "requestCorrectionSuccess": "Solicitud de corrección presentada para el caso",
+        "requestCorrrectionFail": "No se pudo enviar la solicitud de corrección. Inténtelo de nuevo o póngase en contacto con el servicio de asistencia.",
+        "additionalNotes": "Notas adicionales",
+        "addNotes": "Agregar notas",
         "payeeOrBeneficiaries": "Bénéficiaire ou bénéficiaires",
         "paymentAmount": "Monto del pago",
         "paymentForm": "Forma de pago",
@@ -1104,6 +1120,21 @@
         "SystematicRequiredMinimumDistribution": "Distribución mínima requerida sistemática",
         "SystematicRequiredMinimumDistributionSetup": "Configuración de distribución mínima requerida sistemática",
         "TAKEINPUTTEDVALUE": "Usar valor ingresado",
+        "licensing": "Licencias",
+        "financial": "Financiero",
+        "tax": "Impuesto",
+        "nonFinancial": "No financiero",
+        "death": "Muerte",
+        "maturity": "Vencimiento",
+        "complianceRequirementChange": "Cambio en el requisito de cumplimiento",
+        "customerCorrectionRequest": "Solicitud de corrección del cliente",
+        "dataEntryError": "Error de entrada de datos",
+        "deathEventDetailsIncorrect": "Detalles del evento de muerte incorrectos",
+        "documentationMissingOrInvalid": "Documentación faltante/inválida",
+        "maturityEventIncorrect": "Evento de vencimiento incorrecto",
+        "onboardingDataIncorrect": "Datos de incorporación incorrectos",
+        "submittedVsProcessedMismatch": "Discordancia entre enviados y procesados",
+        "systemError": "Error del sistema",
         "TARGETBENEFITPLAN": "Plan de beneficio objetivo",
         "TENYEARTAXOPTION": "Opción fiscal a diez años",
         "TERM": "Plazo",
@@ -3193,7 +3224,25 @@
                 "linked case": "Caso vinculado: {{label}}",
                 "bene": "Notifier {{label}}",
                 "beneficiary": "Beneficiario {{label}}",
-                "owner": "Propietario {{label}}"
+                "owner": "Propietario",
+                "payee": "Beneficiario",
+                "payor": "Pagador",
+                "assignee": "Cesionario",
+                "jointowner": "Copropietario",
+                "thirdpartydesignee": "Designado por un tercero",
+                "primarybeneficiary": "Beneficiario principal",
+                "contingentbeneficiary": "Beneficiario contingente",
+                "primarywritingagent": "Agente principal de suscripción",
+                "additionalwritingagent": "Agente adicional de suscripción",
+                "primaryservicingagent": "Agente principal de servicio",
+                "additionalservicingagent": "Agente adicional de servicio",
+                "annuitant": "Rentista",
+                "jointannuitant": "Rentista conjunto",
+                "trustee": "Fideicomisario",
+                "grantor": "Otorgante",
+                "powerofattorney": "Poder notarial",
+                "coveragejointinsured": "Asegurado conjunto",
+                "insured": "Asegurado"
             },
             "reviewIssues": "Revisión",
             "suitabilityReview": "idoneidad",
@@ -7126,6 +7175,15 @@
             "newDeathClaim": "Nuevo reclamo por muerte",
             "surrender": "Política de rendición"
         },
+        "cases": {
+            "requestCorrection": "Solicitar corrección",
+            "deprioritize": {
+                "title": "De-priorizar Caso"
+            },
+            "prioritize": {
+                "title": "Priorizar Caso"
+            }
+        },
         "requestOperationReview": {
             "label": "Solicitud de revisión de operaciones"
         }
@@ -7734,7 +7792,7 @@
             "title": "¡Enviado!",
             "subTitle": "Los datos de idoneidad ingresados han sido enviados.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar detalles de idoneidad"
         }
     },
@@ -7753,7 +7811,7 @@
             "title": "¡Enviado!",
             "subTitle": "La revisión de idoneidad fue enviada.",
             "cta": "Ir a revisión de idoneidad",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar detalles de revisión de idoneidad"
         }
     },
@@ -7810,7 +7868,7 @@
             "title": "¡Entendido!",
             "subTitle": "La tarea: Coincidir Documento ha sido enviada.",
             "cta": "Ir a Calificación",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7819,7 +7877,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Problemas del Agente fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7836,7 +7894,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar prima inicial fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7845,7 +7903,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Problemas de la Solicitud fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7854,7 +7912,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Coincidir Documento fue enviada.",
             "cta": "Ir a calificación",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7863,7 +7921,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Agente fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7872,7 +7930,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Problemas de OFAC fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7881,7 +7939,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Problemas de Incorporación fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7890,7 +7948,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Transferencia fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7899,7 +7957,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Transferencia fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7908,7 +7966,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Detalles de la Solicitud fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7917,7 +7975,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Problemas de Incorporación fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7926,7 +7984,7 @@
             "title": "Got It!",
             "subTitle": "Task: Identify Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7935,7 +7993,7 @@
             "title": "Got It!",
             "subTitle": "Task: Stop Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -7944,7 +8002,7 @@
             "title": "Got It!",
             "subTitle": "Task: Reverse Uncashed Transaction was submitted.",
             "cta": "Go to death claim",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8172,7 +8230,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Entrada de Datos de Nuevos Negocios fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8181,7 +8239,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisión de NIGO Posterior al Problema fue enviada.",
             "cta": "Ir al Caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8190,7 +8248,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Entrada de Datos de Nuevos Negocios fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8199,7 +8257,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Procesamiento de Entrada de Datos de Transacción Posterior al Problema fue enviada.",
             "cta": "Ir al Caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8208,7 +8266,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: La revisión del cambio de nombre ha sido enviada.",
             "cta": "Ir al Caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8217,7 +8275,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Entrada de Datos de Nuevos Negocios fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8226,7 +8284,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Entrada de Datos de Nuevos Negocios fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8235,7 +8293,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Entrada de Datos de Nuevos Negocios fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8308,7 +8366,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Devolver Pago fue enviada.",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8317,7 +8375,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Entrada de Datos de Idoneidad NIGO fue enviada.",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8326,7 +8384,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Revisar Problemas de Verificación de Antecedentes fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8335,7 +8393,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Verificación de Antecedentes fue enviada.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8344,7 +8402,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se envió el Claims Ops To Finance Escheatment.",
             "cta": "Ir al reclamo de muerte",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8353,7 +8411,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se presentó Reclamación de Renuncia a FI.",
             "cta": "Ir al reclamo de muerte",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8362,7 +8420,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se envió el Match Death Case.",
             "cta": "Ir al reclamo de muerte",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8380,7 +8438,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Verificación de beneficiarios de reclamaciones fue enviada.",
             "cta": "Ir al expediente de reclamación",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8389,7 +8447,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Verificación de dirección del beneficiario fue enviada.",
             "cta": "Ir al expediente de reclamación",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8402,7 +8460,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: El formulario de solicitud de servicio fue enviado",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8467,7 +8525,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se envió la información para contactar a los beneficiarios.",
             "cta": "Ir al expediente de reclamación",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8476,7 +8534,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Operaciones fue enviada.",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8485,7 +8543,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Validar Operaciones fue enviada.",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8494,7 +8552,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Operación Review fue enviada.",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8503,7 +8561,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se envió la información final a los beneficiarios.",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         },
         "callForInformation": {
@@ -8585,7 +8643,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se envió el documento Claim Match Bene.",
             "cta": "Ir al reclamo de muerte",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8604,7 +8662,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Enviar Comunicación NIGO fue enviada.",
             "cta": "Ir al caso",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8681,7 +8739,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se envió la revisión de la base de costos.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -8690,7 +8748,7 @@
             "title": "¡Entendido!",
             "subTitle": "Tarea: Se inició una nueva transacción.",
             "cta": "Ir a transferencia entrante",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -9079,7 +9137,7 @@
             "title": "¡Entendido!",
             "subTitle": "Se envió el documento Review Quality Audit.",
             "cta": "Ir a la Auditoría de Calidad",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -9088,7 +9146,7 @@
             "title": "¡Entendido!",
             "subTitle": "Se envió el documento Rework on Quality Audit.",
             "cta": "Ir a la Auditoría de Calidad",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },
@@ -9097,7 +9155,7 @@
             "title": "¡Entendido!",
             "subTitle": "Se envió el documento Review Quality Audit Rework.",
             "cta": "Ir a la Auditoría de Calidad",
-            "secondaryCta": "Volver a inicio",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     },

@@ -9,8 +9,10 @@ import {
 } from '@deps/contexts/PermissionsContext';
 import { getUserHierarchyBySellingCode } from '@deps/queries/tanstack/producerQueries/producerQueries';
 import { GetHierarchyResponse, UplineItem } from '@deps/types/producers';
+import { AliasModel } from '@zinnia/api-types/types/partyreference';
 
 import { useAgencyOptions } from './use-agency-options';
+import { AliasWithSellingCode } from './user-identity';
 
 jest.mock('@deps/queries/tanstack/producerQueries/producerQueries');
 jest.mock('@deps/contexts/PermissionsContext');
@@ -24,7 +26,11 @@ type MockSellingCode =
     | 'no-upline'
     | 'single-agency'
     | 'single-other-agency'
-    | 'agent-agency';
+    | 'agent-other-district'
+    | 'agency-owner'
+    | 'agency-owner-other-district'
+    | 'district-manager'
+    | 'other-district-manager';
 
 mockedGetUserHierarchyBySellingCode.mockImplementation(async (sellingCode) => {
     const agency1 = {
@@ -55,18 +61,46 @@ mockedGetUserHierarchyBySellingCode.mockImplementation(async (sellingCode) => {
         nationalProducerNumber: 'test-other-agency',
     } satisfies UplineItem;
 
-    const brokerAgency = {
-        firstName: 'Broker',
+    const agencyOtherDistrict = {
+        firstName: 'Some Other District',
         lastName: 'Agency',
         middleName: '',
-        fullName: 'Broker Agency',
+        fullName: 'Other District Agency',
         producerType: 'Corporation',
         addresses: [] as const,
-        hierarchyId: 'broker-agency-hierarchy-id',
+        hierarchyId: 'other-district-agency-hierarchy-id',
+        level: 2,
+        role: 'GeneralAgency',
+        sellingCode: 'other-district-agency',
+        nationalProducerNumber: 'test-other-district-agency',
+    } satisfies UplineItem;
+
+    const brokerDealer = {
+        firstName: 'Broker',
+        lastName: 'Dealer',
+        middleName: '',
+        fullName: 'Broker Dealer',
+        producerType: 'Corporation',
+        addresses: [] as const,
+        hierarchyId: 'broker-dealer-hierarchy-id',
         level: 3,
         role: 'BrokerDealer',
-        sellingCode: 'broker-agency',
-        nationalProducerNumber: 'test-broker-agency',
+        sellingCode: 'district-manager',
+        nationalProducerNumber: 'test-broker-dealer',
+    } satisfies UplineItem;
+
+    const otherBrokerDealer = {
+        firstName: 'Other',
+        lastName: 'Broker Dealer',
+        middleName: '',
+        fullName: 'Other Broker Dealer',
+        producerType: 'Corporation',
+        addresses: [] as const,
+        hierarchyId: 'other-broker-dealer-hierarchy-id',
+        level: 3,
+        role: 'BrokerDealer',
+        sellingCode: 'other-district-manager',
+        nationalProducerNumber: 'test-other-broker-dealer',
     } satisfies UplineItem;
 
     const common = {
@@ -93,17 +127,40 @@ mockedGetUserHierarchyBySellingCode.mockImplementation(async (sellingCode) => {
         case 'single-agency':
             return {
                 ...common,
-                upline: [agency1, brokerAgency],
+                upline: [agency1, brokerDealer],
             } as GetHierarchyResponse;
         case 'single-other-agency':
             return {
                 ...common,
-                upline: [agency2, brokerAgency],
+                upline: [agency2, brokerDealer],
             } as GetHierarchyResponse;
-        case 'agent-agency':
+        case 'agent-other-district':
             return {
                 ...common,
-                upline: [agency1, brokerAgency],
+                upline: [agencyOtherDistrict, otherBrokerDealer],
+            } as GetHierarchyResponse;
+        case 'agency-owner':
+            return {
+                ...common,
+                upline: [brokerDealer],
+                role: 'GeneralAgency',
+            } as GetHierarchyResponse;
+        case 'district-manager':
+            return {
+                ...common,
+                upline: [],
+                role: 'BrokerDealer',
+            } as GetHierarchyResponse;
+        case 'other-district-manager':
+            return {
+                ...common,
+                upline: [],
+                role: 'BrokerDealer',
+            } as GetHierarchyResponse;
+        case 'agency-owner-other-district':
+            return {
+                ...common,
+                upline: [brokerDealer],
                 role: 'GeneralAgency',
             } as GetHierarchyResponse;
         default:
@@ -131,14 +188,16 @@ const mockAsSuperIllustrator = () => {
     );
 };
 
-describe('useAgencyOptions', () => {
+const mockNonsuperIllustrator = () =>
     mockedUsePermissionsContext.mockImplementation(
         () =>
             ({
                 writeclientCaseCarriers: [],
+                isSuperIllustrator: false,
             } as unknown as PermissionsContextProps)
     );
 
+describe('useAgencyOptions', () => {
     const agentCommon = {
         firstName: 'John',
         lastName: 'Doe',
@@ -156,7 +215,7 @@ describe('useAgencyOptions', () => {
             wrapper,
         });
 
-        await waitFor(() => expect(result.current).not.toBeNull());
+        await waitFor(() => expect(result.current).not.toHaveLength(0));
 
         expect(result.current).toEqual([
             {
@@ -172,23 +231,68 @@ describe('useAgencyOptions', () => {
         ]);
     });
 
-    it('returns only root agencies of the selected agent is there is any, for super-illustrator', async () => {
+    it('returns agency owners, for super-illustrator', async () => {
         const agentOption = {
             ...agentCommon,
-            sellingCodes: ['agent-agency', 'single-agency'],
+            sellingCodes: ['agency-owner', 'single-agency'],
         };
         mockAsSuperIllustrator();
         const { result } = renderHook(() => useAgencyOptions(agentOption, []), {
             wrapper,
         });
 
-        await waitFor(() => expect(result.current).not.toBeNull());
+        await waitFor(() => expect(result.current).not.toHaveLength(0));
 
         expect(result.current).toEqual([
             {
-                value: 'agent-agency',
+                value: 'agency-owner',
                 textValue: 'John Doe',
-                agentSellingCode: 'agent-agency',
+                agentSellingCode: 'agency-owner',
+            },
+            {
+                value: 'some-agency',
+                textValue: 'Some Agency',
+                agentSellingCode: 'single-agency',
+            },
+        ]);
+    });
+
+    it('filters by district, for district managers', async () => {
+        mockNonsuperIllustrator();
+
+        const agentOption = {
+            ...agentCommon,
+            sellingCodes: ['single-agency', 'agent-other-district'],
+        };
+        const districtManagerAliases = [
+            {
+                firstName: 'John',
+                lastName: 'Doe',
+                fullName: 'John Doe',
+                carrier: 'FNWL',
+                externalPartyIds: [
+                    {
+                        key: 'SELLING_CODE',
+                        value: 'district-manager',
+                    },
+                ],
+            },
+        ] as AliasModel[] as AliasWithSellingCode[];
+
+        const { result } = renderHook(
+            () => useAgencyOptions(agentOption, districtManagerAliases),
+            {
+                wrapper,
+            }
+        );
+
+        await waitFor(() => expect(result.current).not.toHaveLength(0));
+
+        expect(result.current).toEqual([
+            {
+                textValue: 'Some Agency',
+                value: 'some-agency',
+                agentSellingCode: 'single-agency',
             },
         ]);
     });

@@ -18,8 +18,8 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import useNavLink from '@deps/hooks/useNavLink';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import style from './illustration-details-header.module.css';
 import { useSelectedIllustration } from '../../../providers/SelectedIllustrationProvider';

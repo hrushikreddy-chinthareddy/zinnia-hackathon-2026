@@ -2,6 +2,7 @@ import { Label } from '@zinnia/bloom/components';
 import { clsx } from 'clsx';
 
 import { ProducerType } from '@deps/components/pom/types';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { default as styles } from './Identification.module.css';
 
@@ -18,7 +19,7 @@ export const Identification = ({
 
     const individualIdentificationFields = [
         { label: 'Birth date', value: '1/1/2010' },
-        { label: 'Social Security Number', value: '--' },
+        { label: 'Social Security Number', value: DEFAULT_ERROR_STRING },
     ];
 
     const identificationFields = (() => {

@@ -15,6 +15,7 @@ import { TransactionResponse, TransactionSubmitResponse } from './bpm';
 import { serverApi } from '../api-utils/serverApiClient';
 const baseUrl = `${baseAppUrl}/api/webnonfinancial/nonfinancial/v1`;
 const claimUrl = `${baseAppUrl}/api/webnonfinancial/claim/v1`;
+const roleChangeUrl = `${baseAppUrl}/api/bpm/v1`;
 
 export const addTransaction = async (body: any): Promise<any> => {
     const { businessKey, correlationid, carrierId, policyNumber } = body || {};
@@ -152,7 +153,7 @@ export const validateAgentTransaction = async (body: any): Promise<any> => {
             url: validateAgentUrl,
             function: 'webnonfinancial.validateAgentTransaction',
         });
-        return error;
+        return error?.data;
     }
 };
 
@@ -364,5 +365,54 @@ export const initialDeathClaimExistsSsr = async (
             { ...parseErrorInformation(error), ...loggingContext }
         );
         throw error;
+    }
+};
+export const validateThirdPartyDesigneeChange = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    partyId: string | null | undefined = '',
+    requestType: string,
+    query: any
+): Promise<TransactionResponse> => {
+    const params = new URLSearchParams();
+
+    if (partyId) {
+        params.set('partyId', partyId);
+    }
+
+    params.set('requestType', requestType);
+
+    const url = `${roleChangeUrl}/policies/${planCode}/${policyNumber}/parties/ThirdPartyDesignee/validation?${params.toString()}`;
+
+    browserLogInfo(
+        `validateThirdPartyDesigneeChange::Starting validation for Third Party Designee`,
+        {
+            url,
+            planCode,
+            policyNumber,
+            partyId,
+            payload: JSON.stringify(query),
+        }
+    );
+
+    try {
+        const { data } = await client.post<TransactionResponse, AxiosResponse>(
+            url,
+            query
+        );
+
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            `validate Third Party Designee Change::an error occurred during validation check`,
+            {
+                ...parseErrorInformation(error),
+                planCode,
+                policyNumber,
+                partyId,
+                payload: JSON.stringify(query),
+            }
+        );
+        return error?.data;
     }
 };

@@ -100,3 +100,11 @@
         padding-right: var(--measure-dimension-padding-sm);
     }
 }
+
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+}

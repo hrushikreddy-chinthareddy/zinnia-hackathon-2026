@@ -12,6 +12,7 @@ import {
     TabDataItem,
     DynamicSideSheetDataType,
 } from '@deps/utils/dynamicSideSheet';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export enum SideSheetDataType {
     Number = 'number',
@@ -149,7 +150,7 @@ export default function DynamicSideSheetContent({
                             <div className="col-span-2 text-base text-gray-900 break-all text-sm font-normal py-2">
                                 {item.value != null && item.value !== ''
                                     ? renderValue(item)
-                                    : '--'}
+                                    : DEFAULT_ERROR_STRING}
                             </div>
                         </React.Fragment>
                     );

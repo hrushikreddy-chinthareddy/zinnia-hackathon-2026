@@ -1,4 +1,4 @@
-import { queryOptions, skipToken } from '@tanstack/react-query';
+import { QueryClient, queryOptions, skipToken } from '@tanstack/react-query';
 
 import { PRODUCER_ROLES } from '@deps/types/producers';
 
@@ -6,7 +6,7 @@ import { AGENT_SEARCH_QUERY_PREFIXES } from './constants';
 import { buildAgentsFromDownline } from './helpers';
 import { buildGetDownlineForNearestRoleQueryOptions } from '../../hooks/pom';
 
-export const buildDistrictAgentQuery = ({
+const buildDistrictAgentQuery = ({
     sellingCode,
     carrierShortName,
     partialFullName = '',
@@ -43,3 +43,23 @@ export const buildDistrictAgentQuery = ({
                   });
               },
     });
+
+export const fetchDistrictAgents = (
+    client: QueryClient,
+    {
+        sellingCode,
+        carrierShortName,
+        partialFullName = '',
+    }: {
+        sellingCode: string;
+        carrierShortName: string;
+        partialFullName: string | undefined;
+    }
+) =>
+    client.fetchQuery(
+        buildDistrictAgentQuery({
+            sellingCode,
+            carrierShortName,
+            partialFullName,
+        })
+    );

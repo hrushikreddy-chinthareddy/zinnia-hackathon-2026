@@ -6,7 +6,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { BankDetail } from '@zinnia/api-types/types/aggregation';
 import { BankAccount } from '@zinnia/api-types/types/sor';
 

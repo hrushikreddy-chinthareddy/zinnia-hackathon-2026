@@ -151,13 +151,13 @@ export default FileWidget;
 
 export interface FileAttachmentProps {
     setAttachments: (file: TaskDocument, operationType?: ActionTypes) => void;
-    widgetProps: WidgetProps;
+    widgetProps?: Partial<WidgetProps>;
     attachments?: TaskDocument[];
 }
 
 function FileUploadComponent({
     setAttachments,
-    widgetProps,
+    widgetProps = {} as WidgetProps,
 }: FileAttachmentProps) {
     const correlationId = uuidv4();
     const {
@@ -167,7 +167,7 @@ function FileUploadComponent({
         multiple,
         value,
         options,
-        registry,
+        registry = {} as Registry,
         formContext,
     } = widgetProps;
 
@@ -304,7 +304,7 @@ function FileUploadComponent({
                             filesInfo={filesInfoEvent}
                             onRemove={rmFile}
                             registry={registry}
-                            preview={options.filePreview}
+                            preview={options?.filePreview}
                             options={values as any}
                         />
 
@@ -322,7 +322,14 @@ function FileUploadComponent({
                 sideSheet.handleOpen(true);
             });
         },
-        [multiple, setAttachments, value, onSubmit, options.filePreview, loader]
+        [
+            multiple,
+            setAttachments,
+            value,
+            onSubmit,
+            options?.filePreview,
+            loader,
+        ]
     );
 
     const rmFile = useCallback(
@@ -362,13 +369,15 @@ function FileUploadComponent({
                     {t('fileUpload.upload')}
                 </label>
                 <BaseInputTemplate
-                    {...widgetProps}
+                    {...(widgetProps as any)}
                     disabled={disabled || readonly}
                     type="file"
                     required={value ? false : required}
                     onChangeOverride={handleChange}
                     value=""
-                    accept={options.accept ? String(options.accept) : undefined}
+                    accept={
+                        options?.accept ? String(options.accept) : undefined
+                    }
                     className={style.input}
                 />
             </div>

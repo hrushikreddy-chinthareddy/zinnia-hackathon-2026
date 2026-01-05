@@ -4,26 +4,9 @@ import { first, groupBy, uniq } from 'lodash';
 import { useAuthenticatedAgentSellingCodes } from '@deps/components/illustrations/helpers/hooks/pom';
 import { useDelegatedAgentsBySellingCodeListQuery } from '@deps/components/illustrations/helpers/queries/agent-search/agents-by-selling-code-query';
 import { DelegatedAgent } from '@deps/components/illustrations/helpers/queries/agent-search/types';
+import { buildAgentOptionFromDelegatedAgent } from 'components/client-case/client-case-create/create-client-case-form/build-agent-option-from-delegated-agent';
 
 import { AgentOption } from './types';
-
-const buildAgentOptionFromDelegatedAgent = ({
-    firstName,
-    lastName,
-    email,
-    sellingCodes,
-    npn,
-    lookupId,
-    carrierShortName,
-}: DelegatedAgent): AgentOption => ({
-    firstName,
-    lastName,
-    email,
-    sellingCodes,
-    npn,
-    lookupId,
-    carrierShortName,
-});
 
 const deduplicateDelegatedAgents = (
     agents: DelegatedAgent[]

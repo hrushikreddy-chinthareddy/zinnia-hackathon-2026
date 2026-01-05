@@ -35,12 +35,12 @@ import {
     useDocumentDownload,
 } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import {
     CaseDocumentClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
