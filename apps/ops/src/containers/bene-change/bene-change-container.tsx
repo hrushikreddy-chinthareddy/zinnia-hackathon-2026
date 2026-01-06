@@ -1,18 +1,23 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useEffect, useCallback } from 'react';
+import { useMemo, useEffect, useCallback, useState } from 'react';
 
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import { TranslationFiles } from '@deps/config/translations';
 import TabGroupContainer from '@deps/containers/bene-change/components/tab-group-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { DocumentData, DocumentType } from '@deps/models/case/document';
 import { SOR_MAP, SorSystem } from '@deps/models/policy/enums';
 import { fetchDocument } from '@deps/operations/documents/documentOperations';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { validateBeneChangeTransaction } from '@deps/queries/api/web-non-financial';
 import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { Policy } from '@zinnia/api-types/types/sor';
@@ -59,6 +64,7 @@ const BeneChangeContainer = ({
         ownerInfo,
         peopleSelection,
     } = useBeneChange();
+    const [isLoading, setIsLoading] = useState(true);
 
     const { policyNumber } = policy;
     const leaveTransactionLink = isReReg
@@ -81,7 +87,7 @@ const BeneChangeContainer = ({
 
     const renderCondition = !isReReg ? isPeople : isPeopleView;
 
-    const { data } = useQuery({
+    const { data, isFetched } = useQuery({
         queryKey: ['beneficiaryEligibility', planCode, policyNumber],
         queryFn:
             planCode && policyNumber
@@ -93,20 +99,42 @@ const BeneChangeContainer = ({
     const invokeNewBeneChangeApi =
         featureFlags[FEATURE_FLAGS.BENE_CHANGE_NEW_API];
 
+    const { isPermissioned: isUserPermissionedToWithdraw } =
+        useTransactionPermissionCheck(
+            TransactionPermission.WritePolicy,
+            policyNumber,
+            planCode
+        );
+
     useEffect(() => {
-        if (!data) return;
+        if (!isFetched || !data) return;
+
         const sor = (data?.sor ?? '').toLowerCase();
         const isZahara = sor === SorSystem.Zahara.toLowerCase();
         const isEligible = isZahara
             ? data?.status === TransactionResponseStatus.Success
             : !!sor;
+
         setEligibility(isEligible);
         setSOR(SOR_MAP[sor.toLowerCase()] || SorSystem.LifeCad);
 
-        if (!isEligible) {
+        if (
+            router.asPath.includes('/people/benechange') &&
+            (!isEligible || !isUserPermissionedToWithdraw)
+        ) {
             router.replace('/403');
+        } else {
+            setIsLoading(false);
         }
-    }, [data, setEligibility, setSOR, policyNumber]);
+    }, [
+        isFetched,
+        data,
+        setEligibility,
+        setSOR,
+        policyNumber,
+        isUserPermissionedToWithdraw,
+        router.asPath,
+    ]);
 
     const validateCall = useCallback(async () => {
         let documentResult;
@@ -263,6 +291,10 @@ const BeneChangeContainer = ({
                 .map((item: any, index: number) => ({ ...item, index })),
         [steps]
     );
+
+    if (isLoading) {
+        return <PageLoader variant={PageLoaderVariant.Center} />;
+    }
 
     return renderCondition ? (
         !isReReg ? (
