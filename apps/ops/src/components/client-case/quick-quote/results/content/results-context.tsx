@@ -20,10 +20,12 @@ import {
     TermQuickQuoteResult,
     QuickQuoteParams,
     TermQuickQuoteRiderDataItem,
+    RIDER_CODE_MAP,
 } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
     nonEligibleReasonByClass,
+    RiderCode,
 } from '@deps/utils/quick-quotes-rules/types';
 
 import {
@@ -151,6 +153,7 @@ export const QuickQuoteResultsProvider = ({
 
                         if (error instanceof VariantNotAvailableError) {
                             const { variant } = error;
+
                             return {
                                 planCode: variant.planCode,
                                 variant,
@@ -162,7 +165,7 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
-                // console.log('🚀 ~ QuickQuoteResultsProvider ~ items:', items);
+
                 const result = Object.entries(groupBy(items, 'planCode'))
                     .map(
                         ([planCode, sameProductData]):
@@ -202,6 +205,16 @@ export const QuickQuoteResultsProvider = ({
                                         !!item.variant
                                             .notAvailabilityReasonField
                                 )?.variant?.notAvailabilityReasonField;
+
+                            const extractRiderNotAvailabilityReason = (
+                                data: typeof sameProductData,
+                                riderCode: RiderCode
+                            ) =>
+                                data.find(
+                                    (item) =>
+                                        item.variant.riders[riderCode].reasons
+                                            .length > 0
+                                )?.variant?.riders?.[riderCode].reasons;
 
                             const isAvailableResponse = (
                                 item:
@@ -314,10 +327,11 @@ export const QuickQuoteResultsProvider = ({
                                                             ]) => {
                                                                 return [
                                                                     termLength,
-                                                                    filterIneligibilityReasons(
-                                                                        extractNotAvailabilityReason(
-                                                                            data
-                                                                        )
+                                                                    extractRiderNotAvailabilityReason(
+                                                                        data,
+                                                                        RIDER_CODE_MAP[
+                                                                            riderName
+                                                                        ]
                                                                     ),
                                                                 ] as const;
                                                             }
@@ -379,7 +393,7 @@ export const QuickQuoteResultsProvider = ({
 
                 return result;
             },
-            [products, variants, filterIneligibilityReasons]
+            [products, variants]
         )
     );
 

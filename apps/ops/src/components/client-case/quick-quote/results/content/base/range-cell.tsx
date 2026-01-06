@@ -25,6 +25,8 @@ export const QuickQuoteRangeCell = ({
     ...rest
 }: QuickQuoteRangeCellProps) => (
     <div className={clsx(styles.contentDataCell, className)} {...rest}>
-        <QuickQuoteRangeCellText {...{ value, period, variant }} />
+        <QuickQuoteRangeCellText
+            {...{ value, period, variant, hasRiderErrors }}
+        />
     </div>
 );
