@@ -21,6 +21,8 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PremiumCardTest } from '@deps/jest/constants/test-id-constants';
 import { ReactComponent as RewardsIcon } from '@deps/styles/elements/icons/navigation/rewards-portal.svg';
 
+import styles from './policy-test-card.module.css';
+
 type BadgeProps = {
     label?: string;
     tooltipBody?: string;
@@ -70,7 +72,7 @@ const Title = ({
     title,
     ...tooltipProps
 }: TitleProps) => (
-    <div className="title flex flex-row gap-4">
+    <div className={clsx('title', styles.title)}>
         {showIcon && <RewardsIcon width={24} height={24} />}
         <Label
             variant={LabelVariant.LabelLg}
@@ -79,7 +81,7 @@ const Title = ({
             {...tooltipProps}
         />
         {!!label.length && (
-            <div className="flex">
+            <div className={styles.badgeContainer}>
                 <Tooltip
                     placement={PopoverPlacement.TopRight}
                     body={tooltipBody}
@@ -110,11 +112,16 @@ const ValueTable = ({
     total,
     compareValue,
 }: ValueTableProps) => (
-    <div className="flex basis-3/4 flex-col gap-4 self-stretch lg:mr-8 lg:self-center">
-        <div className="flex grow flex-row flex-wrap items-baseline gap-2 align-baseline">
-            <div className="flex flex-row items-baseline gap-2 align-middle">
+    <div className={styles.valueTableContainer}>
+        <div className={styles.valueRow}>
+            <div className={styles.labelContainer}>
                 {Number(total) > Number(compareValue) && (
-                    <hr className="h-4 w-4 flex-none self-center rounded border-none bg-[--color-progress-total]" />
+                    <hr
+                        className={clsx(
+                            styles.colorIndicator,
+                            styles.colorIndicatorTotal
+                        )}
+                    />
                 )}
                 <Label
                     variant={LabelVariant.FieldLabel}
@@ -122,11 +129,8 @@ const ValueTable = ({
                     {...amountProps}
                 />
             </div>
-            <div className="flex grow items-baseline gap-2">
-                <hr
-                    className="grow border-0 border-b-2 border-dotted border-gray-300"
-                    role="presentation"
-                />
+            <div className={styles.valueContainer}>
+                <hr className={styles.dottedLine} role="presentation" />
                 <Typography variant={TypographyVariant.Value}>
                     {numberFormatify(
                         Math.abs(Number(total) - Number(compareValue))
@@ -134,28 +138,27 @@ const ValueTable = ({
                 </Typography>
             </div>
         </div>
-        <div className="flex grow flex-row flex-wrap items-baseline gap-2 align-baseline">
-            <div className="flex flex-row items-center gap-2 align-middle">
-                <hr className="h-4 w-4 flex-none self-center rounded border-none bg-[--color-progress-indicator]" />
+        <div className={styles.valueRow}>
+            <div className={styles.labelContainer}>
+                <hr
+                    className={clsx(
+                        styles.colorIndicator,
+                        styles.colorIndicatorBase
+                    )}
+                />
                 <Label variant={LabelVariant.FieldLabel} {...basisProps} />
             </div>
-            <div className="flex grow items-baseline gap-2">
-                <hr
-                    className="grow border-0 border-b-2 border-dotted border-gray-300"
-                    role="presentation"
-                />
+            <div className={styles.valueContainer}>
+                <hr className={styles.dottedLine} role="presentation" />
                 <Typography variant={TypographyVariant.BodySm}>
                     {numberFormatify(compareValue)}
                 </Typography>
             </div>
         </div>
-        <div className="flex flex-row flex-wrap items-baseline gap-2 align-baseline">
+        <div className={styles.valueRow}>
             <Label variant={LabelVariant.FieldLabel} {...totalProps} />
-            <div className="flex grow items-baseline gap-2">
-                <hr
-                    className="grow border-0 border-b-2 border-dotted border-gray-300"
-                    role="presentation"
-                />
+            <div className={styles.valueContainer}>
+                <hr className={styles.dottedLine} role="presentation" />
                 <Typography variant={TypographyVariant.BodySm}>
                     {numberFormatify(total)}
                 </Typography>
@@ -169,11 +172,13 @@ const FieldDataValues = ({
 }: Pick<PolicyTestCardProps, 'fieldDataValues'>) => (
     <>
         {fieldDataValues && (
-            <div className="my-4 self-stretch lg:my-0">
-                <hr className="hidden h-full w-full bg-gray-100 lg:block lg:w-0.5" />
+            <div className={styles.dividerContainer}>
+                <hr className={styles.divider} />
             </div>
         )}
-        <div className="field-data-values flex basis-1/4 flex-col gap-4 lg:ml-8">
+        <div
+            className={clsx('field-data-values', styles.fieldDataValuesWrapper)}
+        >
             {fieldDataValues &&
                 fieldDataValues.map(({ value, label, ...props }) => (
                     <FieldData
@@ -210,10 +215,7 @@ const PolicyTestCard = ({
     const ref = useRef<HTMLDivElement>(null);
     const { t } = useTranslation();
 
-    const classes = clsx(
-        'progress-bar flex max-w-5xl flex-col gap-6 rounded border-2 border-gray-100 p-4 md:p-6 lg:p-8',
-        classNames
-    );
+    const classes = clsx('progress-bar', styles.progressBar, classNames);
 
     const progressValue = Math.round(
         (Number(compareValue) / Number(total)) * 100
@@ -233,27 +235,24 @@ const PolicyTestCard = ({
             <Title title={title} showIcon={showIcon} badgeProps={badgeProps} />
             <Progress.Root
                 aria-hidden
-                className={clsx(
-                    'h-3 w-full overflow-hidden rounded-full bg-[--color-progress-total]',
-                    progressRootClasses
-                )}
+                className={clsx(styles.progressRoot, progressRootClasses)}
                 max={total}
                 value={Math.min(Number(total), Number(compareValue))}
                 aria-label={`${t(`ariaLabel.progressIndicator`)} ${title}`}
             >
                 <Progress.Indicator
                     className={clsx(
+                        styles.progressIndicator,
                         Number(compareValue) > 0
-                            ? 'min-w-[10px] border-[--color-progress-border]'
-                            : 'border-[--color-progress-total]',
-                        'h-full border-r-2  bg-[--color-progress-indicator]',
+                            ? styles.progressIndicatorActive
+                            : styles.progressIndicatorInactive,
                         progressIndicatorClasses
                     )}
                     style={{ width: `${progressValue}%` }}
                 />
             </Progress.Root>
             <div
-                className="labels flex flex-col items-start lg:flex-row lg:items-center"
+                className={clsx('labels', styles.labelsContainer)}
                 data-testid={PremiumCardTest.FOOTER}
                 ref={ref}
             >

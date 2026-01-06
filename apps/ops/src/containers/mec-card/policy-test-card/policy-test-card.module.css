@@ -1,0 +1,182 @@
+.progressBar {
+    display: flex;
+    max-width: 64rem;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-xl);
+    border-radius: var(--measure-dimension-radius-sm);
+    border: var(--measure-dimension-stroke-sm) solid rgb(var(--color-100-gray));
+    padding: var(--measure-dimension-padding-2xl);
+}
+
+@media (min-width: 768px) {
+    .progressBar {
+        padding: var(--measure-dimension-padding-3xl);
+    }
+}
+
+@media (min-width: 1024px) {
+    .progressBar {
+        padding: var(--measure-dimension-padding-4xl);
+    }
+}
+
+/* Title Component */
+.title {
+    display: flex;
+    flex-direction: row;
+    gap: var(--measure-dimension-gap-lg);
+}
+
+.titleIcon {
+    width: var(--measure-dimension-z-space-6);
+    height: var(--measure-dimension-z-space-6);
+}
+
+.badgeContainer {
+    display: flex;
+}
+
+/* ValueTable Component */
+.valueTableContainer {
+    display: flex;
+    flex-basis: 75%;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+    align-self: stretch;
+}
+
+@media (min-width: 1024px) {
+    .valueTableContainer {
+        margin-right: var(--measure-dimension-margin-md);
+        align-self: center;
+    }
+}
+
+.valueRow {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: var(--measure-dimension-gap-md);
+    vertical-align: baseline;
+}
+
+.labelContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: var(--measure-dimension-gap-md);
+    vertical-align: middle;
+}
+
+.colorIndicator {
+    height: var(--measure-dimension-z-space-4);
+    width: var(--measure-dimension-z-space-4);
+    flex: none;
+    align-self: center;
+    border-radius: var(--measure-dimension-radius-sm);
+    border-style: none;
+}
+
+.colorIndicatorTotal {
+    background-color: var(--color-progress-total);
+}
+
+.colorIndicatorBase {
+    background-color: var(--color-progress-indicator);
+}
+
+.valueContainer {
+    display: flex;
+    flex-grow: 1;
+    align-items: baseline;
+    gap: var(--measure-dimension-gap-md);
+}
+
+.dottedLine {
+    flex-grow: 1;
+    border: 0;
+    border-bottom: var(--measure-dimension-z-space-0) dotted
+        rgb(var(--color-300-gray));
+}
+
+/* FieldDataValues Component */
+.fieldDataValuesWrapper {
+    display: flex;
+    flex-basis: 25%;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+}
+
+@media (min-width: 1024px) {
+    .fieldDataValuesWrapper {
+        margin-left: var(--measure-dimension-margin-md);
+    }
+}
+
+.dividerContainer {
+    margin-top: var(--measure-dimension-margin-xs);
+    margin-bottom: var(--measure-dimension-margin-xs);
+    align-self: stretch;
+}
+
+@media (min-width: 1024px) {
+    .dividerContainer {
+        margin-top: 0;
+        margin-bottom: 0;
+    }
+}
+
+.divider {
+    display: none;
+    height: 100%;
+    width: 100%;
+    background-color: rgb(var(--color-100-gray));
+}
+
+@media (min-width: 1024px) {
+    .divider {
+        display: block;
+        width: var(--measure-dimension-z-space-0);
+    }
+}
+
+/* Progress Root */
+.progressRoot {
+    height: var(--measure-dimension-z-space-3);
+    width: 100%;
+    overflow: hidden;
+    border-radius: var(--measure-dimension-radius-max);
+    background-color: var(--color-progress-total);
+}
+
+/* Progress Indicator */
+.progressIndicator {
+    height: 100%;
+    border-right: var(--measure-dimension-stroke-sm) solid;
+    background-color: var(--color-progress-indicator);
+}
+
+.progressIndicatorActive {
+    min-width: var(--measure-dimension-z-space-2);
+    border-color: var(--color-progress-border);
+}
+
+.progressIndicatorInactive {
+    border-color: var(--color-progress-total);
+}
+
+/* Labels Container */
+.labelsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (min-width: 1024px) {
+    .labelsContainer {
+        flex-direction: row;
+        align-items: center;
+    }
+}

@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 
+import styles from './dot-container.module.css';
+
 interface DotContainerProps {
     dotContainerClassName?: string;
     dotLeftSide: ReactNode;
@@ -21,21 +23,21 @@ const DotContainer = ({
     dotRightSideClassName,
 }: DotContainerProps) => {
     const dotContainerClasses = clsx(
-        'dot-container flex items-baseline gap-2',
+        'dot-container',
+        styles.dotContainer,
         dotContainerClassName
     );
     const dotLeftSideClasses = clsx(
-        'dot-left-side w-fit',
+        'dot-left-side',
+        styles.dotLeftSide,
         dotLeftSideClassName
     );
     const dotRightSideClasses = clsx(
-        'dot-right-side flex',
+        'dot-right-side',
+        styles.dotRightSide,
         dotRightSideClassName
     );
-    const dotClasses = clsx(
-        'dot grow border-0 border-b-2 border-dotted border-gray-300',
-        dotClassName
-    );
+    const dotClasses = clsx('dot', styles.dot, dotClassName);
 
     return (
         <div className={dotContainerClasses}>
