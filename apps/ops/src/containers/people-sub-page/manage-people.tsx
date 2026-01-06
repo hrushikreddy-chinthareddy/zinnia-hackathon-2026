@@ -39,7 +39,7 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
     const shouldShowBeneficiaryChange =
         featureFlags[FEATURE_FLAGS.BENEFICIARY_CHANGE_TRANSACTION];
     const shouldShowAssigneeChange =
-        featureFlags[FEATURE_FLAGS.ASSIGNEE_CHANGE_TRANSACTION] ?? true;
+        featureFlags[FEATURE_FLAGS.ASSIGNEE_CHANGE_TRANSACTION];
 
     const useRoleManagementEligibility = (
         policy: { planCode?: string; policyNumber?: string },
