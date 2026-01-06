@@ -1,5 +1,6 @@
 import { useTranslation } from 'next-i18next';
 
+import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
@@ -112,21 +113,27 @@ export const BankAccounts = ({
                                     {shouldShowBankEdit && (
                                         <>
                                             {isEligible ? (
-                                                <EditIcon
-                                                    height={16}
-                                                    width={16}
+                                                <IconButton
+                                                    aria-label={`${defaultT(
+                                                        'people.card.general.edit'
+                                                    )} ${
+                                                        branchName?.toLocaleUpperCase() ??
+                                                        DEFAULT_ERROR_STRING
+                                                    } ${defaultT(
+                                                        'people.card.bank.label'
+                                                    )}`}
                                                     onClick={editClickHandler(
                                                         onEditClick,
                                                         bankAccount
                                                     )}
                                                     data-testid="edit-bank-account-icon"
-                                                    color={editIconColor}
-                                                    className={`ml-1 ${
-                                                        !isEligible
-                                                            ? 'pointer-events-none opacity-50'
-                                                            : 'cursor-pointer'
-                                                    }`}
-                                                />
+                                                >
+                                                    <EditIcon
+                                                        height={16}
+                                                        width={16}
+                                                        color={editIconColor}
+                                                    />
+                                                </IconButton>
                                             ) : (
                                                 <TempNavInactive
                                                     hideIcon
