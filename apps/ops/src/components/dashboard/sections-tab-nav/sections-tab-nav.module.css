@@ -1,6 +1,11 @@
 .container {
+    --first-column-width: 94px;
+
     display: grid;
-    grid-template-columns: 94px repeat(auto-fit, minmax(0, 1fr));
+    grid-template-columns: var(--first-column-width) repeat(
+            auto-fit,
+            minmax(0, 1fr)
+        );
     grid-template-rows: 1fr;
 }
 
