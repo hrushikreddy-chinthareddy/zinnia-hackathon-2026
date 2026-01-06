@@ -2252,6 +2252,9 @@
             "submit": "Submitted!",
             "backToHome": "Back to Home"
         },
+        "start":{
+            "title": "Start"
+        },
         "assigneeChange": {
             "start": {
                 "title": "Manage Assignees",

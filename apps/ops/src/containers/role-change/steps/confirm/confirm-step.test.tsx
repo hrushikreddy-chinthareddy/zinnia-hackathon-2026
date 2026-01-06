@@ -57,7 +57,7 @@ jest.mock('@deps/contexts/RoleChangeContext', () => ({
 }));
 jest.mock('@deps/queries/api/role-change', () => ({
     submitRoleChange: jest.fn(),
-    deleteTPDRole: jest.fn(),
+    deleteRole: jest.fn(),
 }));
 jest.mock('../../role-change-helper', () => ({
     buildRoleChangeRequestBody: jest.fn(() => ({})),

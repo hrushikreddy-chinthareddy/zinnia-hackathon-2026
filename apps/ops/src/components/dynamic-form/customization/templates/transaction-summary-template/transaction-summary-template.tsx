@@ -105,7 +105,6 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const url = formContext?.customData?.validationUrl;
     const { issueResolved } = formContext?.customData || {};
     const customData = formContext?.customData;
-
     const [validationResponse, setValidationResponse] =
         useState<ValidationResponse | null>(null);
     const [_validationError, setValidationError] = useState<string | null>(
@@ -140,8 +139,6 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
         [formContext.customData]
     );
 
-    //const hasFetchedValidation = useRef(false);
-
     const previousSummaryRef = useRef<TransactionResponse | null>(null);
 
     const setValidationSummary = useCallback(
@@ -165,12 +162,6 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
 
     useEffect(() => {
         if (!url || !stableCustomData || !issueResolved || readonly) return;
-
-        // if (hasFetchedValidation.current) {
-        //     return;
-        // }
-
-        // hasFetchedValidation.current = true;
         setLoading(true);
         setValidationError(null);
 
@@ -178,17 +169,11 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
             .then((summary) => {
                 setValidationResponse(summary);
                 setLoading(false);
-                // if (formContext.setValidationSummary) {
-                //     formContext.setValidationSummary(summary);
-                // }
                 setValidationSummary(summary as TransactionResponse);
             })
             .catch((err) => {
                 setValidationError(err?.message || t('failedToFetch'));
                 setLoading(false);
-                // if (formContext.setValidationSummary) {
-                //     formContext.setValidationSummary(null);
-                // }
                 setValidationSummary(null);
             });
     }, [

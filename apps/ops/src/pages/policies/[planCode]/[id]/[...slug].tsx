@@ -104,6 +104,11 @@ const parseSlugToKey = (slug: string[] | undefined): string => {
     }
 };
 
+const Slugs = {
+    AssigneeChange: 'assigneechange',
+    BeneChange: 'benechange',
+};
+
 const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     user,
     subPageTitleKey,
@@ -151,9 +156,9 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
 
     const getTransactionData = useCallback(() => {
         let transactionType;
-        if (slug && slug[1]) {
+        if (slug && slug.length > 0) {
             switch (slug[1]) {
-                case 'assigneechange':
+                case Slugs.AssigneeChange:
                     transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
                     break;
             }
@@ -205,15 +210,15 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
             case 'people':
                 subPageContent =
                     slug[1] &&
-                    slug[1] != 'benechange' &&
-                    slug[1] != 'assigneechange' ? (
+                    slug[1] != Slugs.BeneChange &&
+                    slug[1] != Slugs.AssigneeChange ? (
                         <PersonSubPage
                             editable={canEditPolicy}
                             partyId={slug[1]}
                         />
                     ) : (
                         (subPageContent =
-                            slug[1] === 'assigneechange' ? (
+                            slug[1] === Slugs.AssigneeChange ? (
                                 transactionData && (
                                     <SelfServeTransactionProvider>
                                         <SelfServeTransactionContainer
@@ -240,9 +245,6 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                                             processSubType={
                                                 transactionData.processSubType
                                             }
-                                            startStepTitle={t(
-                                                transactionData?.startStepTitle
-                                            )}
                                             startStepSubtitle={
                                                 t(
                                                     transactionData?.startStepSubtitle

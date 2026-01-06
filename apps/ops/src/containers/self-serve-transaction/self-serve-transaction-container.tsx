@@ -1,4 +1,4 @@
-import { IChangeEvent } from '@rjsf/core';
+import Form, { IChangeEvent } from '@rjsf/core';
 import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
 import { createRef, RefObject, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,11 +12,11 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { Processes } from '@deps/models/case/case';
+import { FormMetadata } from '@deps/models/case/task';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 import { useSelfServeTransactionContext } from './self-serve-transaction-provider';
-import ConfirmStep from './steps/confirm-step';
 import {
     SelfServeTransaction,
     SelfServeTransactionSubmitResult,
@@ -24,18 +24,18 @@ import {
 } from './types';
 import ProgressBarSteps from '../progress-bar-steps/progress-bar-steps';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import ConfirmStep from './steps/confirm-step/confirm-step';
 
 type SelfServeTransactionContainerProps = {
     initialCustomData: any;
     initialFormData: any;
     transactionType: SelfServeTransaction;
     policy: Policy;
-    metaData: any;
+    metaData: FormMetadata;
     parentPage: ParentPage;
     leaveTransactionLink: string;
     processType: Processes;
     processSubType: Processes[];
-    startStepTitle: string;
     startStepSubtitle?: string;
     submitResponseHandler: (
         payload: any
@@ -53,7 +53,6 @@ const SelfServeTransactionContainer = ({
     leaveTransactionLink,
     processType,
     processSubType,
-    startStepTitle,
     startStepSubtitle = '',
     submitResponseHandler,
     confirmStepSubtitle,
@@ -68,15 +67,19 @@ const SelfServeTransactionContainer = ({
     const [hasValidationErrors, setHasValidationErrors] =
         useState<boolean>(false);
 
-    const steps = schemaContent.tabSchemas;
+    const steps = useMemo(
+        () => schemaContent?.tabSchemas ?? [],
+        [schemaContent]
+    );
+
+    //adding 2 to steps.length to account for start and confirm step
     const formRefs = useMemo(
         () =>
-            Array.from({ length: steps.length + 2 }).map(() =>
-                createRef<any>()
+            Array.from({ length: steps?.length + 2 }).map(() =>
+                createRef<Form>()
             ),
         [steps]
     );
-
     // Initialize formData with initialCustomData only once
     useEffect(() => {
         if (initialCustomData && Object.keys(initialCustomData).length > 0) {
@@ -89,7 +92,6 @@ const SelfServeTransactionContainer = ({
 
     useEffect(() => {
         if (!formData?.actionData) return;
-
         setFormData((prev: any) => ({
             ...prev,
             ...formData.actionData,
@@ -112,7 +114,7 @@ const SelfServeTransactionContainer = ({
 
     const handleStepContinue = (
         stepTitle: string,
-        currentRef: RefObject<any>
+        currentRef: RefObject<Form>
     ) => {
         if (currentRef.current) {
             const isValid = currentRef.current.validateForm?.() || false;
@@ -160,7 +162,8 @@ const SelfServeTransactionContainer = ({
         goToNext();
     };
 
-    const dynamicSteps: Step[] = steps.map((step: any, index: number) => {
+    const dynamicSteps: Step[] = steps.map((step, index) => {
+        const title = step?.title ?? '';
         return {
             isVisible: () => true,
             component: (
@@ -175,7 +178,7 @@ const SelfServeTransactionContainer = ({
                             disableContinue={hasValidationErrors}
                             handleContinue={() =>
                                 handleStepContinue(
-                                    step.title,
+                                    title,
                                     formRefs[currentStepIndex]
                                 )
                             }
@@ -194,10 +197,10 @@ const SelfServeTransactionContainer = ({
                     />
                 </WorkflowCard>
             ),
-            text: step?.title,
+            text: title,
             index: index + 1,
             isCompleted: false,
-            screenReaderLabel: step?.title || '',
+            screenReaderLabel: title,
             isDisabled: false,
         };
     });
@@ -210,16 +213,16 @@ const SelfServeTransactionContainer = ({
                 policy={policy}
                 state={formData}
                 setState={setFormData}
-                title={startStepTitle}
+                title={t('start.title')}
                 subtitle={startStepSubtitle}
                 processType={processType}
                 processSubType={processSubType}
                 leaveTransactionLink={leaveTransactionLink}
             />
         ),
-        text: startStepTitle,
+        text: t('start.title'),
         index: 0,
-        screenReaderLabel: startStepTitle,
+        screenReaderLabel: t('start.title'),
     };
 
     const confirmStep: Step = {
@@ -246,9 +249,13 @@ const SelfServeTransactionContainer = ({
             !policy
         )
             return;
-        setFormData(initialFormData);
+        setFormData((prev: any) => {
+            return {
+                ...prev,
+                ...initialFormData,
+            };
+        });
     }, [initialFormData, setFormData, policy]);
-
     return (
         <div>
             <ProgressBarSteps

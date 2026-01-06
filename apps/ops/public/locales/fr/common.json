@@ -2311,6 +2311,9 @@
             "submit": "Envoyé !",
             "backToHome": "Retour à l’accueil"
         },
+        "start":{
+            "title": "Commencer"
+        },
         "assigneeChange": {
             "start": {
                 "title": "Gérer les assignés",
