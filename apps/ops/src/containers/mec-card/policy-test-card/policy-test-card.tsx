@@ -123,7 +123,10 @@ const ValueTable = ({
                 />
             </div>
             <div className="flex grow items-baseline gap-2">
-                <hr className="grow border-0 border-b-2 border-dotted border-gray-300" />
+                <hr
+                    className="grow border-0 border-b-2 border-dotted border-gray-300"
+                    role="presentation"
+                />
                 <Typography variant={TypographyVariant.Value}>
                     {numberFormatify(
                         Math.abs(Number(total) - Number(compareValue))
@@ -137,7 +140,10 @@ const ValueTable = ({
                 <Label variant={LabelVariant.FieldLabel} {...basisProps} />
             </div>
             <div className="flex grow items-baseline gap-2">
-                <hr className="grow border-0 border-b-2 border-dotted border-gray-300" />
+                <hr
+                    className="grow border-0 border-b-2 border-dotted border-gray-300"
+                    role="presentation"
+                />
                 <Typography variant={TypographyVariant.BodySm}>
                     {numberFormatify(compareValue)}
                 </Typography>
@@ -146,7 +152,10 @@ const ValueTable = ({
         <div className="flex flex-row flex-wrap items-baseline gap-2 align-baseline">
             <Label variant={LabelVariant.FieldLabel} {...totalProps} />
             <div className="flex grow items-baseline gap-2">
-                <hr className="grow border-0 border-b-2 border-dotted border-gray-300" />
+                <hr
+                    className="grow border-0 border-b-2 border-dotted border-gray-300"
+                    role="presentation"
+                />
                 <Typography variant={TypographyVariant.BodySm}>
                     {numberFormatify(total)}
                 </Typography>

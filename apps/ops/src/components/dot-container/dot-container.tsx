@@ -40,7 +40,7 @@ const DotContainer = ({
     return (
         <div className={dotContainerClasses}>
             <div className={dotLeftSideClasses}>{dotLeftSide}</div>
-            <hr className={dotClasses} />
+            <hr className={dotClasses} role="presentation" />
             <div className={dotRightSideClasses}> {dotRightSide}</div>
         </div>
     );
