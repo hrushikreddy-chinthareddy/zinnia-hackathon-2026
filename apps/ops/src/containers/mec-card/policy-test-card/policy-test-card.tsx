@@ -121,6 +121,7 @@ const ValueTable = ({
                             styles.colorIndicator,
                             styles.colorIndicatorTotal
                         )}
+                        role="presentation"
                     />
                 )}
                 <Label
@@ -145,6 +146,7 @@ const ValueTable = ({
                         styles.colorIndicator,
                         styles.colorIndicatorBase
                     )}
+                    role="presentation"
                 />
                 <Label variant={LabelVariant.FieldLabel} {...basisProps} />
             </div>
@@ -173,7 +175,7 @@ const FieldDataValues = ({
     <>
         {fieldDataValues && (
             <div className={styles.dividerContainer}>
-                <hr className={styles.divider} />
+                <hr className={styles.divider} role="presentation" />
             </div>
         )}
         <div
