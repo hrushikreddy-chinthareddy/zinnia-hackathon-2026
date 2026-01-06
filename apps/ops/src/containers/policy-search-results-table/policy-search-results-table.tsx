@@ -14,6 +14,7 @@ import { useTranslation } from 'react-i18next';
 
 import { PolicySortBy } from '@deps/components/policy-index/types';
 import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
+import useNavLink from '@deps/hooks/useNavLink';
 import { PolicyReferenceSearchResponse } from '@deps/types/search';
 
 import { PolicyRow } from './policy-row';
@@ -35,6 +36,7 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
         isError || !data || !data.results || data?.results?.length === 0;
 
     const { t } = useTranslation();
+    const { buildOpenInNewWindowLinkText } = useNavLink();
     return (
         <Table>
             <TableHeader>
@@ -91,6 +93,9 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
                                     target="_blank"
                                     rel="noreferrer"
                                     className="underline-offset-4 underline text-link"
+                                    aria-label={buildOpenInNewWindowLinkText(
+                                        t('dashboard.search.results.helpDesk')
+                                    )}
                                 >
                                     {t('dashboard.search.results.helpDesk')}
                                 </Link>

@@ -1,8 +1,8 @@
 import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { ProductTypes } from '@deps/types/product';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';

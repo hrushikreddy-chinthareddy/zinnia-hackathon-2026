@@ -302,6 +302,9 @@ const caseChartHelpers = {
             enabled: false,
         },
         series: [],
+        drilldown: {
+            activeDataLabelStyle: {},
+        },
     }),
 };
 

@@ -1,5 +1,7 @@
 .skipLink {
-    position: fixed;
+    /* This style overrides a bloom style but contact management includes bloom again and overrides this */
+    /* The !important is a temp fix to resolve the issue */
+    position: fixed !important;
     top: 1.5rem;
     left: 2rem;
     z-index: 9999;

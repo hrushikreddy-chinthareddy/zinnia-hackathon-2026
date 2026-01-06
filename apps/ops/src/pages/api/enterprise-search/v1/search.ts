@@ -14,6 +14,8 @@ import { LoggingContext, withAuthAndLogging } from '@deps/utils/server-logging';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 // Will proxy any request made to the next server directly to the gateway apis
+// This endpoint is currently only used for case search
+// /api/policies/search calls enterprise search directly for policies
 export default withAuthAndLogging(
     async (
         req: NextApiRequest,
@@ -24,12 +26,11 @@ export default withAuthAndLogging(
         const proxyUrl = req.url?.replace(re, apiServerBaseUrl as string);
 
         const session = await getSession(req, res);
-
         const canUnmask = await canUnmaskPii(
             session?.accessToken,
             session?.user?.partyId
         );
-
+        // This is only handling masking cases since /api/policies/search calls enterprise search directly
         const masker = canUnmask ? caseSearchSanitizer : caseSearchFullMasker;
 
         return await requestHandler<any>(

@@ -10,7 +10,7 @@ jest.mock('@deps/types/constants', () => ({
     DEFAULT_ERROR_STRING: 'N/A',
 }));
 
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import {
     getDetails,

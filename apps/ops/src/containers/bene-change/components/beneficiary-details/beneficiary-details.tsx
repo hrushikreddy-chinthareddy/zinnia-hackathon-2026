@@ -128,7 +128,9 @@ export default function BeneficiaryDetails({
         currentBene?.party?.info || {}
     );
 
-    const [preferedOption, setPreferredOption] = useState<string | null>(null);
+    const [preferedOption, setPreferredOption] = useState<string>(
+        currentBene.party.preferredCommunicationType || ''
+    );
 
     const preferedOptions = [
         {
@@ -308,6 +310,7 @@ export default function BeneficiaryDetails({
                             index={0}
                             isReadOnly={isReadOnly}
                             partyType={currentParty?.partyType}
+                            preferredContactMethod={preferedOption ?? undefined}
                         />
                     </div>
                 </div>
@@ -357,6 +360,7 @@ export default function BeneficiaryDetails({
                             updateEmail={currentEmails?.[0]}
                             index={0}
                             isReadOnly={isReadOnly}
+                            preferredContactMethod={preferedOption ?? undefined}
                         />
                     </div>
                 </div>

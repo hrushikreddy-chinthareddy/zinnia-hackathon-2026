@@ -6,6 +6,11 @@ import NavLink from './nav-link';
 afterEach(cleanup);
 
 describe('NavLink Component', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('should render a NavLink component', () => {
         render(<NavLink>NavLink</NavLink>);
         expect(screen.getByRole('link')).toBeInTheDocument();

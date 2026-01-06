@@ -15,6 +15,7 @@ describe('Case Details Side Nav Component', () => {
     beforeEach(() => {
         // default: allow showing Case Insights
         mockUsePermissions.mockReturnValue({ hasCaseInsightPermission: true });
+        jest.spyOn(console, 'warn').mockImplementation();
     });
 
     afterEach(() => {

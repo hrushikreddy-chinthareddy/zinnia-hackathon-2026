@@ -37,6 +37,12 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime, toTitleCase } from '@deps/helpers/string.helpers';
+import {
+    DEFAULT_ASSIGNEE_FIELDS,
+    getUserNameFromEmail,
+    findAssignee,
+    NO_ASSIGNEE,
+} from '@deps/hooks/useTaskManagementQueue';
 import { CaseIdentifier } from '@deps/models/case/case';
 import {
     includeDocumentTypeForInboundSearch,
@@ -53,8 +59,14 @@ import {
     TaskSideSheetProps,
     TaskComment,
 } from '@deps/models/case/task-instance';
+import { getUserDataByPartyIds } from '@deps/queries/api/parties';
+import { searchUsersInGroupCSR } from '@deps/queries/api/server/fga/searchUsers';
 import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { claimTask } from '@deps/queries/api/v1/task';
+import {
+    assignTaskAsAdmin,
+    unAssignTaskAsAdmin,
+} from '@deps/queries/api/v1/task-admin';
 import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
@@ -73,6 +85,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
+import { AssigneeField } from './components/assignee-field';
 import {
     isAPIErrorInformation,
     isClaimNextTask,
@@ -196,6 +209,7 @@ export default function GlobalTaskSideSheet({
     taskName,
     featureFlagDecisions,
     onTaskClaimSuccess,
+    onTaskUpdated,
     mappedDocuments,
 }: TaskSideSheetProps) {
     const { t } = useTranslation();
@@ -209,6 +223,18 @@ export default function GlobalTaskSideSheet({
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
+
+    const [assigneeList, setAssigneeList] = useState<
+        { user: string; partyId: string }[]
+    >([]);
+    const [allAssigneeList, setAllAssigneeList] = useState<
+        { user: string; partyId: string }[]
+    >([]);
+
+    const [assigneeLoading, setAssigneeLoading] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
+    const [assignLoader, setAssignLoader] = useState(false);
+
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
     const { isZinniaInternalProcessor } = usePermissionsContext();
@@ -413,11 +439,39 @@ export default function GlobalTaskSideSheet({
             router.push(`/cases/${caseId}`);
         }
     };
+    async function resolveAssigneeForTask(task: ManagementTask) {
+        if (!task.assigneePartyId) return NO_ASSIGNEE;
+
+        const { parties } = await getUserDataByPartyIds({
+            partyIds: [task.assigneePartyId],
+            fields: DEFAULT_ASSIGNEE_FIELDS,
+        });
+
+        return findAssignee(parties, task.assigneePartyId);
+    }
 
     useEffect(() => {
         const getTaskData = async () => {
-            const data = await getTaskInstance({ taskId });
-            setTask(data);
+            const task = await getTaskInstance({ taskId });
+            if (!task) {
+                setTask(null);
+                setLoading(false);
+                return;
+            }
+
+            let finalAssignee = NO_ASSIGNEE;
+
+            if (!isOpsManagerView) {
+                finalAssignee =
+                    task.assignee || task.prefferedAssignee || NO_ASSIGNEE;
+            } else {
+                finalAssignee = await resolveAssigneeForTask(task);
+            }
+
+            setTask({
+                ...task,
+                assignee: finalAssignee,
+            });
             setLoading(false);
         };
         getTaskData();
@@ -610,6 +664,127 @@ export default function GlobalTaskSideSheet({
     const shouldRenderStartButton =
         isCaseAndStartAble || isReadOnlyWithFeatureFlag;
 
+    const handleClick = async () => {
+        if (assigneeList.length === 0 && !assigneeLoading) {
+            try {
+                setAssigneeLoading(true);
+                const usersData = await searchUsersInGroupCSR({
+                    carrier: task.carrier,
+                    queue: task.queue,
+                    access: 'processor',
+                });
+
+                const mappedUsers =
+                    usersData?.users.map((u: any) => ({
+                        user: getUserNameFromEmail(u.email),
+                        partyId: u.id.split(':')[1],
+                    })) || [];
+
+                setAssigneeList(mappedUsers);
+                setAllAssigneeList(mappedUsers);
+            } catch (error) {
+                browserLogError('Error fetching assignee list');
+            } finally {
+                setAssigneeLoading(false);
+            }
+        }
+    };
+
+    const handleSearch = (value: string) => {
+        setSearchValue(value);
+
+        if (!value.trim()) {
+            setAssigneeList(allAssigneeList);
+            return;
+        }
+
+        setAssigneeList(
+            allAssigneeList.filter((a) =>
+                a.user.toLowerCase().includes(value.toLowerCase())
+            )
+        );
+    };
+
+    const handleTaskAssignAsAdmin = async (
+        taskId: string,
+        assigneePartyId: string
+    ) => {
+        setAssignLoader(true);
+
+        try {
+            const updatedTask = await assignTaskAsAdmin(
+                taskId,
+                assigneePartyId
+            );
+
+            if (updatedTask) {
+                let resolvedAssignee = NO_ASSIGNEE;
+
+                const { parties } = await getUserDataByPartyIds({
+                    partyIds: [assigneePartyId],
+                    fields: DEFAULT_ASSIGNEE_FIELDS,
+                });
+
+                resolvedAssignee = findAssignee(parties, assigneePartyId);
+
+                const finalTask = {
+                    ...task,
+                    assignee: resolvedAssignee,
+                    assigneePartyId: assigneePartyId,
+                };
+
+                //Update the sidesheet UI
+                setTask(finalTask);
+
+                // Notify table row
+                onTaskUpdated?.(finalTask);
+
+                writeToCache('getTaskInstance', { taskId }, finalTask);
+            }
+        } finally {
+            setAssignLoader(false);
+        }
+    };
+
+    const handleTaskUnassignAsAdmin = async (
+        taskId: string,
+        assigneePartyId: string
+    ) => {
+        setAssignLoader(true);
+
+        try {
+            const updatedTask = await unAssignTaskAsAdmin(
+                taskId,
+                assigneePartyId
+            );
+
+            if (updatedTask) {
+                const finalTask = {
+                    ...task,
+                    assignee: NO_ASSIGNEE,
+                    assigneePartyId: undefined,
+                };
+
+                ////Update the sidesheet UI
+                setTask(finalTask);
+
+                // Notify table row
+                onTaskUpdated?.(finalTask);
+
+                writeToCache('getTaskInstance', { taskId }, finalTask);
+            }
+        } finally {
+            setAssignLoader(false);
+        }
+    };
+
+    const hasAssignee = () => {
+        if (!task.assignee) return false;
+
+        const value = String(task.assignee).trim();
+        return value !== '' && value !== NO_ASSIGNEE;
+    };
+
     const renderDetails = (
         <div className="flex flex-col w-full">
             <label className="font-primary text-lg mt-8">
@@ -722,13 +897,34 @@ export default function GlobalTaskSideSheet({
                     {t('sideSheet.task.assigneeLabel')}{' '}
                 </div>
                 <div className="col-span-2">
-                    <Typography variant={TypographyVariant.BodySm}>
-                        {task.assignee
-                            ? task.assignee
-                            : task.prefferedAssignee
-                            ? task.prefferedAssignee
-                            : NoAssigneeComp}
-                    </Typography>
+                    {!isOpsManagerView ? (
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {task.assignee
+                                ? task.assignee
+                                : task.prefferedAssignee
+                                ? task.prefferedAssignee
+                                : NoAssigneeComp}
+                        </Typography>
+                    ) : (
+                        <AssigneeField
+                            task={task}
+                            isOpsManagerView={isOpsManagerView}
+                            assigneeList={assigneeList}
+                            assigneeLoading={assigneeLoading}
+                            searchValue={searchValue}
+                            handleClick={handleClick}
+                            handleSearch={handleSearch}
+                            hasAssignee={hasAssignee}
+                            handleTaskAssignAsAdmin={handleTaskAssignAsAdmin}
+                            handleTaskUnassignAsAdmin={
+                                handleTaskUnassignAsAdmin
+                            }
+                            fallback={NoAssigneeComp}
+                            positionMode="portal"
+                            isAssigning={assignLoader}
+                            onTaskUpdated={onTaskUpdated}
+                        />
+                    )}
                     {errorClaimingTask ? (
                         <AssistiveText
                             variant={AssistiveTextVariant.Error}

@@ -94,6 +94,7 @@ describe('ConfirmStep', () => {
     });
     beforeEach(() => {
         jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
     });
 
     it('shows loader on initial render', async () => {

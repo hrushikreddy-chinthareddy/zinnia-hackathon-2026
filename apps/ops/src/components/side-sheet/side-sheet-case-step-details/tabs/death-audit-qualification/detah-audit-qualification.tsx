@@ -10,7 +10,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export interface DeathAuditQualificationProps {
     stepAdditionalData: CaseAdditionalStepDataBase;
