@@ -9241,5 +9241,23 @@
             "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
+    },
+    "fraudScreeningReview": {
+        "confirmStep": {
+            "title": "C’est fait !",
+            "subTitle": "La tâche d’approbation du transporteur a été soumise.",
+            "secondaryCta": "Retour à l’accueil",
+            "cta": "Aller à l’Audit de Qualité",
+            "submitTask": "Soumettre"
+        }
+    },
+    "bankingValidationCallout": {
+        "confirmStep": {
+            "title": "C’est fait !",
+            "subTitle": "La tâche d'appel Giact a été soumise.",
+            "secondaryCta": "Retour à l’accueil",
+            "cta": "Aller à l’Audit de Qualité",
+            "submitTask": "Soumettre"
+        }
     }
 }

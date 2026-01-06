@@ -9195,5 +9195,23 @@
             "secondaryCta": "Volver al inicio",
             "submitTask": "Enviar"
         }
+    },
+    "fraudScreeningReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "La tarea de aprobación del transportista fue enviada.",
+            "secondaryCta": "Volver a inicio",
+            "cta": "Ir al caso",
+            "submitTask": "Enviar"
+        }
+    },
+    "bankingValidationCallout": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Se envió la tarea de llamada de Giact.",
+            "secondaryCta": "Volver al inicio",
+            "cta": "Ir al caso",
+            "submitTask": "Enviar"
+        }
     }
 }

@@ -9359,5 +9359,23 @@
             "secondaryCta": "Back",
             "submitTask": "Submit"
         }
+    },
+    "fraudScreeningReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Carrier Approval Task was submitted.",
+            "cta": "Go to case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "bankingValidationCallout": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Giact call out Task was submitted.",
+            "secondaryCta": "Back to home",
+            "cta": "Go to case",
+            "submitTask": "Submit"
+        }
     }
 }
