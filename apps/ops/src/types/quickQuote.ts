@@ -176,7 +176,7 @@ type TermQuickQuoteDataItem =
     | TermQuickQuoteAvailableDataItem
     | TermQuickQuoteNotAvailableItem;
 
-type TermQuickQuoteRiderDataItem = {
+export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;
     notAvailabilityReasonField?: Partial<
         Record<number, IneligibilityReason[] | undefined>

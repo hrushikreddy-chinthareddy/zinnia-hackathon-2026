@@ -35,27 +35,32 @@ export const QuickQuoteResultTableRow = ({
                 reasons={data[0]?.notAvailabilityReasons}
             />
         ) : (
-            data?.map(({ value, period, notAvailabilityReasons }, idx) =>
-                value != null ? (
-                    <div key={idx}>
-                        <QuickQuoteRangeCell
-                            value={value}
-                            period={period}
-                            variant={cellsVariant}
-                        />
-                        {notAvailabilityReasons && (
-                            <QuickQuoteNotAvailableReasonCell
-                                key={idx}
-                                reasons={notAvailabilityReasons}
+            data?.map(
+                (
+                    { value, period, hasRiderErrors, notAvailabilityReasons },
+                    idx
+                ) =>
+                    value != null ? (
+                        <div key={idx}>
+                            <QuickQuoteRangeCell
+                                value={value}
+                                period={period}
+                                variant={cellsVariant}
+                                hasRiderErrors={hasRiderErrors}
                             />
-                        )}
-                    </div>
-                ) : (
-                    <QuickQuoteNotAvailableReasonCell
-                        key={idx}
-                        reasons={notAvailabilityReasons}
-                    />
-                )
+                            {notAvailabilityReasons && (
+                                <QuickQuoteNotAvailableReasonCell
+                                    key={idx}
+                                    reasons={notAvailabilityReasons}
+                                />
+                            )}
+                        </div>
+                    ) : (
+                        <QuickQuoteNotAvailableReasonCell
+                            key={idx}
+                            reasons={notAvailabilityReasons}
+                        />
+                    )
             )
         );
     return (

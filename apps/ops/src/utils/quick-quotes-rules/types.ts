@@ -151,6 +151,7 @@ export interface RiderInputNormalized {
 export type DataItem = {
     period?: string;
     value: NumberOrRange | undefined;
+    hasRiderErrors?: boolean;
     notAvailabilityReasons?: IneligibilityReason[];
 };
 

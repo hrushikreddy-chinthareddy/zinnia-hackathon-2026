@@ -10,6 +10,7 @@ import { ArrayValues } from 'type-fest';
 
 import { getQuickQuoteProductMapping } from '@deps/queries/api/v1/quick-quote';
 import { useQueryProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
+import { RiderName } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import {
     NO_PARAM_RIDERS,
@@ -18,6 +19,7 @@ import {
     QuickQuoteResult,
     TermQuickQuoteResult,
     QuickQuoteParams,
+    TermQuickQuoteRiderDataItem,
 } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
@@ -39,6 +41,10 @@ type QuickQuoteResultsContextState = {
     filterIneligibilityReasons: (
         reasons: nonEligibleReasonByClass[] | undefined
     ) => IneligibilityReason[] | undefined;
+    hasRiderErrorsByTermLength: (
+        riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
+        termLength: number
+    ) => boolean;
 };
 
 const QuickQuoteResultsContext =
@@ -89,6 +95,18 @@ export const QuickQuoteResultsProvider = ({
                 return undefined;
 
             return filteredReasons;
+        },
+        []
+    );
+
+    const hasRiderErrorsByTermLength = useCallback(
+        (
+            riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
+            termLength: number
+        ): boolean => {
+            return Object.entries(riders).some(
+                ([_, data]) => !data.notAvailabilityReasonField?.[termLength]
+            );
         },
         []
     );
@@ -372,6 +390,7 @@ export const QuickQuoteResultsProvider = ({
             isPending,
             results: results?.length ? results : placeholderData,
             filterIneligibilityReasons,
+            hasRiderErrorsByTermLength,
         }),
         [
             results,
@@ -380,6 +399,7 @@ export const QuickQuoteResultsProvider = ({
             isFetchingProducts,
             isPending,
             filterIneligibilityReasons,
+            hasRiderErrorsByTermLength,
         ]
     );
 

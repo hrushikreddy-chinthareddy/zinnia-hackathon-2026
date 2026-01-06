@@ -8865,6 +8865,7 @@
         "quickQuoteResults": {
             "notAvailable": "Pas disponible",
             "notAvailableByTermLength": "Pas disponible pour un contrat de {{termLength}} ans:",
+            "hasRiderErrors": "Certains suppléments ne sont pas inclus. Voir la couverture et le résumé.",
             "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
             "title": "Devis rapide",
             "coverage": {

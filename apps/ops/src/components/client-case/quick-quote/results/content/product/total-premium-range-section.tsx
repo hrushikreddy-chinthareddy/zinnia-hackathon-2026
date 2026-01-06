@@ -13,7 +13,8 @@ import { useQuickQuoteResults } from '../results-context';
 
 export const QuickQuoteTotalPremiumRangeSection = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const { results, filterIneligibilityReasons } = useQuickQuoteResults();
+    const { results, filterIneligibilityReasons, hasRiderErrorsByTermLength } =
+        useQuickQuoteResults();
 
     if (!results) {
         return null;
@@ -61,6 +62,10 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                     value: item?.range,
                     period: 'mo.',
                     notAvailabilityReasons: reasons,
+                    hasRiderErrors: hasRiderErrorsByTermLength(
+                        result.data.riders,
+                        termLength
+                    ),
                 };
             })}
         />

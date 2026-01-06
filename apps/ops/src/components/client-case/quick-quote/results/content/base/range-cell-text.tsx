@@ -16,6 +16,7 @@ type QuickQuoteRangeCellTextProps = {
     period?: string;
     variant?: TypographyVariant;
     notAvailableText?: string;
+    hasRiderErrors?: boolean;
 };
 
 export const QuickQuoteRangeCellText = ({
@@ -24,23 +25,31 @@ export const QuickQuoteRangeCellText = ({
     period,
     notAvailableText,
     variant = TypographyVariant.BodySm,
+    hasRiderErrors,
 }: QuickQuoteRangeCellTextProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
     return (
-        <Typography
-            className={clsx(
-                {
-                    [styles.notAvailableText]: value == null,
-                },
-                className
+        <>
+            <Typography
+                className={clsx(
+                    {
+                        [styles.notAvailableText]: value == null,
+                    },
+                    className
+                )}
+                variant={value != null ? variant : TypographyVariant.BodySm}
+            >
+                {value !== null && value !== undefined
+                    ? buildRangeText(value, period)
+                    : notAvailableText ||
+                      t('clientCase.quickQuoteResults.notAvailable')}
+            </Typography>
+            {value !== undefined && hasRiderErrors && (
+                <Typography variant={TypographyVariant.BodySm}>
+                    {t('clientCase.quickQuoteResults.hasRiderErrors')}
+                </Typography>
             )}
-            variant={value != null ? variant : TypographyVariant.BodySm}
-        >
-            {value !== null && value !== undefined
-                ? buildRangeText(value, period)
-                : notAvailableText ||
-                  t('clientCase.quickQuoteResults.notAvailable')}
-        </Typography>
+        </>
     );
 };

@@ -13,13 +13,14 @@ type QuickQuoteRangeCellProps = {
     value: NumberOrRange | undefined;
     period?: string;
     variant?: TypographyVariant;
+    hasRiderErrors?: boolean;
 } & Omit<TypographyProps, 'children' | 'variant'>;
 
 export const QuickQuoteRangeCell = ({
     className,
     value,
     period,
-
+    hasRiderErrors,
     variant = TypographyVariant.BodySm,
     ...rest
 }: QuickQuoteRangeCellProps) => (

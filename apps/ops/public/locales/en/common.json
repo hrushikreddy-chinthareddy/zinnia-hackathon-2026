@@ -8977,6 +8977,7 @@
             "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
             "notAvailable": "Not Available",
             "notAvailableByTermLength": "Not available for {{termLength}}-year term:",
+            "hasRiderErrors": "Some riders not included. See Coverage & Summary.",
             "product": {
                 "title": "Product",
                 "totalPremiumRange": "Total Premium Range",
