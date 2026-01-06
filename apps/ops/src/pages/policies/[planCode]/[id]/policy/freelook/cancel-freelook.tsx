@@ -27,30 +27,29 @@ const CancelFreeLook = ({ policy }: { policy: Policy }) => {
     const { policyNumber } = policy;
     const { planCode } = policy.product ?? {};
 
-    const { isPermissioned: isUserPermissionedToWithdraw } =
-        useTransactionPermissionCheck(
-            TransactionPermission.WritePolicy,
-            policyNumber,
-            planCode
-        );
+    const {
+        isPermissioned: isUserPermissionedToWithdraw,
+        isLoading: isPermissionCheckLoading,
+    } = useTransactionPermissionCheck(
+        TransactionPermission.WritePolicy,
+        policyNumber,
+        planCode
+    );
 
     useEffect(() => {
-        console.log('Eligibility Checks:', {
-            freeLookEnabled,
-            isUserPermissionedToWithdraw,
-        });
+        if (isPermissionCheckLoading) return;
 
-        // Wait until the permission state is defined
-        if (typeof isUserPermissionedToWithdraw !== 'undefined') {
-            const isPermissioned = isUserPermissionedToWithdraw;
-
-            if (!freeLookEnabled || !isPermissioned) {
-                router.replace('/403');
-            } else {
-                setIsLoading(false);
-            }
+        if (!freeLookEnabled || !isUserPermissionedToWithdraw) {
+            router.replace('/403');
+        } else {
+            setIsLoading(false);
         }
-    }, [freeLookEnabled, isUserPermissionedToWithdraw, router]);
+    }, [
+        freeLookEnabled,
+        isUserPermissionedToWithdraw,
+        router,
+        isPermissionCheckLoading,
+    ]);
 
     if (isLoading) {
         return <PageLoader variant={PageLoaderVariant.Center} />;
