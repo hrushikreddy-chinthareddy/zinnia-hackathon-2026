@@ -9053,6 +9053,7 @@
             "ariaGoToEApp": "Go to eApp link",
             "selectBeforeGoToEApp": "Please select an illustration before continuing to the eApplication.",
             "archiveIllustrationPopoverTitle": "Archive this illustration?",
+            "archiveIllustrationIconTitle": "Archive illustration icon",
             "archiveIllustrationPopoverBody": "You can unarchive it later.",
             "confirmArchive": "Archive",
             "cancel": "Cancel",

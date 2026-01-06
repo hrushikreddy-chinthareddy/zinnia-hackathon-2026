@@ -8892,6 +8892,7 @@
             "ariaGoToEApp": "Enlace para ir al eApp",
             "selectBeforeGoToEApp": "Por favor seleccione un ilustración antes de continuar al eApplication.",
             "archiveIllustrationPopoverTitle": "Archivar esta ilustración?",
+            "archiveIllustrationIconTitle": "Icono de archivar illustración",
             "archiveIllustrationPopoverBody": "Puede desarchivarla luego.",
             "confirmArchive": "Archivar",
             "cancel": "Cancelar",
