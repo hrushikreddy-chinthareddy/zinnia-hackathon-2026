@@ -2507,6 +2507,7 @@
         "unassign": "Unassign",
         "assign": "Assign",
         "startTask": "Start Task",
+        "assigneeSearchPlaceholder": "Find a person",
         "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
         "assigned": "Assigned",

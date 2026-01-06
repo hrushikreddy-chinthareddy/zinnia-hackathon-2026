@@ -1494,6 +1494,7 @@
         "unassignTaskError": "Erreur de désattribution de tâche",
         "assignTaskError": "Erreur d'affectation de tâche",
         "startTask": "Démarrer la tâche",
+        "assigneeSearchPlaceholder": "Trouver une personne",
         "assignTask": "Assigner une tâche",
         "transaction": "Transaction: {{transactionType}}",
         "assigned": "Attribué",
