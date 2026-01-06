@@ -1,0 +1,15 @@
+.contentBody {
+    padding: var(--measure-dimension-z-space-8);
+}
+.headerSection {
+    margin-bottom: var(--measure-dimension-z-space-8);
+}
+.entryRow {
+    display: flex;
+    gap: var(--measure-dimension-z-space-16);
+    margin-top: var(--measure-dimension-z-space-3);
+    margin-bottom: var(--measure-dimension-z-space-3);
+}
+.entryField {
+    width: 100%;
+}
