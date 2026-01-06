@@ -137,6 +137,7 @@ export enum FEATURE_FLAGS {
     DEFAULT_CASE_DATA_ENTRY = 'contact-center-default-case-data-entry',
     SYSTEMATIC_WITHDRAWAL_TRANSACTION = 'systematic_withdrawal_transaction',
     SYSTEMATIC_RMD_TRANSACTION = 'systematic_rmd_transaction',
+    SYSTEMATIC_PROGRAMS_TABLE = 'systematic_programs_table',
     FAST_WITHDRAWAL = 'fast-withdrawal',
     FAST_OFT = 'fast-oft',
     // FAST_RMD = 'fast-rmd',
