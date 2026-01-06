@@ -1,6 +1,6 @@
 .progressBar {
     display: flex;
-    max-width: 64rem;
+    max-width: calc(var(--measure-dimension-z-space-32) * 8);
     flex-direction: column;
     gap: var(--measure-dimension-gap-xl);
     border-radius: var(--measure-dimension-radius-sm);
@@ -14,7 +14,7 @@
     }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
     .progressBar {
         padding: var(--measure-dimension-padding-4xl);
     }
@@ -45,7 +45,7 @@
     align-self: stretch;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
     .valueTableContainer {
         margin-right: var(--measure-dimension-margin-md);
         align-self: center;
@@ -109,7 +109,7 @@
     gap: var(--measure-dimension-gap-lg);
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
     .fieldDataValuesWrapper {
         margin-left: var(--measure-dimension-margin-md);
     }
@@ -121,7 +121,7 @@
     align-self: stretch;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
     .dividerContainer {
         margin-top: 0;
         margin-bottom: 0;
@@ -135,7 +135,7 @@
     background-color: rgb(var(--color-100-gray));
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
     .divider {
         display: block;
         width: var(--measure-dimension-z-space-0);
@@ -174,7 +174,7 @@
     align-items: flex-start;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1025px) {
     .labelsContainer {
         flex-direction: row;
         align-items: center;
