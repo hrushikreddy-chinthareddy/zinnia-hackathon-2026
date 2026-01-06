@@ -2,7 +2,6 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 
@@ -31,7 +30,7 @@ const TaskContainer = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagement.taskForm',
     });
-    const { featureFlags } = useOptimizely();
+
     const steps = stepsProvider.getSteps(taskType as TaskType, {
         carrierId: carrier,
         caseId,
@@ -46,7 +45,6 @@ const TaskContainer = ({
         task,
         isSaveAsDraftEnabled,
         isContinueButtonEnabled,
-        featureFlags,
     });
     return (
         <WorkflowProvider>
