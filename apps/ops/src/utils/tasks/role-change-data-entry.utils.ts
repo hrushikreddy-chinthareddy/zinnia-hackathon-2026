@@ -1,4 +1,6 @@
 import { Action } from '@deps/constants/policy';
+import { Party } from '@deps/containers/task-container/task-handlers/types';
+import { toTitleCase } from '@deps/helpers/string.helpers';
 
 export interface RoleChangeActionItem {
     action: Action | string;
@@ -26,26 +28,10 @@ export function detectRoleChangeRequestType(
     return { requestType, addedItem, deletedItem };
 }
 
-export function getCollateralAmountValue(
-    actionData: any[]
-): RoleChangeDetectionResult {
-    const addedItem = actionData.find((a) => a.action === Action.ADD) ?? null;
-    const deletedItem =
-        actionData.find((a) => a.action === Action.DELETE) ?? null;
-
-    let collateralAmount = null;
-    if (addedItem && deletedItem)
-        collateralAmount = addedItem.party.collateralAmount;
-    else if (addedItem) collateralAmount = addedItem.party.collateralAmount;
-    else if (deletedItem) collateralAmount = deletedItem.party.collateralAmount;
-
-    return collateralAmount;
-}
-
 export function resolveRoleChangePartyId(
     requestType: Action,
     deletedItem: RoleChangeActionItem | null,
-    defaultPartyId: string | null
+    _defaultPartyId: string | null
 ) {
     switch (requestType) {
         case Action.UPDATE:
@@ -53,7 +39,7 @@ export function resolveRoleChangePartyId(
             return deletedItem?.party?.partyId ?? null;
         case Action.ADD:
         default:
-            return defaultPartyId;
+            return '';
     }
 }
 
@@ -118,3 +104,15 @@ export function getDefaultRoleChangeParty() {
         endDate: null,
     };
 }
+export const toFullName = (party: Party): string | null =>
+    toTitleCase(
+        [
+            party.prefix,
+            party.firstName,
+            party.middleName,
+            party.lastName,
+            party.suffix,
+        ]
+            .filter(Boolean)
+            .join(' ')
+    ) || null;

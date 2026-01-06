@@ -22,8 +22,7 @@ export const useAgencyOptions = (
     agentOption: AgentOption | undefined,
     aliasesWithSellingCodes: AliasWithSellingCode[] | undefined
 ) => {
-    const { writeClientCaseCarriers } = usePermissionsContext();
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
+    const { isSuperIllustrator } = usePermissionsContext();
     // TODO: Add client case agent selling code retrival logic
 
     const authUserAliases = aliasesWithSellingCodes?.map((alias) => ({

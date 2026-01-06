@@ -30,7 +30,6 @@ type SelfServeTransactionContainerProps = {
     initialFormData: any;
     transactionType: SelfServeTransaction;
     policy: Policy;
-    planCode: string;
     metaData: any;
     parentPage: ParentPage;
     leaveTransactionLink: string;
@@ -49,7 +48,6 @@ const SelfServeTransactionContainer = ({
     initialFormData,
     transactionType,
     policy,
-    planCode,
     metaData,
     parentPage,
     leaveTransactionLink,
@@ -67,6 +65,8 @@ const SelfServeTransactionContainer = ({
     const { currentStepIndex, setCurrentStepIndex, goToNext } = useWorkflow();
     const { formData, setFormData } = useSelfServeTransactionContext();
     const [validationSummary, setValidationSummary] = useState<any>(null);
+    const [hasValidationErrors, setHasValidationErrors] =
+        useState<boolean>(false);
 
     const steps = schemaContent.tabSchemas;
     const formRefs = useMemo(
@@ -77,10 +77,38 @@ const SelfServeTransactionContainer = ({
         [steps]
     );
 
-    const customFormData = {
-        ...formData,
-        ...initialCustomData,
-    };
+    // Initialize formData with initialCustomData only once
+    useEffect(() => {
+        if (initialCustomData && Object.keys(initialCustomData).length > 0) {
+            setFormData((prev: any) => ({
+                ...prev,
+                ...initialCustomData,
+            }));
+        }
+    }, [initialCustomData, setFormData]);
+
+    useEffect(() => {
+        if (!formData?.actionData) return;
+
+        setFormData((prev: any) => ({
+            ...prev,
+            ...formData.actionData,
+        }));
+    }, [formData?.actionData, setFormData]);
+
+    const mergedFormContext = useMemo(
+        () => ({
+            customData: formData,
+            setCustomData: (patch: any) => {
+                setFormData((prev: any) => ({
+                    ...prev,
+                    ...patch,
+                }));
+            },
+            setValidationSummary,
+        }),
+        [formData, setFormData]
+    );
 
     const handleStepContinue = (
         stepTitle: string,
@@ -95,7 +123,6 @@ const SelfServeTransactionContainer = ({
                 stepTitle == 'Summary'
                     ? isValid && !hasValidationErrors
                     : isValid;
-            console.log(`IsValid:${canProceed} for step:${stepTitle}`);
 
             if (!canProceed) {
                 browserLogError(
@@ -114,6 +141,13 @@ const SelfServeTransactionContainer = ({
             ...formData,
             ...event.formData,
         }));
+        const currentRef = formRefs[currentStepIndex];
+        if (currentRef?.current) {
+            setTimeout(() => {
+                const isValid = currentRef.current?.validateForm?.() || false;
+                setHasValidationErrors(!isValid);
+            }, 0);
+        }
     };
 
     const handleStepChange = (step: Step) => {
@@ -133,13 +167,14 @@ const SelfServeTransactionContainer = ({
             isVisible: () => true,
             component: (
                 <WorkflowCard
-                    key={currentStepIndex}
+                    key={`step-${index + 1}-${currentStepIndex}`}
                     title={step?.title ?? ''}
                     footerContent={
                         <TransactionNavigationButtons
                             submitLabel={t('continue') ?? ''}
                             cancelLabel={t('cancel') ?? ''}
                             isSubmit={false}
+                            disableContinue={hasValidationErrors}
                             handleContinue={() =>
                                 handleStepContinue(
                                     step.title,
@@ -157,11 +192,7 @@ const SelfServeTransactionContainer = ({
                         formData={formData}
                         onChange={handleFormChange}
                         onSubmit={handleSubmit}
-                        formContext={{
-                            customData: customFormData,
-                            setCustomData: setFormData,
-                            setValidationSummary: setValidationSummary,
-                        }}
+                        formContext={mergedFormContext}
                     />
                 </WorkflowCard>
             ),
@@ -197,7 +228,7 @@ const SelfServeTransactionContainer = ({
         isVisible: () => true,
         component: (
             <ConfirmStep
-                customData={customFormData}
+                customData={formData}
                 transactionType={transactionType}
                 submitResponseHandler={submitResponseHandler}
                 subTitle={confirmStepSubtitle}

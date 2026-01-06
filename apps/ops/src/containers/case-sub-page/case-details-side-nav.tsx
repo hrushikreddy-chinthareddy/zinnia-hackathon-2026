@@ -63,6 +63,7 @@ const CaseDetailsSideNav = ({
     caseProcessingDetails,
 }: CaseDetailsSideNavProps) => {
     const { hasCaseInsightPermission } = usePermissionsContext();
+
     const { t } = useTranslation();
     const submissionDetails = caseProcessingDetails?.[0]?.details;
     const { agentFirstName, agentLastName, agentNPN, agentSSN, transactionId } =

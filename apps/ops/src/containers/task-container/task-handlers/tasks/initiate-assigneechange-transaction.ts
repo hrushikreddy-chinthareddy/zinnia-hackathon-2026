@@ -19,7 +19,6 @@ import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 
-import { PREFIX_MAP } from '../constants';
 import {
     TaskHandler,
     Reason,
@@ -45,9 +44,6 @@ const ensureSingle = <T>(items: T[], fallback: T): T[] =>
 const normalizeNullableString = (v?: string | null): string | null =>
     isNullEmptyOrUndefined(v) ? null : String(v);
 
-const getPrefix = (prefix?: string | null): string | null =>
-    prefix ? PREFIX_MAP[prefix] ?? null : null;
-
 const formatAddress = (address?: Partial<Address>): Address => ({
     addressType: address?.addressType ?? AddressType.RESIDENCE,
     addressLine1: address?.addressLine1 ?? '',
@@ -72,7 +68,7 @@ const getAddresses = (addresses?: Party['addresses']): Address[] => {
 };
 
 const formatPhone = (phone?: Partial<Phone>): Phone => ({
-    phoneType: (phone?.phoneType as string) ?? PhoneType.HOME,
+    phoneType: (phone?.phoneType as string) ?? PhoneType.MOBILE,
     dialNumber: phone?.dialNumber ?? null,
     areaCode: phone?.areaCode ?? null,
     countryCode: phone?.countryCode ?? 'USA',
@@ -140,15 +136,28 @@ const toFullName = (party: Party): string | null =>
             .join(' ')
     ) || null;
 
+const getCollateralAmount = (
+    party: Party,
+    policy: PolicyResponse
+): number | null => {
+    const partyRole = policy.partyRoles.find(
+        (r) =>
+            r.partyId === party.partyId &&
+            r.partyRole === Roles.ASSIGNEE &&
+            (!r.endDate || !isEndDated(r.endDate))
+    );
+    const collateralAmount = partyRole?.collateralAmount ?? null;
+    return collateralAmount;
+};
+
 const formatPartyForContract = (party: Party, role: string) => {
     const isIndividual = party.partyType === PartyType.INDIVIDUAL;
-    console.log('party', party);
 
     return {
         partyRoleId: party?.partyRoleId ?? null,
         partyRole: role,
         partyType: party?.partyType,
-        prefix: getPrefix(party?.prefix ?? null),
+        prefix: party?.prefix ?? null,
         firstName: isIndividual
             ? normalizeNullableString(party?.firstName)
             : null,
@@ -166,6 +175,7 @@ const formatPartyForContract = (party: Party, role: string) => {
         identifications: getIdentifications(party?.identifications),
         emails: getEmails(party?.emails),
         phones: getPhones(party?.phones),
+        isIrrevocable: party?.isIrrevocable ?? false,
     };
 };
 
@@ -173,7 +183,6 @@ export const getContractInfo = (policy: PolicyResponse) => {
     const rolesToFormat: PartyRoleType[] = [
         PartyRoleType.OWNER,
         PartyRoleType.JOINTOWNER,
-        PartyRoleType.THIRDPARTYDESIGNEE,
         PartyRoleType.ASSIGNEE,
     ];
 
@@ -213,7 +222,7 @@ export const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
                 party: {
                     partyId: party.partyId ?? null,
                     partyType: party.partyType ?? null,
-                    prefix: getPrefix(party.prefix ?? null),
+                    prefix: party.prefix ?? null,
                     firstName: party.firstName ?? null,
                     middleName: party.middleName ?? null,
                     lastName:
@@ -236,6 +245,8 @@ export const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
                     phones: getPhones(party.phones),
                     emails: getEmails(party.emails),
                     identifications: getIdentifications(party.identifications),
+                    collateralAmount:
+                        getCollateralAmount(party, policy) ?? null,
                 },
             })
         );
@@ -352,8 +363,7 @@ const initiateAssigneeChangeTransactionHandler: TaskHandler<
                     },
                     effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
                     actionData,
-                    defaultPartyIdRoleChange:
-                        actionData?.[0]?.party?.partyId ?? '',
+                    defaultPartyIdRoleChange: '',
                 },
             });
         }

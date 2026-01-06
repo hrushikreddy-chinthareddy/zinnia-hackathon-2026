@@ -71,6 +71,7 @@ export interface PartyRole {
     relationshipToParty: string;
     partyRoleId?: string;
     endDate?: string;
+    collateralAmount?: number;
 }
 
 export interface Identification {
@@ -206,6 +207,7 @@ export type ActionDataItem = {
         phones: Phone[];
         emails: Email[];
         identifications: Identification[];
+        collateralAmount?: number | null;
     };
 };
 

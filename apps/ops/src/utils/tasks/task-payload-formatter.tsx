@@ -7,17 +7,17 @@ import {
     PotentialMatches,
 } from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask } from '@deps/models/case/task-instance';
+import { PartyType } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-
 import {
+    toFullName,
     detectRoleChangeRequestType,
     getDefaultRoleChangeParty,
     cleanAddresses,
     cleanEmails,
     cleanPhones,
     mergeIdentifications,
-    getCollateralAmountValue,
-} from './role-change-data-entry.utils';
+} from '@deps/utils/tasks/role-change-data-entry.utils';
 
 const getRelationship = (item: any) =>
     item?.party?.relationshipToTheCurrentOwner || null;
@@ -86,8 +86,6 @@ export const getPurchaseDocumentPayload = (
 export const getAssigneeChangePayload = (task: ManagementTask) => {
     const actionData = task?.data?.actionData || [];
     const signatureData = task?.data?.signatureData || [];
-
-    const collateralAmount = getCollateralAmountValue(actionData);
     const { requestType, addedItem, deletedItem } =
         detectRoleChangeRequestType(actionData);
 
@@ -97,6 +95,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
     const party = {
         ...base,
         ...src,
+        collateralAmount: src?.collateralAmount || null,
         addresses: cleanAddresses(src.addresses),
         emails: cleanEmails(src.emails),
         phones: cleanPhones(src.phones),
@@ -118,7 +117,7 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
     };
 
     const partyId =
-        requestType === Action.ADD ? undefined : deletedItem?.party?.partyId;
+        requestType === Action.ADD ? null : deletedItem?.party?.partyId;
 
     return {
         ...task,
@@ -135,8 +134,8 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
             policyNumber: task.data.policyNumber,
             signatures: signatureData?.signatures ?? [],
             notarySignatures: signatureData?.notarySignatures ?? [],
-            collateralAmount: collateralAmount,
             partyRole: PolicyRole.ASSIGNEE,
+            signatureData: signatureData,
         },
     };
 };
@@ -233,13 +232,25 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
         addresses: cleanAddresses(src.addresses),
         emails: cleanEmails(src.emails),
         phones: cleanPhones(src.phones),
+        firstName: src.firstName ?? null,
+        middleName: src.middleName ?? null,
+        lastName:
+            src.lastName ??
+            (src.partyType !== PartyType.INDIVIDUAL
+                ? src.fullName ?? null
+                : null) ??
+            null,
+        fullName: toFullName(src),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
+        entityType:
+            src.partyType === PartyType.ORGANIZATION && !src.entityType
+                ? 'UNKNOWN'
+                : src.entityType,
     };
 
     const partyId =
         requestType === Action.ADD ? undefined : deletedItem?.party?.partyId;
-
     return {
         ...task,
         data: {
@@ -254,6 +265,9 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
             planCode: task.data.planCode,
             policyNumber: task.data.policyNumber,
             signatures: signatureData?.signatures ?? [],
+            partyRole: 'ThirdPartyDesignee',
+            documents: src?.documents,
+            supportingDocumentAttached: src?.supportingDocumentAttached,
         },
     };
 };

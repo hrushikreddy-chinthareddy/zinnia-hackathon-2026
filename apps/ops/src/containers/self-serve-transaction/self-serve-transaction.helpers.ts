@@ -15,8 +15,8 @@ import {
     buildInitialBeneChangeFormData,
 } from './transactions/bene-change-transaction';
 import { SelfServeTransaction } from './types';
+import assigneeChangeMetadata from '../../jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json';
 import beneChangeMetadata from '../../jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json';
-import assigneeChangeMetadata from '../../jsonschema-mock-service/tasks/WELB/initiate-assigneechange-transaction.json';
 
 const removeFirstTabSchema = (metadata: any) => ({
     ...metadata,

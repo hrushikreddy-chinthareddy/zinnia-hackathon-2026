@@ -5,6 +5,11 @@ import { render, screen } from '@testing-library/react';
 import SearchResults, { QueryResult } from './search-results';
 
 describe('SearchResults', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     // Renders header and children when query is successful and not empty
     it('should render header and children when query is successful and not empty', () => {
         const query: QueryResult = {
