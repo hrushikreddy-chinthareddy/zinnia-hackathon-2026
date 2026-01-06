@@ -42,11 +42,15 @@ import {
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createDtccValidator, createValidator } from '../../utils/helper-utils';
-import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import {
+    validateDtccDetails,
+    validateSignESign,
+} from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getUsaaConfig(
     t: TFunction,
-    isDtccSectionEnabled: boolean
+    isDtccSectionEnabled: boolean,
+    isValidationV2Enabled: boolean = false
 ) {
     const formValidation = ({
         formSignature,
@@ -89,6 +93,87 @@ export default function getUsaaConfig(
                 'formValidation.accountTypeMustBeSelected'
             );
         }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
+
+    // usaa-ssw-validation-v2
+    /**
+     * Improved form validation with cleaner structure:
+     * - Extracted payment method check
+     * - Destructured bank reference
+     * - Declarative validation rules
+     * - Early return pattern
+     */
+    const formValidationV2 = ({
+        formSignature,
+        formDisbursement,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors: FormValidationErrors = {};
+
+        const bank = formDisbursement?.bank?.[0];
+        const paymentMethod = formDisbursement?.paymentMethod
+            ?.text as PaymentMethod;
+        const isEftOrWire = [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+            paymentMethod
+        );
+
+        if (isEftOrWire) {
+            // Define validation rules for banking fields that must match
+            const matchingFieldRules = [
+                {
+                    field: bank?.accountNumber,
+                    matchField: bank?.reEnterAccountNumber,
+                    errorKey: BankingFields.ReEnterAccountNumber,
+                    errorMessage: 'formValidation.accountNumberDoesNotMatch',
+                },
+                {
+                    field: bank?.routingNumber,
+                    matchField: bank?.reEnterBankRoutingNumber,
+                    errorKey: BankingFields.ReEnterBankRoutingNumber,
+                    errorMessage: 'formValidation.routingNumberDoesNotMatch',
+                },
+            ];
+
+            // Validate matching fields (only when bank name is empty - preserving original logic)
+            const isBankNameEmpty = bank?.bankName === '';
+            if (isBankNameEmpty) {
+                matchingFieldRules.forEach(
+                    ({ field, matchField, errorKey, errorMessage }) => {
+                        if (field !== matchField) {
+                            errors[errorKey] = t(errorMessage);
+                        }
+                    }
+                );
+            }
+
+            // Validate account type is selected
+            if (!bank?.accountType?.text) {
+                errors[BankingFields.AccountType] = t(
+                    'formValidation.accountTypeMustBeSelected'
+                );
+            }
+        }
+
+        // DTCC validation for SSW
+        if (isDtccSectionEnabled) {
+            const participantId = formDisbursement?.participantId?.text ?? '';
+            const contractNumber = bank?.accountNumber ?? ''; // DTCC stores contract number in bank.accountNumber
+            const dtccErrors = validateDtccDetails(
+                t,
+                participantId,
+                contractNumber
+            );
+            Object.assign(errors, dtccErrors);
+        }
+
         const signESignValidate = validateSignESign({
             formSignature,
             formESignatureData,
@@ -623,7 +708,9 @@ export default function getUsaaConfig(
     };
 
     return {
-        formValidation,
+        formValidation: isValidationV2Enabled
+            ? formValidationV2
+            : formValidation,
         formPartyConfigs,
         systematicWithdrawalOptions,
         fundWithdrawnMethodOptions,

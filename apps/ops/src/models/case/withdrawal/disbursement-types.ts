@@ -223,4 +223,5 @@ export interface DisbursementParts {
     consentAvailable: boolean | null;
     ChooseBankingType: string;
     isAddressLine2Required?: boolean;
+    name?: string | null;
 }
