@@ -211,7 +211,8 @@ export const PremiumsSubPage = () => {
         },
     });
 
-    const openCancelSideSheet = () => {
+    const openCancelSideSheet = (e?: React.MouseEvent) => {
+        e && e.preventDefault();
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {t('cancelPremiumAutopayTitle')}
@@ -254,8 +255,7 @@ export const PremiumsSubPage = () => {
         tooltip: getManageAutopayTooltip(),
     };
     const cancelAutopay = {
-        // TODO: avoid using # here
-        href: '#',
+        href: '',
         isDisabled:
             !premiumSetOrCancelAutopayEnabled ||
             !systematicProgramsEligibility?.isEligibleManageAutopay ||

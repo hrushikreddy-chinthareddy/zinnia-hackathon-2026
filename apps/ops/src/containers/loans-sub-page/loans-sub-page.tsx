@@ -151,7 +151,8 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
             policyNumber,
             planCode
         );
-    const openCancelSideSheet = () => {
+    const openCancelSideSheet = (e?: React.MouseEvent) => {
+        e && e.preventDefault();
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {t('cancelLoanAutopayTitle')}
@@ -230,7 +231,7 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     };
 
     const loanCancelAutopay = {
-        href: '#',
+        href: '',
         isDisabled:
             !loanCancelEnabled ||
             !loanPaymentEnabled ||

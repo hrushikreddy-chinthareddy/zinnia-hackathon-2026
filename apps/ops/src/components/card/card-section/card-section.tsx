@@ -21,7 +21,7 @@ export interface FooterContent {
     text: string;
     href: string;
     isDisabled?: boolean;
-    onClick?: () => void;
+    onClick?: (e?: React.MouseEvent) => void;
     tooltip?: string;
     tempInactive?: boolean;
 }

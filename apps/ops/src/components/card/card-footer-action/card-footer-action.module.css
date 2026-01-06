@@ -8,4 +8,5 @@
     font-size: var(--measure-font-sizing-content-body-font-size);
     font-weight: var(--string-font-weight-font-weight-semibold);
     color: var(--color-600-cerulean);
+    cursor: pointer;
 }

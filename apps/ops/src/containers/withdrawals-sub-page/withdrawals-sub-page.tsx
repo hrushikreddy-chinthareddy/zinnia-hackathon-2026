@@ -252,9 +252,10 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         tooltip: getWithdrawalTooltip(),
     };
     const withdrawCancelAutopay = {
-        href: '#',
+        href: '',
         text: t('allFields.cancelAutopay'),
-        onClick: () => {
+        onClick: (e?: React.MouseEvent) => {
+            e && e.preventDefault();
             openCancelSideSheet(ArrangementType.WITHDRAWAL);
         },
         isDisabled:
@@ -287,9 +288,10 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         tooltip: getRmdTooltip(),
     };
     const rmdCancelAutopay = {
-        href: '#',
+        href: '',
         text: t('allFields.cancelAutopay'),
-        onClick: () => {
+        onClick: (e?: React.MouseEvent) => {
+            e && e.preventDefault();
             openCancelSideSheet(ArrangementType.REQUIREDMINIMUMDISTRIBUTION);
         },
         isDisabled:
