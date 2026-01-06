@@ -1,7 +1,6 @@
 import clsx from 'clsx';
 import { PropsWithChildren, ReactNode } from 'react';
 
-import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import ResponsiveFlex from '@deps/components/responsive-flex/responsive-flex';
 import {
     HorizontalResizing,
@@ -10,8 +9,9 @@ import {
     LayoutAlignment,
     LayoutDirection,
 } from '@deps/components/responsive-flex/responsive-flex.types';
-import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import { JestProps } from '@deps/types/props';
+
+import FooterAction from '../card-footer-action/card-footer-action';
 
 enum SectionCardTest {
     Container = 'section-card-container-test-id',
@@ -21,7 +21,7 @@ export interface FooterContent {
     text: string;
     href: string;
     isDisabled?: boolean;
-    onClick?: () => void;
+    onClick?: (e?: React.MouseEvent) => void;
     tooltip?: string;
     tempInactive?: boolean;
 }
@@ -30,6 +30,7 @@ export type SectionCardProps = {
     headerContent?: ReactNode;
     footerContent?: FooterContent[];
     className?: string;
+    headerClassName?: string;
 } & JestProps &
     PropsWithChildren;
 
@@ -42,6 +43,7 @@ const SectionCard = ({
     className,
     headerContent,
     footerContent,
+    headerClassName,
     'data-testid': testId,
 }: SectionCardProps) => (
     <CardContainer
@@ -55,71 +57,25 @@ const SectionCard = ({
         <CardHeader
             horizontalResizing={HorizontalResizing.Hug}
             itemSpacing={ItemSpacing.XXSmall}
+            className={headerClassName}
         >
             {headerContent}
         </CardHeader>
         <CardBody
             layoutDirection={LayoutDirection.Vertical}
             layoutAlignment={LayoutAlignment.TopEvenly}
-            className="md:flex-row md:justify-start md:gap-8"
+            className="md:flex-row md:justify-start md:gap-8 w-full"
         >
             {children}
         </CardBody>
         {footerContent && (
             <div className="flex flex-wrap gap-4 bg-gray-50 py-4 md:flex-row md:gap-8 md:pl-6 lg:w-auto lg:self-stretch lg:pl-8">
-                {footerContent.map(
-                    ({
-                        text,
-                        tempInactive,
-                        tooltip,
-                        href,
-                        isDisabled,
-                        onClick,
-                    }) => (
-                        <span key={`${text}-wrapper`}>
-                            {tempInactive ? (
-                                <TempNavInactive
-                                    key={`${text}-tooltip`}
-                                    tooltipBody={tooltip}
-                                >
-                                    {text}
-                                </TempNavInactive>
-                            ) : isDisabled ? (
-                                tooltip ? (
-                                    <Tooltip
-                                        placement={PopoverPlacement.TopRight}
-                                        body={tooltip}
-                                        key={`${text}-tooltip`}
-                                    >
-                                        <span
-                                            className="cursor-not-allowed font-primary  font-semibold text-gray-300"
-                                            key={`${text}-link`}
-                                        >
-                                            {text}
-                                        </span>
-                                    </Tooltip>
-                                ) : (
-                                    <span
-                                        className="cursor-not-allowed font-primary font-semibold text-gray-300"
-                                        key={`${text}-link`}
-                                    >
-                                        {text}
-                                    </span>
-                                )
-                            ) : (
-                                <a
-                                    href={href}
-                                    key={`${text}-link`}
-                                    className="font-primary text-links-sm font-semibold text-cerulean-600"
-                                    data-testid={text}
-                                    onClick={onClick}
-                                >
-                                    {text}
-                                </a>
-                            )}
-                        </span>
-                    )
-                )}
+                {footerContent.map((footerAction) => (
+                    <FooterAction
+                        key={`${footerAction.text}-wrapper`}
+                        footerContent={footerAction}
+                    />
+                ))}
             </div>
         )}
     </CardContainer>

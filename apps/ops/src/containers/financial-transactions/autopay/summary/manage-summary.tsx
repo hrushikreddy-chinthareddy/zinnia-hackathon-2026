@@ -110,7 +110,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         {
             header: '',
             new: t(
-                `${translationKeyPrefix}Summary${
+                `allFields.${translationKeyPrefix}Summary${
                     systematicProgramTablesEnabled
                         ? 'NewSystematicProgramDetail'
                         : 'NewAutopayDetail'
@@ -226,7 +226,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
             </Typography>
             <Typography className="mb-6 mt-2" variant={TypographyVariant.Body}>
                 {validationSucceeded
-                    ? t(`${translationKeyPrefix}.summary.typstatus200subtitlee`)
+                    ? t(`${translationKeyPrefix}.summary.status200subtitle`)
                     : t(`${translationKeyPrefix}.summary.status400subtitle`)}
             </Typography>
             <div>
@@ -278,7 +278,7 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                     submitLabel={
                         validationSucceeded
                             ? t(
-                                  `${translationKeyPrefix}Summary${
+                                  `allFields.${translationKeyPrefix}Summary${
                                       systematicProgramTablesEnabled
                                           ? 'UpdateSystematicProgram'
                                           : 'UpdateAutopay'

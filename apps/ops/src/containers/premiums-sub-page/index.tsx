@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
 import { FooterContent } from '@deps/components/card/card-section/card-section';
+import SystematicProgramsCard from '@deps/components/card/card-systematic-programs/card-systematic-programs';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
 import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-transaction/cancel-autopay/side-sheet-cancel-autopay';
@@ -76,6 +77,11 @@ export const PremiumsSubPage = () => {
             ),
         [systematicPrograms]
     );
+
+    const premiumPrograms =
+        systematicPrograms?.filter(
+            (sp) => sp.arrangementType === ArrangementType.PAYMENT
+        ) || [];
 
     const flatExtra = getFlatExtra(coverage);
     const addCharges = getAddCharges({
@@ -201,7 +207,8 @@ export const PremiumsSubPage = () => {
         },
     });
 
-    const openCancelSideSheet = () => {
+    const openCancelSideSheet = (e?: React.MouseEvent) => {
+        e && e.preventDefault();
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {systematicProgramTablesEnabled
@@ -218,41 +225,47 @@ export const PremiumsSubPage = () => {
         sideSheet.handleOpen(true);
     };
 
+    const premiumSetUpAutopayDisable = !!(
+        !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
+        !premiumSetOrCancelAutopayEnabled ||
+        upcomingPayment?.nextProgramDate ||
+        !isUserPermissionedToAutopay
+    );
+
+    const startAutopay = {
+        text: t('premium.upcoming.startAutopay'),
+        href: `/policies/${planCode}/${policyNumber}/policy/premiums/add-premium-autopay`,
+        isDisabled: premiumSetUpAutopayDisable,
+        tooltip: !isUserPermissionedToAutopay
+            ? t('transactions.permissionDeniedTooltip', {
+                  carrier: policyDetails.carrierName,
+              })
+            : undefined,
+    };
+
+    const manageAutopay = {
+        text: t('premium.upcoming.manageAutopay'),
+        href: `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay`,
+        isDisabled:
+            !systematicProgramsEligibility?.isEligibleManageAutopay ||
+            !upcomingPayment?.nextProgramDate ||
+            !isUserPermissionedToAutopay,
+        tooltip: getManageAutopayTooltip(),
+    };
+    const cancelAutopay = {
+        href: '',
+        isDisabled:
+            !premiumSetOrCancelAutopayEnabled ||
+            !systematicProgramsEligibility?.isEligibleManageAutopay ||
+            !upcomingPayment?.nextProgramDate ||
+            !isUserPermissionedToAutopay,
+        text: t('premium.upcoming.cancelAutopay'),
+        onClick: openCancelSideSheet,
+    };
     const footerContent = [
-        {
-            text: t('premium.upcoming.startAutopay'),
-            href: `/policies/${planCode}/${policyNumber}/policy/premiums/add-premium-autopay`,
-            isDisabled:
-                !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
-                !premiumSetOrCancelAutopayEnabled ||
-                upcomingPayment?.nextProgramDate ||
-                !isUserPermissionedToAutopay,
-            tooltip: !isUserPermissionedToAutopay
-                ? t('premium.upcoming.transactions.permissionDeniedTooltip', {
-                      carrier: policyDetails.carrierName,
-                  })
-                : undefined,
-        },
-        {
-            text: t('premium.upcoming.manageAutopay'),
-            href: `/policies/${planCode}/${policyNumber}/policy/premiums/update-premium-autopay`,
-            isDisabled:
-                !systematicProgramsEligibility?.isEligibleManageAutopay ||
-                !upcomingPayment?.nextProgramDate ||
-                !isUserPermissionedToAutopay,
-            tooltip: getManageAutopayTooltip(),
-        },
-        {
-            // TODO: avoid using # here
-            href: '#',
-            isDisabled:
-                !premiumSetOrCancelAutopayEnabled ||
-                !systematicProgramsEligibility?.isEligibleManageAutopay ||
-                !upcomingPayment?.nextProgramDate ||
-                !isUserPermissionedToAutopay,
-            text: t('premium.upcoming.cancelAutopay'),
-            onClick: openCancelSideSheet,
-        },
+        startAutopay,
+        manageAutopay,
+        cancelAutopay,
         {
             text: t('premium.upcoming.oneTimePaymentText'),
             href: `/policies/${planCode}/${policyNumber}/policy/premiums/new-premium`,
@@ -277,31 +290,56 @@ export const PremiumsSubPage = () => {
             />
 
             <hr className="border-t-2 border-t-background" />
-            <UpcomingPaymentCard
-                additionalCharges={addCharges}
-                bankDetails={payorBankDetails}
-                footerLinks={footerContent as FooterContent[]}
-                autopayAmount={upcomingPayment?.amount}
-                paymentDate={upcomingPayment?.nextProgramDate}
-                paymentDateText={
-                    (!!upcomingPayment?.nextProgramDate &&
-                        t('premium.upcoming.paymentDateText')) ||
-                    undefined
-                }
-                paymentFrequencyText={
-                    t('premium.upcoming.paymentFrequencyText', {
-                        paymentMode: upcomingPayment?.frequency
-                            ? getFrequency(upcomingPayment?.frequency, t)
-                            : '',
-                        paymentType: t('premium.upcoming.paymentType.premium'),
-                    }) || undefined
-                }
-                requestSubTypes={[
-                    'Systematic Program Setup',
-                    'Systematic Program Update',
-                ]}
-                hasProgram={!!upcomingPayment}
-            />
+            {!systematicProgramTablesEnabled && (
+                <UpcomingPaymentCard
+                    additionalCharges={addCharges}
+                    bankDetails={payorBankDetails}
+                    footerLinks={footerContent as FooterContent[]}
+                    autopayAmount={upcomingPayment?.amount}
+                    paymentDate={upcomingPayment?.nextProgramDate}
+                    paymentDateText={
+                        (!!upcomingPayment?.nextProgramDate &&
+                            t('premium.upcoming.paymentDateText')) ||
+                        undefined
+                    }
+                    paymentFrequencyText={
+                        t('premium.upcoming.paymentFrequencyText', {
+                            paymentMode: upcomingPayment?.frequency
+                                ? getFrequency(upcomingPayment?.frequency, t)
+                                : '',
+                            paymentType: t(
+                                'premium.upcoming.paymentType.premium'
+                            ),
+                        }) || undefined
+                    }
+                    requestSubTypes={[
+                        'Systematic Program Setup',
+                        'Systematic Program Update',
+                    ]}
+                    hasProgram={!!upcomingPayment}
+                />
+            )}
+            {systematicProgramTablesEnabled && (
+                <SystematicProgramsCard
+                    programs={[
+                        {
+                            arrangementType: ArrangementType.PAYMENT,
+                            activePrograms: premiumPrograms.filter(
+                                (program) => program.status === Status.ACTIVE
+                            ),
+                            terminatedOrSuspendedPrograms:
+                                premiumPrograms.filter(
+                                    (program) =>
+                                        program.status === Status.TERMINATED ||
+                                        program.status === Status.SUSPENDED
+                                ),
+                            manageAction: manageAutopay,
+                            cancelAction: cancelAutopay,
+                        },
+                    ]}
+                    setUpAction={startAutopay}
+                />
+            )}
 
             {!isTerm && !isAnnuity && (
                 <>
