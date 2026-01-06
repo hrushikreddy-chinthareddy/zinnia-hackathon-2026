@@ -1,28 +1,21 @@
+import { TaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
-export const getBeneChangeSteps = (props: GetStepsProps) => {
-    const {
-        taskInfoLink,
-        task,
-        taskType,
-        t,
-        taskMetadata,
-        isContinueButtonEnabled,
-        featureFlags,
-    } = props;
-
+export const getBeneChangeSteps = ({
+    taskInfoLink,
+    task,
+    taskType,
+    t,
+    taskMetadata,
+    isContinueButtonEnabled,
+}: GetStepsProps) => {
     const readOnly = task.status === TaskStatus.Completed;
     const isIssueResolved = task.data.issueResolved;
-    const isBeneChangePaperFormSummaryEnabled =
-        featureFlags[
-            FEATURE_FLAGS.ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN
-        ];
 
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
@@ -32,7 +25,10 @@ export const getBeneChangeSteps = (props: GetStepsProps) => {
                 readonly={readOnly}
                 taskInfoLink={taskInfoLink}
                 isSubmit={
-                    (index === (isBeneChangePaperFormSummaryEnabled ? 4 : 3) &&
+                    (index ===
+                        (taskType === TaskType.Initiate_BeneChange_Transaction
+                            ? 4
+                            : 3) &&
                         !readOnly) ||
                     !isIssueResolved
                 }
