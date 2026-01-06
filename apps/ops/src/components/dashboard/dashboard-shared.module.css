@@ -1,20 +1,20 @@
 .chartContainer {
     display: block;
 
-    @media screen and (min-width: var(--breakpoint-xl)) {
+    @media screen and (min-width: 1044px) {
         display: grid;
         grid-template-rows: 1fr;
     }
 }
 
 .chartContainerRightAlign {
-    @media screen and (min-width: var(--breakpoint-xl)) {
+    @media screen and (min-width: 1044px) {
         grid-template-columns: minmax(0, 1fr) minmax(0, 25%);
     }
 }
 
 .chartContainerLeftAlign {
-    @media screen and (min-width: var(--breakpoint-xl)) {
+    @media screen and (min-width: 1044px) {
         grid-template-columns: minmax(0, 25%) minmax(0, 1fr);
     }
 }
@@ -47,7 +47,7 @@
     margin: var(--measure-dimension-gap-lg) 0;
     gap: var(--measure-dimension-gap-lg);
 
-    @media screen and (min-width: var(--breakpoint-lg)) {
+    @media screen and (min-width: 1025px) {
         flex-direction: row;
         justify-content: space-between;
     }
@@ -60,20 +60,20 @@
     flex-wrap: wrap;
     gap: var(--measure-dimension-gap-lg);
 
-    @media screen and (min-width: var(--breakpoint-lg)) {
+    @media screen and (min-width: 1025px) {
         flex-basis: 50%;
     }
 }
 
 .multiselectDropdowns {
-    @media screen and (min-width: var(--breakpoint-lg)) {
+    @media screen and (min-width: 1025px) {
         width: 150px;
         min-width: 150px;
     }
 }
 
 .filterItem {
-    @media screen and (min-width: var(--breakpoint-lg)) {
+    @media screen and (min-width: 1025px) {
         flex: 1 1 auto;
         width: auto;
     }
@@ -109,7 +109,7 @@
     background: var(--color-base-surface-surface-secondary, #f8f8f8);
     padding: var(--measure-dimension-padding-4xl);
 
-    @media screen and (min-width: var(--breakpoint-xl)) {
+    @media screen and (min-width: 1044px) {
         border-left: 2px solid var(--color-base-border-border-light, #ededed);
         padding: var(--measure-dimension-padding-5xl) 0 0 0;
     }
