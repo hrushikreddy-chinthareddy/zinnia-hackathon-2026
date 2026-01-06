@@ -116,13 +116,15 @@ const SelfServeTransactionContainer = ({
     ) => {
         if (currentRef.current) {
             const isValid = currentRef.current.validateForm?.() || false;
-            const hasValidationErrors =
+            const hasApiValidationErrors =
                 validationSummary &&
                 validationSummary.status !== ValidationSummaryStatus.SUCCESS;
             const canProceed =
                 stepTitle == 'Summary'
-                    ? isValid && !hasValidationErrors
+                    ? isValid && !hasApiValidationErrors
                     : isValid;
+
+            setHasValidationErrors(!isValid);
 
             if (!canProceed) {
                 browserLogError(
@@ -141,12 +143,8 @@ const SelfServeTransactionContainer = ({
             ...formData,
             ...event.formData,
         }));
-        const currentRef = formRefs[currentStepIndex];
-        if (currentRef?.current) {
-            setTimeout(() => {
-                const isValid = currentRef.current?.validateForm?.() || false;
-                setHasValidationErrors(!isValid);
-            }, 0);
+        if (hasValidationErrors) {
+            setHasValidationErrors(false);
         }
     };
 
