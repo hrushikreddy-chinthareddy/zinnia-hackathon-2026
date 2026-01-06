@@ -20,7 +20,7 @@ const FooterAction = ({ footerContent }: FooterActionPros) => {
         }
 
         if (isDisabled) {
-            const textSpan = (
+            const disableActionLabel = (
                 <span className={styles.footerActionText} key={`${text}-link`}>
                     {text}
                 </span>
@@ -32,10 +32,10 @@ const FooterAction = ({ footerContent }: FooterActionPros) => {
                     body={tooltip}
                     key={`${text}-tooltip`}
                 >
-                    {textSpan}
+                    {disableActionLabel}
                 </Tooltip>
             ) : (
-                textSpan
+                disableActionLabel
             );
         }
 

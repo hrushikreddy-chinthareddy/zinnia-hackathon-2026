@@ -49,10 +49,7 @@ export interface AddChargesProps {
 }
 
 const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'withdrawals.upcoming',
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
 
     const { systematicPrograms } = policyDetails;
@@ -173,9 +170,12 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
 
         if (permissionRequired) {
             return !isUserPermissionedToWithdraw
-                ? t('transactions.permissionDeniedTooltip', {
-                      carrier: policyDetails.carrierName,
-                  })
+                ? t(
+                      'withdrawals.upcoming.transactions.permissionDeniedTooltip',
+                      {
+                          carrier: policyDetails.carrierName,
+                      }
+                  )
                 : undefined;
         }
 
@@ -188,9 +188,12 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
 
         if (permissionRequired) {
             return !isUserPermissionedToWithdraw
-                ? t('transactions.permissionDeniedTooltip', {
-                      carrier: policyDetails.carrierName,
-                  })
+                ? t(
+                      'withdrawals.upcoming.transactions.permissionDeniedTooltip',
+                      {
+                          carrier: policyDetails.carrierName,
+                      }
+                  )
                 : undefined;
         }
 
@@ -201,8 +204,12 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const openCancelSideSheet = (type: string) => {
         const sideSheetTitle =
             type === ArrangementType.REQUIREDMINIMUMDISTRIBUTION
-                ? t('cancelWithdrawalAutopayTitle', { type: 'RMD' })
-                : t('cancelWithdrawalAutopayTitle', { type: 'Withdrawal' });
+                ? t('withdrawals.upcoming.cancelWithdrawalAutopayTitle', {
+                      type: 'RMD',
+                  })
+                : t('withdrawals.upcoming.cancelWithdrawalAutopayTitle', {
+                      type: 'Withdrawal',
+                  });
 
         const arrangementType =
             type === ArrangementType.REQUIREDMINIMUMDISTRIBUTION
@@ -237,7 +244,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
 
     const withdrawManageAutopay = {
         href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=WITHDRAWAL`,
-        text: t('manageAutopay'),
+        text: t('allFields.manageAutopay'),
         isDisabled:
             !withdrawalEligibility?.isEligibleWithdrawal ||
             !withdrawalProgram?.nextProgramDate ||
@@ -246,7 +253,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     };
     const withdrawCancelAutopay = {
         href: '#',
-        text: t('cancelAutopay'),
+        text: t('allFields.cancelAutopay'),
         onClick: () => {
             openCancelSideSheet(ArrangementType.WITHDRAWAL);
         },
@@ -257,7 +264,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     };
     const withdrawSetUpAction = {
         href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
-        text: t('setUpAutopay'),
+        text: t('allFields.setUpAutopay'),
         isDisabled:
             !withdrawalEligibility?.isEligibleWithdrawal ||
             !!withdrawalProgram?.nextProgramDate ||
@@ -272,7 +279,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
 
     const rmdManageAutopay = {
         href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=RMD`,
-        text: t('manageAutopay'),
+        text: t('allFields.manageAutopay'),
         isDisabled:
             !rmdEligibility?.isEligibleRmd ||
             !rmdProgram?.nextProgramDate ||
@@ -281,7 +288,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     };
     const rmdCancelAutopay = {
         href: '#',
-        text: t('cancelAutopay'),
+        text: t('allFields.cancelAutopay'),
         onClick: () => {
             openCancelSideSheet(ArrangementType.REQUIREDMINIMUMDISTRIBUTION);
         },
@@ -292,7 +299,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     };
     const rmdSetUpAction = {
         href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
-        text: t('setUpAutopay'),
+        text: t('allFields.setUpAutopay'),
         isDisabled:
             !rmdEligibility?.isEligibleRmd ||
             !!rmdProgram?.nextProgramDate ||
@@ -318,7 +325,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             {!systematicProgramTablesEnabled && withdrawalEnabled && (
                 <>
                     <UpcomingPaymentCard
-                        title={`${t('withdrawalAutopay')}`}
+                        title={`${t('withdrawals.upcoming.withdrawalAutopay')}`}
                         titleCase={false}
                         autopayAmount={withdrawalProgram?.amount}
                         paymentDate={withdrawalProgram?.nextProgramDate}
@@ -332,12 +339,14 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             keyPrefix: 'withdrawals.upcoming',
                         })}
                         paymentFrequencyText={
-                            t('paymentFrequencyText', {
+                            t('withdrawals.upcoming.paymentFrequencyText', {
                                 paymentMode: getFrequency(
                                     withdrawalProgram?.frequency as Frequency,
-                                    defaultT
+                                    t
                                 ),
-                                paymentType: t('paymentType.payment'),
+                                paymentType: t(
+                                    'withdrawals.upcoming.paymentType.payment'
+                                ),
                             }) || undefined
                         }
                         footerLinks={withdrawFooterLinks}
@@ -351,7 +360,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                     <hr className="h-0.5 border-none bg-gray-200" />
                     <UpcomingPaymentCard
                         autopayAmount={rmdProgram?.amount}
-                        title={`${t('rmdAutopay')}`}
+                        title={`${t('withdrawals.upcoming.rmdAutopay')}`}
                         paymentDate={rmdProgram?.nextProgramDate}
                         bankDetails={getBankDetails(
                             getParty(parties, rmdProgram),
@@ -363,12 +372,14 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             keyPrefix: 'withdrawals.upcoming',
                         })}
                         paymentFrequencyText={
-                            t('paymentFrequencyText', {
+                            t('withdrawals.upcoming.paymentFrequencyText', {
                                 paymentMode: getFrequency(
                                     rmdProgram?.frequency as Frequency,
-                                    defaultT
+                                    t
                                 ),
-                                paymentType: t('paymentType.payment'),
+                                paymentType: t(
+                                    'withdrawals.upcoming.paymentType.payment'
+                                ),
                             }) || undefined
                         }
                         titleCase={false}
