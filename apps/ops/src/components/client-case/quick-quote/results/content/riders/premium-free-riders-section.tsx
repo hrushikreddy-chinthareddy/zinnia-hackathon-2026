@@ -44,10 +44,6 @@ export const QuickQuotePremiumFreeRidersSection = () => {
         </QuickQuoteResultTableRow>
     ));
 
-    // if (!rows.length) {
-    //     return null;
-    // }
-
     return (
         <QuickQuoteResultTableSection
             title={t('clientCase.quickQuoteResults.riders.premiumFreeRiders')}

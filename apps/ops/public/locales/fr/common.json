@@ -8874,11 +8874,11 @@
                 "title": "Couverture"
             },
             "notAvailableReason": {
-                "maxAge": "Âge maximal d'émission: {{age}}.",
-                "minAge": "Âge minimum d'émission: {{age}}.",
-                "maxFaceAm": "Montant maximal du visage: {{amount}}.",
-                "minFaceAm": "Montant minimum du visage: {{amount}}.",
-                "state": "Non disponible pour cet état."
+                "maxAge": "Âge maximal d'émission: {{age}}",
+                "minAge": "Âge minimum d'émission: {{age}}",
+                "maxFaceAm": "Montant maximal du visage: {{amount}}",
+                "minFaceAm": "Montant minimum du visage: {{amount}}",
+                "state": "Non disponible pour cet état"
             },
             "product": {
                 "title": "Produit",

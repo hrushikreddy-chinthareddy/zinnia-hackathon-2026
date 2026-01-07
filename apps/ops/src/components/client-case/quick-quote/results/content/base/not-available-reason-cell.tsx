@@ -49,20 +49,30 @@ const NotAvailabilityReasonLabel = ({
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
+    const formatToCurrency = (value: number) =>
+        numberFormatify(value, {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        });
+
     let ageMessage = '';
     if (reason.field === 'age') {
-        if (reason.actual > reason.expected[1]) {
+        const maxAge = reason.expected[1];
+        const minAge = reason.expected[0];
+        if (reason.actual > maxAge) {
             ageMessage = t(
                 'clientCase.quickQuoteResults.notAvailableReason.maxAge',
                 {
-                    age: reason.expected[1],
+                    age: maxAge,
                 }
             );
         } else {
             ageMessage = t(
                 'clientCase.quickQuoteResults.notAvailableReason.minAge',
                 {
-                    age: reason.expected[0],
+                    age: minAge,
                 }
             );
         }
@@ -70,28 +80,20 @@ const NotAvailabilityReasonLabel = ({
 
     let faceAmountMessage = '';
     if (reason.field === 'face') {
-        if (reason.actual > reason.expected[1]) {
+        const maxFaceAmount = reason.expected[1];
+        const minFaceAmount = reason.expected[0];
+        if (reason.actual > maxFaceAmount) {
             faceAmountMessage = t(
                 'clientCase.quickQuoteResults.notAvailableReason.maxFaceAm',
                 {
-                    amount: numberFormatify(reason.expected[1], {
-                        style: 'currency',
-                        currency: 'USD',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                    }),
+                    amount: formatToCurrency(maxFaceAmount),
                 }
             );
         } else {
             faceAmountMessage = t(
                 'clientCase.quickQuoteResults.notAvailableReason.minFaceAm',
                 {
-                    amount: numberFormatify(reason.expected[0], {
-                        style: 'currency',
-                        currency: 'USD',
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 0,
-                    }),
+                    amount: formatToCurrency(minFaceAmount),
                 }
             );
         }

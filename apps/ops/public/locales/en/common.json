@@ -8991,11 +8991,11 @@
                 "nYearTerm": "{{years}} year term"
             },
             "notAvailableReason": {
-                "maxAge": "Max issue age: {{age}}.",
-                "minAge": "Min issue age: {{age}}.",
-                "state": "Not available for this state.",
-                "maxFaceAm": "Max face amount: {{amount}}.",
-                "minFaceAm": "Min face amount: {{amount}}."
+                "maxAge": "Max issue age: {{age}}",
+                "minAge": "Min issue age: {{age}}",
+                "state": "Not available for this state",
+                "maxFaceAm": "Max face amount: {{amount}}",
+                "minFaceAm": "Min face amount: {{amount}}"
             },
             "riders": {
                 "title": "Riders",
