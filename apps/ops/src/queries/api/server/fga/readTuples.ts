@@ -1,28 +1,21 @@
-import { getAccessToken } from '@auth0/nextjs-auth0';
+import { getSession } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';
 import {
+    getRolesFromCookie,
+    setRolesCookie,
+} from '@deps/utils/permissionsCookie';
+import {
     LoggingContext,
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import { ReadTuplesResponse } from '@zinnia/api-types/types/fga';
 
 const readUsersTuplesUrlSsr = `${apiServerBaseUrl}/fga/v1/tuples`;
-
-type TuplesData = {
-    tuples: {
-        key: {
-            user: string;
-            object: string;
-            relation: string;
-            condition: string;
-        };
-        timestamp: string;
-    }[];
-};
 
 // FIXME: the results may be paginated, and this would only read the first page
 export const readUserTuples = async (
@@ -31,7 +24,7 @@ export const readUserTuples = async (
     logCtx: LoggingContext
 ) => {
     if (!accessToken) {
-        const ret: ApiResponse<TuplesData> = {
+        const ret: ApiResponse<ReadTuplesResponse> = {
             data: null,
             error: {
                 status: 400,
@@ -51,7 +44,7 @@ export const readUserTuples = async (
     const url = `${readUsersTuplesUrlSsr}?${queryString}`;
 
     try {
-        const usersTuples = await serverApi.get<TuplesData>(
+        const usersTuples = await serverApi.get<ReadTuplesResponse>(
             url,
             {
                 authorization: `Bearer ${accessToken}`,
@@ -59,7 +52,7 @@ export const readUserTuples = async (
             loggingContext
         );
 
-        const response: ApiResponse<TuplesData> = {
+        const response: ApiResponse<ReadTuplesResponse> = {
             data: usersTuples?.data,
             error: null,
         };
@@ -91,7 +84,7 @@ export const readUserTuples = async (
             inputs: {},
         });
 
-        const ret: ApiResponse<TuplesData> = {
+        const ret: ApiResponse<ReadTuplesResponse> = {
             data: null,
             error: {
                 status: 500,
@@ -116,16 +109,21 @@ export const readUserTuplesPage = async (
     };
 
     try {
-        const accessToken = (await getAccessToken(ctx.req, ctx.res))
-            .accessToken;
+        const rolesFromCookie = getRolesFromCookie(ctx.req, ctx.res);
+        if (rolesFromCookie) {
+            return rolesFromCookie;
+        }
 
+        const session = await getSession(ctx.req, ctx.res);
+        const accessToken = session?.accessToken;
         const result = await readUserTuples(
             accessToken as string,
             queryString,
             loggingContext
         );
-
-        if (!result.error) {
+        console.log('....setting roles cookie....', result.data?.tuples);
+        if (!result.error && result.data) {
+            setRolesCookie(result.data, ctx.req, ctx.res);
             return result.data;
         }
     } catch (e) {
@@ -141,5 +139,4 @@ export const readUserTuplesPage = async (
             }
         );
     }
-    return null;
 };

@@ -4,7 +4,9 @@ import {
     DEFAULT_PERMISSIONS_COOKIE,
     PERMISSIONS_COOKIE_NAME,
     PermissionsCookie,
+    ROLES_COOKIE_NAME,
 } from '@deps/types/permissionsCookie';
+import { ReadTuplesResponse } from '@zinnia/api-types/types/fga';
 
 import { isHttpsEnvironment } from '../environment.helpers';
 import { logWarn } from '../server-logging';
@@ -33,6 +35,11 @@ export const addTupleToCookie = (
             permissions.tuples[relation] = {};
         }
         permissions.tuples[relation][tupleObject] = result;
+        console.log(
+            '......adding tuple to cookie permissionsCookie.......',
+            PERMISSIONS_COOKIE_NAME,
+            permissionsCookie
+        );
         setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
             req,
             res,
@@ -57,6 +64,11 @@ export const addCarrierListToCookie = (
             DEFAULT_PERMISSIONS_COOKIE;
         const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
         permissions.carriers[relation] = carrierList;
+        console.log(
+            '......adding tuple to cookie permissionsCookie.......',
+            PERMISSIONS_COOKIE_NAME,
+            permissions
+        );
         setCookie(PERMISSIONS_COOKIE_NAME, JSON.stringify(permissions), {
             req,
             res,
@@ -114,6 +126,12 @@ export const checkPermissionsCookieForTuple = (
             req,
             res,
         });
+
+        console.log(
+            'permissionsCookie.......',
+            PERMISSIONS_COOKIE_NAME,
+            permissionsCookie
+        );
         if (!permissionsCookie) {
             return undefined;
         }
@@ -153,6 +171,49 @@ export const checkPermissionsCookieForCarrierList = (
     } catch (error) {
         console.error(
             'checkPermissionsCookieForCarrierList::An error occurred while checking permissions cookie',
+            error
+        );
+        return undefined;
+    }
+};
+
+// Cookie age controlled by permissionsCookieOptions
+export const setRolesCookie = (
+    roles: ReadTuplesResponse,
+    req?: any, // FIXME: constrict type
+    res?: any
+) => {
+    try {
+        setCookie(ROLES_COOKIE_NAME, JSON.stringify(roles), {
+            req,
+            res,
+            ...permissionsCookieOptions,
+        });
+    } catch (error) {
+        logWarn(
+            'setRolesCookie::An error occurred while setting the roles cookie'
+        );
+    }
+};
+
+export const getRolesFromCookie = (
+    req?: any,
+    res?: any
+): ReadTuplesResponse | undefined => {
+    try {
+        const rolesCookie = getCookie(ROLES_COOKIE_NAME, {
+            req,
+            res,
+        });
+        if (!rolesCookie) {
+            return undefined;
+        }
+
+        const roles = JSON.parse(rolesCookie);
+        return roles;
+    } catch (error) {
+        console.error(
+            'getRolesCookie::An error occurred while getting roles cookie',
             error
         );
         return undefined;

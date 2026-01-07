@@ -58,15 +58,25 @@ export const getUserRolesData = async (
     const user = await getUserData(context);
     const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
 
-    // TODO: cache for ~1 hour
-    const userTuplesData = await readUserTuplesPage(
+    const userTuples = await readUserTuplesPage(
         context,
         tuplesQuery,
         loggingContext
     );
 
-    const userRolesMap = userTuplesData?.tuples.reduce<UserRolesMap>(
-        (acc, { key: { object } }) => {
+    const userRolesMap = userTuples?.tuples?.reduce<UserRolesMap>(
+        (acc, { key: relationalData }) => {
+            if (
+                !relationalData ||
+                typeof relationalData !== 'object' ||
+                !('object' in relationalData)
+            ) {
+                return acc;
+            }
+            const { object } = relationalData;
+            // Anything between 'role:' and the first '_' will be treated as the carrier code,
+            // and everything after the first '_' will be treated as the role type (generic role)
+            // This is a stopgap solution until personas are implemented in FGA
             const [_, carrierCode, roleType] =
                 object.match(/^role:([^_]+)_(.+)$/) ?? [];
 

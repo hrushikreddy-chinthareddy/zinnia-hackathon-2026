@@ -1,0 +1,1562 @@
+openapi: 3.0.0
+paths:
+  /fga/v1/assertions:
+    get:
+      operationId: readAssertions
+      summary: List Assertions
+      description: List Assertions
+      parameters: []
+      responses:
+        '200':
+          description: List of assertions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadAssertionsResponse'
+      tags:
+        - FGA
+    post:
+      operationId: writeAssertions
+      summary: Create and update Assertions
+      description: Create and update Assertions
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteAssertionsRequest'
+      responses:
+        '204':
+          description: Assertions updated
+      tags:
+        - FGA
+  /fga/v1/tuples:
+    get:
+      operationId: readTuples
+      summary: Read tuples from OpenFGA
+      description: Read tuples from OpenFGA
+      parameters:
+        - name: user
+          required: false
+          in: query
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          schema:
+            example: party:495f40f49d8f415fa59e99716d59f6e9
+            type: string
+        - name: relation
+          required: false
+          in: query
+          description: >-
+            the permission to search for on the resource, usually described by
+            access + _ + resource example: read_policy
+          schema:
+            example: read_policy
+            type: string
+        - name: object
+          required: true
+          in: query
+          description: >-
+            specific resource or resource type to search for, prepended with the
+            type so policy 1234 is policy:1234 and all policies would be policy:
+            with no identifier
+          schema:
+            example: policy:1234
+            type: string
+        - name: pageSize
+          required: false
+          in: query
+          description: size of the page
+          schema:
+            maximum: 100
+            default: 10
+            example: 10
+            type: number
+        - name: continuationToken
+          required: false
+          in: query
+          description: continuation token to provide pagination
+          schema:
+            example: >-
+              eyJwayI6IkxBVEVTVF9OU0NPTkZJR19hdXRoMHN0b3JlIiwic2siOiIxem1qbXF3MWZLZExTcUoyN01MdTdqTjh0cWgifQ
+            type: string
+      responses:
+        '200':
+          description: List of tuples
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReadTuplesResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+    post:
+      operationId: writeTuples
+      summary: Write tuples to OpenFGA
+      description: Write tuples to OpenFGA
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WriteTuplesRequest'
+      responses:
+        '201':
+          description: Tuples updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WriteTuplesResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/tuples/delete:
+    post:
+      operationId: deleteTuples
+      summary: Delete Tuples
+      description: Delete Tuples
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteTuplesRequest'
+      responses:
+        '201':
+          description: Tuples deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeleteTuplesResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/tuples/changes:
+    get:
+      operationId: readChanges
+      summary: List all tuples added or removed
+      description: List all tuples added or removed
+      parameters:
+        - name: type
+          required: true
+          in: query
+          description: >-
+            resource to check against, checking access for policy would be
+            policy
+          schema:
+            example: policy
+            type: string
+        - name: pageSize
+          required: false
+          in: query
+          description: size of the page
+          schema:
+            maximum: 100
+            default: 10
+            example: 10
+            type: number
+        - name: continuationToken
+          required: false
+          in: query
+          description: continuation token
+          schema:
+            example: >-
+              0yI1FcgqT74npA-o4PoHGtgvfPYa_jCAwkXjRynE-Z9sIaokCAaJMZUtfrGQrr57A3fdV2fYVO11BCkb3zZwPEDnuBotD067A3HdOlbn7F9TluNH
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChangesResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/bulk-check:
+    post:
+      operationId: bulkCheckRelation
+      summary: Bulk check tuples to evaluate the relations
+      description: Bulk check tuples to evaluate the relations
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkCheckRequest'
+      responses:
+        '200':
+          description: Tuples checked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BulkCheckResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/check:
+    post:
+      operationId: checkRelation
+      summary: Check tuple to evaluate the relation
+      description: Check tuple to evaluate the relation
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CheckRequest'
+      responses:
+        '200':
+          description: Tuple checked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/check-parent:
+    post:
+      operationId: checkParentRelation
+      summary: >-
+        Check tuple to evaluate the relation and the relation to its provided
+        parent resource
+      description: >-
+        Check tuple to evaluate the relation and the relation to its provided
+        parent resource
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParentCheckRequest'
+      responses:
+        '200':
+          description: Tuple checked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/check-policy:
+    post:
+      operationId: checkPolicyRelation
+      summary: Check access to a policy and its plancode
+      description: Check access to a policy and its plancode
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PolicyCheckRequest'
+      responses:
+        '200':
+          description: Tuple checked
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CheckResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/health:
+    get:
+      operationId: health
+      summary: ''
+      description: Health
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+  /fga/v1/list-carriers:
+    post:
+      operationId: listCarriers
+      summary: List carriers
+      description: List carriers
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListCarriersRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCarriersResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/list-queue:
+    post:
+      operationId: listQueue
+      summary: Return queues a user has access to
+      description: >-
+        This endpoint retrieves the queues that a specified user has access to
+        based on the provided relation.
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListQueueRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListQueueResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/access/delegation/{assistantId}:
+    post:
+      operationId: delegatePermissions
+      summary: Delegate access to an assistant
+      description: >-
+        Allows an agent to delegate their access to an assistant agent, except
+        for super admin roles.
+      parameters:
+        - name: assistantId
+          required: true
+          in: path
+          description: ID of the assistant to delegate permissions to
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Delegation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentDelegationResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/list:
+    post:
+      operationId: listObjects
+      summary: List all objects in relation with the user
+      description: List all objects in relation with the user
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ListObjectsRequest'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListObjectsResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/permissions:
+    get:
+      operationId: getPermissions
+      summary: Get All Available Permissions
+      description: gets all permissions
+      parameters: []
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+    post:
+      operationId: createPermission
+      summary: Create Permission
+      description: creates a new permission
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePermissionDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/permissions/{permission}:
+    delete:
+      operationId: deletePermission
+      summary: Delete Permission
+      description: deletes a permission
+      parameters:
+        - name: permission
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+    put:
+      operationId: updatePermission
+      summary: Update Permission
+      description: updates a permission
+      parameters:
+        - name: permission
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePermissionDto'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/roles:
+    post:
+      operationId: createRole
+      summary: Create Role
+      description: creates a new role
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleDto'
+      responses:
+        '201':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+    get:
+      operationId: listRoles
+      summary: List Roles
+      description: >-
+        Fetches roles with optional filters for all roles, queue roles, or
+        entity roles.
+      parameters:
+        - name: filter
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: carrierId
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/roles/{role}:
+    get:
+      operationId: getRole
+      summary: Get Role By Name
+      description: gets a role by Name
+      parameters:
+        - name: role
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: carrierId
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+    delete:
+      operationId: deleteRole
+      summary: Delete Role
+      description: deletes a role
+      parameters:
+        - name: role
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+    put:
+      operationId: updateRole
+      summary: Update Role
+      description: updates a role
+      parameters:
+        - name: role
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoleDto'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/roles/search/{entity}:
+    get:
+      operationId: searchRoles
+      summary: Search Roles
+      description: searches roles by entity
+      parameters:
+        - name: entity
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/roles/{role}/permissions:
+    get:
+      operationId: getRolePermissions
+      summary: Get Role Permissions
+      description: gets all permissions for a role
+      parameters:
+        - name: role
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: carrierId
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/roles/{role}/permissions/{permission}:
+    post:
+      operationId: addPermissionToRole
+      summary: Add Permission to Role
+      description: adds a permission to a role
+      parameters:
+        - name: role
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: permission
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '201':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+    delete:
+      operationId: removePermissionFromRole
+      summary: Remove Permission from Role
+      description: removes a permission from a role
+      parameters:
+        - name: role
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: permission
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/ops-tuples/create:
+    post:
+      operationId: createOpsTuple
+      summary: Create Ops Tuple
+      description: Create Ops Tuple
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOpsRequest'
+      responses:
+        '201':
+          description: Tuple created
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/ops-tuples/delete:
+    post:
+      operationId: deleteOpsTuple
+      summary: Delete Ops Tuple
+      description: Delete Ops Tuple
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteOpsRequest'
+      responses:
+        '204':
+          description: Tuple deleted
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/search-parties:
+    get:
+      operationId: SearchPartyController_getPartyRelatedData
+      summary: Search for related cases and policies for a party
+      description: >-
+        Searches and retrieves all related cases and/or policies for a given
+        party ID
+      parameters:
+        - name: partyId
+          required: true
+          in: query
+          description: ID of the party to get related data for
+          schema:
+            type: string
+        - name: filterType
+          required: false
+          in: query
+          description: Filter to show only policies or cases related data
+          schema:
+            enum:
+              - policies
+              - cases
+            type: string
+        - name: maxDepth
+          required: false
+          in: query
+          description: >-
+            Maximum depth for recursive relationship fetching. Leave empty for
+            unlimited depth.
+          schema:
+            type: number
+        - name: excludeSource
+          required: false
+          in: query
+          description: Exclude either entity or salesentity data sources from the results
+          schema:
+            enum:
+              - entity
+              - salesentity
+            type: string
+        - name: directOnly
+          required: false
+          in: query
+          description: >-
+            Return only direct party relationships. For policies: return direct
+            party policies only. For cases: return direct party cases plus cases
+            from direct party policies.
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Successfully retrieved related data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PartyRelatedDataResponse'
+        '404':
+          description: Party not found
+      tags:
+        - FGA
+  /fga/v1/frauds:
+    get:
+      operationId: getFraud
+      summary: Get user fraud score
+      description: Get user fraud score
+      parameters:
+        - name: firstName
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: surName
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: country
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: mobileNumber
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: email
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Fraud score and details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocureFraudResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+  /fga/v1/search-users:
+    post:
+      operationId: SearchUsersController_searchOpsUsers
+      summary: >-
+        Search for users who have specific access to a particular queue for a
+        carrier
+      description: >-
+        Search for users who have specific access to a particular queue for a
+        carrier
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchUsersRequest'
+      responses:
+        '200':
+          description: Successfully retrieved ops users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchUsersResponse'
+      tags:
+        - FGA
+      security:
+        - Auth0: []
+info:
+  title: FGA Service
+  description: Fine Grain Authorization service
+  version: 0.1.0
+  contact: {}
+tags:
+  - name: FGA
+    description: ''
+servers:
+  - url: https://api.zinnia.io
+components:
+  securitySchemes:
+    Auth0:
+      type: openIdConnect
+      openIdConnectUrl: https://login.zinnia.com/.well-known/openid-configuration
+      x-kong-security-openid-connect:
+        config:
+          run_on_preflight: true
+          scopes_claim:
+            - https://api.zinnia.io/permissions
+          audience_claim:
+            - aud
+          audience_required:
+            - https://api.zinnia.io
+          auth_methods:
+            - bearer
+          scopes: []
+        enabled: true
+        protocols:
+          - grpc
+          - grpcs
+          - http
+          - https
+  schemas:
+    Assertion:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission or relation for the resource, usually described by
+            access + _ + resource example: read_policy
+          example: read_policy
+        object:
+          type: string
+          description: >-
+            specific resource, prepended with the type so policy 1234 is
+            policy:1234
+          example: policy:1234
+        expectation:
+          type: boolean
+          description: expectation of assertion, true or false
+          example: true
+      required:
+        - user
+        - relation
+        - object
+        - expectation
+    ReadAssertionsResponse:
+      type: object
+      properties:
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assertion'
+      required:
+        - assertions
+    WriteAssertionsRequest:
+      type: object
+      properties:
+        assertions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assertion'
+      required:
+        - assertions
+    FGATupleResponse:
+      type: object
+      properties:
+        key:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+    ReadTuplesResponse:
+      type: object
+      properties:
+        tuples:
+          type: array
+          items:
+            $ref: '#/components/schemas/FGATupleResponse'
+        continuation_token:
+          type: string
+        continuationToken:
+          type: string
+    Tuple:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission or relation for the resource, usually described by
+            access + _ + resource example: read_policy
+          example: read_policy
+        object:
+          type: string
+          description: >-
+            specific resource, prepended with the type so policy 1234 is
+            policy:1234
+          example: policy:1234
+      required:
+        - user
+        - relation
+        - object
+    WriteTuplesRequest:
+      type: object
+      properties:
+        tuples:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tuple'
+        disableTransaction:
+          type: boolean
+      required:
+        - tuples
+    WriteTuplesResponse:
+      type: object
+      properties:
+        created:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tuple'
+    DeleteTuplesRequest:
+      type: object
+      properties:
+        tuples:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tuple'
+      required:
+        - tuples
+    DeleteTuplesResponse:
+      type: object
+      properties:
+        deleted:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tuple'
+    Changes:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission or relation for the resource, usually described by
+            access + _ + resource example: read_policy
+          example: read_policy
+        object:
+          type: string
+          description: >-
+            specific resource, prepended with the type so policy 1234 is
+            policy:1234
+          example: policy:1234
+        operation:
+          type: string
+          description: specific operation performed
+          example: TUPLE_OPERATION_WRITE
+        timestamp:
+          format: date-time
+          type: string
+          description: timestamp it occured
+          example: '2023-12-06T18:36:35.846Z'
+      required:
+        - user
+        - relation
+        - object
+        - operation
+        - timestamp
+    ChangesResponse:
+      type: object
+      properties:
+        changes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Changes'
+      required:
+        - changes
+    CheckRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission to check on the resource, usually described by access
+            + _ + resource example: read_policy
+          example: read_policy
+        object:
+          type: string
+          description: >-
+            specific resource to check against, prepended with the type so
+            policy 1234 is policy:1234
+          example: policy:1234
+      required:
+        - user
+        - relation
+        - object
+    BulkCheckRequest:
+      type: object
+      properties:
+        tuples:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckRequest'
+      required:
+        - tuples
+    CheckTupleResponse:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission or relation for the resource, usually described by
+            access + _ + resource example: read_policy
+          example: read_policy
+        object:
+          type: string
+          description: >-
+            specific resource, prepended with the type so policy 1234 is
+            policy:1234
+          example: policy:1234
+        allowed:
+          type: boolean
+      required:
+        - user
+        - relation
+        - object
+        - allowed
+    BulkCheckResponse:
+      type: object
+      properties:
+        tuples:
+          type: array
+          items:
+            $ref: '#/components/schemas/CheckTupleResponse'
+      required:
+        - tuples
+    CheckResponse:
+      type: object
+      properties:
+        allowed:
+          type: boolean
+      required:
+        - allowed
+    ParentCheckRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission to check on the resource, usually described by access
+            + _ + resource example: read_policy
+          example: read_policy
+        object:
+          type: string
+          description: >-
+            specific resource to check against, prepended with the type so
+            policy 1234 is policy:1234
+          example: policy:1234
+        parentObject:
+          type: string
+          description: >-
+            parent object to check relation to, for example plancode:1234 for
+            policy:1234 to verify the policy is also part of the plancode
+          example: plancode:1234
+      required:
+        - user
+        - relation
+        - object
+        - parentObject
+    PolicyCheckRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission or relation for the resource, usually described by
+            access + _ + resource example: read_policy
+          example: read_policy
+        planCode:
+          type: string
+          description: plancode of policy
+          example: '1234'
+        policyNumber:
+          type: string
+          description: policy number
+          example: '1234'
+      required:
+        - user
+        - relation
+        - planCode
+        - policyNumber
+    ListCarriersRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission or relation for the resource, usually described by
+            access + _ + resource example: read_policy
+          example: read_policy
+      required:
+        - user
+        - relation
+    ListCarriersResponse:
+      type: object
+      properties:
+        carriers:
+          example:
+            - sbul
+            - elic
+          type: array
+          items:
+            type: string
+      required:
+        - carriers
+    ListQueueRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          example: party:b6eeddafdd9e4f92aecf84f6b6702442
+        relation:
+          type: string
+          example: read_policy
+      required:
+        - user
+        - relation
+    ListQueueResponse:
+      type: object
+      properties:
+        queues:
+          type: array
+          items:
+            type: object
+            additionalProperties:
+              type: array
+              items:
+                type: string
+          example:
+            - sbgc:
+                - withdrawal
+                - deposit
+            - mass:
+                - suitability
+                - claims
+      required:
+        - queues
+    AgentDelegationResponse:
+      type: object
+      properties:
+        created:
+          type: array
+          items:
+            $ref: '#/components/schemas/Tuple'
+    ListObjectsRequest:
+      type: object
+      properties:
+        user:
+          type: string
+          description: >-
+            party reference Id prefixed with party, so
+            495f40f49d8f415fa59e99716d59f6e9 is
+            party:495f40f49d8f415fa59e99716d59f6e9
+          example: party:495f40f49d8f415fa59e99716d59f6e9
+        relation:
+          type: string
+          description: >-
+            the permission to check on the resource, usually described by access
+            + _ + resource example: read_policy
+          example: read_policy
+        type:
+          type: string
+          description: >-
+            resource to check against, checking access for policy would be
+            policy
+          example: policy
+      required:
+        - user
+        - relation
+        - type
+    ListObjectsResponse:
+      type: object
+      properties:
+        objects:
+          example:
+            - policy:1234
+          type: array
+          items:
+            type: string
+    CreatePermissionDto:
+      type: object
+      properties:
+        description:
+          type: string
+          description: description of the permission
+          example: api view access for policy resource
+        label:
+          type: string
+          description: permission descriptive name
+          example: Read Policy
+        permission:
+          type: string
+          description: fga tuple id name
+          example: read_policy
+        dateCreated:
+          format: date-time
+          type: string
+          description: timestamp it occured
+          example: '2023-12-06T18:36:35.846Z'
+      required:
+        - description
+        - label
+        - permission
+    RoleDto:
+      type: object
+      properties:
+        entity:
+          type: string
+          description: carrier or fga entity
+          example: zinnia
+        entities:
+          description: carriers or fga entities
+          example:
+            - elic
+            - sbgc
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+          description: description of the role
+          example: viewer access for sbgc resources
+        role:
+          type: string
+          description: fga tuple name
+          example: sbgc_viewer
+        label:
+          type: string
+          description: role name generally prefixed with carrier or entity descriptive name
+          example: Security Benefits Viewer
+        roleId:
+          type: string
+          description: unique role id
+          example: 77fb1e2b-cf96-4a13-8cc6-8645759b0f14
+        dateCreated:
+          format: date-time
+          type: string
+          description: timestamp it occurred
+          example: '2023-12-06T18:36:35.846Z'
+        queue:
+          type: string
+          description: Queue name associated with the role
+          example: withdrawal
+      required:
+        - entity
+        - entities
+        - description
+        - role
+        - label
+        - roleId
+        - dateCreated
+        - queue
+    CreateOpsRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Authentication user email address
+          example: ciam@zinnia.com
+        carrierCode:
+          type: string
+          enum:
+            - allm
+            - alls
+            - aric
+            - cwa
+            - dlic
+            - elic
+            - emrs
+            - flic
+            - gdmn
+            - glac
+            - glco
+            - gili
+            - ilic
+            - ilna
+            - jhli
+            - mass
+            - mwoa
+            - nasu
+            - nlid
+            - nlvf
+            - pica
+            - plic
+            - pmhc
+            - prdn
+            - prud
+            - rsln
+            - saag
+            - sbgc
+            - sbul
+            - smtr
+            - ulic
+            - ulpc
+            - usaa
+            - welb
+            - pg
+            - zinnia
+            - sbl
+            - fnwl
+          description: Carrier id to provide access
+        role:
+          type: string
+          enum:
+            - processor
+            - viewer
+            - call_center
+            - illustrator
+          description: Access type to provide
+      required:
+        - email
+        - carrierCode
+        - role
+    DeleteOpsRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          description: Authentication user email address
+          example: ciam@zinnia.com
+        carrierCode:
+          type: string
+          enum:
+            - allm
+            - alls
+            - aric
+            - cwa
+            - dlic
+            - elic
+            - emrs
+            - flic
+            - gdmn
+            - glac
+            - glco
+            - gili
+            - ilic
+            - ilna
+            - jhli
+            - mass
+            - mwoa
+            - nasu
+            - nlid
+            - nlvf
+            - pica
+            - plic
+            - pmhc
+            - prdn
+            - prud
+            - rsln
+            - saag
+            - sbgc
+            - sbul
+            - smtr
+            - ulic
+            - ulpc
+            - usaa
+            - welb
+            - pg
+            - zinnia
+            - sbl
+            - fnwl
+          description: Carrier id to provide access
+        role:
+          type: string
+          enum:
+            - processor
+            - viewer
+            - call_center
+            - illustrator
+          description: Access type to provide
+      required:
+        - email
+        - carrierCode
+        - role
+    PolicyResponse:
+      type: object
+      properties:
+        policyNumber:
+          type: string
+          description: Policy number
+        planCode:
+          type: string
+          description: Plan code
+      required:
+        - policyNumber
+        - planCode
+    PartyRelatedDataResponse:
+      type: object
+      properties:
+        partyId:
+          type: string
+          description: party id for which related data is being retrieved
+        cases:
+          description: List of related case IDs
+          type: array
+          items:
+            type: string
+        policies:
+          description: List of related policies
+          type: array
+          items:
+            $ref: '#/components/schemas/PolicyResponse'
+      required:
+        - partyId
+    SocureFraudResponse:
+      type: object
+      properties: {}
+    SearchUsersRequest:
+      type: object
+      properties:
+        carrier:
+          type: string
+          example: sbul
+          description: carrier name
+        queue:
+          type: string
+          example: new_business
+          description: queue name
+        access:
+          type: string
+          enum:
+            - viewer
+            - processor
+            - admin
+          example: viewer
+          description: access level
+      required:
+        - carrier
+        - queue
+        - access
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+          example: example@example.com
+          description: user email
+        firstName:
+          type: string
+          example: John
+          description: user first name
+        lastName:
+          type: string
+          example: Doe
+          description: user last name
+        id:
+          type: string
+          example: '1234567890'
+          description: user party Id
+      required:
+        - email
+        - firstName
+        - lastName
+        - id
+    SearchUsersResponse:
+      type: object
+      properties:
+        users:
+          example:
+            - email: example@example.com
+              firstName: John
+              lastName: Doe
+              id: '1234567890'
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      required:
+        - users

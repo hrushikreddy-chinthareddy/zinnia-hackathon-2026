@@ -141,7 +141,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             if (!accessToken) {
                 return serverSidePropsLogout();
             }
-
+            console.log('----------------checking tuple page');
             const hasPagePermissions = await checkTuplePage(
                 context,
                 UserPermission.AllowReadOtpRenewals,

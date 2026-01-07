@@ -123,6 +123,7 @@ export const checkTuplePage = async (
     tupleObject: string,
     logCtx: LoggingContext
 ): Promise<boolean> => {
+    console.log('----------------inside checking tuple page');
     const loggingContext = {
         ...logCtx,
         file: 'queries/api/fga/checkTuple',
@@ -151,6 +152,10 @@ export const checkTuplePage = async (
         );
 
         if (!result.error) {
+            console.log(
+                '....-------..adding tuple to cookie permissionsCookie.......',
+                result.data
+            );
             addTupleToCookie(
                 relation,
                 tupleObject,
