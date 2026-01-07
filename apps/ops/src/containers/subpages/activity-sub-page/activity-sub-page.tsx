@@ -20,6 +20,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import TransactionsTab from './transactions-tab';
 
+// remove once the revised_history_table is cleaned up
 export default function ActivitySubPage() {
     const { policy } = useContext(PolicyData);
     const { t } = useTranslation();

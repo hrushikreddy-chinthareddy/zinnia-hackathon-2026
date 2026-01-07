@@ -302,6 +302,8 @@
         "lastPaymentDate": "Fecha del último pago",
         "lineOfBusiness": "Línea de negocio",
         "linkOrUploadDocument": "Enlace o subir documento",
+        "loadingTransactionDetails": "Cargando detalles de la transacción...",
+        "loadingTransactions": "Cargando transacciones...",
         "loanAccruedInterest": "Interés acumulado del préstamo",
         "loanActivity": "Activité de prêt",
         "loanAutopayCancellation": "Cancelación de pago automático de préstamo",
@@ -406,6 +408,7 @@
         "nextProgramDate": "Fecha del próximo programa",
         "noFormsFound": "No se encontraron formularios.",
         "noRecordsFound": "No se encontraron registros.",
+        "noTransactionsTitle": "Actualmente no hay transacciones {{status}}.",
         "numberOfOccurrence": "Número de ocurrencias",
         "numberOfWithdrawal": "Total de retiros tomados",
         "openInNewWindow": "Abre en nueva ventana",
@@ -634,6 +637,7 @@
         "transactionAmounts": "Montants de la transaction",
         "transactionBasics": "Conceptos básicos de transacciones",
         "transactionDetails": "Detalles de la transacción",
+        "transactionDetailsError": "Error al cargar los detalles de la transacción.",
         "transactionId": "ID de transaction",
         "transactionReason": "Motif de la transaction",
         "transactionType": "Type de transaction",
@@ -2368,7 +2372,7 @@
             "submit": "¡Enviado!",
             "backToHome": "Volver al inicio"
         },
-        "start":{
+        "start": {
             "title": "Comenzar"
         },
         "assigneeChange": {
@@ -5279,7 +5283,6 @@
             },
             "loadingEvents": "Cargando eventos...",
             "noEventsTitle": "Aún no hay eventos.",
-            "noTransactionsTitle": "Actualmente no hay transacciones {{status}}.",
             "noEventsSubtitle": "Parece que no ha pasado nada hasta ahora.",
             "upcomingEvents": "Próximos eventos",
             "requested": "Solicitado",

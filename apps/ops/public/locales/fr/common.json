@@ -303,6 +303,8 @@
         "lastPaymentDate": "Date du dernier paiement",
         "lineOfBusiness": "Ligne d'activité",
         "linkOrUploadDocument": "Lier ou télécharger un document",
+        "loadingTransactionDetails": "Chargement des détails de la transaction...",
+        "loadingTransactions": "Chargement des transactions...",
         "loanAccruedInterest": "Intérêts courus du prêt",
         "loanActivity": "Actividad del préstamo",
         "loanAutopayCancellation": "Annulation du paiement automatique de prêt",
@@ -407,6 +409,7 @@
         "nextProgramDate": "Date du programme suivant",
         "noFormsFound": "Aucun formulaire trouvé.",
         "noRecordsFound": "Aucun enregistrement trouvé.",
+        "noTransactionsTitle": "Il n'y a actuellement aucune transaction {{status}}",
         "numberOfOccurrence": "Nombre d'occurrences",
         "numberOfWithdrawal": "Nombre total de retraits",
         "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
@@ -635,6 +638,7 @@
         "transactionAmounts": "Montos de la transacción",
         "transactionBasics": "Bases des transactions",
         "transactionDetails": "Détails de la transaction",
+        "transactionDetailsError": "Erreur lors du chargement des détails de la transaction.",
         "transactionId": "ID de transacción",
         "transactionReason": "Motivo de la transacción",
         "transactionType": "Tipo de transacción",
@@ -2423,7 +2427,7 @@
             "submit": "Envoyé !",
             "backToHome": "Retour à l’accueil"
         },
-        "start":{
+        "start": {
             "title": "Commencer"
         },
         "assigneeChange": {
@@ -5224,7 +5228,6 @@
             },
             "loadingEvents": "Chargement des événements...",
             "noEventsTitle": "Aucun événement pour le moment.",
-            "noTransactionsTitle": "Il n'y a actuellement aucune transaction {{status}}",
             "noEventsSubtitle": "On dirait que rien ne s'est encore passé.",
             "upcomingEvents": "Événements à venir",
             "requested": "Demandé",

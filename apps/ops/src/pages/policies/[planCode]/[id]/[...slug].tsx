@@ -314,6 +314,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                         subPageContent = <FilterTransactions />;
                     if (slug[1] === 'call-logs') subPageContent = <CallLogs />;
                 } else {
+                    // remove once the revised_history_table feature flag is cleaned up
                     subPageContent = <ActivitySubPage />;
                 }
                 break;

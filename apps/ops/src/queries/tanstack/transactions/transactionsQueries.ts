@@ -2,21 +2,67 @@ import { AxiosResponse } from 'axios';
 
 import { hasFilter } from '@deps/components/history/filters/filter.helpers';
 import { getEvents } from '@deps/containers/subpages/activity-sub-page/event-feed/event-feed.helpers';
-import { HistoryFilters } from '@deps/contexts/HistoryFiltersContext';
-import { getPolicyTransactions } from '@deps/queries/api/policies';
+import {
+    getPolicyTransactions,
+    getPolicyTransactionsSummary,
+} from '@deps/queries/api/policies';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { client } from '@deps/queries/api-utils/client';
+import { Transaction } from '@zinnia/api-types/types/sor';
 import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 
-interface GetTransactionsProps {
-    historyFilters: HistoryFilters;
+import { GetTransactionsProps, GetTransactionsSummaryProps } from './types';
+
+export const getTransactionsSummaryQuery = async ({
+    policyNumber,
+    planCode,
+    sortField = 'EFFECTIVEDATE',
+    sortOrder = 'DESC',
+    ...args
+}: GetTransactionsSummaryProps) => {
+    if (!policyNumber) {
+        throw 'No policy number provided';
+    }
+    if (!planCode) {
+        throw 'No plan code provided';
+    }
+
+    return await getPolicyTransactionsSummary({
+        policyNumber,
+        planCode: planCode,
+        sortField,
+        sortOrder,
+        ...args,
+    });
+};
+
+export const getTransactionByIdQuery = async ({
+    policyNumber,
+    planCode,
+    transactionId,
+}: {
     policyNumber?: string;
     planCode?: string;
-    sortField?: 'PROCESSDATE' | 'EFFECTIVEDATE' | 'REVERSALDATE';
-    sortOrder?: 'ASC' | 'DESC';
-    multiTransactionTypes?: boolean;
-}
+    transactionId?: string;
+}) => {
+    {
+        if (!transactionId) {
+            throw new Error('No transaction id provided');
+        }
+        if (!policyNumber || !planCode) {
+            throw new Error('No policy number or plan code provided');
+        }
+        const val = await client.get<
+            { data: Transaction },
+            AxiosResponse<{ data: Transaction }>
+        >(
+            `${baseAppUrl}/api/policy/v1/policies/${planCode}/${policyNumber}/transactions/${transactionId}`
+        );
+
+        return val.data;
+    }
+};
 
 export const getTransactionsQuery = async ({
     historyFilters,
