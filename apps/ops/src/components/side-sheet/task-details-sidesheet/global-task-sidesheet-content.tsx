@@ -462,8 +462,7 @@ export default function GlobalTaskSideSheet({
             let finalAssignee = NO_ASSIGNEE;
 
             if (!isOpsManagerView) {
-                finalAssignee =
-                    task.assignee || task.prefferedAssignee || NO_ASSIGNEE;
+                finalAssignee = task.assignee ?? task.prefferedAssignee ?? '';
             } else {
                 finalAssignee = await resolveAssigneeForTask(task);
             }
