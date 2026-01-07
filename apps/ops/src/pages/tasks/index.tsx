@@ -12,11 +12,12 @@ import { TranslationFiles } from '@deps/config/translations';
 import TaskManagementQueue from '@deps/containers/task-management-queue/task-management-queue-container';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { _QUEUE_ADMIN, ADMIN_ROLE } from '@deps/helpers/ops-manager.helpers';
-import { getUserData, UserRolesMap } from '@deps/helpers/query-data.helpers';
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
+import { readAndStoreUserRolesCookie } from '@deps/queries/api/server/fga/readTuples';
 import { FgaUiEntity } from '@deps/types/fga';
 import { FgaRelation } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -90,7 +91,7 @@ function extractQueueNameFromRole(role: string): string {
 }
 
 export function extractTaskListingParamsFromRolesMap(
-    userRolesMap: UserRolesMap
+    userRolesMap: Record<string, string[]>
 ): TaskListingParams {
     const carriers = new Set<string>();
     const queues = new Set<string>();
@@ -110,7 +111,9 @@ export function extractTaskListingParamsFromRolesMap(
     };
 }
 
-export function isAdminFromUserRolesMap(userRolesMap?: UserRolesMap): boolean {
+export function isAdminFromUserRolesMap(
+    userRolesMap?: Record<string, string[]>
+): boolean {
     return Boolean(
         userRolesMap &&
             Object.keys(userRolesMap).some((role) => role.includes(ADMIN_ROLE))
@@ -121,8 +124,7 @@ export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (
             context: GetServerSidePropsContext,
-            loggingContext: LoggingContext,
-            userRolesMap?: UserRolesMap
+            loggingContext: LoggingContext
         ) => {
             const { locale = DEFAULT_LOCALE, res, req } = context;
             const user = await getUserData(context);
@@ -141,7 +143,7 @@ export const getServerSideProps = withPageAuthAndLogging(
             if (!accessToken) {
                 return serverSidePropsLogout();
             }
-            console.log('----------------checking tuple page');
+
             const hasPagePermissions = await checkTuplePage(
                 context,
                 UserPermission.AllowReadOtpRenewals,
@@ -156,6 +158,10 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
+            const userRolesMap = await readAndStoreUserRolesCookie(
+                context,
+                loggingContext
+            );
             const isAdmin = isAdminFromUserRolesMap(userRolesMap);
 
             let taskListingParams: TaskListingParams = {

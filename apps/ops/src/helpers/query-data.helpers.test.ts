@@ -2,7 +2,7 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { cleanup } from '@testing-library/react';
 
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
-import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
+import { readUserRolesCookie } from '@deps/queries/api/server/fga/readTuples';
 
 import {
     doesUserHavePagePermissions,
@@ -160,7 +160,7 @@ describe('helpers/query-data.helpers', () => {
                 user: { partyId: 'party-1' },
             });
 
-            (readUserTuplesPage as jest.Mock).mockResolvedValue({
+            (readUserRolesCookie as jest.Mock).mockResolvedValue({
                 tuples: [
                     { key: { object: 'role:ABC_admin' } },
                     { key: { object: 'role:XYZ_admin' } },
@@ -170,7 +170,7 @@ describe('helpers/query-data.helpers', () => {
 
             const result = await getUserRolesData(ctx, logging);
 
-            expect(readUserTuplesPage).toHaveBeenCalledWith(
+            expect(readUserRolesCookie).toHaveBeenCalledWith(
                 ctx,
                 'user=party:party-1&object=role:&pageSize=100',
                 logging
@@ -186,7 +186,7 @@ describe('helpers/query-data.helpers', () => {
                 user: { partyId: 'party-1' },
             });
 
-            (readUserTuplesPage as jest.Mock).mockResolvedValue({
+            (readUserRolesCookie as jest.Mock).mockResolvedValue({
                 tuples: [
                     { key: { object: 'role:ABC_admin' } },
                     { key: { object: 'role:ABC' } },
@@ -205,7 +205,7 @@ describe('helpers/query-data.helpers', () => {
             (getSession as jest.Mock).mockResolvedValue({
                 user: { partyId: 'party-1' },
             });
-            (readUserTuplesPage as jest.Mock).mockResolvedValue(undefined);
+            (readUserRolesCookie as jest.Mock).mockResolvedValue(undefined);
 
             const result = await getUserRolesData(ctx, logging);
             expect(result).toBeUndefined();

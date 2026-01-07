@@ -12,7 +12,6 @@ import { DocumentContext } from 'next/document';
 
 import { UserPermission, UserProfile } from '@deps/models/user-profile';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
-import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
 import { PRODUCTION_HOST_NAME } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 
@@ -47,54 +46,6 @@ export const getUserData = async (ctx: GetServerSidePropsContext) => {
     const user = auth?.user as UserProfile;
 
     return user;
-};
-
-export type UserRolesMap = Record<string, string[]>;
-
-export const getUserRolesData = async (
-    context: GetServerSidePropsContext,
-    loggingContext: LoggingContext
-) => {
-    const user = await getUserData(context);
-    const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
-
-    const userTuples = await readUserTuplesPage(
-        context,
-        tuplesQuery,
-        loggingContext
-    );
-
-    const userRolesMap = userTuples?.tuples?.reduce<UserRolesMap>(
-        (acc, { key: relationalData }) => {
-            if (
-                !relationalData ||
-                typeof relationalData !== 'object' ||
-                !('object' in relationalData)
-            ) {
-                return acc;
-            }
-            const { object } = relationalData;
-            // Anything between 'role:' and the first '_' will be treated as the carrier code,
-            // and everything after the first '_' will be treated as the role type (generic role)
-            // This is a stopgap solution until personas are implemented in FGA
-            const [_, carrierCode, roleType] =
-                object.match(/^role:([^_]+)_(.+)$/) ?? [];
-
-            if (!roleType) {
-                return acc;
-            }
-
-            return {
-                ...acc, // Existing roles
-                [roleType]: [
-                    ...(acc[roleType] || []), // Existing carrier codes
-                    carrierCode,
-                ],
-            };
-        },
-        {}
-    );
-    return userRolesMap;
 };
 
 export const doesUserHavePagePermissions = async (

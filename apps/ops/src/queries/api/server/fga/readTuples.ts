@@ -1,6 +1,7 @@
 import { getSession } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 
+import { getUserData } from '@deps/helpers/query-data.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { ApiResponse } from '@deps/types/api-response';
@@ -81,7 +82,7 @@ export const readUserTuples = async (
             file: 'queries/api/fga',
             function: 'checkTupleSsr',
             url,
-            inputs: {},
+            inputs: { queryString },
         });
 
         const ret: ApiResponse<ReadTuplesResponse> = {
@@ -97,9 +98,8 @@ export const readUserTuples = async (
     }
 };
 
-export const readUserTuplesPage = async (
+export const readAndStoreUserRolesCookie = async (
     ctx: GetServerSidePropsContext,
-    queryString: string,
     logCtx: LoggingContext
 ) => {
     const loggingContext = {
@@ -111,21 +111,56 @@ export const readUserTuplesPage = async (
     try {
         const rolesFromCookie = getRolesFromCookie(ctx.req, ctx.res);
         if (rolesFromCookie) {
+            console.log('....roles from cookie....', rolesFromCookie);
             return rolesFromCookie;
         }
 
+        const user = await getUserData(ctx);
+        const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
         const session = await getSession(ctx.req, ctx.res);
         const accessToken = session?.accessToken;
         const result = await readUserTuples(
             accessToken as string,
-            queryString,
+            tuplesQuery,
             loggingContext
         );
-        console.log('....setting roles cookie....', result.data?.tuples);
-        if (!result.error && result.data) {
-            setRolesCookie(result.data, ctx.req, ctx.res);
-            return result.data;
+
+        const userRolesMap = result.data?.tuples?.reduce<
+            Record<string, string[]>
+        >((acc, { key: relationalData }) => {
+            if (
+                !relationalData ||
+                typeof relationalData !== 'object' ||
+                !('object' in relationalData)
+            ) {
+                return acc;
+            }
+            const { object } = relationalData;
+            // Anything between 'role:' and the first '_' will be treated as the carrier code,
+            // and everything after the first '_' will be treated as the role type (generic role)
+            // This is a stopgap solution until personas are implemented in FGA
+            const [_, carrierCode, roleType] =
+                object.match(/^role:([^_]+)_(.+)$/) ?? [];
+
+            if (!roleType) {
+                return acc;
+            }
+
+            return {
+                ...acc, // Existing roles
+                [roleType]: [
+                    ...(acc[roleType] || []), // Existing carrier codes
+                    carrierCode,
+                ],
+            };
+        }, {});
+
+        if (userRolesMap) {
+            console.log('....setting roles cookie....', userRolesMap);
+            setRolesCookie(userRolesMap, ctx.req, ctx.res);
         }
+
+        return userRolesMap;
     } catch (e) {
         logWarn(
             'readUserTuplePage::An error occurred while reading users tuple',
@@ -133,9 +168,6 @@ export const readUserTuplesPage = async (
                 ...loggingContext,
                 file: 'queries/api/fga',
                 function: 'readUsersTuplePage',
-                inputs: {
-                    queryString,
-                },
             }
         );
     }

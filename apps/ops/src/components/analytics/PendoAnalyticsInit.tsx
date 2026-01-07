@@ -1,11 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { useEffect, useMemo } from 'react';
 
-import { UserRolesMap } from '@deps/helpers/query-data.helpers';
 import { isInternalZinniaUser } from '@deps/helpers/user.helpers';
 import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
 import { UserProfile as ZinniaUserProfile } from '@deps/models/user-profile';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { getRolesFromCookie } from '@deps/utils/permissionsCookie';
 import { PendoOptions } from 'globals';
 
 // Account for additional properties on the user profile
@@ -13,15 +13,16 @@ declare module '@auth0/nextjs-auth0/client' {
     interface UserProfile extends ZinniaUserProfile {}
 }
 
-const PendoAnalyticsInit = ({
-    userRolesMap,
-}: {
-    userRolesMap: UserRolesMap;
-}) => {
+const PendoAnalyticsInit = () => {
     const { user } = useUser();
     const carrier = useUserCarrier();
 
     const initOptions = useMemo((): PendoOptions | undefined => {
+        const userRolesMap = getRolesFromCookie();
+        if (!userRolesMap) {
+            return undefined;
+        }
+
         if (user?.partyId && carrier) {
             const isInternalUser = isInternalZinniaUser(user);
             const roles = Object.keys(userRolesMap);
@@ -55,7 +56,7 @@ const PendoAnalyticsInit = ({
                 },
             };
         }
-    }, [user, carrier, userRolesMap]);
+    }, [user, carrier]);
 
     useEffect(() => {
         if (initOptions) {

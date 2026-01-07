@@ -7,7 +7,7 @@ export const PERMISSIONS_COOKIE_NAME = `${
 
 export const ROLES_COOKIE_NAME = `${
     isHttpsEnvironment() ? '__Host-' : ''
-}fga-roles`;
+}user-roles`;
 
 export const DEFAULT_PERMISSIONS_COOKIE = '{"tuples":{},"carriers":{}}';
 

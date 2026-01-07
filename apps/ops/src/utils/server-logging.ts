@@ -17,11 +17,8 @@ import {
 } from 'next';
 import { v4 as uuidV4 } from 'uuid';
 
-import {
-    getUserRolesData,
-    UserRolesMap,
-} from '@deps/helpers/query-data.helpers';
 import { UserProfile } from '@deps/models/user-profile';
+import { readAndStoreUserRolesCookie } from '@deps/queries/api/server/fga/readTuples';
 
 import pino from './pino-server';
 
@@ -87,8 +84,7 @@ export type RouteHandlerWithLoggingContext = (
 export type GetServerSidePropsWithLoggingContext = (
     ...args: [
         ...Parameters<GetServerSideProps>,
-        ...[loggingContext: LoggingContext],
-        userRolesMap?: UserRolesMap
+        ...[loggingContext: LoggingContext]
     ]
 ) => ReturnType<GetServerSideProps>;
 
@@ -348,26 +344,16 @@ export const withPageAuthAndLogging: WithPageAuthAndLogging = (
             );
             logTrace('next-server page view', loggingContext);
 
-            const userRolesMap = await getUserRolesData(
+            // Trigger user roles cookie to populate if expired
+            console.log('....-------------triggering user roles cookie....');
+            await readAndStoreUserRolesCookie(context, loggingContext);
+
+            const pageSpecificProps = await getServerSideProps(
                 context,
                 loggingContext
             );
 
-            const pageSpecificProps = await getServerSideProps(
-                context,
-                loggingContext,
-                userRolesMap
-            );
-
-            return {
-                ...pageSpecificProps,
-                props: {
-                    userRolesMap,
-                    ...(pageSpecificProps &&
-                        'props' in pageSpecificProps &&
-                        pageSpecificProps.props),
-                },
-            };
+            return pageSpecificProps;
         },
     });
 };
