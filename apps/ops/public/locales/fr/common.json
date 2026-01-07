@@ -7789,7 +7789,8 @@
             }
         },
         "formValidation": {
-            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée"
+            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée",
+            "signatureDesignationMustBeSelected": "La désignation de signature doit être sélectionnée"
         },
         "signTabTitle": "Signature",
         "success": "La demande SSW a été soumise.",

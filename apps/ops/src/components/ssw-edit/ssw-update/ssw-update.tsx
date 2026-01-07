@@ -10,7 +10,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { FormSignature } from '@deps/models/case/withdrawal/case';
+import { FormComment, FormSignature } from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { Policy } from '@zinnia/api-types/types/sor';
 
@@ -60,7 +60,8 @@ const SswUpdate = ({
     const handleFormAction = async (
         item: Program,
         operationType: SswUpdateType,
-        formSign: FormSignature
+        formSign: FormSignature,
+        formCmnt: FormComment | null
     ) => {
         if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSign, t);
@@ -84,7 +85,8 @@ const SswUpdate = ({
                     item,
                     updateProgram,
                     document,
-                    operationType
+                    operationType,
+                    formCmnt ?? { comment: null }
                 )
             );
         }
@@ -99,7 +101,8 @@ const SswUpdate = ({
                     item,
                     updateProgram,
                     document,
-                    operationType
+                    operationType,
+                    formCmnt ?? { comment: null }
                 )
             );
         }
@@ -137,7 +140,6 @@ const SswUpdate = ({
                 text: t('tabs.amount.tabTitle'),
                 isVisible: () => true,
             },
-
             {
                 component: <Signature />,
                 screenReaderLabel: t('signTabTitle'),

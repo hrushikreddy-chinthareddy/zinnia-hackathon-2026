@@ -26,6 +26,7 @@ import {
     AccountType,
     ActiveWithdrawalCase,
     Carrier,
+    FormComment,
     FormSignature,
     PartyRoles,
 } from '@deps/models/case/withdrawal/case';
@@ -274,7 +275,8 @@ export const getBankUpdatePayload = (
     bankUpdateDetails: DisbursementParts,
     formSignature: FormSignature,
     document: DocumentData,
-    bankUpdateType: BankUpdateType
+    bankUpdateType: BankUpdateType,
+    formComment: FormComment
 ) => {
     const documentSource = getDocumentSource(document.documentNumber);
 
@@ -334,6 +336,7 @@ export const getBankUpdatePayload = (
         ...initialForm.data,
         onbaseCaseId: document?.caseId,
         formRequest: {
+            formComment: formComment,
             formData: formData,
             formSource: source,
             formUpdateData: formUpdateData,
@@ -365,7 +368,8 @@ export const bankUpdateFormData = (
     bankUpdateDetails: DisbursementParts,
     formSignature: FormSignature,
     document: DocumentData,
-    bankUpdateType: BankUpdateType
+    bankUpdateType: BankUpdateType,
+    formComment: FormComment
 ): CreateTaskBody<TaskStatus, TaskV2Payload> => {
     return {
         source: TaskSource.ZinniaTaskManagement,
@@ -376,7 +380,8 @@ export const bankUpdateFormData = (
             bankUpdateDetails,
             formSignature,
             document,
-            bankUpdateType
+            bankUpdateType,
+            formComment
         ) as any,
     };
 };

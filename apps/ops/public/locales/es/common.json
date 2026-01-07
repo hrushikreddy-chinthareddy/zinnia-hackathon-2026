@@ -4352,7 +4352,8 @@
                 "eftDrawUpdate": "Actualización de Retiro EFT",
                 "withholdingUpdate": "Actualización de Retención",
                 "formValidation": {
-                    "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente"
+                    "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
+                    "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente"
                 }
             },
             "sswRequest": "Solicitud SSW"

@@ -4,7 +4,7 @@ import { useContext } from 'react';
 import IconButton from '@deps/components/icon-button/icon-button';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
-import { FormSignature } from '@deps/models/case/withdrawal/case';
+import { FormComment, FormSignature } from '@deps/models/case/withdrawal/case';
 
 import { SswUpdateType } from '../ssw-edit-helpers';
 
@@ -13,7 +13,8 @@ type EditProgramProps = {
     onTerminate: (
         item: Program,
         operationType: SswUpdateType,
-        formSign: FormSignature
+        formSign: FormSignature,
+        formCmnt: FormComment | null
     ) => void;
     onEdit: (ind: number) => void;
     programIndex: number;
@@ -25,7 +26,7 @@ const EditProgram = ({
     onEdit,
     programIndex,
 }: EditProgramProps) => {
-    const { formSignature } = useContext(FormDataContext);
+    const { formSignature, formComment } = useContext(FormDataContext);
     return (
         <div>
             <div className="mx-8">
@@ -55,7 +56,8 @@ const EditProgram = ({
                                 onTerminate(
                                     program,
                                     SswUpdateType.PROGRAM_TERMINATE,
-                                    formSignature
+                                    formSignature,
+                                    formComment ?? { comment: null }
                                 )
                             }
                         >

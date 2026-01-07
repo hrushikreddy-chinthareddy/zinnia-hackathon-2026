@@ -7898,7 +7898,8 @@
             }
         },
         "formValidation": {
-            "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+            "signaturePresentOptionMustBeSelected": "Signature present option must be selected",
+            "signatureDesignationMustBeSelected": "Signature designation must be selected"
         },
         "signTabTitle": "Signature",
         "success": "SSW Request has been submitted.",

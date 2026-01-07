@@ -14,6 +14,7 @@ import {
 import { TaskStatus } from '@deps/models/case/task-instance';
 import {
     ActiveWithdrawalCase,
+    FormComment,
     FormSignature,
     FormTaxWithholding,
     PartyRoles,
@@ -105,7 +106,8 @@ export const taxWithholdingUpdateFormData = (
     initialForm: ActiveWithdrawalCase,
     formSignature: FormSignature,
     formTaxWithholding: FormTaxWithholding,
-    document: DocumentData
+    document: DocumentData,
+    formComment: FormComment
 ): CreateTaskBody<TaskStatus, TaskV2Payload> => {
     return {
         source: TaskSource.ZinniaTaskManagement,
@@ -115,7 +117,8 @@ export const taxWithholdingUpdateFormData = (
             initialForm,
             formSignature,
             formTaxWithholding,
-            document
+            document,
+            formComment
         ) as any,
     };
 };
@@ -124,7 +127,8 @@ export const getWithholdingUpdatePayload = (
     initialForm: ActiveWithdrawalCase,
     formSignature: FormSignature,
     formTaxWithholding: FormTaxWithholding,
-    document: DocumentData
+    document: DocumentData,
+    formComment: FormComment
 ) => {
     const documentSource = getDocumentSource(initialForm?.data.documentNumber);
 
@@ -165,6 +169,7 @@ export const getWithholdingUpdatePayload = (
     return {
         ...initialForm.data,
         formRequest: {
+            formComment: formComment,
             formData: formData,
             formSource: source,
             formUpdateData: formUpdateData,
