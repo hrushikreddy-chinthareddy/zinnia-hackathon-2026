@@ -13,10 +13,9 @@ import { AnalyticsRouteValues } from '@deps/types/constants';
 
 const DEFAULT_PATH = AnalyticsRouteValues.cases;
 
-export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
-    children,
-    path,
-}) => {
+export const DashboardTabNav: FC<
+    PropsWithChildren & { path?: string; usageTabEnabled: boolean }
+> = ({ children, path, usageTabEnabled }) => {
     const { t } = useTranslation();
     const router = useRouter();
     const [pathVal, setPathVal] = useState(path || DEFAULT_PATH);
@@ -32,7 +31,6 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
             value={pathVal}
             activationMode="manual"
             onValueChange={handleTabChange}
-            style={{ display: 'flex' }}
         >
             <TabList
                 style={
@@ -51,15 +49,17 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
                     />
                     {t('allFields.cases')}
                 </TabTrigger>
-                <TabTrigger value={AnalyticsRouteValues.usage}>
-                    <Icon
-                        type={IconType.USER_GROUP}
-                        width={24}
-                        height={24}
-                        className="hidden lg:block"
-                    />
-                    {t('allFields.usage')}
-                </TabTrigger>
+                {usageTabEnabled && (
+                    <TabTrigger value={AnalyticsRouteValues.usage}>
+                        <Icon
+                            type={IconType.USER_GROUP}
+                            width={24}
+                            height={24}
+                            className="hidden lg:block"
+                        />
+                        {t('allFields.usage')}
+                    </TabTrigger>
+                )}
             </TabList>
             {children}
         </TabGroup>

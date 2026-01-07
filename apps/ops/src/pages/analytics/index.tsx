@@ -28,6 +28,11 @@ import {
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
 import { FgaRoles } from '@deps/utils/auth';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import {
     logWarn,
     parseErrorInformation,
@@ -42,6 +47,7 @@ interface AnalyticsPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
     path: string;
+    usageTabEnabled: boolean;
 }
 
 const AnalyticsPage = ({
@@ -49,6 +55,7 @@ const AnalyticsPage = ({
     brokerDealersSSR,
     user,
     path,
+    usageTabEnabled,
 }: AnalyticsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
@@ -88,6 +95,7 @@ const AnalyticsPage = ({
                     brokerDealersSSR={brokerDealersSSR}
                     ref={carrierHeaderRef}
                     path={slug}
+                    usageTabEnabled={usageTabEnabled}
                 />
                 <TabGroup
                     defaultValue={AnalyticsRouteValues.cases}
@@ -141,6 +149,22 @@ export const getServerSideProps = withPageAuthAndLogging(
                 };
             }
 
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const doesUserHaveUsagePermission = await checkTuplePage(
+                context,
+                FgaRelation.UiAccess,
+                FgaRoles.USAGE_DASHBOARD_ENTITY,
+                loggingContext
+            );
+
+            const usageTabEnabled =
+                doesUserHaveUsagePermission ||
+                featureFlagDecisions[FEATURE_FLAGS.USAGE_STATS_DASHBOARD];
+
             const translations = await serverSideTranslations(
                 locale,
                 [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
@@ -171,6 +195,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     brokerDealersSSR: filteredBrokerDealers,
                     path: resolvedUrl,
                     user,
+                    usageTabEnabled,
                     ...translations,
                 },
             };
