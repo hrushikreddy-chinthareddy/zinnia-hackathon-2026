@@ -1,4 +1,5 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import dynamic from 'next/dynamic';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useState, useCallback } from 'react';
@@ -23,6 +24,7 @@ import { TaskLabel, TaskStatus } from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
 import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_outlined/filter.svg';
+import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
@@ -82,6 +84,7 @@ type SearchParamsPayload = {
     queues?: string[];
     statuses?: string[];
     sortDirection?: string;
+    scheduledDate?: string;
     escalated?: boolean | null | undefined;
 };
 
@@ -151,6 +154,7 @@ const TaskManagementQueue = ({
             queues = [],
             statuses = [],
             escalated,
+            scheduledDate,
         } = searchParams;
         const safeSearchParams = {
             ...searchParams,
@@ -166,6 +170,11 @@ const TaskManagementQueue = ({
             sortDirection: searchParams.sortDirection || sortDirection,
             sortBy: DEFAULT_SORTING_CONFIG.sortBy,
             ...(escalated !== undefined && { escalated }),
+            ...(scheduledDate && {
+                scheduledDate: dayjs
+                    .utc(scheduledDate, NUMERIC_DATE_FORMAT)
+                    .toISOString(),
+            }),
         };
 
         return safeSearchParams;
@@ -243,6 +252,7 @@ const TaskManagementQueue = ({
                 ),
                 queues: additionalFilters.group,
                 escalated: additionalFilters.escalated,
+                scheduledDate: additionalFilters.scheduledDate,
             };
 
             const copy = { ...searchValue };
@@ -332,19 +342,28 @@ const TaskManagementQueue = ({
         [searchValue]
     );
 
+    function resetAdditionalFilters(additionalFilters: Record<string, any>) {
+        Object.keys(additionalFilters).forEach((key) => {
+            if (key === FilterKeys.statuses) return;
+
+            if (key === FilterKeys.escalated) {
+                additionalFilters[key] = undefined;
+            } else if (key === FilterKeys.scheduledDate) {
+                additionalFilters[key] = '';
+            } else {
+                additionalFilters[key] = [];
+            }
+        });
+
+        return additionalFilters;
+    }
+
     const handleReset = useCallback(() => {
         const newSearchValue = { ...searchValue };
         const statuses = newSearchValue?.additionalFilters?.statuses || [];
 
         if (newSearchValue.additionalFilters) {
-            Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                if (key === FilterKeys.statuses) return;
-                else if (key === FilterKeys.escalated) {
-                    newSearchValue.additionalFilters[key] = undefined;
-                } else {
-                    newSearchValue.additionalFilters[key] = [];
-                }
-            });
+            resetAdditionalFilters(newSearchValue.additionalFilters);
         }
 
         const { additionalFilters, ...payload } = newSearchValue;
@@ -395,14 +414,7 @@ const TaskManagementQueue = ({
         delete searchParams?.additionalFilters;
 
         if (newSearchValue?.additionalFilters) {
-            Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                if (key === FilterKeys.statuses) return;
-                else if (key === FilterKeys.escalated) {
-                    newSearchValue.additionalFilters[key] = undefined;
-                } else {
-                    newSearchValue.additionalFilters[key] = [];
-                }
-            });
+            resetAdditionalFilters(newSearchValue.additionalFilters);
 
             setSearchValue(newSearchValue);
 

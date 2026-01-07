@@ -11,6 +11,7 @@ import { CaseCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { createBaseQuery, formatProcessListOptions } from '../utils';
 
 interface CaseTypeFilterProps {
+    className?: string;
     onValueChange: (value: Processes | ExtendedProcesses) => void;
     defaultProcess: Processes | ExtendedProcesses;
     caseStatus: Statuses[];
@@ -22,6 +23,7 @@ export enum ExtendedProcesses {
 }
 
 export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
+    className,
     onValueChange,
     defaultProcess,
     caseStatus,
@@ -63,6 +65,7 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
 
     return (
         <Select
+            className={className}
             maxContentWidth
             label="Case type"
             options={processListOptions || []}

@@ -102,6 +102,7 @@
         "cancelPremiumProgram": "Cancelar programa de prima",
         "cancelProgram": "Cancelar programa",
         "carrierId": "ID del transportista",
+        "carrierName": "Nombre de la compañía",
         "caseId": "ID du dossier",
         "caseIdSearchError": "Ingrese un Case Id para mostrar resultados de búsqueda",
         "caseType": "Tipo de caso",
@@ -162,6 +163,7 @@
         "currentContributionAmount": "Montant actuel de la contribution",
         "currentMonthCharge": "Cargo del mes actual",
         "currentTaxYear": "Année fiscale en cours",
+        "dashboardProductDetails": "Detalles del producto",
         "date": "Fecha",
         "dateOfDeathReportedNotification": "Fecha de notificación de fallecimiento",
         "day": "día",
@@ -487,8 +489,12 @@
         "priorYearRequiredMinimumDistributionAmount": "Monto de RMD del año previo",
         "proceedCancel": "Proceder con la cancelación del programa sistemático {{frequency}} de {{amount}}",
         "processDate": "Date de traitement",
+        "processingTime": "Tiempo de procesamiento",
         "product": "Producto",
         "productCode": "Código del producto",
+        "productMarketingName": "Nombre comercial del producto",
+        "productName": "Nombre del producto",
+        "productNameTooltip": "Este es el nombre del producto que verá referenciado en la documentación interna. Es diferente del nombre comercial del producto que se usa en la correspondencia y que será familiar para el propietario.",
         "productType": "Tipo de producto",
         "productVersion": "Versión del producto",
         "projectedLapseIndicator": "Indicador de caducidad proyectada",
@@ -1532,6 +1538,10 @@
                 "text": "Administrar beneficiarios",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
+            },
             "userMenu": {
                 "text": "Menú de Usuario"
             }
@@ -2345,6 +2355,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continuar",
+        "cancel": "Cancelar",
+        "confirm": {
+            "header": "Confirmar",
+            "tryAgain": "Intentar de nuevo",
+            "for": "para",
+            "nigo": "Procesamiento NIGO.",
+            "goToCase": "Ir al caso",
+            "gotIt": "¡Entendido!",
+            "submit": "¡Enviado!",
+            "backToHome": "Volver al inicio"
+        },
+        "start":{
+            "title": "Comenzar"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gestionar asignados",
+                "subTitle": "Aquí puedes gestionar los asignados"
+            },
+            "confirm": {
+                "subTitle": "Las actualizaciones del cambio de asignado se enviaron."
+            }
+        }
+    },
     "welcome": {
         "header": "Bienvenido a {{policyPortalName}}",
         "subHeader": "Una herramienta de experiencia de gestión de pólizas para hacer su vida un poco más fácil.",
@@ -2724,6 +2760,8 @@
             "taskStatus": "Estado de la tarea",
             "group": "Grupo",
             "assignee": "Cesionario",
+            "scheduledDate": "Fecha programada",
+            "scheduledDatePlaceholder": "Selecciona una fecha",
             "priority": "Prioridad",
             "selectPriority": "Seleccionar prioridad",
             "onlyPrioritized": "Cas prioritaires",
@@ -4408,7 +4446,8 @@
                 "eftDrawUpdate": "Actualización de Retiro EFT",
                 "withholdingUpdate": "Actualización de Retención",
                 "formValidation": {
-                    "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente"
+                    "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
+                    "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente"
                 }
             },
             "sswRequest": "Solicitud SSW"
@@ -5675,9 +5714,11 @@
             "newCreatedLabel": "Creado",
             "assigneeLabel": "Asignado a",
             "documentNumber": "Documento",
+            "carrier": "Transportador",
+            "caseId": "Identificación del caso",
             "stepLabel": "Paso",
             "issueLabel": "Problema",
-            "detailsLabel": "Detalles",
+            "detailsLabel": "Descripción de la tarea",
             "noDataAvailable": "No hay datos disponibles.",
             "noDocuments": "No hay documentos disponibles",
             "errorAdditionalDocuments": "Error al obtener documentos adicionales.",
@@ -9010,6 +9051,7 @@
             "ariaGoToEApp": "Enlace para ir al eApp",
             "selectBeforeGoToEApp": "Por favor seleccione un ilustración antes de continuar al eApplication.",
             "archiveIllustrationPopoverTitle": "Archivar esta ilustración?",
+            "archiveIllustrationIconTitle": "Icono de archivar illustración",
             "archiveIllustrationPopoverBody": "Puede desarchivarla luego.",
             "confirmArchive": "Archivar",
             "cancel": "Cancelar",

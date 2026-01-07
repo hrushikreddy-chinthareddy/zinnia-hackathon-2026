@@ -24,6 +24,7 @@ import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import CallLogCard from '@deps/components/card/card-call-log/card-call-log';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
+import IconButton from '@deps/components/icon-button/icon-button';
 import CustomLoader from '@deps/components/loader/customLoader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
@@ -74,11 +75,13 @@ import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/a
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
 import { ReactComponent as ClipboardIcon } from '@deps/styles/elements/icons/content/clipboard-1.svg';
+import { ReactComponent as ClipboardOutlineIcon } from '@deps/styles/elements/icons/icons_outlined/clipboard-copy.svg';
 import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_outlined/clipboard-list.svg';
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { removeFromCache, writeToCache } from '@deps/utils/cache';
+import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { formatTimestamp } from '@deps/utils/dates';
 import { isProd } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
@@ -86,6 +89,7 @@ import { parseErrorInformation } from '@deps/utils/server-logging';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
 import { AssigneeField } from './components/assignee-field';
+import styles from './global-task-side-sheet-content.module.css';
 import {
     isAPIErrorInformation,
     isClaimNextTask,
@@ -462,8 +466,7 @@ export default function GlobalTaskSideSheet({
             let finalAssignee = NO_ASSIGNEE;
 
             if (!isOpsManagerView) {
-                finalAssignee =
-                    task.assignee || task.prefferedAssignee || NO_ASSIGNEE;
+                finalAssignee = task.assignee ?? task.prefferedAssignee ?? '';
             } else {
                 finalAssignee = await resolveAssigneeForTask(task);
             }
@@ -654,6 +657,10 @@ export default function GlobalTaskSideSheet({
         CaseIdentifier.DocumentNumber
     );
 
+    const goToCase = () => {
+        window.open(`/cases/${task.caseId}`, '_blank', 'noopener,noreferrer');
+    };
+
     const isCaseAndStartAble = type === 'case' && showStartButton && !readOnly;
 
     const isReadOnlyWithFeatureFlag =
@@ -663,6 +670,9 @@ export default function GlobalTaskSideSheet({
 
     const shouldRenderStartButton =
         isCaseAndStartAble || isReadOnlyWithFeatureFlag;
+
+    const carrierName =
+        getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
 
     const handleClick = async () => {
         if (assigneeList.length === 0 && !assigneeLoading) {
@@ -879,6 +889,31 @@ export default function GlobalTaskSideSheet({
 
                 {renderTaskStatus(task.status)}
 
+                <div className={styles.labelCell}>
+                    {' '}
+                    {t('sideSheet.task.carrier')}{' '}
+                </div>
+
+                <Typography
+                    variant={TypographyVariant.BodySm}
+                    className="col-span-2"
+                >
+                    {carrierName}
+                </Typography>
+
+                <div className={styles.labelCell}>
+                    {' '}
+                    {t('sideSheet.task.caseId')}{' '}
+                </div>
+                <div className={styles.valueRow}>
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {task?.caseId}
+                    </Typography>
+                    <IconButton onClick={goToCase}>
+                        <ClipboardOutlineIcon height={16} width={16} />
+                    </IconButton>
+                </div>
+
                 {!isProd() && documentNumber && (
                     <>
                         <div className="col-span-1 text-[--color-base-text-text-secondary]">
@@ -892,7 +927,7 @@ export default function GlobalTaskSideSheet({
                     </>
                 )}
 
-                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                <div className={styles.labelCell}>
                     {' '}
                     {t('sideSheet.task.assigneeLabel')}{' '}
                 </div>
@@ -933,7 +968,7 @@ export default function GlobalTaskSideSheet({
                     ) : null}
                 </div>
 
-                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                <div className={styles.labelCell}>
                     {' '}
                     {t('sideSheet.task.newCreatedLabel')}{' '}
                 </div>
@@ -946,11 +981,11 @@ export default function GlobalTaskSideSheet({
                         : 'N/A'}
                 </Typography>
 
-                {!isOpsManagerView && task.taskName && type == 'case' && (
+                {task.taskName && (
                     <>
                         {details && (
                             <>
-                                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                                <div className={styles.labelCell}>
                                     {t('sideSheet.task.detailsLabel')}
                                 </div>
                                 <Typography
@@ -1169,11 +1204,11 @@ export default function GlobalTaskSideSheet({
                     <TabTrigger value={TabOptions.Details}>
                         {t('sideSheet.task.tabs.details') ?? ''}
                     </TabTrigger>
-                    {type === 'task' && (
-                        <TabTrigger value={TabOptions.Documents}>
-                            {t('sideSheet.task.tabs.documents') ?? ''}
-                        </TabTrigger>
-                    )}
+
+                    <TabTrigger value={TabOptions.Documents}>
+                        {t('sideSheet.task.tabs.documents') ?? ''}
+                    </TabTrigger>
+
                     {!noCommentsAvailable && (
                         <TabTrigger value={TabOptions.Comments}>
                             {t('sideSheet.task.tabs.comments') ?? ''}

@@ -102,6 +102,7 @@
         "cancelPremiumProgram": "Cancel Premium Program",
         "cancelProgram": "Cancel program",
         "carrierId": "Carrier ID",
+        "carrierName": "Carrier name",
         "caseId": "Case ID",
         "caseIdSearchError": "Enter a Case Id to return search results",
         "caseType": "Case type",
@@ -162,6 +163,7 @@
         "currentContributionAmount": "Current contribution amount",
         "currentMonthCharge": "Current month charge",
         "currentTaxYear": "Current tax year",
+        "dashboardProductDetails": "Product Details",
         "date": "Date",
         "dateOfDeathReportedNotification": "Date of death reported notification",
         "day": "day",
@@ -487,8 +489,12 @@
         "priorYearRequiredMinimumDistributionAmount": "Prior year RMD amount",
         "proceedCancel": "Proceed with canceling {{frequency}} systematic program of {{amount}}",
         "processDate": "Process date",
+        "processingTime": "Processing time",
         "product": "Product",
         "productCode": "Product code",
+        "productMarketingName": "Product marketing name",
+        "productName": "Product name",
+        "productNameTooltip": "This is the product name that you'll see referenced in internal documentation. It's different from the product marketing name that's used in correspondence and will be familiar to the owner.",
         "productType": "Product type",
         "productVersion": "Product version",
         "projectedLapseIndicator": "Projected lapse indicator",
@@ -1548,6 +1554,10 @@
                 "text": "Manage beneficiaries",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
+            "assignee": {
+                "text": "Manage assignee",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
+            },
             "userMenu": {
                 "text": "User Menu"
             }
@@ -2341,6 +2351,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "confirm": {
+            "header": "Confirm",
+            "tryAgain": "Try Again",
+            "for": "for",
+            "nigo": "NIGO processing.",
+            "goToCase": "Go to case",
+            "gotIt": "Got it!",
+            "submit": "Submitted!",
+            "backToHome": "Back to Home"
+        },
+        "start":{
+            "title": "Start"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Manage Assignees",
+                "subTitle": "Here you can manage assignees"
+            },
+            "confirm": {
+                "subTitle": "Assignee Change updates were submitted."
+            }
+        }
+    },
     "welcome": {
         "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
@@ -2721,6 +2757,8 @@
             "taskStatus": "Task Status",
             "group": "Group",
             "assignee": "Assignee",
+            "scheduledDate": "Scheduled date",
+            "scheduledDatePlaceholder": "Select a date",
             "priority": "Priority status",
             "selectPriority": "Select priority",
             "onlyPrioritized": "Prioritized cases",
@@ -5704,9 +5742,11 @@
             "newCreatedLabel": "Created",
             "assigneeLabel": "Assignee",
             "documentNumber": "Document",
+            "carrier": "Carrier",
+            "caseId": "Case ID",
             "stepLabel": "Step",
             "issueLabel": "Issue",
-            "detailsLabel": "Details",
+            "detailsLabel": "Task Description",
             "noDataAvailable": "No data available.",
             "noDocuments": "No documents available",
             "errorAdditionalDocuments": "Error fetching additional documents.",
@@ -7937,7 +7977,8 @@
             }
         },
         "formValidation": {
-            "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+            "signaturePresentOptionMustBeSelected": "Signature present option must be selected",
+            "signatureDesignationMustBeSelected": "Signature designation must be selected"
         },
         "signTabTitle": "Signature",
         "success": "SSW Request has been submitted.",
@@ -9092,6 +9133,7 @@
             "ariaGoToEApp": "Go to eApp link",
             "selectBeforeGoToEApp": "Please select an illustration before continuing to the eApplication.",
             "archiveIllustrationPopoverTitle": "Archive this illustration?",
+            "archiveIllustrationIconTitle": "Archive illustration icon",
             "archiveIllustrationPopoverBody": "You can unarchive it later.",
             "confirmArchive": "Archive",
             "cancel": "Cancel",

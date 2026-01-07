@@ -228,7 +228,7 @@ export const PremiumsSubPage = () => {
     const premiumSetUpAutopayDisable = !!(
         !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
         !premiumSetOrCancelAutopayEnabled ||
-        upcomingPayment?.nextProgramDate ||
+        !upcomingPayment?.nextProgramDate ||
         !isUserPermissionedToAutopay
     );
 

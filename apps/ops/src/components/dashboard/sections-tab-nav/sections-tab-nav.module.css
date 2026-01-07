@@ -1,3 +1,14 @@
+.container {
+    --first-column-width: 94px;
+
+    display: grid;
+    grid-template-columns: var(--first-column-width) repeat(
+            auto-fit,
+            minmax(0, 1fr)
+        );
+    grid-template-rows: 1fr;
+}
+
 .tabList {
     display: flex;
     flex-direction: column;

@@ -103,6 +103,7 @@
         "cancelPremiumProgram": "Annuler le programme de primes",
         "cancelProgram": "Annuler le programme",
         "carrierId": "ID du transporteur",
+        "carrierName": "Nom de l'assureur",
         "caseId": "ID del caso",
         "caseIdSearchError": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
         "caseType": "Type de dossier",
@@ -163,6 +164,7 @@
         "currentContributionAmount": "Monto de contribución actual",
         "currentMonthCharge": "Frais du mois en cours",
         "currentTaxYear": "Año fiscal actual",
+        "dashboardProductDetails": "Détails du produit",
         "date": "Date",
         "dateOfDeathReportedNotification": "Date de notification du décès signalé",
         "day": "jour",
@@ -488,8 +490,12 @@
         "priorYearRequiredMinimumDistributionAmount": "Montant RMD de l'année précédente",
         "proceedCancel": "Procéder à l'annulation du programme systématique {{frequency}} de {{amount}}",
         "processDate": "Fecha de procesamiento",
+        "processingTime": "Délai de traitement",
         "product": "Produit",
         "productCode": "Code produit",
+        "productMarketingName": "Nom commercial du produit",
+        "productName": "Nom du produit",
+        "productNameTooltip": "Il s'agit du nom du produit que vous verrez référencé dans la documentation interne. Il est différent du nom commercial du produit qui est utilisé dans la correspondance et qui sera familier au titulaire.",
         "productType": "Type de produit",
         "productVersion": "Version du produit",
         "projectedLapseIndicator": "Indicateur de résiliation projetée",
@@ -1512,6 +1518,10 @@
                 "text": "Gérer les bénéficiaires",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
+            },
             "userMenu": {
                 "text": "Menu Utilisateur"
             }
@@ -2400,6 +2410,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continuer",
+        "cancel": "Annuler",
+        "confirm": {
+            "header": "Confirmer",
+            "tryAgain": "Réessayer",
+            "for": "pour",
+            "nigo": "Traitement NIGO.",
+            "goToCase": "Aller au dossier",
+            "gotIt": "Compris !",
+            "submit": "Envoyé !",
+            "backToHome": "Retour à l’accueil"
+        },
+        "start":{
+            "title": "Commencer"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gérer les assignés",
+                "subTitle": "Ici, vous pouvez gérer les assignés"
+            },
+            "confirm": {
+                "subTitle": "Les mises à jour du changement d’assigné ont été envoyées."
+            }
+        }
+    },
     "welcome": {
         "header": "Bienvenue sur {{policyPortalName}}",
         "subHeader": "Un outil d'expérience de gestion des politiques pour vous faciliter la vie",
@@ -2676,6 +2712,8 @@
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
             "assignee": "Cessionnaire",
+            "scheduledDate": "Date prévue",
+            "scheduledDatePlaceholder": "Sélectionnez une date",
             "priority": "Priorité du dossier",
             "selectPriority": "Sélectionner la priorité",
             "onlyPrioritized": "Casos prioritarios",
@@ -5629,9 +5667,11 @@
             "newCreatedLabel": "Créée",
             "assigneeLabel": "Cessionnaire",
             "documentNumber": "Document",
+            "caseId": "Numéro de cas",
+            "carrier": "Transporteur",
             "stepLabel": "Étape",
             "issueLabel": "Problème",
-            "detailsLabel": "Détails",
+            "detailsLabel": "Description de la tâche",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
             "reasonLabel": "Raison du statut",
             "scheduledNoteLabel": "Note",
@@ -7829,7 +7869,8 @@
             }
         },
         "formValidation": {
-            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée"
+            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée",
+            "signatureDesignationMustBeSelected": "La désignation de signature doit être sélectionnée"
         },
         "signTabTitle": "Signature",
         "success": "La demande SSW a été soumise.",
@@ -8923,6 +8964,7 @@
             "ariaGoToEApp": "Aller vers le lien eApp",
             "selectBeforeGoToEApp": "Veuillez choisir une illustration avant de poursuivre vers l'eApplication.",
             "archiveIllustrationPopoverTitle": "Archivez cette illustration?",
+            "archiveIllustrationIconTitle": "Icône d'illustration d'archive",
             "archiveIllustrationPopoverBody": "Vous pouvez l'archiver plus tard.",
             "confirmArchive": "Archiver",
             "cancel": "Annuler",

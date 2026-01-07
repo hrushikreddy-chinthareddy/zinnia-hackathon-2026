@@ -68,7 +68,7 @@ const getAddresses = (addresses?: Party['addresses']): Address[] => {
 };
 
 const formatPhone = (phone?: Partial<Phone>): Phone => ({
-    phoneType: (phone?.phoneType as string) ?? PhoneType.HOME,
+    phoneType: (phone?.phoneType as string) ?? PhoneType.MOBILE,
     dialNumber: phone?.dialNumber ?? null,
     areaCode: phone?.areaCode ?? null,
     countryCode: phone?.countryCode ?? 'USA',
@@ -179,11 +179,13 @@ const formatPartyForContract = (party: Party, role: string) => {
     };
 };
 
-const getContractInfo = (policy: PolicyResponse) => {
+export const getContractInfo = (policy: PolicyResponse) => {
     const rolesToFormat: PartyRoleType[] = [
         PartyRoleType.OWNER,
         PartyRoleType.JOINTOWNER,
         PartyRoleType.ASSIGNEE,
+        PartyRoleType.PRIMARYBENEFICIARY,
+        PartyRoleType.CONTINGENTBENEFICIARY,
     ];
 
     const partyRoleToId = policy.partyRoles.reduce<Record<string, string>>(
@@ -203,7 +205,7 @@ const getContractInfo = (policy: PolicyResponse) => {
         .filter(Boolean) as ReturnType<typeof formatPartyForContract>[];
 };
 
-const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
+export const formatPartyData = (policy: PolicyResponse): ActionDataItem[] => {
     const eligiblePartyIds = policy.partyRoles
         .filter(
             (r) =>
