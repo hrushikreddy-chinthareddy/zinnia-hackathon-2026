@@ -5,16 +5,16 @@ import {
 
 describe('Bank Validation Helper', () => {
     describe('isAccountNumberValid', () => {
-        it('should return true when the account number is at least 8 digits', () => {
-            expect(isAccountNumberValid('12345678')).toBe(true);
+        it('should return true when the account number is at least 4 digits', () => {
+            expect(isAccountNumberValid('1234')).toBe(true);
         });
 
         it('should return true when the account number is up to 17 digits', () => {
             expect(isAccountNumberValid('12345678901234567')).toBe(true);
         });
 
-        it('should return false when the account number is under 8 digits', () => {
-            expect(isAccountNumberValid('1234567')).toBe(false);
+        it('should return false when the account number is under 4 digits', () => {
+            expect(isAccountNumberValid('123')).toBe(false);
         });
 
         it('should return false when the account number is over 17 digits', () => {
