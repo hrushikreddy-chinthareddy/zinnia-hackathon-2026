@@ -103,6 +103,7 @@
     grid-column: 2 / -1;
 }
 
+.notAvailableRiderText,
 .notAvailableText {
     color: var(--color-base-text-text-secondary);
 }
@@ -169,6 +170,7 @@
 
 .reasonList {
     display: flex;
+    flex-direction: column;
     list-style-type: disc;
 
     li {

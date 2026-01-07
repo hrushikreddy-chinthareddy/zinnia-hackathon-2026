@@ -5,12 +5,12 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     IneligibilityReason,
     NotAvailabilityReasonField,
 } from '@deps/utils/quick-quotes-rules/types';
 
-import { useQuickQuoteParams } from '../../params-context';
 import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
@@ -47,15 +47,60 @@ const NotAvailabilityReasonLabel = ({
 }: {
     reason: IneligibilityReason;
 }) => {
-    const { insuredAge } = useQuickQuoteParams();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
+    let ageMessage = '';
+    if (reason.field === 'age') {
+        if (reason.actual > reason.expected[1]) {
+            ageMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.maxAge',
+                {
+                    age: reason.expected[1],
+                }
+            );
+        } else {
+            ageMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.minAge',
+                {
+                    age: reason.expected[0],
+                }
+            );
+        }
+    }
+
+    let faceAmountMessage = '';
+    if (reason.field === 'face') {
+        if (reason.actual > reason.expected[1]) {
+            faceAmountMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.maxFaceAm',
+                {
+                    amount: numberFormatify(reason.expected[1], {
+                        style: 'currency',
+                        currency: 'USD',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                    }),
+                }
+            );
+        } else {
+            faceAmountMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.minFaceAm',
+                {
+                    amount: numberFormatify(reason.expected[0], {
+                        style: 'currency',
+                        currency: 'USD',
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 0,
+                    }),
+                }
+            );
+        }
+    }
+
     const reasonMessageMap = {
-        age: t('clientCase.quickQuoteResults.notAvailableReason.age', {
-            age: insuredAge,
-        }),
+        age: ageMessage,
+        face: faceAmountMessage,
         state: t('clientCase.quickQuoteResults.notAvailableReason.state'),
-        face: t('clientCase.quickQuoteResults.notAvailableReason.state'),
         termLength: t('clientCase.quickQuoteResults.notAvailable'),
     } satisfies Record<
         NonNullable<NotAvailabilityReasonField>,
@@ -79,7 +124,7 @@ export const QuickQuoteNotAvailableReasonCell = ({
     return (
         <div className={clsx(styles.notAvailableReasonCell, className)}>
             {Array.isArray(reasons) ? (
-                <>
+                <div>
                     <NotAvailableLabel />
                     <ul className={styles.reasonList}>
                         {reasons?.map((reason) => {
@@ -92,9 +137,8 @@ export const QuickQuoteNotAvailableReasonCell = ({
                             );
                         })}
                     </ul>
-                </>
+                </div>
             ) : typeof reasons === 'object' ? (
-                // TODO: Is it possible that a rider is not available  by itself?
                 Object.entries(reasons).map(([termLength, reasons]) => {
                     return (
                         <div key={`${termLength}`}>

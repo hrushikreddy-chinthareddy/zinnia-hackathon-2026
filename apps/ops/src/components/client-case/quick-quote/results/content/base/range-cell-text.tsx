@@ -46,7 +46,10 @@ export const QuickQuoteRangeCellText = ({
                       t('clientCase.quickQuoteResults.notAvailable')}
             </Typography>
             {value !== undefined && hasRiderErrors && (
-                <Typography variant={TypographyVariant.BodySm}>
+                <Typography
+                    variant={TypographyVariant.BodySm}
+                    className={styles.notAvailableRiderText}
+                >
                     {t('clientCase.quickQuoteResults.hasRiderErrors')}
                 </Typography>
             )}

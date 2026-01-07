@@ -8874,8 +8874,10 @@
                 "title": "Couverture"
             },
             "notAvailableReason": {
-                "age": "Non disponible pour l'âge {{age}}.",
-                "face": "Non disponible pour ce montant assuré.",
+                "maxAge": "Âge maximal d'émission: {{age}}.",
+                "minAge": "Âge minimum d'émission: {{age}}.",
+                "maxFaceAm": "Montant maximal du visage: {{amount}}.",
+                "minFaceAm": "Montant minimum du visage: {{amount}}.",
                 "state": "Non disponible pour cet état."
             },
             "product": {

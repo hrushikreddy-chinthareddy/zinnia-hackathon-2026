@@ -8884,8 +8884,10 @@
             "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
             "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailableReason": {
-                "age": "No disponible para la edad {{age}}.",
-                "face": "No disponible para este monto nominal.",
+                "maxAge": "Edad máxima de emisión: {{age}}.",
+                "minAge": "Edad mínima de emisión: {{age}}.",
+                "maxFaceAm": "Monto nominal máximo: {{amount}}.",
+                "minFaceAm": "Monto nominal mínimo: {{amount}}.",
                 "state": "No disponible para este estado."
             },
             "product": {
