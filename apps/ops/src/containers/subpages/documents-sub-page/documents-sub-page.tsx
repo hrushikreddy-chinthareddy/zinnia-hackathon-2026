@@ -25,10 +25,8 @@ import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import {
-    DEFAULT_ERROR_STRING,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     SearchRequest,
     TaxformResponse,
@@ -189,6 +187,7 @@ const NormalDocs = ({
                     results={policyDocuments ?? []}
                     planCode={policy.product?.planCode}
                     policyDeliveryDate={policy.policyDates?.policyDeliveryDate}
+                    context="policy"
                 />
             )}
             <DocumentResultsPagination

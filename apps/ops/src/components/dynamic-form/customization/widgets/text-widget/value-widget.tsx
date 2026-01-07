@@ -1,5 +1,5 @@
-import { WidgetProps } from '@rjsf/utils';
-import { useEffect, useState } from 'react';
+import { getUiOptions, WidgetProps } from '@rjsf/utils';
+import { Badge, BadgeVariant, Tag } from '@zinnia/bloom/components';
 
 import Field, {
     FieldFormat,
@@ -7,7 +7,10 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 export const ValueWidget = function (props: WidgetProps) {
     const {
         id,
@@ -17,14 +20,24 @@ export const ValueWidget = function (props: WidgetProps) {
         required,
         onChange,
         placeholder,
+        schema,
+        uiSchema,
         rawErrors,
     } = props;
-    const [inputVal, setInputVal] = useState<string>(value);
     const numberFormat = {
         type: 'number' as FieldFormat,
         decimalPlaces: 2,
         format: 'en-US',
     };
+
+    const rowFormData = props.options?.rowFormData;
+
+    const defaultValue = rowFormData
+        ? replacePlaceholders(
+              schema?.default ?? value,
+              rowFormData as Record<string, any>
+          )
+        : value;
 
     const formatNumber = (num: any) => {
         return parseFloat(num).toLocaleString('en-US', {
@@ -32,26 +45,49 @@ export const ValueWidget = function (props: WidgetProps) {
             minimumFractionDigits: 2,
         });
     };
+    const UiOptions = getUiOptions(uiSchema);
+    const display = UiOptions.display;
+    if (display === 'tag') {
+        return <Tag text={defaultValue} />;
+    }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const updatedVal = e.target.value.toString();
-        setInputVal(updatedVal);
-        onChange(updatedVal);
-    };
-
-    useEffect(() => {
-        if (value === undefined) setInputVal('');
-    }, [value]);
+    if (readonly && UiOptions.true && UiOptions.false) {
+        const label =
+            defaultValue === 'true'
+                ? typeof UiOptions.true === 'string'
+                    ? UiOptions.true
+                    : JSON.stringify(UiOptions.true)
+                : typeof UiOptions.false === 'string'
+                ? UiOptions.false
+                : JSON.stringify(UiOptions.false);
+        return UiOptions.badge ? (
+            <Badge
+                variant={
+                    defaultValue === 'true'
+                        ? BadgeVariant.SUCCESS
+                        : BadgeVariant.ERROR
+                }
+                label={String(label)}
+            />
+        ) : (
+            <Typography variant={TypographyVariant.Body}>
+                {String(label)}
+            </Typography>
+        );
+    }
+    if (readonly && UiOptions.format === 'numeric') {
+        return <div>${defaultValue}</div>;
+    }
 
     return (disabled as boolean) ? (
-        <div>{inputVal}</div>
+        <div>{defaultValue}</div>
     ) : readonly ? (
-        <>{formatNumber(inputVal)}</>
+        <>{formatNumber(defaultValue)}</>
     ) : (
         <div className="max-w-sm flex w-full flex-col">
             <Field
                 name={id}
-                value={inputVal}
+                value={defaultValue}
                 formatOptions={numberFormat}
                 leading={<div>$</div>}
                 id={id}
@@ -59,7 +95,7 @@ export const ValueWidget = function (props: WidgetProps) {
                 required={required}
                 readOnly={readonly}
                 placeholder={placeholder}
-                onChange={handleChange}
+                onChange={(e) => onChange(e.target.value.toString())}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
                 variant={

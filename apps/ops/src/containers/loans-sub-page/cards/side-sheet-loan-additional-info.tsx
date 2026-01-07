@@ -8,7 +8,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { rateFormatted } from '@deps/helpers/data-transform.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { LoanSegment, LoanType } from '@zinnia/api-types/types/sor';
 
 export type SideSheetLoanAdditionalInfoProps = {

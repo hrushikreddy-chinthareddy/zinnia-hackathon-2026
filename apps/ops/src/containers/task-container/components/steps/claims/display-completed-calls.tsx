@@ -2,7 +2,8 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Field, { FieldVariant } from '@deps/components/fields/field';
 import FieldLabel from '@deps/components/fields/field-label';
 import { formatPhone } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING, NOOP } from '@deps/types/constants';
+import { NOOP } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { CallLog, ContactRole, DynamicKey } from './claims.type';
 

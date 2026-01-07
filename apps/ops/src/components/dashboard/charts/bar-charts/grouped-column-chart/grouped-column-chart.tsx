@@ -1,9 +1,9 @@
-import Highcharts from 'highcharts';
 import Drilldown from 'highcharts/modules/drilldown';
 import HighchartsReact from 'highcharts-react-official';
 import { FC } from 'react';
 
 import caseChartHelpers from '@deps/helpers/dashboard/case-chart-helpers';
+import Highcharts from '@deps/utils/highcharts';
 
 import {
     AXIS_LABEL_STYLE,

@@ -1,5 +1,6 @@
 import {
     queryOptions,
+    skipToken,
     useQueries,
     useQuery,
     UseQueryResult,
@@ -8,20 +9,20 @@ import { first, groupBy, sortBy } from 'lodash';
 import { useCallback, useMemo } from 'react';
 
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import {
-    wrapCombinedQueryResultsData,
-    CombinedQueryResult,
-} from '@deps/hooks/combined-query';
+import { wrapCombinedQueryResultsData } from '@deps/hooks/combined-query';
 import {
     getProducersByIdQuery,
     getProducersByNameAndCarrierCodeQuery,
     getUserDownlineBySellingCode,
     getUserHierarchyBySellingCode,
 } from '@deps/queries/tanstack/producerQueries/producerQueries';
+import { ApiGetProducerResponse } from '@deps/types/pom/get.types';
 import {
     GetDownlineResponse,
     GetHierarchyResponse,
     MAIN_AGENCY_ROLE,
+    PRODUCER_ROLES,
+    ProducerRole,
     ProducersResponse,
     Upline,
     UplineItem,
@@ -29,6 +30,7 @@ import {
 
 import {
     getSellingCodesFromAliases,
+    IllustratorRole,
     useAllAliasesWithSellingCode,
 } from './user-identity';
 
@@ -40,6 +42,16 @@ export const POM_QUERY_PREFIXES = {
         'getProducersByNameAndCarrierCode',
     ],
     GET_PRODUCER_BY_ID: ['POM', 'getProducerById'],
+    GET_COMP_PRODUCER_BY_SELLING_CODE: [
+        'POM',
+        'comp',
+        'getProducerBySellingcode',
+    ],
+    GET_COMP_DOWNLINE_FOR_NEAREST_ROLE: [
+        'POM',
+        'comp',
+        'getdownlineForNearestRole',
+    ],
 } as const;
 
 //
@@ -90,7 +102,7 @@ const buildDownlineQueryOptions = (
     sellingCode: string | undefined,
     {
         carrierShortName,
-        partialFullName,
+        partialFullName = '',
     }: {
         carrierShortName: string | undefined;
         partialFullName: string | undefined;
@@ -190,6 +202,36 @@ export const useGetProducersListQuery = <MT>(
 // Producer by Id
 //
 
+export type GetProducerByIdWrappedResponse = {
+    lookupId: string;
+    carrierShortName: string;
+    response: ApiGetProducerResponse | null;
+};
+
+const buildGetWrappedProducerByIdQueryOptions = (
+    lookupId: string | undefined,
+    carrierShortName: string | undefined
+) => {
+    const upperCarrierShortName = carrierShortName?.toUpperCase();
+
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID,
+            upperCarrierShortName,
+            lookupId,
+        ],
+        queryFn: async (): Promise<GetProducerByIdWrappedResponse> => ({
+            lookupId: lookupId!,
+            carrierShortName: upperCarrierShortName!,
+            response: await getProducersByIdQuery(
+                lookupId!,
+                upperCarrierShortName!
+            ),
+        }),
+        enabled: !!(lookupId && carrierShortName),
+    });
+};
+
 const buildGetProducerByIdQueryOptions = (
     lookupId: string | undefined,
     carrierShortName: string | undefined
@@ -207,10 +249,154 @@ const buildGetProducerByIdQueryOptions = (
     });
 };
 
-export const useGetProducerById = (
+/**
+ * @deprecated use `useGetProducerById` instead
+ */
+export const useGetWrappedProducerByIdQuery = (
+    lookupId: string | undefined,
+    carrierShortName: string | undefined
+) =>
+    useQuery(
+        buildGetWrappedProducerByIdQueryOptions(lookupId, carrierShortName)
+    );
+
+export const useGetProducerByIdQuery = (
     lookupId: string | undefined,
     carrierShortName: string | undefined
 ) => useQuery(buildGetProducerByIdQueryOptions(lookupId, carrierShortName));
+
+export const useGetWrappedProducersByIdListQuery = <MT>(
+    params: { lookupId: string; carrierShortName: string }[],
+    combine: (
+        results: UseQueryResult<GetProducerByIdWrappedResponse | null>[]
+    ) => MT
+) =>
+    useQueries({
+        queries: params.map(({ lookupId, carrierShortName }) =>
+            buildGetWrappedProducerByIdQueryOptions(lookupId, carrierShortName)
+        ),
+        combine: useCallback(
+            (results: UseQueryResult<GetProducerByIdWrappedResponse>[]) =>
+                wrapCombinedQueryResultsData(results, combine),
+            [combine]
+        ),
+    });
+
+//
+// Composite queries
+//
+
+export const buildGetProducerBySellingCodeQueryOptions = ({
+    sellingCode,
+    carrierShortName,
+}: {
+    sellingCode: string | undefined;
+    carrierShortName: string | undefined;
+}) => {
+    carrierShortName = carrierShortName?.toUpperCase();
+
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_COMP_PRODUCER_BY_SELLING_CODE,
+            carrierShortName,
+            sellingCode,
+        ],
+        queryFn: !(sellingCode && carrierShortName)
+            ? skipToken
+            : async ({ client }) => {
+                  const hierarchy = await client.fetchQuery(
+                      buildHierarchyQueryOptions({
+                          sellingCode,
+                          carrierShortName,
+                      })
+                  );
+
+                  if (!hierarchy) {
+                      return null;
+                  }
+
+                  return await client.fetchQuery(
+                      buildGetProducerByIdQueryOptions(
+                          hierarchy?.producerLookupId,
+                          carrierShortName
+                      )
+                  );
+              },
+    });
+};
+
+export const buildGetDownlineForNearestRoleQueryOptions = ({
+    sellingCode,
+    role,
+    carrierShortName,
+    partialFullName = '',
+}: {
+    sellingCode: string | undefined;
+    role: ProducerRole | undefined;
+    carrierShortName: string | undefined;
+    partialFullName: string | undefined;
+}) => {
+    carrierShortName = carrierShortName?.toUpperCase();
+
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_COMP_DOWNLINE_FOR_NEAREST_ROLE,
+            carrierShortName,
+            sellingCode,
+            role,
+            { partialFullName },
+        ],
+        queryFn: !(sellingCode && role && carrierShortName)
+            ? skipToken
+            : async ({ client }) => {
+                  const hierarchy = await client.fetchQuery(
+                      buildHierarchyQueryOptions({
+                          sellingCode,
+                          carrierShortName,
+                      })
+                  );
+
+                  if (!hierarchy) {
+                      return null;
+                  }
+
+                  const nearestProducer = getNearestRoleFromHierarchy(
+                      hierarchy,
+                      role
+                  );
+
+                  if (!nearestProducer) {
+                      return null;
+                  }
+
+                  return await client.fetchQuery(
+                      buildDownlineQueryOptions(nearestProducer.sellingCode, {
+                          carrierShortName,
+                          partialFullName,
+                      })
+                  );
+              },
+    });
+};
+
+export const useGetProducersBySellingCodeListQuery = <MT>(
+    params: { sellingCode: string; carrierShortName: string }[] | undefined,
+    combine: (results: UseQueryResult<ApiGetProducerResponse | null>[]) => MT
+) =>
+    useQueries({
+        queries:
+            params?.map(({ sellingCode, carrierShortName }) =>
+                buildGetProducerBySellingCodeQueryOptions({
+                    sellingCode,
+                    carrierShortName,
+                })
+            ) ?? [],
+        combine: useCallback(
+            (results: UseQueryResult<ApiGetProducerResponse | null>[]) =>
+                wrapCombinedQueryResultsData(results, combine),
+            [combine]
+        ),
+    });
 
 //
 // Helpers
@@ -224,8 +410,50 @@ export const useAuthenticatedAgentSellingCodes = () => {
     return useMemo(() => getSellingCodesFromAliases(aliases), [aliases]);
 };
 
-export const isAgency = (uplineItem: UplineItem | null) =>
-    uplineItem?.role === MAIN_AGENCY_ROLE;
+export const isAgency = (
+    uplineItem: UplineItem | GetHierarchyResponse | null
+) => uplineItem?.role === MAIN_AGENCY_ROLE;
+
+/**
+ * Returns the nearest instance of an specific producer role in a hierarchy
+ */
+const getNearestRoleFromHierarchy = (
+    hierarchy: GetHierarchyResponse | null,
+    role: ProducerRole
+) => {
+    if (!hierarchy) {
+        return null;
+    }
+
+    if (hierarchy.role === role) {
+        return hierarchy;
+    }
+
+    const { upline } = hierarchy;
+    const uplineItems =
+        upline?.filter((uplineItem) => uplineItem.role === role) ?? [];
+
+    if (!uplineItems.length) {
+        return null;
+    }
+
+    const sortedItems = sortBy(uplineItems, 'level');
+
+    return first(sortedItems)!;
+};
+
+/*
+ * Returns the nearest agency from a hierarchy upline
+ */
+export const getHierarchyAgency = (hierarchy: GetHierarchyResponse | null) =>
+    getNearestRoleFromHierarchy(hierarchy, PRODUCER_ROLES.GENERAL_AGENCY);
+
+/*
+ * Returns the nearest BrokerDealer from a hierarchy upline
+ */
+export const getHierarchyBrokerDealer = (
+    hierarchy: GetHierarchyResponse | null
+) => getNearestRoleFromHierarchy(hierarchy, PRODUCER_ROLES.BROKER_DEALER);
 
 /*
  * Returns the agencies from an upline that are at the lowest level available
@@ -252,55 +480,39 @@ export const getNearestAgenciesFromUpline = (upline: Upline | null) => {
 };
 
 /**
- * Returns the agencies that an agent belongs to
- * that are at the nearest level in each of their uplines
+ *
+ * Infers an illustrator role for an specific hierarchy
  */
-export const useAuthenticatedAgentAgencies = () => {
-    const agentSellingCodes = useAuthenticatedAgentSellingCodes();
+export const getIllustratorRoleFromHierarchy = (
+    hierarchy: GetHierarchyResponse
+) => {
+    const agency = getHierarchyAgency(hierarchy);
+    const brokerDealer = getHierarchyBrokerDealer(hierarchy);
 
-    return useHierarchyListQuery(
-        agentSellingCodes,
-        useCallback(
-            (results: UseQueryResult<GetHierarchyResponse | null>[]) => {
-                const hierarchies = results
-                    .map((result) => result?.data)
-                    .filter((item): item is GetHierarchyResponse => !!item);
+    const isDistrictManager = hierarchy.role === PRODUCER_ROLES.BROKER_DEALER;
+    const isAgencyOwner = hierarchy.role === PRODUCER_ROLES.GENERAL_AGENCY;
+    const isDistrictStaff =
+        hierarchy.role === PRODUCER_ROLES.REP &&
+        agency == null &&
+        brokerDealer != null;
+    const isNormalAgent =
+        hierarchy.role === PRODUCER_ROLES.REP && agency != null;
 
-                const rootAgencyHierarchies = hierarchies.filter(
-                    ({ role }) => role === MAIN_AGENCY_ROLE
-                );
+    if (isDistrictManager) {
+        return IllustratorRole.DISTRICT_MANAGER;
+    }
 
-                if (rootAgencyHierarchies?.length) {
-                    // Return all rootAgencies if any is present
-                    return rootAgencyHierarchies.map((rootAgencyHierarchy) => ({
-                        agencies: [rootAgencyHierarchy],
-                        agentSellingCode: rootAgencyHierarchy?.sellingCode,
-                        carrierShortName:
-                            rootAgencyHierarchy.carrier.carrierShortName,
-                    }));
-                }
+    if (isDistrictStaff) {
+        return IllustratorRole.DISTRICT_STAFF;
+    }
 
-                return hierarchies
-                    .map(
-                        (hierarchy) =>
-                            hierarchy && {
-                                agencies: getNearestAgenciesFromUpline(
-                                    hierarchy.upline ?? []
-                                ),
-                                agentSellingCode: hierarchy.sellingCode,
-                                carrierShortName:
-                                    hierarchy.carrier.carrierShortName,
-                            }
-                    )
-                    .filter((item) => item!.agencies.length);
-            },
-            []
-        )
-    ) as CombinedQueryResult<
-        {
-            agencies: UplineItem[];
-            agentSellingCode: string;
-            carrierShortName: string;
-        }[]
-    >;
+    if (isAgencyOwner) {
+        return IllustratorRole.AGENCY_OWNER;
+    }
+
+    if (isNormalAgent) {
+        return IllustratorRole.AGENT;
+    }
+
+    return IllustratorRole.NO_ROLE;
 };

@@ -43,7 +43,7 @@ type SidesheetReverseRecreateProps = {
     planCode: string | undefined;
     policyNumber: string | undefined;
     reversalTransactionId: string | undefined;
-    transactionType: string;
+    transactionType: string | undefined;
 };
 
 export default function SidesheetReverseRecreate({

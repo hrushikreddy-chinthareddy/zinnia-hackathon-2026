@@ -74,6 +74,9 @@ export enum TaskType {
     Agent_Change_Detail = 'AGENT_CHANGE_DETAIL',
     Initiate_BeneChange_Transaction = 'INITIATE_BENECHANGE_TRANSACTION',
     Claims_Death_Audit_Contract_Matching = 'CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING',
+    Carrier_Approval = 'FRAUD_SCREENING_REVIEW',
+    Giact_Call_Out = 'BANKING_VALIDATION_CALLOUT',
+    Initiate_AssigneeChange_Transaction = 'INITIATE_ASSIGNEECHANGE_TRANSACTION',
 }
 
 export enum EarlyTaskType {

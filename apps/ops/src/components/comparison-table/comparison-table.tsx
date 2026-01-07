@@ -6,7 +6,7 @@ import React from 'react';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { formatAddress } from '@deps/helpers/address.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Address, PaymentForm } from '@zinnia/api-types/types/sor';
 
 import { PiiWrapper } from '../pii/PiiWrapper';

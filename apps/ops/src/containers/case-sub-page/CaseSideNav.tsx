@@ -20,15 +20,16 @@ import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as TimeIcon } from '@deps/styles/elements/icons/icons_outlined/clock.svg';
 import { ReactComponent as LighBulb } from '@deps/styles/elements/icons/icons_outlined/light-bulb.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import CaseDetailsSideNav from './case-details-side-nav';
 import { getSideNavData } from './case-helpers';
+import CaseSideNavFinancialTransaction from './case-side-nav-financial-transaction';
 import { PartiesProps } from './CaseSideNavParties';
 import CaseSideNavTabs from './CaseSideNavTabs';
 import Transactions from './CaseSideNavTransactions';
@@ -232,6 +233,12 @@ const CaseSideNav = ({
     const data = getSideNavData(caseDetails, caseActivityContext, t);
     const shouldShowCaseInsights = useCaseInsightsPermission();
 
+    const {
+        financialTransaction,
+        financialTransactionLoading,
+        isFinancialTransaction,
+    } = useCaseActivityContext();
+
     const getOpenAiSummary = async (caseDetails: Case) => {
         if (!caseDetails) {
             return '';
@@ -306,7 +313,16 @@ const CaseSideNav = ({
                             </div>
                         </div>
                     )}
-                    <Transactions caseDetails={caseDetails} />
+                    {isFinancialTransaction ? (
+                        <CaseSideNavFinancialTransaction
+                            financialTransaction={financialTransaction}
+                            financialTransactionLoading={
+                                financialTransactionLoading
+                            }
+                        />
+                    ) : (
+                        <Transactions caseDetails={caseDetails} />
+                    )}
                 </div>
                 {caseDetails.process !== Processes.AgentOnboarding && (
                     <CaseSideNavTabs

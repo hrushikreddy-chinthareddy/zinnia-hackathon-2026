@@ -1,5 +1,6 @@
 import { TFunction } from 'next-i18next';
 
+import { NOT_YET_AVAILABLE } from '@deps/types/constants';
 import { typedEntries } from '@deps/utils/objects';
 
 import { formatAsDataValue } from '../transformations/formatters';
@@ -28,12 +29,19 @@ import {
  */
 export function buildRenderTreeFromSourceData(
     obj: unknown,
-    t: TFunction
+    t: TFunction,
+    mapNotYetAvailableFields: string[] = []
 ): DataNode[] {
     if (!isNonNullishObject(obj)) return [];
 
     return typedEntries(obj)
-        .map(([key, value]) => convertTuple(key, value, t))
+        .map(([key, value]) => {
+            const currentValue =
+                mapNotYetAvailableFields.includes(key) && !value
+                    ? t(NOT_YET_AVAILABLE)
+                    : value;
+            return convertTuple(key, currentValue, t, mapNotYetAvailableFields);
+        })
         .filter(isNotNullish);
 }
 
@@ -48,7 +56,8 @@ export function buildRenderTreeFromSourceData(
 export function convertTuple(
     key: string,
     value: unknown,
-    t: TFunction
+    t: TFunction,
+    mapNotYetAvailableFields: string[] = []
 ): DataNode | undefined {
     // Skip nullish values
     if (value === null || value === '') return;
@@ -75,7 +84,8 @@ export function convertTuple(
 
                     const fields: DataNode[] = buildRenderTreeFromSourceData(
                         item,
-                        t
+                        t,
+                        mapNotYetAvailableFields
                     );
 
                     return {
@@ -97,7 +107,7 @@ export function convertTuple(
         } else {
             // Array → DataGroup
             const groups: DataNode[][] = value.map((item) =>
-                buildRenderTreeFromSourceData(item, t)
+                buildRenderTreeFromSourceData(item, t, mapNotYetAvailableFields)
             );
             if (groups.length === 0) return;
 
@@ -117,7 +127,11 @@ export function convertTuple(
 
     // Object → DataSection
     if (typeof value === 'object' && !Array.isArray(value)) {
-        const children = buildRenderTreeFromSourceData(value, t);
+        const children = buildRenderTreeFromSourceData(
+            value,
+            t,
+            mapNotYetAvailableFields
+        );
 
         if (children.length === 0) return;
 

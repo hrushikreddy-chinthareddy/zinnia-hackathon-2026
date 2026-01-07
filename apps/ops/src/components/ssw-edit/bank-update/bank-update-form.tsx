@@ -2,6 +2,7 @@ import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import SelectSimple from '@deps/components/select/select';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -59,7 +60,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
     const [submitFailed, setSubmitFailed] = useState(false);
     const source = getDocumentSource(document.documentNumber);
 
-    const { initialForm, formSignature, setFormErrors } =
+    const { initialForm, formSignature, setFormErrors, formComment } =
         useContext(FormDataContext);
 
     const requestBankUpdate = async (bankUpdateType: BankUpdateType) => {
@@ -73,7 +74,8 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                 bankUpdateDetails,
                 formSignature,
                 document,
-                bankUpdateType
+                bankUpdateType,
+                formComment ?? { comment: null }
             )
         );
         if (successfulCaseUpdate) {
@@ -209,7 +211,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                                 config={signaturesConfig}
                             />
                         )}
-
+                        <NoteSection />
                         <div className="flex flex-col p-4">
                             <div className="flex">
                                 <Button

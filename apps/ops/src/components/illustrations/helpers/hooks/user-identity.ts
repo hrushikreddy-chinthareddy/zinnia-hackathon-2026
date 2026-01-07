@@ -10,6 +10,16 @@ import {
 
 const SELLING_CODE_FIELD = 'SELLING_CODE';
 
+export enum IllustratorRole {
+    SUPER_ILLUSTRATOR = 'SUPER_ILLUSTRATOR',
+    DISTRICT_MANAGER = 'DISTRICT_MANAGER',
+    DISTRICT_STAFF = 'DISTRICT_STAFF',
+    AGENCY_OWNER = 'AGENCY_OWNER',
+    AGENCY_STAFF = 'AGENCY_STAFF',
+    AGENT = 'AGENT',
+    NO_ROLE = 'NO_ROLE',
+}
+
 /**
  * To brand aliases that we know have an external party identifier with a
  * selling code

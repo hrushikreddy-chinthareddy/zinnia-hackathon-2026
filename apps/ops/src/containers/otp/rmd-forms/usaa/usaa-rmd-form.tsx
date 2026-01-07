@@ -13,16 +13,23 @@ import SignatureValidations from '@deps/components/otp-withdrawal-form/signature
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
 import getUsaaWithdrawalConfig from './usaa-rmd-from.helpers';
 
 const UsaaRmdWithdrawalForm = () => {
+    const { featureFlags } = useOptimizely();
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+    const isDtccSectionEnabled =
+        featureFlags[FEATURE_FLAGS.DTCC_SECTION_ENABLED];
+    const isValidationV2Enabled =
+        featureFlags[FEATURE_FLAGS.USAA_SSW_VALIDATION_V2]; // Flag was created for SSW, but can be used for RMD as well
     const {
         formValidation,
         formPartyConfigs,
@@ -32,7 +39,7 @@ const UsaaRmdWithdrawalForm = () => {
         signaturesConfig,
         eSignatureFieldConfig,
         w4pSignaturesConfig,
-    } = getUsaaWithdrawalConfig(t);
+    } = getUsaaWithdrawalConfig(t, isDtccSectionEnabled, isValidationV2Enabled);
     const {
         formParty,
         setFormValidator,

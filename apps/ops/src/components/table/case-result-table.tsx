@@ -22,7 +22,6 @@ import ChipStatus from '@deps/components/chip-status/chip-status';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { getValidFullName } from '@deps/helpers/case-management';
@@ -34,10 +33,7 @@ import {
     Processes,
     shouldShowEscalationBadge,
 } from '@deps/models/case/case';
-import {
-    CaseDetailsTabValues,
-    DEFAULT_ERROR_STRING,
-} from '@deps/types/constants';
+import { CaseDetailsTabValues } from '@deps/types/constants';
 import { SearchViewQuery } from '@deps/types/search';
 import {
     CaseClickedEvent,
@@ -48,6 +44,7 @@ import {
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
 import { formatTimestamp } from '@deps/utils/dates';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import styles from './case-result-table.module.css';
 import CaseDetailField from '../card/case-search-card/case-detail-field';
@@ -74,7 +71,7 @@ const PartyWithOthers = ({
     highlights,
     isOwner,
 }: PartyWithOthersProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
     const textWithHighlights =
         !!text && highlights && highlights.length ? (
             <Highlighter text={text} highlights={highlights} />
@@ -113,7 +110,7 @@ interface CaseTableRowProps {
 }
 
 const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
     const router = useRouter();
     const { sessionId, partyId } = usePermissionsContext();
 
@@ -207,7 +204,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                             getValidFullName({
                                 firstName: onboardingAgentFirstName,
                                 lastName: onboardingAgentLastName,
-                            }) || '--'
+                            }) || DEFAULT_ERROR_STRING
                         )}
                         highlights={highlights}
                         truncate={true}
@@ -411,7 +408,7 @@ const NoResultsRow = ({
     loadingMessage: string;
     caseSearchLoading: boolean;
 }) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
 
     return (
         <TableRow>
@@ -434,10 +431,17 @@ export const CaseResultTable = ({
     caseSearchLoading,
     loadingMessage,
 }: CaseResultTableProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
 
     return (
-        <Table className={styles.tableContainer}>
+        <Table
+            className={styles.tableContainer}
+            aria-describedby="cases-table-description"
+            role="table"
+        >
+            <caption id="cases-table-description" className="sr-only">
+                {t('allFields.tableCaptionsCasesTable') ?? ''}
+            </caption>
             <TableHeader>
                 <TableRow>
                     {/* This header cell is needed so the link can come first in the Table Row, without it the table body will shift right one column too far */}

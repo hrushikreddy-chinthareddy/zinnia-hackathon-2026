@@ -1,3 +1,4 @@
+import { WidgetProps } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
@@ -10,7 +11,7 @@ import { FileAttachmentProps } from '../../widgets/file-widget/file-widget';
 export function FileListing({
     attachments,
     setAttachments,
-    widgetProps,
+    widgetProps = {} as WidgetProps,
 }: FileAttachmentProps) {
     const { readonly } = widgetProps;
 
@@ -29,7 +30,7 @@ export function FileListing({
 
     return (
         <div className={clsx('flex ')}>
-            <ul className="file-info">
+            <ul className="file-info w-full">
                 {attachments?.map((fileInfo: TaskDocument, index: number) => {
                     const { documentId, documentName } = fileInfo;
 

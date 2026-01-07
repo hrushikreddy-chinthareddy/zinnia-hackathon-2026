@@ -11,7 +11,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 interface CaseDetailFieldProps extends PiiProps {
     ariaLabel?: string;
     label?: string | null;

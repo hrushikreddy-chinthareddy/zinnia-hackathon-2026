@@ -13,8 +13,8 @@ import {
     PolicySearchFilters,
     PolicySearchFiltersContext,
 } from '@deps/contexts/PolicySearchFilters';
+import { useSearchBarcontext } from '@deps/contexts/SearchBarContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import {
     SortOrder,
     useTableOptions,
@@ -46,9 +46,7 @@ const toggleLabels =
                 label: t('dashboard.search.buttons.policyNumber'),
                 value: 'policyNumber',
                 placeholder: '',
-                errorMessage: t(
-                    'dashboard.search.error.policyNumber'
-                ) as string,
+                errorMessage: t('allFields.policyNumberSearchError') ?? '',
             },
             {
                 label: t('dashboard.search.buttons.ssn'),
@@ -57,7 +55,7 @@ const toggleLabels =
                 placeholder: t('dashboard.search.buttons.ssnPlaceholder') ?? '',
                 format: '###-##-####',
                 replaceValue: '-',
-                errorMessage: t('dashboard.search.error.ssn') as string,
+                errorMessage: t('allFields.ssnSearchError') ?? '',
             },
             {
                 label: t('dashboard.search.buttons.name'),
@@ -71,25 +69,22 @@ const toggleLabels =
                                   ),
                                   value: 'firstName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.firstName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.firstNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.lastName'),
                                   value: 'lastName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.lastName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.lastNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.fullName'),
                                   value: 'fullName',
                                   placeholder: 'Trust or organization',
-                                  errorMessage: t(
-                                      'dashboard.search.error.fullName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.fullNameSearchError') ?? '',
                               },
                           ],
                       }
@@ -101,17 +96,15 @@ const toggleLabels =
                                   ),
                                   value: 'firstName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.firstName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.firstNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.lastName'),
                                   value: 'lastName',
                                   placeholder: '',
-                                  errorMessage: t(
-                                      'dashboard.search.error.lastName'
-                                  ) as string,
+                                  errorMessage:
+                                      t('allFields.lastNameSearchError') ?? '',
                               },
                           ],
                       }),
@@ -140,8 +133,10 @@ export const PolicyIndexTableView = ({
         policySearchFilters,
         setPolicySearchFilters,
         clearPolicySearchFilters,
-        setShowFieldErrorMessage,
     } = useContext(PolicySearchFiltersContext);
+
+    const { setShowFieldErrorMessage, validateValueToSearch } =
+        useSearchBarcontext();
 
     const { searchValue, offset } = policySearchFilters;
 
@@ -191,6 +186,10 @@ export const PolicyIndexTableView = ({
                 policySearchFilters?.searchValue?.policyNumber !== policyNumber)
         );
     };
+
+    useEffect(() => {
+        return () => setShowFieldErrorMessage(false);
+    }, [setShowFieldErrorMessage]);
 
     //TODO: Can we completely refactor how the search context works?
     // I feel like we could potentially move it out of state and make the search completely URL driven
@@ -252,30 +251,7 @@ export const PolicyIndexTableView = ({
             }
         );
 
-        // The api treats an empty string as a valid search value. Searching with an empty string in firstName and a correct
-        // value in lastName will return 0 results.
-        // This removes all falsy values from the search query
-        // This feels like the wrong location to strip the values but I'm isolating to Policy.
-        Object.keys(value).forEach((key) => {
-            const trimmedValue = value[key as keyof typeof value]?.trim();
-            value[key as keyof typeof value] = trimmedValue;
-
-            if (isNullEmptyOrUndefined(value[key as keyof typeof value])) {
-                delete value[key as keyof typeof value];
-            }
-        });
-
-        const hasSearchValue =
-            value &&
-            !!Object.keys(value).length &&
-            !(value.ssn && !/\d/.test(value.ssn));
-
-        // Show the field error message if the search button is clicked and nothing have been entered into the field
-        if (!hasSearchValue) {
-            setShowFieldErrorMessage(true);
-        } else {
-            setShowFieldErrorMessage(false);
-        }
+        validateValueToSearch(value);
 
         const newSearchValues: PolicySearchFilters = {
             ...policySearchFilters,

@@ -23,7 +23,7 @@ import {
     isNullEmptyOrUndefined,
     toSentenceCase,
 } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import styles from './funds-table.module.css';
 import { FundViewModel } from '../types';
@@ -33,6 +33,11 @@ interface FundsTableProps {
     funds?: FundViewModel[];
     loading?: boolean;
     policy: PolicyDetails;
+    /**
+     * Optional accessible caption describing the specific fund table
+     * (e.g., elected vs non-elected funds).
+     */
+    caption?: string;
 }
 
 export enum FundTypes {
@@ -44,7 +49,7 @@ export enum FundTypes {
 const hasSideSheet = (fundType: string | undefined) =>
     fundType === FundTypes.Index || fundType === FundTypes.Variable;
 
-const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
+const FundsTable = ({ funds, loading, policy, caption }: FundsTableProps) => {
     const sideSheet = useSideSheetContext();
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'policy.funds.fundsTable',
@@ -104,8 +109,19 @@ const FundsTable = ({ funds, loading, policy }: FundsTableProps) => {
         sideSheet.handleOpen(true);
     };
 
+    const captionId = caption
+        ? caption.includes('Elected')
+            ? 'elected-funds-table-description'
+            : 'not-elected-funds-table-description'
+        : undefined;
+
     return (
-        <Table>
+        <Table aria-describedby={captionId}>
+            {caption && (
+                <caption id={captionId} className="sr-only">
+                    {caption}
+                </caption>
+            )}
             <TableHeader>
                 <TableRow>
                     <TableHeaderCell className={styles.nameCell}>

@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import DotContainer from '@deps/components/dot-container/dot-container';
 import FieldLabel from '@deps/components/fields/field-label';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export interface PayeeSummaryCardRowProps {
     amount?: string;

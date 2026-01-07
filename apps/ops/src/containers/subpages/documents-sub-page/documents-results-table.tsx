@@ -35,12 +35,12 @@ import {
     useDocumentDownload,
 } from '@deps/hooks/useDocumentDownload';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import {
     CaseDocumentClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './documents-results-table.module.css';
@@ -54,6 +54,11 @@ type DocumentsResultsTableProps = {
     results: DocumentWithSource[] | V3DocumentWithSource[];
     planCode: string | undefined;
     policyDeliveryDate: string | undefined;
+    /**
+     * Indicates whether this table is showing case-level or policy-level documents.
+     * Defaults to 'policy' for backward compatibility.
+     */
+    context?: 'case' | 'policy';
 };
 
 const DownloadItem = ({
@@ -171,15 +176,59 @@ export default function DocumentsResultsTable({
     results,
     planCode,
     policyDeliveryDate,
+    context,
 }: DocumentsResultsTableProps) {
     const { featureFlags } = useOptimizely();
     const pd = 'policy.documents';
     const { t } = useTranslation();
 
+    const isSent = documentType === DocumentTypeView.Correspondence;
+    // Explicitly check for 'case' context, default to 'policy' if undefined or not 'case'
+    const isCaseContext = context === 'case';
+
+    // Determine caption based on context and document type using switch
+    const contextType = isCaseContext ? 'case' : 'policy';
+    const documentDirection = isSent ? 'sent' : 'received';
+    const captionKey = `${contextType}-${documentDirection}`;
+
+    let translationKey: string;
+    let captionId: string;
+
+    switch (captionKey) {
+        case 'case-sent':
+            translationKey = 'allFields.tableCaptionsSentCaseDocuments';
+            captionId = 'sent-case-documents-table-description';
+            break;
+        case 'case-received':
+            translationKey = 'allFields.tableCaptionsReceivedCaseDocuments';
+            captionId = 'received-case-documents-table-description';
+            break;
+        case 'policy-sent':
+            translationKey = 'allFields.tableCaptionsSentPolicyDocuments';
+            captionId = 'sent-policy-documents-table-description';
+            break;
+        case 'policy-received':
+            translationKey = 'allFields.tableCaptionsReceivedPolicyDocuments';
+            captionId = 'received-policy-documents-table-description';
+            break;
+        default:
+            // Fallback to policy-received if something unexpected happens
+            translationKey = 'allFields.tableCaptionsReceivedPolicyDocuments';
+            captionId = 'received-policy-documents-table-description';
+            break;
+    }
+
+    const captionText = t(translationKey);
+
     return (
-        <Table className="my-8" stickyColumn={TableStickyColumn.End}>
-            <caption className="hidden">
-                {`${policyNumber} ${t(`${pd}.documents`)}`}
+        <Table
+            className="my-8"
+            stickyColumn={TableStickyColumn.End}
+            aria-describedby={captionId}
+            role="table"
+        >
+            <caption id={captionId} className="sr-only">
+                {captionText ?? ''}
             </caption>
             <TableHeader className="typography-content-body-sm-bold">
                 <TableRow>
@@ -195,7 +244,7 @@ export default function DocumentsResultsTable({
                                 DocumentTypeView.Correspondence && (
                                 <Popover
                                     body={t(`${pd}.documentIdentifierTooltip`)}
-                                    title={t(`${pd}.documentId`) as string}
+                                    title={t(`${pd}.documentId`) ?? ''}
                                     placement={PopoverPlacement.TopRight}
                                 >
                                     <Icon
@@ -231,7 +280,7 @@ export default function DocumentsResultsTable({
                             </Typography>
                             <Popover
                                 body={t(`${pd}.actionsTooltip`)}
-                                title={t(`${pd}.actions`) as string}
+                                title={t(`${pd}.actions`) ?? ''}
                                 placement={PopoverPlacement.TopLeft}
                             >
                                 <Icon
@@ -276,7 +325,7 @@ export default function DocumentsResultsTable({
                                                         type:
                                                             document.documentType?.toLowerCase() ||
                                                             DEFAULT_ERROR_STRING,
-                                                    }) as string
+                                                    }) ?? ''
                                                 }
                                                 placement={
                                                     PopoverPlacement.TopRight

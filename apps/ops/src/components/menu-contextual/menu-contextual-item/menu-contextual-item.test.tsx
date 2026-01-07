@@ -16,6 +16,11 @@ const customRender = (children: ReactNode) => {
 
 describe('MenuContextualItem', () => {
     describe('Rendering', () => {
+        beforeEach(() => {
+            jest.clearAllMocks();
+            jest.spyOn(console, 'warn').mockImplementation();
+        });
+
         it('should render a contextual item with content and icon', async () => {
             customRender(
                 <MenuContextualItem
