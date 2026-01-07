@@ -126,10 +126,11 @@ describe('QuickQuoteProducts', () => {
             (p) => p.planCode === 'TL0101' && p.termLength === 10
         );
 
+        expect(tl10).toBeDefined();
         expect(tl10?.classCodes.length).toBeGreaterThan(0);
         const isRiderEligible = tl10?.riders.Rider_ADR.eligible;
         const ageNotAvailabilityReason = determineNotAvailabilityRiderReason(
-            tl10?.riders.Rider_ADR!,
+            tl10!.riders.Rider_ADR!,
             'age'
         );
         expect(isRiderEligible).toBe(false);
@@ -159,7 +160,7 @@ describe('QuickQuoteProducts', () => {
         );
         expect(tl10).toBeDefined();
         const faceNotAvailabilityReason = determineNotAvailabilityRiderReason(
-            tl10?.riders.Rider_ADR!,
+            tl10!.riders.Rider_ADR!,
             'face'
         );
         const isRiderEligible = tl10?.riders.Rider_ADR.eligible;
