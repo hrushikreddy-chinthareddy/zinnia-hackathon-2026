@@ -268,7 +268,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         text: t('allFields.setUpAutopay'),
         isDisabled:
             !withdrawalEligibility?.isEligibleWithdrawal ||
-            !!withdrawalProgram?.nextProgramDate ||
+            !withdrawalProgram?.nextProgramDate ||
             !isUserPermissionedToWithdraw,
         tooltip: getWithdrawalTooltip(),
     };
