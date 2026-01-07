@@ -2,6 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useMemo, useState } from 'react';
 
 import ButtonGrp from '@deps/components/button-group/button-group';
+import { defaultBankUpdateValues } from '@deps/components/ssw-edit/bank-update/bank-update.helpers';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -13,6 +14,7 @@ import {
 } from '@deps/helpers/bank.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import {
+    FormDisbursement,
     FormDisbursement as FormDisbursementType,
     PaymentMailType,
     PaymentMethod,
@@ -37,13 +39,18 @@ type FormDisbursementProps = {
     title?: string;
     isFormStateReadOnly?: boolean;
     defaultValue?: PaymentMethod | PaymentMailType;
+    isBankUpdateForm?: boolean;
 };
 
 export default function FormDisbursementV2({
     options,
     title,
     isFormStateReadOnly = false,
+    isBankUpdateForm = false,
 }: FormDisbursementProps) {
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'caseWithdrawal.request.distributionMethod',
+    });
     const {
         formDisbursement,
         parties,
@@ -55,17 +62,13 @@ export default function FormDisbursementV2({
         setBankDetails,
     } = useContext(FormDataContext);
 
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'caseWithdrawal.request.distributionMethod',
-    });
-
     const [defaultDisbursementInfo, setDefaultDisbursementInfo] = useState<any>(
         {}
     );
 
-    const selectedPaymentOption = options.find(
-        (val) => val.value === bankDetails?.paymentMethod
-    );
+    const selectedPaymentOption = !isBankUpdateForm
+        ? options?.find((val) => val.value === bankDetails?.paymentMethod)
+        : undefined;
 
     const selectedBankInfoOption = formDisbursement?.bank[0]?.isDirectDeposit
         ?.text
@@ -95,6 +98,17 @@ export default function FormDisbursementV2({
                     ...pv,
                     paymentMethod: formDisbursement?.paymentMethod
                         ?.text as PaymentMethod,
+                }));
+        }
+        if (isBankUpdateForm) {
+            setDefaultDisbursementInfo({
+                [PaymentMethod.EFT]: defaultBankUpdateValues,
+            });
+            setFormDisbursement(defaultBankUpdateValues as FormDisbursement);
+            setBankDetails &&
+                setBankDetails((pv) => ({
+                    ...pv,
+                    paymentMethod: PaymentMethod.EFT as PaymentMethod,
                 }));
         }
     }, []);
@@ -212,7 +226,9 @@ export default function FormDisbursementV2({
     const renderDisbursementInformation = () => {
         return (
             <FormDisbursementSectionV2
-                fieldConfig={selectedPaymentOption as any}
+                fieldConfig={
+                    isBankUpdateForm ? options : (selectedPaymentOption as any)
+                }
                 defaultDisbursementInfo={
                     defaultDisbursementInfo[
                         bankDetails?.paymentMethod as string
@@ -228,6 +244,10 @@ export default function FormDisbursementV2({
         bankDetails?.paymentMethod ||
         formDisbursement?.paymentMethod?.text ||
         '';
+
+    if (isBankUpdateForm) {
+        return <>{renderDisbursementInformation()}</>;
+    }
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-100">
