@@ -184,6 +184,8 @@ export const getContractInfo = (policy: PolicyResponse) => {
         PartyRoleType.OWNER,
         PartyRoleType.JOINTOWNER,
         PartyRoleType.ASSIGNEE,
+        PartyRoleType.PRIMARYBENEFICIARY,
+        PartyRoleType.CONTINGENTBENEFICIARY,
     ];
 
     const partyRoleToId = policy.partyRoles.reduce<Record<string, string>>(
