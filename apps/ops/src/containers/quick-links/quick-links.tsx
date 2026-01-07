@@ -12,9 +12,6 @@ import QuickActionsMenu, {
     QuickActionsMenuProps,
     QuickActionsType,
 } from '@deps/components/quick-actions-menu/quick-actions-menu';
-import Typography, {
-    TypographyVariant,
-} from '@deps/components/typography/typography';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import {
@@ -83,11 +80,11 @@ const QuickLinks = ({
                     return (
                         <MenuContextual
                             key={name + href}
+                            triggerAsChild={true}
                             trigger={
-                                <Typography
-                                    className="block"
-                                    variant={TypographyVariant.NavLinks}
-                                    asTag="p"
+                                <button
+                                    type="button"
+                                    className="nav-links group block cursor-pointer tracking-normal no-underline default-focus focus-visible:rounded"
                                 >
                                     {name}
                                     <Icon
@@ -95,8 +92,9 @@ const QuickLinks = ({
                                         height={16}
                                         width={16}
                                         className="ml-1"
+                                        aria-hidden="true"
                                     />
-                                </Typography>
+                                </button>
                             }
                         >
                             <MenuContextualLabel

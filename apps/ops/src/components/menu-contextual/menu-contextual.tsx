@@ -73,17 +73,16 @@ export const MenuContextual = ({
     return (
         <DropdownMenu.Root
             modal={false}
-            onOpenChange={(open: boolean) => {
-                onOpenChange(open);
+            onOpenChange={(isOpen: boolean) => {
+                setOpen(isOpen);
+                onOpenChange(isOpen);
             }}
             open={open}
         >
             <DropdownMenu.Trigger
                 asChild={triggerAsChild}
-                className="group block rounded"
+                className={triggerAsChild ? '' : 'group block rounded'}
                 ref={triggerRef}
-                onClick={() => setOpen(true)}
-                onKeyUp={(e) => (e.key === 'Enter' ? setOpen(true) : undefined)}
             >
                 {trigger}
             </DropdownMenu.Trigger>
@@ -99,9 +98,9 @@ export const MenuContextual = ({
                     onEscapeKeyDown={() => setOpen(false)}
                     onInteractOutside={() => setOpen(false)}
                 >
-                    <ul className="flex flex-col items-start gap-4 rounded-md py-4">
+                    <div className="flex flex-col items-start gap-4 rounded-md py-4">
                         {children}
-                    </ul>
+                    </div>
                 </DropdownMenu.Content>
             </DropdownMenu.Portal>
         </DropdownMenu.Root>

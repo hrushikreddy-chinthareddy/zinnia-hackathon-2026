@@ -797,7 +797,10 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
     return (
         <>
             <div className="hidden md:block">
-                <MenuContextual trigger={<TextButton label={t('label')} />}>
+                <MenuContextual
+                    trigger={<TextButton label={t('label')} />}
+                    triggerAsChild={true}
+                >
                     {props.type === QuickActionsType.Policy ? (
                         <PolicyMenuContextualContent
                             policy={props.policy}
