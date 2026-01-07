@@ -2698,6 +2698,8 @@
             "taskStatus": "Estado de la tarea",
             "group": "Grupo",
             "assignee": "Cesionario",
+            "scheduledDate": "Fecha programada",
+            "scheduledDatePlaceholder": "Selecciona una fecha",
             "priority": "Prioridad",
             "selectPriority": "Seleccionar prioridad",
             "onlyPrioritized": "Cas prioritaires",

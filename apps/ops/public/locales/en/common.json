@@ -2695,6 +2695,8 @@
             "taskStatus": "Task Status",
             "group": "Group",
             "assignee": "Assignee",
+            "scheduledDate": "Scheduled date",
+            "scheduledDatePlaceholder": "Select a date",
             "priority": "Priority status",
             "selectPriority": "Select priority",
             "onlyPrioritized": "Prioritized cases",

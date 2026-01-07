@@ -2650,6 +2650,8 @@
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
             "assignee": "Cessionnaire",
+            "scheduledDate": "Date prévue",
+            "scheduledDatePlaceholder": "Sélectionnez une date",
             "priority": "Priorité du dossier",
             "selectPriority": "Sélectionner la priorité",
             "onlyPrioritized": "Casos prioritarios",
