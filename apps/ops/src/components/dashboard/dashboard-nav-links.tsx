@@ -32,6 +32,7 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
             value={pathVal}
             activationMode="manual"
             onValueChange={handleTabChange}
+            style={{ display: 'flex' }}
         >
             <TabList
                 style={
@@ -39,7 +40,7 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
                         '--indicator-z-index': 2,
                     } as CSSProperties
                 }
-                className="!mb-0 w-full !border-b-0 bg-white "
+                className="!mb-0 w-full !border-b-0 bg-white"
             >
                 <TabTrigger value={AnalyticsRouteValues.cases}>
                     <Icon
@@ -49,6 +50,15 @@ export const DashboardTabNav: FC<PropsWithChildren & { path?: string }> = ({
                         className="hidden lg:block"
                     />
                     {t('allFields.cases')}
+                </TabTrigger>
+                <TabTrigger value={AnalyticsRouteValues.usage}>
+                    <Icon
+                        type={IconType.USER_GROUP}
+                        width={24}
+                        height={24}
+                        className="hidden lg:block"
+                    />
+                    {t('allFields.usage')}
                 </TabTrigger>
             </TabList>
             {children}

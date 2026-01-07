@@ -1,11 +1,11 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { TabContent, TabGroup } from '@zinnia/bloom/components';
 import Highcharts from 'highcharts';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
-import { AnalyticsTabs } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
@@ -21,6 +21,7 @@ import {
 } from '@deps/queries/api/dashboard';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
+import { AnalyticsRouteValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import {
     SegmentPageName,
@@ -35,6 +36,7 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import Cases from './content/cases';
+import Usage from './content/usage';
 
 interface AnalyticsPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
@@ -49,13 +51,9 @@ const AnalyticsPage = ({
     path,
 }: AnalyticsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
-    const params = useSearchParams();
-    const tabParam = params.get('tab') ?? '';
-    const slug = path.split('/').at(-1);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
-    const isTabValid = Object.values(AnalyticsTabs).some(
-        (value) => value === tabParam
-    );
+    const [slug, setSlug] = useState(path.split('/').at(-1));
+    const router = useRouter();
 
     const {
         isIntersecting: carrierHeaderIsIntersecting,
@@ -74,6 +72,11 @@ const AnalyticsPage = ({
         });
     }, []);
 
+    useEffect(() => {
+        const slug = router.asPath.split('?')[0].split('/').at(-1);
+        setSlug(slug);
+    }, [router.asPath]);
+
     return (
         <>
             <PageHead titleKey="analytics" />
@@ -86,10 +89,18 @@ const AnalyticsPage = ({
                     ref={carrierHeaderRef}
                     path={slug}
                 />
-                <Cases
-                    tab={isTabValid ? tabParam : undefined}
+                <TabGroup
+                    defaultValue={AnalyticsRouteValues.cases}
+                    value={slug}
                     ref={tabContentRef}
-                />
+                >
+                    <TabContent value={AnalyticsRouteValues.cases}>
+                        <Cases />
+                    </TabContent>
+                    <TabContent value={AnalyticsRouteValues.usage}>
+                        <Usage />
+                    </TabContent>
+                </TabGroup>
             </DashboardResponsiveLayout>
         </>
     );
