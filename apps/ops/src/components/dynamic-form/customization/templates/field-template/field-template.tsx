@@ -7,6 +7,19 @@ import {
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
+import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
+import {
+    AddressFields,
+    convertAddressFields,
+} from '@deps/helpers/address.helpers';
+import { isStringWithBrackets } from '@deps/helpers/string.helpers';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import styles from './field-template.module.css';
@@ -15,6 +28,7 @@ import { TransactionSummaryTemplate } from '../transaction-summary-template/tran
 export enum FieldTemplateType {
     SummaryCard = 'summaryCard',
     Table = 'table',
+    Address = 'address',
 }
 
 export const helpInformation = (helpText: string) => {
@@ -28,7 +42,7 @@ export const helpInformation = (helpText: string) => {
                     onClick={(e) => e.preventDefault()}
                     height={'16px'}
                     width={'16px'}
-                    className="tooltip-primary"
+                    className="text-primary"
                 />
             }
             placement={TooltipPlacement.TopRight}
@@ -53,39 +67,88 @@ export function FieldTemplate(props: FieldTemplateProps) {
     let { formData } = props;
     const uiOptions = getUiOptions(uiSchema);
 
-    const helpText = uiOptions.help;
+    const {
+        help: helpText,
+        assistiveText,
+        assistiveColor,
+        style = '',
+        type,
+        inline,
+        label: showLabel,
+        titleVariant,
+        rowFormData,
+        classNames: wrapperClassNames,
+        templateType,
+        widget,
+        format,
+        isQuoted,
+        titleClassName,
+    } = uiOptions;
 
-    const style = uiOptions?.style ?? '';
-    const isLink = uiOptions?.type === 'link';
+    const isLink = type === 'link';
     let { displayLabel } = props;
 
-    if (uiOptions.label === false) {
+    const variant = (
+        Object.values(TypographyVariant) as TypographyVariant[]
+    ).includes(titleVariant as TypographyVariant)
+        ? (titleVariant as TypographyVariant)
+        : TypographyVariant.Label;
+
+    if (showLabel === false) {
         displayLabel = false;
     }
-    if (uiOptions.templateType === FieldTemplateType.SummaryCard) {
+
+    if (rowFormData && isStringWithBrackets(formData)) {
+        formData = replacePlaceholders(
+            formData,
+            rowFormData as Record<string, any>
+        );
+    }
+    if (formData === undefined && schema.type === 'string') {
+        formData = '-';
+    }
+    if (templateType === FieldTemplateType.SummaryCard) {
         return <TransactionSummaryTemplate {...props} />;
     }
 
+    const modifiedLabel = isStringWithBrackets(label)
+        ? replacePlaceholders(label, formData as Record<string, any>)
+        : label;
     const fieldLabel = label ? (
-        <span className={styles.labelRequired}>
-            {label}
-            {required && (
-                <span className={styles.requiredAsterisk}>
-                    {'\u00A0'}
-                    {'\u002A'}{' '}
-                </span>
-            )}
+        <span className={styles.labelRequired + ' ' + titleClassName}>
+            <Typography variant={variant}>
+                {modifiedLabel}
+                {required && (
+                    <span className={styles.requiredAsterisk}>
+                        {'\u00A0'}
+                        {'\u002A'}{' '}
+                    </span>
+                )}
+            </Typography>
         </span>
     ) : (
         ''
     );
 
-    const isDataTypeInReadOnly = readonly && uiOptions?.dataType;
+    const isInlineWithoutLabel = !showLabel && inline;
 
-    if (uiOptions.isQuoted && formData && typeof formData === 'string') {
+    if (isQuoted && formData && typeof formData === 'string') {
         formData = `"${formData}"`;
     }
-    // Helper to render the nested list for CheckBoxesSelectWidget
+
+    const labelElement = (
+        <div className="mb-2 ">
+            <Label
+                labelFor={id}
+                interactiveElements={[helpInformation(helpText as string)]}
+            >
+                <span className={clsx('text-md font-medium', style as string)}>
+                    {fieldLabel}
+                </span>
+            </Label>
+        </div>
+    );
+
     const renderCheckBoxesSelectWidgetList = (data: any) => {
         const items = Array.isArray(data) ? data : [data];
         return (
@@ -108,60 +171,56 @@ export function FieldTemplate(props: FieldTemplateProps) {
             </ol>
         );
     };
+
+    if (templateType === FieldTemplateType.Address && readonly) {
+        const convertedAddressFields = convertAddressFields(
+            formData as AddressFields
+        );
+        return (
+            <>
+                {labelElement}
+                <FormattedAddress address={convertedAddressFields} />
+            </>
+        );
+    }
+
     return (
         <>
-            {uiOptions?.widget === 'CheckBoxesSelectWidget' &&
-            readonly &&
-            formData ? (
+            {widget === 'CheckBoxesSelectWidget' && readonly && formData ? (
                 <div style={{ marginBottom: 12 }}>
                     <div>{fieldLabel}</div>
                     {renderCheckBoxesSelectWidgetList(formData)}
                 </div>
-            ) : uiOptions?.templateType === FieldTemplateType.Table ? (
+            ) : templateType === FieldTemplateType.Table ? (
                 readonly && typeof formData === 'string' ? (
                     formData
                 ) : (
                     children
                 )
             ) : (
-                <div className={uiOptions?.classNames || ''}>
+                <div className={wrapperClassNames || ''}>
                     {classNames?.indexOf('divider') !== -1 && (
                         <div className="mb-4">
                             <Divider direction="horizontal" color="subtle" />
                         </div>
                     )}
-                    <div
-                        className={uiOptions.noMargin ? '' : styles.children}
-                        key={id}
-                    >
-                        {displayLabel && (
-                            <div className="mb-2 ">
-                                <Label
-                                    labelFor={id}
-                                    interactiveElements={[
-                                        helpInformation(helpText ?? ''),
-                                    ]}
-                                >
-                                    <span
-                                        className={clsx(
-                                            'text-md font-medium',
-                                            style as string
-                                        )}
-                                    >
-                                        {fieldLabel}
-                                    </span>
-                                </Label>
-                            </div>
-                        )}
+                    <div className={styles.children} key={id}>
+                        {displayLabel && labelElement}
                         {readonly &&
                         typeof formData === 'string' &&
-                        !(schema.enum || uiOptions.format === 'numeric') &&
+                        !(schema.enum || format === 'numeric') &&
                         !isLink &&
-                        !isDataTypeInReadOnly &&
-                        !uiOptions?.hidden
+                        !isInlineWithoutLabel
                             ? formData
                             : children}
                         {!hideError && errors}
+                        {assistiveColor && assistiveText && (
+                            <AssistiveText
+                                text={assistiveText as string}
+                                variant={assistiveColor as AssistiveTextVariant}
+                                className="mt-2"
+                            />
+                        )}
                     </div>
                 </div>
             )}

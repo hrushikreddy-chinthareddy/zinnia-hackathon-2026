@@ -18,12 +18,14 @@ interface CustomDateRangeProps {
     timerange?: { from: string; to: string };
     handleTimerangeChange?: (value: { from: string; to: string }) => void;
     showIcon?: boolean;
+    disableFutureDates?: boolean;
 }
 
 export const CustomDateRange: FC<CustomDateRangeProps> = ({
     timerange,
     handleTimerangeChange,
     showIcon = true,
+    disableFutureDates = true,
 }) => {
     const [open, setOpen] = useState(false);
 
@@ -89,7 +91,11 @@ export const CustomDateRange: FC<CustomDateRangeProps> = ({
                             selected={selected}
                             onSelect={handleSelect}
                             endMonth={dayjs().toDate()}
-                            disabled={{ after: new Date() }}
+                            disabled={
+                                disableFutureDates
+                                    ? { after: new Date() }
+                                    : undefined
+                            }
                             defaultMonth={dayjs(
                                 timerange?.to || dayjs()
                             ).toDate()}

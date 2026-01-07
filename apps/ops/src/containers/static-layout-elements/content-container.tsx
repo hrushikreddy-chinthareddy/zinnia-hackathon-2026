@@ -8,6 +8,7 @@ import GlobalValuesBar from '@deps/components/global-values/global-values-bar/gl
 import PageLoader, {
     PageLoaderVariant,
 } from '@deps/components/page-loader/page-loader';
+import { QuickActionsType } from '@deps/components/quick-actions-menu/quick-actions-menu';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -143,6 +144,7 @@ const ContentContainer = ({
                                 links={quickLinks || []}
                                 sessionId={sessionId}
                                 className={styles.quickLinks}
+                                type={QuickActionsType.Policy}
                             />
                         </Skeleton>
                         {children}

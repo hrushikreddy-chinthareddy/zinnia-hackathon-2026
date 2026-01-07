@@ -37,7 +37,6 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     FIFTEEN_MINUTES_IN_MS,
     FIVE_MINUTES_IN_MS,
 } from '@deps/types/constants';
@@ -46,7 +45,7 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
-import { toSentenceCase } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@deps/utils/strings';
 import { PartyRole, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { PolicyActionCell } from './policy-action-cell';

@@ -17,10 +17,10 @@ export const TasksVolumeFilters: FC = () => {
 
     return (
         <div className={sharedStyles.filterContainer}>
-            <div className="flex gap-4 items-start">
+            <div className={sharedStyles.filterItem}>
                 <TaskStatusFilter />
             </div>
-            <div className="w-1/2">
+            <div className={sharedStyles.filterItem}>
                 <TimeFilter
                     defaultValue={timeframeRadio}
                     onRadioChange={(val) => {

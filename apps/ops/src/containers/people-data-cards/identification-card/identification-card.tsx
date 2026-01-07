@@ -27,7 +27,7 @@ import {
     trimStringByCharacterCount,
 } from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Identification,
     IdentificationType,

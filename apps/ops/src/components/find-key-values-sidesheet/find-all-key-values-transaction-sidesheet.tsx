@@ -2,6 +2,7 @@ import { SideSheet } from '@zinnia/bloom/components';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import { ViewStateProvider } from '@deps/contexts/ViewStateContext';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
 import { Transaction } from '@zinnia/api-types/types/sor';
@@ -22,12 +23,18 @@ export const FindAllKeyValuesTransactionSidesheet = ({
     transaction,
     open,
     onOpenChange,
+    onTransactionSubmit,
 }: {
-    transaction: Transaction;
+    transaction?: Transaction;
     open: boolean;
     onOpenChange: Dispatch<SetStateAction<boolean>>;
+    onTransactionSubmit?: () => void;
 }) => {
     const { t } = useTranslation();
+
+    if (!transaction) {
+        return null;
+    }
 
     return (
         <SideSheet
@@ -46,9 +53,14 @@ export const FindAllKeyValuesTransactionSidesheet = ({
             onOpenChange={onOpenChange}
             preventCloseOnOutsideClick={false}
         >
-            <TreeStateProvider initialTreeState={Collapse}>
-                <TransactionSidesheetContent transaction={transaction} />
-            </TreeStateProvider>
+            <ViewStateProvider>
+                <TreeStateProvider initialTreeState={Collapse}>
+                    <TransactionSidesheetContent
+                        transaction={transaction}
+                        onTransactionSubmit={onTransactionSubmit}
+                    />
+                </TreeStateProvider>
+            </ViewStateProvider>
         </SideSheet>
     );
 };
