@@ -98,7 +98,6 @@ describe('HistoryFilters helpers', () => {
                 args.filterKey,
                 args.filter
             );
-            console.log(result);
             expect(result).toStrictEqual({ people: ['address'] });
         });
 
@@ -113,8 +112,21 @@ describe('HistoryFilters helpers', () => {
                 args.filterKey,
                 args.filter
             );
-            console.log(result);
             expect(result).toStrictEqual({});
+        });
+
+        it('filters out the EventFilterKey', () => {
+            const args = {
+                state: { people: ['address', 'potatoes'] } as any,
+                filterKey: EventFilterKeys.People,
+                filter: 'potatoes',
+            };
+            const result = filterEventFilters(
+                args.state,
+                args.filterKey,
+                args.filter
+            );
+            expect(result).toStrictEqual({ people: ['address'] });
         });
 
         it('add new value to the EventFilterKey array', () => {
@@ -128,7 +140,6 @@ describe('HistoryFilters helpers', () => {
                 args.filterKey,
                 args.filter
             );
-            console.log(result);
             expect(result).toStrictEqual({ people: ['address', 'phone'] });
         });
     });
