@@ -1492,6 +1492,10 @@
                 "text": "Manage beneficiaries",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
+            "assignee": {
+                "text": "Manage assignee",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
+            },
             "userMenu": {
                 "text": "User Menu"
             }
@@ -2282,6 +2286,32 @@
                 "existing": "Existing",
                 "address": "Address",
                 "phone": "Phone"
+            }
+        }
+    },
+    "selfServeTransaction": {
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "confirm": {
+            "header": "Confirm",
+            "tryAgain": "Try Again",
+            "for": "for",
+            "nigo": "NIGO processing.",
+            "goToCase": "Go to case",
+            "gotIt": "Got it!",
+            "submit": "Submitted!",
+            "backToHome": "Back to Home"
+        },
+        "start":{
+            "title": "Start"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Manage Assignees",
+                "subTitle": "Here you can manage assignees"
+            },
+            "confirm": {
+                "subTitle": "Assignee Change updates were submitted."
             }
         }
     },

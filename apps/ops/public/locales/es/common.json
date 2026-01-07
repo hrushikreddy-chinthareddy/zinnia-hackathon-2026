@@ -1476,6 +1476,10 @@
                 "text": "Administrar beneficiarios",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
+            },
             "userMenu": {
                 "text": "Menú de Usuario"
             }
@@ -2286,6 +2290,32 @@
                 "existing": "Existente",
                 "address": "Dirección",
                 "phone": "Teléfono"
+            }
+        }
+    },
+    "selfServeTransaction": {
+        "continue": "Continuar",
+        "cancel": "Cancelar",
+        "confirm": {
+            "header": "Confirmar",
+            "tryAgain": "Intentar de nuevo",
+            "for": "para",
+            "nigo": "Procesamiento NIGO.",
+            "goToCase": "Ir al caso",
+            "gotIt": "¡Entendido!",
+            "submit": "¡Enviado!",
+            "backToHome": "Volver al inicio"
+        },
+        "start":{
+            "title": "Comenzar"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gestionar asignados",
+                "subTitle": "Aquí puedes gestionar los asignados"
+            },
+            "confirm": {
+                "subTitle": "Las actualizaciones del cambio de asignado se enviaron."
             }
         }
     },

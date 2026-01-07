@@ -2,7 +2,8 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import PageLoader, {
@@ -21,6 +22,10 @@ import PersonSubPage from '@deps/containers/person-sub-page';
 import PolicyDetailsContainer from '@deps/containers/policy-details/policy-details';
 import PremiumsSubPage from '@deps/containers/premiums-sub-page';
 import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
+import SelfServeTransactionContainer from '@deps/containers/self-serve-transaction/self-serve-transaction-container';
+import { SelfServeTransactionProvider } from '@deps/containers/self-serve-transaction/self-serve-transaction-provider';
+import { getSelfServeTransactionData } from '@deps/containers/self-serve-transaction/self-serve-transaction.helpers';
+import { SelfServeTransaction } from '@deps/containers/self-serve-transaction/types';
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
 import CallLogs from '@deps/containers/subpages/activity-sub-page/call-logs';
 import { FilterTransactions } from '@deps/containers/subpages/activity-sub-page/filter-transactions';
@@ -99,15 +104,24 @@ const parseSlugToKey = (slug: string[] | undefined): string => {
     }
 };
 
+const Slugs = {
+    AssigneeChange: 'assigneechange',
+    BeneChange: 'benechange',
+};
+
 const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     user,
     subPageTitleKey,
 }: PolicyPageProps) => {
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'selfServeTransaction',
+    });
     const router = useRouter();
     const { query } = router;
     const { id, slug, planCode } = query;
-    const { partyId } = usePermissionsContext();
+    const { partyId, sessionId } = usePermissionsContext();
     const { featureFlags } = useOptimizely();
+    const [transactionData, setTransactionData] = useState<any | null>(null);
 
     const {
         data: policy,
@@ -139,6 +153,28 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     });
 
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
+
+    const getTransactionData = useCallback(() => {
+        let transactionType;
+        if (slug && slug.length > 0) {
+            switch (slug[1]) {
+                case Slugs.AssigneeChange:
+                    transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
+                    break;
+            }
+            const transactionPayload = getSelfServeTransactionData(
+                transactionType as SelfServeTransaction,
+                policy as Policy,
+                planCode as string
+            );
+            setTransactionData(transactionPayload);
+        }
+    }, [slug, policy, planCode]);
+
+    useEffect(() => {
+        if (!policy || !planCode) return;
+        getTransactionData();
+    }, [policy, planCode, getTransactionData]);
 
     if (loading) {
         return (
@@ -173,21 +209,67 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         switch (slug[0]) {
             case 'people':
                 subPageContent =
-                    slug[1] && slug[1] != 'benechange' ? (
+                    slug[1] &&
+                    slug[1] != Slugs.BeneChange &&
+                    slug[1] != Slugs.AssigneeChange ? (
                         <PersonSubPage
                             editable={canEditPolicy}
                             partyId={slug[1]}
                         />
                     ) : (
-                        (subPageContent = (
-                            <BeneChangeProvider>
-                                <BeneChangeContainer
-                                    policy={policy}
-                                    planCode={planCode as any}
-                                    isReReg={false}
-                                />
-                            </BeneChangeProvider>
-                        ))
+                        (subPageContent =
+                            slug[1] === Slugs.AssigneeChange ? (
+                                transactionData && (
+                                    <SelfServeTransactionProvider>
+                                        <SelfServeTransactionContainer
+                                            initialCustomData={
+                                                transactionData.initialCustomData
+                                            }
+                                            initialFormData={
+                                                transactionData.initialFormData
+                                            }
+                                            transactionType={
+                                                transactionData.transactionType
+                                            }
+                                            policy={policy}
+                                            metaData={transactionData.metaData}
+                                            parentPage={
+                                                transactionData.parentPage
+                                            }
+                                            leaveTransactionLink={
+                                                transactionData.leaveTransactionLink
+                                            }
+                                            processType={
+                                                transactionData.processType
+                                            }
+                                            processSubType={
+                                                transactionData.processSubType
+                                            }
+                                            startStepSubtitle={
+                                                t(
+                                                    transactionData?.startStepSubtitle
+                                                ) ?? ''
+                                            }
+                                            submitResponseHandler={transactionData?.submitResponseHandler(
+                                                policy,
+                                                sessionId,
+                                                partyId
+                                            )}
+                                            confirmStepSubtitle={t(
+                                                transactionData?.confirmStepSubtitle
+                                            )}
+                                        />
+                                    </SelfServeTransactionProvider>
+                                )
+                            ) : (
+                                <BeneChangeProvider>
+                                    <BeneChangeContainer
+                                        policy={policy}
+                                        planCode={planCode as any}
+                                        isReReg={false}
+                                    />
+                                </BeneChangeProvider>
+                            ))
                     );
                 break;
             case 'transactions':
@@ -264,7 +346,6 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         </BlurOverlayLoader>
     );
 };
-
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {

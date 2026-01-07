@@ -88,6 +88,9 @@ const StartStep = ({
     const [task, setTask] = useState<ManagementTask | null>(null);
 
     useEffect(() => {
+        if (!taskId) {
+            return;
+        }
         const getTaskData = async () => {
             const data = await getTaskInstance({ taskId });
             setTask(data);
