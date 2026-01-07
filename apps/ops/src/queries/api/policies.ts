@@ -511,27 +511,17 @@ export const getPolicyAccountInfoSSR = async (
 };
 
 type PolicyNotesQuery = {
-    clientCode: string;
-    limit?: number;
-    offset?: number;
     policyNumber: string;
     planCode: string;
-    isLC?: boolean;
 };
 export const getPolicyNotesInfo = async ({
     policyNumber,
-    clientCode,
-    offset = 0,
-    limit = 10,
     planCode,
-    isLC,
 }: PolicyNotesQuery): Promise<PolicyNotesInfoResponse | null> => {
     try {
-        const fastEndPoint = `${baseUrl}/${planCode}/${policyNumber}/notes`;
-        const lcEndPoint = `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`;
-        const endpoint = isLC ? lcEndPoint : fastEndPoint;
+        const endpoint = `${baseUrl}/${planCode}/${policyNumber}/notes`;
 
-        if (!isLC && !planCode) {
+        if (!planCode) {
             browserLogError(
                 'getPolicyNotesInfo::planCode is required for FAST policies'
             );

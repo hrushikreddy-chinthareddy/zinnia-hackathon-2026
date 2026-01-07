@@ -30,49 +30,18 @@ const mockFASTNotes = [
     },
 ];
 
-const mockLCNotes = {
-    Items: [
-        { NoteDate: '2023-10-15T00:00:00Z', NoteText: 'Past note' },
-        { NoteDate: '2023-10-10T00:00:00Z', NoteText: 'Older note' },
-    ],
-    Count: 2,
-};
-
 describe('useDiaryNotes', () => {
     beforeEach(() => {
         jest.clearAllMocks();
     });
 
-    it('loads and maps FAST notes correctly', async () => {
+    it('loads and maps FAST and LC notes correctly', async () => {
         getPolicyNotesInfo.mockResolvedValueOnce(mockFASTNotes);
         const { result } = renderHook(() =>
             useDiaryNotes({
                 policyNumber: '123',
-                clientCode: 'FLIC',
-                offset: 0,
-                limit: 10,
                 showDiaryNotes: true,
                 planCode: '1234',
-                isLC: false,
-            })
-        );
-        await waitFor(() => expect(result.current.isLoading).toBe(false));
-        expect(result.current.diaryNotes.length).toBe(2);
-        expect(result.current.totalLogs).toBe(2);
-        expect(result.current.diaryNotes[0].NoteText).toBe('Past note');
-        expect(result.current.diaryNotes[1].NoteText).toBe('Older note');
-    });
-
-    it('loads LC notes directly when isLC is true', async () => {
-        getPolicyNotesInfo.mockResolvedValueOnce(mockLCNotes);
-        const { result } = renderHook(() =>
-            useDiaryNotes({
-                policyNumber: '123',
-                clientCode: 'FLIC',
-                offset: 0,
-                limit: 10,
-                showDiaryNotes: true,
-                isLC: true,
             })
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -89,11 +58,8 @@ describe('useDiaryNotes', () => {
         const { result } = renderHook(() =>
             useDiaryNotes({
                 policyNumber: '',
-                clientCode: '',
-                offset: 0,
-                limit: 10,
                 showDiaryNotes: true,
-                isLC: true,
+                planCode: '1234',
             })
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
@@ -106,11 +72,8 @@ describe('useDiaryNotes', () => {
         const { result } = renderHook(() =>
             useDiaryNotes({
                 policyNumber: '123',
-                clientCode: 'FLIC',
-                offset: 0,
-                limit: 10,
                 showDiaryNotes: false,
-                isLC: false,
+                planCode: '1234',
             })
         );
         // Wait a tick to ensure useEffect runs
@@ -123,50 +86,40 @@ describe('useDiaryNotes', () => {
     it('refetches notes when parameters change', async () => {
         getPolicyNotesInfo.mockResolvedValue(mockFASTNotes);
         const { result, rerender } = renderHook(
-            ({ policyNumber, clientCode }) =>
+            ({ policyNumber }) =>
                 useDiaryNotes({
                     policyNumber: policyNumber,
-                    clientCode: clientCode,
-                    offset: 0,
-                    limit: 10,
                     showDiaryNotes: true,
-                    isLC: true,
+                    planCode: '1234',
                 }),
-            { initialProps: { policyNumber: '123', clientCode: 'FLIC' } }
+            { initialProps: { policyNumber: '123', planCode: '1234' } }
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(getPolicyNotesInfo).toHaveBeenCalledWith(
-            expect.objectContaining({
-                policyNumber: '123',
-                clientCode: 'FLIC',
-            })
+            expect.objectContaining({ planCode: '1234', policyNumber: '123' })
         );
-        rerender({ policyNumber: 'PN999', clientCode: 'FLIC' });
+        rerender({ policyNumber: 'PN999', planCode: '1234' });
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(getPolicyNotesInfo).toHaveBeenCalledWith(
             expect.objectContaining({
                 policyNumber: 'PN999',
-                clientCode: 'FLIC',
+                planCode: '1234',
             })
         );
     });
 
-    it('passes planCode and isLC correctly to getPolicyNotesInfo', async () => {
+    it('passes planCode correctly to getPolicyNotesInfo', async () => {
         getPolicyNotesInfo.mockResolvedValueOnce(mockFASTNotes);
         const { result } = renderHook(() =>
             useDiaryNotes({
                 policyNumber: '123',
-                clientCode: 'FLIC',
-                offset: 0,
-                limit: 10,
                 showDiaryNotes: true,
                 planCode: 'PLANX',
-                isLC: true,
             })
         );
         await waitFor(() => expect(result.current.isLoading).toBe(false));
         expect(getPolicyNotesInfo).toHaveBeenCalledWith(
-            expect.objectContaining({ planCode: 'PLANX', isLC: true })
+            expect.objectContaining({ planCode: 'PLANX' })
         );
     });
 });
