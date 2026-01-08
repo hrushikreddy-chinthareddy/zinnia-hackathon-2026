@@ -2369,7 +2369,7 @@
             "submit": "Envoyé !",
             "backToHome": "Retour à l’accueil"
         },
-        "start":{
+        "start": {
             "title": "Commencer"
         },
         "assigneeChange": {
@@ -9021,7 +9021,8 @@
                 "minAge": "Âge minimum d'émission: {{age}}",
                 "maxFaceAm": "Montant maximal du visage: {{amount}}",
                 "minFaceAm": "Montant minimum du visage: {{amount}}",
-                "state": "Non disponible pour cet état"
+                "state": "Non disponible pour cet état",
+                "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police."
             },
             "product": {
                 "title": "Produit",

@@ -11,6 +11,7 @@ import {
     NotAvailabilityReasonField,
 } from '@deps/utils/quick-quotes-rules/types';
 
+import { useQuickQuoteParams } from '../../params-context';
 import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
@@ -48,6 +49,7 @@ const NotAvailabilityReasonLabel = ({
     reason: IneligibilityReason;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { faceAmount } = useQuickQuoteParams();
 
     const formatToCurrency = (value: number) =>
         numberFormatify(value, {
@@ -82,7 +84,11 @@ const NotAvailabilityReasonLabel = ({
     if (reason.field === 'face') {
         const maxFaceAmount = reason.expected[1];
         const minFaceAmount = reason.expected[0];
-        if (reason.actual > maxFaceAmount) {
+        if (reason.actual > faceAmount) {
+            faceAmountMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.riderFaceAmount'
+            );
+        } else if (reason.actual > maxFaceAmount) {
             faceAmountMessage = t(
                 'clientCase.quickQuoteResults.notAvailableReason.maxFaceAm',
                 {

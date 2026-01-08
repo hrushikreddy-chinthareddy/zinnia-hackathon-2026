@@ -2314,7 +2314,7 @@
             "submit": "¡Enviado!",
             "backToHome": "Volver al inicio"
         },
-        "start":{
+        "start": {
             "title": "Comenzar"
         },
         "assigneeChange": {
@@ -9031,7 +9031,8 @@
                 "minAge": "Edad mínima de emisión: {{age}}",
                 "maxFaceAm": "Monto nominal máximo: {{amount}}",
                 "minFaceAm": "Monto nominal mínimo: {{amount}}",
-                "state": "No disponible para este estado"
+                "state": "No disponible para este estado",
+                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
             },
             "product": {
                 "title": "Producto",

@@ -2310,7 +2310,7 @@
             "submit": "Submitted!",
             "backToHome": "Back to Home"
         },
-        "start":{
+        "start": {
             "title": "Start"
         },
         "assigneeChange": {
@@ -9137,7 +9137,8 @@
                 "minAge": "Min issue age: {{age}}",
                 "state": "Not available for this state",
                 "maxFaceAm": "Max face amount: {{amount}}",
-                "minFaceAm": "Min face amount: {{amount}}"
+                "minFaceAm": "Min face amount: {{amount}}",
+                "riderFaceAmount": "Rider face amount cannot exceed policy face amount."
             },
             "riders": {
                 "title": "Riders",
