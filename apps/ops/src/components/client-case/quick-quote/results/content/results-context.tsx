@@ -107,7 +107,7 @@ export const QuickQuoteResultsProvider = ({
             termLength: number
         ): boolean => {
             return Object.entries(riders).some(
-                ([_, data]) => !data.notAvailabilityReasonField?.[termLength]
+                ([_, data]) => data.notAvailabilityReasonField?.[termLength]
             );
         },
         []
