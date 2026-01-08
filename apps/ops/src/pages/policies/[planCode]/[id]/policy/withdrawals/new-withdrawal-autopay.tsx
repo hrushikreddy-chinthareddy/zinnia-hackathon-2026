@@ -155,12 +155,7 @@ const NewWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
         const isEligible = withdrawalEligibility?.isEligibleWithdrawal || false;
         const isRmdEligible = rmdEligibility?.isEligibleRmd || false;
 
-        if (
-            (!isEligible && type !== ProgramType.RMD) ||
-            (!isRmdEligible && type === ProgramType.RMD) ||
-            !withdrawalProgram?.nextProgramDate ||
-            !isUserPermissionedToWithdraw
-        ) {
+        if ((!isEligible && !isRmdEligible) || !isUserPermissionedToWithdraw) {
             router.replace('/403');
         } else {
             setIsLoading(false);
@@ -175,7 +170,6 @@ const NewWithdrawalAutoPay = ({ policy }: WithdrawalAutopayProps) => {
         isRmdEligibilityFetched,
         isPartialWithdrawalOneTimeEligibilityFetched,
         type,
-        withdrawalProgram?.nextProgramDate,
     ]);
 
     if (isLoading) {
