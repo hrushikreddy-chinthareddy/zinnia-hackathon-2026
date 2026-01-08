@@ -31,7 +31,7 @@ export async function applyDynamicOptions(
 
         // Pass the full task object to the handler so it can construct the correct payload
         const payload = handler.getPayload(task, logCtx);
-        const response = await handler.api(payload, accessToken);
+        const response = await handler.api(payload, accessToken, logCtx);
         handler.transformResponse(response, currentTaskMetadata, task, logCtx);
     } catch (error) {
         logWarn(
