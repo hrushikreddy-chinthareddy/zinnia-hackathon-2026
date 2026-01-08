@@ -99,7 +99,7 @@ export function extractTaskListingParamsFromRolesMap(
     for (const [roleOrQueue, roleCarriers] of Object.entries(userRolesMap)) {
         if (roleOrQueue.includes(_QUEUE_ADMIN)) {
             for (const userRoleCarrier of roleCarriers) {
-                carriers.add(userRoleCarrier);
+                carriers.add(userRoleCarrier.toUpperCase());
             }
             queues.add(extractQueueNameFromRole(roleOrQueue));
         }
