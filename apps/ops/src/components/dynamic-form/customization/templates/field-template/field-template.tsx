@@ -130,6 +130,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
         ''
     );
 
+    const isDataTypeInReadOnly = readonly && uiOptions?.dataType;
     const isInlineWithoutLabel = !showLabel && inline;
 
     if (isQuoted && formData && typeof formData === 'string') {
@@ -210,6 +211,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         typeof formData === 'string' &&
                         !(schema.enum || format === 'numeric') &&
                         !isLink &&
+                        !isDataTypeInReadOnly &&
                         !isInlineWithoutLabel
                             ? formData
                             : children}
