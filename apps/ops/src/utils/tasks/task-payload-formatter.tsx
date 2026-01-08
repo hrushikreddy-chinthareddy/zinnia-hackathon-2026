@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
-import { Action } from '@deps/constants/policy';
+import { Action, PolicyRole } from '@deps/constants/policy';
+import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
     MatchingCase,
     PotentialMatches,
@@ -80,6 +81,62 @@ export const getPurchaseDocumentPayload = (
     return {
         ...task,
         ...updateTask,
+    };
+};
+export const getAssigneeChangePayload = (task: ManagementTask) => {
+    const actionData = task?.data?.actionData || [];
+    const signatureData = task?.data?.signatureData || [];
+    const { requestType, addedItem, deletedItem } =
+        detectRoleChangeRequestType(actionData);
+
+    const src = addedItem?.party ?? deletedItem?.party ?? {};
+    const base = getDefaultRoleChangeParty();
+
+    const party = {
+        ...base,
+        ...src,
+        collateralAmount: src?.collateralAmount || null,
+        addresses: cleanAddresses(src.addresses),
+        emails: cleanEmails(src.emails),
+        phones: cleanPhones(src.phones),
+        identifications: mergeIdentifications(src.identifications),
+        relationshipToTheCurrentOwner: getRelationship(src),
+        preferredCommunicationType:
+            src.preferredCommunicationType === 'null'
+                ? null
+                : src.preferredCommunicationType,
+        fullName: getFullName(src),
+        startDate:
+            requestType === Action.ADD || requestType === Action.UPDATE
+                ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                : null,
+        endDate:
+            requestType === Action.DELETE
+                ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                : null,
+    };
+
+    const partyId =
+        requestType === Action.ADD ? null : deletedItem?.party?.partyId;
+
+    return {
+        ...task,
+        data: {
+            ...task.data,
+            requestType,
+            partyId,
+            party,
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            transactionName: 'AssigneeChange',
+            carrierId: task.carrier,
+            caseId: task.caseId,
+            planCode: task.data.planCode,
+            policyNumber: task.data.policyNumber,
+            signatures: signatureData?.signatures ?? [],
+            notarySignatures: signatureData?.notarySignatures ?? [],
+            partyRole: PolicyRole.ASSIGNEE,
+            signatureData: signatureData,
+        },
     };
 };
 
@@ -186,6 +243,10 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
         fullName: toFullName(src),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
+        entityType:
+            src.partyType === PartyType.ORGANIZATION && !src.entityType
+                ? 'UNKNOWN'
+                : src.entityType,
     };
 
     const partyId =

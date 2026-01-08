@@ -9,6 +9,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { Action } from '@deps/constants/policy';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { getTagVariant, hasBeneficiaryChanged } from './summary-step.helpers';
@@ -18,7 +19,8 @@ const BeneficiaryOverview = ({ name, action, allocation }: any) => {
         keyPrefix: 'beneChange.summary',
     });
     const { tagVariant, tagText } = getTagVariant(action, t);
-    const allocationValue = action === Action.DELETE ? '--' : `${allocation}%`;
+    const allocationValue =
+        action === Action.DELETE ? DEFAULT_ERROR_STRING : `${allocation}%`;
 
     return (
         <div className="mr-5 flex">

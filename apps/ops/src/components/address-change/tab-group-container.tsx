@@ -27,6 +27,7 @@ type TabGroupContainerProps = {
     steps: Step[];
     policy: Policy;
     showJointOwner?: boolean;
+    planCode: string;
 };
 const TabGroupContent = ({
     steps,
@@ -72,13 +73,10 @@ const TabGroupContent = ({
     const sideSheet = useSideSheetContext();
     const { diaryNotes } = useDiaryNotes({
         policyNumber: policy?.policyNumber as string,
-        clientCode: policy?.carrierId as string,
-        offset: 0,
-        limit: 10,
         showDiaryNotes: true,
-        planCode: '',
-        isLC: true,
+        planCode: planCode,
     });
+
     const openSideSheet = () => {
         const content = (
             <DiaryNotesContent notesData={{ diaryNotes: diaryNotes } as any} />
@@ -145,14 +143,19 @@ const TabGroupContent = ({
     );
 };
 
-const TabGroupContainer = ({ steps, policy }: TabGroupContainerProps) => {
+const TabGroupContainer = ({
+    steps,
+    policy,
+    planCode,
+}: TabGroupContainerProps) => {
     return (
-        <DiaryNotesProvider caseDetails={policy as any} isLC={true}>
+        <DiaryNotesProvider caseDetails={policy as any} planCode={planCode}>
             <WorkflowProvider>
                 <TabGroupContent
                     steps={steps}
                     policy={policy}
                     showJointOwner={true}
+                    planCode={planCode}
                 />
             </WorkflowProvider>
         </DiaryNotesProvider>

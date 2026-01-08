@@ -1,12 +1,11 @@
 import { ArrayFieldTemplateProps, getUiOptions, RJSFSchema } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import { ActionDataItem } from '@deps/containers/task-container/task-handlers/types';
 
 import styles from './party-info-list.module.css';
-
-// the commented code in this file is for future use and is intentionally left there
 
 type PartyArrayKey = 'emails' | 'phones' | 'addresses';
 
@@ -35,42 +34,35 @@ export default function PartyInfoListTemplate(
     const {
         addButtonCTA = 'Add',
         title: overrideTitle,
-        // showRemoveItemBtn = true,
         showDeleteBtn = true,
         prefferedCTA = 'Preferred',
     } = uiOptions;
 
-    // const [disabledSet, setDisabledSet] = useState(new Set<number>());
     const prevLengthRef = useRef(items.length);
-    const [newlyAddedSet, setNewlyAddedSet] = useState(new Set<number>());
-
-    const [preferredIndex, setPreferredIndex] = useState(0);
 
     const itemRefs = useRef<(HTMLDivElement | null)[]>([]);
     const contacts = Array.isArray(formData) ? formData : [];
-    const updatedActionData = [...(formContext.parentActionData || [])];
-    // const { t } = useTranslation(TranslationFiles.COMMON, {
-    //     keyPrefix: 'transactionAccordion',
-    // });
 
-    // const toggleDisable = (index: number) => {
-    //     setDisabledSet((prev) => {
-    //         const copy = new Set(prev);
-    //         copy.has(index) ? copy.delete(index) : copy.add(index);
-    //         return copy;
-    //     });
-    // };
+    const updatedActionDataRef = useRef<ActionDataItem[]>(
+        formContext.parentActionData
+    );
+
+    useEffect(() => {
+        updatedActionDataRef.current = formContext.parentActionData;
+    }, [formContext.parentActionData]);
 
     const safeStringify = (v: any) => JSON.stringify(v ?? []);
 
-    useEffect(() => {
+    const toggleIsPreferred = (index: number) => {
         const id = idSchema?.$id ?? '';
         const match = id.match(/actionData_(\d+)/);
         const partyIndex = match ? Number(match[1]) : 0;
         const updatedList = contacts.map((item: any, idx: number) => ({
             ...item,
-            isPreferred: idx === preferredIndex,
+            isPreferred: idx === index,
         }));
+
+        const updatedActionData = [...updatedActionDataRef.current];
 
         const entry = updatedActionData[partyIndex] ?? {};
         const party = entry.party ?? {};
@@ -93,19 +85,9 @@ export default function PartyInfoListTemplate(
             party: updatedParty,
         };
 
+        updatedActionDataRef.current = updatedActionData;
+
         setCustomData({ actionData: updatedActionData });
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [preferredIndex]);
-
-    const toggleIsPreferred = (index: number, checked: boolean) => {
-        let newPreferredIndex = preferredIndex;
-        if (checked) {
-            newPreferredIndex = index;
-        } else if (preferredIndex === index) {
-            newPreferredIndex = -1;
-        }
-
-        setPreferredIndex(newPreferredIndex);
     };
 
     useEffect(() => {
@@ -114,12 +96,6 @@ export default function PartyInfoListTemplate(
 
         if (newLen > prevLen) {
             const addedIndex = newLen - 1;
-
-            setNewlyAddedSet((prev) => {
-                const copy = new Set(prev);
-                copy.add(addedIndex);
-                return copy;
-            });
 
             requestAnimationFrame(() => {
                 const el = itemRefs.current[addedIndex];
@@ -161,9 +137,9 @@ export default function PartyInfoListTemplate(
             </div>
 
             {items.map((element, index) => {
-                const isPreferred = preferredIndex === index;
-
-                // const isDisabled = disabledSet.has(index);
+                const isPreferred = !!contacts[index]?.isPreferred;
+                //allow all items to be removable except the first one
+                const isRemovable = index > 0;
 
                 return (
                     <>
@@ -173,9 +149,7 @@ export default function PartyInfoListTemplate(
                                 itemRefs.current[index] = el;
                             }}
                             className={`${styles.card} ${
-                                newlyAddedSet.has(index)
-                                    ? styles.animateSlideUp
-                                    : ''
+                                isRemovable ? styles.animateSlideUp : ''
                             }`}
                             style={{ opacity: 1 }}
                         >
@@ -184,21 +158,9 @@ export default function PartyInfoListTemplate(
                                     {element.children}
                                 </div>
                                 <div className="flex flex-col gap-3 items-end">
-                                    {/* {showRemoveItemBtn &&
-                                        !readonly &&
-                                        !newlyAddedSet.has(index) && (
-                                            <CheckboxText
-                                                id={`remove-address-${index}`}
-                                                label={t('remove')}
-                                                checked={isDisabled}
-                                                onChange={() =>
-                                                    toggleDisable(index)
-                                                }
-                                            />
-                                        )} */}
                                     {showDeleteBtn &&
                                         !readonly &&
-                                        newlyAddedSet.has(index) && (
+                                        isRemovable && (
                                             <button
                                                 type="button"
                                                 onClick={element.onDropIndexClick(
@@ -215,9 +177,7 @@ export default function PartyInfoListTemplate(
                                 label={prefferedCTA as string}
                                 checked={isPreferred}
                                 isDisabled={readonly || isPreferred}
-                                onChange={(val) =>
-                                    toggleIsPreferred(index, val)
-                                }
+                                onChange={() => toggleIsPreferred(index)}
                             />
                         </div>
                     </>

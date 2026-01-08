@@ -408,4 +408,13 @@ export const EventConfig: {
         type: SegmentTransactionType.THIRD_PARTY,
         ui_surface: UI_SURFACE.FLOW,
     },
+    [TransactionSubmittedEventType.ADD_ASSIGNEE]: {
+        area: TransactionArea.PEOPLE,
+        category: TransactionCategory.POLICY_UPDATE,
+        environment: process.env.NODE_ENV,
+        mode: TransactionMode.ADD,
+        transaction_key: `${TransactionCategory.POLICY_UPDATE}:${SegmentTransactionType.ASSIGNEE}:${TransactionMode.ADD}`,
+        type: SegmentTransactionType.ASSIGNEE,
+        ui_surface: UI_SURFACE.FLOW,
+    },
 };

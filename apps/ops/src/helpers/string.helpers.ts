@@ -4,11 +4,11 @@ import { TFunction } from 'next-i18next';
 
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
     LEGACY_END_DATE,
     LEGACY_START_DATE,
 } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Phone, Party } from '@zinnia/api-types/types/sor';
 
 import { calculateAgeNumber } from './age.helpers';
@@ -484,4 +484,11 @@ export function capitalizeAfterPeriod(text: string): string {
     return text
         .toLowerCase()
         .replace(/(^\s*\w|\. \w)/g, (match) => match.toUpperCase());
+}
+export function isStringWithBrackets(formData: string) {
+    return (
+        typeof formData === 'string' &&
+        formData.startsWith('{{') &&
+        formData.endsWith('}}')
+    );
 }

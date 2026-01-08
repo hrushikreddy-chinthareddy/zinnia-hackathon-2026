@@ -24,7 +24,7 @@ import {
     isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleExclamationIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { LoanSegment } from '@zinnia/api-types/types/sor';
 
 import SideSheetLoanAdditionalInfo from './side-sheet-loan-additional-info';

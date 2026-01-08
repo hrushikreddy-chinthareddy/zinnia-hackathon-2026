@@ -7,7 +7,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { DocumentData } from '@deps/models/case/document';
 import { ChannelType } from '@deps/models/case/enums';
-import { FormSignature } from '@deps/models/case/withdrawal/case';
+import { FormComment, FormSignature } from '@deps/models/case/withdrawal/case';
 
 import EditProgram from './edit-program';
 import { signaturesConfig } from '../bank-update/bank-update.helpers';
@@ -21,7 +21,8 @@ type SswOperationsProps = {
     onProgramUpdate: (
         item: Program,
         operationType: SswUpdateType,
-        formSign: FormSignature
+        formSign: FormSignature,
+        formCmnt: FormComment | null
     ) => void;
     setSelectedProgram: React.Dispatch<Program>;
 };

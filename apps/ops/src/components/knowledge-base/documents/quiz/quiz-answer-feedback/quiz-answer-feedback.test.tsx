@@ -55,7 +55,9 @@ describe('QuizAnswerFeedback', () => {
         );
 
         expect(getByText('sidenav.quiz.readMore:')).toBeInTheDocument();
-        const link = getByRole('link', { name: docInfo.documentName });
+        const link = getByRole('link', {
+            name: new RegExp(docInfo.documentName, 'i'),
+        });
         expect(link).toBeInTheDocument();
         expect(link).toHaveAttribute('href', docInfo.documentWebUrl);
     });

@@ -2,7 +2,7 @@ import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery } from '@tanstack/react-query';
 import clsx from 'clsx';
 import { useTranslation, TFunction } from 'next-i18next';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
@@ -13,14 +13,17 @@ import {
     commonTriggerClasses,
 } from '@deps/components/popover/popover.helpers';
 import { TranslationFiles } from '@deps/config/translations';
+import CaseActionSideSheet from '@deps/containers/case-sub-page/caseActionsSideSheet';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useFreelookCancellation } from '@deps/hooks/useFreelookCancellation';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
-import { ProcessType } from '@deps/models/case/enums';
+import { Case, Statuses } from '@deps/models/case/case';
+import { CaseAction, ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
@@ -47,6 +50,8 @@ import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
 import { Reason } from '@zinnia/api-types/types/sor';
 
 import { TextButton } from './quick-action-text-button';
+import { NavElementType } from '../nav-element/nav-element';
+import SideSheetRequestCorrection from '../side-sheet/side-sheet-request-correction/side-sheet-request-correction';
 interface TranslateProps {
     t: TFunction;
 }
@@ -78,10 +83,13 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
     }
 );
 
-export const MenuContextualContent = ({
+export const PolicyMenuContextualContent = ({
     t,
     policy,
-}: TranslateProps & QuickActionsMenuProps) => {
+}: {
+    t: TFunction;
+    policy: PolicyDetails;
+}) => {
     const limit = 1;
     const offset = 0;
     const { sessionId, partyId: userPartyId } = usePermissionsContext();
@@ -335,7 +343,7 @@ export const MenuContextualContent = ({
     });
 
     const { data: freelookCancellation } = useFreelookCancellation(
-        policy?.product?.planCode,
+        policy.product?.planCode,
         policy.policyNumber
     );
 
@@ -624,11 +632,164 @@ export const MenuContextualContent = ({
     );
 };
 
-export interface QuickActionsMenuProps {
-    policy: PolicyDetails;
+export const CaseMenuContextualContent = ({
+    t,
+    caseDetails,
+    escalated,
+}: {
+    t: TFunction;
+    caseDetails: Case;
+    escalated: boolean;
+}) => {
+    const { featureFlags } = useOptimizely();
+    const {
+        showRequestCorrection,
+        hasPermissionToPrioritizeCases,
+        isAllowOpsCaseReviewRequest,
+        sessionId,
+        partyId: userPartyId,
+    } = usePermissionsContext();
+    const sideSheet = useSideSheetContext();
+
+    const displayRequestCorrection =
+        featureFlags[FEATURE_FLAGS.WRITE_REQUEST_CASE_CORRECTION];
+    const isCasePrioritizationEnabled =
+        featureFlags[FEATURE_FLAGS.CASE_PRIORITIZATION];
+
+    const caseStatus = caseDetails?.caseStatus;
+    const isInactiveStatus = [Statuses.Canceled, Statuses.Completed].includes(
+        caseStatus
+    );
+
+    const canShowRequestCorrection =
+        (displayRequestCorrection || showRequestCorrection) && isInactiveStatus;
+
+    const canShowPriorityActions =
+        isCasePrioritizationEnabled &&
+        hasPermissionToPrioritizeCases &&
+        !isInactiveStatus;
+
+    const openRequestCorrectionSideSheet = () => {
+        sideSheet.changeSideSheetContent(
+            t('cases.requestCorrection'),
+            <SideSheetRequestCorrection
+                caseDetails={caseDetails}
+                onClose={() => sideSheet.handleOpen(false)}
+            />
+        );
+        sideSheet.handleOpen(true);
+    };
+
+    const openSideSheet = useCallback(
+        (action: CaseAction) => {
+            const content = (
+                <CaseActionSideSheet
+                    action={action}
+                    caseId={caseDetails.id ?? ''}
+                />
+            );
+            sideSheet.changeSideSheetContent(
+                t(`cases.${action}.title`),
+                content
+            );
+            sideSheet.handleOpen(true);
+        },
+        [caseDetails.id, sideSheet, t]
+    );
+
+    const handleDeprioritize = useCallback(
+        () => openSideSheet(CaseAction.Deprioritize),
+        [openSideSheet]
+    );
+
+    const handlePrioritize = useCallback(
+        () => openSideSheet(CaseAction.Prioritize),
+        [openSideSheet]
+    );
+
+    const trackClick = (linkName: string, linkUrl: string) => {
+        // TODO MG: do we always want to call both of these?
+        segmentAnalyticsTrackEvent<DropdownClickedEvent>(
+            SegmentTrackedEventName.DropdownClicked,
+            {
+                dropdownName: 'Policy Quick Actions',
+                selectedItemName: linkName,
+                authSessionId: sessionId,
+                userId: userPartyId,
+            }
+        );
+        segmentAnalyticsTrackEvent<PolicyClickedEvent>(
+            SegmentTrackedEventName.PolicyClicked,
+            {
+                linkName,
+                linkUrl,
+                authSessionId: sessionId,
+                userId: userPartyId,
+                caseId: caseDetails.id,
+            }
+        );
+    };
+
+    return (
+        <MenuContextualLabel label="" hideLabel={true}>
+            {canShowRequestCorrection && (
+                <MenuContextualItem
+                    content={t('cases.requestCorrection')}
+                    onClick={openRequestCorrectionSideSheet}
+                    openInNewTab={false}
+                    type={NavElementType.Button}
+                />
+            )}
+            {canShowPriorityActions && (
+                <MenuContextualItem
+                    content={
+                        escalated
+                            ? t('cases.deprioritize.title')
+                            : t('cases.prioritize.title')
+                    }
+                    onClick={escalated ? handleDeprioritize : handlePrioritize}
+                    type={NavElementType.Button}
+                />
+            )}
+            {isAllowOpsCaseReviewRequest && (
+                <MenuContextualItem
+                    content={t('requestOperationReview.label')}
+                    href={`/cases/${caseDetails.id}/operations-review`}
+                    onClick={() => {
+                        trackClick(
+                            'Raise a Service Request',
+                            `/cases/${caseDetails.id}/operations-review`
+                        );
+                    }}
+                    type={NavElementType.Link}
+                    openInNewTab={true}
+                />
+            )}
+        </MenuContextualLabel>
+    );
+};
+
+export enum QuickActionsType {
+    Policy = 'policy',
+    Case = 'case',
 }
 
-const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
+type PolicyQuickActionsProps = {
+    type: QuickActionsType.Policy;
+    policy: PolicyDetails;
+};
+
+type CaseQuickActionsProps = {
+    type: QuickActionsType.Case;
+    caseDetails: Case;
+    escalated: boolean;
+};
+
+export type QuickActionsMenuProps =
+    | PolicyQuickActionsProps
+    | CaseQuickActionsProps;
+
+const QuickActionsMenu = (props: QuickActionsMenuProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'quickActions',
     });
@@ -637,7 +798,18 @@ const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
         <>
             <div className="hidden md:block">
                 <MenuContextual trigger={<TextButton label={t('label')} />}>
-                    <MenuContextualContent policy={policy} t={t} />
+                    {props.type === QuickActionsType.Policy ? (
+                        <PolicyMenuContextualContent
+                            policy={props.policy}
+                            t={t}
+                        />
+                    ) : (
+                        <CaseMenuContextualContent
+                            caseDetails={props.caseDetails}
+                            t={t}
+                            escalated={props.escalated}
+                        />
+                    )}
                 </MenuContextual>
             </div>
             {/* small viewports */}
@@ -648,7 +820,18 @@ const QuickActionsMenu = ({ policy }: QuickActionsMenuProps) => {
                             trigger={<IconButton t={t} />}
                             triggerAsChild={true}
                         >
-                            <MenuContextualContent policy={policy} t={t} />
+                            {props.type === QuickActionsType.Policy ? (
+                                <PolicyMenuContextualContent
+                                    policy={props.policy}
+                                    t={t}
+                                />
+                            ) : (
+                                <CaseMenuContextualContent
+                                    caseDetails={props.caseDetails}
+                                    t={t}
+                                    escalated={props.escalated}
+                                />
+                            )}
                         </MenuContextual>
                         <ReactTooltip.Portal>
                             <ReactTooltip.Content

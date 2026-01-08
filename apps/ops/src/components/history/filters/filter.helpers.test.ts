@@ -3,7 +3,7 @@ import {
     EventFilters,
     PolicyFilters,
 } from '@deps/contexts/HistoryFiltersContext';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import {
     filterEventFilters,
@@ -98,7 +98,6 @@ describe('HistoryFilters helpers', () => {
                 args.filterKey,
                 args.filter
             );
-            console.log(result);
             expect(result).toStrictEqual({ people: ['address'] });
         });
 
@@ -113,8 +112,21 @@ describe('HistoryFilters helpers', () => {
                 args.filterKey,
                 args.filter
             );
-            console.log(result);
             expect(result).toStrictEqual({});
+        });
+
+        it('filters out the EventFilterKey', () => {
+            const args = {
+                state: { people: ['address', 'potatoes'] } as any,
+                filterKey: EventFilterKeys.People,
+                filter: 'potatoes',
+            };
+            const result = filterEventFilters(
+                args.state,
+                args.filterKey,
+                args.filter
+            );
+            expect(result).toStrictEqual({ people: ['address'] });
         });
 
         it('add new value to the EventFilterKey array', () => {
@@ -128,7 +140,6 @@ describe('HistoryFilters helpers', () => {
                 args.filterKey,
                 args.filter
             );
-            console.log(result);
             expect(result).toStrictEqual({ people: ['address', 'phone'] });
         });
     });

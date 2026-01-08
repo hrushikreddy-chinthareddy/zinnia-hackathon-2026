@@ -19,6 +19,12 @@ describe('verify correct tooltip values are present', () => {
     beforeAll(() => {
         mockPolicyDetails = new PolicyDetails(mockPolicy);
     });
+
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('should contain correct labels', () => {
         render(<InsuredCard policy={mockPolicyDetails} />);
 

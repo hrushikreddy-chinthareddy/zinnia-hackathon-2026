@@ -12,6 +12,7 @@ import NavElement, {
     NavElementType,
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import PageLoader, {
@@ -46,6 +47,7 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
         setFormErrors,
         formTaxWithholding,
         ownerStateOfResidence,
+        formComment,
     } = useContext(FormDataContext);
     const [formSubmitted, setFormSubmitted] = useState({
         success: false,
@@ -72,7 +74,8 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
                 initialForm,
                 formSignature,
                 formTaxWithholding,
-                document
+                document,
+                formComment ?? { comment: null }
             )
         );
         if (successfulCaseUpdate) {
@@ -123,7 +126,6 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
                         isFormStateReadOnly={false}
                         ownerStateOfResidence={ownerStateOfResidence}
                     />
-
                     <div>
                         {source !== ChannelType.Phone && formSignature && (
                             <SignatureValidations
@@ -131,7 +133,7 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
                                 config={signaturesConfig}
                             />
                         )}
-
+                        <NoteSection />
                         <div className="flex flex-col p-4">
                             <div className="flex">
                                 <Button

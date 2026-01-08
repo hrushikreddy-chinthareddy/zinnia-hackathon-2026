@@ -1,5 +1,7 @@
 import NextLink from 'next/link';
-import { AnchorHTMLAttributes } from 'react';
+import { AnchorHTMLAttributes, useRef } from 'react';
+
+import useNavLink from '@deps/hooks/useNavLink';
 
 export type NavLinkProps = {
     isNewPage?: boolean;
@@ -26,9 +28,13 @@ export default function NavLink({
     replace = false,
     ...rest
 }: NavLinkProps) {
+    const { getLinkTextFromChildren } = useNavLink();
     const clickEvent = !disabled && onClick ? onClick : () => undefined;
     const focusEvent = !disabled && onFocus ? onFocus : () => undefined;
     const blurEvent = !disabled && onBlur ? onBlur : () => undefined;
+    const newPageAnnounce = useRef<string | undefined>(undefined);
+
+    newPageAnnounce.current = getLinkTextFromChildren(target, children);
 
     if (isNewPage) {
         return (
@@ -40,6 +46,7 @@ export default function NavLink({
                 onClick={clickEvent}
                 onFocus={focusEvent}
                 onBlur={blurEvent}
+                aria-label={newPageAnnounce.current}
                 {...rest}
             >
                 {startIcon}
@@ -58,6 +65,7 @@ export default function NavLink({
                 onClick={() => window.location.reload()}
                 onFocus={focusEvent}
                 onBlur={blurEvent}
+                aria-label={newPageAnnounce.current}
                 {...rest}
             >
                 {startIcon}
@@ -77,6 +85,7 @@ export default function NavLink({
             onBlur={blurEvent}
             replace={replace}
             aria-disabled={disabled}
+            aria-label={newPageAnnounce.current}
             {...rest}
         >
             {startIcon}

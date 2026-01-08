@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import dayjs from 'dayjs';
 import { FC, useState } from 'react';
 
-import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { ZAHARA_DATE_FORMAT } from '@deps/helpers/date.helpers';
@@ -12,9 +11,11 @@ import { ExceptionCountGroupByEnum } from '@zinnia/api-types/types/analytics';
 import { IssueStatusType } from '../sections/issue-counts-by-status/context/issue-counts-by-status-context';
 
 interface IssueCategoryFilterProps {
+    className?: string;
     onChange: (value: string[]) => void;
 }
 export const IssueCategoryFilter: FC<IssueCategoryFilterProps> = ({
+    className,
     onChange,
 }) => {
     const [category, setCategory] = useState<IssueStatusType>({});
@@ -61,6 +62,7 @@ export const IssueCategoryFilter: FC<IssueCategoryFilterProps> = ({
 
     return (
         <Select
+            className={className}
             maxContentWidth
             label="Issue category"
             placeholder="All"
@@ -69,7 +71,6 @@ export const IssueCategoryFilter: FC<IssueCategoryFilterProps> = ({
             name="issue-category-dropdown-btn"
             value={category}
             isMultiselect
-            className={sharedStyles.multiselectDropdowns}
             onChange={(val) => handleCategoryChange(val)}
         />
     );

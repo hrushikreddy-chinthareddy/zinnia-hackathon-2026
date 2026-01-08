@@ -85,7 +85,7 @@ export const ServiceFormReview = ({
 
     if (
         isRenewals &&
-        nigoSubExceptions[0].subExceptions?.find(
+        nigoSubExceptions[0]?.subExceptions?.find(
             (item: any) => item.value === DE_162
         )
     ) {
@@ -120,7 +120,7 @@ export const ServiceFormReview = ({
     };
 
     const showNigoOptions = isRenewals
-        ? nigoSubExceptions[0].subExceptions?.find(
+        ? nigoSubExceptions[0]?.subExceptions?.find(
               (item: any) => item.value === DE_162
           )
         : sectionOption === NIGO_EXCEPTION;

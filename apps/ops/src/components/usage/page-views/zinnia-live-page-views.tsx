@@ -7,6 +7,7 @@ import {
     xAxisLabelFormatter,
 } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
+import { tooltipFormatter } from '@deps/components/dashboard/charts/date-time-chart/line-chart-label';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
 import {
     ErrorMessage,
@@ -34,7 +35,6 @@ import { getUserViewsCountsQuery } from '@deps/queries/tanstack/usage/usageQueri
 import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserViewsGroupByEnum } from '@zinnia/api-types/types/analytics';
 
-import { tooltipFormatter } from './page-views-tooltip';
 import { generateSeries, PrepareUserViewsCSV, roles } from './utils';
 
 export const ZinniaLivePageViews = ({ title }: { title: string }) => {
@@ -151,7 +151,10 @@ export const ZinniaLivePageViews = ({ title }: { title: string }) => {
                             xAxisTitle={'Date'}
                             xAxisLabelFormatter={xAxisLabelFormatter}
                             tickInterval={tickInterval}
-                            tooltipFormatter={tooltipFormatter}
+                            tooltipFormatter={tooltipFormatter({
+                                timerange,
+                                isTooltipColorCircle: false,
+                            })}
                             yAxisOpposite={false}
                         />
                     )}

@@ -7,7 +7,7 @@ import {
     sortByAndThenBy,
 } from '@deps/helpers/sort.helpers';
 import { TagKey } from '@deps/types/components';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
 import {
     PartyRole,

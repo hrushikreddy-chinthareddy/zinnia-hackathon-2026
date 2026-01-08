@@ -20,10 +20,8 @@ import {
     PayeeOrBeneficiary,
 } from '@deps/models/policy-sor-touchups/Transaction';
 import { policyWithdrawalQuote } from '@deps/queries/api/policies';
-import {
-    DEFAULT_ERROR_STRING,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     AllocationOption,
     AmountType,

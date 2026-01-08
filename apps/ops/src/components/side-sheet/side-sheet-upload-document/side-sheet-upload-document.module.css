@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    height: 100%;
+}
+
+.contentArea {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.buttonRow {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1.25rem;
+}
+
+.uploadBtn {
+    width: 120px;
+    padding: 5px !important;
+}
