@@ -10,6 +10,7 @@ import {
     setRolesCookie,
 } from '@deps/utils/permissionsCookie';
 import {
+    logError,
     LoggingContext,
     logWarn,
     parseErrorInformation,
@@ -54,7 +55,7 @@ export const readUserTuples = async (
         );
 
         const response: ApiResponse<ReadTuplesResponse> = {
-            data: usersTuples?.data,
+            data: null,
             error: null,
         };
 
@@ -72,11 +73,15 @@ export const readUserTuples = async (
                 message: usersTuples.statusText,
                 name: 'Error reading users tuple',
             };
+
+            return response;
         }
+
+        response.data = usersTuples?.data;
 
         return response;
     } catch (error: any) {
-        logWarn('checkTupleSsr::An error occurred while checking tuple', {
+        logError('checkTupleSsr::An error occurred while checking tuple', {
             ...loggingContext,
             ...parseErrorInformation(error),
             file: 'queries/api/fga',
@@ -111,7 +116,6 @@ export const readAndStoreUserRolesCookie = async (
     try {
         const rolesFromCookie = getRolesFromCookie(ctx.req, ctx.res);
         if (rolesFromCookie) {
-            console.log('....roles from cookie....', rolesFromCookie);
             return rolesFromCookie;
         }
 
@@ -156,13 +160,12 @@ export const readAndStoreUserRolesCookie = async (
         }, {});
 
         if (userRolesMap) {
-            console.log('....setting roles cookie....', userRolesMap);
             setRolesCookie(userRolesMap, ctx.req, ctx.res);
         }
 
         return userRolesMap;
     } catch (e) {
-        logWarn(
+        logError(
             'readUserTuplePage::An error occurred while reading users tuple',
             {
                 ...loggingContext,

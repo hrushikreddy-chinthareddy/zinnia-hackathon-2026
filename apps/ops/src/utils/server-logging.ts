@@ -345,7 +345,6 @@ export const withPageAuthAndLogging: WithPageAuthAndLogging = (
             logTrace('next-server page view', loggingContext);
 
             // Trigger user roles cookie to populate if expired
-            console.log('....-------------triggering user roles cookie....');
             await readAndStoreUserRolesCookie(context, loggingContext);
 
             const pageSpecificProps = await getServerSideProps(

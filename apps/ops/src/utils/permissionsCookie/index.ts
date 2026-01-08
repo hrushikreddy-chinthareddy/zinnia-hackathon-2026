@@ -6,9 +6,8 @@ import {
     PermissionsCookie,
     ROLES_COOKIE_NAME,
 } from '@deps/types/permissionsCookie';
-
-import { isHttpsEnvironment } from '../environment.helpers';
-import { logWarn } from '../server-logging';
+import { isHttpsEnvironment } from '@deps/utils/environment.helpers';
+import { logWarn } from '@deps/utils/server-logging';
 
 const permissionsCookieOptions = {
     maxAge: 60 * 5, // 5 mins
