@@ -3,7 +3,6 @@ import { IncomingMessage, ServerResponse } from 'http';
 
 import { logWarn } from '@deps/utils/server-logging';
 
-
 jest.mock('cookies-next', () => ({
     getCookie: jest.fn(),
     setCookie: jest.fn(),
