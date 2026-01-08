@@ -9,10 +9,15 @@ import {
 import { isHttpsEnvironment } from '@deps/utils/environment.helpers';
 import { logWarn } from '@deps/utils/server-logging';
 
+import type { IncomingMessage, ServerResponse } from 'http';
+
+type CookieReq = IncomingMessage;
+type CookieRes = ServerResponse;
+
 const permissionsCookieOptions = {
     maxAge: 60 * 5, // 5 mins
     path: '/',
-    sameSite: 'lax',
+    sameSite: 'lax' as const,
     httpOnly: true,
     secure: isHttpsEnvironment(),
 };
@@ -20,7 +25,7 @@ const permissionsCookieOptions = {
 const rolesCookieOptions = {
     maxAge: 60 * 60 * 1, // 1 hour
     path: '/',
-    sameSite: 'lax',
+    sameSite: 'lax' as const,
     httpOnly: false, // roles need to be exposed to the client scripts
     secure: isHttpsEnvironment(),
 };
@@ -29,8 +34,8 @@ export const addTupleToCookie = (
     relation: string,
     tupleObject: string,
     result: boolean,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ) => {
     try {
         const permissionsCookie =
@@ -56,8 +61,8 @@ export const addTupleToCookie = (
 export const addCarrierListToCookie = (
     relation: string,
     carrierList: string[],
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ) => {
     try {
         const permissionsCookie =
@@ -80,8 +85,8 @@ export const addCarrierListToCookie = (
 export const doesPermissionsHaveCarrierRelation = (
     relation: string,
     carrier: string,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ): boolean => {
     try {
         if (!relation || !carrier) {
@@ -109,8 +114,8 @@ export const doesPermissionsHaveCarrierRelation = (
 export const checkPermissionsCookieForTuple = (
     relation: string,
     tupleObject: string,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ): boolean | undefined => {
     try {
         if (!relation || !tupleObject) {
@@ -139,8 +144,8 @@ export const checkPermissionsCookieForTuple = (
 // check if the permissions object has the carrier list for the relation provided
 export const checkPermissionsCookieForCarrierList = (
     relation: string,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ): string[] | undefined => {
     try {
         if (!relation) {
@@ -168,8 +173,8 @@ export const checkPermissionsCookieForCarrierList = (
 // Cookie age controlled by permissionsCookieOptions
 export const setRolesCookie = (
     roles: Record<string, string[]>,
-    req?: any, // FIXME: constrict type
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ) => {
     try {
         setCookie(ROLES_COOKIE_NAME, JSON.stringify(roles), {
@@ -185,8 +190,8 @@ export const setRolesCookie = (
 };
 
 export const getRolesFromCookie = (
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ): Record<string, string[]> | undefined => {
     try {
         const rolesCookie = getCookie(ROLES_COOKIE_NAME, {

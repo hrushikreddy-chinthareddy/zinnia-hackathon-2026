@@ -1,6 +1,8 @@
 import { getCookie, setCookie } from 'cookies-next';
+import { IncomingMessage, ServerResponse } from 'http';
 
 import { logWarn } from '@deps/utils/server-logging';
+
 
 jest.mock('cookies-next', () => ({
     getCookie: jest.fn(),
@@ -37,9 +39,10 @@ describe('permissionsCookie', () => {
         it('sets roles cookie with expected options (non-https)', async () => {
             process.env.NEXT_PUBLIC_BASE_URL = 'http://localhost:3000';
             const { setRolesCookie } = await loadModule();
-            setRolesCookie({ admin: ['ABC'] }, { req: 1 }, {
-                res: 2,
-            } as any);
+
+            const mockReq = {} as IncomingMessage;
+            const mockRes = {} as ServerResponse;
+            setRolesCookie({ admin: ['ABC'] }, mockReq, mockRes);
 
             expect(setCookieMock).toHaveBeenCalledTimes(1);
             expect(setCookieMock).toHaveBeenCalledWith(
@@ -50,8 +53,8 @@ describe('permissionsCookie', () => {
                     sameSite: 'lax',
                     path: '/',
                     secure: false,
-                    req: { req: 1 },
-                    res: { res: 2 },
+                    req: mockReq,
+                    res: mockRes,
                 })
             );
         });
@@ -59,9 +62,10 @@ describe('permissionsCookie', () => {
         it('sets roles cookie with expected options (https)', async () => {
             process.env.NEXT_PUBLIC_BASE_URL = 'https://localhost:3000';
             const { setRolesCookie } = await loadModule();
-            setRolesCookie({ admin: ['ABC'] }, { req: 1 }, {
-                res: 2,
-            } as any);
+
+            const mockReq = {} as IncomingMessage;
+            const mockRes = {} as ServerResponse;
+            setRolesCookie({ admin: ['ABC'] }, mockReq, mockRes);
 
             expect(setCookieMock).toHaveBeenCalledTimes(1);
             expect(setCookieMock).toHaveBeenCalledWith(
@@ -72,8 +76,8 @@ describe('permissionsCookie', () => {
                     sameSite: 'lax',
                     path: '/',
                     secure: true,
-                    req: { req: 1 },
-                    res: { res: 2 },
+                    req: mockReq,
+                    res: mockRes,
                 })
             );
         });
@@ -96,9 +100,10 @@ describe('permissionsCookie', () => {
             const { getRolesFromCookie } = await loadModule();
             getCookieMock.mockReturnValueOnce(undefined);
 
-            const res = getRolesFromCookie({ req: 1 }, {
-                res: 2,
-            } as any);
+            const mockReq = {} as IncomingMessage;
+            const mockRes = {} as ServerResponse;
+
+            const res = getRolesFromCookie(mockReq, mockRes);
 
             expect(res).toBeUndefined();
         });
@@ -133,9 +138,16 @@ describe('permissionsCookie', () => {
             const { addTupleToCookie } = await loadModule();
             getCookieMock.mockReturnValueOnce(undefined);
 
-            addTupleToCookie('can_view', 'role:ABC_admin', true, { req: 1 }, {
-                res: 2,
-            } as any);
+            const mockReq = {} as IncomingMessage;
+            const mockRes = {} as ServerResponse;
+
+            addTupleToCookie(
+                'can_view',
+                'role:ABC_admin',
+                true,
+                mockReq,
+                mockRes
+            );
 
             expect(setCookieMock).toHaveBeenCalledTimes(1);
             const [, rawValue, options] = setCookieMock.mock.calls[0];
@@ -145,8 +157,8 @@ describe('permissionsCookie', () => {
                     sameSite: 'lax',
                     path: '/',
                     secure: false,
-                    req: { req: 1 },
-                    res: { res: 2 },
+                    req: mockReq,
+                    res: mockRes,
                 })
             );
             expect(setCookieMock.mock.calls[0][0]).toBe('fga-permissions');
@@ -160,9 +172,16 @@ describe('permissionsCookie', () => {
             const { addTupleToCookie } = await loadModule();
             getCookieMock.mockReturnValueOnce(undefined);
 
-            addTupleToCookie('can_view', 'role:ABC_admin', true, { req: 1 }, {
-                res: 2,
-            } as any);
+            const mockReq = {} as IncomingMessage;
+            const mockRes = {} as ServerResponse;
+
+            addTupleToCookie(
+                'can_view',
+                'role:ABC_admin',
+                true,
+                mockReq,
+                mockRes
+            );
 
             expect(setCookieMock).toHaveBeenCalledTimes(1);
             const [, rawValue, options] = setCookieMock.mock.calls[0];
@@ -172,8 +191,8 @@ describe('permissionsCookie', () => {
                     sameSite: 'lax',
                     path: '/',
                     secure: true,
-                    req: { req: 1 },
-                    res: { res: 2 },
+                    req: mockReq,
+                    res: mockRes,
                 })
             );
             expect(setCookieMock.mock.calls[0][0]).toBe(

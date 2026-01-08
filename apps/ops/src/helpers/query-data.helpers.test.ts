@@ -22,9 +22,6 @@ jest.mock('cookies-next', () => ({
 jest.mock('@deps/queries/api/server/fga/listCarriers', () => ({
     listCarriersPage: jest.fn(),
 }));
-jest.mock('@deps/queries/api/server/fga/readTuples', () => ({
-    readUserTuplesPage: jest.fn(),
-}));
 jest.mock('@deps/types/constants', () => ({
     PRODUCTION_HOST_NAME: 'open.zinnia.com',
 }));
