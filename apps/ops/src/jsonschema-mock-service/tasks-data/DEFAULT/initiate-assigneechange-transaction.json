@@ -1,0 +1,178 @@
+{
+    "id": "TA000000054889",
+    "caseId": "CA0000543637",
+    "source": "Zinnia.BPMTransactions",
+    "templateId": "0b5b7dfb-7532-4cf3-a875-db06c2378078",
+    "process": "Policy Update",
+    "carrier": "WELB",
+    "taskType": "INITIATE_ASSIGNEECHANGE_TRANSACTION",
+    "taskName": "Assignee Data Entry",
+    "status": "NEW",
+    "category": "Data entry",
+    "productType": "",
+    "data": {
+        "caseId": "CA0000402461",
+        "process": "Policy Update",
+        "policyNumber": "FIUL844450420",
+        "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
+        "taskName": "Assignee Data Entry",
+        "processSubType": "Assignee Change",
+        "planCode": "IU0101",
+        "partyId": "",
+        "details": {
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "Assignee Change Form",
+                    "documentExt": "pdf"
+                },
+                {
+                    "documentId": "e9ab5272-10a7-4e0a-8d12-073861dea25g",
+                    "documentName": "Assignee Change Form",
+                    "documentExt": "pdf"
+                }
+            ]
+        },
+        "documents": [
+            {
+                "documentId": "67c1b9655c3f6536d7f2ac69",
+                "documentName": "Assignee Change Form"
+            }
+        ],
+        "supportingDocumentAttached": null,
+        "collateralAmount": null,
+        "party": {
+            "partyId": "bb55421365184fb29ea820f0840c3db1",
+            "partyType": "INDIVIDUAL",
+            "prefix": "Mr.",
+            "firstName": "first",
+            "middleName": "middle",
+            "lastName": "last",
+            "fullName": "first middle last",
+            "entityType": null,
+            "dateOfBirth": null,
+            "gender": null,
+            "trustDate": null,
+            "trustType": null,
+            "usCitizen": "Yes",
+            "countryOfCitizenship": null,
+            "relationshipToTheCurrentOwner": "TRUST",
+            "identifications": [
+                {
+                    "identificationValue": "123-45-6789",
+                    "identificationType": "SSN",
+                    "endDate": null,
+                    "issueCountry": null,
+                    "permanentResident": null,
+                    "startDate": "2025-11-21"
+                }
+            ],
+
+            "preferredCommunicationType": "EMAIL",
+            "addresses": [
+                {
+                    "addressType": "RESIDENCE",
+                    "addressLine1": "123",
+                    "city": "California",
+                    "state": "CA",
+                    "zipCode": "90001",
+                    "isPreferred": true,
+                    "country": "US",
+                    "endDate": null,
+                    "startDate": "2025-11-21",
+                    "zipCodeExtension": ""
+                }
+            ],
+            "phones": [
+                {
+                    "phoneType": "BUSINESS",
+                    "dialNumber": "1234567890",
+                    "areaCode": "777",
+                    "countryCode": "1",
+                    "endDate": null,
+                    "isPreferred": true,
+                    "startDate": "2025-11-21"
+                }
+            ],
+            "emails": [
+                {
+                    "emailType": "BUSINESS",
+                    "emailAddress": "1234567890",
+                    "endDate": null,
+                    "isPreferred": true,
+                    "startDate": "2025-11-21"
+                }
+            ]
+        },
+
+        "signatures": [
+            {
+                "isSignedPresent": false,
+                "signDate": null,
+                "signDesignation": null,
+                "signType": "OWNER",
+                "signTypeForUI": "Owner"
+            },
+            {
+                "isSignedPresent": false,
+                "signDate": null,
+                "signDesignation": null,
+                "signType": "JOINT_OWNER",
+                "signTypeForUI": "Joint Owner"
+            },
+            {
+                "isSignedPresent": false,
+                "signDate": null,
+                "signDesignation": null,
+                "signType": "IRREVOCABLE"
+            }
+        ],
+
+        "notarySignatures": [
+            {
+                "commissionExpiredDate": "2025-11-08",
+                "signDate": "2025-11-07",
+                "isSealPresent": true,
+                "signedPresent": true,
+                "signTypeForUI": "NOTARY"
+            }
+        ],
+        "issueResolved": false,
+        "requestType": "ADD",
+
+        "submitInfo": {
+            "submittedBy": "ace.test@farmersinsurance.com",
+            "source": "Zinnia Live",
+            "submittedByPartyId": "bb64385533b9458badb4629bb240275c"
+        },
+        "mappedExceptions": [],
+        "mappedDocuments": [],
+        "queue": "policy_update",
+        "escalated": false,
+        "createdBy": "SYSTEM",
+        "createdByPartyId": "SYSTEM",
+        "createdAt": "2025-03-24T11:52:37Z",
+        "updatedBy": "SYSTEM",
+        "updatedByPartyId": "SYSTEM",
+        "updatedAt": "2025-03-24T11:52:37Z",
+        "identifiers": [
+            {
+                "identificationType": "SSN",
+                "identificationValue": "***-**-2025"
+            },
+            {
+                "identifier": "zlCaseId",
+                "value": "CA0000402461"
+            },
+            {
+                "identifier": "contractNumber",
+                "value": "ADA2501506"
+            },
+            {
+                "identifier": "policyNumber",
+                "value": "ADA2501506"
+            }
+        ],
+        "externalId": "0a805ffe-ef0b-4f4a-ba41-f774df12d820"
+    }
+}

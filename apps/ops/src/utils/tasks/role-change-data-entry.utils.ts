@@ -31,7 +31,7 @@ export function detectRoleChangeRequestType(
 export function resolveRoleChangePartyId(
     requestType: Action,
     deletedItem: RoleChangeActionItem | null,
-    defaultPartyId: string | null
+    _defaultPartyId: string | null
 ) {
     switch (requestType) {
         case Action.UPDATE:
@@ -39,7 +39,7 @@ export function resolveRoleChangePartyId(
             return deletedItem?.party?.partyId ?? null;
         case Action.ADD:
         default:
-            return defaultPartyId;
+            return '';
     }
 }
 
@@ -99,6 +99,9 @@ export function getDefaultRoleChangeParty() {
         addresses: null,
         emails: null,
         phones: null,
+        collateralAmount: null,
+        startDate: null,
+        endDate: null,
     };
 }
 export const toFullName = (party: Party): string | null =>

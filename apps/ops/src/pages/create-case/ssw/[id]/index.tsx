@@ -261,7 +261,6 @@ export default function SSWCase({
             <DiaryNotesProvider
                 caseDetails={caseDetailsData}
                 planCode={planCode}
-                isLC={isLC}
             >
                 <OtpLayout
                     contractNumber={document.contract}

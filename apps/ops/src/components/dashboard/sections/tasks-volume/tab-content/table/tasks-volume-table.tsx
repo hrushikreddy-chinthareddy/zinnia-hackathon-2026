@@ -10,7 +10,7 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -19,22 +19,21 @@ import {
 } from '@deps/components/dashboard/components/errors';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { downloadCSV } from '@deps/components/dashboard/download-csv';
-import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
-import CardContainer from '@deps/containers/card-container/card-container';
-import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
-import { useDashboardStore } from '@deps/store/store';
-import { toSentenceCase } from '@deps/utils/strings';
-
-import { TasksVolumeContext } from '../../context/tasks-volume-context';
+import { useTasksVolume } from '@deps/components/dashboard/sections/tasks-volume/context/tasks-volume-context';
+import { TasksVolumeFilters } from '@deps/components/dashboard/sections/tasks-volume/tab-content/shared/tasks-volume-filters';
+import { TasksVolumeHeader } from '@deps/components/dashboard/sections/tasks-volume/tab-content/shared/tasks-volume-header';
 import {
     CSV_COLUMNS,
     flattenTaskData,
     generateTasksCSVFilename,
     getCarrierName,
     getStatusDisplayText,
-} from '../../utils';
-import { TasksVolumeFilters } from '../shared/tasks-volume-filters';
-import { TasksVolumeHeader } from '../shared/tasks-volume-header';
+} from '@deps/components/dashboard/sections/tasks-volume/utils';
+import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
+import CardContainer from '@deps/containers/card-container/card-container';
+import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
+import { useDashboardStore } from '@deps/store/store';
+import { toSentenceCase } from '@deps/utils/strings';
 
 enum SortByOptions {
     CASE_TYPE = 'caseType',
@@ -52,7 +51,7 @@ export const TasksVolumeTable = () => {
         taskVolumeDataError,
         selectedStatus,
         timerange,
-    } = useContext(TasksVolumeContext);
+    } = useTasksVolume();
 
     const { selectedCarriers } = useDashboardStore((state) => state);
 

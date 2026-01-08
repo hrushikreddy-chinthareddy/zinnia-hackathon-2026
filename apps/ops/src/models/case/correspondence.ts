@@ -20,6 +20,7 @@ export enum TransactionSubTypes {
 export enum AttachmentType {
     Form = 'form',
     TaxForms = 'TAX_FORMS',
+    PolicyPages = 'POLPG',
 }
 
 export type ContactCenterActions = CorrespondenceAction | SendDocumentActions;

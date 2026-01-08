@@ -195,6 +195,7 @@ const RenewalFormActions = ({
             );
         });
     };
+
     return (
         <div>
             <hr className="mt-4 h-0.5 border-none bg-gray-100" />

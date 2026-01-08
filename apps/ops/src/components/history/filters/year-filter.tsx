@@ -10,7 +10,7 @@ import SelectSimple from '@deps/components/select/select';
 import { TranslationFiles } from '@deps/config/translations';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export default function TransactionsYearFilter() {
     const { t } = useTranslation(TranslationFiles.COMMON, {
