@@ -94,7 +94,7 @@ const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
         if (
             !isEligible ||
             !premiumSetOrCancelAutopayEnabled ||
-            !upcomingPayment?.nextProgramDate ||
+            upcomingPayment?.nextProgramDate ||
             !isPermissioned
         ) {
             router.replace('/403');
