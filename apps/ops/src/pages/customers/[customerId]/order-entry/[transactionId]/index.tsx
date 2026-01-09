@@ -1,5 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
+import { useCallback, useMemo } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -24,13 +25,20 @@ export default function OrderEntryPage({
 }: {
     accessToken: string;
 }) {
-    const { success, error } = useZEmbedInit({
-        modules: ['order-entry'],
-        debug: process.env.NODE_ENV === 'development',
-        accessToken: async () => {
-            return accessToken;
-        },
-    });
+    const getAccessToken = useCallback(async () => {
+        return accessToken;
+    }, [accessToken]);
+
+    const zembedConfig = useMemo(
+        () => ({
+            modules: ['order-entry'],
+            debug: process.env.NODE_ENV === 'development',
+            accessToken: getAccessToken,
+        }),
+        [getAccessToken]
+    );
+
+    const { success, error } = useZEmbedInit(zembedConfig);
 
     if (!success && error) {
         return <div>Error: {error?.message}</div>;
