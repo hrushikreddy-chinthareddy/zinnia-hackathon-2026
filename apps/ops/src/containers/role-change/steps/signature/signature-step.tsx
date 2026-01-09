@@ -6,10 +6,12 @@ import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { PolicyRole, Roles } from '@deps/constants/policy';
+import { PolicyRole, Roles, Action } from '@deps/constants/policy';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { validateRoleChange } from '@deps/queries/api/role-change';
+import { validateThirdPartyDesigneeChange } from '@deps/queries/api/web-non-financial';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 import SignatureSection from './signature-section';
@@ -41,18 +43,44 @@ const SignatureStep = ({ policy, role }: SignatureStepProps) => {
         existingRoleData,
         currentErrors,
         setCurrentErrors,
+        removedTpdIndex,
     } = useRoleChange();
 
+    const partyAdded =
+        !isNullEmptyOrUndefined(roleData?.party?.firstName) ||
+        !isNullEmptyOrUndefined(roleData?.party?.lastName);
+    const partyDeleted = removedTpdIndex !== null;
+
+    let requestType = '';
+
     const validateTransaction = () => {
-        return validateRoleChange(
-            policy.product?.planCode,
-            policy.policyNumber,
-            role.toUpperCase() === Roles.PAYOR
-                ? ''
-                : existingRoleData?.[0]?.party?.partyId ?? '',
-            role,
-            buildRoleChangeRequestBody(roleData, role)
-        );
+        if (partyAdded && partyDeleted) {
+            requestType = Action.UPDATE;
+        } else if (partyAdded && !partyDeleted) {
+            requestType = Action.ADD;
+        } else if (!partyAdded && partyDeleted) {
+            requestType = Action.DELETE;
+        }
+
+        return role.toUpperCase() === Roles.THIRDPARTYDESIGNEE
+            ? validateThirdPartyDesigneeChange(
+                  policy.product?.planCode,
+                  policy.policyNumber,
+                  removedTpdIndex !== null
+                      ? existingRoleData?.[removedTpdIndex]?.party?.partyId
+                      : '',
+                  requestType,
+                  buildRoleChangeRequestBody(roleData, role)
+              )
+            : validateRoleChange(
+                  policy.product?.planCode,
+                  policy.policyNumber,
+                  role.toUpperCase() === Roles.PAYOR
+                      ? ''
+                      : existingRoleData?.[0]?.party?.partyId ?? '',
+                  role,
+                  buildRoleChangeRequestBody(roleData, role)
+              );
     };
 
     const signTypeToTitleMap: Record<string, string> = {

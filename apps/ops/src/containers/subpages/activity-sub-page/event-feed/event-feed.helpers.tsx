@@ -8,7 +8,6 @@ import {
 } from '@deps/contexts/HistoryFiltersContext';
 import {
     allTransactions,
-    allTransactionTypes,
     financialTransactions,
     peopleTransactions,
     policyTransactions,
@@ -25,7 +24,7 @@ export const getEvents = (
     multiTransactionTypes = false
 ) => {
     if (!hasFilter(eventFilter) || eventFilter === undefined) {
-        return allTransactionTypes;
+        return undefined;
     }
     const filters = Object.entries(eventFilter);
 
@@ -103,12 +102,10 @@ export const getEvents = (
                     default:
                         return peopleTransactions.all;
                 }
-            case EventFilterKeys.All: {
-                return allTransactionTypes;
+            case EventFilterKeys.All:
+            default: {
+                return undefined;
             }
-
-            default:
-                return allTransactions.all;
         }
     }
 };

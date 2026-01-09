@@ -3,13 +3,14 @@ import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
-import { Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
+import { TransactionSummary } from '@deps/types/transactions';
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 export const TransactionStatusTabGroup = ({
     transactions,
     children,
 }: {
-    transactions: { [key: string]: Transaction[] };
+    transactions: { [key: string]: TransactionSummary[] };
     children: React.ReactNode;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {

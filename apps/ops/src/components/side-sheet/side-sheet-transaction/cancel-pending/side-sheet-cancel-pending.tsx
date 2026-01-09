@@ -32,8 +32,8 @@ type SidesheetCancelPendingProps = {
     planCode: string | undefined;
     policyNumber: string | undefined;
     reason?: string;
-    transactionId: string;
-    transactionType: string;
+    transactionId: string | undefined;
+    transactionType: string | undefined;
 };
 
 export default function SidesheetCancelPending({

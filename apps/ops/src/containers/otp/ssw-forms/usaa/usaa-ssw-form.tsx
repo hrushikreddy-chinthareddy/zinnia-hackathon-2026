@@ -31,6 +31,8 @@ export function UsaaSSWForm() {
 
     const isDtccSectionEnabled =
         featureFlags[FEATURE_FLAGS.DTCC_SECTION_ENABLED];
+    const isValidationV2Enabled =
+        featureFlags[FEATURE_FLAGS.USAA_SSW_VALIDATION_V2];
 
     const {
         formValidation,
@@ -42,7 +44,7 @@ export function UsaaSSWForm() {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         eSignatureFieldConfig,
-    } = getUsaaConfig(t, isDtccSectionEnabled);
+    } = getUsaaConfig(t, isDtccSectionEnabled, isValidationV2Enabled);
     const {
         setFormValidator,
         formData,

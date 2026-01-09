@@ -56,6 +56,7 @@
         "accountValueByPolicyYear": "Valeur du compte par année {{policyNomenclature}}",
         "accountValues": "Valeurs du compte",
         "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire. La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
+        "actions": "Actions",
         "activityTooltipDescription": "Cliquez sur un type de transaction pour plus de détails sur les décomptes. Utilisez le fil d’Ariane au-dessus du graphique pour revenir à tous les types de transaction.",
         "actuarialPresentValue": "Valeur actuelle actuarielle",
         "addressId": "Adresse",
@@ -94,7 +95,9 @@
         "beginningAccountValue": "Valeur initiale du compte",
         "calculatedAmount": "Monto calculado",
         "cancel": "Annuler",
+        "cancelAutopay": "Annuler le paiement automatique",
         "carrierId": "ID du transporteur",
+        "carrierName": "Nom de l'assureur",
         "caseId": "ID del caso",
         "cases": "Cas",
         "caseIdSearchError": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
@@ -153,6 +156,7 @@
         "currentContributionAmount": "Monto de contribución actual",
         "currentMonthCharge": "Frais du mois en cours",
         "currentTaxYear": "Año fiscal actual",
+        "dashboardProductDetails": "Détails du produit",
         "date": "Date",
         "dateOfDeathReportedNotification": "Date de notification du décès signalé",
         "day": "jour",
@@ -187,6 +191,7 @@
         "emailRequired": "L'e-mail est requis.",
         "emailTooltip": "Veuillez entrer une adresse e-mail valide. Un seul e-mail est autorisé dans ce champ.",
         "emptySearch": "Aucun résultat trouvé",
+        "emptySystematicProgramsTable": "Il n’existe actuellement aucun programme systématique {{type}}.",
         "endDate": "Date de fin",
         "endingAccountValue": "Valeur finale du compte",
         "endingIn": "{{accountType}} se terminant par {{accountNumber}}",
@@ -285,7 +290,10 @@
         "lastName": "Nom de famille",
         "lastNameRequired": "Le nom de famille est obligatoire.",
         "lastNameSearchError": "Entrez un nom de famille pour obtenir les résultats de recherche",
+        "lastPaymentDate": "Date du dernier paiement",
         "lineOfBusiness": "Ligne d'activité",
+        "loadingTransactionDetails": "Chargement des détails de la transaction...",
+        "loadingTransactions": "Chargement des transactions...",
         "loanAccruedInterest": "Intérêts courus du prêt",
         "loanActivity": "Actividad del préstamo",
         "loanBalance": "Solde du prêt",
@@ -307,6 +315,8 @@
         "mail": "Mail préféré",
         "makePayment": "Effectuer un paiement",
         "male": "Homme",
+        "manage": "Gérer",
+        "manageAutopay": "Gérer paiement automatique",
         "marketingName": "Nom marketing",
         "marketValueAdjustment": "Ajustement de valeur de marché",
         "marketValueAdjustmentAmount": "Montant MVA",
@@ -365,9 +375,11 @@
         "nextAnniversaryDate": "Date anniversaire suivante",
         "nextEvaluationDate": "Prochaine date d'évaluation",
         "nextMonthiversaryDate": "Prochaine date mensuelle",
+        "nextPayment": "Prochain paiement",
         "nextProgramDate": "Date du programme suivant",
         "noFormsFound": "Aucun formulaire trouvé.",
         "noRecordsFound": "Aucun enregistrement trouvé.",
+        "noTransactionsTitle": "Il n'y a actuellement aucune transaction {{status}}",
         "numberOfOccurrence": "Nombre d'occurrences",
         "numberOfWithdrawal": "Nombre total de retraits",
         "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
@@ -389,9 +401,26 @@
         "partyPolicyNewReferenceId": "Registro actualizado",
         "partyRole": "Rôle de la personne",
         "payeeGrossAmount": "Monto bruto del beneficiario",
+        "details": "Détails",
+        "overviewText": "Veuillez sélectionner le type de correction dans la liste, fournir une raison claire pour votre demande et joindre un document justificatif. Les trois champs sont obligatoires. Une fois soumise, une demande de correction sera créée et acheminée à l'équipe des opérations appropriée pour examen et traitement.",
+        "correctionType": "Type de correction",
+        "selectCorrectionType": "Sélectionner le type de correction",
+        "correctionReason": "Raison de la correction",
+        "selectCorrectionReason": "Sélectionner la raison de la correction",
+        "linkOrUploadDocument": "Lier ou télécharger un document",
+        "findExistingDocuments": "Trouver des documents existants...",
+        "or": "ou",
+        "submit": "Soumettre",
+        "upload": "Télécharger",
+        "uploadDocument": "Télécharger un document",
+        "requestCorrectionSuccess": "Demande de correction soumise pour le cas",
+        "requestCorrrectionFail": "Échec de la soumission de la demande de correction. Veuillez réessayer ou contacter le support.",
+        "additionalNotes": "Notes complémentaires",
+        "addNotes": "Ajouter des notes",
         "payeeOrBeneficiaries": "Beneficiario(s)",
         "paymentAmount": "Montant du paiement",
         "paymentForm": "Mode de paiement",
+        "paymentType": "Type de paiement",
         "payorPayeeDetails": "Détails du payeur/bénéficiaire",
         "payors": "Pagadores",
         "people": "Personnes",
@@ -407,6 +436,8 @@
         "policyGainAmount": "Montant du gain {{policyNomenclature}}",
         "policyNumber": "Numéro {{policyNomenclature}}",
         "policyNumberSearchError": "Entrez un numéro de police pour obtenir les résultats de recherche",
+        "policyPage": "Page de la Police",
+        "policyPagesBeingResent": "Les pages de stratégie sont actuellement en cours de renvoi.",
         "policyReferenceId": "ID de référence {{policyNomenclature}}",
         "policySource": "Source {{policyNomenclature}}",
         "policySourceDescription": "Description de la source {{policyNomenclature}}",
@@ -429,8 +460,12 @@
         "priorYearEndAccountValue": "Valeur du compte de fin d'année précédente",
         "priorYearRequiredMinimumDistributionAmount": "Montant RMD de l'année précédente",
         "processDate": "Fecha de procesamiento",
+        "processingTime": "Délai de traitement",
         "product": "Produit",
         "productCode": "Code produit",
+        "productMarketingName": "Nom commercial du produit",
+        "productName": "Nom du produit",
+        "productNameTooltip": "Il s'agit du nom du produit que vous verrez référencé dans la documentation interne. Il est différent du nom commercial du produit qui est utilisé dans la correspondance et qui sera familier au titulaire.",
         "productType": "Type de produit",
         "productVersion": "Version du produit",
         "projectedLapseIndicator": "Indicateur de résiliation projetée",
@@ -483,7 +518,10 @@
         "sendChannel_email": "envoyé par courrier électronique à",
         "sendChannel_fax": "faxé à",
         "sendChannel_paper_mail": "envoyé par courrier à",
+        "sendPolicyPages": "Envoyer des pages de stratégie",
         "sendToDifferentAddress": "Envoyer à une adresse différente",
+        "setUpAutopay": "Configurer paiement automatique",
+        "setUp": "Configurer",
         "sevenPayLimit": "Limite 7-paiements",
         "sevenPayPeriod": "Période 7-paiements",
         "sevenPayPremium": "Total prime 7-paiements",
@@ -491,6 +529,7 @@
         "sevenPayTestBasis": "Base de prime 7-paiements",
         "sex": "Sexe",
         "shortName": "Nom court",
+        "showHistory": "Afficher l'historique",
         "ssn": "Numéro de sécurité sociale",
         "ssnSearchError": "Entrez un numéro de sécurité sociale pour obtenir les résultats de recherche",
         "startDate": "Date de début",
@@ -503,6 +542,7 @@
         "surrenderValueWithoutMarketValueAdjustment": "Valeur de rachat sans ajustement de la valeur de marché",
         "systematicOrBillingChangeIndicator": "Indicador de cambio sistemático o de facturación",
         "systematicPrograms": "Programmes systématiques",
+        "systemProgramStatus": "Statut",
         "tableCaptionsCasesTable": "Liste de tous les cas, incluant le statut, le propriétaire, l'assureur, l'agent et la date de création",
         "tableCaptionsElectedFunds": "Allocations de fonds élus, incluant le nom du fonds, le type, la période de garantie, le taux d'intérêt, la valeur et le pourcentage d'allocation",
         "tableCaptionsNotElectedFunds": "Fonds non élus, incluant le nom du fonds, le type, la période de garantie, le taux d'intérêt et la valeur",
@@ -560,6 +600,7 @@
         "transactionAmounts": "Montos de la transacción",
         "transactionBasics": "Bases des transactions",
         "transactionDetails": "Détails de la transaction",
+        "transactionDetailsError": "Erreur lors du chargement des détails de la transaction.",
         "transactionId": "ID de transacción",
         "transactionReason": "Motivo de la transacción",
         "transactionType": "Tipo de transacción",
@@ -1074,6 +1115,21 @@
         "SystematicRequiredMinimumDistribution": "Distribution minimale systématique requise",
         "SystematicRequiredMinimumDistributionSetup": "Mise en place de la distribution minimale systématique requise",
         "TAKEINPUTTEDVALUE": "Utiliser la valeur saisie",
+        "licensing": "Licences",
+        "financial": "Finances",
+        "tax": "Impôts",
+        "nonFinancial": "Non-Finances",
+        "death": "Décès",
+        "maturity": "Échéance",
+        "complianceRequirementChange": "Modification des exigences de conformité",
+        "customerCorrectionRequest": "Demande de correction client",
+        "dataEntryError": "Erreur de saisie de données",
+        "deathEventDetailsIncorrect": "Détails de l'événement de décès incorrects",
+        "documentationMissingOrInvalid": "Documentation manquante ou invalide",
+        "maturityEventIncorrect": "Événement d'échéance incorrect",
+        "onboardingDataIncorrect": "Données d'intégration incorrectes",
+        "submittedVsProcessedMismatch": "Incohérence entre les données soumises et traitées",
+        "systemError": "Erreur système",
         "TARGETBENEFITPLAN": "Plan à prestations cibles",
         "TASKS": "Tâches",
         "TENYEARTAXOPTION": "Option fiscale sur dix ans",
@@ -1179,6 +1235,7 @@
             "sendDocument": "Envoyer un document",
             "sendStatement": "Envoyer un extrait de compte",
             "sendTaxForm": "Formulaire de taxes envoyé",
+            "sendPolicyPages": "Envoyer des Pages de Stratégie",
             "updatePremium": "Gérer Paiement Automatique",
             "usage": "Usage",
             "viewDocument": "Voir le document",
@@ -1413,6 +1470,10 @@
                 "text": "Gérer les bénéficiaires",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
             },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
+            },
             "userMenu": {
                 "text": "Menu Utilisateur"
             }
@@ -1469,6 +1530,7 @@
         "unassignTaskError": "Erreur de désattribution de tâche",
         "assignTaskError": "Erreur d'affectation de tâche",
         "startTask": "Démarrer la tâche",
+        "assigneeSearchPlaceholder": "Trouver une personne",
         "assignTask": "Assigner une tâche",
         "transaction": "Transaction: {{transactionType}}",
         "assigned": "Attribué",
@@ -2300,6 +2362,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continuer",
+        "cancel": "Annuler",
+        "confirm": {
+            "header": "Confirmer",
+            "tryAgain": "Réessayer",
+            "for": "pour",
+            "nigo": "Traitement NIGO.",
+            "goToCase": "Aller au dossier",
+            "gotIt": "Compris !",
+            "submit": "Envoyé !",
+            "backToHome": "Retour à l’accueil"
+        },
+        "start":{
+            "title": "Commencer"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gérer les assignés",
+                "subTitle": "Ici, vous pouvez gérer les assignés"
+            },
+            "confirm": {
+                "subTitle": "Les mises à jour du changement d’assigné ont été envoyées."
+            }
+        }
+    },
     "welcome": {
         "header": "Bienvenue sur {{policyPortalName}}",
         "subHeader": "Un outil d'expérience de gestion des politiques pour vous faciliter la vie",
@@ -2576,6 +2664,8 @@
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
             "assignee": "Cessionnaire",
+            "scheduledDate": "Date prévue",
+            "scheduledDatePlaceholder": "Sélectionnez une date",
             "priority": "Priorité du dossier",
             "selectPriority": "Sélectionner la priorité",
             "onlyPrioritized": "Casos prioritarios",
@@ -3152,7 +3242,25 @@
                 "linked case": "Cas lié",
                 "bene": "Notifier",
                 "beneficiary": "Beneficiaire",
-                "owner": "Proprietaire"
+                "owner": "Propriétaire",
+                "payee": "Bénéficiaire",
+                "payor": "Payeur",
+                "assignee": "Cessionnaire",
+                "jointowner": "Co-propriétaire",
+                "thirdpartydesignee": "Designado por un tercero",
+                "primarybeneficiary": "Bénéficiaire principal",
+                "contingentbeneficiary": "Bénéficiaire subsidiaire",
+                "primarywritingagent": "Agent rédacteur principal",
+                "additionalwritingagent": "Agent rédacteur supplémentaire",
+                "primaryservicingagent": "Agent principal de service",
+                "additionalservicingagent": "Agent de service supplémentaire",
+                "annuitant": "Rentista",
+                "jointannuitant": "Co-rentièr(e)",
+                "trustee": "Fiduciaire",
+                "grantor": "Constituant",
+                "powerofattorney": "Procuration",
+                "coveragejointinsured": "Assuré conjoint",
+                "insured": "Assuré"
             },
             "reviewIssues": "Revoir problèmes",
             "suitabilityReview": "suitability",
@@ -5068,7 +5176,6 @@
             },
             "loadingEvents": "Chargement des événements...",
             "noEventsTitle": "Aucun événement pour le moment.",
-            "noTransactionsTitle": "Il n'y a actuellement aucune transaction {{status}}",
             "noEventsSubtitle": "On dirait que rien ne s'est encore passé.",
             "upcomingEvents": "Événements à venir",
             "requested": "Demandé",
@@ -5515,9 +5622,11 @@
             "newCreatedLabel": "Créée",
             "assigneeLabel": "Cessionnaire",
             "documentNumber": "Document",
+            "caseId": "Numéro de cas",
+            "carrier": "Transporteur",
             "stepLabel": "Étape",
             "issueLabel": "Problème",
-            "detailsLabel": "Détails",
+            "detailsLabel": "Description de la tâche",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
             "reasonLabel": "Raison du statut",
             "scheduledNoteLabel": "Note",
@@ -7173,6 +7282,15 @@
             "newDeathClaim": "Nouvelle réclamation pour décès",
             "surrender": "Politique de reddition"
         },
+        "cases": {
+            "requestCorrection": "Demander une correction",
+            "deprioritize": {
+                "title": "De-prioriser le Dossier"
+            },
+            "prioritize": {
+                "title": "Prioriser le Dossier"
+            }
+        },
         "requestOperationReview": {
             "label": "Demande de révision des opérations"
         }
@@ -7718,7 +7836,8 @@
             }
         },
         "formValidation": {
-            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée"
+            "signaturePresentOptionMustBeSelected": "L'option de signature présente doit être sélectionnée",
+            "signatureDesignationMustBeSelected": "La désignation de signature doit être sélectionnée"
         },
         "signTabTitle": "Signature",
         "success": "La demande SSW a été soumise.",
@@ -7765,7 +7884,7 @@
             "title": "Soumise!",
             "subTitle": "Les données d'adéquation des entrées ont été soumises.",
             "cta": "Aller au virement entrant",
-            "secondaryCta": "Retourner à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre les détails de l'adéquation"
         }
     },
@@ -7798,7 +7917,7 @@
             "title": "Soumise!",
             "subTitle": "La pertinence de l'avis a été soumise.",
             "cta": "Aller à l'examen d'adéquation",
-            "secondaryCta": "Retourner à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre les détails de l'examen d'adéquation"
         }
     },
@@ -7850,7 +7969,7 @@
             "title": "Compris!",
             "subTitle": "Tâche: Appariement de Document a été soumise.",
             "cta": "Aller à la Qualification",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         },
         "formErrors": {
@@ -7864,7 +7983,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'agent a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7881,7 +8000,7 @@
             "title": "Compris !",
             "subTitle": "Tâche : Examen de la prime initiale soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7890,7 +8009,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'application a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7899,7 +8018,7 @@
             "title": "Compris!",
             "subTitle": "Tâche: Document de correspondance a été soumise.",
             "cta": "Aller à la Qualification",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7908,7 +8027,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7917,7 +8036,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'OFAC a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7926,7 +8045,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7935,7 +8054,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7944,7 +8063,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7953,7 +8072,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider les détails de l'application a été soumise.",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7962,7 +8081,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider des problèmes d'onboarding a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7971,7 +8090,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7980,7 +8099,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -7989,7 +8108,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8213,7 +8332,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le transfert de révision a été soumis",
             "cta": "Aller au transfert entrant ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8226,7 +8345,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Valider que l'agent a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8235,7 +8354,7 @@
             "title": "C'est compris !",
             "subTitle": "Tâche : Post Issue NIGO Review a été soumis.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8244,7 +8363,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Traitement de saisie de données de transaction postérieure à la délivrance soumis.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8253,7 +8372,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : la révision du changement de nom a été soumise.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8353,7 +8472,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Le retour de paiement a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8362,7 +8481,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Le retour de paiement a été soumis.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8371,7 +8490,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Révision des problèmes de vérification des antécédents a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8380,7 +8499,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Validation de la vérification des antécédents a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8389,7 +8508,7 @@
             "title": "Compris!",
             "subTitle": "Tâche: Le chèque d'enrichissement d'achat a été soumis.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8398,7 +8517,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Claims Ops To Finance Escheatment soumis.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8407,7 +8526,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Les réclamations FI en déshérence ont été soumises.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8416,7 +8535,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Match Death Case soumises.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8425,7 +8544,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Vérification des bénéficiaires de réclamations a été soumise.",
             "cta": "Aller au dossier de réclamation",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8434,7 +8553,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Vérification de la vérification des antécédents a été soumise.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8447,7 +8566,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Le formulaire de demande de service a été soumis.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8512,7 +8631,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : La demande de prise de contact avec les bénéficiaires a été soumise.",
             "cta": "Ir al expediente de reclamación",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8521,7 +8640,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Validation des opérations a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8530,7 +8649,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Validation des opérations a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8539,7 +8658,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Opération Review a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8548,7 +8667,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : La dernière demande de prise de contact avec les bénéficiaires a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         },
         "callForInformation": {
@@ -8634,7 +8753,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Le document Claim Match Bene a été soumis.",
             "cta": "Aller à la demande de décès",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8653,7 +8772,7 @@
             "title": "C'est fait !",
             "subTitle": "Tâche : Envoyer la communication NIGO a été soumise.",
             "cta": "Aller au cas",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8662,7 +8781,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Un examen de la base des coûts a été soumis.",
             "cta": "Go to incoming transfer ",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8671,7 +8790,7 @@
             "title": "Compris!",
             "subTitle": "Tâche : Une nouvelle transaction est initiée.",
             "cta": "Aller au transfert entrant",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -8812,6 +8931,7 @@
             "ariaGoToEApp": "Aller vers le lien eApp",
             "selectBeforeGoToEApp": "Veuillez choisir une illustration avant de poursuivre vers l'eApplication.",
             "archiveIllustrationPopoverTitle": "Archivez cette illustration?",
+            "archiveIllustrationIconTitle": "Icône d'illustration d'archive",
             "archiveIllustrationPopoverBody": "Vous pouvez l'archiver plus tard.",
             "confirmArchive": "Archiver",
             "cancel": "Annuler",
@@ -9118,7 +9238,7 @@
             "title": "Compris !",
             "subTitle": "Les données d'adéquation ont été soumises.",
             "cta": "Aller au dossier",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9127,7 +9247,7 @@
             "title": "Compris!",
             "subTitle": "Le document Review Quality Audit a été soumis.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9136,7 +9256,7 @@
             "title": "Compris!",
             "subTitle": "Le document Rework on Quality Audit a été soumis.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9145,7 +9265,7 @@
             "title": "Compris!",
             "subTitle": "Le document Review Quality Audit Rework a été soumis.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     },
@@ -9186,7 +9306,25 @@
             "title": "Compris!",
             "subTitle": "Le formulaire de détails du tiers a été soumis avec succès.",
             "cta": "Aller à l’Audit de Qualité",
-            "secondaryCta": "Retour à l'accueil",
+            "secondaryCta": "Retour",
+            "submitTask": "Soumettre"
+        }
+    },
+    "fraudScreeningReview": {
+        "confirmStep": {
+            "title": "C’est fait !",
+            "subTitle": "La tâche d’approbation du transporteur a été soumise.",
+            "secondaryCta": "Retour à l’accueil",
+            "cta": "Aller à l’Audit de Qualité",
+            "submitTask": "Soumettre"
+        }
+    },
+    "bankingValidationCallout": {
+        "confirmStep": {
+            "title": "C’est fait !",
+            "subTitle": "La tâche d'appel Giact a été soumise.",
+            "secondaryCta": "Retour à l’accueil",
+            "cta": "Aller à l’Audit de Qualité",
             "submitTask": "Soumettre"
         }
     }

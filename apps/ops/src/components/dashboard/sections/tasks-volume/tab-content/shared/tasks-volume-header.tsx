@@ -1,13 +1,10 @@
-import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
-
-import { TasksVolumeContext } from '../../context/tasks-volume-context';
+import { useTasksVolume } from '@deps/components/dashboard/sections/tasks-volume/context/tasks-volume-context';
 
 export const TasksVolumeHeader = () => {
-    const { taskVolumeDataFetching, totalTaskCount } =
-        useContext(TasksVolumeContext);
+    const { taskVolumeDataFetching, totalTaskCount } = useTasksVolume();
 
     const totalTasks = taskVolumeDataFetching ? (
         <div className="blur">

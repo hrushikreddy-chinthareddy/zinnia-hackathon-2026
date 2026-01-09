@@ -13,4 +13,5 @@ export const AGENT_SEARCH_QUERY_PREFIXES = {
     FOR_DISTRICT_STAFF: [...AGENT_SEARCH_PREFIX, 'forAgentStaff'],
 
     BY_SELLING_CODE: [...AGENT_SEARCH_PREFIX, 'bySellingCode'],
+    SELF_ASSIGN: [...AGENT_SEARCH_PREFIX, 'selfAssign'],
 } as const;

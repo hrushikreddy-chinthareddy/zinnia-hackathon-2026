@@ -19,12 +19,11 @@ import { validateRoleChange } from '@deps/queries/api/role-change';
 import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
+    validateThirdPartyDesigneeChange,
 } from '@deps/queries/api/web-non-financial';
-import {
-    DEFAULT_ERROR_STRING,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     cleanAddresses,
     cleanEmails,
@@ -110,7 +109,6 @@ export async function fetchValidationSummary(
     } else if (customData.taskType === TaskType.Agent_Change_Detail) {
         return await validateAgentTransaction(requestBody);
     } else if (
-        customData.taskType === TaskType.Third_Party_Detail ||
         customData.taskType === TaskType.Initiate_AssigneeChange_Transaction
     ) {
         return await validateRoleChange(
@@ -118,6 +116,14 @@ export async function fetchValidationSummary(
             requestBody?.policyNumber,
             requestBody?.partyId,
             requestBody?.role,
+            requestBody?.query
+        );
+    } else if (customData.taskType === TaskType.Third_Party_Detail) {
+        return await validateThirdPartyDesigneeChange(
+            requestBody?.planCode,
+            requestBody?.policyNumber,
+            requestBody?.partyId,
+            requestBody?.requestType,
             requestBody?.query
         );
     } else {
@@ -276,6 +282,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             policyNumber: customData?.policyNumber,
             partyId,
             role: PolicyRole.THIRDPARTYDESIGNEE,
+            requestType,
             query: {
                 effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                 caseId: customData?.caseId,
@@ -283,9 +290,9 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 changeReason: customData?.changeReason,
                 signatures: customData?.signatureData?.signatures,
                 beneDetailsReqInd: customData?.beneDetailsReqInd || false,
-                documents: customData?.documents,
+                documents: uiParty?.documents,
                 supportingDocumentAttached:
-                    customData?.supportingDocumentAttached || null,
+                    uiParty?.supportingDocumentAttached || null,
                 relationshipToParty: customData?.relationshipToParty,
                 party: cleanedParty,
             },

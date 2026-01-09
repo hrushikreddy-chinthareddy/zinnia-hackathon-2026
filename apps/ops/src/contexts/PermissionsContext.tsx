@@ -62,6 +62,8 @@ export interface PermissionsContextProps {
     isZinniaInternalViewer: boolean;
     isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
+    showZinniaLiveCaseActions: boolean;
+    showRequestCorrection: boolean;
     isAllowOpsCaseReviewRequest: boolean;
     hasPermissionToPrioritizeCases: boolean;
     hasMarketConnectContacts: boolean;
@@ -368,6 +370,18 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRelation.UiAccess
             );
 
+            const showZinniaLiveCaseActions = !!checkRelation(
+                data,
+                FgaRoles.ZINNIA_LIVE_CASE_ACTIONS,
+                FgaRelation.UiAccess
+            );
+
+            const showRequestCorrection = !!checkRelation(
+                data,
+                FgaRoles.REQUEST_CORRECTION,
+                FgaRelation.UiAccess
+            );
+
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
@@ -386,6 +400,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor,
                 hasWelbSalesMaterials,
                 hasCreateClientAccess,
+                showZinniaLiveCaseActions,
+                showRequestCorrection,
             };
         },
         enabled: !!partyId,
@@ -446,6 +462,9 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
+                showZinniaLiveCaseActions:
+                    !!fgaRoleData?.showZinniaLiveCaseActions,
+                showRequestCorrection: !!fgaRoleData?.showRequestCorrection,
                 isAllowOpsCaseReviewRequest: !!isAllowOpsCaseReviewRequest,
                 hasMarketConnectContacts,
                 isSuperIllustrator,

@@ -41,8 +41,9 @@ export const TransactionTrendsFilters: FC = () => {
 
     return (
         <div className={sharedStyles.filterContainer}>
-            <div className="w-1/2 flex gap-4">
+            <div className={sharedStyles.filterGroup}>
                 <Select
+                    className={sharedStyles.filterItem}
                     maxContentWidth
                     label="Group by"
                     options={groupByOptions}
@@ -51,13 +52,14 @@ export const TransactionTrendsFilters: FC = () => {
                     onChange={(val) => setGroupBy(val as CaseCountGroupByEnum)}
                 />
                 <CaseTypeFilter
+                    className={sharedStyles.filterItem}
                     onValueChange={setSelectedProcess}
                     defaultProcess={Processes.NewBusiness}
                     caseStatus={[Statuses.Completed]}
                     value={selectedProcess}
                 />
             </div>
-            <div className="w-1/2">
+            <div>
                 <TimeFilter
                     defaultValue={timeframeRadio}
                     onRadioChange={(val) =>

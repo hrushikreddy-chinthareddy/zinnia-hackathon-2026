@@ -4,7 +4,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { useAgentFieldContext } from './agent-field-context';
 import styles from './agent-search.module.css';

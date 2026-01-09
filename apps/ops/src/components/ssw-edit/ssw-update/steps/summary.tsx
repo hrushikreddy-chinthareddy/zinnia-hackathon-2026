@@ -10,6 +10,7 @@ import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import { Program } from '@deps/components/otp-withdrawal-form/rmd-method/program-item';
 import TransactionNavigationButtons, {
     ParentPage,
@@ -18,9 +19,14 @@ import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card
 import { TranslationFiles } from '@deps/config/translations';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { FormSignature } from '@deps/models/case/withdrawal/case';
+import { ChannelType } from '@deps/models/case/enums';
+import { FormComment, FormSignature } from '@deps/models/case/withdrawal/case';
 
-import { SswUpdateType, UpdatedProgram } from '../../ssw-edit-helpers';
+import {
+    getDocumentSource,
+    SswUpdateType,
+    UpdatedProgram,
+} from '../../ssw-edit-helpers';
 
 type SummaryProps = {
     currentProgram: Program;
@@ -28,7 +34,8 @@ type SummaryProps = {
     onContinue: (
         item: Program,
         operationType: SswUpdateType,
-        formSign: FormSignature
+        formSign: FormSignature,
+        formCmnt: FormComment | null
     ) => void;
 };
 
@@ -41,11 +48,20 @@ const Summary = ({
         keyPrefix: 'sswUpdate.tabs.summary',
     });
     const { goToNext } = useWorkflow();
-    const { formSignature } = useContext(FormDataContext);
+    const { formSignature, initialForm, formComment } =
+        useContext(FormDataContext);
     const signObj = structuredClone(formSignature);
+    const commentObj =
+        formComment !== undefined ? structuredClone(formComment) : null;
+    const source = getDocumentSource(initialForm?.data?.documentNumber);
 
     const handleSubmitSswUpdate = () => {
-        onContinue(currentProgram, SswUpdateType.PROGRAM_UPDATE, signObj);
+        onContinue(
+            currentProgram,
+            SswUpdateType.PROGRAM_UPDATE,
+            signObj,
+            commentObj
+        );
         goToNext();
     };
 
@@ -166,6 +182,7 @@ const Summary = ({
                     </TableBody>
                 </Table>
             </div>
+            <>{source === ChannelType.Phone && <NoteSection />}</>
         </WorkflowCard>
     );
 };

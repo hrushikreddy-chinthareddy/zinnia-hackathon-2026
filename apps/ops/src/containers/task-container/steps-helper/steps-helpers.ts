@@ -7,6 +7,7 @@ import { getAgentReviewSteps } from './agent-review';
 import { getBeneAddressVerificationSteps } from './bene-address-verification';
 import { getBeneCallSteps } from './bene-call-steps';
 import { getBeneChangeSteps } from './bene-change-steps';
+import { getCarrierApprovalSteps } from './carrier-approval-steps';
 import { getClaimBeneReviewSteps } from './claim-bene-review-steps';
 import { getClaimUncashTxnIdentifySteps } from './claim-uncash-txn-identify';
 import { getDay150ReviewSteps } from './claims-day-150-review';
@@ -119,6 +120,10 @@ export const getFormSteps = (
             break;
         case TaskType.Agent_Change_Detail:
             steps = getAgentChangeSteps(props);
+            break;
+        case TaskType.Carrier_Approval:
+        case TaskType.Giact_Call_Out:
+            steps = getCarrierApprovalSteps(props);
             break;
         default:
             steps = getDefaultTaskSteps(props);

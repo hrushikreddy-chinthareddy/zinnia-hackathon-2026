@@ -2,6 +2,9 @@ import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
+import { getDefaultFormDisbursementValues } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
+import FormDisbursementV2 from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2';
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import SelectSimple from '@deps/components/select/select';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
@@ -12,10 +15,6 @@ import {
     ContributionType,
 } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import {
-    DEFAULT_DISBURSEMENT_UPDATE,
-    DisbursementConfig,
-} from '@deps/models/case/withdrawal/disbursement-types';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
@@ -38,29 +37,35 @@ import NavElement, {
     NavElementType,
     NavElementVariant,
 } from '../../nav-element/nav-element';
-import FormDisbursementSection from '../../otp-withdrawal-form/form-disbursement/form-disbursement-section';
 import SignatureValidations from '../../otp-withdrawal-form/signature-validation/signature-validations';
 import PageLoader, { PageLoaderVariant } from '../../page-loader/page-loader';
 import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helpers';
 
 type BankUpdateFormProps = {
     document: DocumentData;
-    carrierId: string;
 };
-const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
+const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+
+    const DEFAULT_DISBURSEMENT_DATA: any = getDefaultFormDisbursementValues();
+
     const [bankUpdateDetails, setBankUpdateDetails] = useState(
-        DEFAULT_DISBURSEMENT_UPDATE
+        DEFAULT_DISBURSEMENT_DATA
     );
     const [isLoading, setIsLoading] = useState(false);
     const [formSubmitted, setFormSubmitted] = useState(false);
     const [submitFailed, setSubmitFailed] = useState(false);
     const source = getDocumentSource(document.documentNumber);
 
-    const { initialForm, formSignature, setFormErrors } =
-        useContext(FormDataContext);
+    const {
+        initialForm,
+        formSignature,
+        formDisbursement,
+        setFormErrors,
+        formComment,
+    } = useContext(FormDataContext);
 
     const requestBankUpdate = async (bankUpdateType: BankUpdateType) => {
         setIsLoading(true);
@@ -71,9 +76,11 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                 TaskStatus.Completed,
                 initialForm,
                 bankUpdateDetails,
+                formDisbursement,
                 formSignature,
                 document,
-                bankUpdateType
+                bankUpdateType,
+                formComment ?? { comment: null }
             )
         );
         if (successfulCaseUpdate) {
@@ -129,10 +136,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
         );
     }
 
-    const bankingFieldsConfig = BankUpdateFieldConfigs(
-        t,
-        carrierId
-    ) as DisbursementConfig[];
+    const bankingFieldsConfig = BankUpdateFieldConfigs(t) as any;
 
     return (
         <>
@@ -173,14 +177,14 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
             {!formSubmitted ? (
                 <>
                     <div className=" mx-6">
-                        <div className="my-4 grid w-full grid-cols-4 gap-4">
+                        <div className="my-4 grid w-full grid-cols-3 gap-4">
                             <SelectSimple
                                 disabled={false}
                                 className="max-w-lg"
                                 label={t('distributionMethod.type') || ''}
                                 options={typeOptions(t)}
                                 onChange={(val) =>
-                                    setBankUpdateDetails((prevState) => ({
+                                    setBankUpdateDetails((prevState: any) => ({
                                         ...prevState,
                                         bankType: val,
                                     }))
@@ -194,11 +198,10 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                             />
                         </div>
                         <div>
-                            <FormDisbursementSection
-                                fields={bankingFieldsConfig}
-                                disbursementInformation={bankUpdateDetails}
-                                onDataChange={setBankUpdateDetails}
+                            <FormDisbursementV2
                                 isFormStateReadOnly={false}
+                                options={bankingFieldsConfig}
+                                isBankUpdateForm={true}
                             />
                         </div>
                     </div>
@@ -209,7 +212,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                                 config={signaturesConfig}
                             />
                         )}
-
+                        <NoteSection />
                         <div className="flex flex-col p-4">
                             <div className="flex">
                                 <Button

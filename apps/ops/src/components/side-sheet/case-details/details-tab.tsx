@@ -10,10 +10,8 @@ import NavElement, {
 import { TranslationFiles } from '@deps/config/translations';
 import { DocumentData } from '@deps/models/case/document';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
-import { formatCurrencyLocal } from '@deps/utils/strings';
+import { formatCurrencyLocal, DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Policy } from '@zinnia/api-types/types/sor';
-
-export const DEFAULT_ERROR_STRING = '--';
 
 type DetailTabProps = {
     carrierName: string;

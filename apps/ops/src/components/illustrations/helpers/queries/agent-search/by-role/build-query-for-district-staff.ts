@@ -1,7 +1,7 @@
 import { queryOptions, skipToken } from '@tanstack/react-query';
 
 import { AGENT_SEARCH_QUERY_PREFIXES } from '../constants';
-import { buildDistrictAgentQuery } from '../district-agent-query';
+import { fetchDistrictAgents } from '../district-agent-query';
 import { DelegatedAgent } from '../types';
 
 export const buildQueryForDistrictStaff = ({
@@ -23,14 +23,11 @@ export const buildQueryForDistrictStaff = ({
         queryFn: !(sellingCode && carrierShortName)
             ? skipToken
             : async ({ client }): Promise<(DelegatedAgent | null)[]> => {
-                  // District-agent (district manager downline)
-                  const agencyAgents = await client.fetchQuery(
-                      buildDistrictAgentQuery({
-                          sellingCode,
-                          carrierShortName,
-                          partialFullName,
-                      })
-                  );
+                  const agencyAgents = await fetchDistrictAgents(client, {
+                      sellingCode,
+                      carrierShortName,
+                      partialFullName,
+                  });
 
                   return agencyAgents;
               },

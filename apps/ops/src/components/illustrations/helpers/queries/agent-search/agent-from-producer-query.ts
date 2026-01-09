@@ -1,13 +1,14 @@
-import { queryOptions, skipToken } from '@tanstack/react-query';
+import { QueryClient, queryOptions, skipToken } from '@tanstack/react-query';
+
+import { buildGetProducerBySellingCodeQueryOptions } from 'components/illustrations/helpers/hooks/pom';
 
 import { AGENT_SEARCH_QUERY_PREFIXES } from './constants';
-import { buildAgentsFromProducer } from './helpers';
-import { buildGetProducerBySellingCodeQueryOptions } from '../../hooks/pom';
+import { buildAgentsFromProducer, hasPartialFullName } from './helpers';
 
 /*
  * Query Options to fetch a single AgentOption for a sellingCode
  */
-export const buildAgentFromProducerQuery = ({
+const buildAgentFromProducerQuery = ({
     sellingCode,
     carrierShortName,
 }: {
@@ -40,3 +41,32 @@ export const buildAgentFromProducerQuery = ({
                   });
               },
     });
+
+export const fetchSelfAssignAgent = async (
+    client: QueryClient,
+    {
+        sellingCode,
+        carrierShortName,
+        partialFullName = '',
+    }: {
+        sellingCode: string | undefined;
+        carrierShortName: string | undefined;
+        partialFullName?: string;
+    }
+) => {
+    const selfAssignAgent = await client.fetchQuery(
+        buildAgentFromProducerQuery({
+            sellingCode,
+            carrierShortName,
+        })
+    );
+
+    if (
+        !selfAssignAgent ||
+        !hasPartialFullName(partialFullName, selfAssignAgent)
+    ) {
+        return null;
+    }
+
+    return selfAssignAgent;
+};

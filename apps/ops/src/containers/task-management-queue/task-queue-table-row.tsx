@@ -19,6 +19,7 @@ import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
 import IconButton from '@deps/components/icon-button/icon-button';
 import NavLink from '@deps/components/nav-element/nav-link/nav-link';
+import { AssigneeField } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import Typography, {
     TypographyVariant,
@@ -61,7 +62,6 @@ import {
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
-import AssigneePopover from './table-elements/assignee-popover';
 import styles from './task-management-queue.module.css';
 import TaskQueueDrawer from './task-queue-drawer';
 type TaskQueueTableRowProps = {
@@ -78,125 +78,6 @@ type TaskQueueTableRowProps = {
 const PROCESSOR_ROLE = 'processor';
 export const OPS_MANAGER_VIEW_TASK = 'opsManagerView-task';
 
-export const Assignee = ({
-    isOpsManagerView,
-    hasAssignee,
-    assignee,
-    task,
-    handleUnassignTask,
-    handleTaskAssignAsAdmin,
-    handleTaskUnassignAsAdmin,
-}: any) => {
-    const [allAssigneeList, setAllAssigneeList] = useState<string[]>([]);
-    const [assigneeList, setAssigneeList] = useState<string[]>([]);
-    const [assigneeLoading, setAssigneeLoading] = useState(false);
-    const [searchValue, setSearchValue] = useState('');
-
-    const handleClick = async () => {
-        if (task.status === TaskStatus.Completed) {
-            return;
-        }
-
-        if (assigneeList.length === 0 && !assigneeLoading) {
-            try {
-                setAssigneeLoading(true);
-                const usersData = await searchUsersInGroupCSR({
-                    carrier: task.carrier,
-                    queue: task.queue,
-                    access: PROCESSOR_ROLE,
-                });
-
-                const mappedUsers =
-                    usersData?.users.map((user: any) => ({
-                        user: getUserNameFromEmail(user.email),
-                        partyId: user.id.split(':')[1],
-                    })) || [];
-
-                setAssigneeList(mappedUsers);
-                setAllAssigneeList(mappedUsers);
-            } catch (error) {
-                browserLogError('Error fetching assignee list');
-            } finally {
-                setAssigneeLoading(false);
-            }
-        }
-    };
-
-    const handleSearch = (searchValue: string): void => {
-        setSearchValue(searchValue);
-        setAssigneeList(
-            allAssigneeList.filter((assignee: any) =>
-                assignee.user.toLowerCase().includes(searchValue.toLowerCase())
-            )
-        );
-    };
-
-    return !isOpsManagerView ? (
-        <>
-            <div className="w-full flex items-center space-x-2">
-                {hasAssignee() && (
-                    <Avatar
-                        className="!mr-0"
-                        name={assignee || ''}
-                        size="small"
-                    />
-                )}
-                {hasAssignee() ? (
-                    <Content
-                        className="!z-10 !ml-0 min-h-8"
-                        contentClassName="text-left flex-1"
-                        details={
-                            assignee
-                                ?.split(',')
-                                .map((x: string) => x.trim())
-                                .reverse()
-                                .join(' ') || ''
-                        }
-                        variant={ContentVariant.BodySm}
-                    />
-                ) : (
-                    <Content
-                        details={toSentenceCase(assignee)}
-                        variant={ContentVariant.BodySm}
-                    />
-                )}
-                {hasAssignee() && (
-                    <Tooltip
-                        placement={TooltipPlacement.TopRight}
-                        tooltipClassName="!w-auto"
-                        triggerClassName="!z-10  justify-end"
-                        trigger={
-                            <IconButton
-                                className="text-secondary"
-                                onClick={() => {
-                                    handleUnassignTask(task?.id);
-                                }}
-                            >
-                                <CancelIcon height={18} width={18} />
-                            </IconButton>
-                        }
-                    >
-                        <span className="text-md">Unassign</span>
-                    </Tooltip>
-                )}
-            </div>
-        </>
-    ) : (
-        <AssigneePopover
-            task={task}
-            assignee={task?.assignee}
-            handleClick={handleClick}
-            handleSearch={handleSearch}
-            searchValue={searchValue}
-            assigneeLoading={assigneeLoading}
-            assigneeList={assigneeList}
-            hasAssignee={hasAssignee}
-            handleTaskAssignAsAdmin={handleTaskAssignAsAdmin}
-            handleTaskUnassignAsAdmin={handleTaskUnassignAsAdmin}
-        />
-    );
-};
-
 const TaskQueueTableRow = ({
     task,
     featureFlagDecisions,
@@ -211,6 +92,14 @@ const TaskQueueTableRow = ({
     const router = useRouter();
     const [_timer] = useState(performance.now());
     const [actionLoader, setActionLoader] = useState(false);
+    const [assigneeList, setAssigneeList] = useState<
+        { user: string; partyId: string }[]
+    >([]);
+    const [allAssigneeList, setAllAssigneeList] = useState<
+        { user: string; partyId: string }[]
+    >([]);
+    const [assigneeLoading, setAssigneeLoading] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
 
     const [_loader, setLoader] = useState(false);
     const { taskType: _taskType, status: _status, carrier } = task;
@@ -357,6 +246,55 @@ const TaskQueueTableRow = ({
         }
     };
 
+    const updateRow = (updatedTask: any) => {
+        manageTableAfterAction(
+            task.id,
+            updatedTask.assigneePartyId,
+            updatedTask
+        );
+    };
+
+    const handleClick = async () => {
+        if (assigneeList.length === 0 && !assigneeLoading) {
+            try {
+                setAssigneeLoading(true);
+                const usersData = await searchUsersInGroupCSR({
+                    carrier: task.carrier,
+                    queue: task.queue,
+                    access: PROCESSOR_ROLE,
+                });
+
+                const mappedUsers =
+                    usersData?.users.map((u: any) => ({
+                        user: getUserNameFromEmail(u.email),
+                        partyId: u.id.split(':')[1],
+                    })) || [];
+
+                setAllAssigneeList(mappedUsers);
+                setAssigneeList(mappedUsers);
+            } catch (error) {
+                browserLogError('Error fetching assignee list');
+            } finally {
+                setAssigneeLoading(false);
+            }
+        }
+    };
+
+    const handleSearch = (value: string) => {
+        setSearchValue(value);
+
+        if (!value.trim()) {
+            setAssigneeList(allAssigneeList);
+            return;
+        }
+
+        setAssigneeList(
+            allAssigneeList.filter((a) =>
+                a.user.toLowerCase().includes(value.toLowerCase())
+            )
+        );
+    };
+
     const openTaskSideSheet = () => {
         if (task) {
             const { taskName = '', id } = task;
@@ -374,6 +312,7 @@ const TaskQueueTableRow = ({
                     taskId={id}
                     taskDescription={task?.taskDetails}
                     onTaskClaimSuccess={handleTaskClaimSuccess}
+                    onTaskUpdated={updateRow}
                 />,
                 true
             );
@@ -461,6 +400,48 @@ const TaskQueueTableRow = ({
         task.escalated &&
         task.status !== TaskStatus.Canceled &&
         task.status !== TaskStatus.Completed;
+
+    const AssigneeFallback = (
+        <div className={styles.assigneeFallback}>
+            {hasAssignee() ? (
+                <>
+                    <Avatar
+                        className={styles.avatar}
+                        name={task.assignee || ''}
+                        size="small"
+                    />
+
+                    <Content
+                        className={styles.assigneeContent}
+                        contentClassName="text-left flex-1"
+                        details={task.assignee}
+                        variant={ContentVariant.BodySm}
+                    />
+
+                    <Tooltip
+                        placement={TooltipPlacement.TopRight}
+                        tooltipClassName={styles.tooltip}
+                        triggerClassName={styles.tooltipTrigger}
+                        trigger={
+                            <IconButton
+                                className={styles.unassignButton}
+                                onClick={() => handleUnassignTask(task.id)}
+                            >
+                                <CancelIcon height={18} width={18} />
+                            </IconButton>
+                        }
+                    >
+                        <span className={styles.tooltipText}>Unassign</span>
+                    </Tooltip>
+                </>
+            ) : (
+                <Content
+                    details={toSentenceCase(task.assignee)}
+                    variant={ContentVariant.BodySm}
+                />
+            )}
+        </div>
+    );
 
     return (
         <TableRow className={styles.row} key={`task_queue_row_${task.id}`}>
@@ -594,18 +575,26 @@ const TaskQueueTableRow = ({
                         <div className="w-100 h-8 text-center py-4">
                             <Loader variant={LoaderVariant.CTA} />
                         </div>
-                    ) : (
-                        <Assignee
-                            hasAssignee={hasAssignee}
-                            assignee={task.assignee}
-                            isOpsManagerView={isOpsManagerView}
+                    ) : isOpsManagerView ? (
+                        <AssigneeField
                             task={task}
-                            handleUnassignTask={handleUnassignTask}
+                            isOpsManagerView={isOpsManagerView}
+                            assigneeList={assigneeList}
+                            assigneeLoading={assigneeLoading}
+                            searchValue={searchValue}
+                            handleClick={handleClick}
+                            handleSearch={handleSearch}
+                            hasAssignee={() =>
+                                !task.assignee?.includes(NO_ASSIGNEE)
+                            }
                             handleTaskAssignAsAdmin={handleTaskAssignAsAdmin}
                             handleTaskUnassignAsAdmin={
                                 handleTaskUnassignAsAdmin
                             }
+                            positionMode="table"
                         />
+                    ) : (
+                        AssigneeFallback
                     )}
                 </div>
             </TableCell>
