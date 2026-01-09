@@ -21,7 +21,7 @@ export function useZEmbedInit(config: ZinniaConfig): ZEmbedInitResult {
                 const zembedModule = await import(
                     /* @vite-ignore */
                     /* webpackIgnore: true */
-                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/zembed/v1.0.0/zembed-bootstraper.mjs`
+                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/zembed/v1/zembed-bootstraper.mjs`
                 );
 
                 await zembedModule.initEmbeddedComponents({
