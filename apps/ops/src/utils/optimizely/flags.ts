@@ -137,6 +137,7 @@ export enum FEATURE_FLAGS {
     DEFAULT_CASE_DATA_ENTRY = 'contact-center-default-case-data-entry',
     SYSTEMATIC_WITHDRAWAL_TRANSACTION = 'systematic_withdrawal_transaction',
     SYSTEMATIC_RMD_TRANSACTION = 'systematic_rmd_transaction',
+    SYSTEMATIC_PROGRAMS_TABLE = 'systematic_programs_table',
     FAST_WITHDRAWAL = 'fast-withdrawal',
     FAST_OFT = 'fast-oft',
     // FAST_RMD = 'fast-rmd',
@@ -183,6 +184,7 @@ export enum FEATURE_FLAGS {
     FGA_ENTITY_ZINNIA_LIVE_POLICY_MANAGEMENT = 'fga_entity_zinnia_live_policy_management',
     FGA_ENTITY_ZINNIA_LIVE_CASE_MANAGEMENT = 'fga_entity_zinnia_live_case_management',
     REVISED_HISTORY_TABLE = 'revised_history_table',
+    WRITE_REQUEST_CASE_CORRECTION = 'write_request_case_correction',
     OPS_REVIEW_REQUEST = 'ops_review_request',
     ILLUSTRATIONS_AS_IS_ILLUSTRATIONS = 'illustrations_as_is_illustrations',
     ILLUSTRATIONS_IMPROVED_AGENT_SEARCH = 'improved_illustration_agent_search',
@@ -190,4 +192,6 @@ export enum FEATURE_FLAGS {
     FINANCIAL_TRANSACTION = 'financial-transaction',
     DTCC_SECTION_ENABLED = 'dtcc_section_enabled',
     DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
+    USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
+    ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN = 'enable_bene_change_paper_form_summary_screen',
 }

@@ -1,11 +1,10 @@
-import { FC, useContext } from 'react';
+import { FC } from 'react';
 
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { TaskStatusFilter } from '@deps/components/dashboard/filters/task-status-filter';
 import { TimeFilter } from '@deps/components/dashboard/filters/time-filter/time-filter';
-import { TasksVolumeContext } from '@deps/components/dashboard/sections/tasks-volume/context/tasks-volume-context';
-
-import { TaskVolumeTimeframeOptions } from '../../utils';
+import { useTasksVolume } from '@deps/components/dashboard/sections/tasks-volume/context/tasks-volume-context';
+import { TaskVolumeTimeframeOptions } from '@deps/components/dashboard/sections/tasks-volume/utils';
 
 export const TasksVolumeFilters: FC = () => {
     const {
@@ -13,14 +12,14 @@ export const TasksVolumeFilters: FC = () => {
         handleTimeframeRadioChange,
         timerange,
         handleRangeChange,
-    } = useContext(TasksVolumeContext);
+    } = useTasksVolume();
 
     return (
         <div className={sharedStyles.filterContainer}>
-            <div className="flex gap-4 items-start">
+            <div className={sharedStyles.filterItem}>
                 <TaskStatusFilter />
             </div>
-            <div className="w-1/2">
+            <div className={sharedStyles.filterItem}>
                 <TimeFilter
                     defaultValue={timeframeRadio}
                     onRadioChange={(val) => {

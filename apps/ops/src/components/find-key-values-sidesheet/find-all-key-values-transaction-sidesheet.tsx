@@ -1,10 +1,17 @@
-import { SideSheet } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    SideSheet,
+} from '@zinnia/bloom/components';
 import { Dispatch, SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import EventsLoader from '@deps/components/events-loader/events-loader';
+import { ViewStateProvider } from '@deps/contexts/ViewStateContext';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { useTransactionByIdQuery } from '@deps/hooks/useTransactionByIdQuery';
 import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { TransactionType } from '@zinnia/api-types/types/sor';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
 
@@ -19,15 +26,35 @@ import { TransactionSidesheetContent } from './content/transaction-sidesheet-con
  * @returns {JSX.Element} - the rendered component
  */
 export const FindAllKeyValuesTransactionSidesheet = ({
-    transaction,
-    open,
     onOpenChange,
+    open,
+    planCode,
+    policyNumber,
+    transactionId,
+    onTransactionSubmit,
 }: {
-    transaction: Transaction;
     open: boolean;
+    policyNumber: string | undefined;
+    planCode: string | undefined;
     onOpenChange: Dispatch<SetStateAction<boolean>>;
+    transactionId: string | undefined;
+    transactionType: TransactionType | undefined;
+    onTransactionSubmit?: () => void;
 }) => {
     const { t } = useTranslation();
+    const {
+        data: transaction,
+        isLoading,
+        isError,
+    } = useTransactionByIdQuery({
+        transactionId,
+        policyNumber,
+        planCode,
+    });
+
+    if (!transaction) {
+        return null;
+    }
 
     return (
         <SideSheet
@@ -36,8 +63,8 @@ export const FindAllKeyValuesTransactionSidesheet = ({
                 <span className="typography-desktop-headline-2-d">
                     {toTitleCase(
                         t(
-                            `enums.${transaction.transactionType}`,
-                            transaction.transactionType ?? ''
+                            `enums.${transaction?.transactionType}`,
+                            transaction?.transactionType ?? ''
                         ) ?? ''
                     )}
                 </span>
@@ -46,9 +73,27 @@ export const FindAllKeyValuesTransactionSidesheet = ({
             onOpenChange={onOpenChange}
             preventCloseOnOutsideClick={false}
         >
-            <TreeStateProvider initialTreeState={Collapse}>
-                <TransactionSidesheetContent transaction={transaction} />
-            </TreeStateProvider>
+            <ViewStateProvider>
+                {isLoading && (
+                    <EventsLoader
+                        message={t('allFields.loadingTransactionDetails')}
+                    />
+                )}
+                {isError && !isLoading && !transaction && (
+                    <AssistiveText
+                        text={t('allFields.transactionDetailsError')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                )}
+                {!isError && !isLoading && !!transaction && (
+                    <TreeStateProvider initialTreeState={Collapse}>
+                        <TransactionSidesheetContent
+                            onTransactionSubmit={onTransactionSubmit}
+                            transaction={transaction}
+                        />
+                    </TreeStateProvider>
+                )}
+            </ViewStateProvider>
         </SideSheet>
     );
 };

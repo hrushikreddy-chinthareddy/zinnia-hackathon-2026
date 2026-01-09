@@ -3,6 +3,7 @@ import { useCallback, useEffect, useState } from 'react';
 
 import Button, { ButtonType } from '@deps/components/button/button';
 import { FieldSize } from '@deps/components/fields/field';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
@@ -24,6 +25,7 @@ type FilterPayload = {
     carriers: string[];
     queues: string[];
     escalated?: boolean | null;
+    scheduledDate?: string;
 };
 
 export interface SideSheetTasksResultsProps {
@@ -46,6 +48,7 @@ type Carriers = {
 type AdditionalFilters = {
     carriers: Carriers;
     group: string[];
+    scheduledDate?: string;
     assignees: string[];
     escalated?: boolean | null;
 };
@@ -55,6 +58,7 @@ const initialAdditionalFilters: AdditionalFilters = {
     group: [],
     assignees: [],
     escalated: undefined,
+    scheduledDate: '',
 };
 
 export default function SideSheetTasksResults({
@@ -139,11 +143,12 @@ export default function SideSheetTasksResults({
     };
 
     const handleSubmit = useCallback(() => {
-        const { carriers, group, escalated } = additionalFilters;
+        const { carriers, group, escalated, scheduledDate } = additionalFilters;
         const payload = {
             carriers: Object.keys(carriers),
             queues: group,
             escalated: escalated,
+            ...(scheduledDate && { scheduledDate }),
         };
 
         handleApplyFilters(additionalFilters, payload);
@@ -156,7 +161,16 @@ export default function SideSheetTasksResults({
         newAdditionalFilters.group = [];
         newAdditionalFilters.assignees = [];
         newAdditionalFilters.escalated = undefined;
+        newAdditionalFilters.scheduledDate = '';
         setAdditionalFilters(newAdditionalFilters);
+    };
+
+    const handleScheduledDateChange = (event: any) => {
+        const scheduledDate = event.target.value;
+        setAdditionalFilters((prevFilters) => ({
+            ...prevFilters,
+            scheduledDate,
+        }));
     };
 
     const handleReset = () => {
@@ -165,6 +179,7 @@ export default function SideSheetTasksResults({
         if (
             (additionalFilters?.group || []).length > 0 ||
             Object.keys(additionalFilters?.carriers || {}).length > 0 ||
+            additionalFilters?.scheduledDate ||
             additionalFilters?.escalated !== undefined
         ) {
             clearFilters();
@@ -174,11 +189,15 @@ export default function SideSheetTasksResults({
     const selectedCarriers = additionalFilters.carriers ?? {};
 
     useEffect(() => {
-        const { carriers, queues, statuses, escalated } =
+        const { carriers, queues, statuses, escalated, scheduledDate } =
             searchValue.additionalFilters || {};
         const carrierFilterItems = getUniqueCarrierFilterItems();
 
-        if (carriers || queues || statuses || escalated !== undefined) {
+        const isFiltersApplied =
+            [carriers, queues, statuses, scheduledDate].some(Boolean) ||
+            escalated !== undefined;
+
+        if (isFiltersApplied) {
             const selectedCarriers = Array.isArray(carriers)
                 ? carriers?.map((carrier: string) => carrier.toUpperCase())
                 : carriers && Object.keys(carriers).length > 0
@@ -200,6 +219,7 @@ export default function SideSheetTasksResults({
                 escalated: escalated,
                 group: queues || [],
                 taskStatus: statuses || [],
+                scheduledDate,
             }));
             if (!groupList.length) {
                 setGroupList(allGroups || []);
@@ -231,6 +251,7 @@ export default function SideSheetTasksResults({
     const hasActiveFilters =
         (additionalFilters?.group || []).length > 0 ||
         Object.keys(additionalFilters?.carriers || {}).length > 0 ||
+        additionalFilters?.scheduledDate ||
         additionalFilters.escalated !== undefined;
 
     return (
@@ -272,6 +293,26 @@ export default function SideSheetTasksResults({
                         disabled={true}
                     />
                           /> */}
+
+                    <div className={styles.dateFieldWrapper}>
+                        <FieldDateSelect
+                            value={additionalFilters.scheduledDate || ''}
+                            size={FieldSize.Small}
+                            label={
+                                t(
+                                    `${REFINE_RESULTS_BASE_KEY}scheduledDate`
+                                ) as string
+                            }
+                            onChange={handleScheduledDateChange}
+                            placeholder={
+                                t(
+                                    `${REFINE_RESULTS_BASE_KEY}scheduledDatePlaceholder`
+                                ) as string
+                            }
+                            isClearable={true}
+                            isFutureDateDisabled={false}
+                        />
+                    </div>
 
                     <Select
                         options={priorityOptions}

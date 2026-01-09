@@ -1,5 +1,5 @@
 export const isAccountNumberValid = (accountNumber: string): boolean => {
-    return /^\d{8,17}$/.test(accountNumber);
+    return /^\d{4,17}$/.test(accountNumber);
 };
 
 export const isRoutingNumberValid = (routingNumber: string): boolean => {

@@ -184,6 +184,8 @@ export const getContractInfo = (policy: PolicyResponse) => {
         PartyRoleType.OWNER,
         PartyRoleType.JOINTOWNER,
         PartyRoleType.ASSIGNEE,
+        PartyRoleType.PRIMARYBENEFICIARY,
+        PartyRoleType.CONTINGENTBENEFICIARY,
     ];
 
     const partyRoleToId = policy.partyRoles.reduce<Record<string, string>>(
@@ -280,14 +282,14 @@ const initiateAssigneeChangeTransactionHandler: TaskHandler<
         };
     },
 
-    getPayload: (task: any) => {
+    getPayload: (task: any, logCtx?: LoggingContext) => {
         return {
             category: ['Assignee Change', 'Party Change', 'Notary Validation'],
             businessProcess: task?.process,
             carrier: task?.carrier,
             policyNumber: task?.data?.policyNumber,
             planCode: task?.data?.planCode,
-            logCtx: task?.logCtx,
+            logCtx,
         } as ReviewPayload;
     },
 

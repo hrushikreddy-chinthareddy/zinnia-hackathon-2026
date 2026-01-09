@@ -1,12 +1,7 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { ReactElement } from 'react';
-
-import { MenuContextualItemProps } from '../menu-contextual-item/menu-contextual-item';
 
 export interface MenuContextualLabelProps {
-    children:
-        | ReactElement<MenuContextualItemProps>
-        | ReactElement<MenuContextualItemProps>[];
+    children: React.ReactNode;
     label: string;
 
     hideLabel?: boolean;

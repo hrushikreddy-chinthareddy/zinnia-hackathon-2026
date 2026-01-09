@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'react-i18next';
 
@@ -15,10 +16,11 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useConfirmSelfServe } from '@deps/hooks/useConfirmSelfServe';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
+import styles from './confirm-step.module.css';
 import {
     SelfServeTransaction,
     SelfServeTransactionSubmitResult,
-} from '../types';
+} from '../../types';
 
 type ConfirmStepProps = {
     customData: any;
@@ -48,7 +50,7 @@ const ConfirmStep = ({
 
     if (loading) {
         return (
-            <div className="responsive-padding flex h-[300px] w-full grow">
+            <div className={clsx(styles.loader, 'responsive-padding')}>
                 <PageLoader variant={PageLoaderVariant.Center} />
             </div>
         );
@@ -66,11 +68,11 @@ const ConfirmStep = ({
         );
     }
     return (
-        <div className="responsive-padding flex h-full w-full grow flex-col items-center justify-center">
+        <div className={clsx(styles.confirmContainer, 'responsive-padding')}>
             <CardInfo
                 icon={
                     <CircleCheckIcon
-                        className="text-semantic-success"
+                        className={clsx(styles.success)}
                         height={50}
                         width={50}
                     />

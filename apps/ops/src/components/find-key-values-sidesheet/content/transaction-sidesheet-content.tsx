@@ -7,11 +7,17 @@ import {
     Label,
     FieldSize as BloomFieldSize,
     FieldTypes,
+    Loader,
+    LoaderVariant,
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useEffect, useMemo, ChangeEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SidesheetCancelPending from '@deps/components/side-sheet/side-sheet-transaction/cancel-pending/side-sheet-cancel-pending';
+import SidesheetReverseRecreate from '@deps/components/side-sheet/side-sheet-transaction/reverse-recreate/side-sheet-reverse-recreate';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useViewState } from '@deps/contexts/ViewStateContext';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
@@ -26,6 +32,7 @@ import {
     transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
+import TransactionSidesheetActions from '../transaction-sidesheet-actions';
 import {
     addLinkToPartyId,
     addToolTip,
@@ -40,11 +47,18 @@ import {
     groupBasicsForTransaction,
     getAllParties,
 } from '../transformations/section-grouping';
+import {
+    getReversalTransactionId,
+    getTransactionAmount,
+    TransactionSidesheetViews,
+} from '../utils';
 
 export const TransactionSidesheetContent = ({
     transaction,
+    onTransactionSubmit,
 }: {
     transaction: Transaction;
+    onTransactionSubmit?: () => void;
 }) => {
     const { treeState, setTreeState, searchValue, setSearchValue } =
         useTreeState();
@@ -59,6 +73,8 @@ export const TransactionSidesheetContent = ({
         queryClient,
         true
     );
+    const { viewState, setViewState } = useViewState();
+    const { handleOpen } = useSideSheetContext();
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
@@ -137,8 +153,55 @@ export const TransactionSidesheetContent = ({
         setSearchValue(debouncedSearchValue);
     }, [debouncedSearchValue, setTreeState, setSearchValue]);
 
+    if (viewState === TransactionSidesheetViews.loading) {
+        return (
+            <div className={styles.loadingContainer}>
+                <Loader variant={LoaderVariant.Default} />
+            </div>
+        );
+    }
+
+    if (viewState === TransactionSidesheetViews.cancel) {
+        return (
+            <SidesheetCancelPending
+                amount={getTransactionAmount(transaction)}
+                closeSidesheet={() => {
+                    onTransactionSubmit && onTransactionSubmit();
+                    handleOpen(false);
+                }}
+                exitTransaction={() =>
+                    setViewState(TransactionSidesheetViews.default)
+                }
+                policyNumber={policy?.policyNumber}
+                planCode={policy?.product?.planCode}
+                transactionId={transaction?.transactionId}
+                transactionType={transaction?.transactionType}
+            />
+        );
+    }
+
+    if (viewState === TransactionSidesheetViews.reverse) {
+        return (
+            <SidesheetReverseRecreate
+                amount={getTransactionAmount(transaction)}
+                effectiveDate={transaction.effectiveDate}
+                exitTransaction={() =>
+                    setViewState(TransactionSidesheetViews.default)
+                }
+                closeSidesheet={() => {
+                    onTransactionSubmit && onTransactionSubmit();
+                    handleOpen(false);
+                }}
+                policyNumber={policy?.policyNumber}
+                planCode={policy?.product?.planCode}
+                transactionType={transaction?.transactionType}
+                reversalTransactionId={getReversalTransactionId(transaction)}
+            />
+        );
+    }
     return (
         <div className={styles.keyValuesContainer}>
+            <TransactionSidesheetActions transaction={transaction} />
             <FieldData
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setSearchValue(e.target.value)

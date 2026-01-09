@@ -13,8 +13,8 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildQueryForAgencyOwner } from './by-role/build-query-for-agency-owner';
 import { buildQueryForAgent } from './by-role/build-query-for-agent';
-import { buildQueryForDistrictStaff } from './by-role/build-query-for-agent-staff';
 import { buildQueryForDistrictManager } from './by-role/build-query-for-district-manager';
+import { buildQueryForDistrictStaff } from './by-role/build-query-for-district-staff';
 import { AGENT_SEARCH_QUERY_PREFIXES } from './constants';
 import { DelegatedAgent } from './types';
 import {

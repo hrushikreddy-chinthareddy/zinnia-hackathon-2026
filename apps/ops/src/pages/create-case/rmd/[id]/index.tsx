@@ -277,7 +277,6 @@ export default function RmdCase({
             <DiaryNotesProvider
                 caseDetails={caseDetailsData}
                 planCode={planCode}
-                isLC={isLC}
             >
                 <OtpLayout
                     contractNumber={document.contract}
@@ -541,6 +540,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         partyRoles: [],
                         user,
                         isLC,
+                        planCode,
                         nigoExceptions,
                     },
                 };

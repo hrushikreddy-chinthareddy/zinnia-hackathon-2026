@@ -1,0 +1,77 @@
+{
+    "id": "TA000000036181",
+    "caseId": "CA0000437815",
+    "process": "compliance",
+    "carrier": "SBGC",
+    "taskType": "BANKING_VALIDATION_CALLOUT",
+    "taskName": "Call Out User for Validation",
+    "taskDetails": "",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "transactionDetails": {
+                "policyNumber": "FNWLTROO11138B",
+                "transactionType": "Withdrawal",
+                "caseId": "CA0000465215"
+            },
+            "documents": [
+                {
+                    "documentId": "1213112",
+                    "docType": "PDF",
+                    "documentName": "Withdrawal12",
+                    "documentSource": "EDS"
+                },
+                {
+                    "documentId": "121197",
+                    "docType": "PDF",
+                    "documentName": "Withdrawal192",
+                    "documentSource": "EDS"
+                }
+            ],
+            "giactThreatDetails": [
+                {
+                    "ownerType": "INDIVIDUAL",
+                    "failureType": "Account Verification",
+                    "errorCode": "ND00",
+                    "errorDescription": "The routing number submitted belongs to a financial institution; however, this financial institution does not report information to the National Shared Database. The financial institutions that do report to the National Shared Database have not reported any recent experience (positive or negative) with this account."
+                },
+                {
+                    "ownerType": "INDIVIDUAL",
+                    "failureType": "Authentication",
+                    "errorCode": "n/a",
+                    "errorDescription": ""
+                },
+                {
+                    "ownerType": "INDIVIDUAL",
+                    "failureType": "Verification",
+                    "errorCode": "NoData",
+                    "errorDescription": "No data was found on an identity transaction, or the routing number submitted belongs to a financial institution; however, this financial institution does not report information to the National Shared Database. The financial institutions that do report to the National Shared Database have not reported any recent experience (positive or negative) with this account."
+                }
+            ],
+            "bankAccountType": "Checking",
+            "bankAccountNumber": "12121212",
+            "bankRoutingNumber": "121000248",
+            "addressDetails": {
+                "AddressLine1": "988RHOADSDR",
+                "AddressLine2": "",
+                "City": "BELLEMEAD",
+                "State": "UT",
+                "ZipCode": "08502",
+                "Country": "US"
+            },
+            "firstName": "Abcd",
+            "lastName": "xyzm",
+            "communicationDetails": {
+                "mobilePhoneNumber": "8989711541",
+                "homePhoneNumber": "9912110921",
+                "businessPhoneNumber": "9657287712",
+                "preferredInd": "HOME",
+                "preferredTime": "9:00AM - 6:00PM",
+                "timeZone": "IST"
+            },
+            "giactReviewResponseBankAccountNumber": null,
+            "giactReviewResponseBankRoutingNumber": null,
+            "callOutResults": null
+        }
+    }
+}

@@ -17,6 +17,7 @@ import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_
 
 import HistoryEventFeed from './event-feed/event-feed';
 
+// remove once the revised_history_table feature flag is cleaned up
 const TransactionsTab = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'policy.history.filter',

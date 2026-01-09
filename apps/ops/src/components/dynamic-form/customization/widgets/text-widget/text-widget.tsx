@@ -25,7 +25,7 @@ export const TextWidget = function (props: WidgetProps) {
 
     if (inline) {
         return (
-            <div className="text-md">
+            <div className="grid grid-cols-2 text-md max-w-screen-sm">
                 <div
                     className={clsx(
                         'text-gray-500',

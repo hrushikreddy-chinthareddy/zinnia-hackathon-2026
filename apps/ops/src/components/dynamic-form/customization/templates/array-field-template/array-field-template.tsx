@@ -15,9 +15,19 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
-import React from 'react';
+import React, { useState, useMemo } from 'react';
+
+import { isStringWithBrackets } from '@deps/helpers/string.helpers';
+import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 
 import style from './array-field.module.css';
+
+export const SORT_DIRECTION = {
+    ASC: 'asc',
+    DESC: 'desc',
+} as const;
+
+type SortDirection = (typeof SORT_DIRECTION)[keyof typeof SORT_DIRECTION];
 
 function ArrayFieldTemplate<
     T = any,
@@ -40,6 +50,12 @@ function ArrayFieldTemplate<
 
     const uiOptions = getUiOptions(uiSchema);
     const { templateType } = getUiOptions(uiSchema?.items);
+    const { sorting } = uiOptions;
+
+    const [sortConfig, setSortConfig] = useState<{
+        key: string;
+        direction: SortDirection;
+    } | null>(null);
 
     const ArrayFieldDescriptionTemplate = getTemplate<
         'ArrayFieldDescriptionTemplate',
@@ -63,6 +79,39 @@ function ArrayFieldTemplate<
         ButtonTemplates: { AddButton },
     } = registry.templates;
 
+    const sortedItems = useMemo(() => {
+        if (!sortConfig || !items) return items;
+        const { key, direction } = sortConfig;
+        return [...items].sort((a, b) => {
+            let aVal = (a.children.props.formData?.[key] ?? '') as string;
+            let bVal = (b.children.props.formData?.[key] ?? '') as string;
+            if (isStringWithBrackets(aVal)) {
+                aVal = replacePlaceholders(aVal, a.children.props.formData);
+            }
+            if (isStringWithBrackets(bVal)) {
+                bVal = replacePlaceholders(bVal, b.children.props.formData);
+            }
+            if (aVal < bVal) return direction === SORT_DIRECTION.ASC ? -1 : 1;
+            if (aVal > bVal) return direction === SORT_DIRECTION.ASC ? 1 : -1;
+            return 0;
+        });
+    }, [items, sortConfig]);
+
+    const handleSort = (key: string) => {
+        setSortConfig((prev) => {
+            if (prev?.key === key) {
+                return {
+                    key,
+                    direction:
+                        prev.direction === SORT_DIRECTION.ASC
+                            ? SORT_DIRECTION.DESC
+                            : SORT_DIRECTION.ASC,
+                };
+            }
+            return { key, direction: SORT_DIRECTION.ASC };
+        });
+    };
+
     return (
         <>
             {templateType === 'table' && items?.length > 0 ? (
@@ -76,19 +125,31 @@ function ArrayFieldTemplate<
                                     ).map((key, index) => (
                                         <TableHeaderCell
                                             key={index}
-                                            className="typography-content-body-sm-bold"
+                                            className="typography-content-body-sm-bold cursor-pointer"
                                         >
-                                            {
-                                                (schema.items as any)
-                                                    ?.properties[key].title
-                                            }
+                                            <button
+                                                onClick={() =>
+                                                    sorting && handleSort(key)
+                                                }
+                                            >
+                                                {
+                                                    (schema.items as any)
+                                                        ?.properties[key].title
+                                                }
+                                                {sorting &&
+                                                    sortConfig?.key === key &&
+                                                    (sortConfig.direction ===
+                                                    SORT_DIRECTION.ASC
+                                                        ? ' 🔼'
+                                                        : ' 🔽')}
+                                            </button>
                                         </TableHeaderCell>
                                     ))}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
-                                {items &&
-                                    items.map(
+                                {sortedItems &&
+                                    sortedItems.map(
                                         ({
                                             key,
                                             ...itemProps

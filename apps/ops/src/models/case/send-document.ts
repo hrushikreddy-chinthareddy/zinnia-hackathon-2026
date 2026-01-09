@@ -82,6 +82,7 @@ export type FormDetails = {
 
 export enum SendDocumentFormType {
     ServiceRequestForm = 'Service Request Form',
+    PolicyPagesForm = 'Policy Pages',
 }
 
 export const AllowedRoleTypes: string[] = [

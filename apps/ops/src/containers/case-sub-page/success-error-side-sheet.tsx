@@ -20,6 +20,7 @@ interface ApiResponse {
     data?: {
         message?: string;
     };
+    success?: boolean;
 }
 
 interface SuccessErrorSideSheetProps {
@@ -42,7 +43,8 @@ function SuccessErrorSideSheet({
             <CardInfo
                 className="mt-8 flex-col"
                 icon={
-                    response.status === HttpStatusCode.Ok ? (
+                    response.status === HttpStatusCode.Ok ||
+                    response?.success ? (
                         <CircleCheckIcon
                             className="text-semantic-success"
                             height={50}
@@ -70,13 +72,14 @@ function SuccessErrorSideSheet({
                 }
                 subtitle={
                     <span>
-                        {response.status === HttpStatusCode.Ok
+                        {response.status === HttpStatusCode.Ok ||
+                        response?.success
                             ? successMessage
                             : errorMessage}
                     </span>
                 }
                 title={
-                    response.status === HttpStatusCode.Ok
+                    response.status === HttpStatusCode.Ok || response?.success
                         ? t('successTitle')
                         : t('errorTitle')
                 }

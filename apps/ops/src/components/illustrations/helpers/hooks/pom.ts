@@ -502,12 +502,12 @@ export const getIllustratorRoleFromHierarchy = (
         return IllustratorRole.DISTRICT_MANAGER;
     }
 
-    if (isAgencyOwner) {
-        return IllustratorRole.AGENCY_OWNER;
+    if (isDistrictStaff) {
+        return IllustratorRole.DISTRICT_STAFF;
     }
 
-    if (isDistrictStaff) {
-        return IllustratorRole.AGENCY_STAFF;
+    if (isAgencyOwner) {
+        return IllustratorRole.AGENCY_OWNER;
     }
 
     if (isNormalAgent) {

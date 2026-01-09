@@ -10,6 +10,7 @@ import NavElement, {
 } from '@deps/components/nav-element/nav-element';
 import QuickActionsMenu, {
     QuickActionsMenuProps,
+    QuickActionsType,
 } from '@deps/components/quick-actions-menu/quick-actions-menu';
 import Typography, {
     TypographyVariant,
@@ -21,7 +22,12 @@ import {
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
 
-export interface QuickLinksProps extends QuickActionsMenuProps {
+type PolicyQuickActionsProps = Extract<
+    QuickActionsMenuProps,
+    { type: QuickActionsType.Policy }
+>;
+
+export type QuickLinksProps = PolicyQuickActionsProps & {
     links: {
         href: string;
         name: string;
@@ -32,7 +38,7 @@ export interface QuickLinksProps extends QuickActionsMenuProps {
     sessionId: string;
     userPartyId: string;
     className?: string;
-}
+};
 
 const trackClick = (
     segmentTrackingName: string,
@@ -150,7 +156,10 @@ const QuickLinks = ({
                 <>
                     <div className="hidden min-w-[2px] bg-gray-100 md:block" />
 
-                    <QuickActionsMenu policy={policy} />
+                    <QuickActionsMenu
+                        policy={policy}
+                        type={QuickActionsType.Policy}
+                    />
                 </>
             )}
         </div>

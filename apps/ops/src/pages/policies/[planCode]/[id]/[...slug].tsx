@@ -106,6 +106,11 @@ const parseSlugToKey = (slug: string[] | undefined): string => {
     }
 };
 
+const Slugs = {
+    AssigneeChange: 'assigneechange',
+    BeneChange: 'benechange',
+};
+
 const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     user,
     subPageTitleKey,
@@ -168,9 +173,9 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
 
     const getTransactionData = useCallback(() => {
         let transactionType;
-        if (slug && slug[1]) {
+        if (slug && slug.length > 0) {
             switch (slug[1]) {
-                case 'assigneechange':
+                case Slugs.AssigneeChange:
                     transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
                     break;
                 case 'benechange':
@@ -259,9 +264,6 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                                     processSubType={
                                         transactionData.processSubType
                                     }
-                                    startStepTitle={t(
-                                        transactionData?.startStepTitle
-                                    )}
                                     startStepSubtitle={
                                         t(transactionData?.startStepSubtitle) ??
                                         ''
@@ -332,6 +334,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                         subPageContent = <FilterTransactions />;
                     if (slug[1] === 'call-logs') subPageContent = <CallLogs />;
                 } else {
+                    // remove once the revised_history_table feature flag is cleaned up
                     subPageContent = <ActivitySubPage />;
                 }
                 break;

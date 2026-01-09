@@ -37,38 +37,38 @@ describe('SideSheetProductDetails', () => {
 
         // Assert
         expect(
-            await screen.findByText('dashboard.productDetails')
+            await screen.findByText('allFields.dashboardProductDetails')
         ).toBeInTheDocument();
 
         expect(
-            await screen.findByText('globalPolicyInfo.carrierName')
+            await screen.findByText(/allFields.carrierName/i)
         ).toBeInTheDocument();
         expect(
             await screen.findByText(getCarrierNameByClientId('SBUL'))
         ).toBeInTheDocument();
 
         expect(
-            await screen.findByText('globalPolicyInfo.productMarketingName')
+            await screen.findByText(/allFields.productMarketingName/i)
         ).toBeInTheDocument();
         expect(await screen.findByText('Product A')).toBeInTheDocument();
 
         expect(
-            await screen.findByText('globalPolicyInfo.productName')
+            await screen.findByText(/allFields.productName/i)
         ).toBeInTheDocument();
         expect(await screen.findByText('Plan A')).toBeInTheDocument();
 
         expect(
-            await screen.findByText('globalPolicyInfo.productType')
+            await screen.findByText(/allFields.productType/i)
         ).toBeInTheDocument();
         expect(await screen.findByText('UNIVERSALLIFE')).toBeInTheDocument();
 
         expect(
-            await screen.findByText('globalPolicyInfo.productCode')
+            await screen.findByText(/allFields.productCode/i)
         ).toBeInTheDocument();
         expect(await screen.findByText('123')).toBeInTheDocument();
 
         expect(
-            await screen.findByText('globalPolicyInfo.planCode')
+            await screen.findByText(/allFields.planCode/i)
         ).toBeInTheDocument();
         expect(await screen.findByText('456')).toBeInTheDocument();
     });

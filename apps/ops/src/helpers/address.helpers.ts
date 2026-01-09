@@ -1,4 +1,5 @@
-import { Address } from '@zinnia/api-types/types/sor';
+import { State } from '@zinnia/api-types/types/bpm';
+import { Address, Country } from '@zinnia/api-types/types/sor';
 
 import { getCountryByCode } from './countries.helpers';
 import { getStateCode } from './states.helpers';
@@ -42,6 +43,29 @@ export function formatZipCodeRaw(address: Address): string {
     }
     return formattedAddress;
 }
+
+export interface AddressFields {
+    AddressLine1: string;
+    AddressLine2?: string;
+    AddressLine3?: string;
+    City: string;
+    State: State;
+    ZipCodeExtension?: string;
+    ZipCode: string;
+    Country: Country;
+}
+export const convertAddressFields = (address: AddressFields) => {
+    return {
+        addressLine1: address?.AddressLine1 ?? '',
+        addressLine2: address?.AddressLine2 ?? ' ',
+        addressLine3: address?.AddressLine3 ?? '',
+        city: address?.City ?? '',
+        state: address?.State ?? '',
+        zipCode: address?.ZipCode ?? '',
+        zipCodeExtension: address?.ZipCodeExtension || ' ',
+        country: address?.Country ?? '',
+    };
+};
 
 export const formatAddress = (address: Address): string[] => {
     if (!Object.keys(address).length) return ['', '', ''];
