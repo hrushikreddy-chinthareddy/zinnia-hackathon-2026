@@ -178,7 +178,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 case Slugs.AssigneeChange:
                     transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
                     break;
-                case 'benechange':
+                case Slugs.BeneChange:
                     transactionType = SelfServeTransaction.BENE_CHANGE;
                     break;
             }
@@ -241,7 +241,8 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         switch (slug[0]) {
             case 'people':
                 subPageContent = slug[1] ? (
-                    slug[1] === 'benechange' || slug[1] === 'assigneechange' ? (
+                    slug[1] === Slugs.AssigneeChange ||
+                    slug[1] === Slugs.BeneChange ? (
                         transactionData && (
                             <SelfServeTransactionProvider>
                                 <SelfServeTransactionContainer
