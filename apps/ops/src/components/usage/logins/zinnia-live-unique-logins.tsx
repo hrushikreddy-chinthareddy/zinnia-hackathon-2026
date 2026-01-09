@@ -1,15 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { renderToStaticMarkup } from 'react-dom/server';
 import { useTranslation } from 'react-i18next';
 
 import {
     xAxisLabelFormatter,
     calculateTickInterval,
-    calculateTooltipRanges,
-    getTooltipData,
 } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
-import { LabelComponent } from '@deps/components/dashboard/charts/date-time-chart/label-for-chart-for-time/label';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
+import { tooltipFormatter } from '@deps/components/dashboard/charts/date-time-chart/line-chart-label';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
 import {
     ErrorMessage,
@@ -74,21 +71,6 @@ export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
             ]),
     });
 
-    const tooltipFormatter: Highcharts.TooltipFormatterCallbackFunction =
-        function (this) {
-            const points = this.points;
-            const dateStr = calculateTooltipRanges(this, timerange);
-            const tooltipData = getTooltipData(points) || '';
-
-            return renderToStaticMarkup(
-                <LabelComponent
-                    labelData={tooltipData.labelData}
-                    dateStr={dateStr}
-                    total={tooltipData.total ?? 0}
-                />
-            );
-        };
-
     const series = generateSeries(
         zinniaLiveLoginsData?.data,
         timerange,
@@ -145,7 +127,10 @@ export const ZinniaLiveUniqueLogins = ({ title }: { title: string }) => {
                             xAxisTitle={t('usage.logins.date') || 'Date'}
                             xAxisLabelFormatter={xAxisLabelFormatter}
                             tickInterval={tickInterval}
-                            tooltipFormatter={tooltipFormatter}
+                            tooltipFormatter={tooltipFormatter({
+                                timerange,
+                                isTooltipColorCircle: false,
+                            })}
                             yAxisOpposite={false}
                         />
                     )}

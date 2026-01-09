@@ -1,12 +1,16 @@
 import dayjs from 'dayjs';
 import { v4 as uuidv4 } from 'uuid';
 
-import { PolicyRole } from '@deps/constants/policy';
+import { Action, PolicyRole } from '@deps/constants/policy';
 import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
-import { toTitleCase } from '@deps/helpers/string.helpers';
+import { getFullName } from '@deps/helpers/party-info-helpers';
+import {
+    isNullEmptyOrUndefined,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
 import { PartyType } from '@deps/models/policy/sor-policy';
@@ -15,12 +19,11 @@ import { validateRoleChange } from '@deps/queries/api/role-change';
 import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
+    validateThirdPartyDesigneeChange,
 } from '@deps/queries/api/web-non-financial';
-import {
-    DEFAULT_ERROR_STRING,
-    ZAHARA_API_DATE_FORMAT,
-} from '@deps/types/constants';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     cleanAddresses,
     cleanEmails,
@@ -105,12 +108,22 @@ export async function fetchValidationSummary(
         );
     } else if (customData.taskType === TaskType.Agent_Change_Detail) {
         return await validateAgentTransaction(requestBody);
-    } else if (customData.taskType === TaskType.Third_Party_Detail) {
+    } else if (
+        customData.taskType === TaskType.Initiate_AssigneeChange_Transaction
+    ) {
         return await validateRoleChange(
             requestBody?.planCode,
             requestBody?.policyNumber,
             requestBody?.partyId,
             requestBody?.role,
+            requestBody?.query
+        );
+    } else if (customData.taskType === TaskType.Third_Party_Detail) {
+        return await validateThirdPartyDesigneeChange(
+            requestBody?.planCode,
+            requestBody?.policyNumber,
+            requestBody?.partyId,
+            requestBody?.requestType,
             requestBody?.query
         );
     } else {
@@ -150,6 +163,71 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             isContingentBeneInfoOnFile: false,
         };
     },
+    INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
+        const { actionData } = customData || [];
+        const { requestType, addedItem, deletedItem } =
+            detectRoleChangeRequestType(actionData);
+
+        const partyId = resolveRoleChangePartyId(
+            requestType,
+            deletedItem,
+            customData.defaultPartyIdRoleChange
+        );
+
+        const uiParty = (addedItem ?? deletedItem)?.party ?? null;
+
+        const cleanedParty = uiParty
+            ? {
+                  ...uiParty,
+                  fullName: getFullName(uiParty),
+                  addresses: cleanAddresses(uiParty.addresses),
+                  emails: cleanEmails(uiParty.emails),
+                  phones: cleanPhones(uiParty.phones),
+                  preferredCommunicationType:
+                      uiParty.preferredCommunicationType === 'null'
+                          ? null
+                          : uiParty.preferredCommunicationType,
+                  startDate:
+                      requestType === Action.ADD ||
+                      requestType === Action.UPDATE
+                          ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                          : null,
+                  endDate:
+                      requestType === Action.DELETE
+                          ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                          : null,
+                  collateralAmount: isNullEmptyOrUndefined(
+                      uiParty.collateralAmount
+                  )
+                      ? null
+                      : Number(uiParty.collateralAmount),
+              }
+            : null;
+        return {
+            planCode: customData?.planCode,
+            policyNumber: customData?.policyNumber,
+            partyId,
+            role: PolicyRole.ASSIGNEE,
+            query: {
+                requestType,
+                effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+                caseId: customData?.caseId,
+                correlationId: customData?.correlationId,
+                changeReason: customData?.changeReason,
+                partyRole: PolicyRole.ASSIGNEE,
+                signatures: customData?.signatureData?.signatures,
+                notarySignatures: customData?.signatureData?.notarySignatures,
+                documents: customData?.documents,
+                supportingDocumentAttached:
+                    customData?.supportingDocumentAttached || null,
+                relationshipToTheCurrentOwner:
+                    customData?.relationshipToTheCurrentOwner,
+                party: cleanedParty,
+                partyId,
+            },
+        };
+    },
+
     AGENT_CHANGE_DETAIL: (customData) => {
         return {
             planCode: customData?.planCode,
@@ -192,6 +270,11 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                           : null) ??
                       null,
                   fullName: toFullName(uiParty),
+                  entityType:
+                      uiParty.partyType === PartyType.ORGANIZATION &&
+                      !uiParty.entityType
+                          ? 'UNKNOWN'
+                          : uiParty.entityType,
               }
             : null;
         return {
@@ -199,6 +282,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             policyNumber: customData?.policyNumber,
             partyId,
             role: PolicyRole.THIRDPARTYDESIGNEE,
+            requestType,
             query: {
                 effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                 caseId: customData?.caseId,
@@ -206,9 +290,9 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                 changeReason: customData?.changeReason,
                 signatures: customData?.signatureData?.signatures,
                 beneDetailsReqInd: customData?.beneDetailsReqInd || false,
-                documents: customData?.documents,
+                documents: uiParty?.documents,
                 supportingDocumentAttached:
-                    customData?.supportingDocumentAttached || null,
+                    uiParty?.supportingDocumentAttached || null,
                 relationshipToParty: customData?.relationshipToParty,
                 party: cleanedParty,
             },
@@ -235,6 +319,12 @@ export function buildValidationRequestBody(customData: any): any {
     if (customData.taskType === TaskType.Third_Party_Detail) {
         return requestBodyBuilders.THIRD_PARTY_DETAIL(customData);
     }
+    if (customData.taskType === TaskType.Initiate_AssigneeChange_Transaction) {
+        return requestBodyBuilders.INITIATE_ASSIGNEECHANGE_TRANSACTION(
+            customData
+        );
+    }
+
     return { ...customData };
 }
 

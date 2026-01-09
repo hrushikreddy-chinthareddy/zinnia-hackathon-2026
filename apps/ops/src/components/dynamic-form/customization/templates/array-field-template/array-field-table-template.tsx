@@ -18,7 +18,7 @@ import {
     isNullEmptyOrUndefined,
     parseAndFormatDate,
 } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export enum PropertyKey {
     TransactionAmount = 'transactionAmount',

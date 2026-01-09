@@ -28,7 +28,7 @@ import {
     isNullEmptyOrUndefined,
     formatDate,
 } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 const BASE_KEY = 'policy.detailCards.baseCoverage';
 

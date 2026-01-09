@@ -4,7 +4,7 @@ import { UnderwritingClass } from '@deps/components/illustrations/helpers/illust
 import { useIllustrationDetail } from '@deps/components/illustrations/providers/IllustrationDetailProvider';
 import { TranslationFiles } from '@deps/config/translations';
 import { COVERAGE_IDS } from '@deps/queries/api/v3/illustrations/types';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import ContentEntry from './illustration-details-content-entry';
 import ContentSection from './illustration-details-content-section';

@@ -1,5 +1,6 @@
 import { Meta } from '@storybook/react';
 
+import { QuickActionsType } from '@deps/components/quick-actions-menu/quick-actions-menu';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 
 import QuickLinks from './quick-links';
@@ -34,6 +35,7 @@ export const QuickLinksComponent = () => {
                         freeLookPeriodDetails: { isInFreeLookPeriod: true },
                     } as PolicyDetails
                 }
+                type={QuickActionsType.Policy}
             />
         </div>
     );

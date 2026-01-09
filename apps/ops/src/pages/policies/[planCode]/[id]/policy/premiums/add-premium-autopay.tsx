@@ -1,16 +1,119 @@
+import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { PageHead } from '@deps/components/page-title';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import AutopayContainer from '@deps/containers/financial-transactions/autopay/autopay-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
+import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
+import { TransactionPermission } from '@deps/utils/auth';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
-import { ArrangementType, Policy, Reason } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    Policy,
+    Reason,
+    Status,
+} from '@zinnia/api-types/types/sor';
 
 interface UpdateAutopayProps {
     policy: Policy;
 }
 
 const AddPremiumAutopay = ({ policy }: UpdateAutopayProps) => {
+    const [isLoading, setIsLoading] = useState(true);
+    const router = useRouter();
+    const { featureFlags } = useOptimizely();
+
+    const { systematicPrograms, policyNumber } = policy;
+    const { planCode } = policy.product ?? {};
+
+    const upcomingPayment = useMemo(
+        () =>
+            systematicPrograms?.find(
+                (sp) =>
+                    sp.reason === Reason.PREMIUM && sp.status === Status.ACTIVE
+            ),
+        [systematicPrograms]
+    );
+
+    const premiumSetOrCancelAutopayEnabled =
+        featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
+
+    const { data: setUpAutopayProgramsEligibility, isFetched } = useQuery({
+        queryKey: [
+            'checkSetUpAutopayProgramsEligibility',
+            planCode,
+            policyNumber,
+            upcomingPayment?.arrangementId,
+        ],
+        queryFn: () =>
+            checkSystematicProgramEligibilityQuery(
+                planCode as string,
+                policyNumber as string,
+                upcomingPayment?.arrangementId ?? '',
+
+                {
+                    systematicProgram: {
+                        arrangementType: ArrangementType.PAYMENT,
+                    },
+                }
+            ),
+        placeholderData: (previousData) => previousData,
+        select: (data) => {
+            return {
+                ...data,
+                isEligibleSetUpAutopay:
+                    data?.status === TransactionResponseStatus.Success,
+            };
+        },
+    });
+
+    const { isPermissioned: isUserPermissionedToAutopay } =
+        useTransactionPermissionCheck(
+            TransactionPermission.WritePolicy,
+            policyNumber,
+            planCode
+        );
+
+    useEffect(() => {
+        if (!isFetched) return;
+
+        const isEligible =
+            setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay || false;
+        const isPermissioned = isUserPermissionedToAutopay || false;
+
+        if (
+            !isEligible ||
+            !premiumSetOrCancelAutopayEnabled ||
+            !upcomingPayment?.nextProgramDate ||
+            !isPermissioned
+        ) {
+            router.replace('/403');
+        } else {
+            setIsLoading(false);
+        }
+    }, [
+        setUpAutopayProgramsEligibility,
+        isUserPermissionedToAutopay,
+        router,
+        isFetched,
+        premiumSetOrCancelAutopayEnabled,
+        upcomingPayment,
+    ]);
+
+    if (isLoading) {
+        return <PageLoader variant={PageLoaderVariant.Center} />;
+    }
+
     return (
         <AutopayProvider>
             <PageHead titleKey="addPremiumAutopay" />

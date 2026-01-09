@@ -7,6 +7,7 @@ import {
     xAxisLabelFormatter,
 } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import { Legend } from '@deps/components/dashboard/charts/date-time-chart/legend-for-date-time-chart/legend';
+import { tooltipFormatter } from '@deps/components/dashboard/charts/date-time-chart/line-chart-label';
 import { DateTimeLineChart } from '@deps/components/dashboard/charts/line-charts/date-time-line-chart';
 import {
     ErrorMessage,
@@ -35,10 +36,7 @@ import { startOfTomorrowLocalIso } from '@deps/utils/dates';
 import { UserIllustrationActivityGroupByEnum } from '@zinnia/api-types/types/analytics';
 
 import styles from './Activity.module.css';
-import {
-    IllustrationsActivityTooltip,
-    tooltipFormatter,
-} from './illustrations-tooltip';
+import { IllustrationsActivityTooltip } from './illustrations-tooltip';
 import {
     generateSeries,
     mergeDuplicatedIntoCreated,
@@ -200,7 +198,10 @@ export const IllustrationsActivity = () => {
                                 xAxisTitle={t('allFields.date') ?? 'Date'}
                                 xAxisLabelFormatter={xAxisLabelFormatter}
                                 tickInterval={tickInterval}
-                                tooltipFormatter={tooltipFormatter}
+                                tooltipFormatter={tooltipFormatter({
+                                    timerange,
+                                    isTooltipColorCircle: false,
+                                })}
                                 yAxisOpposite={false}
                             />
                         )}

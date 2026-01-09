@@ -22,10 +22,8 @@ import {
     mapEmailTypeToTranslation,
     mapPhoneTypeToTranslation,
 } from '@deps/helpers/translation.helpers';
-import {
-    DEFAULT_ERROR_STRING,
-    DEFAULT_EXTENDED_DAY_DATE_FORMAT,
-} from '@deps/types/constants';
+import { DEFAULT_EXTENDED_DAY_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Address as PolicyAddress,
     Policy,

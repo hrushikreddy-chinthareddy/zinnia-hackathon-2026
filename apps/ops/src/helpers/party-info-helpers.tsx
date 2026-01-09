@@ -7,7 +7,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { ReactComponent as User } from '@deps/styles/elements/icons/actions/user.svg';
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 import { ReactComponent as OfficeBuildingIcon } from '@deps/styles/elements/icons/icons_outlined/office-building.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
 import {
     AccountType,

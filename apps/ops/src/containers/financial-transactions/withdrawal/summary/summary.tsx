@@ -23,17 +23,20 @@ import PayeeSummaryCard, {
 } from '@deps/containers/payee-summary-card/payee-summary-card';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    normalizeNumber,
+    numberFormatify,
+} from '@deps/helpers/numbers.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { getRequestedWithheldTaxesDisplay } from '@deps/helpers/tax-withholdings.helpers';
 import { getReturnedWithheldTaxesDisplay } from '@deps/helpers/transactions/tax-withholdings.helpers';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DisbursementType,
     TaxWithholdingType,
@@ -82,14 +85,18 @@ const Summary = ({ policy }: SummaryProps) => {
         [validationResponse]
     );
     const ownerTaxState = getOwnersTaxJurisdictionState(policy);
-    const totalWithdrawalAmount = numberFormatify(
+
+    const withdrawalAmount =
         validationResponse?.quoteResponse?.payeeOrBeneficiary?.[0]
-            .disbursementAmount
-    );
+            .disbursementAmount;
+
+    const totalWithdrawalAmount = numberFormatify(withdrawalAmount);
+
     const totalPayment =
-        totalWithdrawalAmount < numberFormatify(amount)
+        normalizeNumber(withdrawalAmount) < normalizeNumber(amount)
             ? totalWithdrawalAmount
             : numberFormatify(amount);
+
     const appliedAmount = validationResponse?.quoteResponse?.transactionAmounts
         ?.appliedAmount
         ? numberFormatify(

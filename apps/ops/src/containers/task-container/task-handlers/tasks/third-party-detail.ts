@@ -66,7 +66,7 @@ const getAddresses = (addresses?: Party['addresses']): Address[] => {
 };
 
 const formatPhone = (phone?: Partial<Phone>): Phone => ({
-    phoneType: (phone?.phoneType as string) ?? PhoneType.HOME,
+    phoneType: (phone?.phoneType as string) ?? PhoneType.MOBILE,
     dialNumber: phone?.dialNumber ?? null,
     areaCode: phone?.areaCode ?? null,
     countryCode: phone?.countryCode ?? 'USA',
@@ -245,14 +245,14 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, ApiResponse> = {
         };
     },
 
-    getPayload: (task: any) => {
+    getPayload: (task: any, logCtx?: LoggingContext) => {
         return {
             category: ['Party Change', 'TPD Change'],
             businessProcess: task?.process,
             carrier: task?.carrier,
             policyNumber: task?.data?.policyNumber,
             planCode: task?.data?.planCode,
-            logCtx: task?.logCtx,
+            logCtx,
         } as ReviewPayload;
     },
 

@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 
 import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import DeathAuditQualification from './detah-audit-qualification';
 
@@ -93,7 +93,6 @@ const mockDeathAuditQualificationData = {
 
 describe('##DeathAuditQualification', () => {
     let consoleErrorSpy: jest.SpyInstance;
-
     beforeAll(() => {
         consoleErrorSpy = jest
             .spyOn(console, 'error')
@@ -106,6 +105,7 @@ describe('##DeathAuditQualification', () => {
 
     beforeEach(() => {
         jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
     });
 
     it('#should render the no data message when no qualification data available', () => {

@@ -1,10 +1,11 @@
 import { IconType, TabContent } from '@zinnia/bloom/components';
 
-import { TasksVolumeProvider } from './context/tasks-volume-context';
 import {
     SectionTabNavs,
     SectionTabValues,
-} from '../../sections-tab-nav/sections-tab-nav';
+} from '@deps/components/dashboard/sections-tab-nav/sections-tab-nav';
+
+import { TasksVolumeProvider } from './context/tasks-volume-provider';
 import { TasksVolumeTable } from './tab-content/table/tasks-volume-table';
 
 export const TasksVolume = () => {

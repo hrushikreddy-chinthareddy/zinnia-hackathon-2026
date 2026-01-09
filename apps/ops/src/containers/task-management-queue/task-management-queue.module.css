@@ -63,3 +63,40 @@
 .loaderCell {
     border-bottom-left-radius: 8px;
 }
+
+/* Assignee - Fallback UI */
+
+.assigneeFallback {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.avatar {
+    margin-right: 0;
+}
+
+.assigneeContent {
+    z-index: 10;
+    margin-left: 0;
+    min-height: 2rem;
+}
+
+.tooltip {
+    width: auto;
+}
+
+.tooltipTrigger {
+    z-index: 10 !important;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.unassignButton {
+    color: var(--color-base-text-text-secondary);
+}
+
+.tooltipText {
+    font-size: 0.875rem;
+}

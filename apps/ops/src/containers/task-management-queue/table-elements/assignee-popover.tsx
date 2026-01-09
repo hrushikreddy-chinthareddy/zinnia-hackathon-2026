@@ -4,6 +4,7 @@ import {
     Tooltip,
     TooltipPlacement,
 } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -49,6 +50,7 @@ const AssigneePopover = ({
     handleTaskUnassignAsAdmin,
     hasAssignee,
     task,
+    positionMode,
 }: any) => {
     const POPOVER_HEIGHT = 170;
     const TBODY = 'tbody';
@@ -153,32 +155,28 @@ const AssigneePopover = ({
         [handleSearch]
     );
 
-    const triggerClassName = '!z-10  justify-end';
-    const assigneePopoverBtnClassName =
-        'w-full flex items-center space-x-2 py-1.5 z-10';
-
     return (
         <div className="w-full relative block" ref={popoverRef}>
             {hasAssignee() ? (
                 <button
                     ref={buttonRef}
                     type="button"
-                    className={`${assigneePopoverBtnClassName} ${
-                        task?.status === TaskStatus.Completed ||
-                        task?.status === TaskStatus.Canceled
-                            ? styles.assigneeBtnCompletedTask
-                            : ''
-                    }`}
+                    className={clsx(
+                        styles.assigneeButton,
+                        (task?.status === TaskStatus.Completed ||
+                            task?.status === TaskStatus.Canceled) &&
+                            styles.assigneeBtnCompletedTask,
+                        positionMode === 'portal'
+                            ? styles.portalWidth70
+                            : styles.fullWidth
+                    )}
                     onClick={handlePopoverToggle}
                     aria-label="Open assignee popover"
                 >
-                    <Avatar
-                        className="!mr-0"
-                        name={assignee || ''}
-                        size="small"
-                    />
+                    <Avatar name={assignee || ''} size="small" />
+
                     <Content
-                        className="!z-10 !ml-0 min-h-8"
+                        className={styles.assigneeContent}
                         contentClassName="text-left flex-1"
                         details={
                             assignee
@@ -189,32 +187,41 @@ const AssigneePopover = ({
                         }
                         variant={ContentVariant.BodySm}
                     />
+
                     {isPopoverAllowed && (
                         <Tooltip
                             placement={TooltipPlacement.TopRight}
-                            tooltipClassName="!w-auto"
-                            triggerClassName={triggerClassName}
+                            tooltipClassName={styles.tooltip}
+                            triggerClassName={styles.tooltipTrigger}
                             trigger={
                                 <IconButton
                                     aria-label="Unassign"
-                                    className="text-secondary"
+                                    className={styles.unassignBtn}
                                     onClick={handleUnassignClick}
                                 >
                                     <CancelIcon height={18} width={18} />
                                 </IconButton>
                             }
                         >
-                            <span className="text-md">Unassign</span>
+                            <span className={styles.tooltipText}>Unassign</span>
                         </Tooltip>
                     )}
                 </button>
             ) : (
-                <div className="w-full flex justify-between !cursor-default">
+                <div
+                    ref={popoverRef}
+                    className={
+                        positionMode === 'portal'
+                            ? styles.assigneeInlinePortal
+                            : styles.assigneeInline
+                    }
+                >
                     <Content
-                        contentClassName="text-sm !cursor-default"
+                        contentClassName={styles.inlineContent}
                         details={assignee}
                         variant={ContentVariant.ArticleReferences}
                     />
+
                     <button
                         tabIndex={
                             task?.status === TaskStatus.Completed ? -1 : 0
@@ -223,6 +230,7 @@ const AssigneePopover = ({
                         type="button"
                         onClick={handlePopoverToggle}
                         aria-label="Open assignee popover"
+                        className={styles.assignButton}
                     >
                         <Content
                             className={
@@ -240,24 +248,26 @@ const AssigneePopover = ({
 
             {open && positionReady && (
                 <div
-                    className={`absolute left-0 ${
-                        showAbove ? 'bottom-full mb-2' : 'top-full mt-2'
-                    } !z-[201] w-72
-                        bg-white rounded-lg shadow-lg`}
+                    className={clsx(
+                        styles.popover,
+                        showAbove ? styles.popoverAbove : styles.popoverBelow
+                    )}
+                    ref={popoverRef}
                 >
-                    <div className="p-2 border-b">
+                    <div className={styles.searchBar}>
                         <input
                             disabled={false}
                             onChange={handleSearchInputChange}
                             value={searchValue}
                             type="text"
-                            placeholder="Find a person"
-                            className="w-full px-3 py-1.5 border border-gray-300 rounded-md outline-none focus:ring-2 focus:ring-gray-300 text-gray-500"
+                            placeholder={t('assigneeSearchPlaceholder') || ''}
+                            className={styles.searchInput}
                         />
                     </div>
-                    <div className="max-h-[8rem] overflow-y-auto">
-                        {assigneeLoading ? (
-                            <div className="w-full h-10 text-center py-4">
+
+                    <div className={styles.listContainer}>
+                        {assigneeLoading || task.isAssigning ? (
+                            <div className={styles.loaderWrapper}>
                                 <Loader variant={LoaderVariant.CTA} />
                             </div>
                         ) : (
@@ -272,10 +282,10 @@ const AssigneePopover = ({
                                             assignee.partyId
                                         )
                                     }
-                                    className="w-full flex items-center space-x-2 px-4 py-2 hover:bg-gray-100"
+                                    className={styles.assigneeRow}
                                 >
                                     <Avatar name={assignee.user} size="small" />
-                                    <span className="text-gray-800">
+                                    <span className={styles.assigneeName}>
                                         {assignee.user}
                                     </span>
                                 </button>

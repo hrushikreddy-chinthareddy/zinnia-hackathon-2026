@@ -1,0 +1,466 @@
+{
+    "process": "Compliance",
+
+    "taskType": "BANKING_VALIDATION_CALLOUT",
+    "formId": "fa47c1c8-c45d-445d-8a49-a9ef89b5699e",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "GIACT Call Out",
+                "formSchema": {
+                    "type": "object",
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "definitions": {},
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Review the GIACT validation failure and manually call out the customer to verify bank account ownership"
+                        },
+                        "details": {
+                            "type": "object",
+                            "properties": {
+                                "transactionDetailsTitle": {
+                                    "type": "string",
+                                    "title": "Transaction Details"
+                                },
+                                "transactionDetails": {
+                                    "type": "object",
+
+                                    "properties": {
+                                        "policyNumber": {
+                                            "type": "string",
+                                            "title": "Policy Number"
+                                        },
+                                        "transactionType": {
+                                            "type": "string",
+                                            "title": "Transaction Type"
+                                        },
+                                        "caseId": {
+                                            "type": "string",
+                                            "title": "Case ID"
+                                        }
+                                    }
+                                },
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting Document",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "NPN: "
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                },
+                                "threatDetailsTitle": {
+                                    "type": "string",
+                                    "title": "Threat Details"
+                                },
+                                "bankDetailTitle": {
+                                    "type": "string",
+                                    "title": "Bank Details"
+                                },
+                                "giactThreatDetails": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "ownerType": {
+                                                "type": ["string", "null"],
+                                                "title": "Owner Type"
+                                            },
+                                            "failureType": {
+                                                "type": ["string", "null"],
+                                                "title": "Failure Type"
+                                            },
+                                            "errorCode": {
+                                                "type": ["string", "null"],
+                                                "title": "Error Code"
+                                            },
+                                            "errorDescription": {
+                                                "type": ["string", "null"],
+                                                "title": "Error Description"
+                                            }
+                                        }
+                                    }
+                                },
+                                "communicationDetailsTitle": {
+                                    "title": "Communication Details",
+                                    "type": "string"
+                                },
+                                "communicationDetails": {
+                                    "type": "object",
+
+                                    "properties": {
+                                        "mobilePhoneNumber": {
+                                            "type": "string",
+                                            "title": "Mobile phone number"
+                                        },
+                                        "homePhoneNumber": {
+                                            "type": "string",
+                                            "title": "Home phone number"
+                                        },
+                                        "businessPhoneNumber": {
+                                            "type": "string",
+                                            "title": "Buisness phone number"
+                                        },
+
+                                        "preferredTime": {
+                                            "type": "string",
+                                            "title": "Preferred time"
+                                        },
+                                        "timeZone": {
+                                            "type": "string",
+                                            "title": "Time zone"
+                                        }
+                                    }
+                                },
+                                "submitBankingDetailsTitle": {
+                                    "title": "Submit Banking Details",
+                                    "type": "string"
+                                },
+                                "firstName": {
+                                    "type": "string",
+                                    "title": "First name"
+                                },
+                                "lastName": {
+                                    "type": "string",
+                                    "title": "Last name"
+                                },
+                                "addressDetails": {
+                                    "type": ["object"],
+                                    "title": "Address"
+                                },
+                                "bankRoutingNumber": {
+                                    "type": "string",
+                                    "title": "Routing number"
+                                },
+                                "bankAccountNumber": {
+                                    "type": "string",
+                                    "title": "Account number"
+                                },
+
+                                "bankAccountType": {
+                                    "type": "string",
+                                    "title": "Account type"
+                                },
+
+                                "callOutResults": {
+                                    "type": "string",
+                                    "title": "Following your call with owner, please select one of the following",
+
+                                    "enum": [
+                                        "CALL_SUCCESSFUL",
+                                        "NOT_VALID",
+                                        "CALL_NOT_SUCCESSFUL",
+                                        "CALL_UNSUCCESSFUL"
+                                    ]
+                                }
+                            },
+                            "required": ["callOutResults"]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http: //json-schema.org/draft-07/schema#",
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "ui:options": {
+                        "semantic": {
+                            "errorOptions": {
+                                "size": "small",
+                                "pointing": "above"
+                            }
+                        }
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "ObjectFieldTemplate": "AddressFieldTemplate",
+                            "label": false,
+                            "nobackground": true,
+                            "backgroundColor": "white",
+                            "width": 100,
+                            "classes": "p-0"
+                        },
+                        "transactionDetailsTitle": {
+                            "ui:options": {
+                                "FieldTemplate": "TitleFieldTemplate",
+                                "titleVariant": "h3",
+                                "className": "mt-5 mb-3",
+                                "title": "Transaction Details",
+                                "omitValue": true
+                            }
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "label": true,
+                                "title": "Supporting documents",
+                                "addable": false,
+                                "classes": "pt-3"
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "cardType": "Document",
+                                    "icon": "BRIEFCASE",
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "nobackground": true
+                                },
+                                "documentName": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                },
+                                "documentSource": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                }
+                            }
+                        },
+                        "transactionDetails": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "ObjectFieldTemplate": "AddressFieldTemplate",
+                                "label": false,
+                                "nobackground": true,
+                                "backgroundColor": "white",
+                                "width": 100,
+                                "classes": "p-0",
+                                "title": "Transaction Details"
+                            },
+                            "policyNumber": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            },
+                            "transactionType": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            },
+                            "caseId": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            }
+                        },
+                        "threatDetailsTitle": {
+                            "ui:options": {
+                                "FieldTemplate": "TitleFieldTemplate",
+                                "titleVariant": "h3",
+                                "className": "mt-5",
+                                "title": "Threat Details",
+                                "omitValue": true
+                            }
+                        },
+                        "bankDetailTitle": {
+                            "ui:options": {
+                                "FieldTemplate": "TitleFieldTemplate",
+                                "titleVariant": "h4",
+                                "className": "mt-3",
+                                "title": "Banking Details",
+                                "omitValue": true
+                            }
+                        },
+
+                        "giactThreatDetails": {
+                            "ui:readonly": false,
+                            "ui:options": {
+                                "label": true,
+                                "sorting": true,
+                                "addable": false,
+                                "canAdd": false
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "canAdd": false,
+                                    "templateType": "table",
+                                    "passrow": true,
+                                    "label": true,
+                                    "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                                },
+
+                                "ownerType": {
+                                    "ui:readonly": true,
+
+                                    "ui:options": {
+                                        "label": false
+                                    }
+                                },
+                                "failureType": {
+                                    "ui:readonly": true,
+                                    "ui:options": {
+                                        "label": false
+                                    }
+                                },
+                                "errorCode": {
+                                    "ui:readonly": true,
+                                    "ui:options": {
+                                        "label": false
+                                    }
+                                },
+                                "errorDescription": {
+                                    "ui:readonly": true,
+                                    "ui:options": {
+                                        "label": false
+                                    }
+                                }
+                            }
+                        },
+                        "communicationDetailsTitle": {
+                            "ui:options": {
+                                "FieldTemplate": "TitleFieldTemplate",
+                                "titleVariant": "h3",
+                                "className": "mt-5 mb-3",
+                                "title": "Communication Details",
+                                "omitValue": true
+                            }
+                        },
+                        "communicationDetails": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "ObjectFieldTemplate": "AddressFieldTemplate",
+                                "label": false,
+                                "nobackground": true,
+                                "backgroundColor": "white",
+                                "width": 100,
+                                "classes": "p-0",
+                                "title": "Transaction Details"
+                            },
+                            "mobilePhoneNumber": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            },
+                            "homePhoneNumber": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            },
+                            "businessPhoneNumber": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            },
+
+                            "preferredTime": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            },
+                            "timeZone": {
+                                "ui:readonly": true,
+                                "ui:options": {
+                                    "width": 33
+                                }
+                            }
+                        },
+                        "submitBankingDetailsTitle": {
+                            "ui:options": {
+                                "FieldTemplate": "TitleFieldTemplate",
+                                "titleVariant": "h3",
+                                "className": "mt-5 mb-3",
+                                "title": "Submit Banking Details",
+                                "omitValue": true
+                            }
+                        },
+                        "firstName": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "width": 33
+                            }
+                        },
+                        "lastName": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "width": 33
+                            }
+                        },
+                        "addressDetails": {
+                            "ui:readonly": true,
+                            "ui:label": true,
+                            "ui:options": {
+                                "label": true,
+                                "templateType": "address",
+                                "displayLabel": true,
+                                "width": 33
+                            },
+                            "ui:hideError": true
+                        },
+                        "bankRoutingNumber": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "width": 33
+                            }
+                        },
+
+                        "bankAccountNumber": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "width": 33
+                            }
+                        },
+                        "bankAccountType": {
+                            "ui:readonly": true,
+                            "ui:options": {
+                                "width": 33
+                            }
+                        },
+
+                        "callOutResults": {
+                            "ui:widget": "radio",
+                            "ui:hideError": true,
+                            "ui:options": {
+                                "enumNames": [
+                                    "Owner validated the banking details",
+                                    "Owner denied submitting request",
+                                    "Owner couldn't validate the banking details",
+                                    "Call unsuccessful"
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

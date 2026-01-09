@@ -2,7 +2,6 @@ import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 
 import { helpInformation } from '../field-template/field-template';
 import styles from '../field-template/field-template.module.css';
-
 const widthClass = (width: number) => {
     return width === 100
         ? 'w-full lg:basis-[calc(100%-0.25rem)] '

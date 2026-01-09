@@ -27,12 +27,11 @@ import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { patchIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     IllustrationsClientCase,
     TransactionType,
 } from '@deps/types/illustrations';
-import { capitalize } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 
 import styles from './case-summary.module.css';
 

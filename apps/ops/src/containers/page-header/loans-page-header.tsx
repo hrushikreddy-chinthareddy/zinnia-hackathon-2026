@@ -29,7 +29,7 @@ import {
     getLoanInterestRate,
 } from '@deps/queries/api/product-rate';
 import { checkNewLoanEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 interface LoansContainerProps {
