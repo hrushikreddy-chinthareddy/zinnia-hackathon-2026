@@ -1,6 +1,11 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
+import { useMemo, useState } from 'react';
 
+import BannerAlert, {
+    BannerVariant,
+} from '@deps/components/banner-alert/banner-alert';
+import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TransactionNavigationButtons, {
     ParentPage,
@@ -38,7 +43,8 @@ const Summary = ({ policy }: SummaryProps) => {
     });
     const { policyNumber, product } = policy;
     const { withdrawal } = useWithdrawal();
-
+    const [isChecked, setIsChecked] = useState(false);
+    const [showSelectionError, setShowSelectionError] = useState(false);
     const { goToNext } = useWorkflow();
     const {
         amount,
@@ -50,7 +56,11 @@ const Summary = ({ policy }: SummaryProps) => {
         payeeFullName,
         fboFfc,
     } = withdrawal;
-
+    const { validationResponse } = withdrawal;
+    const validationSucceeded = useMemo(
+        () => validationResponse?.status === 'SUCCESS',
+        [validationResponse]
+    );
     return (
         <div>
             <CardContainer containerClassNames="border-b-2 border-gray-100">
@@ -105,6 +115,51 @@ const Summary = ({ policy }: SummaryProps) => {
                     showFinancialData={false}
                     fboFfc={fboFfc}
                 />
+
+                {!validationSucceeded && (
+                    <div className="mt-10 flex flex-col gap-6">
+                        {validationResponse?.validationResult ? (
+                            validationResponse?.validationResult?.map(
+                                (validationResult) => {
+                                    const { error, errorCode, resolution } =
+                                        validationResult;
+
+                                    return (
+                                        <BannerAlert
+                                            canDismiss={false}
+                                            key={`bpm-validation-banner-${errorCode}`}
+                                            variant={BannerVariant.Error}
+                                        >
+                                            <b>{error}</b> {resolution}
+                                        </BannerAlert>
+                                    );
+                                }
+                            )
+                        ) : (
+                            <BannerAlert
+                                canDismiss={false}
+                                variant={BannerVariant.Error}
+                            >
+                                <b>{t('bpm500Error')}</b>
+                            </BannerAlert>
+                        )}
+                        <div className="flex flex-row">
+                            <CheckboxText
+                                label={t('submitWithErrorsText')}
+                                checked={isChecked}
+                                onChange={() => {
+                                    setIsChecked(!isChecked);
+                                    setShowSelectionError(false);
+                                }}
+                            />
+                        </div>
+                        {showSelectionError && (
+                            <div className="text-sm text-red-500">
+                                {t('pleaseAcknowledgeErrors')}
+                            </div>
+                        )}
+                    </div>
+                )}
                 <TransactionNavigationButtons
                     className="mt-10"
                     handleContinue={goToNext}

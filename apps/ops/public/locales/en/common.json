@@ -2310,7 +2310,7 @@
             "submit": "Submitted!",
             "backToHome": "Back to Home"
         },
-        "start":{
+        "start": {
             "title": "Start"
         },
         "assigneeChange": {
@@ -7975,6 +7975,19 @@
             "suitabilityForm": "Suitability form",
             "nigoDetails": "Missing Information",
             "summary": "Summary"
+        },
+        "cancelFreeLook": {
+            "summary": {
+                "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
+                "pleaseAcknowledgeErrors": "Please acknowledge the errors to continue",
+                "bpm500Error": "An error occurred while validating your request",
+                "submitCancellation": "Submit Cancellation",
+                "label": "Free Look Cancellation",
+                "status200subtitle": "Review the details of your free look cancellation request below.",
+                "effectiveDate": "Effective Date",
+                "effectiveDateTooltip": "The date when the free look cancellation will take effect",
+                "payee": "Payee"
+            }
         },
         "taskReview": {
             "title": "Input Suitability Data",

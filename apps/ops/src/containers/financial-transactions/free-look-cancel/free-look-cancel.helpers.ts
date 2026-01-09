@@ -3,10 +3,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext.types';
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
-import {
-    FreeLookCancellationRequest,
-    PaymentForm,
-} from '@zinnia/api-types/types/bpm';
+import { FreeLookCancellationRequest } from '@zinnia/api-types/types/bpm';
 
 export const buildFreeLookCancelRequestBody = (
     withdrawal: Withdrawal,
@@ -14,50 +11,49 @@ export const buildFreeLookCancelRequestBody = (
 ): FreeLookCancellationRequest => {
     const requestCorrelationId = withdrawal.correlationId || uuidV4();
 
-    if (wireCheckPaymentsEnabled) {
-        return {
-            caseId: withdrawal.caseId || '',
-            correlationId: requestCorrelationId,
-            effectiveDate: getUtcDate(withdrawal.effectiveDate),
-            parties: [
-                {
-                    allocationPercentage: 100,
-                    bankId: withdrawal.paymentBankId,
-                    partyId: withdrawal.payeePartyId,
-                    paymentForm:
-                        withdrawal.paymentForm || ('ACH' as PaymentForm),
-                    addressId: withdrawal.paymentAddressId,
-                    forBenefitOfOrForFurtherCredit: withdrawal.fboFfc,
-                },
-            ],
-            reverseInitiator: false,
-            transactionAmounts: {
-                disbursementType: withdrawal.disbursementType,
-                disbursementPaymentForm: getDisbursementPaymentForm(
-                    withdrawal.paymentForm
-                ),
-            },
-        };
-    }
-
-    return {
-        caseId: withdrawal.caseId || '',
+    // Common base request properties
+    const baseRequest: Partial<FreeLookCancellationRequest> = {
         correlationId: requestCorrelationId,
         effectiveDate: getUtcDate(withdrawal.effectiveDate),
-        parties: [
-            {
-                allocationPercentage: 100,
-                bankId: withdrawal.paymentBankId,
-                partyId: withdrawal.payeePartyId,
-                paymentForm: PaymentForm.ACH,
-            },
-        ],
         reverseInitiator: false,
         transactionAmounts: {
-            disbursementType: withdrawal.disbursementType,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            disbursementPaymentForm: PaymentForm.ACH,
+            disbursementType: withdrawal.disbursementType || 'GROSS',
+            disbursementPaymentForm:
+                getDisbursementPaymentForm(withdrawal.paymentForm) || 'CHECK',
         },
     };
+
+    // For wire check payments
+    if (wireCheckPaymentsEnabled) {
+        return {
+            ...baseRequest,
+            parties: [
+                {
+                    partyId: withdrawal.payeePartyId,
+                    paymentForm: withdrawal.paymentForm || 'CHECK',
+                    allocationPercentage: 100.0,
+                    bankId: withdrawal.paymentBankId,
+                    ...(withdrawal.paymentAddressId && {
+                        addressId: withdrawal.paymentAddressId,
+                    }),
+                    ...(withdrawal.fboFfc && {
+                        forBenefitOfOrForFurtherCredit: withdrawal.fboFfc,
+                    }),
+                },
+            ],
+        } as FreeLookCancellationRequest;
+    }
+
+    // For non-wire payments
+    return {
+        ...baseRequest,
+        payeeOrBeneficiary: {
+            partyId: withdrawal.payeePartyId,
+            paymentForm: withdrawal.paymentForm || 'CHECK',
+            allocationPercentage: 100.0,
+            ...(withdrawal.paymentBankId && {
+                bankId: withdrawal.paymentBankId,
+            }),
+        },
+    } as FreeLookCancellationRequest;
 };

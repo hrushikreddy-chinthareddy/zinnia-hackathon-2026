@@ -2314,7 +2314,7 @@
             "submit": "¡Enviado!",
             "backToHome": "Volver al inicio"
         },
-        "start":{
+        "start": {
             "title": "Comenzar"
         },
         "assigneeChange": {
@@ -7822,6 +7822,19 @@
             "suitabilityForm": "Formulario de Idoneidad",
             "nigoDetails": "Información Faltante",
             "summary": "Resumen"
+        },
+        "cancelFreeLook": {
+            "summary": {
+                "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en Zinnia Live).",
+                "pleaseAcknowledgeErrors": "Por favor, reconozca los errores para continuar",
+                "bpm500Error": "Se produjo un error al validar su solicitud",
+                "submitCancellation": "Enviar cancelación",
+                "label": "Cancelación de Período de Gracia",
+                "status200subtitle": "Revise los detalles de su solicitud de cancelación de período de gracia a continuación.",
+                "effectiveDate": "Fecha Efectiva",
+                "effectiveDateTooltip": "La fecha en que la cancelación del período de gracia tendrá efecto",
+                "payee": "Beneficiario"
+            }
         },
         "taskReview": {
             "title": "Ingresar Datos de Idoneidad",

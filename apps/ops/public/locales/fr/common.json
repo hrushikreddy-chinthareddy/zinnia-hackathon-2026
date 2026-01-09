@@ -2369,7 +2369,7 @@
             "submit": "Envoyé !",
             "backToHome": "Retour à l’accueil"
         },
-        "start":{
+        "start": {
             "title": "Commencer"
         },
         "assigneeChange": {
@@ -7852,6 +7852,19 @@
             "start": "Commencer",
             "suitabilityForm": "Formulaire d'aptitude",
             "summary": "Résumé"
+        },
+        "cancelFreeLook": {
+            "summary": {
+                "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live).",
+                "pleaseAcknowledgeErrors": "Veuillez reconnaître les erreurs pour continuer",
+                "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande",
+                "submitCancellation": "Soumettre l'annulation",
+                "label": "Annulation de Rétractation",
+                "status200subtitle": "Veuillez vérifier les détails de votre demande d'annulation de rétractation ci-dessous.",
+                "effectiveDate": "Date d'Effet",
+                "effectiveDateTooltip": "La date à laquelle l'annulation de la rétractation prendra effet",
+                "payee": "Bénéficiaire"
+            }
         },
         "taskReview": {
             "title": "Données d’adéquation des entrées",
