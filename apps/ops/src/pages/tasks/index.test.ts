@@ -87,7 +87,7 @@ describe('tasks/index helpers', () => {
                     claims_queue_admin: ['abc', 'def'],
                 })
             ).toEqual({
-                carriers: ['abc', 'def'],
+                carriers: ['ABC', 'DEF'],
                 queues: ['claims'],
             });
         });
@@ -101,7 +101,7 @@ describe('tasks/index helpers', () => {
             });
 
             expect(new Set(result.carriers)).toEqual(
-                new Set(['abc', 'def', 'ghi'])
+                new Set(['ABC', 'DEF', 'GHI'])
             );
             expect(new Set(result.queues)).toEqual(
                 new Set(['claims', 'billing'])
