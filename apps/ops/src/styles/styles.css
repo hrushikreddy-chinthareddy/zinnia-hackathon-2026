@@ -26,6 +26,8 @@
     --breakpoint-md: 768px;
     --people-filter-panel-width: 278px;
     --breakpoint-lg: 1024px;
+    --order-entry-left-column-padding: 0;
+    --order-entry-center-column-bottom-padding-offset: 40px;
 }
 
 @layer base {
