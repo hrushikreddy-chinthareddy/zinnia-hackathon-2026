@@ -2310,7 +2310,7 @@
             "submit": "Submitted!",
             "backToHome": "Back to Home"
         },
-        "start":{
+        "start": {
             "title": "Start"
         },
         "assigneeChange": {
@@ -9118,6 +9118,8 @@
             "title": "Quick Quote",
             "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
             "notAvailable": "Not Available",
+            "notAvailableByTermLength": "Not available for {{termLength}}-year term:",
+            "hasRiderErrors": "Some riders not included. See Coverage & Summary.",
             "product": {
                 "title": "Product",
                 "totalPremiumRange": "Total Premium Range",
@@ -9131,9 +9133,12 @@
                 "nYearTerm": "{{years}} year term"
             },
             "notAvailableReason": {
-                "age": "Not available for age {{age}}.",
-                "state": "Not available for this state.",
-                "face": "Not available for this face amount."
+                "maxAge": "Max issue age: {{age}}",
+                "minAge": "Min issue age: {{age}}",
+                "state": "Not available for this state",
+                "maxFaceAm": "Max face amount: {{amount}}",
+                "minFaceAm": "Min face amount: {{amount}}",
+                "riderFaceAmount": "Rider face amount cannot exceed policy face amount."
             },
             "riders": {
                 "title": "Riders",
