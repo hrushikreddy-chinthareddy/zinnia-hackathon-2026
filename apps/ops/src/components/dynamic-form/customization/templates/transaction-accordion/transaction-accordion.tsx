@@ -46,6 +46,7 @@ export const TransactionAccordionTemplate = (
         allowContentDisabled = false,
         isSinglePartyTransaction = false,
         isMultiPartyTransaction = false,
+        isEditable = true,
     } = ui;
     const isSimpleAccordion =
         !isSinglePartyTransaction && !isMultiPartyTransaction;
@@ -111,6 +112,7 @@ export const TransactionAccordionTemplate = (
 
                 const disableContent =
                     isDeleted ||
+                    !isEditable ||
                     (allowContentDisabled && !isNew && !isSimpleAccordion);
 
                 return (
