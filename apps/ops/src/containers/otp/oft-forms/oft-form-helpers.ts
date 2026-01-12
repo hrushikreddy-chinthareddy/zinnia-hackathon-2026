@@ -192,16 +192,38 @@ export enum MorganStanleyFirm {
     TAX_ID = '510116113',
 }
 
-export const isMorganStanleyFirm = (formParty: FormParty): boolean => {
-    const ownerInfo = formParty?.parties?.find(
+export enum WellsFargoFirm {
+    FULLNAME = 'WELLS FARGO',
+    TAX_ID = '232384840',
+}
+
+interface FirmIdentifier {
+    fullName: string;
+    taxId: string;
+}
+
+const getOwnerInfo = (formParty: FormParty) =>
+    formParty?.parties?.find(
         (party) => party.partyRoleType === PartyRoles.OWNER
     );
-    const ownerFullName = ownerInfo?.fullName?.toUpperCase();
-    if (
-        ownerFullName?.includes(MorganStanleyFirm.FULLNAME) ||
-        ownerInfo?.taxId === MorganStanleyFirm.TAX_ID
-    )
-        return true;
 
-    return false;
+const isFirm = (formParty: FormParty, firm: FirmIdentifier): boolean => {
+    const ownerInfo = getOwnerInfo(formParty);
+    if (!ownerInfo) return false;
+    const ownerFullName = ownerInfo.fullName?.toUpperCase();
+    return (
+        ownerFullName?.includes(firm.fullName) || ownerInfo.taxId === firm.taxId
+    );
 };
+
+export const isMorganStanleyFirm = (formParty: FormParty): boolean =>
+    isFirm(formParty, {
+        fullName: MorganStanleyFirm.FULLNAME,
+        taxId: MorganStanleyFirm.TAX_ID,
+    });
+
+export const isWellsFargoFirm = (formParty: FormParty): boolean =>
+    isFirm(formParty, {
+        fullName: WellsFargoFirm.FULLNAME,
+        taxId: WellsFargoFirm.TAX_ID,
+    });

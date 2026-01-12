@@ -4,6 +4,10 @@ import { Infer, t } from 'typegate';
 import { USStates } from '@deps/constants/geography/us-states';
 import { RIDER_NAMES, RiderName } from '@deps/types/illustrations';
 import { Product, ProductTypes } from '@deps/types/product';
+import {
+    IneligibilityReason,
+    nonEligibleReasonByClass,
+} from '@deps/utils/quick-quotes-rules/types';
 
 export type NumberRange = [number, number];
 export type NumberOrRange = NumberRange | number;
@@ -142,7 +146,7 @@ export type QuickQuoteFormState = Simplify<
 
 interface QuickQuoteNotAvailableBaseItem {
     range: undefined;
-    notAvailabilityReasonField?: string;
+    notAvailabilityReasonField?: nonEligibleReasonByClass[] | undefined;
 }
 
 export interface QuickQuoteResultBase {
@@ -172,10 +176,17 @@ type TermQuickQuoteDataItem =
     | TermQuickQuoteAvailableDataItem
     | TermQuickQuoteNotAvailableItem;
 
+export type TermQuickQuoteRiderDataItem = {
+    range?: NumberOrRange | boolean;
+    notAvailabilityReasonField?: Partial<
+        Record<number, IneligibilityReason[] | undefined>
+    >;
+};
+
 export interface TermQuickQuoteResultData {
     totalPremiumRange: TermQuickQuoteDataItem[];
     basePremiumRange: TermQuickQuoteDataItem[];
-    riders: Partial<Record<RiderName, NumberOrRange | boolean>>;
+    riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>;
 }
 
 export type QuickQuoteResult = TermQuickQuoteResult;

@@ -1,21 +1,23 @@
 import dayjs from 'dayjs';
 
-import { Action } from '@deps/constants/policy';
+import { Action, PolicyRole } from '@deps/constants/policy';
+import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
     MatchingCase,
     PotentialMatches,
 } from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask } from '@deps/models/case/task-instance';
+import { PartyType } from '@deps/models/policy/sor-policy';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-
 import {
+    toFullName,
     detectRoleChangeRequestType,
     getDefaultRoleChangeParty,
     cleanAddresses,
     cleanEmails,
     cleanPhones,
     mergeIdentifications,
-} from './role-change-data-entry.utils';
+} from '@deps/utils/tasks/role-change-data-entry.utils';
 
 const getRelationship = (item: any) =>
     item?.party?.relationshipToTheCurrentOwner || null;
@@ -79,6 +81,62 @@ export const getPurchaseDocumentPayload = (
     return {
         ...task,
         ...updateTask,
+    };
+};
+export const getAssigneeChangePayload = (task: ManagementTask) => {
+    const actionData = task?.data?.actionData || [];
+    const signatureData = task?.data?.signatureData || [];
+    const { requestType, addedItem, deletedItem } =
+        detectRoleChangeRequestType(actionData);
+
+    const src = addedItem?.party ?? deletedItem?.party ?? {};
+    const base = getDefaultRoleChangeParty();
+
+    const party = {
+        ...base,
+        ...src,
+        collateralAmount: src?.collateralAmount || null,
+        addresses: cleanAddresses(src.addresses),
+        emails: cleanEmails(src.emails),
+        phones: cleanPhones(src.phones),
+        identifications: mergeIdentifications(src.identifications),
+        relationshipToTheCurrentOwner: getRelationship(src),
+        preferredCommunicationType:
+            src.preferredCommunicationType === 'null'
+                ? null
+                : src.preferredCommunicationType,
+        fullName: getFullName(src),
+        startDate:
+            requestType === Action.ADD || requestType === Action.UPDATE
+                ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                : null,
+        endDate:
+            requestType === Action.DELETE
+                ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                : null,
+    };
+
+    const partyId =
+        requestType === Action.ADD ? null : deletedItem?.party?.partyId;
+
+    return {
+        ...task,
+        data: {
+            ...task.data,
+            requestType,
+            partyId,
+            party,
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            transactionName: 'AssigneeChange',
+            carrierId: task.carrier,
+            caseId: task.caseId,
+            planCode: task.data.planCode,
+            policyNumber: task.data.policyNumber,
+            signatures: signatureData?.signatures ?? [],
+            notarySignatures: signatureData?.notarySignatures ?? [],
+            partyRole: PolicyRole.ASSIGNEE,
+            signatureData: signatureData,
+        },
     };
 };
 
@@ -174,13 +232,25 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
         addresses: cleanAddresses(src.addresses),
         emails: cleanEmails(src.emails),
         phones: cleanPhones(src.phones),
+        firstName: src.firstName ?? null,
+        middleName: src.middleName ?? null,
+        lastName:
+            src.lastName ??
+            (src.partyType !== PartyType.INDIVIDUAL
+                ? src.fullName ?? null
+                : null) ??
+            null,
+        fullName: toFullName(src),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
+        entityType:
+            src.partyType === PartyType.ORGANIZATION && !src.entityType
+                ? 'UNKNOWN'
+                : src.entityType,
     };
 
     const partyId =
         requestType === Action.ADD ? undefined : deletedItem?.party?.partyId;
-
     return {
         ...task,
         data: {
@@ -195,6 +265,9 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
             planCode: task.data.planCode,
             policyNumber: task.data.policyNumber,
             signatures: signatureData?.signatures ?? [],
+            partyRole: 'ThirdPartyDesignee',
+            documents: src?.documents,
+            supportingDocumentAttached: src?.supportingDocumentAttached,
         },
     };
 };

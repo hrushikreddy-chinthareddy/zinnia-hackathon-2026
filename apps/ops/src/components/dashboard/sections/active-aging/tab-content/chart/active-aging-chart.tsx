@@ -58,8 +58,13 @@ export const ActiveAgingChart = () => {
     }, [chartSeries]);
 
     return (
-        <div className="flex flex-wrap">
-            <div className={clsx(sharedStyles.chartColumn, 'w-3/4')}>
+        <div
+            className={clsx(
+                sharedStyles.chartContainer,
+                sharedStyles.chartContainerRightAlign
+            )}
+        >
+            <div className={sharedStyles.chartColumn}>
                 <CardContainer fullWidth={false}>
                     <ActiveAgingHeader />
                     <ActiveAgingFilters />
@@ -92,7 +97,7 @@ export const ActiveAgingChart = () => {
                     </BlurOverlayLoader>
                 </CardContainer>
             </div>
-            <div className={clsx('w-1/4 pt-40', sharedStyles.pieChartColumn)}>
+            <div className={sharedStyles.pieChartColumn}>
                 <BlurOverlayLoader loading={activeAgingDataFetching}>
                     <PieChart
                         colors={colors}

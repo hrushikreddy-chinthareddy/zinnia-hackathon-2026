@@ -1,6 +1,5 @@
 import { render, screen } from '@testing-library/react';
 import { TFunction } from 'i18next';
-import React from 'react';
 
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 
@@ -20,6 +19,8 @@ describe('NameCard', () => {
                 PARTY_NAME_CHANGE_TRANSACTION: true,
             },
         });
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
     });
 
     afterEach(() => {

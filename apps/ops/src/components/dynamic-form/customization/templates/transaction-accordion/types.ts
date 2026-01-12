@@ -6,6 +6,7 @@ export enum TabTitle {
     OwnerDetails = 'Owner Details',
     BeneficiaryDetails = 'Beneficiary Details',
     Signature = 'Signature',
+    AssigneeDetails = 'Assignee Details',
 }
 
 export enum BeneficiaryRole {

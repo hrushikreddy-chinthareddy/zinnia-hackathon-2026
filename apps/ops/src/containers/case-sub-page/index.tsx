@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react';
 
 import { getStatusDetails } from '@deps/components/case-list/components/case-status-tooltip';
 import CaseSubPage from '@deps/components/case-sub-page/case-sub-page';
+import QuickActionsMenu, {
+    QuickActionsType,
+} from '@deps/components/quick-actions-menu/quick-actions-menu';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
@@ -39,6 +42,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         hasCallLogsAccess,
         hasNotesAccess,
         hasPermissionToPrioritizeCases,
+        showZinniaLiveCaseActions,
     } = usePermissionsContext();
     const router = useRouter();
     const { query } = router;
@@ -116,17 +120,27 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
     );
     return (
         <div className={styles.container}>
-            <CasePageHeader
-                caseId={caseDetailsModel.id}
-                title={caseDetailsModel.processSubType as string}
-                tag={caseDetailsModel.process}
-                status={statusDetails.statusText}
-                statusTooltip={statusDetails.statusTooltip}
-                statusVariant={statusDetails.statusVariant as BadgeVariant}
-                escalated={showBadge ?? false}
-                hasPermissionToPrioritizeCases={hasPermissionToPrioritizeCases}
-                caseProcessingDetails={caseDetailsModel.caseProcessingDetails}
-            />
+            <div className="flex justify-between items-baseline">
+                <CasePageHeader
+                    caseId={caseDetailsModel.id}
+                    title={caseDetailsModel.processSubType as string}
+                    tag={caseDetailsModel.process}
+                    status={statusDetails.statusText}
+                    statusTooltip={statusDetails.statusTooltip}
+                    statusVariant={statusDetails.statusVariant as BadgeVariant}
+                    escalated={showBadge ?? false}
+                    caseProcessingDetails={
+                        caseDetailsModel.caseProcessingDetails
+                    }
+                />
+                {showZinniaLiveCaseActions && (
+                    <QuickActionsMenu
+                        caseDetails={caseDetails}
+                        type={QuickActionsType.Case}
+                        escalated={showBadge ?? false}
+                    />
+                )}
+            </div>
             <div className="flex w-full flex-col justify-between gap-2 pt-2 lg:flex-row">
                 <CaseSideNav
                     caseDetails={caseDetailsModel}

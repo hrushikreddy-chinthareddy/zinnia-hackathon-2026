@@ -16,11 +16,14 @@ import FieldDateSelect, {
 } from '@deps/components/fields/field-date-select/field-date-select';
 import SelectSimple from '@deps/components/select/select';
 import {
+    getFormattedDate,
+    getFormattedZaharaDate,
+} from '@deps/helpers/date.helpers';
+import {
     AmountType,
     Frequency,
     RMDProgram,
 } from '@deps/models/case/withdrawal/case';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { RmdOptionsFieldsConfig } from './rmd-method';
 
@@ -43,11 +46,10 @@ export default function RMDOptions({
     });
     const today = dayjs().format(DATE_PICKER_FORMAT);
 
-    const formStartDate = rmdData?.startDate?.text
-        ? dayjs(rmdData?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(
-              DATE_PICKER_FORMAT
-          )
-        : '';
+    const formStartDate = getFormattedDate(
+        rmdData?.startDate?.text,
+        'RMDOptions::input startDate'
+    );
 
     const freq = formConfig?.frequency
         ? rmdData?.frequency?.text || Frequency.Annually
@@ -75,9 +77,11 @@ export default function RMDOptions({
             startDate:
                 formConfig?.startDate && startDate
                     ? {
-                          text: dayjs(startDate, DATE_PICKER_FORMAT).format(
-                              ZAHARA_API_DATE_FORMAT
-                          ),
+                          text:
+                              getFormattedZaharaDate(
+                                  startDate,
+                                  'RMDOptions::output startDate'
+                              ) || '',
                       }
                     : { text: '' },
             frequency: { text: frequency },

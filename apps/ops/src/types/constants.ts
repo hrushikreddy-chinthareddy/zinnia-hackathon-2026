@@ -1,5 +1,3 @@
-export const DEFAULT_ERROR_STRING = '--';
-export const SPLITTER = '|||';
 export enum SCREEN_BREAKPOINTS {
     xs = 320,
     sm = 500,
@@ -47,6 +45,13 @@ export const PolicyActivityTabValues: { [key: string]: string } = {
     'call-logs': 'call-logs',
 };
 
+export const AnalyticsRouteValues: { [key: string]: string } = {
+    cases: 'cases',
+    policies: 'policies',
+    illustrations: 'illustrations',
+    usage: 'usage',
+};
+
 // DEPU-2749 https://zinnia.atlassian.net/browse/DEPU-2749
 export const HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 = true;
 export const NODE_ENV_PRODUCTION = 'production';
@@ -77,3 +82,6 @@ export const CLIENT_COPY = 'CLIENT_COPY';
 export const NEW_BUSINESS = 'NEW_BUSINESS';
 export const DISPLAY_NAME = 'Name Change Supporting Document';
 export const SOURCE = 'Self-Service Portal';
+
+export const NOT_YET_AVAILABLE = 'notYetAvailable';
+export const DEBOUNCE_INTERVAL_200 = 200;

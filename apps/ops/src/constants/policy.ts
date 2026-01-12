@@ -22,6 +22,8 @@ export enum Roles {
     NEWPAYOR = 'NEWPAYOR',
     THIRDPARTYDESIGNEE = 'THIRDPARTYDESIGNEE',
     NEWTHIRDPARTYDESIGNEE = 'NEWTHIRDPARTYDESIGNEE',
+    ASSIGNEE = 'ASSIGNEE',
+    IRREVOCABLE_BENEFICIARY = 'IRREVOCABLE_BENEFICIARY',
 }
 
 export enum RoleLabel {
@@ -29,6 +31,8 @@ export enum RoleLabel {
     JOINTOWNER = 'Joint Owner',
     PAYOR = 'Payor',
     THIRDPARTYDESIGNEE = 'Third Party Designee',
+    IRREVOCABLE_BENEFICIARY = 'Irrevocable Beneficiary',
+    ASSIGNEE = 'Assignee',
 }
 
 export enum PolicyRole {
@@ -37,6 +41,8 @@ export enum PolicyRole {
     PAYOR = 'Payor',
     THIRDPARTYDESIGNEE = 'ThirdPartyDesignee',
     BENEFICIARY = 'Beneficiary',
+    ASSIGNEE = 'Assignee',
+    AGENT = 'multi-agent',
 }
 
 export enum BooleanValue {

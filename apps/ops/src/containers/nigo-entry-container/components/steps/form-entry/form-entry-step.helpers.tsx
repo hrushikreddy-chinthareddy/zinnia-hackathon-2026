@@ -10,8 +10,10 @@ import SbgcOftWithdrawalForm from '@deps/containers/otp/oft-forms/sbgc/sbgc-oft-
 import UlpcOftWithdrawalForm from '@deps/containers/otp/oft-forms/ulpc/ulpc-oft-form';
 import UsaaOftWithdrawalForm from '@deps/containers/otp/oft-forms/usaa/usaa-oft-form';
 import DlicRenewalForm from '@deps/containers/otp/renewal-forms/dlic-form';
+import GlcoRenewalForm from '@deps/containers/otp/renewal-forms/glco/glco-form';
 import MassRenewalForm from '@deps/containers/otp/renewal-forms/mass-mutual-form';
 import SbgcRenewalForm from '@deps/containers/otp/renewal-forms/sbgc-form';
+import UlpcRenewalForm from '@deps/containers/otp/renewal-forms/ulpc/ulpc-form';
 import DlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/dlic/dlic-rmd-form';
 import FlicRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/flic-rmd-form';
 import GdmnRmdWithdrawalForm from '@deps/containers/otp/rmd-forms/gdmn/gdmn-rmd-form';
@@ -134,6 +136,8 @@ const getRenewalFormComponentMap = (): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcRenewalForm />,
     [Carrier.MASS]: <MassRenewalForm />,
     [Carrier.DLIC]: <DlicRenewalForm />,
+    [Carrier.ULPC]: <UlpcRenewalForm />,
+    [Carrier.GLCO]: <GlcoRenewalForm />,
 });
 
 export const getFormParts = (

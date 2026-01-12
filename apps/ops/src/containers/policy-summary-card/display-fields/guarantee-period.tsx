@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { TranslationFiles } from '@deps/config/translations';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 interface GuaranteePeriodProps {
     guaranteePeriod?: string;

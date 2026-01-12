@@ -1,0 +1,60 @@
+.container {
+    position: relative;
+    z-index: 1;
+}
+
+.link {
+    z-index: 2;
+}
+
+.filtersHeader {
+    padding: var(--measure-dimension-gap-2xl);
+    display: flex;
+    gap: var(--measure-dimension-gap-lg);
+    align-items: center;
+    transition: all 0.3s ease-in-out;
+    border: 1px solid transparent;
+    border-left-width: 0;
+    border-right-width: 0;
+
+    &.pinned {
+        border-bottom-color: var(--color-base-border-border-bold);
+        padding: var(--measure-dimension-padding-2xl);
+        background-color: var(--color-base-surface-surface-secondary);
+        box-shadow: var(--shadow-elevation-elevation-light-sm);
+    }
+}
+
+.filtersHeader {
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background-color: var(--color-base-surface-surface-primary);
+    z-index: 3;
+    padding-bottom: var(--measure-dimension-gap-lg);
+
+    &.pinned {
+        z-index: 4;
+    }
+}
+
+.insightsHeaderDropdownContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    gap: var(--measure-dimension-gap-md);
+}
+
+.tooltip {
+    border: 16px solid var(--color-base-surface-surface-primary);
+}
+
+.buttonGroup {
+    margin-bottom: var(--measure-dimension-gap-lg);
+}
+
+.tabContent {
+    border-color: var(--color-base-border-border-light);
+    border-top-width: 2px;
+    position: relative;
+}

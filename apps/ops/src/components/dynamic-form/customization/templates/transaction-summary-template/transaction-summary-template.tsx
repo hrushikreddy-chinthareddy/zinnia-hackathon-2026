@@ -1,7 +1,13 @@
 import { FieldTemplateProps } from '@rjsf/utils';
 import { Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -20,6 +26,7 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { TaskType } from '@deps/models/case/task';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 
 import {
     getRoleLabel,
@@ -98,7 +105,6 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const url = formContext?.customData?.validationUrl;
     const { issueResolved } = formContext?.customData || {};
     const customData = formContext?.customData;
-
     const [validationResponse, setValidationResponse] =
         useState<ValidationResponse | null>(null);
     const [_validationError, setValidationError] = useState<string | null>(
@@ -128,32 +134,55 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const invokeNewBeneChangeApi =
         featureFlags[FEATURE_FLAGS.BENE_CHANGE_NEW_API];
 
+    const stableCustomData = useMemo(
+        () => formContext.customData,
+        [formContext.customData]
+    );
+
+    const previousSummaryRef = useRef<TransactionResponse | null>(null);
+
+    const setValidationSummary = useCallback(
+        (summary: TransactionResponse | null) => {
+            const prev = previousSummaryRef.current;
+            if (!summary && !prev) return;
+            if (
+                summary &&
+                prev &&
+                JSON.stringify(summary) === JSON.stringify(prev)
+            ) {
+                return;
+            }
+            previousSummaryRef.current = summary;
+            if (formContext.setValidationSummary) {
+                formContext.setValidationSummary(summary);
+            }
+        },
+        [formContext]
+    );
+
     useEffect(() => {
-        if (!url || !customData || !issueResolved || readonly) return;
+        if (!url || !stableCustomData || !issueResolved || readonly) return;
         setLoading(true);
         setValidationError(null);
-        fetchValidationSummary(url, customData, invokeNewBeneChangeApi)
+
+        fetchValidationSummary(url, stableCustomData, invokeNewBeneChangeApi)
             .then((summary) => {
                 setValidationResponse(summary);
                 setLoading(false);
-                if (formContext.setValidationSummary) {
-                    formContext.setValidationSummary(summary);
-                }
+                setValidationSummary(summary as TransactionResponse);
             })
             .catch((err) => {
                 setValidationError(err?.message || t('failedToFetch'));
                 setLoading(false);
-                if (formContext.setValidationSummary) {
-                    formContext.setValidationSummary(null);
-                }
+                setValidationSummary(null);
             });
     }, [
         url,
-        invokeNewBeneChangeApi,
-        customData,
+        stableCustomData,
         issueResolved,
         readonly,
-        formContext,
+        invokeNewBeneChangeApi,
+        setValidationSummary,
         t,
     ]);
 
@@ -180,9 +209,13 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const taskType = formContext.customData?.taskType;
     return (
         <div id={'id'} className="space-y-8">
-            <p className="mb-3 font-primary text-sm">
-                {validationSucceeded ? t('successMessage') : t('errorMessage')}
-            </p>
+            {!readonly && (
+                <p className="mb-3 font-primary text-sm">
+                    {validationSucceeded
+                        ? t('successMessage')
+                        : t('errorMessage')}
+                </p>
+            )}
             {(dataSource as SummaryItem[]).map(
                 (item: SummaryItem, idx: number) => {
                     const {
@@ -220,7 +253,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                     const isIrrevocable =
                         item.isIrrevocable === true ? 'Yes' : 'No';
                     const { tagVariant, tagText } = getTagVariant(
-                        item.action ?? 'NONE',
+                        customData?.requestType ?? item.action ?? 'NONE',
                         t
                     );
                     const role = item.partyRole
@@ -353,7 +386,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                 />
             )}
 
-            {!validationSucceeded && renderValidationErrors()}
+            {!readonly && !validationSucceeded && renderValidationErrors()}
             {showSelectionError && !isChecked && (
                 <AssistiveText
                     className="mt-2"

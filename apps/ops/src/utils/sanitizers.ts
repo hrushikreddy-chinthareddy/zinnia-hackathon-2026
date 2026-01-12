@@ -482,8 +482,13 @@ export const fullyMaskPolicySearchResponse = (
     policySearchResponse: PolicyReferenceSearchResponse
 ): PolicyReferenceSearchResponse => {
     try {
-        const results = policySearchResponse.results.map((party) => {
-            return { ...party, ssn: toMaskedStringOrNull(party.ssn) ?? '' };
+        const results = policySearchResponse.results.map((policy) => {
+            return {
+                ...policy,
+                firstName: toMaskedStringOrNull(policy.firstName) ?? '',
+                lastName: toMaskedStringOrNull(policy.lastName) ?? '',
+                ssn: toMaskedStringOrNull(policy.ssn) ?? '',
+            };
         });
         return { ...policySearchResponse, results };
     } catch (e) {

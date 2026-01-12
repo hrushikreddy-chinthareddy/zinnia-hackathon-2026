@@ -10,6 +10,11 @@ jest.mock('next/router', () => ({
 }));
 
 describe('ApiErrorCard', () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
+    });
+
     it('renders correctly', () => {
         render(
             <ApiErrorCard

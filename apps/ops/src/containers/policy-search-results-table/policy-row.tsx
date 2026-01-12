@@ -27,6 +27,7 @@ import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
 import { formatSSN } from '@deps/helpers/string.helpers';
+import useNavLink from '@deps/hooks/useNavLink';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
@@ -36,7 +37,6 @@ import {
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     FIFTEEN_MINUTES_IN_MS,
     FIVE_MINUTES_IN_MS,
 } from '@deps/types/constants';
@@ -45,7 +45,7 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
-import { toSentenceCase } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@deps/utils/strings';
 import { PartyRole, PolicyStatus } from '@zinnia/api-types/types/sor';
 
 import { PolicyActionCell } from './policy-action-cell';
@@ -59,6 +59,7 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
     const { partyId } = usePermissionsContext();
     const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
+    const { buildOpenInNewWindowLinkText } = useNavLink();
 
     const { data: policyData, isLoading: isPolicyDataLoading } = useQuery({
         queryKey: [getPolicyQueryKey, item.policyNumber, item.planCode],
@@ -199,7 +200,9 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
             >
                 {hasCases ? (
                     <Link
-                        aria-label={`View Cases for policy ${item.policyNumber}`}
+                        aria-label={buildOpenInNewWindowLinkText(
+                            `View Cases for policy ${item.policyNumber}`
+                        )}
                         className={styles.casesCount}
                         href={`/cases${convertToQueryString({
                             policyNumber: item.policyNumber || '',

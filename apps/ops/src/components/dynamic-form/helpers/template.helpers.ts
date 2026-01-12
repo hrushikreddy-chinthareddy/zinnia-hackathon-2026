@@ -13,6 +13,7 @@ import TransactionInstructionTemplate from '../customization/templates/instructi
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import PartyInfoListTemplate from '../customization/templates/party-info-list-template/party-info-list';
 import TextListTemplate from '../customization/templates/text-list-template';
+import { TitleFieldTemplate } from '../customization/templates/title-field-template/title-field-template';
 import { TransactionAccordionTemplate } from '../customization/templates/transaction-accordion/transaction-accordion';
 
 export const UIArrayTemplateMap: Record<
@@ -41,8 +42,15 @@ export const UIObjectTemplateMap: Record<
     ['PartyCardFieldTemplate']: PartyCardFieldTemplate,
 };
 
+export const UIfieldTemplateMap: Record<
+    string,
+    (props: any) => React.JSX.Element
+> = {
+    ['TitleFieldTemplate']: TitleFieldTemplate,
+};
+
 export const ApplyUITemplates = (uiSchema: UiSchema) => {
-    Object.keys(uiSchema).forEach((key) => {
+    Object.keys(uiSchema || {}).forEach((key) => {
         if (isObject(uiSchema[key])) {
             if (key.indexOf('ui:options') !== -1) {
                 Object.keys(uiSchema[key]).forEach((optionKey) => {
@@ -59,6 +67,13 @@ export const ApplyUITemplates = (uiSchema: UiSchema) => {
                     ) {
                         uiSchema[key][optionKey] =
                             UIObjectTemplateMap[uiSchema[key][optionKey]];
+                    }
+                    if (
+                        UIfieldTemplateMap[uiSchema[key][optionKey]] !==
+                        undefined
+                    ) {
+                        uiSchema[key][optionKey] =
+                            UIfieldTemplateMap[uiSchema[key][optionKey]];
                     }
                 });
             } else if (key.indexOf('ui:') === -1) {

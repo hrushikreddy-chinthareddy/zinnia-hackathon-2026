@@ -21,15 +21,14 @@ import {
     ExtendedPhone,
     RoleData,
 } from '@deps/contexts/RoleChangeContext';
-import { isEndDated } from '@deps/helpers/date.helpers';
+import { getFormattedZaharaDate, isEndDated } from '@deps/helpers/date.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
     DEFAULT_DATE_FORMAT,
-    DEFAULT_ERROR_STRING,
     ZAHARA_API_DATE_FORMAT,
     DIAL_NUMBER_MAX_LEN,
 } from '@deps/types/constants';
-import { capitalize } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 import {
     Country,
     IdentificationType,
@@ -454,18 +453,6 @@ export const roleCheck = (role: PolicyRole): boolean => {
         PolicyRole.JOINTOWNER,
         PolicyRole.THIRDPARTYDESIGNEE,
     ].includes(role);
-};
-
-export const getFormattedDate = (date?: string | null): string => {
-    return date && dayjs(date, ZAHARA_API_DATE_FORMAT).isValid()
-        ? dayjs(date, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
-        : '';
-};
-
-export const getFormattedZaharaDate = (date?: string | null): string | null => {
-    return date && dayjs(date, DATE_PICKER_FORMAT).isValid()
-        ? dayjs(date, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT)
-        : null;
 };
 
 export const buildRoleChangeRequestBody = (

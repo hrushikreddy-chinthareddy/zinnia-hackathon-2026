@@ -102,7 +102,7 @@ export default function Toggle({
         variant === ToggleVariant.Inactive
             ? 'bg-primary-lightest'
             : 'bg-primary'
-    } pr-1.5 `;
+    } pr-1.5 active`;
     const unselectedClasses = `${
         size === ToggleSize.Large ? 'pr-2.5' : 'pr-6'
     } ${

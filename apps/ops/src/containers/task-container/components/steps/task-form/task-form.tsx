@@ -28,9 +28,9 @@ import {
 import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
 import { removeFromCache } from '@deps/utils/cache';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     buildTaskPayload,
     cleanForm,
@@ -425,6 +425,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                 setCustomData((prev: any) => ({
                     ...prev,
                     ...patch,
+                    task: {
+                        ...prev.task,
+                        data: { ...prev.task.data, ...patch },
+                    },
                 }));
             },
             updateSchema: updateSchemaHandler,

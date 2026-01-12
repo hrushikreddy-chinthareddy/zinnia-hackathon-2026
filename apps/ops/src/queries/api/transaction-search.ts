@@ -66,6 +66,14 @@ export const searchTransactionsSSR = async (
         ...loggingContext,
         payload,
     });
+
+    if (Object.keys(payload).length === 0) {
+        logInfo('transaction-search::searchTransactionsSSR::info', {
+            ...loggingContext,
+            message: 'Empty payload received',
+        });
+        return [];
+    }
     const config = {
         authorization: `Bearer ${accessToken}`,
         headers: {

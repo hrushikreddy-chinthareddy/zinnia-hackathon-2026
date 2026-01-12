@@ -1,0 +1,20 @@
+.dotContainer {
+    display: flex;
+    align-items: baseline;
+    gap: var(--measure-dimension-gap-md);
+}
+
+.dotLeftSide {
+    width: fit-content;
+}
+
+.dotRightSide {
+    display: flex;
+}
+
+.dot {
+    flex-grow: 1;
+    border: 0;
+    border-bottom: var(--measure-dimension-z-space-0) dotted
+        rgb(var(--color-300-gray));
+}

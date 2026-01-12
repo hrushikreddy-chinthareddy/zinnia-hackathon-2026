@@ -60,6 +60,7 @@ export enum BankingFields {
     IsDirectDeposit = 'isDirectDeposit',
     FboDetails = 'fboDetails',
     ChooseBankingType = 'ChooseBankingType',
+    Name = 'name',
 }
 
 // The values that can be impacted by user inputs, in their default forms.

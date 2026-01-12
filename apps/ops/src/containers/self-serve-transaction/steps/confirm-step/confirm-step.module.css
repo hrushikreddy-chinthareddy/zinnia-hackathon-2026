@@ -1,0 +1,20 @@
+.loader {
+    display: flex;
+    height: 300px;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.confirmContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.success {
+    color: var(--color-semantics-color-semantic-success);
+}

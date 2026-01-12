@@ -1,3 +1,4 @@
+import { WidgetProps } from '@rjsf/utils';
 import {
     IconType,
     Icon,
@@ -29,7 +30,7 @@ import style from '../../widgets/file-widget/file-widget.module.css';
 export const FileSearchField = ({
     attachments,
     setAttachments,
-    widgetProps,
+    widgetProps = {} as WidgetProps,
 }: FileAttachmentProps) => {
     const {
         id,
@@ -60,13 +61,6 @@ export const FileSearchField = ({
     const extractedCaseId = caseKey
         ? replacePlaceholders(caseKey, formContext?.customData)
         : '';
-
-    useEffect(() => {
-        if (attachments?.length) {
-            setDocuments(attachments);
-            setError(false);
-        }
-    }, [attachments]);
 
     useEffect(() => {
         const fetchApiData = async () => {
@@ -111,7 +105,12 @@ export const FileSearchField = ({
                 setFetchingDocuments(false);
             }
         };
-        fetchApiData();
+        if (attachments?.length) {
+            setDocuments(attachments);
+            setError(false);
+        } else {
+            fetchApiData();
+        }
     }, [
         error,
         extractedCaseId,
@@ -119,6 +118,7 @@ export const FileSearchField = ({
         formContext?.caseId,
         formContext?.customData?.carrier,
         formContext?.customData?.caseId,
+        attachments,
     ]);
 
     const onFocusHandler = () => {

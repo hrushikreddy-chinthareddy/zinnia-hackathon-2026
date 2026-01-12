@@ -56,6 +56,19 @@ export const getUserNameFromEmail = (email: string): string => {
     );
 };
 
+export const findAssignee = (
+    assigneeMap: AssigneeMap,
+    assigneePartyId?: string
+): string => {
+    if (!assigneePartyId || !assigneeMap?.[assigneePartyId]) return NO_ASSIGNEE;
+
+    const user = assigneeMap[assigneePartyId];
+
+    return user.firstName && user.lastName
+        ? `${user.firstName} ${user.lastName}`
+        : getUserNameFromEmail(user.email);
+};
+
 export const DEFAULT_SORTING_CONFIG = {
     sortDirection: 'desc',
     sortBy: 'createdAt',
@@ -83,18 +96,6 @@ const useTaskManagementQueue = ({
         () => router.pathname.includes(HOMEPAGE_PATH_SEGMENT),
         [router.pathname]
     );
-
-    const findAssignee = (
-        assigneeMap: AssigneeMap,
-        assigneePartyId?: string
-    ): string => {
-        if (!assigneePartyId || !assigneeMap[assigneePartyId])
-            return NO_ASSIGNEE;
-        const user = assigneeMap[assigneePartyId];
-        return user.firstName && user.lastName
-            ? `${user.firstName} ${user.lastName}`
-            : getUserNameFromEmail(user.email);
-    };
 
     const getRegularTasks = async (handleLoader: boolean) => {
         const assignee = additionalData?.user?.name || '';
@@ -264,6 +265,7 @@ const useTaskManagementQueue = ({
         setErrorMessage,
         getTasks,
         setTaskDetails,
+        findAssignee,
         attachAssigneesToTasks,
         offset,
         limit,
