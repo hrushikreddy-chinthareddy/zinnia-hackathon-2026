@@ -50,6 +50,7 @@ const Usage = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
                 items={buttonNavItems}
                 onClick={handleClick}
                 defaultValue={selectedTab}
+                value={selectedTab}
             />
             <TabGroup defaultValue={UsageTabs.LOGINS} value={selectedTab}>
                 <div className={styles.tabContent} ref={ref}>

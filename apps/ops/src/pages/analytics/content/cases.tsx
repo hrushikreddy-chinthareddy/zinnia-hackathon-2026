@@ -59,6 +59,7 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
                 items={buttonNavItems}
                 onClick={handleClick}
                 defaultValue={selectedTab}
+                value={selectedTab}
             />
             <TabGroup
                 defaultValue={AnalyticsTabs.ACTIVE_APPLICATIONS}
