@@ -30,7 +30,6 @@ export const beneChangeSubmitHandler =
                 };
             }
             const caseId = response?.caseId;
-            //const submitNigo = true;
             segmentAnalyticsTrackEvent<TransactionSuccessfulEvent>(
                 SegmentTrackedEventName.TransactionSubmitted,
                 buildNonFinancialTransactionsSubmittedEvent({
