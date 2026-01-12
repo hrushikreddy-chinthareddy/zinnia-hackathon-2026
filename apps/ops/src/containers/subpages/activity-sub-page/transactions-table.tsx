@@ -14,7 +14,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { TransactionSummary } from '@deps/types/transactions';
 
 import styles from './transaction-wrapper.module.css';
 
@@ -25,11 +25,11 @@ export const TransactionsTable = ({
     limit,
     onTableRowClick,
 }: {
-    transactions?: Transaction[];
+    transactions?: TransactionSummary[];
     status: string;
     offset: number;
     limit: number;
-    onTableRowClick: (transaction: Transaction) => void;
+    onTableRowClick: (transaction: TransactionSummary) => void;
 }) => {
     const { t } = useTranslation();
     const currencyFormat: Intl.NumberFormatOptions = {
@@ -108,15 +108,13 @@ export const TransactionsTable = ({
                                     </TableCell>
                                     <TableCell>
                                         {numberFormatify(
-                                            transaction.transactionAmounts
-                                                ?.requestedAmount,
+                                            transaction?.requestedAmount,
                                             currencyFormat
                                         )}
                                     </TableCell>
                                     <TableCell>
                                         {numberFormatify(
-                                            transaction.transactionAmounts
-                                                ?.appliedAmount,
+                                            transaction?.appliedAmount,
                                             currencyFormat
                                         )}
                                     </TableCell>
@@ -130,7 +128,7 @@ export const TransactionsTable = ({
                                 colSpan={100}
                             >
                                 <Typography variant={TypographyVariant.Body}>
-                                    {t('policy.history.noTransactionsTitle', {
+                                    {t('allFields.noTransactionsTitle', {
                                         status: status.toLocaleLowerCase(),
                                     })}
                                 </Typography>

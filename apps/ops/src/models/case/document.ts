@@ -30,6 +30,7 @@ export enum DocumentType {
     Output = 'Output',
     LOAOutput = 'LOA Output',
     PolicyPageOutput = 'Policy Page Output',
+    PolicyPage = 'POLPG',
 }
 
 // FIXME: move out of models (and into env vars or external config)

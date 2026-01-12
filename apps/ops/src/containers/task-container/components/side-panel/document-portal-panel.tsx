@@ -34,6 +34,8 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'task.documentPanel',
     });
+    // Non-prefixed translation function for createViewDownloadAction which expects global keys
+    const { t: tGlobal } = useTranslation(TranslationFiles.COMMON);
 
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
 
@@ -78,7 +80,7 @@ const DocumentPortalPanel = ({ clientCode, documents }: DocumentViewProps) => {
                     {createViewDownloadAction(
                         document,
                         clientCode.toUpperCase(),
-                        t
+                        tGlobal
                     )}
                 </div>
             </div>

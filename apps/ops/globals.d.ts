@@ -21,6 +21,7 @@ declare global {
             initialize: (config: PendoOptions) => void;
             updateOptions: (config: PendoUpdateOptions) => void;
         };
+        __highChartsModulesInit?: boolean;
     }
 }
 

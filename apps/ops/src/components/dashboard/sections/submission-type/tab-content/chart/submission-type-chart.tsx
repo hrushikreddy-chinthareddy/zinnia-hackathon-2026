@@ -157,7 +157,12 @@ export const SubmissionTypeChart: FC = () => {
             <BlurOverlayLoader
                 loading={pieChartStatsFetching || graphStatsFetching}
             >
-                <div className="flex bg-[--color-base-surface-surface-primary] mt-6">
+                <div
+                    className={clsx(
+                        sharedStyles.chartContainer,
+                        sharedStyles.chartContainerLeftAlign
+                    )}
+                >
                     <CaseStatBlock
                         dashboardStatsResponse={pieChartStats}
                         blockLabel="All submissions"
@@ -174,7 +179,7 @@ export const SubmissionTypeChart: FC = () => {
                         showStatDetails={false}
                         showInsights={false}
                     />
-                    <div className={clsx('w-3/4', sharedStyles.chartContainer)}>
+                    <div className={sharedStyles.chartColumn}>
                         <SubmissionTypeFilters />
                         {graphStatsLoading || pieChartStatsLoading ? (
                             <div className="grid place-content-center h-full w-full min-h-[400px]">

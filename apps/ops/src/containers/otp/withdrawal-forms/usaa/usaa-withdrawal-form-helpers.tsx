@@ -569,7 +569,7 @@ export default function getUsaaConfig(
             value: FormDisbursementSelections.DTCC,
             fields: [
                 {
-                    fieldName: BankingFields.PayeeName,
+                    fieldName: BankingFields.Name,
                     fieldLabel: t('distributionMethod.payeeName'),
                     classNames: 'col-start-1',
                     maxLength: 40,
@@ -594,7 +594,6 @@ export default function getUsaaConfig(
                 contractNumber,
             }: DisbursementParts) => {
                 return {
-                    ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMethod.DTCC },
                     participantId: { text: participantId ?? null },
                     payee: {

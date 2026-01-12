@@ -36,13 +36,13 @@ import {
     TrustType,
 } from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
+import { getFormattedDate } from '@deps/helpers/date.helpers';
 import { PartyType } from '@zinnia/api-types/types/sor';
 
 import {
     countryOptions,
     BooleanOptions,
     getVariant,
-    getFormattedDate,
     rolePartyCheck,
     roleCheck,
     normalizeRole,

@@ -1,4 +1,4 @@
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { isNullEmptyOrUndefined } from './string.helpers';
 
@@ -247,4 +247,10 @@ export const wholeNumberFormatify = (
     }
 
     return new Intl.NumberFormat('en-US', options).format(numberValue);
+};
+
+export const normalizeNumber = (
+    value: number | string | null | undefined
+): number => {
+    return Number(String(value ?? 0).replace(/[$,]/g, '')) || 0;
 };

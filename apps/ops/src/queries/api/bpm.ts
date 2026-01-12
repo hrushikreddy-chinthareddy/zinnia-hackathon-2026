@@ -673,12 +673,15 @@ export const submitSystematicProgramUpdate = async (
 export const cancelTransaction = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
-    transactionId: string,
+    transactionId: string | undefined,
     reason: string = '',
     caseId?: string,
     correlationId?: string
 ): Promise<CancelTransactionResponse> => {
     try {
+        if (transactionId === undefined) {
+            throw new Error('Transaction ID is required for cancel operation');
+        }
         const corrId = correlationId ?? uuidV4();
         const response = await client.post<
             CancelTransactionRequestQuery,

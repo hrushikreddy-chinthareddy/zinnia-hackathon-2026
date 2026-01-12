@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState, useContext } from 'react';
 
@@ -8,13 +7,14 @@ import {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '@deps/components/fields/field-date-select/field-date-select';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    getFormattedDate,
+    getFormattedZaharaDate,
+} from '@deps/helpers/date.helpers';
 import { PartyRoles } from '@deps/models/case/withdrawal/case';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import AddressEntry, { DEFAULT_ADDRESS } from './address-entry';
 
@@ -57,13 +57,15 @@ const TaxOL4753Attachment = ({
             contractOwnerDetails?.addresses[0] ||
             DEFAULT_ADDRESS
     );
-    const dob = formOL4753Data?.dob?.text
-        ? dayjs(formOL4753Data.dob?.text, ZAHARA_API_DATE_FORMAT).format(
-              DATE_PICKER_FORMAT
-          )
-        : dayjs(contractOwnerDetails?.dob?.text, ZAHARA_API_DATE_FORMAT).format(
-              DATE_PICKER_FORMAT
-          ) || '';
+    const dob =
+        getFormattedDate(
+            formOL4753Data?.dob?.text,
+            'TaxOL4753::formOL4753Data DOB'
+        ) ||
+        getFormattedDate(
+            contractOwnerDetails?.dob?.text,
+            'TaxOL4753::contractOwner DOB'
+        );
     const [dateOfBirth, setDateOfBirth] = useState(dob);
 
     useEffect(() => {
@@ -75,11 +77,10 @@ const TaxOL4753Attachment = ({
             ...(shouldShowDOBInOl4573 && {
                 dob: dateOfBirth
                     ? {
-                          text:
-                              dateOfBirth &&
-                              dayjs(dateOfBirth, DATE_PICKER_FORMAT).format(
-                                  ZAHARA_API_DATE_FORMAT
-                              ),
+                          text: getFormattedZaharaDate(
+                              dateOfBirth,
+                              'TaxOL4753::output DOB'
+                          ),
                       }
                     : { text: null },
             }),

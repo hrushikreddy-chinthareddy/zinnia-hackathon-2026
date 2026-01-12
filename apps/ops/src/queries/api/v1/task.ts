@@ -372,6 +372,35 @@ export const getTaskFormMetadataSSR = async (
         return null;
     }
 };
+
+export const getTaskFormMetadata = async (
+    clientId: string,
+    taskType: TaskType | undefined,
+    processType: ProcessType | undefined
+): Promise<FormMetadata | null> => {
+    try {
+        const url = `${baseAppUrl}/api/case/v1/form/metadata?process=${processType}&taskType=${taskType}&carrier=${clientId.toUpperCase()}`;
+        browserLogInfo('getTaskFormMetadata', {
+            url,
+        });
+        const { data } = await client.get<FormMetadata, AxiosResponse>(url, {
+            headers: {
+                Accept: '*/*',
+                'Accept-Encoding': 'gzip, deflate, br',
+                Connection: 'keep-alive',
+                'Access-Control-Allow-Origin': '*',
+            },
+        });
+
+        return data as FormMetadata;
+    } catch (error: any) {
+        browserLogError('getFormSchema', {
+            ...parseErrorInformation(error),
+        });
+        return null;
+    }
+};
+
 export const unassignTask = async (
     taskId: string,
     entryDuration?: number

@@ -18,7 +18,7 @@ import { formatAddress } from '@deps/helpers/address.helpers';
 import { negativeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import { formatAccountNumber } from '@deps/helpers/string.helpers';
 import { getPaymentType } from '@deps/helpers/systematic-program.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Address,
     DisbursementPaymentForm,

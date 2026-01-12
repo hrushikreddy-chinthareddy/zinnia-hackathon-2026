@@ -8,6 +8,7 @@ export const Logo = ({ theme }: { theme: string | undefined }) => {
                 <div style={{ minWidth: '127px' }}>
                     <CarrierLogo
                         carrier={CarrierName.FARMERS}
+                        alt="Farmers Insurance Logo"
                         height={24}
                         width={127}
                     />

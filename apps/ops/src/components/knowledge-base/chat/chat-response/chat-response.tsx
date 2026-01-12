@@ -12,6 +12,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import useNavLink from '@deps/hooks/useNavLink';
 import { sendResponseFeedback } from '@deps/queries/api/knowledge-base';
 import { ReactComponent as Dislike } from '@deps/styles/elements/icons/icons_outlined/thumb-down.svg';
 import { ReactComponent as Like } from '@deps/styles/elements/icons/icons_outlined/thumb-up.svg';
@@ -67,6 +68,7 @@ const ChatResponse = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'zinniaAiAssistant',
     });
+    const { buildOpenInNewWindowLinkText } = useNavLink();
     const { sessionId, selectedClientId, commonClientId, answerMode } =
         useKnowledgeBaseContext();
     const [feedbackType, setFeedbackType] = useState<FeedbackType | null>(null);
@@ -370,6 +372,9 @@ const ChatResponse = ({
                                                         href={doc.web_url}
                                                         target="_blank"
                                                         rel="noreferrer"
+                                                        aria-label={buildOpenInNewWindowLinkText(
+                                                            doc.file_name
+                                                        )}
                                                     >
                                                         {doc.file_name}
                                                     </a>

@@ -39,7 +39,7 @@ import {
     DataFormattingTypes,
     TaskFieldTypes,
 } from '@deps/models/case/task';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
 import style from './card-template.module.css';

@@ -1,6 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import { BankingFields } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import { SignatureFieldNames } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
@@ -8,6 +9,13 @@ import {
     FormValidationErrors,
     QCD,
 } from '@deps/models/case/withdrawal/case';
+
+/**
+ * DTCC placeholder participant ID that represents "no valid participant selected".
+ * This value cannot be submitted to the DTCC system when used in combination
+ * with a placeholder contract number.
+ */
+export const DTCC_INVALID_PARTICIPANT_ID = '0000';
 
 interface ValidateSignESignParams {
     formSignature: FormSignature | undefined;
@@ -128,6 +136,27 @@ export const validateCharityName = (
         }
     });
 
+    return errors;
+};
+
+export const validateDtccDetails = (
+    t: TFunction,
+    participantId: string = '',
+    contractNumber: string = ''
+): FormValidationErrors => {
+    const errors = {} as FormValidationErrors;
+    if (
+        participantId === DTCC_INVALID_PARTICIPANT_ID &&
+        contractNumber === DTCC_INVALID_PARTICIPANT_ID
+    ) {
+        errors[BankingFields.ContractNumber] = t(
+            'formValidation.participantIdCannotBeSubmitted'
+        );
+    } else if (participantId && contractNumber === '') {
+        errors[BankingFields.ContractNumber] = t(
+            'formValidation.contractNumberRequired'
+        );
+    }
     return errors;
 };
 

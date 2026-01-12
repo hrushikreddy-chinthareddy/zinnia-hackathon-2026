@@ -53,6 +53,7 @@ import {
     TransactionSuccessfulEvent,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
 
 import { FundViewModel } from '../types';
@@ -170,7 +171,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
         const parsed = allFunds?.map((item) => ({
             ...item,
             allocation:
-                item.allocation === '--'
+                item.allocation === DEFAULT_ERROR_STRING
                     ? '0'
                     : item.allocation?.replace('%', ''),
         }));
@@ -183,7 +184,12 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
 
         allFunds?.forEach((item) => {
             const value = item.allocation;
-            if (value === '--' || value === '' || value === undefined) return;
+            if (
+                value === DEFAULT_ERROR_STRING ||
+                value === '' ||
+                value === undefined
+            )
+                return;
 
             if (!Number.isInteger(Number(value))) {
                 hasInvalidNumbers = true;

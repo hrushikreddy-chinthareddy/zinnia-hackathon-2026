@@ -22,6 +22,8 @@ describe('PageHeader with icon, headerText', () => {
 
     beforeEach(() => {
         props = { headerText };
+        jest.clearAllMocks();
+        jest.spyOn(console, 'warn').mockImplementation();
     });
 
     const renderComponent = () => render(<PageHeader {...props} />);

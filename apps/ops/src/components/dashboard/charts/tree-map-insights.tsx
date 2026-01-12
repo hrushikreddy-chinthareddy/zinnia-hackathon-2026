@@ -285,12 +285,7 @@ export const TreeMapInsights = ({
                         </>
                     )}
                 </div>
-                <div
-                    className={clsx(
-                        'w-3/4 flex-col',
-                        sharedStyles.chartContainer
-                    )}
-                >
+                <div className={sharedStyles.chartContainer}>
                     <div>{FilterComponents}</div>
                     <div
                         className={clsx(

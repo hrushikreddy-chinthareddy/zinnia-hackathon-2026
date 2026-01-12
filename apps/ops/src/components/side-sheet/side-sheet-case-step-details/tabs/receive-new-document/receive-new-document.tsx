@@ -15,7 +15,7 @@ import Typography, {
 import { formatSSN } from '@deps/helpers/string.helpers';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export interface ReceiveNewDocumentProps {
     stepAdditionalData: CaseAdditionalStepDataBase;
