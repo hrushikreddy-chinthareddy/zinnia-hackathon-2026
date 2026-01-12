@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -9,13 +8,14 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '@deps/components/fields/field-date-select/field-date-select';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import CardContainer from '@deps/containers/card-container/card-container';
+import {
+    getFormattedDate,
+    getFormattedZaharaDate,
+} from '@deps/helpers/date.helpers';
 import { stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { IFieldConfig } from '../form-party/form-party';
 import { PartyFields } from '../form-party/party-helpers';
@@ -82,9 +82,7 @@ export function useJLEFields({
         keyPrefix: 'caseWithdrawal.request.personalDetails',
     });
 
-    const formDob = ogDob
-        ? dayjs(ogDob, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
-        : '';
+    const formDob = getFormattedDate(ogDob, 'BeneficiaryInfo::input spouseDOB');
     const ssnFormat = { format: '#########' };
 
     const [spouseFirstName, setSpouseFirstName] = useState(ogFirst || '');
@@ -232,11 +230,11 @@ export function useJLEFields({
         spouseFirstName,
         spouseMiddleName,
         spouseLastName,
-        spouseDOB: spouseDOB
-            ? dayjs(spouseDOB, DATE_PICKER_FORMAT).format(
-                  ZAHARA_API_DATE_FORMAT
-              )
-            : '',
+        spouseDOB:
+            getFormattedZaharaDate(
+                spouseDOB,
+                'BeneficiaryInfo::output spouseDOB'
+            ) || '',
         spouseSSN: spouseSSN,
     };
 }

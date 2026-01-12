@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useState, useContext, useEffect } from 'react';
 
@@ -8,16 +7,17 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '@deps/components/fields/field-date-select/field-date-select';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import {
+    getFormattedDate,
+    getFormattedZaharaDate,
+} from '@deps/helpers/date.helpers';
 import { RMD } from '@deps/models/case/withdrawal/case';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { IFieldConfig } from '../form-party/form-party';
 import { PartyFields } from '../form-party/party-helpers';
@@ -54,9 +54,10 @@ export function useJLEFields({
         keyPrefix: 'caseWithdrawal.request.personalDetails',
     });
 
-    const formDob = ogDob?.text
-        ? dayjs(ogDob?.text, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
-        : '';
+    const formDob = getFormattedDate(
+        ogDob?.text,
+        'JointLifeExpectancy::input DOB'
+    );
     const ssnFormat = { format: '#########' };
 
     const [firstName, setFirstName] = useState(ogFirst || '');
@@ -205,9 +206,11 @@ export function useJLEFields({
         middleName,
         lastName,
         dob: {
-            text: dob
-                ? dayjs(dob, DATE_PICKER_FORMAT).format(ZAHARA_API_DATE_FORMAT)
-                : '',
+            text:
+                getFormattedZaharaDate(
+                    dob,
+                    'JointLifeExpectancy::output DOB'
+                ) || '',
         },
         taxId: { text: taxId },
     };

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import { getFormattedZaharaDate } from '@deps/containers/role-change/role-change-helper';
+import { getFormattedZaharaDate } from '@deps/helpers/date.helpers';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import useNavLink from '@deps/hooks/useNavLink';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
