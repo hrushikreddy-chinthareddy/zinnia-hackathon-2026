@@ -15,12 +15,7 @@ import { useTranslation } from 'react-i18next';
 
 import DateTextInput from '@deps/components/date-text-input/date-text-input';
 import { POM_QUERY_PREFIXES } from '@deps/components/illustrations/helpers/hooks/pom';
-import { useAgencyOptions } from '@deps/components/illustrations/helpers/hooks/use-agency-options';
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
-import {
-    getMainIdentyfiers,
-    useAllAliasesWithSellingCode,
-} from '@deps/components/illustrations/helpers/hooks/user-identity';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -28,7 +23,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
 import { formatUTCDate } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,
@@ -36,10 +30,13 @@ import {
     TransactionType,
 } from '@deps/types/illustrations';
 import { isValidDate } from '@deps/utils/dates';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { AgentField } from 'components/client-case/client-case-create/agent-search/agent-field';
+import { AgentOption } from 'components/client-case/client-case-create/agent-search/types';
 
 import styles from './create-client-case-form.module.css';
-import { AgentField } from '../agent-search/agent-field';
-import { AgentOption } from '../agent-search/types';
+import { useAvailableAgencies } from './use-available-agencies';
+import { useDefaultAuthenticatedAgentOption } from './use-default-authenticated-agent-option';
 
 interface CreateClientCaseFormProps {
     onCancel: () => void;
@@ -106,22 +103,13 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     isEdit,
 }: CreateClientCaseFormProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { writeClientCaseCarriers, partyReferenceData } =
-        usePermissionsContext();
+    const { isSuperIllustrator } = usePermissionsContext();
     const {
         sendClientCaseTitleInput,
         sendAgencySelection,
         sendNewClientCaseCreated,
         sendClientCaseEdited,
     } = useIllustrationAnalytics();
-    const isSuperIllustrator = !!writeClientCaseCarriers.length;
-
-    const aliasesWithSellingCodes =
-        useAllAliasesWithSellingCode(partyReferenceData);
-    const {
-        mainAlias: loggedInUserMainAlias,
-        mainSellingCode: loggedInUserMainSellingCode,
-    } = getMainIdentyfiers(aliasesWithSellingCodes);
 
     const canEditInsuredDetails =
         clientCase?.transactionType !== TransactionType.CONVERSION;
@@ -153,6 +141,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const [somethingChanged, setSomethingChanged] = useState(false);
     const [isSubmiting, setIsSubmiting] = useState(false);
 
+    const defaultAuthenticatedAgentOption =
+        useDefaultAuthenticatedAgentOption();
+
     const getInitialSelectedAgentOption = () => {
         if (isEdit) {
             // for Editting, always use agent details from the client case
@@ -177,11 +168,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         AgentOption | undefined
     >(getInitialSelectedAgentOption());
 
-    //this needs a better name like agencysAvailableAgencies o agencies to search
-    const agencyOptions = useAgencyOptions(
-        selectedAgentOption,
-        aliasesWithSellingCodes
-    );
+    const agencyOptions = useAvailableAgencies(selectedAgentOption);
     const usStatesSelectList = getStateCodesForSelectInput();
     const insuredDetailsClassname = clsx(
         styles.formSection,
@@ -442,31 +429,16 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         }
 
         // We cannot set a default selected agent if we don't have an alias with a sellingCode
-        if (!loggedInUserMainAlias || !loggedInUserMainSellingCode) {
+        if (!defaultAuthenticatedAgentOption) {
             return;
         }
 
-        // If we don't have agentDetails (anonymous flow), use the authenticated
-        // user data (from party reference service) if available
-
-        handleSelectAgentOption({
-            firstName:
-                loggedInUserMainAlias?.firstName ??
-                partyReferenceData?.firstName,
-            lastName:
-                loggedInUserMainAlias?.lastName ?? partyReferenceData?.lastName,
-            email: loggedInUserMainAlias?.email ?? partyReferenceData?.email,
-            carrierShortName: loggedInUserMainSellingCode.carrierShortName,
-            sellingCodes: [loggedInUserMainSellingCode.sellingCode],
-            npn: partyReferenceData?.npn,
-        });
+        handleSelectAgentOption(defaultAuthenticatedAgentOption);
     }, [
         isEdit,
-        partyReferenceData,
         selectedAgentOption,
-        loggedInUserMainAlias,
-        loggedInUserMainSellingCode,
         isSuperIllustrator,
+        defaultAuthenticatedAgentOption,
         handleSelectAgentOption,
     ]);
 

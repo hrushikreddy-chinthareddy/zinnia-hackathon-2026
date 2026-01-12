@@ -28,6 +28,8 @@ const UsaaRmdWithdrawalForm = () => {
     });
     const isDtccSectionEnabled =
         featureFlags[FEATURE_FLAGS.DTCC_SECTION_ENABLED];
+    const isValidationV2Enabled =
+        featureFlags[FEATURE_FLAGS.USAA_SSW_VALIDATION_V2]; // Flag was created for SSW, but can be used for RMD as well
     const {
         formValidation,
         formPartyConfigs,
@@ -37,7 +39,7 @@ const UsaaRmdWithdrawalForm = () => {
         signaturesConfig,
         eSignatureFieldConfig,
         w4pSignaturesConfig,
-    } = getUsaaWithdrawalConfig(t, isDtccSectionEnabled);
+    } = getUsaaWithdrawalConfig(t, isDtccSectionEnabled, isValidationV2Enabled);
     const {
         formParty,
         setFormValidator,

@@ -41,6 +41,8 @@ export const ServiceFormReview = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'nigoEntry.serviceFormReview',
     });
+    // Non-prefixed translation function for createViewDownloadAction which expects global keys
+    const { t: tGlobal } = useTranslation(TranslationFiles.COMMON);
 
     const NIGO_EXCEPTION: SelOptionType = nigoExpection?.value;
 
@@ -85,7 +87,7 @@ export const ServiceFormReview = ({
 
     if (
         isRenewals &&
-        nigoSubExceptions[0].subExceptions?.find(
+        nigoSubExceptions[0]?.subExceptions?.find(
             (item: any) => item.value === DE_162
         )
     ) {
@@ -120,7 +122,7 @@ export const ServiceFormReview = ({
     };
 
     const showNigoOptions = isRenewals
-        ? nigoSubExceptions[0].subExceptions?.find(
+        ? nigoSubExceptions[0]?.subExceptions?.find(
               (item: any) => item.value === DE_162
           )
         : sectionOption === NIGO_EXCEPTION;
@@ -151,7 +153,7 @@ export const ServiceFormReview = ({
                             {createViewDownloadAction(
                                 workingDocument,
                                 clientCode?.toUpperCase(),
-                                t
+                                tGlobal
                             )}
                         </div>
                     </div>

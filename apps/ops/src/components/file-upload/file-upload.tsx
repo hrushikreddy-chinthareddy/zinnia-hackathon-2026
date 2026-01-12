@@ -13,6 +13,7 @@ type FileUploadProps = {
     onChange: (files: File[]) => void;
     error?: string | null;
     required?: boolean;
+    singleFileUpload?: boolean;
 };
 
 const FileUpload: React.FC<FileUploadProps> = ({
@@ -20,12 +21,16 @@ const FileUpload: React.FC<FileUploadProps> = ({
     onChange,
     error: externalError,
     required = false,
+    singleFileUpload = false,
 }) => {
     const fileInputRef = useRef<HTMLInputElement | null>(null);
     const [error, setError] = React.useState<string | null>(null);
 
     const handleFiles = (files: FileList | null) => {
         if (!files) return;
+        if (singleFileUpload && value.length > 0) {
+            return;
+        }
         const validFiles: File[] = [];
         let invalidFile: string | null = null;
         Array.from(files).forEach((file) => {
@@ -133,7 +138,13 @@ const FileUpload: React.FC<FileUploadProps> = ({
                 <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-6 py-2 border-2 border-black rounded-full font-semibold hover:bg-black hover:text-white transition"
+                    disabled={singleFileUpload && value?.length > 0}
+                    className={`px-6 py-2 border-2 border-black rounded-full font-semibold transition
+                        ${
+                            singleFileUpload && value.length > 0
+                                ? 'opacity-50 cursor-not-allowed'
+                                : 'hover:bg-black hover:text-white'
+                        }`}
                 >
                     Select file
                 </button>

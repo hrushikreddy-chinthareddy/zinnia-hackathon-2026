@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
-import { getFormattedZaharaDate } from '@deps/containers/role-change/role-change-helper';
+import { getFormattedZaharaDate } from '@deps/helpers/date.helpers';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import useNavLink from '@deps/hooks/useNavLink';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -12,6 +12,7 @@ import {
     TabDataItem,
     DynamicSideSheetDataType,
 } from '@deps/utils/dynamicSideSheet';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export enum SideSheetDataType {
     Number = 'number',
@@ -149,7 +150,7 @@ export default function DynamicSideSheetContent({
                             <div className="col-span-2 text-base text-gray-900 break-all text-sm font-normal py-2">
                                 {item.value != null && item.value !== ''
                                     ? renderValue(item)
-                                    : '--'}
+                                    : DEFAULT_ERROR_STRING}
                             </div>
                         </React.Fragment>
                     );

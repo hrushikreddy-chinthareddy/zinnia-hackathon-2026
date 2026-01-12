@@ -4,9 +4,11 @@ import { TaskType } from '@deps/models/case/task';
 import { getAgentChangeSteps } from './agent-change-steps';
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
+import { getAssigneeChangeSteps } from './assignee-change-steps';
 import { getBeneAddressVerificationSteps } from './bene-address-verification';
 import { getBeneCallSteps } from './bene-call-steps';
 import { getBeneChangeSteps } from './bene-change-steps';
+import { getCarrierApprovalSteps } from './carrier-approval-steps';
 import { getClaimBeneReviewSteps } from './claim-bene-review-steps';
 import { getClaimUncashTxnIdentifySteps } from './claim-uncash-txn-identify';
 import { getDay150ReviewSteps } from './claims-day-150-review';
@@ -114,11 +116,17 @@ export const getFormSteps = (
             steps = getThirdPartyDetailSteps(props);
             break;
         case TaskType.Initiate_BeneChange_Transaction:
-        case TaskType.Initiate_AssigneeChange_Transaction:
             steps = getBeneChangeSteps(props);
+            break;
+        case TaskType.Initiate_AssigneeChange_Transaction:
+            steps = getAssigneeChangeSteps(props);
             break;
         case TaskType.Agent_Change_Detail:
             steps = getAgentChangeSteps(props);
+            break;
+        case TaskType.Carrier_Approval:
+        case TaskType.Giact_Call_Out:
+            steps = getCarrierApprovalSteps(props);
             break;
         default:
             steps = getDefaultTaskSteps(props);

@@ -3,6 +3,7 @@ import { FormMetadata } from '@deps/models/case/task';
 import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { searchBeneficiaryByCaseId } from '@deps/queries/api/beneficiary';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { TaskHandler } from '../types';
 const claimsMatchBeneDocumentHandler: TaskHandler<any, any> = {
@@ -75,7 +76,7 @@ const generateBeneficiaryOptions = (
         const idField = item.recordId || item.zlCaseId || '';
         const fullName = getName(item.entity?.party);
         const data = {
-            entityType: item.entityType || '--',
+            entityType: item.entityType || DEFAULT_ERROR_STRING,
             recordId: idField,
             beneficiaryName: fullName,
         };
@@ -84,9 +85,9 @@ const generateBeneficiaryOptions = (
             label: '',
             metadata: {
                 beneficiaryName: fullName,
-                ssn: item.entity?.party?.ssn || '--',
+                ssn: item.entity?.party?.ssn || DEFAULT_ERROR_STRING,
                 recordId: idField,
-                entityType: item.entityType || '--',
+                entityType: item.entityType || DEFAULT_ERROR_STRING,
             },
         };
     });

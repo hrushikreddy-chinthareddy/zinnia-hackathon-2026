@@ -45,11 +45,13 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     ];
 
     const handleClick = (value: unknown) => {
-        router.replace(`/analytics/cases/?tab=${value}`, undefined, {
-            shallow: true,
-        });
-        // NOTE: the button group onClick handler type expect a function that returns unknown
-        setSelectedTab(value as string);
+        if (value) {
+            router.replace(`/analytics/cases/?tab=${value}`, undefined, {
+                shallow: true,
+            });
+            // NOTE: the button group onClick handler type expect a function that returns unknown
+            setSelectedTab(value as string);
+        }
     };
 
     return (

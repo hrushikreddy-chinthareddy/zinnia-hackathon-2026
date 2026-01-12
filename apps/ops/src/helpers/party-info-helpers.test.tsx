@@ -1,6 +1,6 @@
 import { cleanup, render } from '@testing-library/react';
 
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     AccountType,
     AddressType,

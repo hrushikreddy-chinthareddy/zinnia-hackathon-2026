@@ -1,7 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export const formatIllustrationDetailCurrency = (
     t: TFunction,

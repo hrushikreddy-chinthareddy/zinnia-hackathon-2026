@@ -1,6 +1,5 @@
 import { useContext, useMemo } from 'react';
 
-import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import { ExceptionStatus } from '@deps/queries/tanstack/dashboard/types';
@@ -25,7 +24,11 @@ export const ExceptionStatusOptions: {
     },
 ];
 
-export const ExceptionStatusFilter = () => {
+export const ExceptionStatusFilter = ({
+    className,
+}: {
+    className?: string;
+}) => {
     const { setExceptionStatus, exceptionStatus } = useContext(
         IssueCountsByStatusContext
     );
@@ -65,6 +68,7 @@ export const ExceptionStatusFilter = () => {
 
     return (
         <Select
+            className={className}
             maxContentWidth
             label="Issue status"
             placeholder="All"
@@ -72,7 +76,6 @@ export const ExceptionStatusFilter = () => {
             value={convertExceptionStatusIntoValueObj}
             size={FieldSize.XS}
             isMultiselect
-            className={sharedStyles.multiselectDropdowns}
             onChange={(val) => handleIssueChange(val as ExceptionStatus)}
         />
     );

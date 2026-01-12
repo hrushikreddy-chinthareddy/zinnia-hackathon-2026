@@ -46,21 +46,19 @@ export const SectionTabNavs: FC<PropsWithChildren<SectionTabNavsProps>> = ({
 }) => {
     const tabsToRender = tabs || defaultTabs;
     return (
-        <TabGroup defaultValue={defaultValue} className="bg-white">
-            <div className="flex">
-                <TabList className={styles.tabList}>
-                    {tabsToRender.map((tab) => (
-                        <TabTrigger
-                            aria-label={`View ${tab.value}`}
-                            value={tab.value}
-                            key={tab.value}
-                        >
-                            <Icon type={tab.iconType} width={28} height={28} />
-                        </TabTrigger>
-                    ))}
-                </TabList>
-                {children}
-            </div>
+        <TabGroup defaultValue={defaultValue} className={styles.container}>
+            <TabList className={styles.tabList}>
+                {tabsToRender.map((tab) => (
+                    <TabTrigger
+                        aria-label={`View ${tab.value}`}
+                        value={tab.value}
+                        key={tab.value}
+                    >
+                        <Icon type={tab.iconType} width={28} height={28} />
+                    </TabTrigger>
+                ))}
+            </TabList>
+            <div>{children}</div>
         </TabGroup>
     );
 };

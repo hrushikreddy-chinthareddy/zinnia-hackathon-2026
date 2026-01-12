@@ -1,9 +1,8 @@
 import { queryOptions, skipToken } from '@tanstack/react-query';
 
-import { buildAgencyAgentsQuery } from '../agency-agents-query';
-import { buildAgentFromProducerQuery } from '../agent-from-producer-query';
+import { fetchAgencyAgents } from '../agency-agents-query';
+import { fetchSelfAssignAgent } from '../agent-from-producer-query';
 import { AGENT_SEARCH_QUERY_PREFIXES } from '../constants';
-import { hasPartialFullName } from '../helpers';
 
 export const buildQueryForAgencyOwner = ({
     sellingCode,
@@ -24,32 +23,22 @@ export const buildQueryForAgencyOwner = ({
         queryFn: !(sellingCode && carrierShortName)
             ? skipToken
             : async ({ client }) => {
-                  // Self-assign agent
-                  const selfAssignAgentP = client.fetchQuery(
-                      buildAgentFromProducerQuery({
-                          sellingCode,
-                          carrierShortName,
-                      })
-                  );
-                  // Agency agents (producer downline)
-                  const agencyAgents = await client.fetchQuery(
-                      buildAgencyAgentsQuery({
-                          sellingCode,
-                          carrierShortName,
-                          partialFullName,
-                      })
-                  );
+                  const selfAssignAgentP = fetchSelfAssignAgent(client, {
+                      sellingCode,
+                      carrierShortName,
+                      partialFullName,
+                  });
+                  const agencyAgentsP = fetchAgencyAgents(client, {
+                      sellingCode,
+                      carrierShortName,
+                      partialFullName,
+                  });
 
-                  const selfAssignAgent = await selfAssignAgentP;
+                  const [selfAssignAgent, agencyAgents] = await Promise.all([
+                      selfAssignAgentP,
+                      agencyAgentsP,
+                  ]);
 
-                  return [
-                      // Only include the self-assign agent if their name
-                      // matches
-                      selfAssignAgent &&
-                      hasPartialFullName(partialFullName, selfAssignAgent)
-                          ? selfAssignAgent
-                          : null,
-                      ...agencyAgents,
-                  ];
+                  return [selfAssignAgent, ...agencyAgents];
               },
     });
