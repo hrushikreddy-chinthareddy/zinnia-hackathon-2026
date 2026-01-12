@@ -5,29 +5,110 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { NotAvailabilityReasonField } from '@deps/utils/quick-quotes-rules/types';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import {
+    IneligibilityReason,
+    NotAvailabilityReasonField,
+} from '@deps/utils/quick-quotes-rules/types';
 
 import { useQuickQuoteParams } from '../../params-context';
 import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
     className?: string;
-    reason?: string;
+    reasons?:
+        | IneligibilityReason[]
+        | Partial<Record<number, IneligibilityReason[]>>;
 };
 
-export const QuickQuoteNotAvailableReasonCell = ({
-    className,
+const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
+    const { t } = useTranslation();
+
+    return (
+        <Typography
+            className={styles.notAvailableText}
+            variant={TypographyVariant.BodySm}
+        >
+            <b>
+                {!termLength
+                    ? t('clientCase.quickQuoteResults.notAvailable')
+                    : t(
+                          'clientCase.quickQuoteResults.notAvailableByTermLength',
+                          {
+                              termLength: termLength,
+                          }
+                      )}
+            </b>
+        </Typography>
+    );
+};
+
+const NotAvailabilityReasonLabel = ({
     reason,
-}: QuickQuoteNotAvailableReasonCellProps) => {
-    const { insuredAge } = useQuickQuoteParams();
+}: {
+    reason: IneligibilityReason;
+}) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { faceAmount } = useQuickQuoteParams();
+
+    const formatToCurrency = (value: number) =>
+        numberFormatify(value, {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0,
+        });
+
+    let ageMessage = '';
+    if (reason.field === 'age') {
+        const maxAge = reason.expected[1];
+        const minAge = reason.expected[0];
+        if (reason.actual > maxAge) {
+            ageMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.maxAge',
+                {
+                    age: maxAge,
+                }
+            );
+        } else {
+            ageMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.minAge',
+                {
+                    age: minAge,
+                }
+            );
+        }
+    }
+
+    let faceAmountMessage = '';
+    if (reason.field === 'face') {
+        const maxFaceAmount = reason.expected[1];
+        const minFaceAmount = reason.expected[0];
+        if (reason.actual > faceAmount) {
+            faceAmountMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.riderFaceAmount'
+            );
+        } else if (reason.actual > maxFaceAmount) {
+            faceAmountMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.maxFaceAm',
+                {
+                    amount: formatToCurrency(maxFaceAmount),
+                }
+            );
+        } else {
+            faceAmountMessage = t(
+                'clientCase.quickQuoteResults.notAvailableReason.minFaceAm',
+                {
+                    amount: formatToCurrency(minFaceAmount),
+                }
+            );
+        }
+    }
 
     const reasonMessageMap = {
-        age: t('clientCase.quickQuoteResults.notAvailableReason.age', {
-            age: insuredAge,
-        }),
+        age: ageMessage,
+        face: faceAmountMessage,
         state: t('clientCase.quickQuoteResults.notAvailableReason.state'),
-        face: t('clientCase.quickQuoteResults.notAvailableReason.state'),
         termLength: t('clientCase.quickQuoteResults.notAvailable'),
     } satisfies Record<
         NonNullable<NotAvailabilityReasonField>,
@@ -35,14 +116,57 @@ export const QuickQuoteNotAvailableReasonCell = ({
     > as Record<string, string>;
 
     return (
+        <Typography
+            className={styles.notAvailableText}
+            variant={TypographyVariant.BodySm}
+        >
+            {reasonMessageMap[reason.field]}
+        </Typography>
+    );
+};
+
+export const QuickQuoteNotAvailableReasonCell = ({
+    className,
+    reasons,
+}: QuickQuoteNotAvailableReasonCellProps) => {
+    return (
         <div className={clsx(styles.notAvailableReasonCell, className)}>
-            <Typography
-                className={styles.notAvailableText}
-                variant={TypographyVariant.BodySm}
-            >
-                {reasonMessageMap[reason as string] ??
-                    t('clientCase.quickQuoteResults.notAvailable')}
-            </Typography>
+            {Array.isArray(reasons) ? (
+                <div>
+                    <NotAvailableLabel />
+                    <ul className={styles.reasonList}>
+                        {reasons?.map((reason) => {
+                            return (
+                                <li key={`${reason.field}`}>
+                                    <NotAvailabilityReasonLabel
+                                        reason={reason}
+                                    />
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+            ) : typeof reasons === 'object' ? (
+                Object.entries(reasons).map(([termLength, reasons]) => {
+                    return (
+                        <div key={`${termLength}`}>
+                            <NotAvailableLabel termLength={termLength} />
+                            <ul className={styles.reasonList}>
+                                {reasons &&
+                                    reasons.map((reason) => (
+                                        <li key={`${reason.field}`}>
+                                            <NotAvailabilityReasonLabel
+                                                reason={reason}
+                                            />
+                                        </li>
+                                    ))}
+                            </ul>
+                        </div>
+                    );
+                })
+            ) : (
+                <NotAvailableLabel />
+            )}
         </div>
     );
 };

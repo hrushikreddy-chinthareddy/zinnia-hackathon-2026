@@ -2314,7 +2314,7 @@
             "submit": "¡Enviado!",
             "backToHome": "Volver al inicio"
         },
-        "start":{
+        "start": {
             "title": "Comenzar"
         },
         "assigneeChange": {
@@ -9023,11 +9023,16 @@
                 "title": "Cobertura y resumen"
             },
             "notAvailable": "No disponible",
+            "notAvailableByTermLength": "No disponible para un contrato de {{termLength}} años:",
+            "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
             "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailableReason": {
-                "age": "No disponible para la edad {{age}}.",
-                "face": "No disponible para este monto nominal.",
-                "state": "No disponible para este estado."
+                "maxAge": "Edad máxima de emisión: {{age}}",
+                "minAge": "Edad mínima de emisión: {{age}}",
+                "maxFaceAm": "Monto nominal máximo: {{amount}}",
+                "minFaceAm": "Monto nominal mínimo: {{amount}}",
+                "state": "No disponible para este estado",
+                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
             },
             "product": {
                 "title": "Producto",

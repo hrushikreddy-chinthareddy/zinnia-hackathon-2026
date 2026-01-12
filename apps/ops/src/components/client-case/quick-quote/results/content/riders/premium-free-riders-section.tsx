@@ -23,9 +23,9 @@ export const QuickQuotePremiumFreeRidersSection = () => {
     }
 
     // Show the rider if it's available to any result
-    const riders = PREMIUM_FREE_RIDERS.filter((riderName) =>
-        results.some((result) => result.data.riders[riderName])
-    );
+    const riders = PREMIUM_FREE_RIDERS.filter((riderName) => {
+        return results.some((result) => result.data.riders[riderName]);
+    });
 
     const rows = riders.map((riderName) => (
         <QuickQuoteResultTableRow
@@ -43,10 +43,6 @@ export const QuickQuotePremiumFreeRidersSection = () => {
             />
         </QuickQuoteResultTableRow>
     ));
-
-    if (!rows.length) {
-        return null;
-    }
 
     return (
         <QuickQuoteResultTableSection

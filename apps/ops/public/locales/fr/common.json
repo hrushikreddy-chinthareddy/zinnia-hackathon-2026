@@ -2369,7 +2369,7 @@
             "submit": "Envoyé !",
             "backToHome": "Retour à l’accueil"
         },
-        "start":{
+        "start": {
             "title": "Commencer"
         },
         "assigneeChange": {
@@ -9007,6 +9007,8 @@
         },
         "quickQuoteResults": {
             "notAvailable": "Pas disponible",
+            "notAvailableByTermLength": "Pas disponible pour un contrat de {{termLength}} ans:",
+            "hasRiderErrors": "Certains suppléments ne sont pas inclus. Voir la couverture et le résumé.",
             "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
             "title": "Devis rapide",
             "coverage": {
@@ -9015,9 +9017,12 @@
                 "title": "Couverture"
             },
             "notAvailableReason": {
-                "age": "Non disponible pour l'âge {{age}}.",
-                "face": "Non disponible pour ce montant assuré.",
-                "state": "Non disponible pour cet état."
+                "maxAge": "Âge maximal d'émission: {{age}}",
+                "minAge": "Âge minimum d'émission: {{age}}",
+                "maxFaceAm": "Montant maximal du visage: {{amount}}",
+                "minFaceAm": "Montant minimum du visage: {{amount}}",
+                "state": "Non disponible pour cet état",
+                "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police."
             },
             "product": {
                 "title": "Produit",
