@@ -71,6 +71,7 @@
         "amountExcessToGuideline": "Montant excédant la référence",
         "amountExcessToModifiedEndowmentContract": "Montant excédant MEC",
         "amountType": "Type de montant",
+        "analyticsDashboard": "Tableau de bord du transporteur",
         "annualBenefitAmount": "Montant annuel de la prestation",
         "annualizedPremium": "Prime annualisée",
         "annualPremium": "Prime annuelle",
@@ -98,6 +99,7 @@
         "carrierId": "ID du transporteur",
         "carrierName": "Nom de l'assureur",
         "caseId": "ID del caso",
+        "cases": "Cas",
         "caseIdSearchError": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
         "caseType": "Type de dossier",
         "certifiedReceivedDate": "Date de réception certifiée",
@@ -705,6 +707,7 @@
         "CHECK": "Chèque",
         "CHECKING": "Compte courant",
         "ClaimPayout": "Paiement de réclamation",
+        "CLOSEDCASES": "Dossiers clos",
         "CommunicationPreferenceChange": "Changement des préférences de communication",
         "Commutation": "Commutation",
         "Completed": "Terminé",
@@ -899,6 +902,7 @@
         "IRSROTH403(B)": "Roth 403(b) selon l'IRS",
         "Issuance": "Émission",
         "ISSUED": "Émis",
+        "ISSUES": "Problèmes",
         "JOINTINDIVIDUAL": "Individu conjoint",
         "KEOGH/HR10": "Plan Keogh (HR-10)",
         "Lapse": "Expiration",
@@ -969,6 +973,7 @@
         "O": "En cours de révision",
         "OneTimePremium": "Prime unique",
         "ONETIMEPREMIUM": "Prime unique",
+        "OPENCASES": "Affaires en cours",
         "OPERATIONAL": "Opérationnel",
         "OPTIONA": "Option A",
         "OPTIONB": "Option B",
@@ -1126,6 +1131,7 @@
         "submittedVsProcessedMismatch": "Incohérence entre les données soumises et traitées",
         "systemError": "Erreur système",
         "TARGETBENEFITPLAN": "Plan à prestations cibles",
+        "TASKS": "Tâches",
         "TENYEARTAXOPTION": "Option fiscale sur dix ans",
         "TERM": "Temporaire",
         "TERMINATED": "Terminé",
@@ -1206,7 +1212,7 @@
             "createCaseRmd": "Traiter RMD - OTP",
             "createCaseSsw": "Traiter retrait systématique - OTP",
             "createCaseWithdrawal": "Traiter retrait - OTP",
-            "dashboard": "Statistiques du dossier",
+            "dashboard": "Analytique",
             "documents": "Documents",
             "featuresAndRiders": "Caractéristiques et cavaliers",
             "formData": "Données du formulaire",
@@ -1313,9 +1319,9 @@
                 "link": "/policies/{{planCode}}/{{id}}/policy/coverage",
                 "text": "$t(pageHeader.coverage.headerText)"
             },
-            "dashboard": {
-                "link": "/dashboard",
-                "text": "Statistiques du dossier"
+            "analytics": {
+                "link": "/analytics/cases",
+                "text": "Analytique"
             },
             "details": {
                 "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",

@@ -1,4 +1,5 @@
 import { PropsWithChildren } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import Typography, {
@@ -14,6 +15,7 @@ const breakpointNumber = Number(BREAKPOINT.replace('px', ''));
 export const DashboardResponsiveLayout = ({ children }: PropsWithChildren) => {
     const windowWidth = useWindowResize();
     const isClient = useIsClient();
+    const { t } = useTranslation();
 
     if (!isClient || windowWidth > breakpointNumber) {
         return <>{children}</>;
@@ -25,7 +27,7 @@ export const DashboardResponsiveLayout = ({ children }: PropsWithChildren) => {
                 className="text-center m-4"
                 variant={TypographyVariant.H1}
             >
-                Carrier Dashboard
+                {t('allFields.analyticsDashboard')}
             </Typography>
             <CardInfo
                 icon={
