@@ -79,9 +79,10 @@ const AnalyticsPage = ({
             <PageHead titleKey="analytics" />
             <DashboardResponsiveLayout>
                 <SelectFiltersHeader
+                    carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
                     authorizedCarriers={authorizedCarriers}
                     brokerDealersSSR={brokerDealersSSR}
-                    ref={carrierHeaderRef}
+                    carrierHeaderEntry={carrierHeaderEntry}
                     path={slug}
                 />
                 <Cases

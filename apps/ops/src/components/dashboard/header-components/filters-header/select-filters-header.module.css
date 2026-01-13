@@ -35,6 +35,10 @@
         min-width: 240px;
         max-width: 400px;
     }
+
+    &.pinned {
+        z-index: 4;
+    }
 }
 
 .tabsNav {

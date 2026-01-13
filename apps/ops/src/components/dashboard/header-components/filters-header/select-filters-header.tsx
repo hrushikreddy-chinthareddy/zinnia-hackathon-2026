@@ -15,17 +15,20 @@ import {
     combineDuplicateLabels,
     getBrokerDealerOptions,
 } from './select-filters-header.helpers';
+import { DashboardTabNav } from '../../dashboard-nav-links';
 
 export const SelectFiltersHeader = ({
     authorizedCarriers,
     brokerDealersSSR,
     carrierHeaderIsIntersecting,
     carrierHeaderEntry,
+    path,
 }: {
     brokerDealersSSR: DashboardResponseData[];
     authorizedCarriers: string[];
     carrierHeaderIsIntersecting: boolean;
     carrierHeaderEntry?: IntersectionObserverEntry;
+    path?: string;
 }) => {
     const { t } = useTranslation();
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -58,7 +61,7 @@ export const SelectFiltersHeader = ({
         <div
             id="carrier-header"
             ref={setContainerRef}
-            className={clsx(styles.filtersHeader, {
+            className={clsx('flex-wrap', styles.filtersHeader, {
                 [styles.pinned as string]:
                     carrierHeaderIsIntersecting ||
                     Number(carrierHeaderEntry?.boundingClientRect.bottom) < 64,
@@ -69,7 +72,7 @@ export const SelectFiltersHeader = ({
                 variant={TypographyVariant.H1}
                 data-testid="header-text"
             >
-                {t('caseStatsDashboardTitle')}
+                {t('site.pageTitles.analytics')}
             </Typography>
             <div className={styles.filters}>
                 <SelectFilter
@@ -87,6 +90,9 @@ export const SelectFiltersHeader = ({
                     container={container}
                     values={selectedBrokerDealers}
                 />
+            </div>
+            <div className={styles.tabsNav}>
+                <DashboardTabNav path={path} />
             </div>
         </div>
     );
