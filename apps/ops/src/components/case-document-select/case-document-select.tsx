@@ -217,8 +217,8 @@ const CaseDocumentSelect = ({
     ]);
 
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-1">
+        <fieldset className="flex flex-col gap-2" role="radiogroup">
+            <legend className="flex items-center gap-1">
                 <Label
                     label={t('transactions.caseDocumentSelect.label')}
                     sentenceCase={false}
@@ -227,7 +227,7 @@ const CaseDocumentSelect = ({
                 {required && (
                     <span className="text-semantic-error">&nbsp;*</span>
                 )}
-            </div>
+            </legend>
 
             <div
                 className={`flex flex-col gap-2 ${
@@ -264,7 +264,7 @@ const CaseDocumentSelect = ({
                     />
                 )}
             </div>
-        </div>
+        </fieldset>
     );
 };
 

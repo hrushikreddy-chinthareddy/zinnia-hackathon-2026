@@ -55,12 +55,18 @@
     }
 
     .default-focus,
-    .default-focus-icons,
-    .default-focus-within {
+    .default-focus-icons {
         &:focus {
             outline: none;
         }
         &:focus-visible {
+            outline: 2px solid var(--color-semantics-color-semantic-focus);
+            outline-offset: 6px;
+        }
+    }
+
+    .default-focus-within {
+        &:focus-within {
             outline: 2px solid var(--color-semantics-color-semantic-focus);
             outline-offset: 6px;
         }
