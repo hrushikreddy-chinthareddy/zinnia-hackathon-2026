@@ -271,3 +271,38 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
         },
     };
 };
+
+export const getBeneficiaryChangePayload = (task: ManagementTask) => {
+    const actionData = task?.data?.actionData || [];
+    const formattedActionData = [...actionData];
+
+    console.log('inside getBeneficiaryChangePayload actionData', actionData);
+
+    formattedActionData.map((data, index: number) => {
+        formattedActionData[index] = {
+            ...data,
+            party: {
+                ...data.party,
+                addresses: cleanAddresses(data.party.addresses),
+                emails: cleanEmails(data.party.emails),
+                phones: cleanPhones(data.party.phones),
+                identifications: mergeIdentifications(
+                    data.party.identifications
+                ),
+            },
+        };
+    });
+
+    console.log(
+        'inside getBeneficiaryChangePayload formattedActionData',
+        formattedActionData
+    );
+
+    return {
+        ...task,
+        data: {
+            ...task.data,
+            actionData,
+        },
+    };
+};

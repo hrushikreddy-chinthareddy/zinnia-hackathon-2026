@@ -46,6 +46,7 @@ export const TransactionAccordionTemplate = (
         allowContentDisabled = false,
         isSinglePartyTransaction = false,
         isMultiPartyTransaction = false,
+        isEditable = true,
     } = ui;
     const isSimpleAccordion =
         !isSinglePartyTransaction && !isMultiPartyTransaction;
@@ -110,7 +111,9 @@ export const TransactionAccordionTemplate = (
                 const isDeleted = itemAction === Action.DELETE;
 
                 const disableContent =
-                    allowContentDisabled && !isNew && !isSimpleAccordion;
+                    isDeleted ||
+                    !isEditable ||
+                    (allowContentDisabled && !isNew && !isSimpleAccordion);
 
                 return (
                     <div key={index} className="mt-3 border-2 rounded-lg">
