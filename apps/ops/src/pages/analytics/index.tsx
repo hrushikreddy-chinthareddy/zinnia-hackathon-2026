@@ -2,7 +2,7 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import Highcharts from 'highcharts';
 import { useSearchParams } from 'next/navigation';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 import { SelectFiltersHeader } from '@deps/components/dashboard/header-components/filters-header/select-filters-header';
 import { AnalyticsTabs } from '@deps/components/dashboard/types';
@@ -52,7 +52,6 @@ const AnalyticsPage = ({
     const params = useSearchParams();
     const tabParam = params.get('tab') ?? '';
     const slug = path.split('/').at(-1);
-    const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const isTabValid = Object.values(AnalyticsTabs).some(
         (value) => value === tabParam
     );
