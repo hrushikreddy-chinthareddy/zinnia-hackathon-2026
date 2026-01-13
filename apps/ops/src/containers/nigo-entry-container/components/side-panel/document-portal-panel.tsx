@@ -44,6 +44,8 @@ const DocumentPortalPanel = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'nigoEntry.documentPanel',
     });
+    // Non-prefixed translation function for createViewDownloadAction which expects global keys
+    const { t: tGlobal } = useTranslation(TranslationFiles.COMMON);
     const [activeTab, setActiveTab] = useState(TabOptions.Working);
     const [loading, getPolicyDocs, workingDocument, relatedDocument] =
         useGetPolicyTypeDocs(policyNumber, clientCode, docType, documentNumber);
@@ -86,7 +88,7 @@ const DocumentPortalPanel = ({
                     {createViewDownloadAction(
                         document,
                         clientCode.toUpperCase(),
-                        t
+                        tGlobal
                     )}
                 </div>
             </div>

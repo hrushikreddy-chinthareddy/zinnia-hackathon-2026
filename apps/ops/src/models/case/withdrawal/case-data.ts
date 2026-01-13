@@ -438,7 +438,7 @@ export const CaseDetails: DigitalFormWithdrawal = {
                     {
                         isSigned: true,
                         signDate: {
-                            text: '07/10/2023',
+                            text: '2023-07-10',
                         },
                         signExtension: null,
                         signName: null,

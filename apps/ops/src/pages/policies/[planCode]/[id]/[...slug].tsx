@@ -171,7 +171,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
 
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
 
-    const getTransactionData = useCallback(() => {
+    const getTransactionData = useCallback(async () => {
         let transactionType;
         if (slug && slug.length > 0) {
             switch (slug[1]) {
@@ -182,7 +182,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                     transactionType = SelfServeTransaction.BENE_CHANGE;
                     break;
             }
-            const transactionPayload = getSelfServeTransactionData(
+            const transactionPayload = await getSelfServeTransactionData(
                 transactionType as SelfServeTransaction,
                 policy as Policy,
                 planCode as string
