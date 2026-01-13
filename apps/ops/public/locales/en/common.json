@@ -6738,6 +6738,9 @@
             "title": "Cancel Policy"
         },
         "summary": {
+            "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
+            "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
+            "bpm500Error": "An error occurred while validating your request",
             "effectiveDate": "Effective date",
             "effectiveDateTooltip": "This is the date used to calculate all the available account values for this withdrawal. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
             "label": "Summary",
@@ -7976,19 +7979,7 @@
             "nigoDetails": "Missing Information",
             "summary": "Summary"
         },
-        "cancelFreeLook": {
-            "summary": {
-                "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
-                "pleaseAcknowledgeErrors": "Please acknowledge the errors to continue",
-                "bpm500Error": "An error occurred while validating your request",
-                "submitCancellation": "Submit Cancellation",
-                "label": "Free Look Cancellation",
-                "status200subtitle": "Review the details of your free look cancellation request below.",
-                "effectiveDate": "Effective Date",
-                "effectiveDateTooltip": "The date when the free look cancellation will take effect",
-                "payee": "Payee"
-            }
-        },
+
         "taskReview": {
             "title": "Input Suitability Data",
             "subTitle": "Are all required sections complete?",

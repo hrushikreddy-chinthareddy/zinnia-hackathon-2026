@@ -2,6 +2,9 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
 
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import BannerAlert, {
     BannerVariant,
 } from '@deps/components/banner-alert/banner-alert';
@@ -44,7 +47,6 @@ const Summary = ({ policy }: SummaryProps) => {
     const { policyNumber, product } = policy;
     const { withdrawal } = useWithdrawal();
     const [isChecked, setIsChecked] = useState(false);
-    const [showSelectionError, setShowSelectionError] = useState(false);
     const { goToNext } = useWorkflow();
     const {
         amount,
@@ -58,9 +60,10 @@ const Summary = ({ policy }: SummaryProps) => {
     } = withdrawal;
     const { validationResponse } = withdrawal;
     const validationSucceeded = useMemo(
-        () => validationResponse?.status === 'SUCCESS',
+        () => validationResponse?.status === 'success',
         [validationResponse]
     );
+
     return (
         <div>
             <CardContainer containerClassNames="border-b-2 border-gray-100">
@@ -149,14 +152,15 @@ const Summary = ({ policy }: SummaryProps) => {
                                 checked={isChecked}
                                 onChange={() => {
                                     setIsChecked(!isChecked);
-                                    setShowSelectionError(false);
                                 }}
                             />
                         </div>
-                        {showSelectionError && (
-                            <div className="text-sm text-red-500">
-                                {t('pleaseAcknowledgeErrors')}
-                            </div>
+                        {isChecked && (
+                            <AssistiveText
+                                className="mt-2"
+                                variant={AssistiveTextVariant.Error}
+                                text={t('missingCheckToConfirm')}
+                            />
                         )}
                     </div>
                 )}

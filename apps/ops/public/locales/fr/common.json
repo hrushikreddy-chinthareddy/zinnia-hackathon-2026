@@ -6659,6 +6659,9 @@
             "title": "Annuler la police"
         },
         "summary": {
+            "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live.)",
+            "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez continuer avec des erreurs et créer une tâche NIGO.",
+            "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande",
             "effectiveDate": "Date d'effet",
             "effectiveDateTooltip": "Ceci est la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce retrait. Comme les fonds dans la valeur du compte sont investis, cette valeur peut changer de jour en jour. Le traitement peut se produire à tout moment, il est donc nécessaire de savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
             "label": "Résumé",
@@ -7852,19 +7855,6 @@
             "start": "Commencer",
             "suitabilityForm": "Formulaire d'aptitude",
             "summary": "Résumé"
-        },
-        "cancelFreeLook": {
-            "summary": {
-                "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live).",
-                "pleaseAcknowledgeErrors": "Veuillez reconnaître les erreurs pour continuer",
-                "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande",
-                "submitCancellation": "Soumettre l'annulation",
-                "label": "Annulation de Rétractation",
-                "status200subtitle": "Veuillez vérifier les détails de votre demande d'annulation de rétractation ci-dessous.",
-                "effectiveDate": "Date d'Effet",
-                "effectiveDateTooltip": "La date à laquelle l'annulation de la rétractation prendra effet",
-                "payee": "Bénéficiaire"
-            }
         },
         "taskReview": {
             "title": "Données d’adéquation des entrées",

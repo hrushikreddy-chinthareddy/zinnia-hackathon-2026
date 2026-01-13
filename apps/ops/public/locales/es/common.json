@@ -6691,6 +6691,9 @@
             "title": "Cancelar Póliza"
         },
         "summary": {
+            "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en Zinnia Live.)",
+            "missingCheckToConfirm": "Para enviar, confirme que desea proceder con errores y crear una tarea NIGO.",
+            "bpm500Error": "Ocurrió un error al validar su solicitud",
             "effectiveDate": "Fecha efectiva",
             "effectiveDateTooltip": "Esta es la fecha utilizada para calcular todos los valores de cuenta disponibles para este retiro. Dado que los fondos en el valor de la cuenta están invertidos, el valor de la cuenta puede cambiar día a día. El procesamiento puede ocurrir en cualquier momento, por lo que necesitamos saber en qué punto retirar efectivamente los fondos, incluso si estamos procesando la transacción algunos días antes o después.",
             "label": "Resumen",
@@ -7823,19 +7826,7 @@
             "nigoDetails": "Información Faltante",
             "summary": "Resumen"
         },
-        "cancelFreeLook": {
-            "summary": {
-                "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en Zinnia Live).",
-                "pleaseAcknowledgeErrors": "Por favor, reconozca los errores para continuar",
-                "bpm500Error": "Se produjo un error al validar su solicitud",
-                "submitCancellation": "Enviar cancelación",
-                "label": "Cancelación de Período de Gracia",
-                "status200subtitle": "Revise los detalles de su solicitud de cancelación de período de gracia a continuación.",
-                "effectiveDate": "Fecha Efectiva",
-                "effectiveDateTooltip": "La fecha en que la cancelación del período de gracia tendrá efecto",
-                "payee": "Beneficiario"
-            }
-        },
+
         "taskReview": {
             "title": "Ingresar Datos de Idoneidad",
             "subTitle": "¿Están completas todas las secciones requeridas?",
