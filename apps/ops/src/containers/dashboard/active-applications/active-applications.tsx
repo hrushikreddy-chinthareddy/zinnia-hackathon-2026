@@ -8,7 +8,7 @@ import { SubmissionType } from '@deps/components/dashboard/sections/submission-t
 import CardContainer from '@deps/containers/card-container/card-container';
 import { oneYearAgoISO } from '@deps/helpers/dashboard/dashboard-helpers';
 import { Statuses } from '@deps/models/case/case';
-import styles from '@deps/pages/dashboard/Dashboard.module.css';
+import styles from '@deps/pages/analytics/Dashboard.module.css';
 import { useDashboardStore } from '@deps/store/store';
 import { CaseCountInputFilter } from '@zinnia/api-types/types/analytics';
 

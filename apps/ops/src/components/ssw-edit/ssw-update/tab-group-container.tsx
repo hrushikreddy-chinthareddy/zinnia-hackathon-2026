@@ -21,7 +21,7 @@ import {
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { DocumentData } from '@deps/models/case/document';
-import { FormSignature } from '@deps/models/case/withdrawal/case';
+import { FormComment, FormSignature } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
@@ -38,7 +38,8 @@ type TabGroupContainerProps = {
     onSswUpdate: (
         item: Program,
         operationType: SswUpdateType,
-        formSign: FormSignature
+        formSign: FormSignature,
+        formCmnt: FormComment | null
     ) => void;
     setSelectedProgram: React.Dispatch<Program>;
     isFormSubmitted: boolean;

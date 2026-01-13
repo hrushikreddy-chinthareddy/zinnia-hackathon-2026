@@ -18,6 +18,7 @@ export const CollapsedLogo = ({
             return (
                 <CarrierAvatar
                     carrier={CarrierName.FARMERS}
+                    alt="Farmers Insurance Logo"
                     height={20}
                     width={20}
                     className={styles.carrierLogo}

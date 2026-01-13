@@ -9,22 +9,14 @@ import { browserLogError } from '@deps/utils/browser-logging';
 
 type UseDiaryNotesParams = {
     policyNumber: string;
-    clientCode: string;
-    offset: number;
-    limit: number;
     showDiaryNotes?: boolean;
     planCode?: string;
-    isLC?: boolean;
 };
 
 export const useDiaryNotes = ({
     policyNumber,
-    clientCode,
-    offset,
-    limit,
     showDiaryNotes = true,
     planCode,
-    isLC,
 }: UseDiaryNotesParams) => {
     const [diaryNotes, setDiaryNotes] = useState<PolicyNotesInfoItem[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,7 +40,7 @@ export const useDiaryNotes = ({
         );
     };
 
-    const mapFASTNotes = (items: any) => {
+    const mapNotes = (items: any) => {
         const arr = items?.map((item: any) => {
             const key = item.type as keyof typeof DairyNoteType;
             return {
@@ -56,7 +48,6 @@ export const useDiaryNotes = ({
                 NoteCategoryDesc: DairyNoteType[key] as DairyNoteType,
                 NoteDate: item.createdDate,
                 NoteText: item.message,
-                SourceSystem: 'FAST',
             };
         });
 
@@ -68,16 +59,12 @@ export const useDiaryNotes = ({
     };
 
     const getDiaryNotes = useCallback(async () => {
-        if (policyNumber && clientCode) {
+        if (policyNumber) {
             const results = await getPolicyNotesInfo({
                 policyNumber,
-                clientCode: clientCode.toUpperCase(),
-                offset,
-                limit,
                 planCode: planCode ?? '',
-                isLC,
             });
-            const mappedResults = isLC ? results : mapFASTNotes(results);
+            const mappedResults = mapNotes(results);
 
             setDiaryNotes(mappedResults?.Items || []);
             setTotalLogs(mappedResults?.Count || 0);
@@ -86,7 +73,7 @@ export const useDiaryNotes = ({
             setIsLoading(false);
             browserLogError('No policy number or client code provided');
         }
-    }, [policyNumber, clientCode, offset, limit, planCode]);
+    }, [policyNumber, planCode]);
 
     useEffect(() => {
         if (showDiaryNotes) getDiaryNotes();

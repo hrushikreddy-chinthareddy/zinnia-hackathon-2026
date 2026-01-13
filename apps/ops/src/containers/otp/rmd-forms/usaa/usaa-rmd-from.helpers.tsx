@@ -44,11 +44,15 @@ import {
     FormSubtype,
     spousalSignatureStateCodes,
 } from '../../withdrawal-forms/flic-withdrawal-form.helpers';
-import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
+import {
+    validateDtccDetails,
+    validateSignESign,
+} from '../../withdrawal-forms/utils/form-validator.helpers';
 
 export default function getUsaaRmdWithdrawalConfig(
     t: TFunction,
-    isDtccSectionEnabled: boolean
+    isDtccSectionEnabled: boolean,
+    isValidationV2Enabled: boolean
 ) {
     const rmdFormValidation = ({
         formSignature,
@@ -90,6 +94,89 @@ export default function getUsaaRmdWithdrawalConfig(
                 'rmdMethod.rmdWarnings.minimumRequiredProgram'
             );
         }
+        const signESignValidate = validateSignESign({
+            formSignature,
+            formESignatureData,
+            t,
+            validateDesignationPresent: false,
+        });
+
+        return { ...errors, ...signESignValidate };
+    };
+
+    /**
+     * Improved form validation with cleaner structure:
+     * - Extracted payment method check
+     * - Destructured bank reference
+     * - Declarative validation rules
+     * - DTCC validation included
+     */
+    const rmdFormValidationV2 = ({
+        formSignature,
+        formDisbursement,
+        formProgram,
+        formESignatureData,
+    }: Partial<FormParts> = {}): FormValidationErrors => {
+        const errors: FormValidationErrors = {};
+
+        const bank = formDisbursement?.bank?.[0];
+        const paymentMethod = formDisbursement?.paymentMethod
+            ?.text as PaymentMethod;
+        const isEftOrWire = [PaymentMethod.EFT, PaymentMethod.Wire].includes(
+            paymentMethod
+        );
+
+        // Banking field validation for EFT/Wire payments
+        if (isEftOrWire) {
+            const matchingFieldRules = [
+                {
+                    field: bank?.accountNumber,
+                    matchField: bank?.reEnterAccountNumber,
+                    errorKey: BankingFields.ReEnterAccountNumber,
+                    errorMessage: 'formValidation.accountNumberDoesNotMatch',
+                },
+                {
+                    field: bank?.routingNumber,
+                    matchField: bank?.reEnterBankRoutingNumber,
+                    errorKey: BankingFields.ReEnterBankRoutingNumber,
+                    errorMessage: 'formValidation.routingNumberDoesNotMatch',
+                },
+            ];
+
+            // Validate matching fields (only when bank name is empty - preserving original logic)
+            const isBankNameEmpty = bank?.bankName === '';
+            if (isBankNameEmpty) {
+                matchingFieldRules.forEach(
+                    ({ field, matchField, errorKey, errorMessage }) => {
+                        if (field !== matchField) {
+                            errors[errorKey] = t(errorMessage);
+                        }
+                    }
+                );
+            }
+        }
+
+        // DTCC validation for RMD
+        if (isDtccSectionEnabled) {
+            const participantId = formDisbursement?.participantId?.text ?? '';
+            const contractNumber = bank?.accountNumber ?? '';
+
+            const dtccErrors = validateDtccDetails(
+                t,
+                participantId,
+                contractNumber
+            );
+            Object.assign(errors, dtccErrors);
+        }
+
+        // RMD-specific validation: at least one RMD program required
+        const rmds = formProgram?.rmd?.rmdPrograms;
+        if (rmds && rmds.length === 0) {
+            errors['rmdMinimumRequiredProgram'] = t(
+                'rmdMethod.rmdWarnings.minimumRequiredProgram'
+            );
+        }
+
         const signESignValidate = validateSignESign({
             formSignature,
             formESignatureData,
@@ -588,7 +675,9 @@ export default function getUsaaRmdWithdrawalConfig(
     return {
         disbursementOptions,
         formPartyConfigs,
-        formValidation: rmdFormValidation,
+        formValidation: isValidationV2Enabled
+            ? rmdFormValidationV2
+            : rmdFormValidation,
         fundWithdrawnMethodOptions,
         irsSignatureConfig,
         signaturesConfig,

@@ -58,7 +58,6 @@ const TabGroupContent = ({
     documentData,
     policyNumber,
     clientCode,
-    isLC,
 }: TabGroupContainerProps) => {
     const { featureFlags } = useOptimizely();
     const [caseTableData, setCaseTableData] = useState<CaseTableData>({
@@ -191,12 +190,8 @@ const TabGroupContent = ({
 
     const { diaryNotes } = useDiaryNotes({
         policyNumber: policy?.policyNumber as string,
-        clientCode: policy?.carrierId as string,
-        offset: 0,
-        limit: 10,
         showDiaryNotes: true,
         planCode: policy?.product?.planCode,
-        isLC: isLC,
     });
 
     const opeDiaryNotes = () => {
@@ -346,7 +341,6 @@ const TabGroupContainer = ({
     return (
         <DiaryNotesProvider
             caseDetails={caseDetails}
-            isLC={isLC}
             planCode={policy?.product?.planCode}
         >
             <WorkflowProvider>

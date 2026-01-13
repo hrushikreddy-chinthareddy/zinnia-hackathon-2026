@@ -106,7 +106,7 @@ export const submitRoleChange = async (
     }
 };
 
-export const deleteTPDRole = async (
+export const deleteRole = async (
     planCode: string | undefined,
     id: string | undefined,
     role: PolicyRole,

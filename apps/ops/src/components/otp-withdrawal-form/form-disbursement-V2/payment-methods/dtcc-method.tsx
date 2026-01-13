@@ -3,6 +3,7 @@ import { useContext } from 'react';
 import { FieldSize, FieldType } from '@deps/components/fields/field';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 
+import { BankingFields } from '../../form-disbursement/form-disbursement.helpers';
 import BankTextFieldV2 from '../bank-text-field-v2';
 import DtccSelectParticipantId from '../dtcc-select-participant-id';
 
@@ -29,6 +30,13 @@ const DtccMethod = ({
                 ...pv.payee,
                 [fieldName]: { text: value },
             },
+            bank: [
+                // Backend expects the contract number/BIN number to be in the bank account number field for DTCC payments
+                {
+                    ...pv?.bank?.[0],
+                    [BankingFields.AccountNumber]: value,
+                },
+            ],
         }));
 
         setDefaultDisbursementInfo((pv: any) => ({
@@ -100,7 +108,7 @@ const DtccMethod = ({
 
     return (
         <form className="grid grid-cols-3 gap-4 mt-4">
-            {config?.fields.map((field: any) => (
+            {config?.fields?.map((field: any) => (
                 <div key={field.fieldName} className={`${field.classNames}`}>
                     {renderField(field)}
                 </div>

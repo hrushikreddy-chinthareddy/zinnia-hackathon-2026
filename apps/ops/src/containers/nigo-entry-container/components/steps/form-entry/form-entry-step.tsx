@@ -68,8 +68,6 @@ function FormEntryStep({
         keyPrefix: 'caseWithdrawal.request',
     });
     const { goToNext } = useWorkflow();
-
-    //const { qualType } = useAccountInfo(document.contract, clientCode);
     const { user } = useUser();
     const caseType = getCaseType(docType as string);
     const formState = useContext(FormDataContext);
@@ -77,6 +75,7 @@ function FormEntryStep({
         channel,
         renewalRequestSignDate,
         subsequentTargetFunds,
+        formErrors: renewalFormErrors,
         formValidator: renewalFormValidator,
         setFormErrors: renewalSetFormErrors,
         ownerInformation,
@@ -354,6 +353,24 @@ function FormEntryStep({
         }
     };
 
+    const showAttachmentError =
+        filteredRelatedDocument &&
+        filteredRelatedDocument?.length !== initRelatedDocCount &&
+        !areAttachmentsViewed;
+
+    const renderRenewalsErrors = (errors: string[]) => {
+        return errors.map((error: string, index: number) => {
+            return (
+                <p
+                    className="mb-2 self-center text-semantic-error"
+                    key={`task-form-error-${index}`}
+                >
+                    {renewalFormErrors[error]}
+                </p>
+            );
+        });
+    };
+
     return (
         <WorkflowCard
             title={formTitle}
@@ -379,6 +396,14 @@ function FormEntryStep({
                 )}
                 {formParts}
                 {caseType !== CaseType.Renewal && <NoteSection />}
+                {Object.keys(renewalFormErrors) &&
+                    caseType === CaseType.Renewal && (
+                        <div className="flex flex-col">
+                            {renderRenewalsErrors(
+                                Object.keys(renewalFormErrors)
+                            )}
+                        </div>
+                    )}
                 <FormErrors
                     t={withdrawalTxt}
                     taskApiError={taskApiError}
@@ -393,17 +418,15 @@ function FormEntryStep({
                             className="mt-2"
                         />
                     )}
-                    {filteredRelatedDocument &&
-                        filteredRelatedDocument?.length !==
-                            initRelatedDocCount && (
-                            <AssistiveText
-                                text={withdrawalTxt(
-                                    'formValidation.attachmentsViewWarning'
-                                )}
-                                variant={AssistiveTextVariant.Error}
-                                className="mt-2"
-                            />
-                        )}
+                    {showAttachmentError && (
+                        <AssistiveText
+                            text={withdrawalTxt(
+                                'formValidation.attachmentsViewWarning'
+                            )}
+                            variant={AssistiveTextVariant.Error}
+                            className="mt-2"
+                        />
+                    )}
                 </div>
             </>
         </WorkflowCard>

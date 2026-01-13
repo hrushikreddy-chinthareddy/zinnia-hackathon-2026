@@ -13,7 +13,8 @@ import { useQuickQuoteResults } from '../results-context';
 
 export const QuickQuoteTotalPremiumRangeSection = () => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const { results } = useQuickQuoteResults();
+    const { results, filterIneligibilityReasons, hasRiderErrorsByTermLength } =
+        useQuickQuoteResults();
 
     if (!results) {
         return null;
@@ -51,13 +52,20 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                         totalPremiumRange.termLength === termLength
                 );
 
+                let reasons = undefined;
+                if (item && item.range == null)
+                    reasons = filterIneligibilityReasons(
+                        item.notAvailabilityReasonField
+                    );
+
                 return {
                     value: item?.range,
-                    notAvailabilityReason:
-                        item && item.range == null
-                            ? item.notAvailabilityReasonField
-                            : undefined,
                     period: 'mo.',
+                    notAvailabilityReasons: reasons,
+                    hasRiderErrors: hasRiderErrorsByTermLength(
+                        result.data.riders,
+                        termLength
+                    ),
                 };
             })}
         />

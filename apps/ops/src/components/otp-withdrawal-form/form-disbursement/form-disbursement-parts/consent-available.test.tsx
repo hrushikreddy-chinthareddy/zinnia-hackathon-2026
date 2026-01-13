@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 // eslint-disable-next-line import/order
-import { cleanup, render } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 
 import {
     FormDataContext,
@@ -10,7 +10,11 @@ import { TaskType } from '@deps/models/case/task';
 import { AccountType, CaseStatus } from '@deps/models/case/withdrawal/case';
 import { CaseDetails } from '@deps/models/case/withdrawal/case-data';
 
-import { ConsentAvailable } from './consent-available';
+import {
+    ConsentAvailable,
+    defaultDisbursmentConsent,
+    getDisbursmentConsent,
+} from './consent-available';
 import { DEFAULT_ADDRESS } from '../../address-entry';
 import { getDefaultFormDisbursementValues } from '../form-disbursement.helpers';
 
@@ -340,6 +344,225 @@ describe('consent Component', () => {
                 ...mockAsOfDateData.disbursmentConsent,
                 isConsent: { text: true },
             },
+        });
+    });
+
+    it('should render in read-only mode when isFormStateReadOnly is true', () => {
+        const signatureFields = [
+            {
+                key: '1',
+                component: () => <div>Component 1</div>,
+                displayLogic: () => true,
+            },
+        ];
+
+        const disbursmentConsentData = {
+            isConsent: { text: true },
+            isSigned: { text: true },
+            signDate: { text: '2023-10-01' },
+            name: { text: 'Jane Doe' },
+            signTitle: { text: 'Owner' },
+        };
+
+        render(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    currentFormState: CaseStatus.Pending,
+                    initialForm: {
+                        data: {
+                            formRequest: {
+                                formDisbursement: {
+                                    disbursmentConsent: disbursmentConsentData,
+                                },
+                            },
+                        },
+                    } as any,
+                    formDisbursement: {
+                        ...formDisbursement,
+                        disbursmentConsent: disbursmentConsentData,
+                    },
+                }}
+            >
+                <ConsentAvailable
+                    signatureFields={signatureFields}
+                    isFormStateReadOnly={true}
+                />
+            </FormDataContext.Provider>
+        );
+
+        const nameInput = screen.getByLabelText(
+            /consentorFullName/i
+        ) as HTMLInputElement;
+        expect(nameInput.value).toBe('Jane Doe');
+    });
+
+    it('should update name when user types in the name field', () => {
+        const signatureFields = [
+            {
+                key: '1',
+                component: () => <div>Component 1</div>,
+                displayLogic: () => true,
+            },
+        ];
+
+        const setFormDisbursement = jest.fn();
+
+        render(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    currentFormState: CaseStatus.Pending,
+                    formDisbursement: {
+                        ...formDisbursement,
+                        disbursmentConsent: {
+                            isConsent: { text: true },
+                            isSigned: { text: null },
+                            signDate: { text: '' },
+                            name: { text: '' },
+                            signTitle: { text: '' },
+                        },
+                    },
+                    setFormDisbursement,
+                }}
+            >
+                <ConsentAvailable
+                    signatureFields={signatureFields}
+                    isFormStateReadOnly={false}
+                />
+            </FormDataContext.Provider>
+        );
+
+        const nameInput = screen.getByLabelText(
+            /consentorFullName/i
+        ) as HTMLInputElement;
+
+        fireEvent.change(nameInput, { target: { value: 'New Name' } });
+
+        expect(nameInput.value).toBe('New Name');
+    });
+
+    it('should render signature validation components from signatureFields', () => {
+        const signatureFields = [
+            {
+                key: 'test-component',
+                component: () => (
+                    <div data-testid="test-signature-component">
+                        Test Signature
+                    </div>
+                ),
+                displayLogic: () => true,
+            },
+        ];
+
+        render(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    currentFormState: CaseStatus.Pending,
+                    formDisbursement: {
+                        ...formDisbursement,
+                        disbursmentConsent: {
+                            isConsent: { text: true },
+                            isSigned: { text: null },
+                            signDate: { text: '' },
+                            name: { text: '' },
+                            signTitle: { text: '' },
+                        },
+                    },
+                }}
+            >
+                <ConsentAvailable
+                    signatureFields={signatureFields}
+                    isFormStateReadOnly={false}
+                />
+            </FormDataContext.Provider>
+        );
+
+        expect(screen.getByTestId('test-signature-component')).toBeVisible();
+    });
+
+    it('should render with empty signatureFields array', () => {
+        render(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    currentFormState: CaseStatus.Pending,
+                    formDisbursement: {
+                        ...formDisbursement,
+                        disbursmentConsent: undefined,
+                    },
+                }}
+            >
+                <ConsentAvailable
+                    signatureFields={[]}
+                    isFormStateReadOnly={false}
+                />
+            </FormDataContext.Provider>
+        );
+
+        expect(screen.getByLabelText(/consentorFullName/i)).toBeVisible();
+    });
+});
+
+describe('getDisbursmentConsent helper', () => {
+    it('should return consentData when isConsent.text is truthy', () => {
+        const consentData = {
+            isConsent: { text: true },
+            name: { text: 'John Doe' },
+            isSigned: { text: true },
+            signTitle: { text: 'Owner' },
+            signDate: { text: '2023-10-01' },
+        };
+
+        const result = getDisbursmentConsent(consentData);
+
+        expect(result).toBe(consentData);
+    });
+
+    it('should return defaultDisbursmentConsent when isConsent.text is null', () => {
+        const consentData = {
+            isConsent: { text: null },
+            name: { text: 'John Doe' },
+            isSigned: { text: true },
+            signTitle: { text: 'Owner' },
+            signDate: { text: '2023-10-01' },
+        };
+
+        const result = getDisbursmentConsent(consentData);
+
+        expect(result).toBe(defaultDisbursmentConsent);
+    });
+
+    it('should return defaultDisbursmentConsent when isConsent.text is false', () => {
+        const consentData = {
+            isConsent: { text: false },
+            name: { text: 'John Doe' },
+            isSigned: { text: true },
+            signTitle: { text: 'Owner' },
+            signDate: { text: '2023-10-01' },
+        };
+
+        const result = getDisbursmentConsent(consentData);
+
+        expect(result).toBe(defaultDisbursmentConsent);
+    });
+
+    it('should return defaultDisbursmentConsent when consentData is undefined', () => {
+        const result = getDisbursmentConsent(undefined);
+
+        expect(result).toBe(defaultDisbursmentConsent);
+    });
+});
+
+describe('defaultDisbursmentConsent', () => {
+    it('should have correct default values', () => {
+        expect(defaultDisbursmentConsent).toEqual({
+            isConsent: { text: null },
+            name: { text: '' },
+            isSigned: { text: null },
+            signTitle: { text: '' },
+            signDate: { text: '' },
         });
     });
 });

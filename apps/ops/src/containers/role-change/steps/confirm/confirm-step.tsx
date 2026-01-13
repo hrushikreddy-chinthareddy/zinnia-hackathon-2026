@@ -19,7 +19,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { Statuses } from '@deps/models/case/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
-import { deleteTPDRole, submitRoleChange } from '@deps/queries/api/role-change';
+import { deleteRole, submitRoleChange } from '@deps/queries/api/role-change';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import {
     TransactionSuccessfulEvent,
@@ -91,7 +91,7 @@ const ConfirmStep = ({
                 return;
             }
 
-            response = await deleteTPDRole(
+            response = await deleteRole(
                 policy.product?.planCode,
                 policy.policyNumber,
                 role,

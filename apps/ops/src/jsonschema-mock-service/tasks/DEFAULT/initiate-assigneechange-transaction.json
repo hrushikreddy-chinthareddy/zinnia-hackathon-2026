@@ -2,7 +2,6 @@
     "formId": "21416aaf-9893-407c-bd20-cedfdded2f47",
     "process": "Policy Update",
     "taskType": "INITIATE_ASSIGNEECHANGE_TRANSACTION",
-    "carrier": "WELB",
     "processSubType": "Assignee Change",
     "formSchema": {
         "type": "object"
@@ -228,7 +227,7 @@
                                         "phones": [
                                             {
                                                 "dialNumber": "",
-                                                "phoneType": "HOME",
+                                                "phoneType": "MOBILE",
                                                 "isPreferred": true
                                             }
                                         ],
@@ -303,7 +302,7 @@
                                             },
                                             "relationshipToTheCurrentOwner": {
                                                 "type": ["string", "null"],
-                                                "title": "Relationship to current owner",
+                                                "title": "Relationship to party",
                                                 "enum": [
                                                     "TRUSTEE",
                                                     "TRUSTEEOFMINOR",
@@ -473,7 +472,7 @@
                                                     "type": "object",
                                                     "default": {
                                                         "dialNumber": "",
-                                                        "phoneType": "HOME",
+                                                        "phoneType": "MOBILE",
                                                         "isPreferred": false
                                                     },
                                                     "properties": {
@@ -1413,10 +1412,11 @@
                                 },
                                 "relationshipToTheCurrentOwner": {
                                     "ui:widget": "SelectWidget",
+                                    "ui:title": "Relationship to party",
                                     "ui:emptyValue": null,
                                     "ui:options": {
                                         "enumNames": [
-                                            "Select relationship to current owner",
+                                            "Select relationship to party",
                                             "Trustee",
                                             "Trustee of Minor",
                                             "Trustee of Incompetent",
@@ -1452,7 +1452,7 @@
                                             "Other"
                                         ]
                                     },
-                                    "ui:placeholder": "Select relationship to current owner"
+                                    "ui:placeholder": "Select relationship to party"
                                 },
                                 "identifications": {
                                     "ui:options": {

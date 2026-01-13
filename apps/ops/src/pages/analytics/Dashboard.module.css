@@ -49,6 +49,10 @@
     border: 16px solid var(--color-base-surface-surface-primary);
 }
 
+.buttonGroup {
+    margin-bottom: var(--measure-dimension-gap-lg);
+}
+
 .tabContent {
     border-color: var(--color-base-border-border-light);
     border-top-width: 2px;

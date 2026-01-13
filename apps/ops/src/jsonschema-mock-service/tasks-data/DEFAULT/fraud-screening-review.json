@@ -1,0 +1,67 @@
+{
+    "id": "TA000000036181",
+    "caseId": "CA0000437815",
+    "source": "Zinnia.BPMRiskshield",
+    "process": "Compliance",
+    "carrier": "SBGC",
+    "taskType": "FRAUD_SCREENING_REVIEW",
+    "taskName": "Carrier fraud screening approval",
+    "taskDetails": "",
+    "status": "INPROGRESS",
+    "data": {
+        "details": {
+            "transactionDetails": {
+                "policyNumber": "FNWLTROO11138B",
+                "transactionType": "Withdrawal",
+                "caseId": "CA0000465215"
+            },
+            "documents": [
+                {
+                    "documentId": "1213112",
+                    "docType": "PDF",
+                    "documentName": "Withdrawal12",
+                    "documentSource": "EDS"
+                },
+                {
+                    "documentId": "121197",
+                    "docType": "PDF",
+                    "documentName": "Withdrawal192",
+                    "documentSource": "EDS"
+                }
+            ],
+            "fraudShareThreatDetails": [
+                {
+                    "detectedFailure": "Email Address",
+                    "failureValue": "denism@yahoo.com",
+                    "ownerType": "INDIVIDUAL_OWNER_EMAIL",
+                    "failureType": null,
+                    "errorCode": null,
+                    "errorDescription": null
+                }
+            ],
+            "giactThreatDetails": [
+                {
+                    "ownerType": "INDIVIDUAL",
+                    "failureType": "Account Verification",
+                    "errorCode": "ND00",
+                    "errorDescription": "The routing number submitted belongs to a financial institution; however, this financial institution does not report information to the National Shared Database. The financial institutions that do report to the National Shared Database have not reported any recent experience (positive or negative) with this account."
+                },
+                {
+                    "ownerType": "JOINT_OWNER",
+                    "failureType": "Authentication",
+                    "errorCode": "n/a",
+                    "errorDescription": ""
+                },
+                {
+                    "ownerType": "INDIVIDUAL",
+                    "failureType": "Verification",
+                    "errorCode": "NoData",
+                    "errorDescription": "No data was found on an identity transaction, or the routing number submitted belongs to a financial institution; however, this financial institution does not report information to the National Shared Database. The financial institutions that do report to the National Shared Database have not reported any recent experience (positive or negative) with this account."
+                }
+            ],
+            "result": null,
+            "approvalReason": null,
+            "rejectionReason": null
+        }
+    }
+}

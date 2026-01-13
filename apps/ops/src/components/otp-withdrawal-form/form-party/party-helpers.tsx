@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect } from 'react';
 
@@ -8,9 +7,11 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '@deps/components/fields/field-date-select/field-date-select';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
+import {
+    getFormattedDate,
+    getFormattedZaharaDate,
+} from '@deps/helpers/date.helpers';
 import {
     FormValidationErrors,
     MaritalStatus,
@@ -18,7 +19,6 @@ import {
     Party,
     PartyRoles,
 } from '@deps/models/case/withdrawal/case';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { PartyType } from '@zinnia/api-types/types/sor';
 
 import { IFieldConfig, selectVarientByConfig } from './form-party';
@@ -47,11 +47,10 @@ export function usePartyFields(
     });
     const ssnFormat = { format: '#########' };
 
-    const formDob = party?.dob?.text
-        ? dayjs(party?.dob?.text, ZAHARA_API_DATE_FORMAT).format(
-              DATE_PICKER_FORMAT
-          )
-        : '';
+    const formDob = getFormattedDate(
+        party?.dob?.text,
+        'PartyHelpers::input DOB'
+    );
 
     const [firstName, setFirstName] = useState(party?.firstName || '');
     const [middleName, setMiddleName] = useState(party?.middleName || '');
@@ -74,11 +73,10 @@ export function usePartyFields(
             email,
             dob: dob
                 ? {
-                      text:
-                          dob &&
-                          dayjs(dob, DATE_PICKER_FORMAT).format(
-                              ZAHARA_API_DATE_FORMAT
-                          ),
+                      text: getFormattedZaharaDate(
+                          dob,
+                          'PartyHelpers::output DOB'
+                      ),
                   }
                 : { text: null },
             maritalStatus: { text: maritalStatus as maritalStatusType },

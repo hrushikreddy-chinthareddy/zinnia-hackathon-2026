@@ -40,8 +40,9 @@ export const SubmissionTypeFilters = () => {
 
     return (
         <div className={sharedStyles.timeFilterContainer}>
-            <div className="w-1/2 flex gap-2">
+            <div className={sharedStyles.filterGroup}>
                 <Select
+                    className={sharedStyles.filterItem}
                     maxContentWidth
                     label="Group by"
                     options={submissionVsOptions}
@@ -53,6 +54,7 @@ export const SubmissionTypeFilters = () => {
                 />
 
                 <CaseTypeFilter
+                    className={sharedStyles.filterItem}
                     onValueChange={setSelectedProcess}
                     caseStatus={[
                         Statuses.InProgress,
@@ -63,7 +65,7 @@ export const SubmissionTypeFilters = () => {
                     value={selectedProcess}
                 />
             </div>
-            <div className="w-1/2">
+            <div>
                 <TimeFilter
                     defaultValue={timeframeRadio}
                     onRadioChange={(val) =>

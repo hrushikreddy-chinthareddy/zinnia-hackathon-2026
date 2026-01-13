@@ -4,6 +4,10 @@ import {
     IconType,
     MenuContextualItem,
     Button,
+    Heading,
+    HeadingVariant,
+    Text,
+    BodyVariant,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
@@ -90,56 +94,65 @@ const IllustrationMenu = ({
         return (
             <Modal
                 open={openArchiveConfirmation}
-                modalTitle={
-                    t(
-                        'clientCase.illustrationDetails.archiveIllustrationPopoverTitle'
-                    ) as string
-                }
-                content={
-                    <>
-                        <p className="typography-content-body">
-                            {t(
-                                'clientCase.illustrationDetails.archiveIllustrationPopoverBody'
-                            )}
-                        </p>
-                        <div className="flex justify-end gap-2">
-                            <Button
-                                onClick={handleArchiveIllustration}
-                                mode="primary"
-                                data-testid="confirm-archive-btn"
-                                aria-label={
-                                    t(
-                                        'clientCase.illustrationDetails.confirmArchiveAriaLabel'
-                                    ) as string
-                                }
-                                type="button"
-                                size="small"
-                            >
-                                {t(
-                                    'clientCase.illustrationDetails.confirmArchive'
-                                )}
-                            </Button>
-                            <Button
-                                onClick={() =>
-                                    setOpenArchiveConfirmation(false)
-                                }
-                                mode="secondary"
-                                data-testid="cancel-archive-btn"
-                                aria-label={
-                                    t(
-                                        'clientCase.illustrationDetails.cancelArchiveAriaLabel'
-                                    ) as string
-                                }
-                                type="button"
-                                size="small"
-                            >
-                                {t('clientCase.illustrationDetails.cancel')}
-                            </Button>
-                        </div>
-                    </>
-                }
                 closeIcon="X"
                 onCancel={() => setOpenArchiveConfirmation(false)}
+                content={
+                    <div className="flex flex-col items-center text-black gap-2 py-20">
+                        <Icon
+                            type={IconType.ALERT_EXCLAMATION}
+                            alt={
+                                t(
+                                    'clientCase.illustrationDetails.archiveIllustrationIconTitle'
+                                ) as string
+                            }
+                            height={50}
+                            width={50}
+                        />
+                        <Heading as={HeadingVariant.h3}>
+                            {
+                                t(
+                                    'clientCase.illustrationDetails.archiveIllustrationPopoverTitle'
+                                ) as string
+                            }
+                        </Heading>
+                        <Text as={BodyVariant.p} className="mb-8">
+                            {
+                                t(
+                                    'clientCase.illustrationDetails.archiveIllustrationPopoverBody'
+                                ) as string
+                            }
+                        </Text>
+
+                        <Button
+                            onClick={handleArchiveIllustration}
+                            mode="primary"
+                            data-testid="confirm-archive-btn"
+                            aria-label={
+                                t(
+                                    'clientCase.illustrationDetails.confirmArchiveAriaLabel'
+                                ) as string
+                            }
+                            type="button"
+                            size="small"
+                        >
+                            {t('clientCase.illustrationDetails.confirmArchive')}
+                        </Button>
+                        <Button
+                            onClick={() => setOpenArchiveConfirmation(false)}
+                            mode="secondary"
+                            data-testid="cancel-archive-btn"
+                            aria-label={
+                                t(
+                                    'clientCase.illustrationDetails.cancelArchiveAriaLabel'
+                                ) as string
+                            }
+                            type="button"
+                            size="small"
+                        >
+                            {t('clientCase.illustrationDetails.cancel')}
+                        </Button>
+                    </div>
+                }
             />
         );
     } else {

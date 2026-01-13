@@ -1,10 +1,12 @@
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 
+import { getEvents } from '@deps/containers/subpages/activity-sub-page/event-feed/event-feed.helpers';
 import {
     DatesFilter,
     EventFilterKeys,
     EventFilters,
+    HistoryFilters,
     PeopleFilters,
     PolicyFilters,
     TransactionFilters,
@@ -12,6 +14,7 @@ import {
 } from '@deps/contexts/HistoryFiltersContext';
 import { determineRange } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
+import { GetTransactionsSummaryProps } from '@deps/queries/tanstack/transactions/types';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
@@ -93,6 +96,7 @@ export const filterEventFilters = (
                 return newState;
             }
             return {
+                ...newState,
                 [filterKey]: filtered,
             };
         }
@@ -105,4 +109,45 @@ export const filterEventFilters = (
         ...newState,
         [filterKey]: [subfilter],
     };
+};
+
+export const getTransactionTypesFromHistoryFilters = (
+    historyFilters: HistoryFilters,
+    multiTransactionTypes?: boolean
+): string[] | undefined => {
+    if (hasFilter(historyFilters?.eventFilter)) {
+        return getEvents(
+            historyFilters.eventFilter,
+            multiTransactionTypes ?? false
+        );
+    }
+    return undefined;
+};
+
+export const buildTransactionApiArgsFromFilters = (
+    historyFilters: HistoryFilters
+): Pick<GetTransactionsSummaryProps, 'year' | 'startDate' | 'endDate'> => {
+    const args: Pick<
+        GetTransactionsSummaryProps,
+        'year' | 'startDate' | 'endDate'
+    > = {};
+
+    if (hasFilter(historyFilters?.yearFilter)) {
+        args.year = dayjs(historyFilters.yearFilter).format('YYYY-01-01');
+    }
+
+    if (historyFilters?.datesFilter) {
+        if (historyFilters?.datesFilter?.from) {
+            args.startDate = dayjs(historyFilters.datesFilter.from).format(
+                'YYYY-MM-DD'
+            );
+        }
+        if (historyFilters?.datesFilter?.to) {
+            args.endDate = dayjs(historyFilters.datesFilter.to).format(
+                'YYYY-MM-DD'
+            );
+        }
+    }
+
+    return args;
 };
