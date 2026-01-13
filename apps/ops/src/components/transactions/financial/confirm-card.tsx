@@ -93,6 +93,7 @@ const ConfirmCard = ({
         systematicProgramTablesEnabled,
         t,
         payorPayeeName,
+        path,
         type,
         amountToDisplay,
         amount,
