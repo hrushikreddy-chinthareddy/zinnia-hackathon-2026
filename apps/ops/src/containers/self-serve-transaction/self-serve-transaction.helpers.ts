@@ -19,7 +19,6 @@ import {
     buildInitialBeneChangeFormData,
 } from './transactions/bene-change-transaction';
 import { SelfServeTransaction } from './types';
-import beneChangeMetadata from '../../jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json';
 
 const removeFirstTabSchema = (metadata: any) => ({
     ...metadata,
@@ -29,6 +28,32 @@ const removeFirstTabSchema = (metadata: any) => ({
     },
 });
 
+const getTransactionMetadata = async (
+    taskType: TaskType,
+    policy: Policy,
+    planCode: string,
+    dynamicImport: () => Promise<any>
+) => {
+    const clientId = policy?.carrierId || '';
+    const isProdEnv = !isNonProductionEnvironment();
+    browserLogInfo('getSelfServeTransactionData environment', {
+        isProdEnv,
+        taskType,
+        clientId,
+        processType: ProcessType.PolicyUpdate,
+        planCode,
+        policyNumber: policy?.policyNumber,
+    });
+    const metaData = isProdEnv
+        ? await getTaskFormMetadata(
+              clientId,
+              taskType,
+              ProcessType.PolicyUpdate
+          )
+        : (await dynamicImport()).default;
+    return removeFirstTabSchema(metaData);
+};
+
 export const getSelfServeTransactionData = async (
     transactionType: SelfServeTransaction,
     policy: Policy,
@@ -36,30 +61,15 @@ export const getSelfServeTransactionData = async (
 ) => {
     switch (transactionType) {
         case SelfServeTransaction.ASSIGNEE_CHANGE: {
-            const taskType = TaskType.Initiate_AssigneeChange_Transaction;
-            const clientId = policy?.carrierId || '';
-            const isProdEnv = !isNonProductionEnvironment();
-
-            browserLogInfo('getSelfServeTransactionData environment', {
-                isProdEnv,
-                taskType,
-                clientId,
-                processType: ProcessType.PolicyUpdate,
+            const metadata = await getTransactionMetadata(
+                TaskType.Initiate_AssigneeChange_Transaction,
+                policy,
                 planCode,
-                policyNumber: policy?.policyNumber,
-            });
-
-            const assigneeChangeMetadataNew = isProdEnv
-                ? await getTaskFormMetadata(
-                      clientId,
-                      taskType,
-                      ProcessType.PolicyUpdate
-                  )
-                : await import(
-                      `@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json`
-                  );
-
-            const metadata = removeFirstTabSchema(assigneeChangeMetadataNew);
+                () =>
+                    import(
+                        '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json'
+                    )
+            );
             return {
                 metaData: JSON.parse(JSON.stringify(metadata)),
                 initialCustomData: {
@@ -82,7 +92,15 @@ export const getSelfServeTransactionData = async (
             };
         }
         case SelfServeTransaction.BENE_CHANGE: {
-            const metadata = removeFirstTabSchema(beneChangeMetadata);
+            const metadata = await getTransactionMetadata(
+                TaskType.Initiate_BeneChange_Transaction,
+                policy,
+                planCode,
+                () =>
+                    import(
+                        '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json'
+                    )
+            );
             return {
                 metaData: JSON.parse(JSON.stringify(metadata)),
                 initialCustomData: {
