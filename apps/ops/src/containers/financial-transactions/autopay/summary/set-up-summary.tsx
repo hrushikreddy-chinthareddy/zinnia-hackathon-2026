@@ -146,8 +146,8 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                             variant={LabelVariant.FieldLabel}
                             label={t(
                                 systematicProgramTablesEnabled
-                                    ? `${translationKeyPrefix}SummarySystematicProgramAmount`
-                                    : `${translationKeyPrefix}SummaryAutopayAmount`
+                                    ? `allFields.${translationKeyPrefix}SummarySystematicProgramAmount`
+                                    : `allFields.${translationKeyPrefix}SummaryAutopayAmount`
                             )}
                         />
                         <Typography variant={TypographyVariant.Value}>
@@ -284,7 +284,11 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     submitLabel={
-                        t(`${translationKeyPrefix}.summary.submit`) ?? ''
+                        t(
+                            systematicProgramTablesEnabled
+                                ? `allFields.${translationKeyPrefix}SummarySubmit`
+                                : `${translationKeyPrefix}.summary.submit`
+                        ) ?? ''
                     }
                     trackEventProps={{
                         type: transactionType,

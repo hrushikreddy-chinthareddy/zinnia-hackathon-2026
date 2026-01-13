@@ -167,7 +167,9 @@ const AutopayContainer = ({
                     setState={setAutopay as StartStepSetState}
                     state={autopay}
                     subtitle={
-                        !isSetUp && parentPage === ParentPage.Premiums
+                        !isSetUp &&
+                        (parentPage === ParentPage.Premiums ||
+                            parentPage === ParentPage.Loans)
                             ? t(
                                   translationKeyPrefix + '.start.subtitleManage'
                               ) ?? ''

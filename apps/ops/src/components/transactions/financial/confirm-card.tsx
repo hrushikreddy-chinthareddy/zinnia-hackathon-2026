@@ -1,3 +1,4 @@
+import { usePathname } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useMemo } from 'react';
@@ -9,12 +10,13 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
-import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import {
     numberFormatify,
     percentFormatify,
 } from '@deps/helpers/numbers.helpers';
 import { AmountType } from '@deps/models/funds/enums';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface ConfirmProps {
     amount: number;
@@ -35,10 +37,13 @@ const ConfirmCard = ({
     type,
     amountType = AmountType.Amount,
 }: ConfirmProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'financialTransaction.confirm',
-    });
+    const { t } = useTranslation();
     const router = useRouter();
+    const { featureFlags } = useOptimizely();
+    const path = usePathname();
+
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const amountToDisplay =
         amountType === AmountType.Amount
@@ -53,23 +58,45 @@ const ConfirmCard = ({
                         {payorPayeeName}'s {numberFormatify(amount)}{' '}
                     </PiiWrapper>
                     <span className="font-bold">{type}</span>
-                    {t('subtitle.wasReceivedNigo')}
+                    {t('financialTransaction.confirm.subtitle.wasReceivedNigo')}
                 </>
             );
         }
 
-        return (
+        return systematicProgramTablesEnabled ? (
             <>
-                {t('subtitle.a')}
-                <span className="font-bold">{type}</span>
-                {t('subtitle.requestFrom')}
+                {t('allFields.financialTransactionWeReceived')}
                 <PiiWrapper className="font-bold">{payorPayeeName}</PiiWrapper>
-                {t('subtitle.for')}
+                {t('allFields.financialTransactionS')}
+                {t(
+                    path.includes('add-')
+                        ? 'allFields.financialTransactionSetUpRequest'
+                        : 'allFields.financialTransactionRequest'
+                )}
+                <span className="font-bold">{type}</span>
+                {t('allFields.financialTransactionProgram')}
+                {t('allFields.financialTransactionTrack')}
+            </>
+        ) : (
+            <>
+                {t('financialTransaction.confirm.subtitle.a')}
+                <span className="font-bold">{type}</span>
+                {t('financialTransaction.confirm.subtitle.requestFrom')}
+                <PiiWrapper className="font-bold">{payorPayeeName}</PiiWrapper>
+                {t('financialTransaction.confirm.subtitle.for')}
                 <PiiWrapper className="font-bold">{amountToDisplay}</PiiWrapper>
-                {t('subtitle.wasReceived')}
+                {t('financialTransaction.confirm.subtitle.wasReceived')}
             </>
         );
-    }, [amount, isNigo, payorPayeeName, t, type, amountToDisplay]);
+    }, [
+        isNigo,
+        systematicProgramTablesEnabled,
+        t,
+        payorPayeeName,
+        type,
+        amountToDisplay,
+        amount,
+    ]);
 
     return (
         <CardInfo
@@ -79,23 +106,25 @@ const ConfirmCard = ({
                           action: () => {
                               router.push(`/cases/${caseId}/progress`);
                           },
-                          text: t('cta'),
+                          text: t('financialTransaction.confirm.cta'),
                       }
                     : undefined
             }
             secondaryCta={
                 <NavElement
-                    aria-label={t('secondaryCta') as string}
+                    aria-label={
+                        t('financialTransaction.confirm.secondaryCta') as string
+                    }
                     onClick={() => router.push(parentPage)}
                     size={NavElementSize.Small}
                     type={NavElementType.Button}
                     variant={NavElementVariant.Default}
                 >
-                    {t('secondaryCta')}
+                    {t('financialTransaction.confirm.secondaryCta')}
                 </NavElement>
             }
             subtitle={subtitle}
-            title={t('title')}
+            title={t('financialTransaction.confirm.title')}
         />
     );
 };
