@@ -814,29 +814,28 @@
                                         ],
                                         "addresses": [
                                             {
-                                                "addressLine1": null,
-                                                "addressLine2": null,
-                                                "addressLine3": null,
+                                                "addressLine1": "",
+                                                "addressLine2": "",
+                                                "addressLine3": "",
                                                 "addressType": "RESIDENCE",
-                                                "city": null,
+                                                "city": "",
                                                 "state": null,
-                                                "zipCode": null,
-                                                "zipCodeExtension": null,
-                                                "isPreffered": true
+                                                "zipCode": "",
+                                                "isPreferred": true
                                             }
                                         ],
                                         "phones": [
                                             {
                                                 "phoneType": "MOBILE",
                                                 "dialNumber": "",
-                                                "isPreffered": true
+                                                "isPreferred": true
                                             }
                                         ],
                                         "emails": [
                                             {
                                                 "emailType": "PERSONAL",
                                                 "emailAddress": "",
-                                                "isPreffered": true
+                                                "isPreferred": true
                                             }
                                         ]
                                     },
@@ -1036,15 +1035,14 @@
                                                         }
                                                     },
                                                     "default": {
-                                                        "addressLine1": null,
-                                                        "addressLine2": null,
-                                                        "addressLine3": null,
+                                                        "addressLine1": "",
+                                                        "addressLine2": "",
+                                                        "addressLine3": "",
                                                         "addressType": "RESIDENCE",
-                                                        "city": null,
+                                                        "city": "",
                                                         "state": null,
-                                                        "zipCode": null,
-                                                        "zipCodeExtension": null,
-                                                        "isPreffered": false
+                                                        "zipCode": "",
+                                                        "isPreferred": false
                                                     }
                                                 }
                                             },
@@ -1074,8 +1072,8 @@
                                                     },
                                                     "default": {
                                                         "phoneType": "MOBILE",
-                                                        "dialNumber": null,
-                                                        "isPreffered": false
+                                                        "dialNumber": "",
+                                                        "isPreferred": false
                                                     }
                                                 }
                                             },
@@ -1104,8 +1102,8 @@
                                                     },
                                                     "default": {
                                                         "emailType": "PERSONAL",
-                                                        "emailAddress": null,
-                                                        "isPreffered": false
+                                                        "emailAddress": "",
+                                                        "isPreferred": false
                                                     }
                                                 }
                                             }
@@ -1139,14 +1137,13 @@
                                                                     }
                                                                 },
                                                                 "required": [
-                                                                    "emailAddress"
+                                                                    "emailAddress",
+                                                                    "emailType"
                                                                 ]
                                                             },
                                                             "minContains": 1
                                                         }
-                                                    },
-
-                                                    "required": ["emails"]
+                                                    }
                                                 }
                                             },
                                             {
@@ -1181,7 +1178,7 @@
                                                                         ],
                                                                         "minLength": 1
                                                                     },
-                                                                    "state": {
+                                                                    "addressType": {
                                                                         "type": [
                                                                             "string"
                                                                         ]
@@ -1195,15 +1192,14 @@
                                                                 },
                                                                 "required": [
                                                                     "addressLine1",
-                                                                    "state",
+                                                                    "addressType",
                                                                     "city",
                                                                     "zipCode"
                                                                 ]
                                                             },
                                                             "minContains": 1
                                                         }
-                                                    },
-                                                    "required": ["addresses"]
+                                                    }
                                                 }
                                             },
                                             {
@@ -1412,7 +1408,6 @@
                                                 }
                                             }
                                         ],
-
                                         "dependencies": {
                                             "preferredCommunicationType": {
                                                 "oneOf": [
@@ -1548,6 +1543,7 @@
                             "ui:order": [
                                 "partyRole",
                                 "action",
+                                "preferredCommunicationType",
                                 "party",
                                 "isPerStirpes",
                                 "isIrrevocable"
@@ -1582,6 +1578,19 @@
                                 "ui:widget": "RadioWidget",
                                 "ui:options": {
                                     "enumNames": ["Yes", "No"]
+                                }
+                            },
+                            "preferredCommunicationType": {
+                                "ui:widget": "RadioWidget",
+                                "ui:emptyValue": null,
+                                "ui:options": {
+                                    "inline": true,
+                                    "enumNames": [
+                                        "Email",
+                                        "Mail",
+                                        "Not specified"
+                                    ],
+                                    "allowNullValue": true
                                 }
                             },
                             "party": {
