@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import {
     Icon,
     IconType,
@@ -34,12 +35,17 @@ import {
     isPreviewSupported,
     useDocumentDownload,
 } from '@deps/hooks/useDocumentDownload';
+import { Processes, Statuses } from '@deps/models/case/case';
+import { DocumentType } from '@deps/models/case/document';
+import { SendDocumentFormType } from '@deps/models/case/send-document';
+import { getCases } from '@deps/queries/api/cases';
 import { ReactComponent as LinkIcon } from '@deps/styles/elements/icons/actions/link.svg';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import {
     CaseDocumentClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { MetadataSearchResponse } from '@zinnia/api-types/types/documents-v3';
 
@@ -137,36 +143,65 @@ export const createViewDownloadAction = (
             }
             activeDocType={doc.documentSource}
         >
-            {label ? t(label) : t('view')}
+            {label ? t(label) : t('allFields.view')}
         </DocumentPreviewer>
     ) : (
         <DownloadItem doc={doc} carrierCode={carrierCode} />
     );
 };
 
-export const createSendAction = (
-    policyNumber: string,
-    planCode: string | undefined,
-    policyDeliveryDate: string | undefined,
-    t: TFunction
-) => {
+function CreateSendAction({
+    policyNumber,
+    planCode,
+    featureFlags,
+    t,
+}: {
+    policyNumber: string;
+    planCode: string | undefined;
+    featureFlags: FeatureFlags;
+    t: TFunction;
+}) {
+    // If there is currently an open case for the policy pages, disable the send action
+    const { data: caseInfo } = useQuery({
+        queryKey: ['caseData', policyNumber, featureFlags],
+        queryFn: () =>
+            getCases(
+                {
+                    limit: 100,
+                    notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
+                    process: [Processes.Correspondence],
+                    requestSubType: [SendDocumentFormType.PolicyPagesForm],
+                    policyNumber,
+                },
+                featureFlags
+            ),
+    });
+
+    const pendingCase =
+        Array.isArray(caseInfo?.data) && caseInfo?.data.length > 0;
+
     return (
         <NavElement
             className={clsx(
                 'text-left underline underline-offset-2',
-                styles.actionPadding,
-                !policyDeliveryDate && styles.disabled
+                styles.actionPadding
             )}
-            href={`/contact-center/send-document?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
+            isNewPage={true}
+            target="_blank"
+            href={`/contact-center/send-policy-pages?planCode=${planCode}&policyNumber=${policyNumber}&correlationId=${uuidV4()}`}
             size={NavElementSize.Small}
-            title={`${t('general.send')}`}
+            title={
+                pendingCase
+                    ? `${t('allFields.policyPagesBeingResent')}`
+                    : `${t('allFields.sendPolicyPages')}`
+            }
             type={NavElementType.Link}
-            disabled={!policyDeliveryDate}
+            disabled={pendingCase}
         >
             {t('general.send')}
         </NavElement>
     );
-};
+}
 
 export default function DocumentsResultsTable({
     carrierCode,
@@ -175,7 +210,6 @@ export default function DocumentsResultsTable({
     policyNumber,
     results,
     planCode,
-    policyDeliveryDate,
     context,
 }: DocumentsResultsTableProps) {
     const { featureFlags } = useOptimizely();
@@ -365,14 +399,15 @@ export default function DocumentsResultsTable({
                                 )}
 
                                 {featureFlags.send_policy_pages &&
-                                document.documentType === 'POLPG'
-                                    ? createSendAction(
-                                          policyNumber,
-                                          planCode,
-                                          policyDeliveryDate,
-                                          t
-                                      )
-                                    : null}
+                                document.documentType ===
+                                    DocumentType.PolicyPage ? (
+                                    <CreateSendAction
+                                        policyNumber={policyNumber}
+                                        planCode={planCode}
+                                        featureFlags={featureFlags}
+                                        t={t}
+                                    />
+                                ) : null}
                             </TableCell>
                         </TableRow>
                     );
