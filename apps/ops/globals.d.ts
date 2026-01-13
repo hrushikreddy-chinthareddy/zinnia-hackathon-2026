@@ -1,3 +1,4 @@
+
 export type PendoOptions = {
     visitor: {
         id: string; // Required if user is logged in
@@ -7,6 +8,7 @@ export type PendoOptions = {
         isInternalZinniaUser?: string; // Optional
         roles?: string[]; // Optional
         carrierAccessList?: string[]; // Optional
+        roleToCarrierMap?: `${string}:${string}`[]; // Optional
     };
 
     account: {
