@@ -70,6 +70,7 @@
         "amountExcessToGuideline": "Monto excedente a la directriz",
         "amountExcessToModifiedEndowmentContract": "Monto excedente al MEC",
         "amountType": "Tipo de monto",
+        "analyticsDashboard": "Panel de Transportista",
         "annualBenefitAmount": "Monto anual del beneficio",
         "annualizedPremium": "Prima anualizada",
         "annualPremium": "Prima anual",
@@ -97,6 +98,7 @@
         "carrierId": "ID del transportista",
         "carrierName": "Nombre de la compañía",
         "caseId": "ID du dossier",
+        "cases": "Casos",
         "caseIdSearchError": "Ingrese un Case Id para mostrar resultados de búsqueda",
         "caseType": "Tipo de caso",
         "certifiedReceivedDate": "Fecha de recepción certificada",
@@ -289,6 +291,8 @@
         "lastNameSearchError": "Ingrese un apellido para mostrar resultados de búsqueda",
         "lastPaymentDate": "Fecha del último pago",
         "lineOfBusiness": "Línea de negocio",
+        "loadingTransactionDetails": "Cargando detalles de la transacción...",
+        "loadingTransactions": "Cargando transacciones...",
         "loanAccruedInterest": "Interés acumulado del préstamo",
         "loanActivity": "Activité de prêt",
         "loanBalance": "Saldo del préstamo",
@@ -374,6 +378,7 @@
         "nextProgramDate": "Fecha del próximo programa",
         "noFormsFound": "No se encontraron formularios.",
         "noRecordsFound": "No se encontraron registros.",
+        "noTransactionsTitle": "Actualmente no hay transacciones {{status}}.",
         "numberOfOccurrence": "Número de ocurrencias",
         "numberOfWithdrawal": "Total de retiros tomados",
         "openInNewWindow": "Abre en nueva ventana",
@@ -430,6 +435,8 @@
         "policyGainAmount": "Monto de ganancia de {{policyNomenclature}}",
         "policyNumber": "Número de {{policyNomenclature}}",
         "policyNumberSearchError": "Ingrese un número de póliza o contrato para mostrar resultados de búsqueda",
+        "policyPage": "Página de la Póliza",
+        "policyPagesBeingResent": "Actualmente se están reenviando las páginas de políticas.",
         "policyReferenceId": "ID de referencia de {{policyNomenclature}}",
         "policySource": "Fuente de {{policyNomenclature}}",
         "policySourceDescription": "Descripción de la fuente de {{policyNomenclature}}",
@@ -510,6 +517,7 @@
         "sendChannel_email": "enviados por correo electrónico a",
         "sendChannel_fax": "enviados por fax a",
         "sendChannel_paper_mail": "enviados por correo a",
+        "sendPolicyPages": "Enviar páginas de políticas",
         "sendToDifferentAddress": "Enviar a una dirección diferente",
         "setUpAutopay": "Configurar pago automático",
         "setUp": "Configurar",
@@ -591,6 +599,7 @@
         "transactionAmounts": "Montants de la transaction",
         "transactionBasics": "Conceptos básicos de transacciones",
         "transactionDetails": "Detalles de la transacción",
+        "transactionDetailsError": "Error al cargar los detalles de la transacción.",
         "transactionId": "ID de transaction",
         "transactionReason": "Motif de la transaction",
         "transactionType": "Type de transaction",
@@ -705,6 +714,7 @@
         "CHECK": "Cheque",
         "CHECKING": "Cuenta corriente",
         "ClaimPayout": "Pago de reclamación",
+        "CLOSEDCASES": "Casos cerrados",
         "CommunicationPreferenceChange": "Cambio de preferencia de comunicación",
         "Commutation": "Conmutación",
         "Completed": "Completado",
@@ -909,6 +919,7 @@
         "IRSROTH403(B)": "Roth 403(b) clasificado por IRS",
         "Issuance": "Emisión",
         "ISSUED": "Emitido",
+        "ISSUES": "Asuntos",
         "JOINTANNUITANT": "Anuitante conjunto",
         "JOINTINDIVIDUAL": "Individual conjunto",
         "JOINTLIFEONLYJOINTANDSURVIVOR": "Solo vida conjunta; conjunta y sobreviviente",
@@ -986,6 +997,7 @@
         "O": "En revisión",
         "OneTimePremium": "Prima única",
         "ONETIMEPREMIUM": "Prima única",
+        "OPENCASES": "Casos abiertos",
         "OPERATIONAL": "Operativo",
         "OPTIONA": "Opción A",
         "OPTIONB": "Opción B",
@@ -1149,6 +1161,7 @@
         "submittedVsProcessedMismatch": "Discordancia entre enviados y procesados",
         "systemError": "Error del sistema",
         "TARGETBENEFITPLAN": "Plan de beneficio objetivo",
+        "TASKS": "Tareas",
         "TENYEARTAXOPTION": "Opción fiscal a diez años",
         "TERM": "Plazo",
         "TERMINATED": "Terminado",
@@ -1230,7 +1243,7 @@
             "createCaseRmd": "Procesar RMD - OTP",
             "createCaseSsw": "Procesar Retiro Sistemático - OTP",
             "createCaseWithdrawal": "Procesar Retiro - OTP",
-            "dashboard": "Estadísticas del Caso",
+            "analytics": "Analítica",
             "documents": "Documentos",
             "formData": "Datos del Formulario",
             "funds": "Fondos",
@@ -1253,6 +1266,7 @@
             "sendDocument": "Enviar Documento",
             "sendStatement": "Enviar Estado de Cuenta",
             "sendTaxForm": "Enviar Formulario de Impuestos",
+            "sendPolicyPages": "Enviar Páginas de Políticas",
             "updatePremium": "Actualizar Pago Automático de Prima",
             "usage": "Uso",
             "viewDocument": "Ver Documento",
@@ -1324,9 +1338,9 @@
                 "text": "$t(pageHeader.coverage.headerText)",
                 "link": "/policies/{{planCode}}/{{id}}/policy/coverage"
             },
-            "dashboard": {
-                "text": "Estadísticas del Caso",
-                "link": "/dashboard"
+            "analytics": {
+                "text": "Analítica",
+                "link": "/analytics/cases"
             },
             "details": {
                 "text": "Detalles",
@@ -1475,6 +1489,10 @@
             "beneficiary": {
                 "text": "Administrar beneficiarios",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
             "userMenu": {
                 "text": "Menú de Usuario"
@@ -2289,6 +2307,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continuar",
+        "cancel": "Cancelar",
+        "confirm": {
+            "header": "Confirmar",
+            "tryAgain": "Intentar de nuevo",
+            "for": "para",
+            "nigo": "Procesamiento NIGO.",
+            "goToCase": "Ir al caso",
+            "gotIt": "¡Entendido!",
+            "submit": "¡Enviado!",
+            "backToHome": "Volver al inicio"
+        },
+        "start": {
+            "title": "Comenzar"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gestionar asignados",
+                "subTitle": "Aquí puedes gestionar los asignados"
+            },
+            "confirm": {
+                "subTitle": "Las actualizaciones del cambio de asignado se enviaron."
+            }
+        }
+    },
     "welcome": {
         "header": "Bienvenido a {{policyPortalName}}",
         "subHeader": "Una herramienta de experiencia de gestión de pólizas para hacer su vida un poco más fácil.",
@@ -2668,6 +2712,8 @@
             "taskStatus": "Estado de la tarea",
             "group": "Grupo",
             "assignee": "Cesionario",
+            "scheduledDate": "Fecha programada",
+            "scheduledDatePlaceholder": "Selecciona una fecha",
             "priority": "Prioridad",
             "selectPriority": "Seleccionar prioridad",
             "onlyPrioritized": "Cas prioritaires",
@@ -5185,7 +5231,6 @@
             },
             "loadingEvents": "Cargando eventos...",
             "noEventsTitle": "Aún no hay eventos.",
-            "noTransactionsTitle": "Actualmente no hay transacciones {{status}}.",
             "noEventsSubtitle": "Parece que no ha pasado nada hasta ahora.",
             "upcomingEvents": "Próximos eventos",
             "requested": "Solicitado",
@@ -5622,9 +5667,11 @@
             "newCreatedLabel": "Creado",
             "assigneeLabel": "Asignado a",
             "documentNumber": "Documento",
+            "carrier": "Transportador",
+            "caseId": "Identificación del caso",
             "stepLabel": "Paso",
             "issueLabel": "Problema",
-            "detailsLabel": "Detalles",
+            "detailsLabel": "Descripción de la tarea",
             "noDataAvailable": "No hay datos disponibles.",
             "noDocuments": "No hay documentos disponibles",
             "errorAdditionalDocuments": "Error al obtener documentos adicionales.",
@@ -8982,11 +9029,16 @@
                 "title": "Cobertura y resumen"
             },
             "notAvailable": "No disponible",
+            "notAvailableByTermLength": "No disponible para un contrato de {{termLength}} años:",
+            "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
             "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailableReason": {
-                "age": "No disponible para la edad {{age}}.",
-                "face": "No disponible para este monto nominal.",
-                "state": "No disponible para este estado."
+                "maxAge": "Edad máxima de emisión: {{age}}",
+                "minAge": "Edad mínima de emisión: {{age}}",
+                "maxFaceAm": "Monto nominal máximo: {{amount}}",
+                "minFaceAm": "Monto nominal mínimo: {{amount}}",
+                "state": "No disponible para este estado",
+                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
             },
             "product": {
                 "title": "Producto",

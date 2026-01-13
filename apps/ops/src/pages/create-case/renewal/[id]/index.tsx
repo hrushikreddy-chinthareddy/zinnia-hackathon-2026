@@ -194,7 +194,10 @@ export default function RenewalCase({
     return (
         <>
             <PageHead titleKey="createCaseRenewal" />
-            <DiaryNotesProvider caseDetails={caseDetailsData} isLC={true}>
+            <DiaryNotesProvider
+                caseDetails={caseDetailsData}
+                planCode={planCode}
+            >
                 <OtpLayout
                     contractNumber={document.contract}
                     clientId={clientId as string}

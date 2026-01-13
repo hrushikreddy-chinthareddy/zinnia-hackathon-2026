@@ -71,6 +71,7 @@
         "amountExcessToGuideline": "Montant excédant la référence",
         "amountExcessToModifiedEndowmentContract": "Montant excédant MEC",
         "amountType": "Type de montant",
+        "analyticsDashboard": "Tableau de bord du transporteur",
         "annualBenefitAmount": "Montant annuel de la prestation",
         "annualizedPremium": "Prime annualisée",
         "annualPremium": "Prime annuelle",
@@ -98,6 +99,7 @@
         "carrierId": "ID du transporteur",
         "carrierName": "Nom de l'assureur",
         "caseId": "ID del caso",
+        "cases": "Cas",
         "caseIdSearchError": "Entrez un identifiant de dossier pour obtenir les résultats de recherche",
         "caseType": "Type de dossier",
         "certifiedReceivedDate": "Date de réception certifiée",
@@ -290,6 +292,8 @@
         "lastNameSearchError": "Entrez un nom de famille pour obtenir les résultats de recherche",
         "lastPaymentDate": "Date du dernier paiement",
         "lineOfBusiness": "Ligne d'activité",
+        "loadingTransactionDetails": "Chargement des détails de la transaction...",
+        "loadingTransactions": "Chargement des transactions...",
         "loanAccruedInterest": "Intérêts courus du prêt",
         "loanActivity": "Actividad del préstamo",
         "loanBalance": "Solde du prêt",
@@ -375,6 +379,7 @@
         "nextProgramDate": "Date du programme suivant",
         "noFormsFound": "Aucun formulaire trouvé.",
         "noRecordsFound": "Aucun enregistrement trouvé.",
+        "noTransactionsTitle": "Il n'y a actuellement aucune transaction {{status}}",
         "numberOfOccurrence": "Nombre d'occurrences",
         "numberOfWithdrawal": "Nombre total de retraits",
         "openInNewWindow": "Ouvrir dans une nouvelle fenêtre",
@@ -431,6 +436,8 @@
         "policyGainAmount": "Montant du gain {{policyNomenclature}}",
         "policyNumber": "Numéro {{policyNomenclature}}",
         "policyNumberSearchError": "Entrez un numéro de police pour obtenir les résultats de recherche",
+        "policyPage": "Page de la Police",
+        "policyPagesBeingResent": "Les pages de stratégie sont actuellement en cours de renvoi.",
         "policyReferenceId": "ID de référence {{policyNomenclature}}",
         "policySource": "Source {{policyNomenclature}}",
         "policySourceDescription": "Description de la source {{policyNomenclature}}",
@@ -511,6 +518,7 @@
         "sendChannel_email": "envoyé par courrier électronique à",
         "sendChannel_fax": "faxé à",
         "sendChannel_paper_mail": "envoyé par courrier à",
+        "sendPolicyPages": "Envoyer des pages de stratégie",
         "sendToDifferentAddress": "Envoyer à une adresse différente",
         "setUpAutopay": "Configurer paiement automatique",
         "setUp": "Configurer",
@@ -592,6 +600,7 @@
         "transactionAmounts": "Montos de la transacción",
         "transactionBasics": "Bases des transactions",
         "transactionDetails": "Détails de la transaction",
+        "transactionDetailsError": "Erreur lors du chargement des détails de la transaction.",
         "transactionId": "ID de transacción",
         "transactionReason": "Motivo de la transacción",
         "transactionType": "Tipo de transacción",
@@ -698,6 +707,7 @@
         "CHECK": "Chèque",
         "CHECKING": "Compte courant",
         "ClaimPayout": "Paiement de réclamation",
+        "CLOSEDCASES": "Dossiers clos",
         "CommunicationPreferenceChange": "Changement des préférences de communication",
         "Commutation": "Commutation",
         "Completed": "Terminé",
@@ -892,6 +902,7 @@
         "IRSROTH403(B)": "Roth 403(b) selon l'IRS",
         "Issuance": "Émission",
         "ISSUED": "Émis",
+        "ISSUES": "Problèmes",
         "JOINTINDIVIDUAL": "Individu conjoint",
         "KEOGH/HR10": "Plan Keogh (HR-10)",
         "Lapse": "Expiration",
@@ -962,6 +973,7 @@
         "O": "En cours de révision",
         "OneTimePremium": "Prime unique",
         "ONETIMEPREMIUM": "Prime unique",
+        "OPENCASES": "Affaires en cours",
         "OPERATIONAL": "Opérationnel",
         "OPTIONA": "Option A",
         "OPTIONB": "Option B",
@@ -1119,6 +1131,7 @@
         "submittedVsProcessedMismatch": "Incohérence entre les données soumises et traitées",
         "systemError": "Erreur système",
         "TARGETBENEFITPLAN": "Plan à prestations cibles",
+        "TASKS": "Tâches",
         "TENYEARTAXOPTION": "Option fiscale sur dix ans",
         "TERM": "Temporaire",
         "TERMINATED": "Terminé",
@@ -1199,7 +1212,7 @@
             "createCaseRmd": "Traiter RMD - OTP",
             "createCaseSsw": "Traiter retrait systématique - OTP",
             "createCaseWithdrawal": "Traiter retrait - OTP",
-            "dashboard": "Statistiques du dossier",
+            "dashboard": "Analytique",
             "documents": "Documents",
             "featuresAndRiders": "Caractéristiques et cavaliers",
             "formData": "Données du formulaire",
@@ -1222,6 +1235,7 @@
             "sendDocument": "Envoyer un document",
             "sendStatement": "Envoyer un extrait de compte",
             "sendTaxForm": "Formulaire de taxes envoyé",
+            "sendPolicyPages": "Envoyer des Pages de Stratégie",
             "updatePremium": "Gérer Paiement Automatique",
             "usage": "Usage",
             "viewDocument": "Voir le document",
@@ -1305,9 +1319,9 @@
                 "link": "/policies/{{planCode}}/{{id}}/policy/coverage",
                 "text": "$t(pageHeader.coverage.headerText)"
             },
-            "dashboard": {
-                "link": "/dashboard",
-                "text": "Statistiques du dossier"
+            "analytics": {
+                "link": "/analytics/cases",
+                "text": "Analytique"
             },
             "details": {
                 "link": "/policies/{{planCode}}/{{id}}/policy/policy-details",
@@ -1455,6 +1469,10 @@
             "bénéficiaire": {
                 "text": "Gérer les bénéficiaires",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
             "userMenu": {
                 "text": "Menu Utilisateur"
@@ -2344,6 +2362,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continuer",
+        "cancel": "Annuler",
+        "confirm": {
+            "header": "Confirmer",
+            "tryAgain": "Réessayer",
+            "for": "pour",
+            "nigo": "Traitement NIGO.",
+            "goToCase": "Aller au dossier",
+            "gotIt": "Compris !",
+            "submit": "Envoyé !",
+            "backToHome": "Retour à l’accueil"
+        },
+        "start": {
+            "title": "Commencer"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gérer les assignés",
+                "subTitle": "Ici, vous pouvez gérer les assignés"
+            },
+            "confirm": {
+                "subTitle": "Les mises à jour du changement d’assigné ont été envoyées."
+            }
+        }
+    },
     "welcome": {
         "header": "Bienvenue sur {{policyPortalName}}",
         "subHeader": "Un outil d'expérience de gestion des politiques pour vous faciliter la vie",
@@ -2620,6 +2664,8 @@
             "taskStatus": "Statut de la tâche",
             "group": "Groupe",
             "assignee": "Cessionnaire",
+            "scheduledDate": "Date prévue",
+            "scheduledDatePlaceholder": "Sélectionnez une date",
             "priority": "Priorité du dossier",
             "selectPriority": "Sélectionner la priorité",
             "onlyPrioritized": "Casos prioritarios",
@@ -5130,7 +5176,6 @@
             },
             "loadingEvents": "Chargement des événements...",
             "noEventsTitle": "Aucun événement pour le moment.",
-            "noTransactionsTitle": "Il n'y a actuellement aucune transaction {{status}}",
             "noEventsSubtitle": "On dirait que rien ne s'est encore passé.",
             "upcomingEvents": "Événements à venir",
             "requested": "Demandé",
@@ -5577,9 +5622,11 @@
             "newCreatedLabel": "Créée",
             "assigneeLabel": "Cessionnaire",
             "documentNumber": "Document",
+            "caseId": "Numéro de cas",
+            "carrier": "Transporteur",
             "stepLabel": "Étape",
             "issueLabel": "Problème",
-            "detailsLabel": "Détails",
+            "detailsLabel": "Description de la tâche",
             "commonTaskIssues": "Un ou plusieurs {{taskType}} problèmes trouvés.",
             "reasonLabel": "Raison du statut",
             "scheduledNoteLabel": "Note",
@@ -8966,6 +9013,8 @@
         },
         "quickQuoteResults": {
             "notAvailable": "Pas disponible",
+            "notAvailableByTermLength": "Pas disponible pour un contrat de {{termLength}} ans:",
+            "hasRiderErrors": "Certains suppléments ne sont pas inclus. Voir la couverture et le résumé.",
             "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
             "title": "Devis rapide",
             "coverage": {
@@ -8974,9 +9023,12 @@
                 "title": "Couverture"
             },
             "notAvailableReason": {
-                "age": "Non disponible pour l'âge {{age}}.",
-                "face": "Non disponible pour ce montant assuré.",
-                "state": "Non disponible pour cet état."
+                "maxAge": "Âge maximal d'émission: {{age}}",
+                "minAge": "Âge minimum d'émission: {{age}}",
+                "maxFaceAm": "Montant maximal du visage: {{amount}}",
+                "minFaceAm": "Montant minimum du visage: {{amount}}",
+                "state": "Non disponible pour cet état",
+                "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police."
             },
             "product": {
                 "title": "Produit",

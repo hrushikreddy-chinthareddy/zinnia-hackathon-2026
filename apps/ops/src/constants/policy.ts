@@ -32,6 +32,7 @@ export enum RoleLabel {
     PAYOR = 'Payor',
     THIRDPARTYDESIGNEE = 'Third Party Designee',
     IRREVOCABLE_BENEFICIARY = 'Irrevocable Beneficiary',
+    ASSIGNEE = 'Assignee',
 }
 
 export enum PolicyRole {

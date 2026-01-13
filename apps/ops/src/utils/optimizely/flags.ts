@@ -164,6 +164,7 @@ export enum FEATURE_FLAGS {
     JOINT_OWNER_CHANGE_TRANSACTION = 'joint_owner_change_transaction',
     PAYOR_CHANGE_TRANSACTION = 'payor_change_transaction',
     THIRD_PARTY_DESIGNEE_TRANSACTION = 'third_party_designee_transaction',
+    ASSIGNEE_CHANGE_TRANSACTION = 'assignee_change_transaction',
     PAYMENTUS_FEATURE = 'paymentus-feature',
     SHOW_RAW_DATA = 'show-raw-data',
     SHOW_CASE_EVENTS = 'show-case-events',
@@ -192,4 +193,5 @@ export enum FEATURE_FLAGS {
     DTCC_SECTION_ENABLED = 'dtcc_section_enabled',
     DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
     USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
+    ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN = 'enable_bene_change_paper_form_summary_screen',
 }

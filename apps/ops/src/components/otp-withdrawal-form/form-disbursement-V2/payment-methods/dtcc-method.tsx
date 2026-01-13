@@ -108,7 +108,7 @@ const DtccMethod = ({
 
     return (
         <form className="grid grid-cols-3 gap-4 mt-4">
-            {config?.fields.map((field: any) => (
+            {config?.fields?.map((field: any) => (
                 <div key={field.fieldName} className={`${field.classNames}`}>
                     {renderField(field)}
                 </div>

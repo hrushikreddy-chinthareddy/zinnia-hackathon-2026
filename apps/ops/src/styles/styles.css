@@ -23,9 +23,6 @@
     );
     --knowledge-base-sidenav-expanded-width: 250px;
     --knowledge-base-sidenav-collapsed-width: 65px;
-    /* Only defined until bloom variables are available */
-    --breakpoint-xl: 1440px;
-    --breakpoint-lg: 1025px;
 }
 
 @layer base {
