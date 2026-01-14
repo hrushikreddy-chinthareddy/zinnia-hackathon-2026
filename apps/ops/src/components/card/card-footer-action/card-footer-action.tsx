@@ -1,3 +1,5 @@
+import { Link } from '@zinnia/bloom/components';
+
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 
@@ -40,15 +42,14 @@ const FooterAction = ({ footerContent }: FooterActionPros) => {
         }
 
         return (
-            <a
-                href={href}
-                key={`${text}-link`}
-                className={styles.footerActionLink}
+            <Link
+                href={isDisabled ? '' : href}
+                text={text}
                 data-testid={text}
+                key={`${text}-link`}
+                state={isDisabled ? 'inactive' : undefined}
                 onClick={onClick}
-            >
-                {text}
-            </a>
+            />
         );
     };
 
