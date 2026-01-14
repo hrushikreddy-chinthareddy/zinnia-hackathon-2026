@@ -18,6 +18,7 @@ import {
 import { v4 as uuidV4 } from 'uuid';
 
 import { UserProfile } from '@deps/models/user-profile';
+import { readAndStoreUserRolesCookie } from '@deps/queries/api/server/fga/readTuples';
 
 import pino from './pino-server';
 
@@ -342,7 +343,16 @@ export const withPageAuthAndLogging: WithPageAuthAndLogging = (
                 func
             );
             logTrace('next-server page view', loggingContext);
-            return getServerSideProps(context, loggingContext);
+
+            // Trigger user roles cookie to populate if expired
+            await readAndStoreUserRolesCookie(context, loggingContext);
+
+            const pageSpecificProps = await getServerSideProps(
+                context,
+                loggingContext
+            );
+
+            return pageSpecificProps;
         },
     });
 };

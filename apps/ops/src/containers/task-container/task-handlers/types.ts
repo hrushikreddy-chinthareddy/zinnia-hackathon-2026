@@ -225,3 +225,7 @@ export type Signatures = {
     ssn?: string | null;
     isDesignationPresent?: boolean | null;
 };
+
+export enum TransactionSearchIdentifiers {
+    PAYMENT_RECORD_ID = 'paymentRecordId',
+}
