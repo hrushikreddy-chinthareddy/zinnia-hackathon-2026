@@ -5989,7 +5989,8 @@
                 "general": {
                     "addLine": "Add unit number, suite, floor, etc.",
                     "addAdressLine": "Add address line (e.g. floor, suite, etc)",
-                    "cancel": "Cancel"
+                    "cancel": "Cancel",
+                    "remove": "Remove"
                 },
                 "labels": {
                     "address": "Address",

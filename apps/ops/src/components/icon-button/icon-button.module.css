@@ -6,7 +6,10 @@
     font-family: var(--string-core-typography-font-family-font-family-primary);
     height: var(--measure-dimension-z-space-6);
     justify-content: center;
-    width: var(--measure-dimension-z-space-6);
+    min-width: var(--measure-dimension-z-space-6);
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    width: fit-content;
 
     &:hover {
         color: var(--color-states-hover-icon-hover-icon-action);

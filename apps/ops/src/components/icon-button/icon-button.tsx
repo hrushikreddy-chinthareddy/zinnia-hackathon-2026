@@ -17,7 +17,7 @@ export default function IconButton({
 
     return (
         <button
-            className={clsx(styles.iconButton)}
+            className={clsx(styles.iconButton, 'default-focus-within')}
             disabled={disabled}
             onClick={onClick}
             onKeyDown={(e) => {

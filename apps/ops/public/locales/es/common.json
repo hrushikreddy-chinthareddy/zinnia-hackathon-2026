@@ -5947,7 +5947,8 @@
                 "general": {
                     "addLine": "Agregar número de unidad, suite, piso, etc.",
                     "addAdressLine": "Agregar línea de dirección (por ejemplo, piso, suite, etc)",
-                    "cancel": "Cancelar"
+                    "cancel": "Cancelar",
+                    "remove": "Eliminar"
                 },
                 "labels": {
                     "address": "Dirección",

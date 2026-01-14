@@ -5914,7 +5914,8 @@
                 "general": {
                     "addLine": "Ajouter un numéro d'unité, un étage, un immeuble, etc.",
                     "addAdressLine": "Ajouter une ligne d'adresse (par exemple, un étage, un immeuble, etc)",
-                    "cancel": "Annuler"
+                    "cancel": "Annuler",
+                    "remove": "Supprimer"
                 },
                 "labels": {
                     "address": "Adresse",

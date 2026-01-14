@@ -90,7 +90,10 @@ export const AdditionalAddressLine = ({
                 disabled={disabled}
                 onClick={removeAddressLine}
             >
-                <TrashIcon height={20} width={20} />
+                <div className="flex items-center gap-1">
+                    <TrashIcon height={20} width={20} />
+                    <span>{t('people.sideSheet.address.general.remove')}</span>
+                </div>
             </IconButton>
         </Transition>
     );
