@@ -22,7 +22,8 @@ import {
     TermQuickQuoteResult,
 } from '@deps/types/quickQuote';
 import {
-    NotAvailabilityReasonField,
+    nonEligibleReasonByClass,
+    PlanCode,
     ProductClassResult,
     ProductClassResultRiders,
 } from '@deps/utils/quick-quotes-rules/types';
@@ -33,11 +34,11 @@ import {
  * Quick quote API call
  */
 export type SingleTermProductQuickQuoteParams = {
-    planCode: 'TR0101' | 'TL0101';
+    planCode: PlanCode; //'TR0101' | 'TL0101';
     termLength: TermFixedCostPeriod;
     classCode: UnderwritingClass | undefined;
     available: boolean;
-    notAvailabilityReasonField: NotAvailabilityReasonField;
+    notAvailabilityReasonField: nonEligibleReasonByClass[];
     riders: ProductClassResultRiders;
 };
 
@@ -102,7 +103,6 @@ export const buildRangeText = (
         const formatted = numberFormatify(value);
         return withPeriodText(formatted, period);
     }
-
     const formatted = value.map((x) => numberFormatify(x));
     return withPeriodText(formatted.join(' — '), period);
 };
@@ -216,14 +216,16 @@ export const expandQuickQuoteVariants = (
             riders,
         }) =>
             classCodes?.length
-                ? classCodes.map((classCode) => ({
-                      planCode,
-                      termLength,
-                      classCode,
-                      available: !notAvailabilityReasonField,
-                      notAvailabilityReasonField,
-                      riders,
-                  }))
+                ? classCodes.map((classCode) => {
+                      return {
+                          planCode,
+                          termLength,
+                          classCode,
+                          available: true,
+                          notAvailabilityReasonField,
+                          riders,
+                      };
+                  })
                 : ({
                       planCode,
                       termLength,
@@ -268,7 +270,8 @@ export const buildNewTermQuickQuotePayload = (
 
             ...RIDERS_WITH_FACE_AMOUNT.filter(
                 (riderName) =>
-                    params.riders[riderName] && riders[riderName] === true
+                    params.riders[riderName] &&
+                    riders[RIDER_CODE_MAP[riderName]].eligible === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 currentAmount: params.riders[riderName] as number,
@@ -282,7 +285,8 @@ export const buildNewTermQuickQuotePayload = (
             })),
             ...NO_PARAM_RIDERS.filter(
                 (riderName) =>
-                    params.riders[riderName] && riders[riderName] === true
+                    params.riders[riderName] &&
+                    riders[RIDER_CODE_MAP[riderName]].eligible === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 participants: [
@@ -296,7 +300,7 @@ export const buildNewTermQuickQuotePayload = (
             ...PREMIUM_FREE_RIDERS.filter(
                 (riderName) =>
                     params.premiumFreeRiders[riderName] &&
-                    riders[riderName] === true
+                    riders[RIDER_CODE_MAP[riderName]].eligible === true
             ).map((riderName) => ({
                 coverageId: RIDER_CODE_MAP[riderName],
                 participants: [
@@ -375,9 +379,18 @@ export const placeholderData = [
                 },
             ],
             riders: {
-                accidentalDeathBenefit: undefined,
-                acceleratedDeathBenefitForTerminalIllness: true,
-                charitableGiving: true,
+                accidentalDeathBenefit: {
+                    range: undefined,
+                    notAvailabilityReasonField: undefined,
+                },
+                acceleratedDeathBenefitForTerminalIllness: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
+                charitableGiving: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
             },
         },
     },
@@ -415,9 +428,18 @@ export const placeholderData = [
                 },
             ],
             riders: {
-                accidentalDeathBenefit: undefined,
-                acceleratedDeathBenefitForTerminalIllness: true,
-                charitableGiving: true,
+                accidentalDeathBenefit: {
+                    range: undefined,
+                    notAvailabilityReasonField: undefined,
+                },
+                acceleratedDeathBenefitForTerminalIllness: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
+                charitableGiving: {
+                    range: true,
+                    notAvailabilityReasonField: undefined,
+                },
             },
         },
     },

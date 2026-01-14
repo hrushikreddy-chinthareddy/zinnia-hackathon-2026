@@ -32,7 +32,7 @@ export const QuickQuoteRiderSubtotalRow = () => {
                     ...RIDERS_WITH_FACE_AMOUNT,
                     ...NO_PARAM_RIDERS,
                 ]
-                    .map((riderName) => result.data.riders[riderName])
+                    .map((riderName) => result.data.riders[riderName]?.range)
                     .filter(
                         (value): value is NumberOrRange =>
                             value != null && typeof value !== 'boolean'

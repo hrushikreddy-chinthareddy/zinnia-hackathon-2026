@@ -1,7 +1,7 @@
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
-import { GetStepsProps } from './types';
+import { GetStepsProps, StepTitle } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
@@ -24,7 +24,14 @@ export const getBeneChangeSteps = (props: GetStepsProps) => {
             FEATURE_FLAGS.ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN
         ];
 
-    const dynamicSteps = taskMetadata.map((metadata, index) => ({
+    const filteredTaskMetadata = taskMetadata.filter(
+        (item) => item.title !== StepTitle.Summary
+    );
+    const dynamicSteps = (
+        isBeneChangePaperFormSummaryEnabled
+            ? taskMetadata
+            : filteredTaskMetadata
+    ).map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => index === 0 || isIssueResolved,
         component: (

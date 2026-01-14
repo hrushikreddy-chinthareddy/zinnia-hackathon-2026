@@ -10,7 +10,6 @@
     "last14Days": "Last 14 days",
     "last30Days": "Last 30 days",
     "yearToDate": "Year-to-date",
-    "caseStatsDashboardTitle": "Case Stats",
     "customRange": "Custom Range",
     "allAgents": "All Agents",
     "allDistributors": "All Distributors",
@@ -72,6 +71,7 @@
         "amountExcessToGuideline": "Amount excess to guideline",
         "amountExcessToModifiedEndowmentContract": "Amount excess to MEC",
         "amountType": "Amount type",
+        "analyticsDashboard": "Carrier Dashboard",
         "annualBenefitAmount": "Annual benefit amount",
         "annualizedPremium": "Annualized premium",
         "annualPremium": "Annual premium",
@@ -104,6 +104,7 @@
         "carrierId": "Carrier ID",
         "carrierName": "Carrier name",
         "caseId": "Case ID",
+        "cases": "Cases",
         "caseIdSearchError": "Enter a Case Id to return search results",
         "caseType": "Case type",
         "certifiedReceivedDate": "Certified received date",
@@ -786,6 +787,7 @@
         "CHECK": "Check",
         "CHECKING": "Checking",
         "ClaimPayout": "Claim payout",
+        "CLOSEDCASES": "Closed Cases",
         "CommunicationPreferenceChange": "Communication preference change",
         "Commutation": "Commutation",
         "Completed": "Completed",
@@ -990,6 +992,7 @@
         "IRSROTH403(B)": "IRS-Classified Roth 403(b)",
         "Issuance": "Issuance",
         "ISSUED": "Issued",
+        "ISSUES": "Issues",
         "JOINTANNUITANT": "Joint annuitant",
         "JOINTINDIVIDUAL": "Joint Individual",
         "JOINTLIFEONLYJOINTANDSURVIVOR": "Joint life only; joint and survivor",
@@ -1067,6 +1070,7 @@
         "O": "Reviewing",
         "ONETIMEPREMIUM": "One time premium",
         "OneTimePremium": "One-time premium",
+        "OPENCASES": "Open Cases",
         "OPERATIONAL": "Operational",
         "OPTIONA": "Option a",
         "OPTIONB": "Option b",
@@ -1230,6 +1234,7 @@
         "submittedVsProcessedMismatch": "Submitted vs. processed mismatch",
         "systemError": "System error",
         "TARGETBENEFITPLAN": "Target Benefit Plan",
+        "TASKS": "Tasks",
         "TENYEARTAXOPTION": "Ten-year tax option",
         "TERM": "Term",
         "TERMINATED": "Terminated",
@@ -1312,7 +1317,7 @@
             "createCaseRmd": "Process RMD - OTP",
             "createCaseSsw": "Process Systematic Withdrawal - OTP",
             "createCaseWithdrawal": "Process Withdrawal - OTP",
-            "dashboard": "Case Stats",
+            "analytics": "Analytics",
             "documents": "Documents",
             "formData": "Form Data",
             "funds": "Funds",
@@ -1421,9 +1426,9 @@
                 "link": "/customers",
                 "altText": "Customers"
             },
-            "dashboard": {
-                "text": "Case Stats",
-                "link": "/dashboard"
+            "analytics": {
+                "text": "Analytics",
+                "link": "/analytics/cases"
             },
             "details": {
                 "text": "Details",
@@ -5242,26 +5247,28 @@
                 }
             },
             "coverageID": {
-                "Rider_ADR": "Provides an additional death benefit if the insured dies due to a covered accident.",
-                "Rider_CGR": "Provides an additional benefit payable to a charity of choice upon the insured's death.",
-                "Rider_CTR": "Provides term life insurance coverage for the insured's children.",
-                "Rider_ABRTRM": "Allows early access to the death benefit if the insured is diagnosed with a terminal illness.",
                 "Rider_ABRCHR": "Allows early access to the death benefit if the insured is diagnosed with a chronic illness.",
                 "Rider_ABRCRI": "Allows early access to the death benefit if diagnosed with a covered critical illness.",
-                "Rider_OPR": "Prevents the policy from lapsing due to excessive policy loans by converting it to a reduced paid-up policy.",
-                "Rider_NHR": "Allows early access to the death benefit or annuity value if the insured is confined to a qualified nursing home.",
+                "Rider_ABRTRM": "Allows early access to the death benefit if the insured is diagnosed with a terminal illness.",
+                "Rider_ADR": "Provides an additional death benefit if the insured dies due to a covered accident.",
+                "Rider_BONUS": "Increases the contract’s accumulation value by applying a bonus to new premium.",
+                "Rider_CGR": "Provides an additional benefit payable to a charity of choice upon the insured's death.",
+                "Rider_CTR": "Provides term life insurance coverage for the insured's children.",
+                "Rider_GAB": "Triggers a single true-up at the end of the GAP period to bring the accumulation value up to the guaranteed GAP amount when needed.",
+                "Rider_GIBR": "Allows the policyholder to purchase additional coverage at specific times without undergoing a medical exam or providing evidence of insurability.",
                 "Rider_GLWB": "Guarantees lifetime withdrawals from an annuity regardless of market performance, even after the account is depleted.",
                 "Rider_GMAB": "Guarantees the return of a minimum account value after a specified holding period, regardless of market conditions.",
                 "Rider_GMDB": "Provides a guaranteed minimum death benefit to beneficiaries regardless of investment performance.",
                 "Rider_GMIB": "Guarantees a minimum income stream from an annuity, typically based on a predetermined growth rate.",
                 "Rider_GMWB": "Guarantees the ability to withdraw a fixed percentage annually even if the annuity value drops to zero.",
-                "Rider_WDR": "The Owner must be aged 18-55 to select Owner Waiver of Deduction Rider.",
-                "Rider_WPR": "Waives policy premiums if the insured becomes totally disabled.",
-                "Rider_WCR": "Waives certain policy charges during periods of the insured's total disability.",
+                "Rider_GWB": "Guarantees lifetime withdrawals from an annuity, subject to the rider’s terms.",
+                "Rider_NHR": "Allows early access to the death benefit or annuity value if the insured is confined to a qualified nursing home.",
+                "Rider_OPR": "Prevents the policy from lapsing due to excessive policy loans by converting it to a reduced paid-up policy.",
                 "Rider_OWCR": "Waives policy charges if the policy owner becomes disabled or meets specific criteria.",
-                "Rider_BONUS": "Increases the contract’s accumulation value by applying a bonus to new premium.",
-                "Rider_GAB": "Triggers a single true-up at the end of the GAP period to bring the accumulation value up to the guaranteed GAP amount when needed.",
-                "Rider_GWB": "Guarantees lifetime withdrawals from an annuity, subject to the rider’s terms."
+                "Rider_OWDR": "Waives certain policy costs if the policy owner becomes disabled, helping to maintain the policy during periods of hardship.",
+                "Rider_WCR": "Waives certain policy charges during periods of the insured's total disability.",
+                "Rider_WDR": "Waives certain policy costs if the insured becomes disabled, helping to maintain the policy during periods of hardship.",
+                "Rider_WPR": "Waives policy premiums if the insured becomes totally disabled."
             }
         },
         "history": {
@@ -8969,10 +8976,6 @@
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
     "caseStats": {
-        "tabs": {
-            "issue": "Issues",
-            "tasks": "Tasks"
-        },
         "tasks": {
             "title": "Task Volume",
             "description": "Volume of tasks created over a selected time range, grouped by case type and task.",
@@ -9175,6 +9178,8 @@
             "title": "Quick Quote",
             "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
             "notAvailable": "Not Available",
+            "notAvailableByTermLength": "Not available for {{termLength}}-year term:",
+            "hasRiderErrors": "Some riders not included. See Coverage & Summary.",
             "product": {
                 "title": "Product",
                 "totalPremiumRange": "Total Premium Range",
@@ -9188,9 +9193,12 @@
                 "nYearTerm": "{{years}} year term"
             },
             "notAvailableReason": {
-                "age": "Not available for age {{age}}.",
-                "state": "Not available for this state.",
-                "face": "Not available for this face amount."
+                "maxAge": "Max issue age: {{age}}",
+                "minAge": "Min issue age: {{age}}",
+                "state": "Not available for this state",
+                "maxFaceAm": "Max face amount: {{amount}}",
+                "minFaceAm": "Min face amount: {{amount}}",
+                "riderFaceAmount": "Rider face amount cannot exceed policy face amount."
             },
             "riders": {
                 "title": "Riders",

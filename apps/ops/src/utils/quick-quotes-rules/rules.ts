@@ -1,6 +1,10 @@
 import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 
-import { RulesModel } from './types';
+import {
+    PremiumRiderEligibilityList,
+    RiderEligibilityList,
+    RulesModel,
+} from './types';
 
 /**
  * RULES_MODEL
@@ -777,3 +781,37 @@ export const RULES_MODEL: RulesModel = {
         },
     ],
 } as const;
+
+export const RIDER_ELIGIBILITY_LIST: RiderEligibilityList[] = [
+    {
+        riderName: 'Accidental Death Benefit Rider',
+        riderCode: 'Rider_ADR',
+        riderPath: 'riders.accidentalDeathBenefit',
+        riderNameCamelCase: 'accidentalDeathBenefit',
+    },
+    {
+        riderName: "Children's Term Insurance Rider",
+        riderCode: 'Rider_CTR',
+        riderPath: 'riders.childrensTerm',
+        riderNameCamelCase: 'childrensTerm',
+    },
+    {
+        riderName: 'Waiver of Premium Rider',
+        riderCode: 'Rider_WPR',
+        riderPath: 'riders.waiverOfPremium',
+        riderNameCamelCase: 'waiverOfPremium',
+    },
+];
+
+export const PREMIUM_RIDER_ELIGIBILITY_LIST: PremiumRiderEligibilityList[] = [
+    {
+        riderName: 'Charitable Giving Rider',
+        riderCode: 'Rider_CGR',
+        riderNameCamelCase: 'charitableGiving',
+    },
+    {
+        riderName: 'Accelerated Death Benefit Rider for Terminal Illness',
+        riderCode: 'Rider_ABRTRM',
+        riderNameCamelCase: 'acceleratedDeathBenefitForTerminalIllness',
+    },
+];

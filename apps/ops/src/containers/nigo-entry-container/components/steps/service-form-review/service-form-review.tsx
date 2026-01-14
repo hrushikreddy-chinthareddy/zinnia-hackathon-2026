@@ -41,6 +41,8 @@ export const ServiceFormReview = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'nigoEntry.serviceFormReview',
     });
+    // Non-prefixed translation function for createViewDownloadAction which expects global keys
+    const { t: tGlobal } = useTranslation(TranslationFiles.COMMON);
 
     const NIGO_EXCEPTION: SelOptionType = nigoExpection?.value;
 
@@ -151,7 +153,7 @@ export const ServiceFormReview = ({
                             {createViewDownloadAction(
                                 workingDocument,
                                 clientCode?.toUpperCase(),
-                                t
+                                tGlobal
                             )}
                         </div>
                     </div>

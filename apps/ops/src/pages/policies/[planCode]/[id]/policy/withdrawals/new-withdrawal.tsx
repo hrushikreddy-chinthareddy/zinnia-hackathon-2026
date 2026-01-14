@@ -15,6 +15,7 @@ import {
     checkPartialWithdrawalOneTimeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { TransactionPermission } from '@deps/utils/auth';
+import { browserLogError } from '@deps/utils/browser-logging';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
 import { Policy } from '@zinnia/api-types/types/sor';
@@ -84,7 +85,7 @@ const NewWithdrawal = ({ policy }: PolicyWithdrawalProps) => {
 
     useEffect(() => {
         if (
-            !isPartialWithdrawalOneTimeEligibilityFetched ||
+            !isPartialWithdrawalOneTimeEligibilityFetched &&
             !isFullSurrenderEligibilityFetched
         )
             return;
@@ -97,7 +98,21 @@ const NewWithdrawal = ({ policy }: PolicyWithdrawalProps) => {
 
         const isPermissioned = isUserPermissionedToWithdraw || false;
 
-        if (!isEligible || !isEligibleFullSurrender || !isPermissioned) {
+        const errorMessage = !isPermissioned
+            ? 'User permissions are missing for withdrawal action'
+            : !isEligibleFullSurrender
+            ? 'Policy is not eligible for full surrender'
+            : !isEligible
+            ? 'Policy is not eligible for one-time withdrawal'
+            : null;
+
+        if ((!isEligible && !isEligibleFullSurrender) || !isPermissioned) {
+            if (errorMessage) {
+                browserLogError(errorMessage, {
+                    policyNumber,
+                    planCode,
+                });
+            }
             router.replace('/403');
         } else {
             setIsLoading(false);
@@ -109,6 +124,8 @@ const NewWithdrawal = ({ policy }: PolicyWithdrawalProps) => {
         fullSurrenderEligibility,
         isPartialWithdrawalOneTimeEligibilityFetched,
         isFullSurrenderEligibilityFetched,
+        planCode,
+        policyNumber,
     ]);
 
     if (isLoading) {

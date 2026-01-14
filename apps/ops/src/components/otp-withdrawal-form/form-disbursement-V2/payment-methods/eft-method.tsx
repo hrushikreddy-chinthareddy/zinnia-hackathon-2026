@@ -307,8 +307,11 @@ const EftMethod = ({
     };
 
     return (
-        <div className="mt-4 grid w-full grid-cols-3 gap-2">
-            {config?.fields.map((field: any) => (
+        <div
+            className="mt-4 grid w-full grid-cols-3 gap-2"
+            data-testid="eft-method"
+        >
+            {config?.fields?.map((field: any) => (
                 <div key={field.fieldName} className={field.classNames}>
                     {renderField(field)}
                 </div>

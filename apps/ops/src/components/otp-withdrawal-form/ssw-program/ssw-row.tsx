@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 import xss from 'xss';
@@ -8,16 +7,17 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '@deps/components/fields/field-date-select/field-date-select';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import SelectSimple from '@deps/components/select/select';
+import {
+    getFormattedDate,
+    getFormattedZaharaDate,
+} from '@deps/helpers/date.helpers';
 import {
     AmountType,
     Frequency,
     SSWType,
 } from '@deps/models/case/withdrawal/case';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SSWProgramOptions } from './ssw-program';
 
@@ -47,11 +47,10 @@ export default function SystematicWithdrawalRow({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.sswProgram',
     });
-    const formStartDate = sswData?.startDate?.text
-        ? dayjs(sswData?.startDate?.text, ZAHARA_API_DATE_FORMAT).format(
-              DATE_PICKER_FORMAT
-          )
-        : '';
+    const formStartDate = getFormattedDate(
+        sswData?.startDate?.text,
+        'SSWRow::input startDate'
+    );
     const [startDate, setStartDate] = useState(formStartDate);
 
     const setSSWData = <Type,>(val: Type, key: string) => {
@@ -65,11 +64,11 @@ export default function SystematicWithdrawalRow({
         onDataChange((fs: SSWProgram) => ({
             ...fs,
             startDate: {
-                text: startDate
-                    ? dayjs(startDate, DATE_PICKER_FORMAT).format(
-                          ZAHARA_API_DATE_FORMAT
-                      )
-                    : '',
+                text:
+                    getFormattedZaharaDate(
+                        startDate,
+                        'SSWRow::output startDate'
+                    ) || '',
             },
         }));
     }, [startDate, onDataChange]);
