@@ -338,6 +338,10 @@ export const PremiumsSubPage = () => {
                         },
                     ]}
                     setUpAction={startAutopay}
+                    requestSubTypes={[
+                        'Systematic Program Setup',
+                        'Systematic Program Update',
+                    ]}
                 />
             )}
 

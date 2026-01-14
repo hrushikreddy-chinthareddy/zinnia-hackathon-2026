@@ -306,6 +306,10 @@ export const LoansSubPage = ({ policy }: LoansContainerProps) => {
                         },
                     ]}
                     setUpAction={loanSetAutopay}
+                    requestSubTypes={[
+                        'Setup Loan Repayment',
+                        'Update Loan Repayment',
+                    ]}
                 />
             )}
             <hr className="h-0.5 border-none bg-gray-200" />
