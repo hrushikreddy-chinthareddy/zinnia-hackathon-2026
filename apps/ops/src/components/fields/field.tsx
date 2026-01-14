@@ -4,6 +4,7 @@ import {
     ReactNode,
     RefObject,
     useEffect,
+    useId,
     useRef,
     useState,
 } from 'react';
@@ -118,6 +119,8 @@ export default function Field({
     const [focus, setFocus] = useState(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
+    const errorMessageId = useId();
+    const hasError = variant === FieldVariant.Error && message;
     useEffect(() => {
         const onKeyDown = (event: KeyboardEvent) => {
             if (event.key === 'Tab') {
@@ -238,6 +241,8 @@ export default function Field({
                     ref={inputRef}
                     isReadOnly={isReadOnly}
                     required={required}
+                    aria-invalid={hasError ? true : undefined}
+                    aria-describedby={hasError ? errorMessageId : undefined}
                     {...rest}
                 />
                 <FieldUnits variant={variant} location={FieldUnitsLocation.End}>
@@ -254,6 +259,7 @@ export default function Field({
             </div>
             {message && (
                 <AssistiveText
+                    id={errorMessageId}
                     text={message}
                     variant={AssistiveTextVariant.Error}
                     className="mt-2"

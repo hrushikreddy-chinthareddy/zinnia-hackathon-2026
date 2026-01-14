@@ -1,5 +1,5 @@
 import { TFunction, useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useId } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import AssistiveText, {
@@ -188,6 +188,8 @@ const CaseDocumentSelect = ({
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
     const assistiveText = getAssistiveText({ caseId, currentErrors, t });
+    const errorMessageId = useId();
+    const hasError = !!currentErrors?.caseId;
 
     useEffect(() => {
         if (caseDocumentOptions?.length) {
@@ -217,7 +219,15 @@ const CaseDocumentSelect = ({
     ]);
 
     return (
-        <fieldset className="flex flex-col gap-2" role="radiogroup">
+        <fieldset
+            className={`flex flex-col gap-2 ${
+                hasError ? 'case-document-error' : ''
+            }`}
+            role="radiogroup"
+            aria-invalid={hasError ? true : undefined}
+            aria-describedby={hasError ? errorMessageId : undefined}
+            tabIndex={hasError ? -1 : undefined}
+        >
             <legend className="flex items-center gap-1">
                 <Label
                     label={t('transactions.caseDocumentSelect.label')}
@@ -236,11 +246,13 @@ const CaseDocumentSelect = ({
                         : ''
                 }`}
             >
-                {caseDocumentOptions.map((caseDocumentOption) => (
+                {caseDocumentOptions.map((caseDocumentOption, index) => (
                     <CardCaseDocument
                         caseDocumentOption={caseDocumentOption}
                         key={caseDocumentOption.value}
                         isSelected={caseId === caseDocumentOption.value}
+                        isFirstOption={index === 0}
+                        hasError={hasError}
                         onChange={(value: string) => {
                             setCurrentErrors((prevState) => {
                                 const { caseId, ...errors } = prevState ?? {};
@@ -259,6 +271,7 @@ const CaseDocumentSelect = ({
 
                 {assistiveText && (
                     <AssistiveText
+                        id={hasError ? errorMessageId : undefined}
                         text={assistiveText.text}
                         variant={assistiveText.variant}
                     />

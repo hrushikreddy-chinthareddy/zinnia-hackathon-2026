@@ -41,6 +41,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -121,6 +122,7 @@ const SideSheetEmail = ({
         CaseDocumentOption[]
     >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
+    const [submitAttempt, setSubmitAttempt] = useState(0);
     const [email, setEmail] = useState<Email>(updateEmail ?? INITIAL_EMAIL);
     const [newCaseId, setNewCaseId] = useState<string>();
 
@@ -128,6 +130,8 @@ const SideSheetEmail = ({
         ValidationResult[]
     >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
+
+    const formRef = useFocusOnError(currentErrors, submitAttempt);
 
     const { emailAddress, emailType = EmailType.PERSONAL } = email;
     const { partyId } = party ?? {};
@@ -194,7 +198,10 @@ const SideSheetEmail = ({
         const caseId = body.caseId;
         const errors = getFormErrors({ email, caseId, isDelete, t: defaultT });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (Object.keys(errors).length > 0) {
+            setSubmitAttempt((prev) => prev + 1);
+            return;
+        }
 
         if (isDelete) {
             if (
@@ -330,7 +337,7 @@ const SideSheetEmail = ({
     }
 
     return (
-        <div className="flex flex-col gap-6 p-10">
+        <div ref={formRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={body.caseId}

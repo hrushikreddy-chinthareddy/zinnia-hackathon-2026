@@ -37,6 +37,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -140,8 +141,11 @@ export const SidesheetNameCard = ({
     ] = useState<string>('');
 
     const [currentErrors, setCurrentErrors] = useState<Errors>();
+    const [submitAttempt, setSubmitAttempt] = useState(0);
 
     const [newCaseId, setNewCaseId] = useState<string | undefined>(undefined);
+
+    const formRef = useFocusOnError(currentErrors, submitAttempt);
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
     >([]);
@@ -367,6 +371,7 @@ export const SidesheetNameCard = ({
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
             setCurrentErrors(errors);
+            setSubmitAttempt((prev) => prev + 1);
             return;
         }
 
@@ -642,6 +647,7 @@ export const SidesheetNameCard = ({
         default:
             return (
                 <div
+                    ref={formRef}
                     role="group"
                     id="comm-pref-form"
                     className="flex flex-col gap-8 p-8"

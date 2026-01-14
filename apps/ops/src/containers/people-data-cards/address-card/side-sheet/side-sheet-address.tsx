@@ -50,6 +50,7 @@ import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { getStateCodes } from '@deps/helpers/states.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -141,11 +142,14 @@ const SideSheetAddress = ({
         CaseDocumentOption[]
     >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
+    const [submitAttempt, setSubmitAttempt] = useState(0);
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
     >([]);
     const [viewState, setViewState] = useState<ViewState>(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
+
+    const formRef = useFocusOnError(currentErrors, submitAttempt);
 
     const { addressType } = address;
     const { caseId } = body;
@@ -237,7 +241,10 @@ const SideSheetAddress = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ address, caseId, isDelete, t });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (Object.keys(errors).length > 0) {
+            setSubmitAttempt((prev) => prev + 1);
+            return;
+        }
 
         if (isDelete) {
             setViewState(ViewState.Warn);
@@ -360,7 +367,7 @@ const SideSheetAddress = ({
     }
 
     return (
-        <div className="flex flex-col gap-6 p-10">
+        <div ref={formRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={caseId}

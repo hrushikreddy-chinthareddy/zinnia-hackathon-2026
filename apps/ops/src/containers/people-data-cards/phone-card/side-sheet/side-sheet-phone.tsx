@@ -52,6 +52,7 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -132,12 +133,15 @@ export const SideSheetPhone = ({
     >([]);
     const [country, setCountry] = useState('US' as keyof typeof countries);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
+    const [submitAttempt, setSubmitAttempt] = useState(0);
     const [phone, setPhone] = useState<Phone>(updatePhone ?? INITIAL_PHONE);
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
     >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
+
+    const formRef = useFocusOnError(currentErrors, submitAttempt);
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -206,7 +210,10 @@ export const SideSheetPhone = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ caseId, isDelete, phone, t: defaultT });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (Object.keys(errors).length > 0) {
+            setSubmitAttempt((prev) => prev + 1);
+            return;
+        }
 
         if (isDelete) {
             setViewState(ViewState.Warn);
@@ -329,7 +336,7 @@ export const SideSheetPhone = ({
     }
 
     return (
-        <div className="flex flex-col gap-6 p-10">
+        <div ref={formRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={caseId}
