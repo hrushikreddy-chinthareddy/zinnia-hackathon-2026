@@ -1,32 +1,38 @@
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
-import {
-    SearchTransactionFilters,
-    searchTransactionsByPaymentRecordId,
-} from '@deps/queries/api/transaction-search';
+import { searchTransactionsSSR } from '@deps/queries/api/transaction-search';
+import { LoggingContext, logWarn } from '@deps/utils/server-logging';
 
 import { TaskHandler } from '../types';
+import { buildPaymentRecordIdRequest } from './nb-cost-basis-review';
 
 interface PaymentFollowUpPayload {
     paymentRecordId: string;
 }
 
 const PaymentFollowUpHandler: TaskHandler<PaymentFollowUpPayload, any> = {
-    api: async (payload: PaymentFollowUpPayload) => {
+    api: async (
+        payload: PaymentFollowUpPayload,
+        accessToken: string,
+        loggingContext: LoggingContext
+    ) => {
         if (!payload.paymentRecordId) {
-            console.error(
-                'PaymentFollowUpHandler::api::missingPaymentRecordId',
-                { payload }
-            );
+            logWarn('PaymentFollowUpHandler::api::missingPaymentRecordId', {
+                ...loggingContext,
+                payload,
+            });
             return null;
         }
 
-        const filters: SearchTransactionFilters = {
-            paymentRecordId: payload.paymentRecordId,
-        };
-        const response = await searchTransactionsByPaymentRecordId(filters);
+        const filters = buildPaymentRecordIdRequest(payload.paymentRecordId);
+        const response = await searchTransactionsSSR(
+            filters,
+            accessToken,
+            loggingContext
+        );
 
         if (!response || !Array.isArray(response) || response.length === 0) {
-            console.error('PaymentFollowUpHandler::api::invalidResponse', {
+            logWarn('PaymentFollowUpHandler::api::invalidResponse', {
+                ...loggingContext,
                 response,
                 paymentRecordId: payload.paymentRecordId,
             });
@@ -41,9 +47,21 @@ const PaymentFollowUpHandler: TaskHandler<PaymentFollowUpPayload, any> = {
             taskData?.data?.details?.paymentRecord?.paymentRecordId || '',
     }),
 
-    transformResponse: (response, metadata: any[]) => {
+    transformResponse: (response, metadata, task) => {
         if (!response || !metadata[0]?.uiSchema?.details?.paymentRecord) {
             return;
+        }
+
+        if (task) {
+            Object.assign(task, {
+                data: {
+                    ...task.data,
+                    details: {
+                        ...task.data?.details,
+                        paymentRecord: response,
+                    },
+                },
+            });
         }
 
         if (metadata[0]?.formSchema) {
