@@ -6,6 +6,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useRef, useState } from 'react';
 
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
+import { AnalyticsTabs, UsageTabs } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
@@ -87,8 +88,13 @@ const AnalyticsPage = ({
         const tab = url?.[1]?.split('=')?.at(-1);
         const slug = url?.[0]?.split('/')?.at(-1);
 
-        if (tab) {
-            setTab(tab);
+        if (!tab) {
+            if (slug === AnalyticsRouteValues.cases) {
+                setTab(AnalyticsTabs.ACTIVE_APPLICATIONS);
+            }
+            if (slug === AnalyticsRouteValues.usage) {
+                setTab(UsageTabs.LOGINS);
+            }
         }
         setSlug(slug);
     }, [router.asPath]);
