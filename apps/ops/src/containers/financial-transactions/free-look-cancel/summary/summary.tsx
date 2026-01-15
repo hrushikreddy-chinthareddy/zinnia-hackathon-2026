@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -23,6 +23,7 @@ import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import {
     DEFAULT_DATE_FORMAT,
@@ -35,6 +36,8 @@ import {
     DisbursementPaymentForm,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
+
+import styles from './summary.module.css';
 
 interface SummaryProps {
     policy: Policy;
@@ -59,11 +62,8 @@ const Summary = ({ policy }: SummaryProps) => {
         fboFfc,
     } = withdrawal;
     const { validationResponse } = withdrawal;
-    const validationSucceeded = useMemo(
-        () => validationResponse?.status === 'success',
-        [validationResponse]
-    );
-
+    const validationSucceeded =
+        validationResponse?.status === TransactionResponseStatus.Success;
     return (
         <div>
             <CardContainer containerClassNames="border-b-2 border-gray-100">
@@ -120,7 +120,7 @@ const Summary = ({ policy }: SummaryProps) => {
                 />
 
                 {!validationSucceeded && (
-                    <div className="mt-10 flex flex-col gap-6">
+                    <div className={styles.validationContainer}>
                         {validationResponse?.validationResult ? (
                             validationResponse?.validationResult?.map(
                                 (validationResult) => {
@@ -146,7 +146,7 @@ const Summary = ({ policy }: SummaryProps) => {
                                 <b>{t('bpm500Error')}</b>
                             </BannerAlert>
                         )}
-                        <div className="flex flex-row">
+                        <div className={styles.checkboxContainer}>
                             <CheckboxText
                                 label={t('submitWithErrorsText')}
                                 checked={isChecked}
@@ -157,7 +157,7 @@ const Summary = ({ policy }: SummaryProps) => {
                         </div>
                         {isChecked && (
                             <AssistiveText
-                                className="mt-2"
+                                className={styles.errorMessage}
                                 variant={AssistiveTextVariant.Error}
                                 text={t('missingCheckToConfirm')}
                             />

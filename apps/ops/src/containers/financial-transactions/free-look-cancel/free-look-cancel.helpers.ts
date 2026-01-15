@@ -3,35 +3,40 @@ import { v4 as uuidV4 } from 'uuid';
 import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext.types';
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
-import { FreeLookCancellationRequest } from '@zinnia/api-types/types/bpm';
+import {
+    DisbursementType,
+    FreeLookCancellationRequest,
+    PaymentForm,
+} from '@zinnia/api-types/types/bpm';
 
 export const buildFreeLookCancelRequestBody = (
     withdrawal: Withdrawal,
     wireCheckPaymentsEnabled: boolean
 ): FreeLookCancellationRequest => {
     const requestCorrelationId = withdrawal.correlationId || uuidV4();
+    const FULL_ALLOCATION_PERCENTAGE = 100.0;
 
-    // Common base request properties
     const baseRequest: Partial<FreeLookCancellationRequest> = {
         correlationId: requestCorrelationId,
         effectiveDate: getUtcDate(withdrawal.effectiveDate),
         reverseInitiator: false,
         transactionAmounts: {
-            disbursementType: withdrawal.disbursementType || 'GROSS',
+            disbursementType:
+                withdrawal.disbursementType || DisbursementType.GROSS,
             disbursementPaymentForm:
-                getDisbursementPaymentForm(withdrawal.paymentForm) || 'CHECK',
+                getDisbursementPaymentForm(withdrawal.paymentForm) ||
+                PaymentForm.CHECK,
         },
     };
 
-    // For wire check payments
     if (wireCheckPaymentsEnabled) {
         return {
             ...baseRequest,
             parties: [
                 {
                     partyId: withdrawal.payeePartyId,
-                    paymentForm: withdrawal.paymentForm || 'CHECK',
-                    allocationPercentage: 100.0,
+                    paymentForm: withdrawal.paymentForm || PaymentForm.CHECK,
+                    allocationPercentage: FULL_ALLOCATION_PERCENTAGE,
                     bankId: withdrawal.paymentBankId,
                     ...(withdrawal.paymentAddressId && {
                         addressId: withdrawal.paymentAddressId,
@@ -49,8 +54,8 @@ export const buildFreeLookCancelRequestBody = (
         ...baseRequest,
         payeeOrBeneficiary: {
             partyId: withdrawal.payeePartyId,
-            paymentForm: withdrawal.paymentForm || 'CHECK',
-            allocationPercentage: 100.0,
+            paymentForm: withdrawal.paymentForm || PaymentForm.CHECK,
+            allocationPercentage: FULL_ALLOCATION_PERCENTAGE,
             ...(withdrawal.paymentBankId && {
                 bankId: withdrawal.paymentBankId,
             }),
