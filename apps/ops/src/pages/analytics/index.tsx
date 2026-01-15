@@ -87,8 +87,10 @@ const AnalyticsPage = ({
         const tab = url?.[1]?.split('=')?.at(-1);
         const slug = url?.[0]?.split('/')?.at(-1);
 
+        if (tab) {
+            setTab(tab);
+        }
         setSlug(slug);
-        setTab(tab);
     }, [router.asPath]);
 
     return (
