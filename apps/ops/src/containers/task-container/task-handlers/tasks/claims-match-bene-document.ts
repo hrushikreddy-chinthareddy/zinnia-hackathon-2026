@@ -25,7 +25,7 @@ interface claimsMatchBeneDocumentPayload {
 
 const claimsMatchBeneDocumentHandler: TaskHandler<
     claimsMatchBeneDocumentPayload,
-    any
+    BeneficiaryRecord[]
 > = {
     api: async (
         payload: claimsMatchBeneDocumentPayload,
@@ -38,7 +38,9 @@ const claimsMatchBeneDocumentHandler: TaskHandler<
             accessToken,
             loggingContext
         );
-        const beneficiaryMatches = Array.isArray(apiResult) ? apiResult : [];
+        const beneficiaryMatches = Array.isArray(apiResult)
+            ? (apiResult as BeneficiaryRecord[])
+            : [];
         return beneficiaryMatches;
     },
 
