@@ -66,6 +66,7 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
             <TabGroup
                 defaultValue={AnalyticsTabs.ACTIVE_APPLICATIONS}
                 value={selectedTab}
+                activationMode="manual"
             >
                 <div className={styles.tabContent} ref={ref}>
                     <TabContent value={AnalyticsTabs.ACTIVE_APPLICATIONS}>

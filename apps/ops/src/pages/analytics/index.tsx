@@ -61,7 +61,7 @@ const AnalyticsPage = ({
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const [slug, setSlug] = useState(path.split('?')[0].split('/').at(-1));
     const [tab, setTab] = useState(
-        path.split('?')[1]?.split('=').at(-1) ?? undefined
+        path.split('?')[1]?.split('=')?.at(-1) ?? undefined
     );
     const router = useRouter();
 
