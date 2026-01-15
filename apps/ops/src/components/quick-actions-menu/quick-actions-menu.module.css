@@ -8,4 +8,7 @@
     &:hover {
         color: var(--color-states-hover-text-hover-text-link);
     }
+    &:focus-visible {
+        border-radius: 4px;
+    }
 }

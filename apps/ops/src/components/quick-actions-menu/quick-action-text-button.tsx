@@ -29,7 +29,7 @@ export const TextButton = forwardRef<HTMLButtonElement, TextButtonProps>(
                 {...props}
                 className={clsx(
                     styles.quickActions,
-                    'group default-focus focus-visible:rounded',
+                    'default-focus',
                     className
                 )}
             >

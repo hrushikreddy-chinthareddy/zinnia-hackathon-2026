@@ -2,6 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import clsx from 'clsx';
 import { ReactNode, useCallback, useRef, useState } from 'react';
 
+import styles from './menu-contextual.module.css';
 import { calculateMenuPlacement } from './menu-placement';
 
 export interface MenuContextualProps {
@@ -81,7 +82,7 @@ export const MenuContextual = ({
         >
             <DropdownMenu.Trigger
                 asChild={triggerAsChild}
-                className={triggerAsChild ? '' : 'group block rounded'}
+                className={triggerAsChild ? '' : styles.trigger}
                 ref={triggerRef}
             >
                 {trigger}

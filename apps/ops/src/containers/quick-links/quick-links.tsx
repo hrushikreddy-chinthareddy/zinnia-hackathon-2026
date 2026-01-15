@@ -19,6 +19,8 @@ import {
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
 
+import styles from './quick-links.module.css';
+
 type PolicyQuickActionsProps = Extract<
     QuickActionsMenuProps,
     { type: QuickActionsType.Policy }
@@ -84,7 +86,10 @@ const QuickLinks = ({
                             trigger={
                                 <button
                                     type="button"
-                                    className="nav-links group block cursor-pointer tracking-normal no-underline default-focus focus-visible:rounded"
+                                    className={clsx(
+                                        styles.menuTriggerButton,
+                                        'nav-links default-focus'
+                                    )}
                                 >
                                     {name}
                                     <Icon
