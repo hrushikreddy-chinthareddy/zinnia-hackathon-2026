@@ -19,9 +19,13 @@ const buildZlCaseIdRequest = (zlCaseId: string) => {
     };
 };
 
-const claimsMatchBeneDocumentHandler: TaskHandler<any, any> = {
+interface claimsMatchBeneDocumentPayload {
+    zlCaseId: string;
+}
+
+const claimsMatchBeneDocumentHandler: TaskHandler<claimsMatchBeneDocumentPayload, any> = {
     api: async (
-        payload: any,
+        payload: claimsMatchBeneDocumentPayload,
         accessToken: string,
         loggingContext: LoggingContext
     ) => {
