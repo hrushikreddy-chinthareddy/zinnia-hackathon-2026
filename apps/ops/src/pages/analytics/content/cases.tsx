@@ -17,12 +17,12 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     const { t } = useTranslation();
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState<string>(
-        tab ?? AnalyticsTabs.ACTIVE_APPLICATIONS
+        AnalyticsTabs.ACTIVE_APPLICATIONS
     );
 
     useEffect(() => {
-        if (!tab) {
-            setSelectedTab(AnalyticsTabs.ACTIVE_APPLICATIONS);
+        if (tab) {
+            setSelectedTab(tab);
         }
     }, [tab]);
 
