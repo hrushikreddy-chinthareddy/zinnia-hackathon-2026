@@ -1,3 +1,4 @@
+import { Task } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import { AdditionalDataInstance } from './additional-data-instance';
@@ -152,6 +153,7 @@ export interface TaskSideSheetProps {
     taskName?: string;
     mappedDocuments?: TaskDocument[];
     onTaskClaimSuccess?: () => void;
+    onTaskUpdated?: (updatedTask: Task) => void;
 }
 
 export interface TaskQueueDrawerProps {

@@ -1,8 +1,14 @@
 import { render } from '@testing-library/react';
+import { getCookie } from 'cookies-next';
 
 import { browserLogError } from '@deps/utils/browser-logging';
 
 import PendoAnalyticsInit from './PendoAnalyticsInit';
+
+jest.mock('cookies-next', () => ({
+    getCookie: jest.fn(),
+    setCookie: jest.fn(),
+}));
 
 jest.mock('@deps/utils/browser-logging', () => ({
     browserLogError: jest.fn(),
@@ -70,6 +76,15 @@ afterAll(() => {
 });
 
 describe('PendoAnalyticsInit', () => {
+    beforeEach(() => {
+        (getCookie as jest.Mock).mockReturnValue(
+            JSON.stringify({
+                admin: ['ELIC', 'SBUL'],
+                processor: ['SBUL'],
+            })
+        );
+    });
+
     afterEach(() => {
         // Reset call counts
         jest.clearAllMocks();
@@ -99,6 +114,33 @@ describe('PendoAnalyticsInit', () => {
         });
     });
 
+    it('includes roles and carrier metadata in visitor when userRolesMap contains role assignments', () => {
+        render(<PendoAnalyticsInit />);
+
+        expect(initializeMock).toHaveBeenCalledTimes(1);
+        const config = initializeMock.mock.calls[0][0];
+
+        expect(config).toMatchObject({
+            visitor: {
+                id: 'party:123',
+                email: 'user@example.com',
+                firstLogin: '2024-01-01T00:00:00.000Z',
+                // Internal flag comes from isInternalZinniaUser mock
+                isInternalZinniaUser: 'true',
+                roles: ['admin', 'processor'],
+                carrierAccessList: ['ELIC', 'SBUL'],
+                roleToCarrierMap: [
+                    'admin:ELIC',
+                    'admin:SBUL',
+                    'processor:SBUL',
+                ],
+            },
+            account: {
+                id: 'zinnia',
+            },
+        });
+    });
+
     it('logs an error if pendo is not loaded on initialize', () => {
         withPendoMissing(() => {
             render(<PendoAnalyticsInit />);
@@ -106,6 +148,10 @@ describe('PendoAnalyticsInit', () => {
             expect(initializeMock).not.toHaveBeenCalled();
             expect(browserLogError).toHaveBeenCalledWith(
                 'pendo::Pendo not loaded, skipping initialization',
+                { user: 'party:123' }
+            );
+            expect(browserLogError).toHaveBeenCalledWith(
+                'pendo::Pendo not loaded, skipping option update',
                 { user: 'party:123' }
             );
         });
@@ -118,6 +164,10 @@ describe('PendoAnalyticsInit', () => {
             expect(updateOptionsMock).not.toHaveBeenCalled();
             expect(browserLogError).toHaveBeenCalledWith(
                 'pendo::Pendo not loaded, skipping option update',
+                { user: 'party:123' }
+            );
+            expect(browserLogError).toHaveBeenCalledWith(
+                'pendo::Pendo not loaded, skipping initialization',
                 { user: 'party:123' }
             );
         });

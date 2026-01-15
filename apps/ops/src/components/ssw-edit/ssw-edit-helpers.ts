@@ -13,6 +13,7 @@ import {
 import { TaskStatus } from '@deps/models/case/task-instance';
 import {
     ActiveWithdrawalCase,
+    FormComment,
     FormSignature,
     FormValidationErrors,
     Frequency,
@@ -57,7 +58,8 @@ const getSswEditPayload = (
     existingProg: Program,
     updateProgram: Program | any,
     document: DocumentData,
-    operationType: SswUpdateType
+    operationType: SswUpdateType,
+    formComment: FormComment
 ) => {
     const isTerminate = operationType === SswUpdateType.PROGRAM_TERMINATE;
     const documentSource = getDocumentSource(document.documentNumber);
@@ -119,6 +121,7 @@ const getSswEditPayload = (
         ...initialForm.data,
         onbaseCaseId: document?.caseId,
         formRequest: {
+            formComment: formComment,
             formData: formData,
             formSource: source,
             formUpdateData: formUpdateData,
@@ -153,7 +156,8 @@ export const buildSSWFormData = (
     existingProg: Program,
     updateProgram: UpdatedProgram,
     document: DocumentData,
-    operationType: SswUpdateType
+    operationType: SswUpdateType,
+    formComment: FormComment
 ): CreateTaskBody<TaskStatus, TaskV2Payload> => {
     return {
         source: TaskSource.ZinniaTaskManagement,
@@ -165,7 +169,8 @@ export const buildSSWFormData = (
             existingProg,
             updateProgram,
             document,
-            operationType
+            operationType,
+            formComment
         ) as any,
     };
 };

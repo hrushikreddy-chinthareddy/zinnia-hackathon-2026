@@ -10,7 +10,6 @@
     "last14Days": "Last 14 days",
     "last30Days": "Last 30 days",
     "yearToDate": "Year-to-date",
-    "caseStatsDashboardTitle": "Case Stats",
     "customRange": "Custom Range",
     "allAgents": "All Agents",
     "allDistributors": "All Distributors",
@@ -55,6 +54,7 @@
         "accountValueByPolicyYear": "Account value by {{policyNomenclature}} year",
         "accountValues": "Account values",
         "accountValueTooltip": "This is the cash value amount held within the owner's life insurance policy. The account value accumulates over time as premiums are paid and interest is earned.",
+        "actions": "Actions",
         "activityTooltipDescription": "Click a transaction type for more details on counts. Use the breadcrumb above the chart to return to all transaction types.",
         "actuarialPresentValue": "Actuarial present value",
         "addressId": "Address",
@@ -69,6 +69,7 @@
         "amountExcessToGuideline": "Amount excess to guideline",
         "amountExcessToModifiedEndowmentContract": "Amount excess to MEC",
         "amountType": "Amount type",
+        "analyticsDashboard": "Carrier Dashboard",
         "annualBenefitAmount": "Annual benefit amount",
         "annualizedPremium": "Annualized premium",
         "annualPremium": "Annual premium",
@@ -92,8 +93,11 @@
         "beginningAccountValue": "Beginning account value",
         "calculatedAmount": "Calculated amount",
         "cancel": "Cancel",
+        "cancelAutopay": "Cancel autopay",
         "carrierId": "Carrier ID",
+        "carrierName": "Carrier name",
         "caseId": "Case ID",
+        "cases": "Cases",
         "caseIdSearchError": "Enter a Case Id to return search results",
         "caseType": "Case type",
         "certifiedReceivedDate": "Certified received date",
@@ -150,6 +154,7 @@
         "currentContributionAmount": "Current contribution amount",
         "currentMonthCharge": "Current month charge",
         "currentTaxYear": "Current tax year",
+        "dashboardProductDetails": "Product Details",
         "date": "Date",
         "dateOfDeathReportedNotification": "Date of death reported notification",
         "day": "day",
@@ -184,6 +189,7 @@
         "emailRequired": "Email is required.",
         "emailTooltip": "Please enter a valid email address. Only one email address is allowed in this field.",
         "emptySearch": "No matches found",
+        "emptySystematicProgramsTable": "There are currently no {{type}} systematic programs.",
         "endDate": "End date",
         "endingAccountValue": "Ending account value",
         "endingIn": "{{accountType}} ending in {{accountNumber}}",
@@ -282,7 +288,10 @@
         "lastName": "Last Name",
         "lastNameRequired": "Last name is required.",
         "lastNameSearchError": "Enter a last name to return search results",
+        "lastPaymentDate": "Last payment date",
         "lineOfBusiness": "Line of business",
+        "loadingTransactionDetails": "Loading transaction details...",
+        "loadingTransactions": "Loading transactions...",
         "loanAccruedInterest": "Loan accrued interest",
         "loanActivity": "Loan activity ",
         "loanBalance": "Loan balance",
@@ -304,6 +313,8 @@
         "mail": "Mail",
         "makePayment": "Make payment",
         "male": "Male",
+        "manage": "Manage",
+        "manageAutopay": "Manage autopay",
         "marketingName": "Marketing name",
         "marketValueAdjustment": "Market Value Adjustment",
         "marketValueAdjustmentAmount": "MVA amount",
@@ -362,9 +373,11 @@
         "nextAnniversaryDate": "Next anniversary date",
         "nextEvaluationDate": "Next evaluation date",
         "nextMonthiversaryDate": "Next monthiversary date",
+        "nextPayment": "Next payment",
         "nextProgramDate": "Next program date",
         "noFormsFound": "No forms found.",
         "noRecordsFound": "No records found.",
+        "noTransactionsTitle": "There are currently no {{status}} transactions.",
         "numberOfOccurrence": "Number of occurrence",
         "numberOfWithdrawal": "Total withdrawals taken",
         "openInNewWindow": "Open in new window",
@@ -405,6 +418,7 @@
         "payeeOrBeneficiaries": "Payee or beneficiaries",
         "paymentAmount": "Payment amount",
         "paymentForm": "Payment form",
+        "paymentType": "Payment type",
         "payorPayeeDetails": "Payor/Payee details",
         "payors": "Payors",
         "people": "People",
@@ -420,6 +434,8 @@
         "policyGainAmount": "{{policyNomenclature, capitalize}} gain amount",
         "policyNumber": "{{policyNomenclature, capitalize}} number",
         "policyNumberSearchError": "Enter a policy/contract number to return search results",
+        "policyPage": "Policy Page",
+        "policyPagesBeingResent": "Policy pages are currently being resent.",
         "policyReferenceId": "{{policyNomenclature, capitalize}} reference ID",
         "policySource": "{{policyNomenclature, capitalize}} source",
         "policySourceDescription": "{{policyNomenclature, capitalize}} source description",
@@ -442,8 +458,12 @@
         "priorYearEndAccountValue": "Prior year-end account value",
         "priorYearRequiredMinimumDistributionAmount": "Prior year RMD amount",
         "processDate": "Process date",
+        "processingTime": "Processing time",
         "product": "Product",
         "productCode": "Product code",
+        "productMarketingName": "Product marketing name",
+        "productName": "Product name",
+        "productNameTooltip": "This is the product name that you'll see referenced in internal documentation. It's different from the product marketing name that's used in correspondence and will be familiar to the owner.",
         "productType": "Product type",
         "productVersion": "Product version",
         "projectedLapseIndicator": "Projected lapse indicator",
@@ -497,6 +517,9 @@
         "sendChannel_fax": "faxed to",
         "sendChannel_paper_mail": "mailed to",
         "sendToDifferentAddress": "Send to a different address",
+        "sendPolicyPages": "Send Policy Pages",
+        "setUpAutopay": "Set up autopay",
+        "setUp": "set up",
         "sevenPayLimit": "7-pay limit",
         "sevenPayPeriod": "7-pay period",
         "sevenPayPremium": "7-pay premium total",
@@ -504,6 +527,7 @@
         "sevenPayTestBasis": "7-pay premium basis",
         "sex": "Sex",
         "shortName": "Short name",
+        "showHistory": "Show history",
         "ssn": "SSN",
         "ssnSearchError": "Enter a Social Security number to return search results",
         "startDate": "Start date",
@@ -516,6 +540,7 @@
         "surrenderValueWithoutMarketValueAdjustment": "Surrender value without MVA",
         "systematicOrBillingChangeIndicator": "Systematic or billing change indicator",
         "systematicPrograms": "Systematic programs",
+        "systemProgramStatus": "Status",
         "tableCaptionsCasesTable": "List of all cases, including status, owner, carrier, agent, and creation time",
         "tableCaptionsElectedFunds": "Elected fund allocations, including fund name, type, guarantee period, interest rate, value, and percentage of allocation",
         "tableCaptionsNotElectedFunds": "Non-elected funds, including fund name, type, guarantee period, interest rate, and value",
@@ -548,6 +573,7 @@
         "tierTwoMaximumCriticalIllnessBenefitAmount": "Tier two max critical illness benefit amount",
         "tierTwoMaximumCriticalIllnessBenefitPercentage": "Tier two maximum critical illness benefit percentage",
         "timeline": "Timeline",
+        "timeliness": "Timeliness",
         "timestamp": "Timestamp",
         "to": "to",
         "total": "Total",
@@ -573,6 +599,7 @@
         "transactionAmounts": "Transaction amounts ",
         "transactionBasics": "Transaction basics",
         "transactionDetails": "Transaction details",
+        "transactionDetailsError": "An error occurred while loading transaction details.",
         "transactionId": "Transaction ID",
         "transactionReason": "Transaction reason",
         "transactionType": "Transaction type",
@@ -687,6 +714,7 @@
         "CHECK": "Check",
         "CHECKING": "Checking",
         "ClaimPayout": "Claim payout",
+        "CLOSEDCASES": "Closed Cases",
         "CommunicationPreferenceChange": "Communication preference change",
         "Commutation": "Commutation",
         "Completed": "Completed",
@@ -891,6 +919,7 @@
         "IRSROTH403(B)": "IRS-Classified Roth 403(b)",
         "Issuance": "Issuance",
         "ISSUED": "Issued",
+        "ISSUES": "Issues",
         "JOINTANNUITANT": "Joint annuitant",
         "JOINTINDIVIDUAL": "Joint Individual",
         "JOINTLIFEONLYJOINTANDSURVIVOR": "Joint life only; joint and survivor",
@@ -968,6 +997,7 @@
         "O": "Reviewing",
         "ONETIMEPREMIUM": "One time premium",
         "OneTimePremium": "One-time premium",
+        "OPENCASES": "Open Cases",
         "OPERATIONAL": "Operational",
         "OPTIONA": "Option a",
         "OPTIONB": "Option b",
@@ -1131,6 +1161,7 @@
         "submittedVsProcessedMismatch": "Submitted vs. processed mismatch",
         "systemError": "System error",
         "TARGETBENEFITPLAN": "Target Benefit Plan",
+        "TASKS": "Tasks",
         "TENYEARTAXOPTION": "Ten-year tax option",
         "TERM": "Term",
         "TERMINATED": "Terminated",
@@ -1213,7 +1244,7 @@
             "createCaseRmd": "Process RMD - OTP",
             "createCaseSsw": "Process Systematic Withdrawal - OTP",
             "createCaseWithdrawal": "Process Withdrawal - OTP",
-            "dashboard": "Case Stats",
+            "analytics": "Analytics",
             "documents": "Documents",
             "formData": "Form Data",
             "funds": "Funds",
@@ -1236,6 +1267,7 @@
             "sendDocument": "Send Document",
             "sendStatement": "Send Statement",
             "sendTaxForm": "Send Tax Form",
+            "sendPolicyPages": "Send Policy Pages",
             "updatePremium": "Update Premium Autopay",
             "usage": "Usage",
             "viewDocument": "View Document",
@@ -1321,9 +1353,9 @@
                 "link": "/customers",
                 "altText": "Customers"
             },
-            "dashboard": {
-                "text": "Case Stats",
-                "link": "/dashboard"
+            "analytics": {
+                "text": "Analytics",
+                "link": "/analytics/cases"
             },
             "details": {
                 "text": "Details",
@@ -1472,6 +1504,10 @@
             "beneficiary": {
                 "text": "Manage beneficiaries",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "assignee": {
+                "text": "Manage assignee",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
             "userMenu": {
                 "text": "User Menu"
@@ -2266,6 +2302,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continue",
+        "cancel": "Cancel",
+        "confirm": {
+            "header": "Confirm",
+            "tryAgain": "Try Again",
+            "for": "for",
+            "nigo": "NIGO processing.",
+            "goToCase": "Go to case",
+            "gotIt": "Got it!",
+            "submit": "Submitted!",
+            "backToHome": "Back to Home"
+        },
+        "start": {
+            "title": "Start"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Manage Assignees",
+                "subTitle": "Here you can manage assignees"
+            },
+            "confirm": {
+                "subTitle": "Assignee Change updates were submitted."
+            }
+        }
+    },
     "welcome": {
         "header": "Welcome to {{policyPortalName}}",
         "subHeader": "A policy management experience tool to make your life a little easier.",
@@ -2507,6 +2569,7 @@
         "unassign": "Unassign",
         "assign": "Assign",
         "startTask": "Start Task",
+        "assigneeSearchPlaceholder": "Find a person",
         "assignTask": "Assign Task",
         "transaction": "Transaction: {{transactionType}}",
         "assigned": "Assigned",
@@ -2645,6 +2708,8 @@
             "taskStatus": "Task Status",
             "group": "Group",
             "assignee": "Assignee",
+            "scheduledDate": "Scheduled date",
+            "scheduledDatePlaceholder": "Select a date",
             "priority": "Priority status",
             "selectPriority": "Select priority",
             "onlyPrioritized": "Prioritized cases",
@@ -5109,26 +5174,28 @@
                 }
             },
             "coverageID": {
-                "Rider_ADR": "Provides an additional death benefit if the insured dies due to a covered accident.",
-                "Rider_CGR": "Provides an additional benefit payable to a charity of choice upon the insured's death.",
-                "Rider_CTR": "Provides term life insurance coverage for the insured's children.",
-                "Rider_ABRTRM": "Allows early access to the death benefit if the insured is diagnosed with a terminal illness.",
                 "Rider_ABRCHR": "Allows early access to the death benefit if the insured is diagnosed with a chronic illness.",
                 "Rider_ABRCRI": "Allows early access to the death benefit if diagnosed with a covered critical illness.",
-                "Rider_OPR": "Prevents the policy from lapsing due to excessive policy loans by converting it to a reduced paid-up policy.",
-                "Rider_NHR": "Allows early access to the death benefit or annuity value if the insured is confined to a qualified nursing home.",
+                "Rider_ABRTRM": "Allows early access to the death benefit if the insured is diagnosed with a terminal illness.",
+                "Rider_ADR": "Provides an additional death benefit if the insured dies due to a covered accident.",
+                "Rider_BONUS": "Increases the contract’s accumulation value by applying a bonus to new premium.",
+                "Rider_CGR": "Provides an additional benefit payable to a charity of choice upon the insured's death.",
+                "Rider_CTR": "Provides term life insurance coverage for the insured's children.",
+                "Rider_GAB": "Triggers a single true-up at the end of the GAP period to bring the accumulation value up to the guaranteed GAP amount when needed.",
+                "Rider_GIBR": "Allows the policyholder to purchase additional coverage at specific times without undergoing a medical exam or providing evidence of insurability.",
                 "Rider_GLWB": "Guarantees lifetime withdrawals from an annuity regardless of market performance, even after the account is depleted.",
                 "Rider_GMAB": "Guarantees the return of a minimum account value after a specified holding period, regardless of market conditions.",
                 "Rider_GMDB": "Provides a guaranteed minimum death benefit to beneficiaries regardless of investment performance.",
                 "Rider_GMIB": "Guarantees a minimum income stream from an annuity, typically based on a predetermined growth rate.",
                 "Rider_GMWB": "Guarantees the ability to withdraw a fixed percentage annually even if the annuity value drops to zero.",
-                "Rider_WDR": "The Owner must be aged 18-55 to select Owner Waiver of Deduction Rider.",
-                "Rider_WPR": "Waives policy premiums if the insured becomes totally disabled.",
-                "Rider_WCR": "Waives certain policy charges during periods of the insured's total disability.",
+                "Rider_GWB": "Guarantees lifetime withdrawals from an annuity, subject to the rider’s terms.",
+                "Rider_NHR": "Allows early access to the death benefit or annuity value if the insured is confined to a qualified nursing home.",
+                "Rider_OPR": "Prevents the policy from lapsing due to excessive policy loans by converting it to a reduced paid-up policy.",
                 "Rider_OWCR": "Waives policy charges if the policy owner becomes disabled or meets specific criteria.",
-                "Rider_BONUS": "Increases the contract’s accumulation value by applying a bonus to new premium.",
-                "Rider_GAB": "Triggers a single true-up at the end of the GAP period to bring the accumulation value up to the guaranteed GAP amount when needed.",
-                "Rider_GWB": "Guarantees lifetime withdrawals from an annuity, subject to the rider’s terms."
+                "Rider_OWDR": "Waives certain policy costs if the policy owner becomes disabled, helping to maintain the policy during periods of hardship.",
+                "Rider_WCR": "Waives certain policy charges during periods of the insured's total disability.",
+                "Rider_WDR": "Waives certain policy costs if the insured becomes disabled, helping to maintain the policy during periods of hardship.",
+                "Rider_WPR": "Waives policy premiums if the insured becomes totally disabled."
             }
         },
         "history": {
@@ -5180,9 +5247,7 @@
                 "pendingReversal": "Pending reversal"
             },
             "loadingEvents": "Loading events...",
-            "loadingTransactions": "Loading transactions...",
             "noEventsTitle": "No events yet.",
-            "noTransactionsTitle": "There are currently no {{status}} transactions.",
             "noEventsSubtitle": "Looks like nothing's happened so far.",
             "upcomingEvents": "Upcoming events",
             "requested": "Requested",
@@ -5632,9 +5697,11 @@
             "newCreatedLabel": "Created",
             "assigneeLabel": "Assignee",
             "documentNumber": "Document",
+            "carrier": "Carrier",
+            "caseId": "Case ID",
             "stepLabel": "Step",
             "issueLabel": "Issue",
-            "detailsLabel": "Details",
+            "detailsLabel": "Task Description",
             "noDataAvailable": "No data available.",
             "noDocuments": "No documents available",
             "errorAdditionalDocuments": "Error fetching additional documents.",
@@ -7879,7 +7946,8 @@
             }
         },
         "formValidation": {
-            "signaturePresentOptionMustBeSelected": "Signature present option must be selected"
+            "signaturePresentOptionMustBeSelected": "Signature present option must be selected",
+            "signatureDesignationMustBeSelected": "Signature designation must be selected"
         },
         "signTabTitle": "Signature",
         "success": "SSW Request has been submitted.",
@@ -8852,10 +8920,6 @@
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
     },
     "caseStats": {
-        "tabs": {
-            "issue": "Issues",
-            "tasks": "Tasks"
-        },
         "tasks": {
             "title": "Task Volume",
             "description": "Volume of tasks created over a selected time range, grouped by case type and task.",
@@ -9034,6 +9098,7 @@
             "ariaGoToEApp": "Go to eApp link",
             "selectBeforeGoToEApp": "Please select an illustration before continuing to the eApplication.",
             "archiveIllustrationPopoverTitle": "Archive this illustration?",
+            "archiveIllustrationIconTitle": "Archive illustration icon",
             "archiveIllustrationPopoverBody": "You can unarchive it later.",
             "confirmArchive": "Archive",
             "cancel": "Cancel",
@@ -9057,6 +9122,8 @@
             "title": "Quick Quote",
             "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
             "notAvailable": "Not Available",
+            "notAvailableByTermLength": "Not available for {{termLength}}-year term:",
+            "hasRiderErrors": "Some riders not included. See Coverage & Summary.",
             "product": {
                 "title": "Product",
                 "totalPremiumRange": "Total Premium Range",
@@ -9070,9 +9137,12 @@
                 "nYearTerm": "{{years}} year term"
             },
             "notAvailableReason": {
-                "age": "Not available for age {{age}}.",
-                "state": "Not available for this state.",
-                "face": "Not available for this face amount."
+                "maxAge": "Max issue age: {{age}}",
+                "minAge": "Min issue age: {{age}}",
+                "state": "Not available for this state",
+                "maxFaceAm": "Max face amount: {{amount}}",
+                "minFaceAm": "Min face amount: {{amount}}",
+                "riderFaceAmount": "Rider face amount cannot exceed policy face amount."
             },
             "riders": {
                 "title": "Riders",
@@ -9358,6 +9428,24 @@
             "subTitle": "Third party detail form was submitted successfully.",
             "cta": "Go to case",
             "secondaryCta": "Back",
+            "submitTask": "Submit"
+        }
+    },
+    "fraudScreeningReview": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Carrier Approval Task was submitted.",
+            "cta": "Go to case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "bankingValidationCallout": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Giact call out Task was submitted.",
+            "secondaryCta": "Back to home",
+            "cta": "Go to case",
             "submitTask": "Submit"
         }
     }

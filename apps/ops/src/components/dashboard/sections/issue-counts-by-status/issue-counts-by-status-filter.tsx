@@ -26,9 +26,13 @@ export const IssueCountsByStatusFilters = () => {
 
     return (
         <div className={sharedStyles.filterContainer}>
-            <div className="flex gap-4 items-start">
-                <IssueCategoryFilter onChange={setCategory} />
+            <div className={sharedStyles.filterGroup}>
+                <IssueCategoryFilter
+                    className={sharedStyles.filterItem}
+                    onChange={setCategory}
+                />
                 <CaseTypeFilter
+                    className={sharedStyles.filterItem}
                     onValueChange={setSelectedProcess}
                     caseStatus={[
                         Statuses.InProgress,
@@ -45,9 +49,9 @@ export const IssueCountsByStatusFilters = () => {
                     defaultProcess={ExtendedProcesses.ALL}
                     value={selectedProcess}
                 />
-                <ExceptionStatusFilter />
+                <ExceptionStatusFilter className={sharedStyles.filterItem} />
             </div>
-            <div className="w-1/2">
+            <div>
                 <TimeFilter
                     defaultValue={timeframeRadio}
                     onRadioChange={(val) => {

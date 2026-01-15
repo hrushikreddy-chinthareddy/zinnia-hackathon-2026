@@ -223,5 +223,6 @@ export interface DisbursementParts {
     consentAvailable: boolean | null;
     ChooseBankingType: string;
     isAddressLine2Required?: boolean;
+    bankVerification?: any;
     name?: string | null;
 }

@@ -18,15 +18,16 @@ export const CaseTimingFilters = () => {
     } = useContext(CaseTimingContext);
     return (
         <div className={sharedStyles.filterContainer}>
-            <div className="w-1/4">
+            <div className={sharedStyles.filterGroup}>
                 <CaseTypeFilter
+                    className={sharedStyles.filterItem}
                     onValueChange={setSelectedProcess}
                     caseStatus={[Statuses.Completed]}
                     defaultProcess={Processes.NewBusiness}
                     value={selectedProcess}
                 />
             </div>
-            <div className="w-3/4">
+            <div>
                 <TimeFilter
                     onRadioChange={(val) =>
                         handleTimeframeRadioChange(

@@ -20,8 +20,10 @@ import { TranslationFiles } from '@deps/config/translations';
 import RenewalFormActions from '@deps/containers/otp/renewal-forms/components/renewal-form-actions';
 import RenewalFormProvider from '@deps/containers/otp/renewal-forms/components/renewal-form-provider';
 import DlicRenewalForm from '@deps/containers/otp/renewal-forms/dlic-form';
+import GlcoRenewalForm from '@deps/containers/otp/renewal-forms/glco/glco-form';
 import MassRenewalForm from '@deps/containers/otp/renewal-forms/mass-mutual-form';
 import SbgcRenewalForm from '@deps/containers/otp/renewal-forms/sbgc-form';
+import UlpcRenewalForm from '@deps/containers/otp/renewal-forms/ulpc/ulpc-form';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { determineFormToRender } from '@deps/helpers/form-selector.helpers';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
@@ -93,6 +95,8 @@ const getFormComponentMap = (): Record<string, React.ReactNode> => ({
     [Carrier.SBGC]: <SbgcRenewalForm />,
     [Carrier.MASS]: <MassRenewalForm />,
     [Carrier.DLIC]: <DlicRenewalForm />,
+    [Carrier.ULPC]: <UlpcRenewalForm />,
+    [Carrier.GLCO]: <GlcoRenewalForm />,
 });
 
 export default function RenewalCase({
@@ -190,7 +194,10 @@ export default function RenewalCase({
     return (
         <>
             <PageHead titleKey="createCaseRenewal" />
-            <DiaryNotesProvider caseDetails={caseDetailsData} isLC={true}>
+            <DiaryNotesProvider
+                caseDetails={caseDetailsData}
+                planCode={planCode}
+            >
                 <OtpLayout
                     contractNumber={document.contract}
                     clientId={clientId as string}

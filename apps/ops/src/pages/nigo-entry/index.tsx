@@ -521,7 +521,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 // Define types
                 const policyTypeDocumentsData: any =
                     await getPolicyTypeDocsSSRV2(
-                        contractNum,
+                        contractNum ?? docContract,
                         clientCode,
                         accessToken,
                         docType,

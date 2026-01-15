@@ -1,21 +1,14 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { TabContent } from '@zinnia/bloom/components';
 import Highcharts from 'highcharts';
+import { useSearchParams } from 'next/navigation';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useRef } from 'react';
 
-import {
-    DashboardTabNav,
-    DashboardTabs,
-} from '@deps/components/dashboard/dashboard-nav-links';
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
+import { AnalyticsTabs } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
-import { ActiveApplications } from '@deps/containers/dashboard/active-applications/active-applications';
-import { ClosedTransactions } from '@deps/containers/dashboard/closed-transactions/closed-transactions';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
-import { NIGOAnalysis } from '@deps/containers/dashboard/nigo-analysis/nigo-analysis';
-import { TasksAnalysis } from '@deps/containers/dashboard/tasks-analysis/tasks-analysis';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -41,21 +34,29 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import styles from './Dashboard.module.css';
+import Cases from './content/cases';
 
-interface DashboardPageProps extends SegmentTrackedPageProps {
+interface AnalyticsPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
+    path: string;
 }
 
-const DashboardPage = ({
+const AnalyticsPage = ({
     authorizedCarriers,
     brokerDealersSSR,
     user,
-}: DashboardPageProps) => {
+    path,
+}: AnalyticsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
-
+    const params = useSearchParams();
+    const tabParam = params.get('tab') ?? '';
+    const slug = path.split('/').at(-1);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
+    const isTabValid = Object.values(AnalyticsTabs).some(
+        (value) => value === tabParam
+    );
+
     const {
         isIntersecting: carrierHeaderIsIntersecting,
         ref: tabContentRef,
@@ -75,7 +76,7 @@ const DashboardPage = ({
 
     return (
         <>
-            <PageHead titleKey="dashboard" />
+            <PageHead titleKey="analytics" />
             <DashboardResponsiveLayout>
                 <FiltersHeader
                     carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
@@ -83,41 +84,31 @@ const DashboardPage = ({
                     authorizedCarriers={authorizedCarriers}
                     brokerDealersSSR={brokerDealersSSR}
                     ref={carrierHeaderRef}
+                    path={slug}
                 />
-                <DashboardTabNav>
-                    <div ref={tabContentRef} className={styles.tabContent}>
-                        <TabContent value={DashboardTabs.ACTIVE_APPLICATIONS}>
-                            <ActiveApplications />
-                        </TabContent>
-                        <TabContent value={DashboardTabs.CLOSED_TRANSACTIONS}>
-                            <ClosedTransactions />
-                        </TabContent>
-                        <TabContent value={DashboardTabs.NIGO_ANALYSIS}>
-                            <NIGOAnalysis />
-                        </TabContent>
-                        <TabContent value={DashboardTabs.TASKS_VOLUME}>
-                            <TasksAnalysis />
-                        </TabContent>
-                    </div>
-                </DashboardTabNav>
+                <Cases
+                    tab={isTabValid ? tabParam : undefined}
+                    ref={tabContentRef}
+                />
             </DashboardResponsiveLayout>
         </>
     );
 };
 
-export default DashboardPage;
+export default AnalyticsPage;
 
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             // Get the user object from the Auth0 Session
             const user = await getUserData(context);
-            const { locale = DEFAULT_LOCALE, res, req } = context;
+            const { locale = DEFAULT_LOCALE, res, req, resolvedUrl } = context;
+
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
-                logWarn('dashboard/index:: Access token expired', {
+                logWarn('analytics/index:: Access token expired', {
                     ...parseErrorInformation(e),
                     ...loggingContext,
                 });
@@ -167,6 +158,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     locale,
                     authorizedCarriers,
                     brokerDealersSSR: filteredBrokerDealers,
+                    path: resolvedUrl,
                     user,
                     ...translations,
                 },
@@ -174,8 +166,8 @@ export const getServerSideProps = withPageAuthAndLogging(
         },
     },
     {
-        file: 'dashboard/index',
+        file: 'analytics/index',
         function: 'getServerSideProps',
-        page: 'dashboard',
+        page: 'analytics',
     }
 );

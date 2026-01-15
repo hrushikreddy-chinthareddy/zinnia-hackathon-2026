@@ -67,33 +67,31 @@ export const ActiveAgingFilters: FC = () => {
 
     return (
         <div className={sharedStyles.filterContainer}>
-            <div className="w-1/2 flex flex-col gap-2">
-                <div className="flex gap-2">
-                    <Select
-                        maxContentWidth
-                        label="Group by"
-                        options={groupByOptions}
-                        value={groupBy}
-                        size={FieldSize.XS}
-                        onChange={(val) =>
-                            setGroupBy(val as CaseCountGroupByEnum)
-                        }
-                    />
+            <div className={sharedStyles.filterGroup}>
+                <Select
+                    className={sharedStyles.filterItem}
+                    maxContentWidth
+                    label="Group by"
+                    options={groupByOptions}
+                    value={groupBy}
+                    size={FieldSize.XS}
+                    onChange={(val) => setGroupBy(val as CaseCountGroupByEnum)}
+                />
 
-                    <CaseTypeFilter
-                        onValueChange={setSelectedProcess}
-                        caseStatus={Object.keys(caseStatus) as Statuses[]}
-                        defaultProcess={ExtendedProcesses.ALL}
-                        value={selectedProcess}
-                    />
-                </div>
+                <CaseTypeFilter
+                    className={sharedStyles.filterItem}
+                    onValueChange={setSelectedProcess}
+                    caseStatus={Object.keys(caseStatus) as Statuses[]}
+                    defaultProcess={ExtendedProcesses.ALL}
+                    value={selectedProcess}
+                />
                 <CaseStatusFilter
                     caseStatus={caseStatus}
                     handleChangeCallback={setCaseStatus}
                     options={caseStatusOptions}
                 />
             </div>
-            <div className="w-1/2">
+            <div>
                 <TimeFilter
                     defaultValue={timeframe}
                     timeframeOptions={ActiveAgingTimeRange}

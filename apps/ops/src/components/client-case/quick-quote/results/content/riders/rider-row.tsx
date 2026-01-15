@@ -5,12 +5,13 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { NumberOrRange, QuickQuoteFormState } from '@deps/types/quickQuote';
+import { RiderDataItem } from '@deps/utils/quick-quotes-rules/types';
 
-import { QuickQuoteResultTableRow } from '../base/result-table-row';
-import { useQuickQuoteResults } from '../results-context';
 import { QuickQuoteRiderRowHeader } from './rider-row-header';
 import { useQuickQuoteParams } from '../../params-context';
+import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import styles from '../content.module.css';
+import { useQuickQuoteResults } from '../results-context';
 
 type QuickQuoteRiderRowProps = {
     riderName: keyof QuickQuoteFormState['riders'];
@@ -27,10 +28,14 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
         return null;
     }
 
-    const data = results.map((result) => ({
-        period: 'mo.',
-        value: result.data.riders?.[riderName] as NumberOrRange,
-    }));
+    const data = results.map(
+        (result): RiderDataItem => ({
+            period: 'mo.',
+            value: result.data.riders?.[riderName]?.range as NumberOrRange,
+            notAvailabilityReasons:
+                result.data.riders?.[riderName]?.notAvailabilityReasonField,
+        })
+    );
 
     return (
         <QuickQuoteResultTableRow

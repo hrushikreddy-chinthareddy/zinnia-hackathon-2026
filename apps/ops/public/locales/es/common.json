@@ -55,6 +55,7 @@
         "accountValueByPolicyYear": "Valor de la cuenta por año de {{policyNomenclature}}",
         "accountValues": "Valores de cuenta",
         "accountValueTooltip": "Este es el valor en efectivo contenido dentro de la póliza de seguro de vida del propietario. El valor de la cuenta se acumula con el tiempo a medida que se pagan las primas y se ganan intereses.",
+        "actions": "Acciones",
         "activityTooltipDescription": "Haz clic en un tipo de transacción para ver más detalles sobre los conteos. Usa la ruta de navegación encima del gráfico para volver a todos los tipos de transacción.",
         "actuarialPresentValue": "Valor actual actuarial",
         "addressId": "Dirección",
@@ -69,6 +70,7 @@
         "amountExcessToGuideline": "Monto excedente a la directriz",
         "amountExcessToModifiedEndowmentContract": "Monto excedente al MEC",
         "amountType": "Tipo de monto",
+        "analyticsDashboard": "Panel de Transportista",
         "annualBenefitAmount": "Monto anual del beneficio",
         "annualizedPremium": "Prima anualizada",
         "annualPremium": "Prima anual",
@@ -92,8 +94,11 @@
         "beginningAccountValue": "Valor inicial de la cuenta",
         "calculatedAmount": "Montant calculé",
         "cancel": "Cancelar",
+        "cancelAutopay": "Cancelar el pago automático",
         "carrierId": "ID del transportista",
+        "carrierName": "Nombre de la compañía",
         "caseId": "ID du dossier",
+        "cases": "Casos",
         "caseIdSearchError": "Ingrese un Case Id para mostrar resultados de búsqueda",
         "caseType": "Tipo de caso",
         "certifiedReceivedDate": "Fecha de recepción certificada",
@@ -150,6 +155,7 @@
         "currentContributionAmount": "Montant actuel de la contribution",
         "currentMonthCharge": "Cargo del mes actual",
         "currentTaxYear": "Année fiscale en cours",
+        "dashboardProductDetails": "Detalles del producto",
         "date": "Fecha",
         "dateOfDeathReportedNotification": "Fecha de notificación de fallecimiento",
         "day": "día",
@@ -184,6 +190,7 @@
         "emailRequired": "Se requiere correo electrónico.",
         "emailTooltip": "Por favor, ingrese una dirección de correo electrónico válida. Solo se permite una dirección de correo electrónico en este campo.",
         "emptySearch": "No se encontraron coincidencias",
+        "emptySystematicProgramsTable": "Actualmente no existen programas sistemáticos {{type}}.",
         "endDate": "Fecha de finalización",
         "endingAccountValue": "Valor final de la cuenta",
         "endingIn": "{{accountType}} terminando en {{accountNumber}}",
@@ -282,7 +289,10 @@
         "lastName": "Apellido",
         "lastNameRequired": "Se requiere el apellido.",
         "lastNameSearchError": "Ingrese un apellido para mostrar resultados de búsqueda",
+        "lastPaymentDate": "Fecha del último pago",
         "lineOfBusiness": "Línea de negocio",
+        "loadingTransactionDetails": "Cargando detalles de la transacción...",
+        "loadingTransactions": "Cargando transacciones...",
         "loanAccruedInterest": "Interés acumulado del préstamo",
         "loanActivity": "Activité de prêt",
         "loanBalance": "Saldo del préstamo",
@@ -304,6 +314,8 @@
         "mail": "Correo",
         "makePayment": "Realizar pago",
         "male": "Masculino",
+        "manage": "Administrar",
+        "manageAutopay": "Administrar pago automático",
         "marketingName": "Nombre comercial",
         "marketValueAdjustment": "Ajuste de valor de mercado",
         "marketValueAdjustmentAmount": "Monto del ajuste de valor de mercado",
@@ -362,9 +374,11 @@
         "nextAnniversaryDate": "Próxima fecha de aniversario",
         "nextEvaluationDate": "Próxima fecha de evaluación",
         "nextMonthiversaryDate": "Próxima fecha de mesiversario",
+        "nextPayment": "Próximo pago",
         "nextProgramDate": "Fecha del próximo programa",
         "noFormsFound": "No se encontraron formularios.",
         "noRecordsFound": "No se encontraron registros.",
+        "noTransactionsTitle": "Actualmente no hay transacciones {{status}}.",
         "numberOfOccurrence": "Número de ocurrencias",
         "numberOfWithdrawal": "Total de retiros tomados",
         "openInNewWindow": "Abre en nueva ventana",
@@ -405,6 +419,7 @@
         "payeeOrBeneficiaries": "Bénéficiaire ou bénéficiaires",
         "paymentAmount": "Monto del pago",
         "paymentForm": "Forma de pago",
+        "paymentType": "Tipo de pago",
         "payorPayeeDetails": "Detalles del pagador/beneficiario",
         "payors": "Payeurs",
         "people": "Personas",
@@ -420,6 +435,8 @@
         "policyGainAmount": "Monto de ganancia de {{policyNomenclature}}",
         "policyNumber": "Número de {{policyNomenclature}}",
         "policyNumberSearchError": "Ingrese un número de póliza o contrato para mostrar resultados de búsqueda",
+        "policyPage": "Página de la Póliza",
+        "policyPagesBeingResent": "Actualmente se están reenviando las páginas de políticas.",
         "policyReferenceId": "ID de referencia de {{policyNomenclature}}",
         "policySource": "Fuente de {{policyNomenclature}}",
         "policySourceDescription": "Descripción de la fuente de {{policyNomenclature}}",
@@ -442,8 +459,12 @@
         "priorYearEndAccountValue": "Valor de cuenta de fin de año previo",
         "priorYearRequiredMinimumDistributionAmount": "Monto de RMD del año previo",
         "processDate": "Date de traitement",
+        "processingTime": "Tiempo de procesamiento",
         "product": "Producto",
         "productCode": "Código del producto",
+        "productMarketingName": "Nombre comercial del producto",
+        "productName": "Nombre del producto",
+        "productNameTooltip": "Este es el nombre del producto que verá referenciado en la documentación interna. Es diferente del nombre comercial del producto que se usa en la correspondencia y que será familiar para el propietario.",
         "productType": "Tipo de producto",
         "productVersion": "Versión del producto",
         "projectedLapseIndicator": "Indicador de caducidad proyectada",
@@ -496,7 +517,10 @@
         "sendChannel_email": "enviados por correo electrónico a",
         "sendChannel_fax": "enviados por fax a",
         "sendChannel_paper_mail": "enviados por correo a",
+        "sendPolicyPages": "Enviar páginas de políticas",
         "sendToDifferentAddress": "Enviar a una dirección diferente",
+        "setUpAutopay": "Configurar pago automático",
+        "setUp": "Configurar",
         "sevenPayLimit": "Límite 7-pagos",
         "sevenPayPeriod": "Período 7-pagos",
         "sevenPayPremium": "Prima total 7-pagos",
@@ -504,6 +528,7 @@
         "sevenPayTestBasis": "Base de prima 7-pagos",
         "sex": "Sexo",
         "shortName": "Nombre corto",
+        "showHistory": "Mostrar historial",
         "ssn": "SSN",
         "ssnSearchError": "Ingrese un número de Seguro Social para mostrar resultados de búsqueda",
         "startDate": "Fecha de inicio",
@@ -516,6 +541,7 @@
         "surrenderValueWithoutMarketValueAdjustment": "Valor de rescate sin ajuste de valor de mercado",
         "systematicOrBillingChangeIndicator": "Indicateur de changement systématique ou de facturation",
         "systematicPrograms": "Programas sistemáticos",
+        "systemProgramStatus": "Estado",
         "tableCaptionsCasesTable": "Lista de todos los casos, incluyendo estado, propietario, aseguradora, agente y fecha de creación",
         "tableCaptionsElectedFunds": "Asignaciones de fondos elegidos, incluyendo nombre del fondo, tipo, período de garantía, tasa de interés, valor y porcentaje de asignación",
         "tableCaptionsNotElectedFunds": "Fondos no elegidos, incluyendo nombre del fondo, tipo, período de garantía, tasa de interés y valor",
@@ -573,6 +599,7 @@
         "transactionAmounts": "Montants de la transaction",
         "transactionBasics": "Conceptos básicos de transacciones",
         "transactionDetails": "Detalles de la transacción",
+        "transactionDetailsError": "Error al cargar los detalles de la transacción.",
         "transactionId": "ID de transaction",
         "transactionReason": "Motif de la transaction",
         "transactionType": "Type de transaction",
@@ -687,6 +714,7 @@
         "CHECK": "Cheque",
         "CHECKING": "Cuenta corriente",
         "ClaimPayout": "Pago de reclamación",
+        "CLOSEDCASES": "Casos cerrados",
         "CommunicationPreferenceChange": "Cambio de preferencia de comunicación",
         "Commutation": "Conmutación",
         "Completed": "Completado",
@@ -891,6 +919,7 @@
         "IRSROTH403(B)": "Roth 403(b) clasificado por IRS",
         "Issuance": "Emisión",
         "ISSUED": "Emitido",
+        "ISSUES": "Asuntos",
         "JOINTANNUITANT": "Anuitante conjunto",
         "JOINTINDIVIDUAL": "Individual conjunto",
         "JOINTLIFEONLYJOINTANDSURVIVOR": "Solo vida conjunta; conjunta y sobreviviente",
@@ -968,6 +997,7 @@
         "O": "En revisión",
         "OneTimePremium": "Prima única",
         "ONETIMEPREMIUM": "Prima única",
+        "OPENCASES": "Casos abiertos",
         "OPERATIONAL": "Operativo",
         "OPTIONA": "Opción A",
         "OPTIONB": "Opción B",
@@ -1131,6 +1161,7 @@
         "submittedVsProcessedMismatch": "Discordancia entre enviados y procesados",
         "systemError": "Error del sistema",
         "TARGETBENEFITPLAN": "Plan de beneficio objetivo",
+        "TASKS": "Tareas",
         "TENYEARTAXOPTION": "Opción fiscal a diez años",
         "TERM": "Plazo",
         "TERMINATED": "Terminado",
@@ -1212,7 +1243,7 @@
             "createCaseRmd": "Procesar RMD - OTP",
             "createCaseSsw": "Procesar Retiro Sistemático - OTP",
             "createCaseWithdrawal": "Procesar Retiro - OTP",
-            "dashboard": "Estadísticas del Caso",
+            "analytics": "Analítica",
             "documents": "Documentos",
             "formData": "Datos del Formulario",
             "funds": "Fondos",
@@ -1235,6 +1266,7 @@
             "sendDocument": "Enviar Documento",
             "sendStatement": "Enviar Estado de Cuenta",
             "sendTaxForm": "Enviar Formulario de Impuestos",
+            "sendPolicyPages": "Enviar Páginas de Políticas",
             "updatePremium": "Actualizar Pago Automático de Prima",
             "usage": "Uso",
             "viewDocument": "Ver Documento",
@@ -1306,9 +1338,9 @@
                 "text": "$t(pageHeader.coverage.headerText)",
                 "link": "/policies/{{planCode}}/{{id}}/policy/coverage"
             },
-            "dashboard": {
-                "text": "Estadísticas del Caso",
-                "link": "/dashboard"
+            "analytics": {
+                "text": "Analítica",
+                "link": "/analytics/cases"
             },
             "details": {
                 "text": "Detalles",
@@ -1457,6 +1489,10 @@
             "beneficiary": {
                 "text": "Administrar beneficiarios",
                 "link": "/policies/{{planCode}}/{{id}}/people/benechange"
+            },
+            "assignee": {
+                "text": "Gestionar asignado",
+                "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
             "userMenu": {
                 "text": "Menú de Usuario"
@@ -2271,6 +2307,32 @@
             }
         }
     },
+    "selfServeTransaction": {
+        "continue": "Continuar",
+        "cancel": "Cancelar",
+        "confirm": {
+            "header": "Confirmar",
+            "tryAgain": "Intentar de nuevo",
+            "for": "para",
+            "nigo": "Procesamiento NIGO.",
+            "goToCase": "Ir al caso",
+            "gotIt": "¡Entendido!",
+            "submit": "¡Enviado!",
+            "backToHome": "Volver al inicio"
+        },
+        "start": {
+            "title": "Comenzar"
+        },
+        "assigneeChange": {
+            "start": {
+                "title": "Gestionar asignados",
+                "subTitle": "Aquí puedes gestionar los asignados"
+            },
+            "confirm": {
+                "subTitle": "Las actualizaciones del cambio de asignado se enviaron."
+            }
+        }
+    },
     "welcome": {
         "header": "Bienvenido a {{policyPortalName}}",
         "subHeader": "Una herramienta de experiencia de gestión de pólizas para hacer su vida un poco más fácil.",
@@ -2511,6 +2573,7 @@
         "unassign": "Desasignar",
         "assign": "Asignar",
         "startTask": "Iniciar Tarea",
+        "assigneeSearchPlaceholder": "encontrar una persona",
         "assignTask": "Asignar Tarea",
         "transaction": "Transacción: {{transactionType}}",
         "assigned": "Asignado",
@@ -2649,6 +2712,8 @@
             "taskStatus": "Estado de la tarea",
             "group": "Grupo",
             "assignee": "Cesionario",
+            "scheduledDate": "Fecha programada",
+            "scheduledDatePlaceholder": "Selecciona una fecha",
             "priority": "Prioridad",
             "selectPriority": "Seleccionar prioridad",
             "onlyPrioritized": "Cas prioritaires",
@@ -4333,7 +4398,8 @@
                 "eftDrawUpdate": "Actualización de Retiro EFT",
                 "withholdingUpdate": "Actualización de Retención",
                 "formValidation": {
-                    "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente"
+                    "signaturePresentOptionMustBeSelected": "Se debe seleccionar la opción de firma presente",
+                    "signatureDesignationMustBeSelected": "Se debe seleccionar la designación de la firma presente"
                 }
             },
             "sswRequest": "Solicitud SSW"
@@ -5094,26 +5160,28 @@
                 }
             },
             "coverageID": {
-                "Rider_ADR": "Proporciona un beneficio por muerte adicional si el asegurado muere debido a un accidente cubierto.",
-                "Rider_CGR": "Proporciona un beneficio adicional pagadero a una organización benéfica elegida en caso de muerte del asegurado.",
-                "Rider_CTR": "Proporciona cobertura de seguro de vida a término para los hijos del asegurado.",
-                "Rider_ABRTRM": "Permite el acceso anticipado al beneficio por fallecimiento si al asegurado se le diagnostica una enfermedad terminal.",
                 "Rider_ABRCHR": "Permite el acceso anticipado al beneficio por fallecimiento si al asegurado se le diagnostica una enfermedad crónica.",
-                "Rider_ABRCRI": "Permite el acceso anticipado al beneficio por muerte si se diagnostica una enfermedad crítica cubierta.",
-                "Rider_OPR": "Evita que la póliza caduque debido a préstamos excesivos al convertirla en una póliza con pago reducido.",
-                "Rider_NHR": "Permite el acceso anticipado al beneficio por muerte o al valor de la anualidad si el asegurado está confinado a un hogar de ancianos calificado.",
-                "Rider_GLWB": "Garantiza retiros de por vida de una anualidad independientemente del desempeño del mercado, incluso después de que la cuenta se agote.",
-                "Rider_GMAB": "Garantiza la devolución de un valor mínimo de cuenta después de un período de tenencia específico, independientemente de las condiciones del mercado.",
-                "Rider_GMDB": "Proporciona un beneficio de muerte mínimo garantizado a los beneficiarios, independientemente del rendimiento de la inversión.",
-                "Rider_GMIB": "Garantiza un flujo de ingresos mínimo a partir de una anualidad, generalmente basado en una tasa de crecimiento predeterminada.",
-                "Rider_GMWB": "Garantiza la posibilidad de retirar un porcentaje fijo anualmente incluso si el valor de la anualidad cae a cero.",
-                "Rider_WDR": "El propietario debe tener entre 18 y 55 años para seleccionar la exención de deducción del propietario.",
-                "Rider_WPR": "Exime el pago de las primas de la póliza si el asegurado queda totalmente discapacitado.",
-                "Rider_WCR": "Exime ciertos cargos de la póliza durante los períodos de incapacidad total del asegurado.",
-                "Rider_OWCR": "Exime los cargos de la póliza si el titular de la póliza queda discapacitado o cumple criterios específicos.",
-                "Rider_BONUS": "Aumenta el valor de acumulación del contrato aplicando una bonificación a la prima nueva.",
-                "Rider_GAB": "Activa un ajuste único al final del período GAP para elevar el valor de acumulación hasta el monto GAP garantizado cuando sea necesario.",
-                "Rider_GWB": "Garantiza retiros de por vida de una anualidad, sujeto a los términos del anexo."
+                "Rider_ABRCRI": "Permite el acceso anticipado al beneficio por fallecimiento si se diagnostica una enfermedad crítica cubierta.",
+                "Rider_ABRTRM": "Permite el acceso anticipado al beneficio por fallecimiento si al asegurado se le diagnostica una enfermedad terminal.",
+                "Rider_ADR": "Proporciona un beneficio por fallecimiento adicional si el asegurado muere debido a un accidente cubierto.",
+                "Rider_BONUS": "Aumenta el valor de acumulación del contrato aplicando una bonificación a la nueva prima.",
+                "Rider_CGR": "Proporciona un beneficio adicional pagadero a una organización benéfica elegida al fallecer el asegurado.",
+                "Rider_CTR": "Proporciona cobertura de seguro de vida temporal para los hijos del asegurado.",
+                "Rider_GAB": "Activa un ajuste único al final del período GAP para elevar el valor de acumulación al monto garantizado cuando sea necesario.",
+                "Rider_GIBR": "Permite al titular de la póliza comprar cobertura adicional en momentos específicos sin exámenes médicos ni evidencia de asegurabilidad.",
+                "Rider_GLWB": "Garantiza retiros vitalicios de una anualidad sin importar el desempeño del mercado, incluso después de agotar la cuenta.",
+                "Rider_GMAB": "Garantiza la devolución de un valor mínimo de cuenta tras un período de tenencia específico, sin importar las condiciones del mercado.",
+                "Rider_GMDB": "Proporciona un beneficio por fallecimiento mínimo garantizado a los beneficiarios independientemente del rendimiento de la inversión.",
+                "Rider_GMIB": "Garantiza un flujo de ingresos mínimo de una anualidad, generalmente basado en una tasa de crecimiento predeterminada.",
+                "Rider_GMWB": "Garantiza la capacidad de retirar un porcentaje fijo cada año incluso si el valor de la anualidad cae a cero.",
+                "Rider_GWB": "Garantiza retiros vitalicios de una anualidad, sujetos a los términos del anexo.",
+                "Rider_NHR": "Permite el acceso anticipado al beneficio por fallecimiento o al valor de la anualidad si el asegurado está confinado a un hogar de ancianos calificado.",
+                "Rider_OPR": "Evita que la póliza caduque por préstamos excesivos al convertirla en una póliza con pago reducido.",
+                "Rider_OWCR": "Exime los cargos de la póliza si el propietario queda discapacitado o cumple criterios específicos.",
+                "Rider_OWDR": "Exime ciertos costos de la póliza si el propietario se incapacita, ayudando a mantener la cobertura durante periodos difíciles.",
+                "Rider_WCR": "Exime ciertos cargos de la póliza durante los periodos de incapacidad total del asegurado.",
+                "Rider_WDR": "Exime ciertos costos de la póliza si el asegurado se incapacita, ayudando a mantener la cobertura durante periodos difíciles.",
+                "Rider_WPR": "Exime el pago de primas de la póliza si el asegurado queda totalmente discapacitado."
             }
         },
         "history": {
@@ -5165,7 +5233,6 @@
             },
             "loadingEvents": "Cargando eventos...",
             "noEventsTitle": "Aún no hay eventos.",
-            "noTransactionsTitle": "Actualmente no hay transacciones {{status}}.",
             "noEventsSubtitle": "Parece que no ha pasado nada hasta ahora.",
             "upcomingEvents": "Próximos eventos",
             "requested": "Solicitado",
@@ -5602,9 +5669,11 @@
             "newCreatedLabel": "Creado",
             "assigneeLabel": "Asignado a",
             "documentNumber": "Documento",
+            "carrier": "Transportador",
+            "caseId": "Identificación del caso",
             "stepLabel": "Paso",
             "issueLabel": "Problema",
-            "detailsLabel": "Detalles",
+            "detailsLabel": "Descripción de la tarea",
             "noDataAvailable": "No hay datos disponibles.",
             "noDocuments": "No hay documentos disponibles",
             "errorAdditionalDocuments": "Error al obtener documentos adicionales.",
@@ -8874,6 +8943,7 @@
             "ariaGoToEApp": "Enlace para ir al eApp",
             "selectBeforeGoToEApp": "Por favor seleccione un ilustración antes de continuar al eApplication.",
             "archiveIllustrationPopoverTitle": "Archivar esta ilustración?",
+            "archiveIllustrationIconTitle": "Icono de archivar illustración",
             "archiveIllustrationPopoverBody": "Puede desarchivarla luego.",
             "confirmArchive": "Archivar",
             "cancel": "Cancelar",
@@ -8962,11 +9032,16 @@
                 "title": "Cobertura y resumen"
             },
             "notAvailable": "No disponible",
+            "notAvailableByTermLength": "No disponible para un contrato de {{termLength}} años:",
+            "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
             "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailableReason": {
-                "age": "No disponible para la edad {{age}}.",
-                "face": "No disponible para este monto nominal.",
-                "state": "No disponible para este estado."
+                "maxAge": "Edad máxima de emisión: {{age}}",
+                "minAge": "Edad mínima de emisión: {{age}}",
+                "maxFaceAm": "Monto nominal máximo: {{amount}}",
+                "minFaceAm": "Monto nominal mínimo: {{amount}}",
+                "state": "No disponible para este estado",
+                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
             },
             "product": {
                 "title": "Producto",
@@ -9194,6 +9269,24 @@
             "subTitle": "El formulario de detalles del tercero se ha enviado correctamente.",
             "cta": "Ir al caso",
             "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "fraudScreeningReview": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "La tarea de aprobación del transportista fue enviada.",
+            "secondaryCta": "Volver a inicio",
+            "cta": "Ir al caso",
+            "submitTask": "Enviar"
+        }
+    },
+    "bankingValidationCallout": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Se envió la tarea de llamada de Giact.",
+            "secondaryCta": "Volver al inicio",
+            "cta": "Ir al caso",
             "submitTask": "Enviar"
         }
     }

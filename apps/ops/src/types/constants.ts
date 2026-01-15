@@ -45,6 +45,13 @@ export const PolicyActivityTabValues: { [key: string]: string } = {
     'call-logs': 'call-logs',
 };
 
+export const AnalyticsRouteValues: { [key: string]: string } = {
+    cases: 'cases',
+    policies: 'policies',
+    illustrations: 'illustrations',
+    usage: 'usage',
+};
+
 // DEPU-2749 https://zinnia.atlassian.net/browse/DEPU-2749
 export const HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 = true;
 export const NODE_ENV_PRODUCTION = 'production';

@@ -10,6 +10,7 @@ import { ArrayValues } from 'type-fest';
 
 import { getQuickQuoteProductMapping } from '@deps/queries/api/v1/quick-quote';
 import { useQueryProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
+import { RiderName } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import {
     NO_PARAM_RIDERS,
@@ -18,7 +19,14 @@ import {
     QuickQuoteResult,
     TermQuickQuoteResult,
     QuickQuoteParams,
+    TermQuickQuoteRiderDataItem,
+    RIDER_CODE_MAP,
 } from '@deps/types/quickQuote';
+import {
+    IneligibilityReason,
+    nonEligibleReasonByClass,
+    RiderCode,
+} from '@deps/utils/quick-quotes-rules/types';
 
 import {
     asNumberOrRange,
@@ -32,6 +40,13 @@ type QuickQuoteResultsContextState = {
     isFetching: boolean;
     isPending: boolean;
     results: QuickQuoteResult[] | undefined;
+    filterIneligibilityReasons: (
+        reasons: nonEligibleReasonByClass[] | undefined
+    ) => IneligibilityReason[] | undefined;
+    hasRiderErrorsByTermLength: (
+        riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
+        termLength: number
+    ) => boolean;
 };
 
 const QuickQuoteResultsContext =
@@ -58,6 +73,46 @@ export const QuickQuoteResultsProvider = ({
     quickQuoteParams,
     children,
 }: QuickQuoteResultsProviderProps) => {
+    const filterIneligibilityReasons = useCallback(
+        (
+            reasons: nonEligibleReasonByClass[] | undefined
+        ): IneligibilityReason[] | undefined => {
+            if (!reasons || reasons.length === 0) return [];
+
+            const filteredReasons = reasons
+                .flatMap((reason) => reason.reasons)
+                .filter(
+                    (reason, index, self) =>
+                        index === self.findIndex((t) => t.field == reason.field)
+                );
+
+            filteredReasons.forEach((fr, i) => {
+                reasons.forEach((reason) => {
+                    if (!reason.reasons.some((r) => r.field === fr.field))
+                        filteredReasons.splice(i, 1);
+                });
+            });
+
+            if (!filteredReasons || filteredReasons.length === 0)
+                return undefined;
+
+            return filteredReasons;
+        },
+        []
+    );
+
+    const hasRiderErrorsByTermLength = useCallback(
+        (
+            riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
+            termLength: number
+        ): boolean => {
+            return Object.entries(riders).some(
+                ([_, data]) => data.notAvailabilityReasonField?.[termLength]
+            );
+        },
+        []
+    );
+
     // TODO: Get real variations based on params
     const variants = useMemo(
         () =>
@@ -98,6 +153,7 @@ export const QuickQuoteResultsProvider = ({
 
                         if (error instanceof VariantNotAvailableError) {
                             const { variant } = error;
+
                             return {
                                 planCode: variant.planCode,
                                 variant,
@@ -110,7 +166,7 @@ export const QuickQuoteResultsProvider = ({
                             item != null
                     );
 
-                return Object.entries(groupBy(items, 'planCode'))
+                const result = Object.entries(groupBy(items, 'planCode'))
                     .map(
                         ([planCode, sameProductData]):
                             | TermQuickQuoteResult
@@ -149,6 +205,16 @@ export const QuickQuoteResultsProvider = ({
                                         !!item.variant
                                             .notAvailabilityReasonField
                                 )?.variant?.notAvailabilityReasonField;
+
+                            const extractRiderNotAvailabilityReason = (
+                                data: typeof sameProductData,
+                                riderCode: RiderCode
+                            ) =>
+                                data.find(
+                                    (item) =>
+                                        item.variant.riders[riderCode].reasons
+                                            .length > 0
+                                )?.variant?.riders?.[riderCode].reasons;
 
                             const isAvailableResponse = (
                                 item:
@@ -249,6 +315,35 @@ export const QuickQuoteResultsProvider = ({
                                                         ]?.modalPremium
                                                 );
 
+                                            const reasonsByTermLength =
+                                                Object.fromEntries(
+                                                    Object.entries(
+                                                        groupedByTermLength
+                                                    )
+                                                        .map(
+                                                            ([
+                                                                termLength,
+                                                                data,
+                                                            ]) => {
+                                                                return [
+                                                                    termLength,
+                                                                    extractRiderNotAvailabilityReason(
+                                                                        data,
+                                                                        RIDER_CODE_MAP[
+                                                                            riderName
+                                                                        ]
+                                                                    ),
+                                                                ] as const;
+                                                            }
+                                                        )
+                                                        .filter(
+                                                            ([_, value]) =>
+                                                                value &&
+                                                                value?.length >
+                                                                    0
+                                                        )
+                                                );
+
                                             if (
                                                 includes(
                                                     PREMIUM_FREE_RIDERS,
@@ -257,15 +352,33 @@ export const QuickQuoteResultsProvider = ({
                                             ) {
                                                 return [
                                                     riderName,
-                                                    values.some(
-                                                        (v) => v != null
-                                                    ),
+                                                    {
+                                                        range: values.some(
+                                                            (v) => v != null
+                                                        ),
+                                                        notAvailabilityReasonField:
+                                                            Object.keys(
+                                                                reasonsByTermLength
+                                                            ).length > 0
+                                                                ? reasonsByTermLength
+                                                                : undefined,
+                                                    },
                                                 ] as const;
                                             }
 
                                             return [
                                                 riderName,
-                                                asNumberOrRange(values),
+                                                {
+                                                    range: asNumberOrRange(
+                                                        values
+                                                    ),
+                                                    notAvailabilityReasonField:
+                                                        Object.keys(
+                                                            reasonsByTermLength
+                                                        ).length > 0
+                                                            ? reasonsByTermLength
+                                                            : undefined,
+                                                },
                                             ] as const;
                                         })
                                     ),
@@ -277,6 +390,8 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
+
+                return result;
             },
             [products, variants]
         )
@@ -288,8 +403,18 @@ export const QuickQuoteResultsProvider = ({
             isFetching: isFetching || isFetchingProducts,
             isPending,
             results: results?.length ? results : placeholderData,
+            filterIneligibilityReasons,
+            hasRiderErrorsByTermLength,
         }),
-        [results, isLoading, isFetching, isFetchingProducts, isPending]
+        [
+            results,
+            isLoading,
+            isFetching,
+            isFetchingProducts,
+            isPending,
+            filterIneligibilityReasons,
+            hasRiderErrorsByTermLength,
+        ]
     );
 
     return (

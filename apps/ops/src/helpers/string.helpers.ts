@@ -485,3 +485,10 @@ export function capitalizeAfterPeriod(text: string): string {
         .toLowerCase()
         .replace(/(^\s*\w|\. \w)/g, (match) => match.toUpperCase());
 }
+export function isStringWithBrackets(formData: string) {
+    return (
+        typeof formData === 'string' &&
+        formData.startsWith('{{') &&
+        formData.endsWith('}}')
+    );
+}
