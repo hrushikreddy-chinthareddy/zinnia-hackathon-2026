@@ -23,7 +23,10 @@ interface claimsMatchBeneDocumentPayload {
     zlCaseId: string;
 }
 
-const claimsMatchBeneDocumentHandler: TaskHandler<claimsMatchBeneDocumentPayload, any> = {
+const claimsMatchBeneDocumentHandler: TaskHandler<
+    claimsMatchBeneDocumentPayload,
+    any
+> = {
     api: async (
         payload: claimsMatchBeneDocumentPayload,
         accessToken: string,
