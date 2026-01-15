@@ -1,6 +1,6 @@
 import { ButtonGroup, TabContent, TabGroup } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AnalyticsTabs, TabTitles } from '@deps/components/dashboard/types';
@@ -19,6 +19,12 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     const [selectedTab, setSelectedTab] = useState<string>(
         tab ?? AnalyticsTabs.ACTIVE_APPLICATIONS
     );
+
+    useEffect(() => {
+        if (!tab) {
+            setSelectedTab(AnalyticsTabs.ACTIVE_APPLICATIONS);
+        }
+    }, [tab]);
 
     const { featureFlags } = useOptimizely();
     const buttonNavItems = [

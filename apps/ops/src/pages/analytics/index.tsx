@@ -199,6 +199,20 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
 
+            if (
+                !(
+                    resolvedUrl.includes('usage') ||
+                    resolvedUrl.includes('cases')
+                )
+            ) {
+                return {
+                    redirect: {
+                        destination: '/analytics/cases',
+                        permanent: false,
+                    },
+                };
+            }
+
             return {
                 props: {
                     locale,
