@@ -88,6 +88,8 @@ const AnalyticsPage = ({
         const tab = url?.[1]?.split('=')?.at(-1);
         const slug = url?.[0]?.split('/')?.at(-1);
 
+        console.info('analytics tab', tab);
+
         if (!tab) {
             if (slug === AnalyticsRouteValues.cases) {
                 setTab(AnalyticsTabs.ACTIVE_APPLICATIONS);
