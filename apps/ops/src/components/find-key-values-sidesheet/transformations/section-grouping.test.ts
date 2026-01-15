@@ -1,8 +1,9 @@
 import { TFunction } from 'next-i18next';
 
-import { DataNode, DataSection, FieldType } from '../types';
+import { DataGroup, DataNode, DataSection, FieldType } from '../types';
 import { makeField, makeGroup, makeSection } from '../utils';
 import {
+    addAccountingEntriesGroup,
     getAllParties,
     groupBasicsForPolicy,
     groupBasicsForTransaction,
@@ -23,6 +24,54 @@ jest.mock('../data-node-helpers/traversal', () => {
 });
 
 const t: TFunction = ((key: string) => key) as unknown as TFunction;
+
+describe('addAccountingEntriesGroup', () => {
+    it('returns original data when accounting entries are empty', () => {
+        const originalData: DataNode[] = [makeSection('existing', [])];
+
+        expect(addAccountingEntriesGroup(originalData, [])).toBe(originalData);
+    });
+
+    it('filters accounting entries down to allowed fields and appends accounting section', () => {
+        const data: DataNode[] = [makeSection('existing', [])];
+        const entry = makeSection('entry', [
+            makeField('accountNumber', '123'),
+            makeField('randomField', 'potatoes'),
+            makeField('currency', 'USD'),
+        ]);
+
+        const result = addAccountingEntriesGroup(data, [entry]);
+
+        expect(result).toHaveLength(2);
+        const appendedSection = result[1] as DataSection;
+        expect(appendedSection.type).toBe(FieldType.section);
+        expect(appendedSection.label).toBe('accounting');
+        expect(appendedSection.children).toHaveLength(1);
+
+        const group = appendedSection.children[0] as DataGroup;
+
+        expect(group.type).toEqual(FieldType.group);
+        expect(group.children).toHaveLength(1);
+        expect(group.children[0]).toEqual([
+            makeField('accountNumber', '123'),
+            makeField('currency', 'USD'),
+        ]);
+    });
+
+    it('wraps non-section accounting entries and preserves them as-is', () => {
+        const data: DataNode[] = [];
+        const fieldEntry = makeField('amount', '42');
+
+        const result = addAccountingEntriesGroup(data, [fieldEntry]);
+        expect(result).toHaveLength(1);
+
+        const accountingSection = result[0] as DataSection;
+        const accountingGroup = accountingSection.children[0] as DataGroup;
+
+        expect(accountingGroup.type).toEqual(FieldType.group);
+        expect(accountingGroup.children[0]).toEqual([fieldEntry]);
+    });
+});
 
 describe('groupBasicsForPolicy', () => {
     it('groups fields into policyBasics section and preserves other sections/groups', () => {

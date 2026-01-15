@@ -31,6 +31,10 @@ import {
     mockPolicy,
     mockPolicySearchResult,
 } from '@deps/services/mocks/sor-policy';
+import {
+    AccountingEntriesAPIParams,
+    AccountingEntriesAPIResponse,
+} from '@deps/types/accountingEntries';
 import { CheckTupleResponse } from '@deps/types/fga';
 import {
     PolicyReferenceSearchResponse,
@@ -519,6 +523,39 @@ export const getPolicyAccountInfoSSR = async (
         return data;
     } catch (e) {
         console.error('policies::getPolicyAccountInfoSSR::error', e);
+        return null;
+    }
+};
+
+export const getPolicyAccountingEntries = async ({
+    limit = 50,
+    offset = 0,
+    ...optionalParams
+}: AccountingEntriesAPIParams): Promise<AccountingEntriesAPIResponse | null> => {
+    try {
+        let accountingEntriesUrl = `${baseAppUrl}/api/policy/v1/accountingentries`;
+
+        const queryParams = new URLSearchParams();
+        for (const [key, value] of Object.entries({
+            limit,
+            offset,
+            ...optionalParams,
+        })) {
+            if (value !== undefined) queryParams.append(key, String(value));
+        }
+
+        accountingEntriesUrl += `?${queryParams.toString()}`;
+
+        const results = await client.get<
+            null,
+            AxiosResponse<AccountingEntriesAPIResponse>
+        >(accountingEntriesUrl);
+
+        return results.data;
+    } catch (e) {
+        browserLogWarn('policies::getPolicyAccountingEntries::error', {
+            ...parseErrorInformation(e),
+        });
         return null;
     }
 };
