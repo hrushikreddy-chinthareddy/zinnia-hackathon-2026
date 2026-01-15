@@ -27,7 +27,7 @@ export const DashboardTabNav: FC<
 
     return (
         <TabGroup
-            defaultValue={DEFAULT_PATH}
+            defaultValue={pathVal}
             value={pathVal}
             activationMode="manual"
             onValueChange={handleTabChange}

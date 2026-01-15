@@ -59,7 +59,10 @@ const AnalyticsPage = ({
 }: AnalyticsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
-    const [slug, setSlug] = useState(path.split('/').at(-1));
+    const [slug, setSlug] = useState(path.split('?')[0].split('/').at(-1));
+    const [tab, setTab] = useState(
+        path.split('?')[1]?.split('=').at(-1) ?? undefined
+    );
     const router = useRouter();
 
     const {
@@ -80,8 +83,12 @@ const AnalyticsPage = ({
     }, []);
 
     useEffect(() => {
-        const slug = router.asPath.split('?')[0].split('/').at(-1);
+        const url = router.asPath.split('?');
+        const tab = url?.[1]?.split('=')?.at(-1);
+        const slug = url?.[0]?.split('/')?.at(-1);
+
         setSlug(slug);
+        setTab(tab);
     }, [router.asPath]);
 
     return (
@@ -97,16 +104,12 @@ const AnalyticsPage = ({
                     path={slug}
                     usageTabEnabled={usageTabEnabled}
                 />
-                <TabGroup
-                    defaultValue={AnalyticsRouteValues.cases}
-                    value={slug}
-                    ref={tabContentRef}
-                >
+                <TabGroup defaultValue={slug} value={slug} ref={tabContentRef}>
                     <TabContent value={AnalyticsRouteValues.cases}>
-                        <Cases />
+                        <Cases tab={tab} />
                     </TabContent>
                     <TabContent value={AnalyticsRouteValues.usage}>
-                        <Usage />
+                        <Usage tab={tab} />
                     </TabContent>
                 </TabGroup>
             </DashboardResponsiveLayout>
