@@ -14,7 +14,6 @@ import PayorStep, {
 import StartStep, {
     StartStepSetState,
 } from '@deps/components/workflows/start-step/start-step';
-import { TranslationFiles } from '@deps/config/translations';
 import { CarrierCode, FarmersPlanCodes } from '@deps/constants/policy';
 import { checkCustomPolicy } from '@deps/containers/policy-details/policy-details.helpers';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -63,22 +62,22 @@ const AutopayContainer = ({
     systematicProgramReason,
     translationKeyPrefix,
 }: AutopayContainerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: translationKeyPrefix,
-    });
+    const { t } = useTranslation();
     const { autopay, setAutopay } = useAutopay();
     const { systematicPrograms } = policy;
 
-    const startLabel = t('start.label');
-    const amountLabel = t('amount.label');
-    const payorLabel = t('payor.label');
-    const paymentLabel = t('payment.label');
-    const summaryLabel = t('summary.label');
-    const confirmLabel = t('confirm.label');
+    const startLabel = t(translationKeyPrefix + '.start.label');
+    const amountLabel = t(translationKeyPrefix + '.amount.label');
+    const payorLabel = t(translationKeyPrefix + '.payor.label');
+    const paymentLabel = t(translationKeyPrefix + '.payment.label');
+    const summaryLabel = t(translationKeyPrefix + '.summary.label');
+    const confirmLabel = t(translationKeyPrefix + '.confirm.label');
 
     const { featureFlags } = useOptimizely();
     const wireCheckPaymentsEnabled =
         featureFlags[FEATURE_FLAGS.WITHDRAWAL_WIRE_CHECK_PAYMENTS];
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     useEffect(() => {
         setAutopay((prevState) => ({
@@ -168,14 +167,30 @@ const AutopayContainer = ({
                     setState={setAutopay as StartStepSetState}
                     state={autopay}
                     subtitle={
-                        !isSetUp && parentPage === ParentPage.Premiums
-                            ? (t('start.subtitleManage') as string)
+                        !isSetUp &&
+                        (parentPage === ParentPage.Premiums ||
+                            parentPage === ParentPage.Loans)
+                            ? t(
+                                  translationKeyPrefix + '.start.subtitleManage'
+                              ) ?? ''
                             : undefined
                     }
                     title={
                         isSetUp
-                            ? t('start.titleStart')
-                            : `${t('start.titleManage')}${
+                            ? t(
+                                  `allFields.${translationKeyPrefix}${
+                                      systematicProgramTablesEnabled
+                                          ? 'SystematicProgramTitleStart'
+                                          : 'TitleStart'
+                                  }`
+                              )
+                            : `${t(
+                                  `allFields.${translationKeyPrefix}${
+                                      systematicProgramTablesEnabled
+                                          ? 'SystematicProgramManageStart'
+                                          : 'ManageStart'
+                                  }`
+                              )}${
                                   parentPage === ParentPage.Withdrawals
                                       ? ` ${
                                             autopay.arrangementType ===
