@@ -7,6 +7,7 @@ import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import FieldSelectItem from './field-select-item';
+import styles from './field-select.module.css';
 
 export type FieldSelectOptions = {
     value: string;
@@ -95,7 +96,10 @@ export default function FieldSelect({
                 leading={
                     leading ? (
                         <div
-                            className="default-focus flex h-full flex-row items-center gap-1 rounded"
+                            className={clsx(
+                                styles.leadingWrapper,
+                                'default-focus'
+                            )}
                             onClick={handleClick}
                             onKeyDown={(e) => handleKeyDown(e)}
                             tabIndex={0}
@@ -120,7 +124,10 @@ export default function FieldSelect({
                         <div
                             onClick={handleClick}
                             onKeyDown={(e) => handleKeyDown(e)}
-                            className="default-focus h-full rounded"
+                            className={clsx(
+                                styles.trailingWrapper,
+                                'default-focus'
+                            )}
                             tabIndex={0}
                             role="button"
                             aria-haspopup="listbox"
