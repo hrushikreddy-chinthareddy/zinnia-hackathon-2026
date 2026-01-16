@@ -249,8 +249,8 @@ const WireMethod = ({
     };
 
     return (
-        <div className="grid grid-cols-3 gap-4 mt-4">
-            {config?.fields.map((field: any) => (
+        <div className="grid grid-cols-3 gap-4 mt-4" data-testid="wire-method">
+            {config?.fields?.map((field: any) => (
                 <div key={field.fieldName} className={field.classNames}>
                     {renderField(field)}
                 </div>

@@ -28,3 +28,7 @@ export interface GetSteps {
 export interface FormStepsProvider {
     getSteps: GetSteps;
 }
+
+export enum StepTitle {
+    Summary = 'Summary',
+}

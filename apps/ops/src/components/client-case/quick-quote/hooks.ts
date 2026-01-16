@@ -46,6 +46,7 @@ export const buildNewTermQuickQuoteOptions = (
         queryFn: async () => {
             const logPrefix =
                 'illustrations::QuickQuote::buildNewTermQuickQuoteOptions::queryFn';
+
             if (!variantParams.available) {
                 throw new VariantNotAvailableError(
                     'QuickQuote is not available for these values',

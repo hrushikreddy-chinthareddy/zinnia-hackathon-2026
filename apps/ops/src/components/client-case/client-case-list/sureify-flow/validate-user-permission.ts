@@ -10,22 +10,26 @@ export const canUserCreateClientCase = async (
     context: GetServerSidePropsContext,
     loggingContext: LoggingContext
 ) => {
-    // Validate loggin user permissions
-    const carriersList = await listCarriersPage(
-        context,
-        UserPermission.AllowWriteClientCase,
-        loggingContext
-    );
+    try {
+        // Validate loggin user permissions
+        const carriersList = await listCarriersPage(
+            context,
+            UserPermission.AllowWriteClientCase,
+            loggingContext
+        );
 
-    // If user or partyId is missing, skip party reference lookup
-    const partyId = loggingContext.user?.partyId;
-    const partyReference = partyId
-        ? await getPartyReferenceByPartyId(partyId, loggingContext)
-        : null;
+        // If user or partyId is missing, skip party reference lookup
+        const partyId = loggingContext.user?.partyId;
+        const partyReference = partyId
+            ? await getPartyReferenceByPartyId(partyId, loggingContext)
+            : null;
 
-    const aliases = filterAliasesWithSellingCode(partyReference?.alias);
-    const isAgent = aliases?.length ?? 0 > 0;
-    const isAllowWriteClientCase = !!carriersList.length; //TODO: update this to check the ui access permission when CIAM implements
+        const aliases = filterAliasesWithSellingCode(partyReference?.alias);
+        const isAgent = aliases?.length ?? 0 > 0;
+        const isAllowWriteClientCase = !!carriersList.length; //TODO: update this to check the ui access permission when CIAM implements
 
-    return !!(isAgent || isAllowWriteClientCase);
+        return !!(isAgent || isAllowWriteClientCase);
+    } catch (error) {
+        return false;
+    }
 };

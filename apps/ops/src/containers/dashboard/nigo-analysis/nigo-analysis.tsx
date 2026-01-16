@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { IssueCountsByStatus } from '@deps/components/dashboard/sections/issue-counts-by-status/issue-counts-by-status';
 import { NIGOOverview } from '@deps/components/dashboard/sections/nigo-overview/nigo-overview';
-import styles from '@deps/pages/dashboard/Dashboard.module.css';
+import styles from '@deps/pages/analytics/Dashboard.module.css';
 
 export const NIGOAnalysis = () => {
     return (

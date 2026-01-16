@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 
 import Field, {
@@ -6,14 +5,16 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
-import FieldDateSelect, {
-    DATE_PICKER_FORMAT,
-} from '@deps/components/fields/field-date-select/field-date-select';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import {
+    getFormattedDate,
+    getFormattedZaharaDate,
+} from '@deps/helpers/date.helpers';
 import { Party } from '@deps/models/case/withdrawal/case';
-import { SSN_FORMAT, ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { SSN_FORMAT } from '@deps/types/constants';
 
 interface GuaranteedWithdrawalBenefitsProps {
     glwbDetails: Party;
@@ -29,11 +30,10 @@ const GuaranteedWithdrawalBenefits = ({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.sswProgram',
     });
-    const formDob = glwbDetails?.dob?.text
-        ? dayjs(glwbDetails?.dob?.text, ZAHARA_API_DATE_FORMAT).format(
-              DATE_PICKER_FORMAT
-          )
-        : '';
+    const formDob = getFormattedDate(
+        glwbDetails?.dob?.text,
+        'GuaranteedWithdrawalBenefits::input DOB'
+    );
 
     const onDataChange = (key: string, value: string | { text: string }) => {
         setFormParty((parties: Party) => {
@@ -112,10 +112,11 @@ const GuaranteedWithdrawalBenefits = ({
                     label={t(`dob`) as string}
                     onChange={(e) =>
                         onDataChange('dob', {
-                            text: dayjs(
-                                e.target.value,
-                                DATE_PICKER_FORMAT
-                            ).format(ZAHARA_API_DATE_FORMAT),
+                            text:
+                                getFormattedZaharaDate(
+                                    e.target.value,
+                                    'GuaranteedWithdrawalBenefits::output DOB'
+                                ) || '',
                         })
                     }
                     size={FieldSize.Small}

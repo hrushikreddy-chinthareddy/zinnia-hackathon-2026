@@ -9,9 +9,9 @@ import {
 import FieldDateSelect, {
     DATE_PICKER_FORMAT,
 } from '@deps/components/fields/field-date-select/field-date-select';
+import { getFormattedDate } from '@deps/helpers/date.helpers';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 
 import { SignatureFieldNames } from '../signature-parts';
 
@@ -39,9 +39,7 @@ export default function SignatureDateCore({
     disabled,
 }: SignatureDateCoreProps) {
     const [signatureDate, setSignatureDate] = useState(
-        signDate
-            ? dayjs(signDate, ZAHARA_API_DATE_FORMAT).format(DATE_PICKER_FORMAT)
-            : ''
+        getFormattedDate(signDate, 'SignatureDateCore::input signDate')
     );
 
     useEffect(() => {

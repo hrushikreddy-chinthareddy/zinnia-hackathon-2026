@@ -1,5 +1,5 @@
 import { ObjectFieldTemplateProps } from '@rjsf/utils';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DifferentAddress from '@deps/components/otp-send-document/components/different-address';
@@ -9,7 +9,6 @@ import {
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
 import { DynamicKey } from '@deps/containers/task-container/components/steps/claims/claims.type';
-import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { DataFormattingTypes } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -60,32 +59,10 @@ export function ChangeAddressTemplate({
     const { customData, setCustomData } = formContext;
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
-    const formState = useContext(TaskDataContext);
-    const { setTask } = formState;
 
     const dynamicKey = customData.details.beneAddress
         ? DynamicKey.BENE_ADDRESS
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
-
-    const updateBenefinalcontactattempt = (addressChangeRequire: boolean) => {
-        setTask((previousTask) => {
-            return {
-                ...previousTask,
-                data: {
-                    ...previousTask.data,
-                    details: {
-                        ...previousTask.data.details,
-                        benefinalcontactattempt: {
-                            ...previousTask.data.details
-                                .benefinalcontactattempt,
-                            subTaskBeneAddressChangeRequire:
-                                addressChangeRequire,
-                        },
-                    },
-                },
-            };
-        });
-    };
 
     useEffect(() => {
         const updatedCustomData = customData;
@@ -105,7 +82,6 @@ export function ChangeAddressTemplate({
             updatedCustomData.task.data.details[
                 dynamicKey
             ].subTaskBeneAddressChangeRequire = false;
-            updateBenefinalcontactattempt(false);
         }
         if (
             !updatedCustomData.task.data.details[dynamicKey]
@@ -262,7 +238,6 @@ export function ChangeAddressTemplate({
                 updatedCustomData.task.data.details[
                     dynamicKey
                 ].beneficiaryChangeDetail.changeRequire = true;
-                updateBenefinalcontactattempt(true);
             }
         }
 

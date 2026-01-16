@@ -39,7 +39,7 @@ export const isNonProductionEnvironment = () => {
 
 // Determines if the environment is https (typically non-localhost)
 export const isHttpsEnvironment = () => {
-    return process.env.NEXT_PUBLIC_BASE_URL?.startsWith('https://');
+    return process.env.NEXT_PUBLIC_BASE_URL?.startsWith('https://') ?? false;
 };
 
 export const isProd = () => {
