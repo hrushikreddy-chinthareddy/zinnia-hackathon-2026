@@ -84,7 +84,8 @@ type SearchParamsPayload = {
     queues?: string[];
     statuses?: string[];
     sortDirection?: string;
-    scheduledDate?: string;
+    scheduledDateStart?: string;
+    scheduledDateEnd?: string;
     escalated?: boolean | null | undefined;
 };
 
@@ -154,7 +155,8 @@ const TaskManagementQueue = ({
             queues = [],
             statuses = [],
             escalated,
-            scheduledDate,
+            scheduledDateStart,
+            scheduledDateEnd,
         } = searchParams;
         const safeSearchParams = {
             ...searchParams,
@@ -170,11 +172,15 @@ const TaskManagementQueue = ({
             sortDirection: searchParams.sortDirection || sortDirection,
             sortBy: DEFAULT_SORTING_CONFIG.sortBy,
             ...(escalated !== undefined && { escalated }),
-            ...(scheduledDate && {
-                scheduledDate: dayjs
-                    .utc(scheduledDate, NUMERIC_DATE_FORMAT)
-                    .toISOString(),
-            }),
+            ...(scheduledDateStart &&
+                scheduledDateEnd && {
+                    scheduledDateStart: dayjs
+                        .utc(scheduledDateStart, NUMERIC_DATE_FORMAT)
+                        .toISOString(),
+                    scheduledDateEnd: dayjs
+                        .utc(scheduledDateEnd, NUMERIC_DATE_FORMAT)
+                        .toISOString(),
+                }),
         };
 
         return safeSearchParams;
@@ -252,7 +258,8 @@ const TaskManagementQueue = ({
                 ),
                 queues: additionalFilters.group,
                 escalated: additionalFilters.escalated,
-                scheduledDate: additionalFilters.scheduledDate,
+                scheduledDateStart: additionalFilters.scheduledDateStart,
+                scheduledDateEnd: additionalFilters.scheduledDateEnd,
             };
 
             const copy = { ...searchValue };
@@ -312,11 +319,14 @@ const TaskManagementQueue = ({
     };
 
     const handleFilterRemove = useCallback(
-        (filterName: string, value: string) => {
+        (filterName: string, value?: string) => {
             const updated = { ...searchValue.additionalFilters };
 
             if (filterName === FilterKeys.escalated) {
                 updated[filterName] = undefined;
+            } else if (filterName === FilterKeys.scheduledDateStart) {
+                updated[filterName] = '';
+                updated[FilterKeys.scheduledDateEnd] = '';
             } else {
                 const current = updated[filterName];
                 if (!current) return;
@@ -348,7 +358,10 @@ const TaskManagementQueue = ({
 
             if (key === FilterKeys.escalated) {
                 additionalFilters[key] = undefined;
-            } else if (key === FilterKeys.scheduledDate) {
+            } else if (
+                key === FilterKeys.scheduledDateStart ||
+                key === FilterKeys.scheduledDateEnd
+            ) {
                 additionalFilters[key] = '';
             } else {
                 additionalFilters[key] = [];

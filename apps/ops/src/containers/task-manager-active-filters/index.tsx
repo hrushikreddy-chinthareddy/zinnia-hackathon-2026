@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
 
@@ -13,6 +14,8 @@ type TaskManagerAdditionalFilters = {
     queues: string[];
     statuses: string[];
     escalated: boolean | null;
+    scheduledDateStart?: string;
+    scheduledDateEnd?: string;
 };
 
 const Clear = ({ onReset }: { onReset: () => void }) => {
@@ -45,6 +48,10 @@ export default function TaskManagerActiveFilters({
         keyPrefix: 'caseManagementDashboard.refineResultsFilters',
     });
 
+    const { t: tAllFields } = useTranslation(undefined, {
+        keyPrefix: 'allFields',
+    });
+
     const [filtersActive, setFiltersActive] = useState(false);
 
     const {
@@ -52,6 +59,8 @@ export default function TaskManagerActiveFilters({
         statuses = [],
         queues = [],
         escalated = undefined,
+        scheduledDateStart = '',
+        scheduledDateEnd = '',
     } = filters || {};
 
     useEffect(() => {
@@ -59,13 +68,22 @@ export default function TaskManagerActiveFilters({
             carriers?.length ||
             queues?.length ||
             statuses?.length ||
-            escalated !== undefined
+            escalated !== undefined ||
+            scheduledDateStart ||
+            scheduledDateEnd
         ) {
             setFiltersActive(true);
         } else {
             setFiltersActive(false);
         }
-    }, [carriers, statuses, queues, escalated]);
+    }, [
+        carriers,
+        statuses,
+        queues,
+        escalated,
+        scheduledDateEnd,
+        scheduledDateStart,
+    ]);
 
     if (!filtersActive) return null;
     const getEscalatedDisplayInfo = (value: boolean | null) => {
@@ -84,6 +102,21 @@ export default function TaskManagerActiveFilters({
         }
     };
 
+    const getScheduledDateRange = () => {
+        return `${tAllFields('scheduledDate')} : ${dayjs(
+            scheduledDateStart,
+            'MMDDYYYY'
+        ).format('MM/DD/YYYY')}
+         - ${dayjs(scheduledDateEnd, 'MMDDYYYY').format('MM/DD/YYYY')}`;
+    };
+
+    const hasActiveFilters =
+        carriers.length > 0 ||
+        queues.length > 0 ||
+        Boolean(scheduledDateStart) ||
+        Boolean(scheduledDateEnd) ||
+        escalated !== undefined;
+
     return (
         <div className="mb-6 mt-4 flex max-w-full flex-row flex-wrap items-center justify-start gap-2">
             {escalated !== undefined && (
@@ -96,6 +129,18 @@ export default function TaskManagerActiveFilters({
                     }}
                     handleRemoveFilter={() => {
                         removeFilter(FilterKeys.escalated, 'any');
+                    }}
+                    t={t}
+                />
+            )}
+
+            {scheduledDateStart && scheduledDateEnd && (
+                <ActiveChip
+                    key="scheduledDateRange-filter"
+                    code={getScheduledDateRange()}
+                    allCodes={{}}
+                    handleRemoveFilter={() => {
+                        removeFilter(FilterKeys.scheduledDateStart, '');
                     }}
                     t={t}
                 />
@@ -122,9 +167,7 @@ export default function TaskManagerActiveFilters({
                             />
                         ))
                 )}
-            {(carriers.length > 0 ||
-                queues.length > 0 ||
-                escalated !== undefined) && <Clear onReset={onReset} />}
+            {hasActiveFilters && <Clear onReset={onReset} />}
         </div>
     );
 }
