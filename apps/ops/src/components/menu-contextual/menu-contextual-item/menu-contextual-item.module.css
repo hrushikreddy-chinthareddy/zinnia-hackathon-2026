@@ -1,9 +1,9 @@
 .menuContextualItem {
     align-items: center;
     border-radius: 2px;
-    color: var(--color-base-text-text-light);
+    color: var(--color-base-text-light);
     display: flex;
-    font: var(--typography-nav-nav-drawer);
+    font: var(--typography-nav-drawer);
     gap: var(--measure-dimension-z-space-2);
     padding-inline: var(--measure-dimension-z-space-4);
     white-space: nowrap;
@@ -11,7 +11,7 @@
     &:hover,
     &:active {
         background-color: var(--color-nav-menu-surface-menu-link-hover-fill);
-        color: var(--color-base-text-text-light);
+        color: var(--color-base-text-light);
         &:after {
             content: unset;
         }

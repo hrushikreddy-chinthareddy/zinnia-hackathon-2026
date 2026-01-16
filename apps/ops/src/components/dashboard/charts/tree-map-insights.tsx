@@ -143,13 +143,13 @@ export const TreeMapInsights = ({
                             const len = (Number(value) / total) * 100;
                             const wrapper = document.createElement('div');
                             wrapper.style.backgroundColor =
-                                'var(--color-base-surface-surface-primary)';
+                                'var(--color-base-surface-primary)';
                             wrapper.classList.add(
                                 'rounded',
                                 'typography-content-body'
                             );
                             wrapper.style.color =
-                                'var(--color-base-text-text-primary)';
+                                'var(--color-base-text-primary)';
                             wrapper.style.margin =
                                 'var(--measure-dimension-margin-sm)';
                             wrapper.style.fontFamily =
@@ -197,9 +197,9 @@ export const TreeMapInsights = ({
                     const wrapper = document.createElement('div');
                     wrapper.classList.add(styles.tooltip);
                     wrapper.style.backgroundColor =
-                        'var(--color-base-surface-surface-primary)';
+                        'var(--color-base-surface-primary)';
                     wrapper.classList.add('rounded', 'typography-content-body');
-                    wrapper.style.color = 'var(--color-base-text-text-primary)';
+                    wrapper.style.color = 'var(--color-base-text-primary)';
                     wrapper.style.padding =
                         'var(--measure-dimension-padding-lg)';
                     wrapper.style.display = 'flex';
@@ -257,7 +257,7 @@ export const TreeMapInsights = ({
             <div className="flex flex-col lg:flex-row gap-4 mt-6">
                 <div className="w-1/4 flex flex-col gap-4 items-start">
                     {loading ? (
-                        <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-surface-tertiary]">
+                        <div className="grid gap-4 h-full mb-4 w-full place-content-center bg-[--color-base-surface-tertiary]">
                             <PageLoader />
                         </div>
                     ) : (
@@ -291,7 +291,7 @@ export const TreeMapInsights = ({
                         className={clsx(
                             `w-full h-[${CHART_HEIGHT}px]`,
                             noData &&
-                                'grid gap-4 place-content-center bg-[--color-base-surface-surface-tertiary]'
+                                'grid gap-4 place-content-center bg-[--color-base-surface-tertiary]'
                         )}
                     >
                         {noData ? (

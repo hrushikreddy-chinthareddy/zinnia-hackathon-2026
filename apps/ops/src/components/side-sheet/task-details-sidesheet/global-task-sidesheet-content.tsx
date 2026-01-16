@@ -642,7 +642,7 @@ export default function GlobalTaskSideSheet({
 
         return (
             <>
-                <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                <div className="col-span-1 text-[--color-base-text-secondary]">
                     {label}
                 </div>
                 <Typography
@@ -803,7 +803,7 @@ export default function GlobalTaskSideSheet({
                 {t('sideSheet.task.tabs.details')}
             </label>
             <div className="grid grid-cols-3 gap-2 text-md align-center">
-                <div className="col-span-1 mt-4 align-self text-[--color-base-text-text-secondary]">
+                <div className="col-span-1 mt-4 align-self text-[--color-base-text-secondary]">
                     {t('sideSheet.task.status.label')}{' '}
                 </div>
                 <div className="col-span-2 mt-2 align-self">
@@ -845,7 +845,7 @@ export default function GlobalTaskSideSheet({
                         task.cancellationReason)) &&
                     !isOpsManagerView && (
                         <>
-                            <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                            <div className="col-span-1 text-[--color-base-text-secondary]">
                                 {' '}
                                 {t('sideSheet.task.reasonLabel')}{' '}
                             </div>
@@ -864,7 +864,7 @@ export default function GlobalTaskSideSheet({
                             </Typography>
                             {task.data?.scheduledNote && (
                                 <>
-                                    <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                                    <div className="col-span-1 text-[--color-base-text-secondary]">
                                         {' '}
                                         {t(
                                             'sideSheet.task.scheduledNoteLabel'
@@ -919,7 +919,7 @@ export default function GlobalTaskSideSheet({
 
                 {!isProd() && documentNumber && (
                     <>
-                        <div className="col-span-1 text-[--color-base-text-text-secondary]">
+                        <div className="col-span-1 text-[--color-base-text-secondary]">
                             {' '}
                             {t('sideSheet.task.documentNumber')}{' '}
                         </div>

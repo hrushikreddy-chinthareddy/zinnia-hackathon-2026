@@ -70,7 +70,7 @@ export const ContractDetails = ({
                 {t('sideSheet.task.tabs.details')}
             </h3>
             <div className="flex flex-row items-start gap-16">
-                <div className="w-1/3 text-[--color-base-text-text-secondary]">
+                <div className="w-1/3 text-[--color-base-text-secondary]">
                     {t('contractNumber')}
                 </div>
                 <div className="w-2/3">
