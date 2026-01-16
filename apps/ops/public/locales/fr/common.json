@@ -196,6 +196,7 @@
         "documentNumberSearchError": "Entrez un numéro de document pour obtenir les résultats de recherche",
         "dollar": "Dólar",
         "duplicateRecipientEmail": "L'e-mail existe deja dans la liste.",
+        "dynamicFields": "Champs dynamiques",
         "effectiveDate": "Date d'effet",
         "email": "E-mail",
         "emailAddress": "Adresse e-mail",
@@ -556,6 +557,7 @@
         "riderPaymentDate": "Date de paiement de l'avenant",
         "riders": "Avenants",
         "riderStoredIncomeBalance": "Solde de revenu stocké de l'avenant",
+        "scheduledDate": "Date prévue",
         "segmentActivity": "Actividad del segmento",
         "segmentId": "ID du segment",
         "selectAddressToContinue": "Sélectionnez une adresse pour continuer.",
@@ -1651,7 +1653,6 @@
         "documentNumber": "Document: ",
         "caseID": "Cas/ID",
         "carrierCase": "Opérateur/ID du cas",
-        "policy": "Politique #:",
         "product": "Produit",
         "assignee": "Cessionnaire",
         "temporal": {

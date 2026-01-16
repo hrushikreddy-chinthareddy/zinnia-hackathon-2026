@@ -132,6 +132,7 @@ export type AssignedTask<T = TaskStatus> = {
     identifiers: IdentifierInstance[];
     createdDate: string;
     updatedDate: string;
+    scheduledDate?: string;
 };
 
 export type DocumentData = {
@@ -183,4 +184,12 @@ export type UnassignedTask<T = TaskStatus> = {
     taskDetails?: string;
     createdAt?: string;
     updatedAt?: string;
+    scheduledDate?: string;
 };
+
+export enum ColSpanConfig {
+    OpsManager = 10,
+    Default = 8,
+}
+
+export const STORAGE_KEY = 'taskQueue.visibleColumns.ops';
