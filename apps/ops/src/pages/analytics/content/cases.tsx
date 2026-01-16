@@ -26,8 +26,8 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     );
 
     useEffect(() => {
-        if (tab && !casesTabSet.has(tab)) {
-            setSelectedTab(AnalyticsTabs.ACTIVE_APPLICATIONS);
+        if (tab && casesTabSet.has(tab)) {
+            setSelectedTab(tab);
         }
     }, [tab, casesTabSet]);
 
@@ -55,8 +55,8 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
         },
     ];
 
-    const handleClick = (value: string) => {
-        if (value && casesTabSet.has(value)) {
+    const handleClick = (value: unknown) => {
+        if (typeof value === 'string' && casesTabSet.has(value)) {
             router.replace(`/analytics/cases/?tab=${value}`, undefined, {
                 shallow: true,
             });
