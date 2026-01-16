@@ -43,7 +43,7 @@ export const TaskMetadataHelper = async (
                         const potentialMatches =
                             response && response.length > 0
                                 ? generatePotentialMatchesOptions(
-                                      response,
+                                      response as TransactionData[],
                                       potentialMatchCriteria?.status || []
                                   )
                                 : [];

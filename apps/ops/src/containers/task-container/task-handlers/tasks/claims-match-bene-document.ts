@@ -2,14 +2,50 @@ import { getName } from '@deps/helpers/party-info-helpers';
 import { FormMetadata } from '@deps/models/case/task';
 import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
-import { searchBeneficiaryByCaseId } from '@deps/queries/api/beneficiary';
+import { searchTransactionsSSR } from '@deps/queries/api/transaction-search';
+import { LoggingContext } from '@deps/utils/server-logging';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
-import { TaskHandler } from '../types';
-const claimsMatchBeneDocumentHandler: TaskHandler<any, any> = {
-    api: async (payload: any) => {
-        const apiResult = await searchBeneficiaryByCaseId(payload);
-        const beneficiaryMatches = Array.isArray(apiResult) ? apiResult : [];
+import { TaskHandler, TransactionSearchIdentifiers } from '../types';
+
+const buildZlCaseIdRequest = (zlCaseId: string, entityType: string) => {
+    return {
+        identifiers: [
+            {
+                identifier: TransactionSearchIdentifiers.ZL_CASE_ID,
+                value: zlCaseId,
+            },
+        ],
+        entityType: [entityType],
+    };
+};
+
+interface claimsMatchBeneDocumentPayload {
+    zlCaseId: string;
+    entityType: string;
+}
+
+const claimsMatchBeneDocumentHandler: TaskHandler<
+    claimsMatchBeneDocumentPayload,
+    BeneficiaryRecord[]
+> = {
+    api: async (
+        payload: claimsMatchBeneDocumentPayload,
+        accessToken: string,
+        loggingContext: LoggingContext
+    ) => {
+        const filters = buildZlCaseIdRequest(
+            payload.zlCaseId,
+            payload.entityType
+        );
+        const apiResult = await searchTransactionsSSR(
+            filters,
+            accessToken,
+            loggingContext
+        );
+        const beneficiaryMatches = Array.isArray(apiResult)
+            ? (apiResult as BeneficiaryRecord[])
+            : [];
         return beneficiaryMatches;
     },
 

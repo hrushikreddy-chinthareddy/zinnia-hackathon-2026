@@ -116,15 +116,4 @@
 td.actionCell {
     display: flex;
     gap: var(--measure-dimension-gap-md);
-    a {
-        text-decoration: underline;
-        &:hover {
-            text-underline-offset: var(
-                --measure-dimension-letter-spacing-font-letter-spacing-1
-            );
-            text-decoration-thickness: var(
-                --measure-dimension-letter-spacing-font-letter-spacing-1
-            );
-        }
-    }
 }

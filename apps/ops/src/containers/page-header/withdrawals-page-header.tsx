@@ -19,6 +19,7 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { mapWithdrawalsSubPage } from '@deps/helpers/withdrawals.helpers';
+import { useFreelookCancellation } from '@deps/hooks/useFreelookCancellation';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
@@ -92,6 +93,11 @@ const WithdrawalsPageHeaderContainer = ({
     });
 
     const status = policyDetails?.policyStatus?.toLocaleLowerCase();
+
+    const { data: freelookCancellation } = useFreelookCancellation(
+        policyDetails.planCode as string,
+        policyDetails.policyNumber as string
+    );
 
     const {
         amountEligibleForWithdrawal,
@@ -449,7 +455,8 @@ const WithdrawalsPageHeaderContainer = ({
                 {freeLookEnabled &&
                 policyDetails.freeLookPeriodDetails.isInFreeLookPeriod &&
                 !isFreeLookPeriodExpired &&
-                isUserPermissionedToWithdraw ? (
+                isUserPermissionedToWithdraw &&
+                freelookCancellation?.isEligibleFreelookCancellation ? (
                     <NavElement
                         href={
                             t('site.navLinks.cancelFreeLook.href', {

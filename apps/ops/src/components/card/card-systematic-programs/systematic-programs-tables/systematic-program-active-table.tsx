@@ -15,7 +15,10 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { ArrangementType } from '@zinnia/api-types/types/bpm';
 
 import FooterAction from '../../card-footer-action/card-footer-action';
-import { SystematicProgramsActiveTableProps } from '../card-systematic-programs.types';
+import {
+    SystematicProgramsActiveTableProps,
+    SystematicArrangementType,
+} from '../card-systematic-programs.types';
 import styles from '../systematic-programs-table.module.css';
 
 const SystematicProgramsActiveTable = ({
@@ -27,15 +30,27 @@ const SystematicProgramsActiveTable = ({
     const getEmptyLabel = () => {
         if (programs.length === 0) return '';
         if (programs.length === 1 || isLife)
-            return t(programs[0].arrangementType).toLowerCase();
+            return t(
+                `enums.${
+                    SystematicArrangementType[programs[0].arrangementType]
+                }`
+            ).toLowerCase();
         if (programs.length === 2)
-            return `${t(programs[0].arrangementType).toLowerCase()} ${t(
-                'or'
-            )} ${
+            return `${t(
+                `enums.${
+                    SystematicArrangementType[programs[0].arrangementType]
+                }`
+            ).toLowerCase()} ${t('or')} ${
                 programs[1].arrangementType ===
                 ArrangementType.REQUIREDMINIMUMDISTRIBUTION
                     ? 'RMD'
-                    : t(programs[1].arrangementType).toLowerCase()
+                    : t(
+                          `enums.${
+                              SystematicArrangementType[
+                                  programs[1].arrangementType
+                              ]
+                          }`
+                      ).toLowerCase()
             }`;
         return '';
     };

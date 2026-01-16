@@ -17,6 +17,7 @@ export interface SystematicProgramsCardProps {
     programs: SystematicProgramsDetails[];
     setUpAction?: FooterContent;
     isLife?: boolean;
+    requestSubTypes?: string[];
 }
 
 export interface SystematicProgramsActiveTableProps {
@@ -32,4 +33,12 @@ export interface SystematicProgramsTerminatedTableProps {
 
 export enum SystematicProgramsCardTest {
     CONTAINER = 'systematic-programs-card-container-test-id',
+}
+
+export enum SystematicArrangementType {
+    PAYMENT = 'PREMIUM',
+    WITHDRAWAL = 'WITHDRAWAL',
+    LOANREPAYMENT = 'LOANREPAYMENT',
+    REQUIREDMINIMUMDISTRIBUTION = 'REQUIREDMINIMUMDISTRIBUTION',
+    PAYOUT = 'PAYOUT',
 }

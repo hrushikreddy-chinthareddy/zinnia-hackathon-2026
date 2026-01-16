@@ -23,6 +23,8 @@
     );
     --knowledge-base-sidenav-expanded-width: 250px;
     --knowledge-base-sidenav-collapsed-width: 65px;
+    --people-filter-panel-width: 278px;
+    --breakpoint-lg: 1024px;
 }
 
 @layer base {

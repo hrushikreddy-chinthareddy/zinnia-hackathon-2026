@@ -28,10 +28,12 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import CustomLoader from '@deps/components/loader/customLoader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import { AssigneeField } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { AssigneePopoverPositionMode } from '@deps/containers/task-management-queue/table-elements/assignee-popover';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -88,7 +90,6 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
-import { AssigneeField } from './components/assignee-field';
 import styles from './global-task-side-sheet-content.module.css';
 import {
     isAPIErrorInformation,
@@ -238,6 +239,7 @@ export default function GlobalTaskSideSheet({
     const [assigneeLoading, setAssigneeLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [assignLoader, setAssignLoader] = useState(false);
+    const [isAssigneePopoverOpen, setIsAssigneePopoverOpen] = useState(false);
 
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
@@ -807,7 +809,8 @@ export default function GlobalTaskSideSheet({
                 <div className="col-span-2 mt-2 align-self">
                     {task?.status === TaskStatus.InProgress &&
                     task?.queue &&
-                    task?.assigneePartyId === user?.partyId &&
+                    (task?.assigneePartyId === user?.partyId ||
+                        !isOpsManagerView) &&
                     !Object.values(EarlyTaskType).includes(
                         task?.taskType as EarlyTaskType
                     ) ? (
@@ -943,6 +946,10 @@ export default function GlobalTaskSideSheet({
                     ) : (
                         <AssigneeField
                             task={task}
+                            isOpen={isAssigneePopoverOpen}
+                            onOpen={() => setIsAssigneePopoverOpen(true)}
+                            onClose={() => setIsAssigneePopoverOpen(false)}
+                            actionLoader={assignLoader}
                             isOpsManagerView={isOpsManagerView}
                             assigneeList={assigneeList}
                             assigneeLoading={assigneeLoading}
@@ -955,7 +962,7 @@ export default function GlobalTaskSideSheet({
                                 handleTaskUnassignAsAdmin
                             }
                             fallback={NoAssigneeComp}
-                            positionMode="portal"
+                            positionMode={AssigneePopoverPositionMode.Portal}
                             isAssigning={assignLoader}
                             onTaskUpdated={onTaskUpdated}
                         />

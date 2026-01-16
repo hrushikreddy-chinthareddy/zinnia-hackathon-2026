@@ -2,9 +2,32 @@
 
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+import enTranslations from 'public/locales/en/common.json';
+import esTranslations from 'public/locales/es/common.json';
+import frTranslations from 'public/locales/fr/common.json';
 
 import SideSheet from './side-sheet'; // Adjust the import path as needed
 import Popover from '../popover/popover';
+import Typography, { TypographyVariant } from '../typography/typography';
+
+beforeAll(async () => {
+    await i18n.use(initReactI18next).init({
+        lng: 'en',
+        fallbackLng: 'en',
+        resources: {
+            en: { common: enTranslations },
+            es: { common: esTranslations },
+            fr: { common: frTranslations },
+        },
+        defaultNS: 'common',
+        interpolation: {
+            escapeValue: false,
+        },
+    });
+});
 
 describe('SideSheet', () => {
     test('should disable scroll when opened and enable when closed', () => {
@@ -52,5 +75,112 @@ describe('SideSheet', () => {
             Number(popover.className.match(regex)?.[0].substring(2)) ?? 0;
 
         expect(popoverZIndexValue).toBeGreaterThanOrEqual(childrenZIndexValue);
+    });
+});
+
+describe('Side Sheets - Translation Tests', () => {
+    // Translation configurations
+    const translationConfigs = {
+        en: {
+            translations: enTranslations,
+        },
+        es: {
+            translations: esTranslations,
+        },
+        fr: {
+            translations: frTranslations,
+        },
+    };
+
+    describe.each([
+        ['English', 'en'],
+        ['Spanish', 'es'],
+        ['French', 'fr'],
+    ])('%s translations', (languageName, languageCode) => {
+        const config =
+            translationConfigs[languageCode as keyof typeof translationConfigs];
+
+        describe('with SYSTEMATIC_PROGRAMS_TABLE flag enabled', () => {
+            it(`should display tittle in ${languageName} for cancel Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <SideSheet
+                        open
+                        handleClose={() => {}}
+                        headerElement={
+                            <Typography variant={TypographyVariant.H2}>
+                                {i18n.t('allFields.cancelPremiumProgram')}
+                            </Typography>
+                        }
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.cancelPremiumProgram.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display tittle in ${languageName} for cancel Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <SideSheet
+                        open
+                        handleClose={() => {}}
+                        headerElement={
+                            <Typography variant={TypographyVariant.H2}>
+                                {i18n.t('allFields.cancelLoanProgram')}
+                            </Typography>
+                        }
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.cancelLoanProgram.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+        });
+
+        describe('with SYSTEMATIC_PROGRAMS_TABLE flag disabled ', () => {
+            it(`should display tittle in ${languageName} for cancel Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <SideSheet
+                        open
+                        handleClose={() => {}}
+                        headerElement={
+                            <Typography variant={TypographyVariant.H2}>
+                                {i18n.t('allFields.cancelPremiumAutopayTitle')}
+                            </Typography>
+                        }
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.cancelPremiumAutopayTitle.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+
+            it(`should display tittle in ${languageName} for cancel Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <SideSheet
+                        open
+                        handleClose={() => {}}
+                        headerElement={
+                            <Typography variant={TypographyVariant.H2}>
+                                {i18n.t('allFields.cancelLoanAutopayTitle')}
+                            </Typography>
+                        }
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.cancelLoanAutopayTitle.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+        });
     });
 });
