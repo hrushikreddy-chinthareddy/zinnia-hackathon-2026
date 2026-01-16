@@ -1,5 +1,5 @@
 .validationContainer {
-    margin-top: 2.5rem;
+    margin-top: var(--bloom-space-xl);
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -9,5 +9,5 @@
     flex-direction: row;
 }
 .errorMessage {
-    margin-top: 0.5rem;
+    margin-top: var(--bloom-space-2);
 }
