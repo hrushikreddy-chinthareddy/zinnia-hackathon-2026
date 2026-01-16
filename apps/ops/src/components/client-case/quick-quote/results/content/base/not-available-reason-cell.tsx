@@ -11,7 +11,6 @@ import {
     NotAvailabilityReasonField,
 } from '@deps/utils/quick-quotes-rules/types';
 
-import { useQuickQuoteParams } from '../../params-context';
 import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
@@ -49,7 +48,6 @@ const NotAvailabilityReasonLabel = ({
     reason: IneligibilityReason;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const { faceAmount } = useQuickQuoteParams();
 
     const formatToCurrency = (value: number) =>
         numberFormatify(value, {
