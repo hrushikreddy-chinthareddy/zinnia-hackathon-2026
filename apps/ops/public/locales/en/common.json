@@ -3192,7 +3192,7 @@
             "quickActions": "Quick Actions",
             "title": "Prioritize Case",
             "detailsHeader": "Details",
-            "detailsBody": "A prioritized case will be moved up as a work item for expedited processing.",
+            "detailsBody": "This will mark the case for expedited processing.",
             "cancel": "Cancel",
             "submit": "Submit",
             "success": "Success!",
@@ -3202,12 +3202,19 @@
             "errorForbidden": "You do not have permission to perform this action.",
             "successMessage": "Case ID: {{caseId}} has been prioritized.",
             "simpleTooltipBody": "This case is prioritized.",
-            "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing."
+            "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing.",
+            "reasonLabel": "Prioritization reason",
+            "reasonPlaceholder": "Select a reason",
+            "sourceLabel": "Prioritization source",
+            "sourcePlaceholder": "Select a source",
+            "reasonRequired": "Select a reason to continue.",
+            "sourceRequired": "Select a source to continue.",
+            "notificationLabel": "Receive notification on changes to specified progress."
         },
         "deprioritizeCase": {
             "title": "De-prioritize Case",
             "detailsHeader": "Details",
-            "detailsBody": "A de-prioritized case will be moved back as a regular work item for normal processing.",
+            "detailsBody": "This will move the case back to normal processing.",
             "cancel": "Cancel",
             "submit": "Submit",
             "success": "Success!",
@@ -3215,7 +3222,14 @@
             "error": "Error",
             "errorMessage": "Error: {{error}}",
             "successMessage": "Case ID: {{caseId}} was deprioritized",
-            "tooltipBody": "This case is deprioritized."
+            "tooltipBody": "This case is deprioritized.",
+            "reasonLabel": "De-prioritization reason",
+            "reasonPlaceholder": "Select a reason",
+            "sourceLabel": "De-prioritization source",
+            "sourcePlaceholder": "Select a source",
+            "reasonRequired": "Select a reason to continue.",
+            "sourceRequired": "Select a source to continue.",
+            "notificationLabel": "Receive notification on changes to specified progress."
         },
         "navDrawer": {
             "topStatus": "Top Status",

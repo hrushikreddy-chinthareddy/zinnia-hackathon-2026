@@ -516,13 +516,17 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
 
 export const escalateCase = async (
     caseId: string,
-    escalate: boolean
+    escalate: boolean,
+    reason: string,
+    source: string
 ): Promise<AxiosResponse | null> => {
     try {
         const url = `${baseCasesUrl2}/${caseId}/escalate`;
 
         const response = await client.patch(url, {
             escalated: escalate,
+            reason,
+            source,
         });
         browserLogInfo('cases::Successfully created a case', {
             url: baseCasesUrl,
