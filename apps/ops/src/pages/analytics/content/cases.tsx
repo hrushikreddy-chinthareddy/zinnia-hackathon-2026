@@ -21,8 +21,9 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     );
 
     useEffect(() => {
-        console.info('cases tab', tab);
-        if (tab) {
+        const casesTabSet = new Set<string>(Object.values(AnalyticsTabs));
+
+        if (tab && casesTabSet.has(tab)) {
             setSelectedTab(tab);
         }
     }, [tab]);
