@@ -137,6 +137,17 @@ export interface ValidationResult {
     resolution: string;
 }
 
+interface AxiosErrorResponse {
+    response?: {
+        data?: any;
+        status?: number;
+        statusText?: string;
+        headers?: any;
+    };
+    data?: any;
+    message?: string;
+}
+
 export enum TransactionResponseStatus {
     Failure = 'failure',
     Success = 'success',
@@ -196,16 +207,18 @@ export const validateFreeLookCancellation = async (
             query
         );
         return response.data;
-    } catch (error: any) {
+    } catch (error: unknown) {
+        const axiosError = error as AxiosErrorResponse;
+        console.log('errorfinal', error);
         browserLogError(
             'validateFreeLookCancellation::an error occurred during validation',
-            { error, payload: query }
+            { error, policyNumber, planCode, payload: query }
         );
         return (
-            error?.response?.data ||
-            error?.data || {
+            axiosError?.response?.data ||
+            axiosError?.data || {
                 status: 'error',
-                message: error?.message || 'An unknown error occurred',
+                message: axiosError?.message || 'An unknown error occurred',
             }
         );
     }

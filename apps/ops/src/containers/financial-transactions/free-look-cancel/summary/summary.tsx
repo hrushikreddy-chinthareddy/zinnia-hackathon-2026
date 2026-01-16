@@ -47,6 +47,7 @@ const Summary = ({ policy }: SummaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'cancelFreeLook.summary',
     });
+    const tCommon = useTranslation(TranslationFiles.COMMON).t;
     const { policyNumber, product } = policy;
     const { withdrawal } = useWithdrawal();
     const [isChecked, setIsChecked] = useState(false);
@@ -143,12 +144,14 @@ const Summary = ({ policy }: SummaryProps) => {
                                 canDismiss={false}
                                 variant={BannerVariant.Error}
                             >
-                                <b>{t('bpm500Error')}</b>
+                                <b>{tCommon('allFields.bpm500Error')}</b>
                             </BannerAlert>
                         )}
                         <div className={styles.checkboxContainer}>
                             <CheckboxText
-                                label={t('submitWithErrorsText')}
+                                label={tCommon(
+                                    'allFields.submitWithErrorsText'
+                                )}
                                 checked={isChecked}
                                 onChange={() => {
                                     setIsChecked(!isChecked);
@@ -159,7 +162,9 @@ const Summary = ({ policy }: SummaryProps) => {
                             <AssistiveText
                                 className={styles.errorMessage}
                                 variant={AssistiveTextVariant.Error}
-                                text={t('missingCheckToConfirm')}
+                                text={tCommon(
+                                    'allFields.missingCheckToConfirm'
+                                )}
                             />
                         )}
                     </div>
