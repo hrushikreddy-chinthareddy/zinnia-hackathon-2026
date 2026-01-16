@@ -8,7 +8,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { TaskHandler, TransactionSearchIdentifiers } from '../types';
 
-const buildZlCaseIdRequest = (zlCaseId: string) => {
+const buildZlCaseIdRequest = (zlCaseId: string, entityType: string) => {
     return {
         identifiers: [
             {
@@ -16,11 +16,13 @@ const buildZlCaseIdRequest = (zlCaseId: string) => {
                 value: zlCaseId,
             },
         ],
+        entityType: [entityType],
     };
 };
 
 interface claimsMatchBeneDocumentPayload {
     zlCaseId: string;
+    entityType: string;
 }
 
 const claimsMatchBeneDocumentHandler: TaskHandler<
@@ -32,7 +34,10 @@ const claimsMatchBeneDocumentHandler: TaskHandler<
         accessToken: string,
         loggingContext: LoggingContext
     ) => {
-        const filters = buildZlCaseIdRequest(payload.zlCaseId);
+        const filters = buildZlCaseIdRequest(
+            payload.zlCaseId,
+            payload.entityType
+        );
         const apiResult = await searchTransactionsSSR(
             filters,
             accessToken,

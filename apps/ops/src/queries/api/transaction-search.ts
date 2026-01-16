@@ -18,6 +18,7 @@ export interface SearchTransactionFilters {
 
 export interface SearchTransactionPayload {
     identifiers: { identifier: string; value: string }[];
+    entityType?: string[];
 }
 
 const transactionSearchUrl =
