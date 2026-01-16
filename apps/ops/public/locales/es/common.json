@@ -710,7 +710,10 @@
         "yearToDateNumberOfWithdrawal": "Retiros acumulados del año",
         "yearToDatePaymentAmount": "Monto de pago acumulado del año",
         "zinniaLiveTransactionActivityDescription": "Muestra la actividad total de transacciones de autoservicio para los roles listados en el filtro.",
-        "zinniaLiveTransactionActivityTitle": "Actividad de Transacciones de Autoservicio"
+        "zinniaLiveTransactionActivityTitle": "Actividad de Transacciones de Autoservicio",
+        "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en Zinnia Live.)",
+        "missingCheckToConfirm": "Para enviar, confirme que desea proceder con errores y crear una tarea NIGO.",
+        "bpm500Error": "Ocurrió un error al validar su solicitud"
     },
     "enums": {
         "ACH": "ACH",
@@ -7967,6 +7970,7 @@
             "nigoDetails": "Información Faltante",
             "summary": "Resumen"
         },
+
         "taskReview": {
             "title": "Ingresar Datos de Idoneidad",
             "subTitle": "¿Están completas todas las secciones requeridas?",

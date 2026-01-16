@@ -710,8 +710,11 @@
         "yearToDateMatchValue": "Valeur d'appariement depuis le début de l'année",
         "yearToDateNumberOfWithdrawal": "Nombre de retraits depuis le début de l'année",
         "yearToDatePaymentAmount": "Montant du paiement depuis le début de l'année",
-        "zinniaLiveTransactionActivityDescription": "Affiche l'activité totale des transactions en libre-service pour les rôles répertoriés dans le filtre.",
-        "zinniaLiveTransactionActivityTitle": "Activité des Transactions en Libre-Service"
+        "zinniaLiveTransactionActivityDescription": "Affiche l’activité totale des transactions en libre-service pour les rôles répertoriés dans le filtre.",
+        "zinniaLiveTransactionActivityTitle": "Activité des Transactions en Libre-Service",
+        "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live.)",
+        "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez continuer avec des erreurs et créer une tâche NIGO.",
+        "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande"
     },
     "enums": {
         "Activation": "Activation",

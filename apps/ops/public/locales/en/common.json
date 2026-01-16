@@ -710,7 +710,10 @@
         "yearToDateNumberOfWithdrawal": "Year-to-date withdrawals",
         "yearToDatePaymentAmount": "Year-to-date payment amount",
         "zinniaLiveTransactionActivityDescription": "Shows the total self-serve transaction activity for roles listed in the filter.",
-        "zinniaLiveTransactionActivityTitle": "Self-Serve Transaction Activity"
+        "zinniaLiveTransactionActivityTitle": "Self-Serve Transaction Activity",
+        "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
+        "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
+        "bpm500Error": "An error occurred while validating your request"
     },
     "enums": {
         "ACH": "ACH",
@@ -8040,6 +8043,7 @@
             "nigoDetails": "Missing Information",
             "summary": "Summary"
         },
+
         "taskReview": {
             "title": "Input Suitability Data",
             "subTitle": "Are all required sections complete?",

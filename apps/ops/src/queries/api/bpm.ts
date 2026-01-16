@@ -137,6 +137,17 @@ export interface ValidationResult {
     resolution: string;
 }
 
+interface AxiosErrorResponse {
+    response?: {
+        data?: any;
+        status?: number;
+        statusText?: string;
+        headers?: any;
+    };
+    data?: any;
+    message?: string;
+}
+
 export enum TransactionResponseStatus {
     Failure = 'failure',
     Success = 'success',
@@ -178,6 +189,41 @@ export const checkEligibilityLoanRepaymentOneTime = async (
     }
 };
 
+export const validateFreeLookCancellation = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: FreeLookCancellationRequest
+): Promise<TransactionResponse> => {
+    try {
+        browserLogInfo(
+            'validateFreeLookCancellation::validating free look cancellation',
+            { payload: query }
+        );
+        const response = await client.post<
+            FreeLookCancellationRequest,
+            AxiosResponse<TransactionResponse>
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/validation`,
+            query
+        );
+        return response.data;
+    } catch (error: unknown) {
+        const axiosError = error as AxiosErrorResponse;
+        console.log('errorfinal', error);
+        browserLogError(
+            'validateFreeLookCancellation::an error occurred during validation',
+            { error, policyNumber, planCode, payload: query }
+        );
+        return (
+            axiosError?.response?.data ||
+            axiosError?.data || {
+                status: 'error',
+                message: axiosError?.message || 'An unknown error occurred',
+            }
+        );
+    }
+};
+
 export const checkEligibilityNewLoan = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
@@ -206,7 +252,7 @@ export const checkEligibilityNewLoan = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilityNewLoan::an error occurred during eligibility check',
             error
         );
@@ -226,7 +272,7 @@ export const checkEligibilityOneTimePremium = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilityOneTimePremium::an error occurred during eligibility check',
             error
         );
@@ -249,7 +295,7 @@ export const checkEligibilityPartialWithdrawalOneTime = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilityPartialWithdrawalOneTime::an error occurred during eligibility check',
             error
         );
@@ -270,7 +316,7 @@ export const checkEligibilitySystematicPrograms = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilitySystematicPrograms::an error occurred during eligibility check',
             error
         );
@@ -369,7 +415,7 @@ export const validateFullSurrenderWithdrawal = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateFullSurrenderWithdrawal::an error occurred during validation',
             error
         );
@@ -394,7 +440,7 @@ export const validateLoanPayment = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateLoanPayment::an error occurred during validation',
             error
         );
@@ -416,7 +462,7 @@ export const validateNewLoan = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateNewLoan::an error occurred during validation',
             error
         );
@@ -441,7 +487,7 @@ export const validateOneTimePremium = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateOneTimePremium::an error occurred during validation',
             error
         );
@@ -466,7 +512,7 @@ export const validatePartialWithdrawalOneTime = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validatePartialWithdrawalOneTime::an error occurred during validation',
             error
         );

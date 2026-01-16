@@ -1,6 +1,14 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
+import BannerAlert, {
+    BannerVariant,
+} from '@deps/components/banner-alert/banner-alert';
+import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import TransactionNavigationButtons, {
     ParentPage,
@@ -15,6 +23,7 @@ import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
+import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { ReactComponent as UserIcon } from '@deps/styles/elements/icons/actions/user.svg';
 import {
     DEFAULT_DATE_FORMAT,
@@ -28,6 +37,8 @@ import {
     TransactionType,
 } from '@zinnia/api-types/types/sor';
 
+import styles from './summary.module.css';
+
 interface SummaryProps {
     policy: Policy;
 }
@@ -36,9 +47,10 @@ const Summary = ({ policy }: SummaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'cancelFreeLook.summary',
     });
+    const tCommon = useTranslation(TranslationFiles.COMMON).t;
     const { policyNumber, product } = policy;
     const { withdrawal } = useWithdrawal();
-
+    const [isChecked, setIsChecked] = useState(false);
     const { goToNext } = useWorkflow();
     const {
         amount,
@@ -50,7 +62,9 @@ const Summary = ({ policy }: SummaryProps) => {
         payeeFullName,
         fboFfc,
     } = withdrawal;
-
+    const { validationResponse } = withdrawal;
+    const validationSucceeded =
+        validationResponse?.status === TransactionResponseStatus.Success;
     return (
         <div>
             <CardContainer containerClassNames="border-b-2 border-gray-100">
@@ -105,6 +119,56 @@ const Summary = ({ policy }: SummaryProps) => {
                     showFinancialData={false}
                     fboFfc={fboFfc}
                 />
+
+                {!validationSucceeded && (
+                    <div className={styles.validationContainer}>
+                        {validationResponse?.validationResult ? (
+                            validationResponse?.validationResult?.map(
+                                (validationResult) => {
+                                    const { error, errorCode, resolution } =
+                                        validationResult;
+
+                                    return (
+                                        <BannerAlert
+                                            canDismiss={false}
+                                            key={`bpm-validation-banner-${errorCode}`}
+                                            variant={BannerVariant.Error}
+                                        >
+                                            <b>{error}</b> {resolution}
+                                        </BannerAlert>
+                                    );
+                                }
+                            )
+                        ) : (
+                            <BannerAlert
+                                canDismiss={false}
+                                variant={BannerVariant.Error}
+                            >
+                                <b>{tCommon('allFields.bpm500Error')}</b>
+                            </BannerAlert>
+                        )}
+                        <div className={styles.checkboxContainer}>
+                            <CheckboxText
+                                label={tCommon(
+                                    'allFields.submitWithErrorsText'
+                                )}
+                                checked={isChecked}
+                                onChange={() => {
+                                    setIsChecked(!isChecked);
+                                }}
+                            />
+                        </div>
+                        {isChecked && (
+                            <AssistiveText
+                                className={styles.errorMessage}
+                                variant={AssistiveTextVariant.Error}
+                                text={tCommon(
+                                    'allFields.missingCheckToConfirm'
+                                )}
+                            />
+                        )}
+                    </div>
+                )}
                 <TransactionNavigationButtons
                     className="mt-10"
                     handleContinue={goToNext}
