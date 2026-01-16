@@ -1,5 +1,5 @@
 import { HttpStatusCode } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button, {
@@ -15,7 +15,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { CaseAction } from '@deps/models/case/enums';
-import { escalateCase } from '@deps/queries/api/cases';
+import { escalateCase, getProcessReferenceData } from '@deps/queries/api/cases';
 import { browserLogError } from '@deps/utils/browser-logging';
 
 import SuccessErrorSideSheet from './success-error-side-sheet';
@@ -32,6 +32,12 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     const [error, setError] = useState<string | undefined>();
     const [reason, setReason] = useState('');
     const [source, setSource] = useState('');
+    const [reasonOptions, setReasonOptions] = useState<
+        { label: string; value: string }[]
+    >([]);
+    const [sourceOptions, setSourceOptions] = useState<
+        { label: string; value: string }[]
+    >([]);
     const [reasonError, setReasonError] = useState<string | undefined>();
     const [sourceError, setSourceError] = useState<string | undefined>();
     const [notify, setNotify] = useState(false);
@@ -89,6 +95,35 @@ function CaseActionSideSheet({ caseId, action }: Props) {
         }
     };
 
+    useEffect(() => {
+        const fetchRefData = async () => {
+            const reasonType =
+                action === CaseAction.Prioritize
+                    ? 'CASE_ESCALATION_REASON'
+                    : 'CASE_DEESCALATION_REASON';
+
+            const [reasonData, sourceData] = await Promise.all([
+                getProcessReferenceData(reasonType),
+                getProcessReferenceData('CASE_ESCALATION_SOURCE'),
+            ]);
+
+            setReasonOptions(
+                (reasonData || []).map((item) => ({
+                    label: item.value,
+                    value: item.key,
+                }))
+            );
+            setSourceOptions(
+                (sourceData || []).map((item) => ({
+                    label: item.value,
+                    value: item.key,
+                }))
+            );
+        };
+
+        fetchRefData();
+    }, [action]);
+
     return (
         <div className="flex flex-col py-10 pl-10 pr-5 justify-between h-full">
             <div className="flex flex-col gap-4 ">
@@ -103,94 +138,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                     <Select
                         label={t('reasonLabel') as string}
                         size={FieldSize.Small}
-                        options={
-                            action === CaseAction.Prioritize
-                                ? [
-                                      { label: 'SLA Risk', value: 'SLA_RISK' },
-                                      {
-                                          label: 'Customer Threatened Cancellation',
-                                          value: 'CUSTOMER_THREATENED_CANCELLATION',
-                                      },
-                                      {
-                                          label: 'Compliance / Regulatory Breach',
-                                          value: 'COMPLIANCE_REGULATORY_BREACH',
-                                      },
-                                      {
-                                          label: 'Financial Issue',
-                                          value: 'FINANCIAL_ISSUE',
-                                      },
-                                      {
-                                          label: 'Operational Error Correction',
-                                          value: 'OPERATIONAL_ERROR_CORRECTION',
-                                      },
-                                      {
-                                          label: 'Key Account / Customer',
-                                          value: 'KEY_ACCOUNT_CUSTOMER',
-                                      },
-                                      {
-                                          label: 'Agent / Distributor Escalation',
-                                          value: 'AGENT_DISTRIBUTOR_ESCALATION',
-                                      },
-                                      {
-                                          label: 'System Issue',
-                                          value: 'SYSTEM_ISSUE',
-                                      },
-                                      {
-                                          label: 'Imminent Policy Impact',
-                                          value: 'IMMINENT_POLICY_IMPACT',
-                                      },
-                                      {
-                                          label: 'Urgent Payment / Disbursement Issue',
-                                          value: 'URGENT_PAYMENT_DISBURSEMENT_ISSUE',
-                                      },
-                                      {
-                                          label: 'Customer Emergency',
-                                          value: 'CUSTOMER_EMERGENCY',
-                                      },
-                                      {
-                                          label: 'Fraud Concern',
-                                          value: 'FRAUD_CONCERN',
-                                      },
-                                  ]
-                                : [
-                                      {
-                                          label: 'SLA Risk No Longer Applicable',
-                                          value: 'SLA_RISK_NO_LONGER_APPLICABLE',
-                                      },
-                                      {
-                                          label: 'Customer Concern Addressed',
-                                          value: 'CUSTOMER_CONCERN_ADDRESSED',
-                                      },
-                                      {
-                                          label: 'Compliance / Regulatory Risk Cleared',
-                                          value: 'COMPLIANCE_REGULATORY_RISK_CLEARED',
-                                      },
-                                      {
-                                          label: 'Financial Impact Mitigated',
-                                          value: 'FINANCIAL_IMPACT_MITIGATED',
-                                      },
-                                      {
-                                          label: 'Operational Reassessment',
-                                          value: 'OPERATIONAL_REASSESSMENT',
-                                      },
-                                      {
-                                          label: 'System Issue Resolved',
-                                          value: 'SYSTEM_ISSUE_RESOLVED',
-                                      },
-                                      {
-                                          label: 'Urgency Downgraded by Customer',
-                                          value: 'URGENCY_DOWNGRADED_BY_CUSTOMER',
-                                      },
-                                      {
-                                          label: 'Incorrect Prioritization',
-                                          value: 'INCORRECT_PRIORITIZATION',
-                                      },
-                                      {
-                                          label: 'Task Specific Urgency Addressed',
-                                          value: 'TASK_SPECIFIC_URGENCY_ADDRESSED',
-                                      },
-                                  ]
-                        }
+                        options={reasonOptions}
                         value={reason}
                         onChange={setReason}
                         placeholder={t('reasonPlaceholder') as string}
@@ -200,11 +148,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                     <Select
                         label={t('sourceLabel') as string}
                         size={FieldSize.Small}
-                        options={[
-                            { label: 'Call Center', value: 'CALL_CENTER' },
-                            { label: 'Internal', value: 'INTERNAL' },
-                            { label: 'Email', value: 'EMAIL' },
-                        ]}
+                        options={sourceOptions}
                         value={source}
                         onChange={setSource}
                         placeholder={t('sourcePlaceholder') as string}

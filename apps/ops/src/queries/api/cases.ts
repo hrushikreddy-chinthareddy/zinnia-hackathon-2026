@@ -93,6 +93,27 @@ export const createCase = async (
     }
 };
 
+export const getProcessReferenceData = async (
+    key: string,
+    queryString: string = ''
+): Promise<ProcessReferenceData[] | null> => {
+    try {
+        let refUrl = `${baseAppUrl}/api/case/v1/refdata/${key}`;
+        if (queryString) {
+            refUrl += `?${queryString}`;
+        }
+        const { data } = await client.get<any>(refUrl);
+
+        return data?.referenceData ?? data;
+    } catch (error: any) {
+        console.error(
+            'getProcessReferenceData::An error occurred while getting reference data',
+            error
+        );
+        return null;
+    }
+};
+
 export const getCases = async (
     query: CaseSearchBody,
     featureFlags: FeatureFlags
