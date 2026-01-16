@@ -1,32 +1,50 @@
 import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import {
-    SearchTransactionFilters,
-    searchTransactionsByPaymentRecordId,
-} from '@deps/queries/api/transaction-search';
+import { searchTransactionsSSR } from '@deps/queries/api/transaction-search';
+import { LoggingContext, logWarn } from '@deps/utils/server-logging';
 
-import { TaskHandler } from '../types';
+import { TaskHandler, TransactionSearchIdentifiers } from '../types';
 
 interface CostBasisReviewPayload {
     paymentRecordId: string;
 }
 
+export const buildPaymentRecordIdRequest = (paymentRecordId: string) => {
+    return {
+        identifiers: [
+            {
+                identifier: TransactionSearchIdentifiers.PAYMENT_RECORD_ID,
+                value: paymentRecordId,
+            },
+        ],
+    };
+};
+
 const costBasisReviewHandler: TaskHandler<CostBasisReviewPayload, any> = {
-    api: async (payload: CostBasisReviewPayload) => {
+    api: async (
+        payload: CostBasisReviewPayload,
+        accessToken: string,
+        loggingContext: LoggingContext
+    ) => {
         if (!payload.paymentRecordId) {
             return null;
         }
 
-        const filters: SearchTransactionFilters = {
-            paymentRecordId: payload.paymentRecordId,
-        };
-        const response = await searchTransactionsByPaymentRecordId(filters);
+        const filters = buildPaymentRecordIdRequest(payload.paymentRecordId);
+
+        const response = await searchTransactionsSSR(
+            filters,
+            accessToken,
+            loggingContext
+        );
 
         if (!response || !Array.isArray(response) || response.length === 0) {
-            console.error('costBasisReviewHandler::api::invalidResponse', {
+            logWarn('costBasisReviewHandler::api::invalidResponse', {
+                ...loggingContext,
                 response,
                 paymentRecordId: payload.paymentRecordId,
             });
+
             return null;
         }
 

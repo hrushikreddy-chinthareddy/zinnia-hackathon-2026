@@ -7,7 +7,7 @@ import PageLoader, {
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import ConfirmCard from '@deps/components/transactions/financial/confirm-card';
 import ApiErrorCard from '@deps/components/workflows/api-error-card/api-error-card';
-import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -22,6 +22,7 @@ import {
     TransactionSuccessfulEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     ArrangementType,
     Policy,
@@ -52,11 +53,12 @@ const Confirm = ({ policy }: ConfirmProps) => {
         isSetUp,
     } = autopay;
 
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: `${translationKeyPrefix}.confirm`,
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
     const { sessionId, partyId } = usePermissionsContext();
+    const { featureFlags } = useOptimizely();
+
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const [submitFailed, setSubmitFailed] = useState(false);
     const [submitNigo, setSubmitNigo] = useState(false);
@@ -150,7 +152,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 leaveRoute={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`}
                 submit={{
                     action: submit,
-                    text: defaultT('workflows.apiErrorCard.submitPayment'),
+                    text: t('workflows.apiErrorCard.submitPayment'),
                 }}
             />
         );
@@ -164,7 +166,15 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 parentPage={`/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/${parentPage}`}
                 amount={Number(paymentAmount)}
                 payorPayeeName={payeeFullName || payorFullName}
-                type={parentPage === 'withdrawals' ? type : t('type')}
+                type={
+                    parentPage === 'withdrawals'
+                        ? type
+                        : t(
+                              systematicProgramTablesEnabled
+                                  ? `allFields.${translationKeyPrefix}ConfirmType`
+                                  : `${translationKeyPrefix}.confirm.type`
+                          )
+                }
             />
         </div>
     );

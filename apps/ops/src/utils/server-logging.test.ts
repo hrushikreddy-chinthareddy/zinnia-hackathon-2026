@@ -201,6 +201,7 @@ describe('server-logging', () => {
         } as GetServerSidePropsContext;
         it('should accept a getServerSideProps and context, passing the context into getServerSideProps', async () => {
             const handler = jest.fn();
+
             const options = {
                 getServerSideProps: handler,
             };
