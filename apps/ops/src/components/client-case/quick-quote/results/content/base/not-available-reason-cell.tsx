@@ -9,6 +9,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     IneligibilityReason,
     NotAvailabilityReasonField,
+    RiderInegilibilityReason,
 } from '@deps/utils/quick-quotes-rules/types';
 
 import { useQuickQuoteParams } from '../../params-context';
@@ -16,9 +17,7 @@ import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
     className?: string;
-    reasons?:
-        | IneligibilityReason[]
-        | Partial<Record<number, IneligibilityReason[]>>;
+    reasons?: IneligibilityReason[] | RiderInegilibilityReason[];
 };
 
 const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
@@ -129,9 +128,23 @@ export const QuickQuoteNotAvailableReasonCell = ({
     className,
     reasons,
 }: QuickQuoteNotAvailableReasonCellProps) => {
+    const isRiderReason = (
+        reasons: IneligibilityReason[] | RiderInegilibilityReason[] | undefined
+    ): reasons is RiderInegilibilityReason[] => {
+        if (reasons === undefined) return false;
+
+        const result =
+            Array.isArray(reasons) &&
+            reasons.every(
+                (r) => Object.keys(r).findIndex((k) => k === 'termLengths') >= 0
+            );
+
+        return result;
+    };
+
     return (
         <div className={clsx(styles.notAvailableReasonCell, className)}>
-            {Array.isArray(reasons) ? (
+            {!isRiderReason(reasons) ? (
                 <div>
                     <NotAvailableLabel />
                     <ul className={styles.reasonList}>
@@ -146,11 +159,14 @@ export const QuickQuoteNotAvailableReasonCell = ({
                         })}
                     </ul>
                 </div>
-            ) : typeof reasons === 'object' ? (
-                Object.entries(reasons).map(([termLength, reasons]) => {
+            ) : isRiderReason(reasons) ? (
+                reasons.map(({ termLengths, reasons }, idx) => {
+                    const concatenatedTermLengths = termLengths?.join(', ');
                     return (
-                        <div key={`${termLength}`}>
-                            <NotAvailableLabel termLength={termLength} />
+                        <div key={`${idx}`}>
+                            <NotAvailableLabel
+                                termLength={concatenatedTermLengths}
+                            />
                             <ul className={styles.reasonList}>
                                 {reasons &&
                                     reasons.map((reason) => (

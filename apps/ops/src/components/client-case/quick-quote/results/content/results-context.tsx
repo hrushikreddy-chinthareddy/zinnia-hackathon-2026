@@ -21,6 +21,8 @@ import {
     QuickQuoteParams,
     TermQuickQuoteRiderDataItem,
     RIDER_CODE_MAP,
+    TermQuickQuoteRiderNotAvailableItem,
+    PlainTermQuickQuoteRiderNotAvailableItem,
 } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
@@ -106,9 +108,75 @@ export const QuickQuoteResultsProvider = ({
             riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
             termLength: number
         ): boolean => {
-            return Object.entries(riders).some(
-                ([_, data]) => data.notAvailabilityReasonField?.[termLength]
+            return Object.entries(riders).some(([_, data]) =>
+                data.notAvailabilityReasonField?.some(
+                    (reasons) =>
+                        reasons.termLengths && reasons.termLengths.length > 0
+                )
             );
+        },
+        []
+    );
+
+    const groupRiderErrors = useCallback(
+        (
+            reasons: TermQuickQuoteRiderNotAvailableItem[]
+        ): TermQuickQuoteRiderNotAvailableItem[] => {
+            let result: PlainTermQuickQuoteRiderNotAvailableItem[] = [];
+            reasons.forEach((r) => {
+                r.reasons?.forEach((re) => {
+                    result = [
+                        ...result,
+                        ...r.termLengths.map((tl) => {
+                            return { termLength: tl, reason: re };
+                        }),
+                    ];
+                });
+            });
+
+            const groupedReasons = result.reduce(
+                (acc: TermQuickQuoteRiderNotAvailableItem[], reason) => {
+                    const accReason = acc.find((ar) =>
+                        ar.reasons?.some(
+                            (r) =>
+                                r.field === reason.reason.field &&
+                                r.actual === reason.reason.actual &&
+                                ((typeof r.expected === 'string' &&
+                                    r.expected === reason.reason.expected) ||
+                                    (typeof r.expected !== 'string' &&
+                                        r.expected[0] ===
+                                            reason.reason.expected[0] &&
+                                        r.expected[1] ===
+                                            reason.reason.expected[1]))
+                        )
+                    );
+
+                    if (!accReason) {
+                        const accReasonByTermLength = acc.find((r) =>
+                            r.termLengths.some((tl) => tl === reason.termLength)
+                        );
+                        if (accReasonByTermLength) {
+                            accReasonByTermLength.reasons?.push(reason.reason);
+                        } else {
+                            acc.push({
+                                termLengths: [reason.termLength],
+                                reasons: [reason.reason],
+                            });
+                        }
+                    } else if (
+                        accReason!.termLengths.every(
+                            (tl) => tl !== reason.termLength
+                        )
+                    ) {
+                        accReason.termLengths.push(reason.termLength);
+                    }
+
+                    return acc;
+                },
+                []
+            );
+
+            return groupedReasons;
         },
         []
     );
@@ -316,32 +384,30 @@ export const QuickQuoteResultsProvider = ({
                                                 );
 
                                             const reasonsByTermLength =
-                                                Object.fromEntries(
+                                                groupRiderErrors(
                                                     Object.entries(
                                                         groupedByTermLength
-                                                    )
-                                                        .map(
-                                                            ([
-                                                                termLength,
-                                                                data,
-                                                            ]) => {
-                                                                return [
-                                                                    termLength,
+                                                    ).map(
+                                                        ([
+                                                            termLength,
+                                                            data,
+                                                        ]) => {
+                                                            return {
+                                                                termLengths: [
+                                                                    parseInt(
+                                                                        termLength
+                                                                    ),
+                                                                ],
+                                                                reasons:
                                                                     extractRiderNotAvailabilityReason(
                                                                         data,
                                                                         RIDER_CODE_MAP[
                                                                             riderName
                                                                         ]
                                                                     ),
-                                                                ] as const;
-                                                            }
-                                                        )
-                                                        .filter(
-                                                            ([_, value]) =>
-                                                                value &&
-                                                                value?.length >
-                                                                    0
-                                                        )
+                                                            } as TermQuickQuoteRiderNotAvailableItem;
+                                                        }
+                                                    )
                                                 );
 
                                             if (
@@ -357,9 +423,8 @@ export const QuickQuoteResultsProvider = ({
                                                             (v) => v != null
                                                         ),
                                                         notAvailabilityReasonField:
-                                                            Object.keys(
-                                                                reasonsByTermLength
-                                                            ).length > 0
+                                                            reasonsByTermLength.length >
+                                                            0
                                                                 ? reasonsByTermLength
                                                                 : undefined,
                                                     },
@@ -373,9 +438,8 @@ export const QuickQuoteResultsProvider = ({
                                                         values
                                                     ),
                                                     notAvailabilityReasonField:
-                                                        Object.keys(
-                                                            reasonsByTermLength
-                                                        ).length > 0
+                                                        reasonsByTermLength.length >
+                                                        0
                                                             ? reasonsByTermLength
                                                             : undefined,
                                                 },
@@ -391,6 +455,7 @@ export const QuickQuoteResultsProvider = ({
                             item != null
                     );
 
+                console.log('🚀 ~ QuickQuoteResultsProvider ~ result:', result);
                 return result;
             },
             [products, variants]
