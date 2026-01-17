@@ -19,7 +19,7 @@ export default function IllustrationDetailsContent() {
 
     if (illustration?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE) {
         return (
-            <div className={styles.detailsContent}>
+            <div className={styles.detailsContent} id="printable-no-scroll">
                 <ContentInsured />
                 <IulContentCoverage />
                 <ContentPremium />
@@ -30,7 +30,7 @@ export default function IllustrationDetailsContent() {
     }
 
     return (
-        <div className={styles.detailsContent}>
+        <div className={styles.detailsContent} id="printable-no-scroll">
             <ContentInsured />
             <CoverageSection />
             <ContentPremium />
