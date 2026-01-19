@@ -67,6 +67,7 @@ export function SbgcSSWForm() {
             },
         });
     }, []);
+
     const hasTpaAuthorization =
         formTpaAuthorization &&
         !Object.values(formTpaAuthorization).every((val) => val === null);
