@@ -201,6 +201,8 @@ function FileUploadComponent({
                     const metaData = {
                         ...data,
                         sourceFileName: name,
+                        documentTypeDescription:
+                            data.documentTypeDescription ?? name,
                         documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                         fileType: getFileSubtype(blob),
                         sourceSystem: SourceSystem.ZL,
