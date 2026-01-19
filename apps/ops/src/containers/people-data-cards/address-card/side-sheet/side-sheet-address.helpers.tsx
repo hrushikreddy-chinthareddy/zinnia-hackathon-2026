@@ -84,15 +84,13 @@ export const AdditionalAddressLine = ({
                 }
             />
             <IconButton
-                aria-label={`${t(
-                    'people.sideSheet.address.general.remove'
-                )} ${label}`}
+                aria-label={`${t('allFields.remove')} ${label}`}
                 disabled={disabled}
                 onClick={removeAddressLine}
             >
                 <div className="flex items-center gap-1">
                     <TrashIcon height={20} width={20} />
-                    <span>{t('people.sideSheet.address.general.remove')}</span>
+                    <span>{t('allFields.remove')}</span>
                 </div>
             </IconButton>
         </Transition>

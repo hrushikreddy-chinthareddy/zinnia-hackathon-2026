@@ -412,6 +412,7 @@ export const SidesheetCommunicationsPreference = ({
                         body={body as NonFinancialTransactionBody}
                     />
                     <div
+                        data-error-id="communicationPreference"
                         role="group"
                         className="flex flex-col gap-4"
                         id="comm-pref-radios"

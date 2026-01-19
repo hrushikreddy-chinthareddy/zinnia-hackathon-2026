@@ -401,6 +401,7 @@ const SideSheetAddress = ({
                 <div className="flex w-full flex-col items-start">
                     <div className="flex w-full flex-col gap-6">
                         <Field
+                            errorId="addressLine1"
                             aria-label={t('labels.addressLine1') as string}
                             label={t('labels.address') as string}
                             message={currentErrors?.addressLine1}
@@ -494,6 +495,7 @@ const SideSheetAddress = ({
                 <div className="flex gap-4">
                     <div className="basis-1/4">
                         <Field
+                            errorId="zipCode"
                             aria-label={t('labels.zip') as string}
                             disabled={isDelete}
                             label={t('labels.zip') as string}
@@ -521,6 +523,7 @@ const SideSheetAddress = ({
                     </div>
                     <div className="flex-grow">
                         <Field
+                            errorId="city"
                             aria-label={t('labels.city') as string}
                             label={t('labels.city') as string}
                             message={currentErrors?.city}
@@ -548,6 +551,7 @@ const SideSheetAddress = ({
                     </div>
                     <div className="basis-1/4">
                         <SelectSimple
+                            errorId="state"
                             aria-label={t('labels.state') as string}
                             disabled={isDelete}
                             label={t('labels.state') as string}

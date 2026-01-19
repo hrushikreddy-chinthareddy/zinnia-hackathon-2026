@@ -372,6 +372,7 @@ export const SideSheetPhone = ({
 
                     <div className="flex gap-4">
                         <FieldSelect
+                            errorId="phoneNumber"
                             aria-label={t('fieldLabels.number') as string}
                             className="w-[300px]"
                             dropdownValue={countries[country].phone}

@@ -64,6 +64,7 @@ export type FieldFormatOptions = {
 export type FieldProps = {
     disabled?: boolean;
     value?: string;
+    errorId?: string;
     formatOptions?: FieldFormatOptions;
     label?: string;
     labelTooltip?: string;
@@ -114,6 +115,7 @@ export default function Field({
     isClearable,
     isReadOnly,
     required,
+    errorId,
     ...rest
 }: FieldProps) {
     const [focus, setFocus] = useState(false);
@@ -212,6 +214,7 @@ export default function Field({
     return (
         <div
             data-testid={FieldTest.Container}
+            data-error-id={errorId}
             className={'flex flex-col'}
             onClick={onClick}
             ref={containerRef}

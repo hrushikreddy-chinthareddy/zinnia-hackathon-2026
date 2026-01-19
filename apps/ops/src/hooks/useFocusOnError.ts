@@ -20,8 +20,18 @@ export const useFocusOnError = <T extends object | undefined>(
         if (hasErrors && formRef.current && submitAttempt > 0) {
             requestAnimationFrame(() => {
                 if (!formRef.current) return;
-                const firstErrorElement = formRef.current.querySelector(
-                    '.border-semantic-error input, .border-semantic-error textarea, .border-semantic-error select, [data-error-focus="true"]'
+
+                // Get the first error key to target the specific field
+                const firstErrorKey = errorKeys[0];
+
+                // Find element by data-error-id attribute
+                const errorContainer = formRef.current.querySelector(
+                    `[data-error-id="${firstErrorKey}"]`
+                );
+
+                // Find focusable element within the container
+                const firstErrorElement = errorContainer?.querySelector(
+                    'input, textarea, select, [tabindex]:not([tabindex="-1"])'
                 ) as HTMLElement;
 
                 if (firstErrorElement) {
@@ -37,11 +47,12 @@ export const useFocusOnError = <T extends object | undefined>(
                         behavior: 'smooth',
                         block: 'center',
                     });
-                } else {
-                    const fallbackElement = formRef.current.querySelector(
-                        '[class*="border-semantic-error"], [class*="text-semantic-error"], .case-document-error'
-                    ) as HTMLElement;
-                    fallbackElement?.focus();
+                } else if (errorContainer) {
+                    // Fallback: scroll to the error container
+                    (errorContainer as HTMLElement).scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'center',
+                    });
                 }
             });
         }

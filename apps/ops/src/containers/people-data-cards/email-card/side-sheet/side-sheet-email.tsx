@@ -370,6 +370,7 @@ const SideSheetEmail = ({
                 )}
 
                 <Field
+                    errorId="emailAddress"
                     aria-label={t('labels.email') as string}
                     label={t('labels.email') as string}
                     message={currentErrors?.emailAddress}

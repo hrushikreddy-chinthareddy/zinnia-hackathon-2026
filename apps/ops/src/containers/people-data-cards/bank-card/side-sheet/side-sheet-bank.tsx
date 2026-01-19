@@ -414,6 +414,7 @@ const SideSheetBank = ({
                     disabled={isDelete}
                 />
                 <Field
+                    errorId="routingNumber"
                     formatOptions={{ format: '#########' }}
                     label={t('labels.routingNumber') as string}
                     message={currentErrors?.routingNumber}
@@ -440,6 +441,7 @@ const SideSheetBank = ({
                     }
                 />
                 <Field
+                    errorId="branchName"
                     label={t('labels.bankName') as string}
                     message={currentErrors?.branchName}
                     onChange={(event) => {
@@ -464,6 +466,7 @@ const SideSheetBank = ({
                     }
                 />
                 <Field
+                    errorId="accountNumber"
                     formatOptions={{ format: '#################' }}
                     label={t('labels.accountNumber') as string}
                     message={currentErrors?.accountNumber}

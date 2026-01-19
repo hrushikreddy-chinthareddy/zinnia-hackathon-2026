@@ -439,6 +439,7 @@ export const SidesheetNameCard = ({
                     <>
                         <div className="max-w-[250px]">
                             <Field
+                                errorId="fullName"
                                 aria-label={t('organizationName') as string}
                                 label={t('organizationName') as string}
                                 message={currentErrors?.fullName}
@@ -468,6 +469,7 @@ export const SidesheetNameCard = ({
                     <>
                         <div className="basis-1/2 max-w-[250px]">
                             <Field
+                                errorId="fullName"
                                 aria-label={t('trustName') as string}
                                 label={t('trustName') as string}
                                 message={currentErrors?.fullName}
@@ -517,6 +519,7 @@ export const SidesheetNameCard = ({
                                 </div>
                                 <div className="basis-1/2">
                                     <Field
+                                        errorId="firstName"
                                         aria-label={t('firstName') as string}
                                         label={t('firstName') as string}
                                         message={currentErrors?.firstName}
@@ -563,6 +566,7 @@ export const SidesheetNameCard = ({
                             <div className="flex gap-4">
                                 <div className="basis-1/2">
                                     <Field
+                                        errorId="lastName"
                                         aria-label={t('lastName') as string}
                                         label={t('lastName') as string}
                                         message={currentErrors?.lastName}

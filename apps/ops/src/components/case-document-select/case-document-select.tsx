@@ -223,6 +223,7 @@ const CaseDocumentSelect = ({
             className={`flex flex-col gap-2 ${
                 hasError ? 'case-document-error' : ''
             }`}
+            data-error-id="caseId"
             role="radiogroup"
             aria-invalid={hasError ? true : undefined}
             aria-describedby={hasError ? errorMessageId : undefined}
