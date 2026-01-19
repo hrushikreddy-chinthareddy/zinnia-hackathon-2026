@@ -15,13 +15,11 @@ import {
     commonPopoverClasses,
     commonTriggerClasses,
 } from '@deps/components/popover/popover.helpers';
-import {
-    checkCaseQualityAuditEligibility,
-    TransactionResponseStatus,
-} from '@deps/queries/api/bpm';
-
+import Tooltip from '@deps/components/tooltip/tooltip';
+import { TranslationFiles } from '@deps/config/translations';
 import CaseActionSideSheet from '@deps/containers/case-sub-page/caseActionsSideSheet';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import {
     useOptimizely,
     OptimizelyVariableKey,
@@ -29,12 +27,20 @@ import {
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import {
+    QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
+    QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
+} from '@deps/helpers/case-stat-helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useFreelookCancellation } from '@deps/hooks/useFreelookCancellation';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { Case, Statuses, QualityAuditStatus } from '@deps/models/case/case';
 import { CaseAction, ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import {
+    checkCaseQualityAuditEligibility,
+    TransactionResponseStatus,
+} from '@deps/queries/api/bpm';
 import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import {
     checkFullSurrenderWithdrawal,
@@ -68,14 +74,6 @@ import styles from './quick-actions-menu.module.css';
 import { buildCreateQualityAuditPayload } from '../../containers/case-sub-page/case-helpers';
 import { NavElementType } from '../nav-element/nav-element';
 import SideSheetRequestCorrection from '../side-sheet/side-sheet-request-correction/side-sheet-request-correction';
-
-import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
-import {
-    QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
-    QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
-} from '@deps/helpers/case-stat-helpers';
-import Tooltip from '@deps/components/tooltip/tooltip';
-import { TranslationFiles } from '@deps/config/translations';
 
 interface TranslateProps {
     t: TFunction;
