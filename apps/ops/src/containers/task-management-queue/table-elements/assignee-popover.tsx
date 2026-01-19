@@ -131,6 +131,7 @@ const AssigneePopover = (props: AssigneePopoverProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagementQueue',
     });
+    const { t: tAllFields } = useTranslation(TranslationFiles.COMMON);
 
     const handleSafeClose = useCallback(() => {
         handleSearch('');
@@ -405,7 +406,10 @@ const AssigneePopover = (props: AssigneePopoverProps) => {
                 >
                     <Content
                         contentClassName={styles.inlineContent}
-                        details={assignee}
+                        details={
+                            assignee ||
+                            (tAllFields('allFields.noAssignee') as string)
+                        }
                         variant={ContentVariant.ArticleReferences}
                     />
 

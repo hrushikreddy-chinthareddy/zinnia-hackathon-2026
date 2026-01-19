@@ -1,5 +1,3 @@
-import { TaskStatus } from '@deps/models/case/task-instance';
-
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
@@ -7,20 +5,20 @@ import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-f
 
 export const getQualityAuditSteps = ({
     taskType,
-    task,
     taskInfoLink,
     t,
     taskMetadata,
     isContinueButtonEnabled,
+    readOnly,
 }: GetStepsProps) => {
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => true,
         component: (
             <TaskFormStep
-                readonly={task.status === TaskStatus.Completed}
+                readonly={readOnly}
                 taskInfoLink={taskInfoLink}
-                isSubmit={task.status === TaskStatus.Completed ? false : true}
+                isSubmit={!readOnly}
                 taskMetadata={metadata}
                 key={`step_${index}`}
                 isContinueButtonEnabled={isContinueButtonEnabled}

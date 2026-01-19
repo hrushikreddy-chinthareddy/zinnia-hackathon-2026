@@ -51,6 +51,7 @@
     "allFields": {
         "account": "Acct",
         "accountValue": "Account value",
+        "noAssignee": "No Assignee",
         "accountValueByPolicyYear": "Account value by {{policyNomenclature}} year",
         "accountValues": "Account values",
         "accountValueTooltip": "This is the cash value amount held within the owner's life insurance policy. The account value accumulates over time as premiums are paid and interest is earned.",
@@ -5833,6 +5834,7 @@
             "closedLabel": "Closed on",
             "additionalDocuments": "Additional Documents",
             "noAssignee": "Only the assignee can start this task",
+            "noPermissionToViewTask": "You do not have access to view this task",
             "startTask": "Start task",
             "goToCase": "Go to case",
             "viewTask": "View task",
