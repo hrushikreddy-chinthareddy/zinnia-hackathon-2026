@@ -228,4 +228,5 @@ export type Signatures = {
 
 export enum TransactionSearchIdentifiers {
     PAYMENT_RECORD_ID = 'paymentRecordId',
+    ZL_CASE_ID = 'zlCaseId',
 }

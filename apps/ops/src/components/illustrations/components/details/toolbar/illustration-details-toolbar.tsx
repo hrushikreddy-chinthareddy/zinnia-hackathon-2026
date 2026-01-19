@@ -7,6 +7,9 @@ import {
     Button,
     BannerAlert,
     BannerVariant,
+    MenuContextual,
+    MenuContextualItem,
+    Icon,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useState } from 'react';
@@ -153,6 +156,13 @@ export default function IllustrationDetailsToolbar({
         handleSelectForApplication();
     };
 
+    // This function will be added to a button after design provided
+    const onPrintIllustrationSummary = () => {
+        document.body.classList.add('print-only');
+        window.print();
+        document.body.classList.remove('print-only');
+    };
+
     useEffect(() => {
         if (isError) {
             setIsPdfGenerationErrorVisible(true);
@@ -163,20 +173,37 @@ export default function IllustrationDetailsToolbar({
         }
     }, [isError]);
 
+    const pdfContextualMenuLabel = (
+        <ToolbarButton
+            icon={IconType.DOCUMENT_REPORT}
+            className={styles.linkButton}
+        >
+            Export PDF
+            <Icon type={IconType.CHEVRON} small />
+        </ToolbarButton>
+    );
+
+    const isDownloadIllustrationPDFAvailable =
+        product?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE &&
+        (!isLoading || isPdfReportAvailable);
+
     return (
         <>
             <div className={styles.toolbarContainer}>
-                {product?.productType === ProductTypes.INDEX_UNIVERSAL_LIFE && (
-                    <ToolbarButton
-                        disabled={isLoading || !isPdfReportAvailable}
-                        icon={IconType.DOCUMENT_REPORT}
-                        className={styles.linkButton}
-                        onClick={handleDownloadPdf}
-                    >
-                        {t('clientCase.illustrationDetails.viewPdf')}
-                    </ToolbarButton>
-                )}
-
+                <MenuContextual triggerLabel={pdfContextualMenuLabel}>
+                    {isDownloadIllustrationPDFAvailable && (
+                        <MenuContextualItem
+                            content="Illustration"
+                            onClick={handleDownloadPdf}
+                            className={styles.menuContextualItem}
+                        />
+                    )}
+                    <MenuContextualItem
+                        content="Summary"
+                        onClick={onPrintIllustrationSummary}
+                        className={styles.menuContextualItem}
+                    />
+                </MenuContextual>
                 <ToolbarButton
                     icon={IconType.DOCUMENT_DUPLICATE}
                     className={styles.linkButton}
@@ -184,7 +211,6 @@ export default function IllustrationDetailsToolbar({
                 >
                     {t('clientCase.illustrationDetails.duplicate')}
                 </ToolbarButton>
-
                 {status === IllustrationStatuses.ARCHIVED ? (
                     <ToolbarButton
                         disabled={isLoading}
@@ -204,7 +230,6 @@ export default function IllustrationDetailsToolbar({
                         </ToolbarButton>
                     </EditSidesheet>
                 ) : null}
-
                 <div
                     className="flex-1 justify-end flex gap-4"
                     style={{ '--loader-size': '24px' } as any}

@@ -31,6 +31,54 @@ import {
     isDataSectionOrField,
 } from '../data-node-helpers/predicates';
 import { defaultNotAvailableFields } from '../translations/default-not-available-fields';
+
+const filterAccountingEntryDataFields = (accountingEntry: DataNode) => {
+    if (!isDataSection(accountingEntry)) {
+        return [accountingEntry];
+    }
+    const entryFieldsToDisplay = [
+        'accountEntryType',
+        'accountNumber',
+        'accountPeriod',
+        'ledgerType',
+        'ledgerGroup',
+        'sourceSystem',
+        'state',
+        'currency',
+        'amount',
+        'fundId',
+        'distributionChannel',
+        'accountingMethod',
+        'transactionDate',
+        'unit',
+    ];
+
+    return accountingEntry?.children
+        ?.filter(isDataField || isDataSection)
+        ?.filter((child) => entryFieldsToDisplay.includes(child.label));
+};
+
+export const addAccountingEntriesGroup = (
+    data: DataNode[],
+    accountingEntries: DataNode[]
+): DataNode[] => {
+    if (!accountingEntries?.length) return data;
+
+    const cleanedAccountingEntries = accountingEntries.map(
+        filterAccountingEntryDataFields
+    );
+
+    const accountingEntriesSection: DataSection = {
+        type: FieldType.section,
+        label: 'accounting',
+        children: [
+            { type: FieldType.group, children: cleanedAccountingEntries },
+        ],
+    };
+
+    return [...data, accountingEntriesSection];
+};
+
 /**
  * Groups basics for policy
  *

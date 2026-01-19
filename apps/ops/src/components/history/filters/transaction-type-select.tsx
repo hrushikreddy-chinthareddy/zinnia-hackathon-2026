@@ -1,75 +1,50 @@
-import { FieldSize } from '@zinnia/bloom/components';
+import { Label, SelectFilter } from '@zinnia/bloom/components';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { FieldType } from '@deps/components/fields/field';
-import SelectSimple from '@deps/components/select/select';
-import { TranslationFiles } from '@deps/config/translations';
-import {
-    EventFilterKeys,
-    PeopleFilters,
-    PolicyFilters,
-    TransactionFilters,
-    useHistoryFiltersContext,
-} from '@deps/contexts/HistoryFiltersContext';
+import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
+import { TransactionType } from '@deps/types/transactionTypes';
 
-import { filterEventFilters, getFilterEnumKey } from './filter.helpers';
 import styles from './transaction-type-select.module.css';
 
 export const TransactionTypeSelect = () => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'policy.history.filter',
-    });
-    const options = {
-        ...TransactionFilters,
-        ...PeopleFilters,
-        ...PolicyFilters,
-    };
+    const { t } = useTranslation();
 
-    const typeOptions = Object.values(options)
-        .filter((option) => option !== 'all')
-        .map((type, index) => ({
+    const typeOptions = Object.values(TransactionType)
+        .map((type) => ({
             value: type,
-            label: <span id={`${type}-${index}`}>{t(`${type}`) || type}</span>,
-            displayText: t(`${type}`) || type,
-        }));
+            label: t(`enums.${type}`) || type,
+        }))
+        .sort((a, b) => a.label.localeCompare(b.label));
     const { setHistoryFilters } = useHistoryFiltersContext();
 
-    const [selections, setSelections] = useState<{ [key: string]: string }>({});
-    const updateSelection = (value: string, displayText: string) => {
-        const newSelections = { ...selections };
-        if (newSelections[value]) {
-            delete newSelections[value];
-        } else {
-            newSelections[value] = displayText;
-        }
-
-        setSelections(newSelections);
+    const [selections, setSelections] = useState<string[]>([]);
+    const updateSelections = (value: string[]) => {
+        setSelections(value);
         setHistoryFilters((prevState) => {
             return {
                 ...prevState,
-                eventFilter: filterEventFilters(
-                    prevState.eventFilter,
-                    getFilterEnumKey(value) as EventFilterKeys,
-                    value
-                ),
+                transactionTypes: value,
             };
         });
     };
 
     return (
-        <SelectSimple
+        <SelectFilter
+            id="transaction-type"
             className={styles.selectContainer}
-            label={t('byTransactionType') as string}
-            onChange={(value, displayText) => {
-                updateSelection(value, displayText);
-            }}
-            defaultValue={EventFilterKeys.All}
-            isMultiselect
+            label={
+                <Label labelFor="transaction-type">
+                    {t('allFields.byTransactionType')}
+                </Label>
+            }
+            onValueChange={updateSelections}
             options={typeOptions}
-            size={FieldSize.Small}
-            type={FieldType.BaseActive}
-            value={selections}
+            values={selections}
+            optionsProps={{
+                overscan: 25,
+            }}
+            placeHolder={`${t('allFields.filterTransactionTypes')}`}
         />
     );
 };

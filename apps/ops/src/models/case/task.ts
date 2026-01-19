@@ -330,5 +330,6 @@ export enum FilterKeys {
     carriers = 'carriers',
     queues = 'queues',
     statuses = 'statuses',
-    scheduledDate = 'scheduledDate',
+    scheduledDateStart = 'scheduledDateStart',
+    scheduledDateEnd = 'scheduledDateEnd',
 }

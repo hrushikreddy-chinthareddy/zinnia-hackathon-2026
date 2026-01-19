@@ -70,7 +70,6 @@ export const getTransactionsQuery = async ({
     planCode,
     sortField = 'EFFECTIVEDATE',
     sortOrder = 'DESC',
-    multiTransactionTypes,
 }: GetTransactionsProps) => {
     if (!policyNumber) {
         throw 'No policy number provided';
@@ -82,7 +81,7 @@ export const getTransactionsQuery = async ({
     const { eventFilter, yearFilter, statusFilter, datesFilter } =
         historyFilters;
 
-    const transactionTypes = getEvents(eventFilter, multiTransactionTypes);
+    const transactionTypes = getEvents(eventFilter);
 
     const results = await getPolicyTransactions({
         transactionTypes: transactionTypes,

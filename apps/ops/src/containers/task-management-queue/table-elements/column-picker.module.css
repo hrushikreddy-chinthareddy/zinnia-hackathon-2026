@@ -1,0 +1,104 @@
+.root {
+    position: relative;
+    display: inline-block;
+}
+
+/*  Trigger Button  */
+.triggerButton {
+    padding: 8px;
+    border-radius: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    background: #fff !important;
+    border: none !important;
+}
+
+.triggerButton:hover {
+    background: #f9fafb;
+}
+
+.triggerButton:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px #e5e7eb;
+}
+
+/*  Popover Panel  */
+.popover {
+    position: absolute;
+    right: 0;
+    z-index: 201;
+    width: 256px;
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 10px 30px rgb(0 0 0 / 0.08);
+}
+
+.popoverBelow {
+    top: 100%;
+    margin-top: 8px;
+}
+
+.popoverAbove {
+    bottom: 100%;
+    margin-bottom: 8px;
+}
+
+/*  Header Title  */
+.popoverTitle {
+    padding: 8px 12px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #374151;
+}
+
+/*  Options Container  */
+.options {
+    padding: 4px 0;
+    max-height: 180px;
+    overflow-y: auto;
+}
+
+/*  Option Row  */
+.optionButton {
+    width: 100%;
+    padding: 8px 12px;
+    text-align: left;
+    font-size: 0.875rem;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.optionButton:hover {
+    background: #f9fafb;
+}
+
+.optionLabel {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.iconPlaceholder {
+    width: 14px;
+}
+
+.checkedIcon {
+    color: #16a34a;
+}
+
+.popoverPortalWrapper {
+    position: fixed;
+    z-index: 9999;
+}
+
+.settingsIcon {
+    color: #00628b;
+}

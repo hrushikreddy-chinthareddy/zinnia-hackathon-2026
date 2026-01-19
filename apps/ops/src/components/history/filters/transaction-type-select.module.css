@@ -1,3 +1,4 @@
 .selectContainer {
-    max-width: 280px;
+    min-width: 240px;
+    max-width: 400px;
 }

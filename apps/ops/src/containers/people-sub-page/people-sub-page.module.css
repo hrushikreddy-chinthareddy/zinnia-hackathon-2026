@@ -1,0 +1,90 @@
+.sectionDivider {
+    height: 2px;
+    border: none;
+    background-color: rgba(237, 237, 237, 1);
+}
+
+.peoplePage {
+    display: flex;
+    flex-direction: column;
+    padding: var(--measure-dimension-padding-4xl, 32px);
+    align-items: flex-start;
+    gap: var(--measure-dimension-gap-2xl, 32px);
+    align-self: stretch;
+}
+
+@media (min-width: 1024px) {
+    /* Reference: var(--breakpoint-lg) */
+    .peoplePage {
+        flex-direction: row;
+    }
+}
+
+.filterPanel {
+    width: 100%;
+    gap: var(--measure-dimension-gap-md, 8px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+@media (min-width: 1024px) {
+    /* Reference: var(--breakpoint-lg) */
+    .filterPanel {
+        width: var(--people-filter-panel-width);
+        max-width: var(--people-filter-panel-width);
+        flex-shrink: 0;
+    }
+}
+
+.filterLabel {
+    color: rgba(33, 33, 33, 1);
+}
+
+.filterChips {
+    display: flex;
+    align-items: flex-start;
+    align-content: flex-start;
+    gap: var(--measure-dimension-gap-md, 8px);
+    align-self: stretch;
+    flex-wrap: wrap;
+}
+
+.contentColumn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--measure-dimension-gap-xl, 24px);
+    flex: 1 0 0;
+    width: 100%;
+}
+
+.toggleContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.peopleInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--measure-dimension-gap-md, 8px);
+    align-self: stretch;
+    width: 100%;
+}
+
+.actionBar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--measure-dimension-gap-2xl, 32px);
+    width: 100%;
+    padding: var(--measure-dimension-padding-2xl, 16px)
+        var(--measure-dimension-padding-4xl, 32px);
+    background-color: rgba(248, 248, 248, 1);
+}
+
+.fullWidth {
+    width: 100%;
+}
