@@ -3536,18 +3536,6 @@
             "scheduledTooltip": "{{followup}} intentos restantes hasta que comience el proceso de escheatment a menos que se establezca contacto.",
             "finalTooltip": "Último intento restante a menos que se establezca contacto.",
             "notificationRestarted": "Notificación reiniciada {{date}}"
-        },
-        "quickActions": {
-            "quickActions": "Acciones Rápidas",
-            "createQualityAudit": "Crear Auditoría de Calidad",
-            "createQualityAuditTooltip": "Iniciar una Auditoría de Calidad para este caso.",
-            "createQualityAuditTooltipDisabled": "No disponible: caso no elegible o permiso denegado.",
-            "caseIsNotEligible": "La transacción no es elegible para auditoría.",
-            "qualityAuditExisted": "El caso de Auditoría de Calidad ya existe."
-        },
-        "qualityAuditToastMessages": {
-            "qualityAuditSuccess": "Auditoría de Calidad creada.",
-            "qualityAuditError": "No se pudo crear la Auditoría de Calidad."
         }
     },
     "caseRenewal": {
@@ -7444,7 +7432,14 @@
         },
         "requestOperationReview": {
             "label": "Solicitud de revisión de operaciones"
-        }
+        },
+        "createQualityAudit": "Crear auditoría de calidad",
+        "createQualityAuditTooltip": "Iniciar una auditoría de calidad para este caso.",
+        "createQualityAuditTooltipDisabled": "No disponible: el caso no es elegible o no tiene permiso.",
+        "caseIsNotEligible": "La transacción no es elegible para auditoría.",
+        "qualityAuditExisted": "Ya existe una auditoría de calidad para este caso.",
+        "qualityAuditSuccess": "Auditoría de calidad creada.",
+        "qualityAuditError": "No se pudo crear la auditoría de calidad."
     },
     "historyEventCard": {
         "bankAccountTypes": {

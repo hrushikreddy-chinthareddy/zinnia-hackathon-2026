@@ -17,7 +17,7 @@ import { Case } from '@deps/models/case/case';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCaseDetailsSSR } from '@deps/queries/api/cases';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
-import { readUserTuplesPage } from '@deps/queries/api/server/fga/readTuples';
+import { readAndStoreUserRolesCookie } from '@deps/queries/api/server/fga/readTuples';
 import { CaseDetailsTabValues } from '@deps/types/constants';
 import { FgaRelation, UserTuplesData } from '@deps/types/fga';
 import {
@@ -83,10 +83,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
-            const tuplesQuery = `user=party:${user.partyId}&object=role:&pageSize=100`;
-            const userTuplesData: any = await readUserTuplesPage(
+            const userTuplesData: any = await readAndStoreUserRolesCookie(
                 context,
-                tuplesQuery,
                 loggingContext
             );
 
