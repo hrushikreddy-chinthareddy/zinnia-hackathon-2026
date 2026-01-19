@@ -139,7 +139,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
         };
 
         fetchRefData();
-    }, [action, t]);
+    }, [action, tCommon]);
 
     return (
         <div className="flex flex-col py-10 pl-10 pr-5 justify-between h-full">
