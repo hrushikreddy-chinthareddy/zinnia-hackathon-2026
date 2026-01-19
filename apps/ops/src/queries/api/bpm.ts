@@ -5,6 +5,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { CreateQualityAuditRequest } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import {
@@ -151,6 +152,9 @@ interface AxiosErrorResponse {
 export enum TransactionResponseStatus {
     Failure = 'failure',
     Success = 'success',
+}
+export interface CaseQualityAuditEligibilityResponse {
+    status: string | number;
 }
 
 export const checkEligibilityLoanRepaymentOneTime = async (
@@ -881,6 +885,40 @@ export const checkEligibilityFreelookCancellation = async (
             url: `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/eligibilitycheck`,
             function: 'checkEligibilityFreelookCancellation',
         });
+        return error?.data;
+    }
+};
+
+export const checkCaseQualityAuditEligibility = async (
+    query: CreateQualityAuditRequest
+): Promise<CaseQualityAuditEligibilityResponse> => {
+    const caseQualityAuditUrl = `${baseAppUrl}/api/process/workflow/v1/qualityaudit/eligibilitycheck`;
+
+    try {
+        browserLogInfo(
+            'CaseQualityAuditEligibility::Initiating eligibility check',
+            {
+                payload: query,
+                url: caseQualityAuditUrl,
+                function: 'checCaseQualityAuditEligibility',
+            }
+        );
+
+        const response = await client.post<
+            CreateQualityAuditRequest,
+            AxiosResponse
+        >(caseQualityAuditUrl, query);
+        return { status: response.status };
+    } catch (error: any) {
+        browserLogError(
+            'CaseQualityAuditEligibility::Eligibility check failed',
+            {
+                ...parseErrorInformation(error),
+                payload: query,
+                url: caseQualityAuditUrl,
+                function: 'checCaseQualityAuditEligibility',
+            }
+        );
         return error?.data;
     }
 };

@@ -7500,7 +7500,14 @@
         },
         "requestOperationReview": {
             "label": "Request Operations Review"
-        }
+        },
+        "createQualityAudit": "Create Quality Audit",
+        "createQualityAuditTooltip": "Initiate a Quality Audit for this case.",
+        "createQualityAuditTooltipDisabled": "Not available: case not eligible or permission denied.",
+        "caseIsNotEligible": "Transaction not eligible for auditing.",
+        "qualityAuditExisted": "Quality Audit case already exists.",
+        "qualityAuditSuccess": "Quality Audit created.",
+        "qualityAuditError": "Couldn’t create Quality Audit."
     },
     "historyEventCard": {
         "bankAccountTypes": {

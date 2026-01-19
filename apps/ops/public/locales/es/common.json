@@ -7433,7 +7433,14 @@
         },
         "requestOperationReview": {
             "label": "Solicitud de revisión de operaciones"
-        }
+        },
+        "createQualityAudit": "Crear auditoría de calidad",
+        "createQualityAuditTooltip": "Iniciar una auditoría de calidad para este caso.",
+        "createQualityAuditTooltipDisabled": "No disponible: el caso no es elegible o no tiene permiso.",
+        "caseIsNotEligible": "La transacción no es elegible para auditoría.",
+        "qualityAuditExisted": "Ya existe una auditoría de calidad para este caso.",
+        "qualityAuditSuccess": "Auditoría de calidad creada.",
+        "qualityAuditError": "No se pudo crear la auditoría de calidad."
     },
     "historyEventCard": {
         "bankAccountTypes": {
