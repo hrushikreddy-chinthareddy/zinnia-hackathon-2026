@@ -2,7 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 import { createContext, useContext, useMemo } from 'react';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { Case, LOADING_TIME_CONFIG, Processes } from '@deps/models/case/case';
+import {
+    Case,
+    LOADING_TIME_CONFIG,
+    Processes,
+    Statuses,
+} from '@deps/models/case/case';
 import { FinancialTransactionRecord } from '@deps/models/case/financial-transactions';
 import { searchPolicy } from '@deps/queries/api/policies';
 import {
@@ -10,6 +15,7 @@ import {
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
+import { UserTuplesData } from '@deps/types/fga';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { Policy } from '@zinnia/api-types/types/sor';
 
@@ -19,6 +25,8 @@ export interface CaseActivityContextProps {
     policy: PolicyDetails | null;
     loadingPolicy: boolean;
     isNewBusinessCase: boolean;
+    caseDetails: Case;
+    userTuplesData: UserTuplesData;
     financialTransaction?: FinancialTransactionRecord;
     financialTransactionLoading: boolean;
     isFinancialTransaction: boolean;
@@ -28,6 +36,35 @@ const defaultValue: CaseActivityContextProps = {
     policy: null,
     loadingPolicy: true,
     isNewBusinessCase: false,
+    caseDetails: {
+        id: '',
+        policyNumber: '',
+        carrier: '',
+        additionalData: {},
+        caseStatus: Statuses.InProgress,
+        createdAt: '',
+        documents: [],
+        events: [],
+        exceptions: [],
+        identifiers: [],
+        mappedDocuments: [],
+        mappedExceptions: [],
+        mappedNotes: null,
+        mappedTasks: [],
+        notes: [],
+        parties: [],
+        process: Processes.NewBusiness,
+        productName: '',
+        stages: [],
+        tasks: [],
+        templateId: '',
+        updatedAt: '',
+    },
+    userTuplesData: {
+        tuples: [],
+        continuation_token: '',
+        continuationToken: '',
+    },
     financialTransaction: undefined,
     financialTransactionLoading: true,
     isFinancialTransaction: false,
@@ -39,6 +76,7 @@ export const CaseActivityContext =
 interface CaseActivityProviderProps {
     children: React.ReactNode;
     caseDetails: Case;
+    userTuplesData: UserTuplesData;
 }
 
 export const useCaseActivityContext = () => {
@@ -113,6 +151,7 @@ const useFinancialTransaction = (
 export const CaseActivityProvider = ({
     children,
     caseDetails,
+    userTuplesData,
 }: CaseActivityProviderProps) => {
     const isNewBusinessCase = useMemo(() => {
         return caseDetails.process === Processes.NewBusiness;
@@ -130,6 +169,8 @@ export const CaseActivityProvider = ({
                 policy: data ? new PolicyDetails(data) : null,
                 loadingPolicy: isLoading,
                 isNewBusinessCase,
+                caseDetails,
+                userTuplesData,
                 financialTransaction,
                 financialTransactionLoading,
                 isFinancialTransaction,

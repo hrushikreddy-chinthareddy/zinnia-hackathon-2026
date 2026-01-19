@@ -11,7 +11,6 @@ import {
 import { DynamicKey } from '@deps/containers/task-container/components/steps/claims/claims.type';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { DataFormattingTypes } from '@deps/models/case/task';
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { AddressType } from '@zinnia/api-types/types/sor';
 
 import { formatValueByDataType } from '../card-templates/card-template';
@@ -261,7 +260,7 @@ export function ChangeAddressTemplate({
         );
     };
 
-    const isTaskCompleted = customData.task?.status === TaskStatus.Completed;
+    const isTaskCompleted = formContext.isReadOnlyOverride;
     return (
         <>
             <div className="flex gap-2">

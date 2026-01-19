@@ -186,8 +186,12 @@ const getStepStatusIconTooltip = (
 
 const Step = ({
     step,
+    isAccordionOpen = false,
     ...rest
-}: { step: TransformedStep } & React.HTMLAttributes<HTMLLIElement>) => {
+}: {
+    step: TransformedStep;
+    isAccordionOpen?: boolean;
+} & React.HTMLAttributes<HTMLLIElement>) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
     const hasSidesheet = doesStepHaveSidesheet(step);
@@ -300,7 +304,10 @@ const Step = ({
                         exceptions={step.exceptions}
                         groupedExceptions={step.exceptionsGroupedByTask}
                     />
-                    <Tasks tasks={step.tasks} />
+                    <Tasks
+                        tasks={step.tasks}
+                        isAccordionOpen={isAccordionOpen}
+                    />
                 </div>
             </div>
         </li>
@@ -310,15 +317,21 @@ const Step = ({
 export default function Steps({
     steps,
     stepFilter = () => true,
+    isAccordionOpen = false,
     ...rest
 }: {
     steps: TransformedStep[];
     stepFilter?: (step: TransformedStep) => boolean;
+    isAccordionOpen?: boolean;
 } & React.HTMLAttributes<HTMLUListElement>) {
     return (
         <ul {...rest}>
             {steps.filter(stepFilter).map((step, index) => (
-                <Step key={index} step={step} />
+                <Step
+                    key={index}
+                    step={step}
+                    isAccordionOpen={isAccordionOpen}
+                />
             ))}
         </ul>
     );

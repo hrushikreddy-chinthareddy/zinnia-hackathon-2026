@@ -1,4 +1,3 @@
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { GetStepsProps, StepTitle } from './types';
@@ -6,18 +5,16 @@ import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
-export const getBeneChangeSteps = (props: GetStepsProps) => {
-    const {
-        taskInfoLink,
-        task,
-        taskType,
-        t,
-        taskMetadata,
-        isContinueButtonEnabled,
-        featureFlags,
-    } = props;
-
-    const readOnly = task.status === TaskStatus.Completed;
+export const getBeneChangeSteps = ({
+    taskInfoLink,
+    task,
+    taskType,
+    t,
+    taskMetadata,
+    isContinueButtonEnabled,
+    readOnly,
+    featureFlags,
+}: GetStepsProps) => {
     const isIssueResolved = task.data.issueResolved;
     const isBeneChangePaperFormSummaryEnabled =
         featureFlags[

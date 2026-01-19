@@ -1,6 +1,5 @@
 import { TaskType } from '@deps/models/case/task';
 import { MatchingCase } from '@deps/models/case/task/doc-matching-payment';
-import { TaskStatus } from '@deps/models/case/task-instance';
 
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -14,6 +13,7 @@ export const getMatchDocumentPaymentReviewSteps = ({
     isContinueButtonEnabled,
     taskMetadata,
     task,
+    readOnly,
 }: GetStepsProps) => {
     let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
 
@@ -31,15 +31,9 @@ export const getMatchDocumentPaymentReviewSteps = ({
         isVisible: () => index === 0 || !isSubmit,
         component: (
             <TaskFormStep
-                readonly={task.status === TaskStatus.Completed}
+                readonly={readOnly}
                 taskInfoLink={taskInfoLink}
-                isSubmit={
-                    task.status === TaskStatus.Completed
-                        ? false
-                        : index === 1
-                        ? true
-                        : isSubmit
-                }
+                isSubmit={readOnly ? false : index === 1 ? true : isSubmit}
                 taskMetadata={metadata}
                 key={`step_${index}`}
                 isContinueButtonEnabled={isContinueButtonEnabled}

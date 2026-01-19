@@ -435,6 +435,7 @@
         "nextMonthiversaryDate": "Próxima fecha de mesiversario",
         "nextPayment": "Próximo pago",
         "nextProgramDate": "Fecha del próximo programa",
+        "noAssignee": "Sin cesionario",
         "noContactNumbersSaved": "No hay números de contacto guardados.",
         "noAddressSaved": "No hay direcciones guardadas.",
         "noBankingDetailsSaved": "No se guardan datos bancarios.",
@@ -596,6 +597,7 @@
         "selectCorrectionReason": "Seleccione el motivo de la corrección",
         "selectCorrectionType": "Seleccione el tipo de corrección",
         "selectDateInRange": "Seleccione una fecha dentro del rango:",
+        "selectDetails": "Seleccionar detalles",
         "selected": "Seleccionado",
         "selectEmailsOnFile": "Seleccionar correos electrónicos archivados",
         "selectFormToContinue": "Seleccione un formulario para continuar.",
@@ -5804,6 +5806,7 @@
             "closedLabel": "Cerrado el",
             "additionalDocuments": "Documentos adicionales",
             "noAssignee": "Solo el asignado puede comenzar esta tarea",
+            "noPermissionToViewTask": "No tienes permisos para ver esta tarea",
             "startTask": "Comenzar tarea",
             "goToCase": "Ir al caso",
             "claimTask": "Reclamar tarea",
@@ -7433,7 +7436,14 @@
         },
         "requestOperationReview": {
             "label": "Solicitud de revisión de operaciones"
-        }
+        },
+        "createQualityAudit": "Crear auditoría de calidad",
+        "createQualityAuditTooltip": "Iniciar una auditoría de calidad para este caso.",
+        "createQualityAuditTooltipDisabled": "No disponible: el caso no es elegible o no tiene permiso.",
+        "caseIsNotEligible": "La transacción no es elegible para auditoría.",
+        "qualityAuditExisted": "Ya existe una auditoría de calidad para este caso.",
+        "qualityAuditSuccess": "Auditoría de calidad creada.",
+        "qualityAuditError": "No se pudo crear la auditoría de calidad."
     },
     "historyEventCard": {
         "bankAccountTypes": {

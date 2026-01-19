@@ -3,7 +3,10 @@ import { createContext } from 'react';
 import { FormSurrenderingSignature } from '@deps/components/ceding-company-signature/ceding-company-signature';
 import { FormBeneInfo } from '@deps/components/otp-withdrawal-form/beneficiary-information/beneficiary-info';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
-import { BankingDetails } from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
+import {
+    BankingDetails,
+    IFormDisbursement,
+} from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
 import { FormSubtype } from '@deps/containers/otp/withdrawal-forms/flic-withdrawal-form.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { TaskStatus } from '@deps/models/case/task-instance';
@@ -41,7 +44,7 @@ export type WithdrawalTaskStatus = CaseStatus | TaskStatus;
 export interface OtpWithdrawalFormState {
     formSubtype?: FormSubtype;
     formData: FormData;
-    formDisbursement: FormDisbursement;
+    formDisbursement: IFormDisbursement | FormDisbursement;
     formDistribution: FormDistribution;
     formErrors: FormValidationErrors;
     formWarnings: FormValidationErrors;
@@ -142,7 +145,7 @@ const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 
 export const defaultFormDataContext = {
     formData: {} as FormData,
-    formDisbursement: {} as FormDisbursement,
+    formDisbursement: {} as FormDisbursement | IFormDisbursement,
     formDistribution: {} as FormDistribution,
     formErrors: {} as FormValidationErrors,
     formFullSurrenderAck: {} as FormFullSurrenderAck,

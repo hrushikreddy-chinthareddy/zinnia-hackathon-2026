@@ -31,6 +31,7 @@ import { DocumentData, PolicyDocument } from '@deps/models/case/document';
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { TaskSource, OwnerInformation } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { FormDisbursement } from '@deps/models/case/withdrawal/case';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
 import { updateTask } from '@deps/queries/api/v2/task';
 import {
@@ -157,7 +158,7 @@ function FormEntryStep({
         } = formState;
         const errors = formValidator({
             formData,
-            formDisbursement,
+            formDisbursement: formDisbursement as FormDisbursement,
             formDistribution,
             formFullSurrenderAck,
             formIrsData,

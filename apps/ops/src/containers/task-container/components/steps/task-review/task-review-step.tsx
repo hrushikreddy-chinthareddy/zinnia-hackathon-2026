@@ -21,12 +21,15 @@ type TaskReviewStepProps = {
     taskInfoLink: string;
     taskType: TaskType;
     clientCode: string;
+    readOnly: boolean;
 };
 
 export const TaskReviewStep = ({
     caseId,
     clientCode,
     taskType,
+    readOnly,
+    taskInfoLink,
 }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `${convertToCamelCase(taskType)}.taskReview`,
@@ -87,18 +90,21 @@ export const TaskReviewStep = ({
             subtitle={t('subTitle') as string}
             footerContent={
                 <TransactionNavigationButtons
-                    readonly={task?.status === TaskStatus.Completed}
+                    readonly={readOnly}
+                    isSubmit={!readOnly}
                     className="mt-4"
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink="/create-case"
+                    leaveTransactionLink={taskInfoLink}
                     cancelLabel={t('cancel') as string}
+                    disableContinue={!readOnly}
                 />
             }
         >
             <div className="flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
                     <TaskReview
+                        readOnly={readOnly}
                         caseId={caseId}
                         taskType={taskType}
                         clientCode={clientCode}

@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
+import { v4 as uuidv4 } from 'uuid';
 
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { CaseActivityContextProps } from '@deps/contexts/CaseActivityContext';
@@ -13,6 +14,7 @@ import {
     Statuses,
 } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
+import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { CaseTimePredictOutput } from '@zinnia/api-types/types/analytics';
 
 import { CaseSideNavProps } from './CaseSideNav';
@@ -329,4 +331,28 @@ export const getEstimatedCompletionAt = (
     const estimatedTime = createdTime + caseTimePrediction.secondsIGO * 1000;
 
     return new Date(estimatedTime).toISOString();
+};
+
+export const buildCreateQualityAuditPayload = (caseDetails: Case) => {
+    const auditRequestId = uuidv4();
+    const {
+        id: caseId,
+        process,
+        processSubType,
+        carrier,
+        correlationId,
+        updatedAt,
+        policyNumber,
+    } = caseDetails;
+    return {
+        parentCaseId: caseId,
+        processType: process,
+        processSubType: processSubType || '',
+        clientCode: carrier,
+        source: 'zinnia-live',
+        correlationId: correlationId,
+        processEndDate: dayjs(updatedAt).format(EDS_DATE_DISPLAY_FORMAT),
+        auditRequestId: auditRequestId,
+        policyNumber,
+    };
 };
