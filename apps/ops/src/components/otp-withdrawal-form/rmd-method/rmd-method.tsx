@@ -55,6 +55,9 @@ export const DEFAULT_RMD = {
     rmdPrograms: [],
     taxId: { text: null },
     rmdMethod: null,
+    rmdYear: null,
+    priorYearMrdBasisValue: null,
+    calculatedAmount: null,
 };
 
 export interface RMDMethodId extends RMDProgram {
@@ -272,8 +275,11 @@ export default function RMDMethod({
                 disableAllPrograms={true}
                 isLC={isLC}
             />
-            {rmdMethod === RMDType.CalculateRMD && !isFormStateReadOnly && (
-                <RMDCalculator />
+            {rmdMethod === RMDType.CalculateRMD && (
+                <RMDCalculator
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    rmdMethod={rmdMethod}
+                />
             )}
             {!isQCD && (
                 <div className="p-2">
