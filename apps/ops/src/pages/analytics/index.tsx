@@ -145,6 +145,20 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
+            if (
+                !(
+                    resolvedUrl.includes(AnalyticsRouteValues.usage) ||
+                    resolvedUrl.includes(AnalyticsRouteValues.cases)
+                )
+            ) {
+                return {
+                    redirect: {
+                        destination: `/analytics/${AnalyticsRouteValues.cases}`,
+                        permanent: false,
+                    },
+                };
+            }
+
             const doesUserHavePagePermission = await checkTuplePage(
                 context,
                 FgaRelation.UiAccess,
@@ -173,8 +187,20 @@ export const getServerSideProps = withPageAuthAndLogging(
             );
 
             const usageTabEnabled =
-                doesUserHaveUsagePermission ||
+                doesUserHaveUsagePermission &&
                 featureFlagDecisions[FEATURE_FLAGS.USAGE_STATS_DASHBOARD];
+
+            if (
+                !usageTabEnabled &&
+                resolvedUrl.includes(AnalyticsRouteValues.usage)
+            ) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
 
             const translations = await serverSideTranslations(
                 locale,
@@ -198,20 +224,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                 UserPermission.AllowReadCaseManagement,
                 loggingContext
             );
-
-            if (
-                !(
-                    resolvedUrl.includes('usage') ||
-                    resolvedUrl.includes('cases')
-                )
-            ) {
-                return {
-                    redirect: {
-                        destination: '/analytics/cases',
-                        permanent: false,
-                    },
-                };
-            }
 
             return {
                 props: {
