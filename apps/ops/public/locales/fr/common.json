@@ -9450,5 +9450,14 @@
             "cta": "Aller à l’Audit de Qualité",
             "submitTask": "Soumettre"
         }
+    },
+    "ownerchangeDataEntry": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "La tâche : Entrée de données de changement de propriétaire a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

@@ -9481,5 +9481,14 @@
             "cta": "Ir al caso",
             "submitTask": "Enviar"
         }
+    },
+    "ownerchangeDataEntry": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Se envió la entrada de datos de cambio de propietario.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
     }
 }

@@ -9563,5 +9563,14 @@
             "cta": "Go to case",
             "submitTask": "Submit"
         }
+    },
+    "ownerchangeDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Owner Change Data Entry was submitted.",
+            "cta": "Go to case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }
