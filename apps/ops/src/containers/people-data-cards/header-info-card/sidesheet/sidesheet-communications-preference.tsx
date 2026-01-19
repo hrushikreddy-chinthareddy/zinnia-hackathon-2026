@@ -101,13 +101,12 @@ export const SidesheetCommunicationsPreference = ({
         CaseDocumentOption[]
     >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
-    const [submitAttempt, setSubmitAttempt] = useState(0);
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
     >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
 
-    const formRef = useFocusOnError(currentErrors, submitAttempt);
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
     const [selectedOption, setSelectedOption] = useState<
         CommunicationPreferenceOption | undefined
     >({
@@ -175,7 +174,7 @@ export const SidesheetCommunicationsPreference = ({
         });
         if (Object.keys(errors).length > 0) {
             setCurrentErrors(errors);
-            setSubmitAttempt((prev) => prev + 1);
+            triggerErrorFocus();
             return;
         }
 
@@ -390,7 +389,7 @@ export const SidesheetCommunicationsPreference = ({
         default:
             return (
                 <div
-                    ref={formRef}
+                    ref={errorRef}
                     role="group"
                     id="comm-pref-form"
                     className="flex flex-col gap-8 p-8"

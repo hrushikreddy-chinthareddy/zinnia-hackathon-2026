@@ -141,11 +141,10 @@ export const SidesheetNameCard = ({
     ] = useState<string>('');
 
     const [currentErrors, setCurrentErrors] = useState<Errors>();
-    const [submitAttempt, setSubmitAttempt] = useState(0);
 
     const [newCaseId, setNewCaseId] = useState<string | undefined>(undefined);
 
-    const formRef = useFocusOnError(currentErrors, submitAttempt);
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
     >([]);
@@ -371,7 +370,7 @@ export const SidesheetNameCard = ({
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
             setCurrentErrors(errors);
-            setSubmitAttempt((prev) => prev + 1);
+            triggerErrorFocus();
             return;
         }
 
@@ -651,7 +650,7 @@ export const SidesheetNameCard = ({
         default:
             return (
                 <div
-                    ref={formRef}
+                    ref={errorRef}
                     role="group"
                     id="comm-pref-form"
                     className="flex flex-col gap-8 p-8"

@@ -142,14 +142,13 @@ const SideSheetAddress = ({
         CaseDocumentOption[]
     >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
-    const [submitAttempt, setSubmitAttempt] = useState(0);
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
     >([]);
     const [viewState, setViewState] = useState<ViewState>(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
 
-    const formRef = useFocusOnError(currentErrors, submitAttempt);
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
 
     const { addressType } = address;
     const { caseId } = body;
@@ -242,7 +241,7 @@ const SideSheetAddress = ({
         const errors = getFormErrors({ address, caseId, isDelete, t });
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
-            setSubmitAttempt((prev) => prev + 1);
+            triggerErrorFocus();
             return;
         }
 
@@ -367,7 +366,7 @@ const SideSheetAddress = ({
     }
 
     return (
-        <div ref={formRef} className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={caseId}

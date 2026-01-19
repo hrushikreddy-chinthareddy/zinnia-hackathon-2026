@@ -126,7 +126,6 @@ const SideSheetBank = ({
         CaseDocumentOption[]
     >([]);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
-    const [submitAttempt, setSubmitAttempt] = useState(0);
 
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
@@ -135,7 +134,7 @@ const SideSheetBank = ({
     const [newCaseId, setNewCaseId] = useState<string>();
     const purposeOptions = getPurposeOptions({ t: defaultT });
 
-    const formRef = useFocusOnError(currentErrors, submitAttempt);
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -207,7 +206,7 @@ const SideSheetBank = ({
         const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
-            setSubmitAttempt((prev) => prev + 1);
+            triggerErrorFocus();
             return;
         }
         let response;
@@ -272,7 +271,7 @@ const SideSheetBank = ({
         const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
-            setSubmitAttempt((prev) => prev + 1);
+            triggerErrorFocus();
             return;
         }
 
@@ -384,7 +383,7 @@ const SideSheetBank = ({
     }
 
     return (
-        <div ref={formRef} className="flex flex-col p-8">
+        <div ref={errorRef} className="flex flex-col p-8">
             <div className="flex flex-col gap-4">
                 <CaseDocumentSelect
                     caseId={caseId}

@@ -133,7 +133,6 @@ export const SideSheetPhone = ({
     >([]);
     const [country, setCountry] = useState('US' as keyof typeof countries);
     const [currentErrors, setCurrentErrors] = useState<Errors>();
-    const [submitAttempt, setSubmitAttempt] = useState(0);
     const [phone, setPhone] = useState<Phone>(updatePhone ?? INITIAL_PHONE);
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
@@ -141,7 +140,7 @@ export const SideSheetPhone = ({
     const [viewState, setViewState] = useState(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
 
-    const formRef = useFocusOnError(currentErrors, submitAttempt);
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -211,7 +210,7 @@ export const SideSheetPhone = ({
         const errors = getFormErrors({ caseId, isDelete, phone, t: defaultT });
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
-            setSubmitAttempt((prev) => prev + 1);
+            triggerErrorFocus();
             return;
         }
 
@@ -336,7 +335,7 @@ export const SideSheetPhone = ({
     }
 
     return (
-        <div ref={formRef} className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={caseId}
