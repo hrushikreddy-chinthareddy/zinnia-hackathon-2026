@@ -251,7 +251,7 @@ const CaseDocumentSelect = ({
                         caseDocumentOption={caseDocumentOption}
                         key={caseDocumentOption.value}
                         isSelected={caseId === caseDocumentOption.value}
-                        isFirstOption={index === 0}
+                        index={index}
                         hasError={hasError}
                         onChange={(value: string) => {
                             setCurrentErrors((prevState) => {

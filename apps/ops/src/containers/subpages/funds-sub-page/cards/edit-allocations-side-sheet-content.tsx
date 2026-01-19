@@ -416,6 +416,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
                         .map((option) => (
                             <CardCaseDocument
                                 caseDocumentOption={option}
+                                index={0}
                                 isSelected={
                                     selectedCaseId ===
                                     PROCESS_WITHOUT_CASE_DOCUMENT

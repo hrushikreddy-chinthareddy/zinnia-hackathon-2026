@@ -14,7 +14,7 @@ import Typography, {
 export interface CardCaseDocumentProps {
     caseDocumentOption: CaseDocumentOption;
     isSelected: boolean;
-    isFirstOption?: boolean;
+    index: number;
     hasError?: boolean;
     onChange: (value: string) => void;
 }
@@ -22,7 +22,7 @@ export interface CardCaseDocumentProps {
 const CardCaseDocument = ({
     caseDocumentOption,
     isSelected,
-    isFirstOption = false,
+    index,
     hasError = false,
     onChange,
 }: CardCaseDocumentProps) => {
@@ -35,7 +35,7 @@ const CardCaseDocument = ({
     const isCaseDocument = value !== PROCESS_WITHOUT_CASE_DOCUMENT;
 
     // Mark first option as focusable for error focus
-    const isErrorFocusTarget = isFirstOption && hasError;
+    const isErrorFocusTarget = index === 0 && hasError;
 
     // this removes focus state on mouse click, but allows it on arrow key navigation
     const handleClick = (e: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
