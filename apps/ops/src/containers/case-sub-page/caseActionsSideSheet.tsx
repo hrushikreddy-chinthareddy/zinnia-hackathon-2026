@@ -26,9 +26,15 @@ interface Props {
     action: CaseAction;
 }
 
-const REASON_TYPE_BY_ACTION: Record<CaseAction, string> = {
-    [CaseAction.Prioritize]: 'CASE_ESCALATION_REASON',
-    [CaseAction.Deprioritize]: 'CASE_DEESCALATION_REASON',
+enum ProcessRefDataKey {
+    EscalationReason = 'CASE_ESCALATION_REASON',
+    DeescalationReason = 'CASE_DEESCALATION_REASON',
+    EscalationSource = 'CASE_ESCALATION_SOURCE',
+}
+
+const REASON_TYPE_BY_ACTION: Record<CaseAction, ProcessRefDataKey> = {
+    [CaseAction.Prioritize]: ProcessRefDataKey.EscalationReason,
+    [CaseAction.Deprioritize]: ProcessRefDataKey.DeescalationReason,
 };
 
 function CaseActionSideSheet({ caseId, action }: Props) {
@@ -53,19 +59,17 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     const sideSheet = useSideSheetContext();
 
     const validate = () => {
-        const errors = {
-            reason: reason
-                ? undefined
-                : tCommon('prioritizationReasonRequired'),
-            source: source
-                ? undefined
-                : tCommon('prioritizationSourceRequired'),
-        };
+        const reasonError = reason
+            ? undefined
+            : tCommon('prioritizationReasonRequired');
+        const sourceError = source
+            ? undefined
+            : tCommon('prioritizationSourceRequired');
 
-        setReasonError(errors.reason as string | undefined);
-        setSourceError(errors.source as string | undefined);
+        setReasonError(reasonError);
+        setSourceError(sourceError);
 
-        return !errors.reason && !errors.source;
+        return !reasonError && !sourceError;
     };
 
     const handleSubmit = async () => {
@@ -114,7 +118,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
 
             const [reasonData, sourceData] = await Promise.all([
                 getProcessReferenceData(reasonType),
-                getProcessReferenceData('CASE_ESCALATION_SOURCE'),
+                getProcessReferenceData(ProcessRefDataKey.EscalationSource),
             ]);
 
             if (!reasonData || !sourceData) {
