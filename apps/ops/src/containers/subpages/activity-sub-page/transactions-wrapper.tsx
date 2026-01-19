@@ -26,12 +26,12 @@ import {
     useTransactions,
 } from '@deps/hooks/useTransactions';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
-import { Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
+import { TransactionSummary } from '@deps/types/transactions';
+import { TransactionStatus } from '@zinnia/api-types/types/sor';
 
 import styles from './transaction-wrapper.module.css';
 import { TransactionsTable } from './transactions-table';
 
-const multiTransactionTypes = true;
 export const TransactionsWrapper = () => {
     const { t } = useTranslation();
     const { policy } = useContext(PolicyData);
@@ -39,7 +39,7 @@ export const TransactionsWrapper = () => {
     const { statusFilter = TransactionStatus.COMPLETED } = historyFilters;
     const [offset, setOffset] = useState(0);
     const limit = 25;
-    const previousStatus = useRef(statusFilter);
+    const previousHistory = useRef(historyFilters);
     const selectedDateRange = {
         from:
             historyFilters?.datesFilter?.from.format(
@@ -49,11 +49,16 @@ export const TransactionsWrapper = () => {
         to:
             historyFilters?.datesFilter?.to.format(
                 DEFAULT_DATE_DISPLAY_FORMAT
-            ) ?? dayjs().format(DEFAULT_DATE_DISPLAY_FORMAT),
+            ) ??
+            dayjs()
+                .add(1, 'month')
+                .endOf('month')
+                .format(DEFAULT_DATE_DISPLAY_FORMAT),
     };
     const {
         data: filteredTransactions = initialFilterTransactions,
         isLoading,
+        refetch,
     } = useTransactions(
         policy,
         {
@@ -63,7 +68,7 @@ export const TransactionsWrapper = () => {
                 to: dayjs(selectedDateRange.to).utc(),
             },
         },
-        multiTransactionTypes
+        historyFilters?.transactionTypes
     );
 
     const goToPage = useCallback(
@@ -74,10 +79,10 @@ export const TransactionsWrapper = () => {
     );
 
     useEffect(() => {
-        if (previousStatus.current !== statusFilter) {
+        if (previousHistory.current !== historyFilters) {
             goToPage(1);
         }
-    }, [previousStatus, statusFilter, goToPage]);
+    }, [previousHistory, historyFilters, goToPage]);
 
     const liveResultsMessage = useMemo(() => {
         if (filteredTransactions?.length) {
@@ -94,18 +99,22 @@ export const TransactionsWrapper = () => {
                 }`,
             });
         } else {
-            return t('policy.history.noTransactionsTitle', {
+            return t('allFields.noTransactionsTitle', {
                 status: statusFilter.toLocaleLowerCase(),
             });
         }
     }, [filteredTransactions, limit, t, statusFilter]);
 
-    const [selectedTransaction, setSelectedTransaction] = useState<Transaction>(
-        {}
-    );
+    const [selectedTransaction, setSelectedTransaction] =
+        useState<TransactionSummary>({});
 
     const [isSideSheetOpen, setIsSideSheetOpen] = useState(false);
     const prevActiveElement = useRef<HTMLElement | null>(null);
+
+    const onTransactionSubmit = useCallback(() => {
+        refetch();
+        setIsSideSheetOpen(false);
+    }, [refetch, setIsSideSheetOpen]);
 
     useEffect(() => {
         // Restore focus to row on sidesheet close
@@ -114,7 +123,7 @@ export const TransactionsWrapper = () => {
         }
     }, [isSideSheetOpen]);
 
-    const handleRowClick = (transaction: Transaction) => {
+    const handleRowClick = (transaction: TransactionSummary) => {
         if (transaction) {
             setSelectedTransaction(transaction);
             prevActiveElement.current = document.activeElement as HTMLElement;
@@ -140,6 +149,7 @@ export const TransactionsWrapper = () => {
                         }))
                     }
                     timerange={selectedDateRange}
+                    disableFutureDates={false}
                 />
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">
@@ -198,15 +208,17 @@ export const TransactionsWrapper = () => {
                         </div>
                     </TransactionStatusTabGroup>
                     <FindAllKeyValuesTransactionSidesheet
-                        transaction={selectedTransaction}
+                        policyNumber={policy?.policyNumber}
+                        planCode={policy?.product?.planCode}
+                        transactionId={selectedTransaction.transactionId}
+                        transactionType={selectedTransaction.transactionType}
                         open={isSideSheetOpen}
                         onOpenChange={setIsSideSheetOpen}
+                        onTransactionSubmit={onTransactionSubmit}
                     />
                 </>
             ) : (
-                <EventsLoader
-                    message={t('policy.history.loadingTransactions')}
-                />
+                <EventsLoader message={t('allFields.loadingTransactions')} />
             )}
         </div>
     );

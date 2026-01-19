@@ -17,8 +17,8 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { checkEligibilityFundAllocation } from '@deps/queries/api/fund-allocation';
 import { ReactComponent as SettingsIcon } from '@deps/styles/elements/icons/icons_outlined/settings.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import FundsTable from './funds-table';
 import { FundViewModel } from '../types';
@@ -31,6 +31,10 @@ interface FundsCardProps {
     titleTooltip?: string;
     policy: PolicyDetails;
     notElectedfunds?: FundViewModel[];
+    /**
+     * Optional accessible caption passed through to the underlying table.
+     */
+    caption?: string;
 }
 
 const getAllocationColors = (funds?: FundViewModel[]): AllocationColor[] => {
@@ -57,6 +61,7 @@ const FundsCard = ({
     titleTooltip,
     policy,
     notElectedfunds,
+    caption,
 }: FundsCardProps) => {
     const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
@@ -160,7 +165,12 @@ const FundsCard = ({
                     <AllocationColorBar colors={getAllocationColors(funds)} />
                 </div>
             )}
-            <FundsTable funds={funds} loading={loading} policy={policy} />
+            <FundsTable
+                funds={funds}
+                loading={loading}
+                policy={policy}
+                caption={caption}
+            />
         </div>
     );
 };

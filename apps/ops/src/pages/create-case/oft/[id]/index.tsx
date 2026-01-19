@@ -274,7 +274,6 @@ export default function OftCase({
             <DiaryNotesProvider
                 caseDetails={caseDetailsData}
                 planCode={planCode}
-                isLC={isLC}
             >
                 <OtpLayout
                     contractNumber={document.contract}
@@ -560,6 +559,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         user,
                         parties,
                         isLC,
+                        planCode,
                         nigoExceptions,
                     },
                 };

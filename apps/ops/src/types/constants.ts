@@ -1,5 +1,5 @@
-export const DEFAULT_ERROR_STRING = '--';
-export const SPLITTER = '|||';
+import { TabKeys } from '@deps/containers/people-data-cards/activity-card/activity-table/party-details-table';
+
 export enum SCREEN_BREAKPOINTS {
     xs = 320,
     sm = 500,
@@ -47,6 +47,13 @@ export const PolicyActivityTabValues: { [key: string]: string } = {
     'call-logs': 'call-logs',
 };
 
+export const AnalyticsRouteValues: { [key: string]: string } = {
+    cases: 'cases',
+    policies: 'policies',
+    illustrations: 'illustrations',
+    usage: 'usage',
+};
+
 // DEPU-2749 https://zinnia.atlassian.net/browse/DEPU-2749
 export const HIDE_ANNUITIES_TOOLTIPS_DEPU_2749 = true;
 export const NODE_ENV_PRODUCTION = 'production';
@@ -68,6 +75,14 @@ export const CALL_LOGS_TAB_QUERY_LIMIT = 100;
 export const LEGACY_START_DATE = '1900-01-01';
 export const LEGACY_END_DATE = '2999-12-31';
 
+export const PeopleActivityTabValues: Record<string, TabKeys> = {
+    roles: 'roles',
+    identification: 'identification',
+    phone: 'phone',
+    email: 'email',
+    address: 'address',
+    bankAccounts: 'bankAccounts',
+};
 export const PartyRoleId = {
     AnnuitantRoleId: '-1|0|1',
     OwnerRoleId: '0|0|2',
@@ -77,3 +92,6 @@ export const CLIENT_COPY = 'CLIENT_COPY';
 export const NEW_BUSINESS = 'NEW_BUSINESS';
 export const DISPLAY_NAME = 'Name Change Supporting Document';
 export const SOURCE = 'Self-Service Portal';
+
+export const NOT_YET_AVAILABLE = 'notYetAvailable';
+export const DEBOUNCE_INTERVAL_200 = 200;

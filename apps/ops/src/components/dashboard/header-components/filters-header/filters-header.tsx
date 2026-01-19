@@ -13,7 +13,6 @@ import Select from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { DashboardResponseData } from '@deps/queries/api/dashboard';
 import { useDashboardStore } from '@deps/store/store';
 import {
@@ -24,11 +23,14 @@ import {
 import { areObjectsEqual } from '@deps/utils/objects';
 import { toTitleCase } from '@deps/utils/strings';
 
+import { DashboardTabNav } from '../../dashboard-nav-links';
+
 interface FiltersHeaderProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
     carrierHeaderIsIntersecting: boolean;
     carrierHeaderEntry?: IntersectionObserverEntry;
+    path?: string;
 }
 
 const getUniqueCarrierFilterItems = (
@@ -58,10 +60,11 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             brokerDealersSSR,
             carrierHeaderIsIntersecting,
             carrierHeaderEntry,
+            path,
         },
         ref
     ) => {
-        const { t } = useTranslation(TranslationFiles.COMMON);
+        const { t } = useTranslation();
 
         const carrierFilterItems = useMemo(
             () =>
@@ -233,7 +236,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                     variant={TypographyVariant.H1}
                     data-testid="header-text"
                 >
-                    {t('caseStatsDashboardTitle')}
+                    {t('site.pageTitles.analytics')}
                 </Typography>
                 <div className="flex justify-between items-center">
                     <div className="flex nowrap gap-2 items-center align-middle">
@@ -284,6 +287,9 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                             </Button>
                         </div>
                     </div>
+                </div>
+                <div className={styles.tabsNav}>
+                    <DashboardTabNav path={path} />
                 </div>
             </div>
         );

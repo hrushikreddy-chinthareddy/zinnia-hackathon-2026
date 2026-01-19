@@ -69,10 +69,14 @@ export enum TaskType {
     Quality_Audit_Rework = 'QUALITY_AUDIT_REWORK',
     Quality_Rework_Audit_Review = 'QUALITY_REWORK_AUDIT_REVIEW',
     Update_Suitability_DataEntry = 'UPDATE_SUITABILITY_DATA_ENTRY',
+    Third_Party_Detail = 'THIRD_PARTY_DETAIL',
     Operation_Review = 'OPERATIONS_REVIEW',
     Agent_Change_Detail = 'AGENT_CHANGE_DETAIL',
     Initiate_BeneChange_Transaction = 'INITIATE_BENECHANGE_TRANSACTION',
     Claims_Death_Audit_Contract_Matching = 'CLAIMS_DEATH_AUDIT_CONTRACT_MATCHING',
+    Carrier_Approval = 'FRAUD_SCREENING_REVIEW',
+    Giact_Call_Out = 'BANKING_VALIDATION_CALLOUT',
+    Initiate_AssigneeChange_Transaction = 'INITIATE_ASSIGNEECHANGE_TRANSACTION',
 }
 
 export enum EarlyTaskType {
@@ -326,4 +330,6 @@ export enum FilterKeys {
     carriers = 'carriers',
     queues = 'queues',
     statuses = 'statuses',
+    scheduledDateStart = 'scheduledDateStart',
+    scheduledDateEnd = 'scheduledDateEnd',
 }

@@ -2,6 +2,7 @@ import { skipToken, useQuery } from '@tanstack/react-query';
 import { I18n, useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
+import SystematicProgramsCard from '@deps/components/card/card-systematic-programs/card-systematic-programs';
 import UpcomingPaymentCard from '@deps/components/card/card-upcoming-payment/card-upcoming-payment';
 import { getAddCharges } from '@deps/components/card/card-upcoming-payment/card-upcoming-payment.helpers';
 import SideSheetCancelAutopay from '@deps/components/side-sheet/side-sheet-transaction/cancel-autopay/side-sheet-cancel-autopay';
@@ -32,6 +33,7 @@ import {
     Frequency,
     Policy,
     Reason,
+    Status,
 } from '@zinnia/api-types/types/sor';
 
 import { BPMErrorContent } from './bpm-error-content';
@@ -47,18 +49,16 @@ export interface AddChargesProps {
 }
 
 const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'withdrawals.upcoming',
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
+
     const { systematicPrograms } = policyDetails;
     const getPayout = (type: ArrangementType) => {
         return systematicPrograms.getNextProgramByType(type);
     };
 
     const { parties } = policy;
-    const { planCode, policyNumber, isAnnuity } = policyDetails;
+    const { planCode, policyNumber, isAnnuity, isLife } = policyDetails;
 
     const { featureFlags } = useOptimizely();
 
@@ -66,6 +66,20 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_WITHDRAWAL_TRANSACTION];
     const rmdEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_RMD_TRANSACTION] && isAnnuity; // NOTE: Only annuities should display the RMD Withdrawal feature - MR
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
+
+    const allRmdPrograms =
+        systematicPrograms.all.filter(
+            (sp) =>
+                sp.arrangementType ===
+                ArrangementType.REQUIREDMINIMUMDISTRIBUTION
+        ) || [];
+
+    const allWithdrawalPrograms =
+        systematicPrograms.all.filter(
+            (sp) => sp.arrangementType === ArrangementType.WITHDRAWAL
+        ) || [];
 
     const rmdPrograms = policyDetails.systematicPrograms.getProgramsByType(
         ArrangementType.REQUIREDMINIMUMDISTRIBUTION
@@ -156,9 +170,12 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
 
         if (permissionRequired) {
             return !isUserPermissionedToWithdraw
-                ? t('transactions.permissionDeniedTooltip', {
-                      carrier: policyDetails.carrierName,
-                  })
+                ? t(
+                      'withdrawals.upcoming.transactions.permissionDeniedTooltip',
+                      {
+                          carrier: policyDetails.carrierName,
+                      }
+                  )
                 : undefined;
         }
 
@@ -171,9 +188,12 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
 
         if (permissionRequired) {
             return !isUserPermissionedToWithdraw
-                ? t('transactions.permissionDeniedTooltip', {
-                      carrier: policyDetails.carrierName,
-                  })
+                ? t(
+                      'withdrawals.upcoming.transactions.permissionDeniedTooltip',
+                      {
+                          carrier: policyDetails.carrierName,
+                      }
+                  )
                 : undefined;
         }
 
@@ -184,8 +204,12 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
     const openCancelSideSheet = (type: string) => {
         const sideSheetTitle =
             type === ArrangementType.REQUIREDMINIMUMDISTRIBUTION
-                ? t('cancelWithdrawalAutopayTitle', { type: 'RMD' })
-                : t('cancelWithdrawalAutopayTitle', { type: 'Withdrawal' });
+                ? t('withdrawals.upcoming.cancelWithdrawalAutopayTitle', {
+                      type: 'RMD',
+                  })
+                : t('withdrawals.upcoming.cancelWithdrawalAutopayTitle', {
+                      type: 'Withdrawal',
+                  });
 
         const arrangementType =
             type === ArrangementType.REQUIREDMINIMUMDISTRIBUTION
@@ -195,11 +219,6 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             type === ArrangementType.REQUIREDMINIMUMDISTRIBUTION
                 ? Reason.REQUIREDMINIMUMDISTRIBUTION
                 : Reason.WITHDRAWAL;
-
-        console.log(
-            'getPayout(arrangementType)?.nextProgramDate',
-            getPayout(arrangementType)?.nextProgramDate
-        );
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H2}>
                 {sideSheetTitle}
@@ -222,6 +241,80 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             policyNumber,
             planCode
         );
+
+    const withdrawManageAutopay = {
+        href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=WITHDRAWAL`,
+        text: t('allFields.manageAutopay'),
+        isDisabled:
+            !withdrawalEligibility?.isEligibleWithdrawal ||
+            !withdrawalProgram?.nextProgramDate ||
+            !isUserPermissionedToWithdraw,
+        tooltip: getWithdrawalTooltip(),
+    };
+    const withdrawCancelAutopay = {
+        href: '',
+        text: t('allFields.cancelAutopay'),
+        onClick: (e?: React.MouseEvent) => {
+            e && e.preventDefault();
+            openCancelSideSheet(ArrangementType.WITHDRAWAL);
+        },
+        isDisabled:
+            !withdrawalEligibility?.isEligibleWithdrawal ||
+            !withdrawalProgram?.nextProgramDate ||
+            !isUserPermissionedToWithdraw,
+    };
+    const withdrawSetUpAction = {
+        href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
+        text: t('allFields.setUpAutopay'),
+        isDisabled:
+            !withdrawalEligibility?.isEligibleWithdrawal ||
+            !!withdrawalProgram?.nextProgramDate ||
+            !isUserPermissionedToWithdraw,
+        tooltip: getWithdrawalTooltip(),
+    };
+    const withdrawFooterLinks = [
+        withdrawManageAutopay,
+        withdrawSetUpAction,
+        withdrawCancelAutopay,
+    ];
+
+    const rmdManageAutopay = {
+        href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=RMD`,
+        text: t('allFields.manageAutopay'),
+        isDisabled:
+            !rmdEligibility?.isEligibleRmd ||
+            !rmdProgram?.nextProgramDate ||
+            !isUserPermissionedToWithdraw,
+        tooltip: getRmdTooltip(),
+    };
+    const rmdCancelAutopay = {
+        href: '',
+        text: t('allFields.cancelAutopay'),
+        onClick: (e?: React.MouseEvent) => {
+            e && e.preventDefault();
+            openCancelSideSheet(ArrangementType.REQUIREDMINIMUMDISTRIBUTION);
+        },
+        isDisabled:
+            !rmdEligibility?.isEligibleRmd ||
+            !rmdProgram?.nextProgramDate ||
+            !isUserPermissionedToWithdraw,
+    };
+    const rmdSetUpAction = {
+        href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
+        text: t('allFields.setUpAutopay'),
+        isDisabled:
+            !rmdEligibility?.isEligibleRmd ||
+            !!rmdProgram?.nextProgramDate ||
+            !isUserPermissionedToWithdraw,
+        tooltip: getRmdTooltip(),
+    };
+    const rmdFooterLinks = [rmdManageAutopay, rmdSetUpAction, rmdCancelAutopay];
+
+    const setUpAutopay = {
+        ...withdrawSetUpAction,
+        isDisabled: withdrawSetUpAction.isDisabled && rmdSetUpAction.isDisabled,
+    };
+
     return (
         <>
             <WithdrawalsPageHeaderContainer
@@ -231,10 +324,10 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
             <hr className="h-0.5 border-none bg-gray-200" />
             <WithdrawalRules policy={policy} policyDetails={policyDetails} />
             <hr className="h-0.5 border-none bg-gray-200" />
-            {withdrawalEnabled && (
+            {!systematicProgramTablesEnabled && withdrawalEnabled && (
                 <>
                     <UpcomingPaymentCard
-                        title={`${t('withdrawalAutopay')}`}
+                        title={`${t('withdrawals.upcoming.withdrawalAutopay')}`}
                         titleCase={false}
                         autopayAmount={withdrawalProgram?.amount}
                         paymentDate={withdrawalProgram?.nextProgramDate}
@@ -248,58 +341,28 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             keyPrefix: 'withdrawals.upcoming',
                         })}
                         paymentFrequencyText={
-                            t('paymentFrequencyText', {
+                            t('withdrawals.upcoming.paymentFrequencyText', {
                                 paymentMode: getFrequency(
                                     withdrawalProgram?.frequency as Frequency,
-                                    defaultT
+                                    t
                                 ),
-                                paymentType: t('paymentType.payment'),
+                                paymentType: t(
+                                    'withdrawals.upcoming.paymentType.payment'
+                                ),
                             }) || undefined
                         }
-                        footerLinks={[
-                            {
-                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=WITHDRAWAL`,
-                                text: t('manageAutopay'),
-                                isDisabled:
-                                    !withdrawalEligibility?.isEligibleWithdrawal ||
-                                    !withdrawalProgram?.nextProgramDate ||
-                                    isUserPermissionedToWithdraw,
-                                tooltip: getWithdrawalTooltip(),
-                            },
-                            {
-                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
-                                text: t('setUpAutopay'),
-                                isDisabled:
-                                    !withdrawalEligibility?.isEligibleWithdrawal ||
-                                    !!withdrawalProgram?.nextProgramDate ||
-                                    !isUserPermissionedToWithdraw,
-                                tooltip: getWithdrawalTooltip(),
-                            },
-                            {
-                                href: '#',
-                                text: t('cancelAutopay'),
-                                onClick: () => {
-                                    openCancelSideSheet(
-                                        ArrangementType.WITHDRAWAL
-                                    );
-                                },
-                                isDisabled:
-                                    !withdrawalEligibility?.isEligibleWithdrawal ||
-                                    !withdrawalProgram?.nextProgramDate ||
-                                    !isUserPermissionedToWithdraw,
-                            },
-                        ]}
+                        footerLinks={withdrawFooterLinks}
                         displayCardWithZeroAmount={true}
                         hasProgram={hasWithdrawalProgram}
                     />
                 </>
             )}
-            {rmdEnabled && (
+            {!systematicProgramTablesEnabled && rmdEnabled && (
                 <>
                     <hr className="h-0.5 border-none bg-gray-200" />
                     <UpcomingPaymentCard
                         autopayAmount={rmdProgram?.amount}
-                        title={`${t('rmdAutopay')}`}
+                        title={`${t('withdrawals.upcoming.rmdAutopay')}`}
                         paymentDate={rmdProgram?.nextProgramDate}
                         bankDetails={getBankDetails(
                             getParty(parties, rmdProgram),
@@ -311,52 +374,59 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
                             keyPrefix: 'withdrawals.upcoming',
                         })}
                         paymentFrequencyText={
-                            t('paymentFrequencyText', {
+                            t('withdrawals.upcoming.paymentFrequencyText', {
                                 paymentMode: getFrequency(
                                     rmdProgram?.frequency as Frequency,
-                                    defaultT
+                                    t
                                 ),
-                                paymentType: t('paymentType.payment'),
+                                paymentType: t(
+                                    'withdrawals.upcoming.paymentType.payment'
+                                ),
                             }) || undefined
                         }
                         titleCase={false}
-                        footerLinks={[
-                            {
-                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/update-withdrawal-autopay?type=RMD`,
-                                text: t('manageAutopay'),
-                                isDisabled:
-                                    !rmdEligibility?.isEligibleRmd ||
-                                    !rmdProgram?.nextProgramDate ||
-                                    !isUserPermissionedToWithdraw,
-                                tooltip: getRmdTooltip(),
-                            },
-                            {
-                                href: `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/withdrawals/new-withdrawal-autopay`,
-                                text: t('setUpAutopay'),
-                                isDisabled:
-                                    !rmdEligibility?.isEligibleRmd ||
-                                    !!rmdProgram?.nextProgramDate ||
-                                    !isUserPermissionedToWithdraw,
-                                tooltip: getRmdTooltip(),
-                            },
-                            {
-                                href: '#',
-                                text: t('cancelAutopay'),
-                                onClick: () => {
-                                    openCancelSideSheet(
-                                        ArrangementType.REQUIREDMINIMUMDISTRIBUTION
-                                    );
-                                },
-                                isDisabled:
-                                    !rmdEligibility?.isEligibleRmd ||
-                                    !rmdProgram?.nextProgramDate ||
-                                    !isUserPermissionedToWithdraw,
-                            },
-                        ]}
+                        footerLinks={rmdFooterLinks}
                         displayCardWithZeroAmount={true}
                         hasProgram={hasRmdProgram}
                     />
                 </>
+            )}
+            {systematicProgramTablesEnabled && (
+                <SystematicProgramsCard
+                    programs={[
+                        {
+                            arrangementType: ArrangementType.WITHDRAWAL,
+                            activePrograms: allWithdrawalPrograms.filter(
+                                (program) => program.status === Status.ACTIVE
+                            ),
+                            terminatedOrSuspendedPrograms:
+                                allWithdrawalPrograms.filter(
+                                    (program) =>
+                                        program.status === Status.TERMINATED ||
+                                        program.status === Status.SUSPENDED
+                                ),
+                            manageAction: withdrawManageAutopay,
+                            cancelAction: withdrawCancelAutopay,
+                        },
+                        {
+                            arrangementType:
+                                ArrangementType.REQUIREDMINIMUMDISTRIBUTION,
+                            activePrograms: allRmdPrograms.filter(
+                                (program) => program.status === Status.ACTIVE
+                            ),
+                            terminatedOrSuspendedPrograms:
+                                allRmdPrograms.filter(
+                                    (program) =>
+                                        program.status === Status.TERMINATED ||
+                                        program.status === Status.SUSPENDED
+                                ),
+                            manageAction: rmdManageAutopay,
+                            cancelAction: rmdCancelAutopay,
+                        },
+                    ]}
+                    setUpAction={setUpAutopay}
+                    isLife={isLife}
+                />
             )}
         </>
     );

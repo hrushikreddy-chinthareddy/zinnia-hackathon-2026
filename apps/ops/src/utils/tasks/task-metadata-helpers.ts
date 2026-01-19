@@ -31,19 +31,22 @@ export const TaskMetadataHelper = async (
             switch (task.taskType) {
                 case TaskType.PURCHASE_DOCUMENT_MATCHING:
                 case TaskType.Standard_Document_Matching: {
+                    const potentialMatchCriteria =
+                        task.data?.potentialMatchCriteria;
+
                     try {
-                        const payload = task?.data?.potentialMatchCriteria;
                         const response = await searchTransactionsSSR(
-                            payload,
+                            potentialMatchCriteria ?? {},
                             accessToken,
                             loggingContext
                         );
                         const potentialMatches =
-                            response &&
-                            generatePotentialMatchesOptions(
-                                response,
-                                payload?.status || []
-                            );
+                            response && response.length > 0
+                                ? generatePotentialMatchesOptions(
+                                      response as TransactionData[],
+                                      potentialMatchCriteria?.status || []
+                                  )
+                                : [];
 
                         const uiSchema = taskMetadata.uiSchema || {};
 
@@ -83,10 +86,13 @@ export const TaskMetadataHelper = async (
                             ];
                         }
                     } catch (error: any) {
-                        logWarn('Error in TaskMetadataHelper', {
-                            ...error,
-                            loggingContext,
-                        });
+                        logWarn(
+                            'taskMetadataHelper:: Error in TaskMetadataHelper',
+                            {
+                                ...error,
+                                loggingContext,
+                            }
+                        );
                     }
                     return taskMetadata;
                 }

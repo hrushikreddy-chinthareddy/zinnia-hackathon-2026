@@ -1,17 +1,23 @@
+import dayjs from 'dayjs';
 import Highcharts from 'highcharts';
+import groupBy from 'lodash/groupBy';
+import { TFunction } from 'next-i18next';
 
 import { GroupedColumnSeries } from '@deps/components/dashboard/charts/bar-charts/grouped-column-chart/grouped-column-chart';
+import { groupDataByWeek } from '@deps/components/dashboard/charts/date-time-chart/dateTimeChartUtils';
 import {
-    UserTransactionOutputLevel1,
-    UserTransactionOutputLevel3,
-} from '@zinnia/api-types/types/analytics';
-
-import {
+    ActivityType,
     colors,
     downloadCSV,
     TRANSACTION_CATEGORY_DISPLAY_MAP,
     TRANSACTION_TYPE_DISPLAY_MAP,
-} from '../utils';
+} from '@deps/components/usage/utils';
+import {
+    UserIllustrationActivityOutputLevel1,
+    UserIllustrationActivityOutputLevel3,
+    UserTransactionOutputLevel1,
+    UserTransactionOutputLevel3,
+} from '@zinnia/api-types/types/analytics';
 
 export const aggregateByCategory = (
     data: UserTransactionOutputLevel1[],
@@ -148,6 +154,184 @@ export const PrepareTransactionActivityCSV = (
             );
         });
     });
+
+    const csv = rows.join('\n');
+    downloadCSV(csv, filename);
+};
+
+export const generateSeries = (
+    activityData: UserIllustrationActivityOutputLevel1[] | undefined,
+    timerange: { from: string; to: string },
+    color: string[],
+    t: TFunction
+) => {
+    if (!activityData?.length) return [];
+
+    const fromDate = dayjs(timerange.from);
+    const toDate = dayjs(timerange.to);
+    const olderThanOneWeek = toDate.diff(fromDate, 'week') > 1;
+
+    return activityData.map((item, index) => {
+        const data = olderThanOneWeek
+            ? groupDataByWeek(item.values!)
+            : item.values;
+
+        const timeData =
+            data?.map((item: UserIllustrationActivityOutputLevel3) => [
+                dayjs(item.name).unix() * 1000,
+                item.count,
+            ]) ?? [];
+
+        const name = t(`allFields.${item.name?.toLowerCase()}`) ?? item.name;
+        const firstDataPoint = data?.[0]?.name ?? 0;
+
+        // Ensure months from filter (3M, 6M) are shown in chart even when there is no data on those dates
+        const olderThanOneMonth =
+            Math.abs(fromDate.diff(dayjs(firstDataPoint), 'month')) > 1;
+        if (!olderThanOneMonth) {
+            return {
+                type: 'line',
+                name,
+                color: color[index],
+                data: timeData,
+            };
+        }
+
+        const defaultStartTime = fromDate.unix() * 1000;
+
+        return {
+            type: 'line',
+            name,
+            color: color[index],
+            data: [[defaultStartTime, 0], ...timeData],
+        };
+    });
+};
+
+/**
+ * Merge Duplicated and Created data into Created activity type
+ * @param data UserIllustrationActivityOutputLevel1[]
+ * @returns
+ */
+export const mergeDuplicatedIntoCreated = (
+    data: UserIllustrationActivityOutputLevel1[]
+): UserIllustrationActivityOutputLevel1[] => {
+    const groups = groupBy(
+        data,
+        (item) => item.name.toLowerCase() ?? 'unknown'
+    );
+
+    const created = groups.created?.[0];
+    const duplicated = groups.duplicated?.[0];
+
+    if (!created || !duplicated) {
+        return data;
+    }
+
+    const dateMap = new Map(
+        created.values?.map((v) => [v.name, v.count]) ?? []
+    );
+
+    for (const v of duplicated.values ?? []) {
+        const prev = dateMap.get(v.name) ?? 0;
+        dateMap.set(v.name, prev + v.count);
+    }
+
+    const mergedValues = Array.from(dateMap, ([date, count]) => ({
+        key: 'activityDay',
+        name: date,
+        count,
+    })).toSorted((a, b) => a.name.localeCompare(b.name));
+
+    const newCreated: UserIllustrationActivityOutputLevel1 = {
+        ...created,
+        count: mergedValues.reduce((acc, v) => acc + v.count, 0),
+        values: mergedValues,
+    };
+
+    const others = Object.entries(groups)
+        .filter(([type]) => type !== ActivityType.Duplicated.toLowerCase())
+        .flatMap(([_, list]) => list)
+        .filter(
+            (item) =>
+                item?.name.toLowerCase() !== ActivityType.Created.toLowerCase()
+        )
+        .map((item) => {
+            const values = item?.values ?? [];
+            const total = values.reduce((acc, v) => acc + (v.count ?? 0), 0);
+            return {
+                ...item,
+                count: total,
+            };
+        }) as UserIllustrationActivityOutputLevel1[];
+
+    return [newCreated, ...others];
+};
+
+export const formatIllustrationActivity = (
+    data: UserIllustrationActivityOutputLevel1[]
+) => {
+    const dateMap = new Map();
+    for (const activity of data) {
+        const typeName = String(activity.name).toLowerCase();
+
+        const isCreated = typeName === ActivityType.Created.toLowerCase();
+        const isSelected = typeName === ActivityType.Selected.toLowerCase();
+
+        if (!isCreated && !isSelected) continue;
+
+        const values = activity?.values ?? [];
+
+        for (const value of values) {
+            const date = value?.name;
+            if (!date) continue;
+
+            const count = Number.isFinite(value?.count) ? value.count : 0;
+            const existing = dateMap.get(date) ?? {
+                date,
+                created: 0,
+                selected: 0,
+            };
+
+            if (isCreated) {
+                existing.created += count;
+            } else if (isSelected) {
+                existing.selected += count;
+            }
+
+            dateMap.set(date, existing);
+        }
+    }
+
+    return Array.from(dateMap.values()).sort((a, b) =>
+        a.date.localeCompare(b.date)
+    );
+};
+
+export const prepareIllustrationsActivityCSV = (
+    data: UserIllustrationActivityOutputLevel1[],
+    filename = 'Illustration-Activity.csv',
+    t?: TFunction
+) => {
+    const rows: string[] = [
+        `${t ? t('allFields.date') : 'Date'}, ${
+            t ? t('allFields.productType') : 'Product Type'
+        },${t ? t('allFields.created') : 'Created'},${
+            t ? t('allFields.selected') : 'Selected'
+        }`,
+    ];
+    const entries = formatIllustrationActivity(data);
+
+    const typeIdx = filename.indexOf(' ');
+    const productType = filename.substring(0, typeIdx);
+
+    for (const entry of entries) {
+        const [year, month, day] = entry.date.split('-');
+        const formattedDate = `${parseInt(month)}/${parseInt(day)}/${year}`;
+        rows.push(
+            `${formattedDate},${productType},${entry.created},${entry.selected}`
+        );
+    }
 
     const csv = rows.join('\n');
     downloadCSV(csv, filename);

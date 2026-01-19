@@ -6,6 +6,7 @@ export enum FEATURE_FLAG_VARIABLES {
     TASK_CONTINUE_BUTTON_ENABLE = 'task-continue-button-enable',
     DOCUMENTS_V3_FEATURE_FLAG = 'documents-v3-update-client-wise',
     CREATE_QUALITY_AUDIT = 'create-quality-audit',
+    ASSIGNEE_CHANGE_TRANSACTION = 'assignee-change-transaction',
 }
 
 export enum FEATURE_VARIABLES_CORRESPONDENCE_KEYS {

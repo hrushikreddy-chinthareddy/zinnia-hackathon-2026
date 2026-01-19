@@ -16,8 +16,8 @@ import { getMasterAgentNumber } from '@deps/utils/agent-helpers';
 import {
     BulkCheckTuple,
     checkIfUserHasAdvisorsExcel,
+    checkIfUserHasAnalyticsAccess,
     checkIfUserHasCaseInsightsAccess,
-    checkIfUserHasDashboardAccess,
     checkIfUserHasPolicyIndexAccess,
     checkIfUserHasUsageAccess,
     checkIfUserIsSuperAdmin,
@@ -39,7 +39,7 @@ export interface PermissionsContextProps {
     fgaRolesData: BulkCheckTuple[];
     isAdvisorsExcel: boolean;
     isSuperAdmin: boolean;
-    hasDashboardPermission: boolean;
+    hasAnalyticsPermission: boolean;
     hasCaseInsightPermission: boolean;
     isAllowReadCaseManagement: boolean;
     isAllowReadPolicyAdmin: boolean;
@@ -62,9 +62,12 @@ export interface PermissionsContextProps {
     isZinniaInternalViewer: boolean;
     isZinniaInternalProcessor: boolean;
     isAllowWriteClientCase: boolean;
+    showZinniaLiveCaseActions: boolean;
+    showRequestCorrection: boolean;
     isAllowOpsCaseReviewRequest: boolean;
     hasPermissionToPrioritizeCases: boolean;
     hasMarketConnectContacts: boolean;
+    isSuperIllustrator: boolean;
 }
 
 export const PermissionContext = createContext<PermissionsContextProps>(
@@ -238,6 +241,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         initialDataUpdatedAt: Date.now() - FIFTEEN_MINUTES_IN_MS,
     });
 
+    const isSuperIllustrator = !!writeClientCaseCarriers.length;
+
     const { data: writeCasePriority } = useQuery({
         queryKey: ['writeCasePriority', partyId],
         queryFn: () =>
@@ -301,7 +306,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
 
             const data = await bulkCheckPermissionsQuery({ tuples });
             const superAdmin = checkIfUserIsSuperAdmin(data);
-            const hasDashboard = checkIfUserHasDashboardAccess(data);
+            const hasAnalytics = checkIfUserHasAnalyticsAccess(data);
             const hasCaseInsight = checkIfUserHasCaseInsightsAccess(data);
             const hasUsage = checkIfUserHasUsageAccess(data);
             const hasAdvisorsExcel = checkIfUserHasAdvisorsExcel(data);
@@ -365,10 +370,22 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 FgaRelation.UiAccess
             );
 
+            const showZinniaLiveCaseActions = !!checkRelation(
+                data,
+                FgaRoles.ZINNIA_LIVE_CASE_ACTIONS,
+                FgaRelation.UiAccess
+            );
+
+            const showRequestCorrection = !!checkRelation(
+                data,
+                FgaRoles.REQUEST_CORRECTION,
+                FgaRelation.UiAccess
+            );
+
             return {
                 fgaRoles: data,
                 isSuperAdmin: !!superAdmin,
-                hasDashboardPermission: !!hasDashboard,
+                hasAnalyticsPermission: !!hasAnalytics,
                 hasCaseInsightPermission: !!hasCaseInsight,
                 isAdvisorsExcel: !!hasAdvisorsExcel,
                 isCallLogAudioPermitted,
@@ -383,6 +400,8 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor,
                 hasWelbSalesMaterials,
                 hasCreateClientAccess,
+                showZinniaLiveCaseActions,
+                showRequestCorrection,
             };
         },
         enabled: !!partyId,
@@ -410,7 +429,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isAdvisorsExcel: !!fgaRoleData?.isAdvisorsExcel,
                 isSuperAdmin: !!fgaRoleData?.isSuperAdmin,
                 fgaRolesData: fgaRoleData?.fgaRoles || [],
-                hasDashboardPermission: !!fgaRoleData?.hasDashboardPermission,
+                hasAnalyticsPermission: !!fgaRoleData?.hasAnalyticsPermission,
                 hasCaseInsightPermission:
                     !!fgaRoleData?.hasCaseInsightPermission,
                 isAllowReadCaseManagement: !!isAllowReadCaseManagement,
@@ -443,8 +462,12 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
+                showZinniaLiveCaseActions:
+                    !!fgaRoleData?.showZinniaLiveCaseActions,
+                showRequestCorrection: !!fgaRoleData?.showRequestCorrection,
                 isAllowOpsCaseReviewRequest: !!isAllowOpsCaseReviewRequest,
                 hasMarketConnectContacts,
+                isSuperIllustrator,
             }}
         >
             {children}

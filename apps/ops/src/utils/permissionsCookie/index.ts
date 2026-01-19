@@ -4,16 +4,29 @@ import {
     DEFAULT_PERMISSIONS_COOKIE,
     PERMISSIONS_COOKIE_NAME,
     PermissionsCookie,
+    ROLES_COOKIE_NAME,
 } from '@deps/types/permissionsCookie';
+import { isHttpsEnvironment } from '@deps/utils/environment.helpers';
+import { logWarn } from '@deps/utils/server-logging';
 
-import { isHttpsEnvironment } from '../environment.helpers';
-import { logWarn } from '../server-logging';
+import type { IncomingMessage, ServerResponse } from 'http';
+
+type CookieReq = IncomingMessage;
+type CookieRes = ServerResponse;
 
 const permissionsCookieOptions = {
     maxAge: 60 * 5, // 5 mins
     path: '/',
-    sameSite: 'lax',
+    sameSite: 'lax' as const,
     httpOnly: true,
+    secure: isHttpsEnvironment(),
+};
+
+const rolesCookieOptions = {
+    maxAge: 60 * 60 * 1, // 1 hour
+    path: '/',
+    sameSite: 'lax' as const,
+    httpOnly: false, // roles need to be exposed to the client scripts
     secure: isHttpsEnvironment(),
 };
 
@@ -21,8 +34,8 @@ export const addTupleToCookie = (
     relation: string,
     tupleObject: string,
     result: boolean,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ) => {
     try {
         const permissionsCookie =
@@ -48,8 +61,8 @@ export const addTupleToCookie = (
 export const addCarrierListToCookie = (
     relation: string,
     carrierList: string[],
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ) => {
     try {
         const permissionsCookie =
@@ -72,8 +85,8 @@ export const addCarrierListToCookie = (
 export const doesPermissionsHaveCarrierRelation = (
     relation: string,
     carrier: string,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ): boolean => {
     try {
         if (!relation || !carrier) {
@@ -91,9 +104,8 @@ export const doesPermissionsHaveCarrierRelation = (
         const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
         return !!permissions.carriers?.[relation]?.includes(carrier);
     } catch (error) {
-        console.error(
-            'checkPermissionsCookieForCarrier::An error occurred while checking permissions cookie',
-            error
+        logWarn(
+            `checkPermissionsCookieForCarrier::An error occurred while checking permissions cookie: ${error}`
         );
         return false;
     }
@@ -102,8 +114,8 @@ export const doesPermissionsHaveCarrierRelation = (
 export const checkPermissionsCookieForTuple = (
     relation: string,
     tupleObject: string,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ): boolean | undefined => {
     try {
         if (!relation || !tupleObject) {
@@ -114,6 +126,7 @@ export const checkPermissionsCookieForTuple = (
             req,
             res,
         });
+
         if (!permissionsCookie) {
             return undefined;
         }
@@ -121,9 +134,8 @@ export const checkPermissionsCookieForTuple = (
         const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
         return permissions.tuples?.[relation]?.[tupleObject];
     } catch (error) {
-        console.error(
-            'checkPermissionsCookieForTuple::An error occurred while checking permissions cookie',
-            error
+        logWarn(
+            `checkPermissionsCookieForTuple::An error occurred while checking permissions cookie: ${error}`
         );
         return undefined;
     }
@@ -132,8 +144,8 @@ export const checkPermissionsCookieForTuple = (
 // check if the permissions object has the carrier list for the relation provided
 export const checkPermissionsCookieForCarrierList = (
     relation: string,
-    req?: any,
-    res?: any
+    req?: CookieReq,
+    res?: CookieRes
 ): string[] | undefined => {
     try {
         if (!relation) {
@@ -151,9 +163,50 @@ export const checkPermissionsCookieForCarrierList = (
         const permissions = JSON.parse(permissionsCookie) as PermissionsCookie;
         return permissions.carriers?.[relation];
     } catch (error) {
-        console.error(
-            'checkPermissionsCookieForCarrierList::An error occurred while checking permissions cookie',
-            error
+        logWarn(
+            `checkPermissionsCookieForCarrierList::An error occurred while checking permissions cookie: ${error}`
+        );
+        return undefined;
+    }
+};
+
+// Cookie age controlled by permissionsCookieOptions
+export const setRolesCookie = (
+    roles: Record<string, string[]>,
+    req?: CookieReq,
+    res?: CookieRes
+) => {
+    try {
+        setCookie(ROLES_COOKIE_NAME, JSON.stringify(roles), {
+            req,
+            res,
+            ...rolesCookieOptions,
+        });
+    } catch (error) {
+        logWarn(
+            `setRolesCookie::An error occurred while setting the roles cookie: ${error}`
+        );
+    }
+};
+
+export const getRolesFromCookie = (
+    req?: CookieReq,
+    res?: CookieRes
+): Record<string, string[]> | undefined => {
+    try {
+        const rolesCookie = getCookie(ROLES_COOKIE_NAME, {
+            req,
+            res,
+        });
+        if (!rolesCookie) {
+            return undefined;
+        }
+
+        const roles = JSON.parse(rolesCookie);
+        return roles;
+    } catch (error) {
+        logWarn(
+            `getRolesCookie::An error occurred while getting roles cookie: ${error}`
         );
         return undefined;
     }

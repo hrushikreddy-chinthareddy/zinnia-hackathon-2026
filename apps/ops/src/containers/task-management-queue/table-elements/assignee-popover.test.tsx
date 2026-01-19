@@ -1,5 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 
+import { Task } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import { TaskStatus } from '@deps/models/case/task-instance';
 
 import AssigneePopover from './assignee-popover';
@@ -8,6 +9,10 @@ const defaultProps = {
     assignee: 'John Doe',
     assigneeList: [{ partyId: '1', user: 'Jane Doe' }],
     assigneeLoading: false,
+    actionLoader: false,
+    isOpen: false,
+    onOpen: jest.fn(),
+    onClose: jest.fn(),
     searchValue: '',
     handleClick: jest.fn(),
     handleSearch: jest.fn(),
@@ -29,7 +34,7 @@ describe('AssigneePopover', () => {
         render(
             <AssigneePopover
                 {...defaultProps}
-                task={{ id: 't1', status: TaskStatus.Completed }}
+                task={{ id: 't1', status: TaskStatus.Completed } as Task}
             />
         );
 
@@ -41,12 +46,23 @@ describe('AssigneePopover', () => {
     });
 
     it('renders placeholder when no assignee', () => {
-        render(<AssigneePopover {...defaultProps} hasAssignee={() => false} />);
+        render(
+            <AssigneePopover
+                {...defaultProps}
+                hasAssignee={() => false}
+                task={{ id: 't1', status: TaskStatus.InProgress } as Task}
+            />
+        );
         expect(screen.getByText('John Doe')).toBeInTheDocument(); // as Content placeholder
     });
 
     it.skip('calls handleSearch on input change', () => {
-        render(<AssigneePopover {...defaultProps} />);
+        render(
+            <AssigneePopover
+                {...defaultProps}
+                task={{ id: 't1', status: TaskStatus.InProgress } as Task}
+            />
+        );
         const triggerButton = screen.getByRole('button', {
             name: /open assignee popover/i,
         });
@@ -59,12 +75,23 @@ describe('AssigneePopover', () => {
     });
 
     it('renders placeholder when no assignee', () => {
-        render(<AssigneePopover {...defaultProps} hasAssignee={() => false} />);
+        render(
+            <AssigneePopover
+                {...defaultProps}
+                hasAssignee={() => false}
+                task={{ id: 't1', status: TaskStatus.InProgress } as Task}
+            />
+        );
         expect(screen.getByText('John Doe')).toBeInTheDocument(); // as Content placeholder
     });
 
     it.skip('calls handleTaskAssignAsAdmin on selecting new assignee', () => {
-        render(<AssigneePopover {...defaultProps} />);
+        render(
+            <AssigneePopover
+                {...defaultProps}
+                task={{ id: 't1', status: TaskStatus.InProgress } as Task}
+            />
+        );
 
         const triggerButton = screen.getByRole('button', {
             name: /open assignee popover/i,
@@ -80,7 +107,12 @@ describe('AssigneePopover', () => {
     });
 
     it.skip('calls handleTaskUnassignAsAdmin on unassign click', () => {
-        render(<AssigneePopover {...defaultProps} />);
+        render(
+            <AssigneePopover
+                {...defaultProps}
+                task={{ id: 't1', status: TaskStatus.InProgress } as Task}
+            />
+        );
         fireEvent.click(
             screen.getByRole('button', { name: /open assignee popover/i })
         );
@@ -89,7 +121,12 @@ describe('AssigneePopover', () => {
     });
 
     it.skip('toggles popover on click when allowed', () => {
-        render(<AssigneePopover {...defaultProps} />);
+        render(
+            <AssigneePopover
+                {...defaultProps}
+                task={{ id: 't1', status: TaskStatus.InProgress } as Task}
+            />
+        );
 
         const triggerButton = screen.getByRole('button', {
             name: /open assignee popover/i,
@@ -102,7 +139,12 @@ describe('AssigneePopover', () => {
     });
 
     it.skip('calls handleSearch on input change', () => {
-        render(<AssigneePopover {...defaultProps} />);
+        render(
+            <AssigneePopover
+                {...defaultProps}
+                task={{ id: 't1', status: TaskStatus.InProgress } as Task}
+            />
+        );
         const triggerButton = screen.getByRole('button', {
             name: /open assignee popover/i,
         });

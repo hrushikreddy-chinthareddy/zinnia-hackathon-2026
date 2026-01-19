@@ -3,7 +3,6 @@
 
 import { isDev } from '@deps/utils/environment.helpers';
 
-// TODO MG: do we need these params?
 const canUnmaskPii = async (
     accessToken: string | undefined,
     partyId: string | undefined,

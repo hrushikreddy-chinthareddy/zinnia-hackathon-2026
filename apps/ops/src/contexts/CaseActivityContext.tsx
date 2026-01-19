@@ -2,14 +2,24 @@ import { useQuery } from '@tanstack/react-query';
 import { createContext, useContext, useMemo } from 'react';
 
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
-import { Case, Processes, Statuses } from '@deps/models/case/case';
+import {
+    Case,
+    LOADING_TIME_CONFIG,
+    Processes,
+    Statuses,
+} from '@deps/models/case/case';
+import { FinancialTransactionRecord } from '@deps/models/case/financial-transactions';
 import { searchPolicy } from '@deps/queries/api/policies';
 import {
     getPolicyQuery,
     getPolicyQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { UserTuplesData } from '@deps/types/fga';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { Policy } from '@zinnia/api-types/types/sor';
+
+import { useOptimizely } from './OptimizelyContext';
 
 export interface CaseActivityContextProps {
     policy: PolicyDetails | null;
@@ -17,6 +27,9 @@ export interface CaseActivityContextProps {
     isNewBusinessCase: boolean;
     caseDetails: Case;
     userTuplesData: UserTuplesData;
+    financialTransaction?: FinancialTransactionRecord;
+    financialTransactionLoading: boolean;
+    isFinancialTransaction: boolean;
 }
 
 const defaultValue: CaseActivityContextProps = {
@@ -52,6 +65,9 @@ const defaultValue: CaseActivityContextProps = {
         continuation_token: '',
         continuationToken: '',
     },
+    financialTransaction: undefined,
+    financialTransactionLoading: true,
+    isFinancialTransaction: false,
 };
 
 export const CaseActivityContext =
@@ -108,6 +124,30 @@ const useUniquePolicyGetter = (
     return [data, isLoading];
 };
 
+const useFinancialTransaction = (
+    caseDetails: Case
+): [FinancialTransactionRecord | undefined, boolean, boolean] => {
+    const { featureFlags } = useOptimizely();
+
+    const transactionRecord = caseDetails?.caseAdditionalData?.find(
+        (item) => item.entityType === 'FI_MONEY_IN_TRANSACTION_RECORD'
+    );
+
+    const isFinancialTransaction =
+        !!transactionRecord &&
+        !!featureFlags[FEATURE_FLAGS.FINANCIAL_TRANSACTION];
+
+    const { data: financialTransaction, isLoading } = useQuery({
+        queryKey: ['financialTransaction', transactionRecord?.id],
+        queryFn: () => getTransactionEntityQuery(transactionRecord?.id),
+        refetchInterval: LOADING_TIME_CONFIG.ORGANIZING_THRESHOLD,
+
+        enabled: isFinancialTransaction,
+    });
+
+    return [financialTransaction, isLoading, isFinancialTransaction];
+};
+
 export const CaseActivityProvider = ({
     children,
     caseDetails,
@@ -118,7 +158,11 @@ export const CaseActivityProvider = ({
     }, [caseDetails.process]);
 
     const [data, isLoading] = useUniquePolicyGetter(caseDetails);
-
+    const [
+        financialTransaction,
+        financialTransactionLoading,
+        isFinancialTransaction,
+    ] = useFinancialTransaction(caseDetails);
     return (
         <CaseActivityContext.Provider
             value={{
@@ -127,6 +171,9 @@ export const CaseActivityProvider = ({
                 isNewBusinessCase,
                 caseDetails,
                 userTuplesData,
+                financialTransaction,
+                financialTransactionLoading,
+                isFinancialTransaction,
             }}
         >
             {children}

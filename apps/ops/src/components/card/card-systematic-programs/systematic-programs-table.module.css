@@ -1,0 +1,119 @@
+.systematicPrograms {
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-lg);
+    width: 100%;
+    th,
+    td {
+        padding: var(--measure-dimension-padding-lg)
+            var(--measure-dimension-padding-2xl);
+        font: var(--typography-content-body-sm);
+    }
+    th {
+        font-weight: var(--font-weight-content-value-font-weight);
+    }
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.setUp {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+    a {
+        font-size: var(--measure-font-sizing-content-body-sm-font-size);
+        font-weight: var(--font-weight-content-value-font-weight);
+    }
+}
+
+.toggle,
+.toggleInactive {
+    button {
+        border: var(--measure-dimension-stroke-sm) solid;
+    }
+    p {
+        font-size: var(
+            --measure-font-sizing-content-body-sm-font-size
+        ) !important;
+    }
+}
+
+.toggle {
+    button {
+        background-color: var(
+            --toggle-default-surface-toggle-selected-fill,
+            #00628b
+        );
+        border-color: var(
+            --toggle-default-surface-toggle-selected-fill,
+            #00628b
+        );
+        span {
+            background-color: var(--base-surface-surface-carrier, #f8f8f8);
+        }
+    }
+}
+
+.toggleInactive {
+    button {
+        background-color: var(
+            --toggle-default-surface-toggle-default-fill,
+            #ededed
+        );
+        border-color: var(
+            --toggledDefault-border-toggle-default-border,
+            #676767
+        );
+        span {
+            background-color: var(
+                --toggledDefault-border-toggle-default-border,
+                #676767
+            );
+        }
+    }
+}
+
+.typeCell {
+    width: 15%;
+}
+
+.paymentAmountCell {
+    width: 15%;
+}
+
+.frecuencyCell {
+    width: 11%;
+}
+
+.nextPaymentCell {
+    width: 13%;
+}
+
+.statusCell {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+    color: var(--status-text-status-error-text, #db004f);
+}
+
+.emptyTableCell {
+    display: flex;
+    justify-content: center;
+    padding: var(--measure-dimension-padding-sm);
+    width: 100%;
+}
+
+.actionCell {
+    width: 17%;
+}
+
+td.actionCell {
+    display: flex;
+    gap: var(--measure-dimension-gap-md);
+}

@@ -14,7 +14,7 @@ import { allowTestHarness } from '@deps/utils/test-harness/utils';
 
 export const useMainNavItems = (): NavGroup[] => {
     const {
-        hasDashboardPermission,
+        hasAnalyticsPermission,
         isAdvisorsExcel,
         isAllowReadCaseManagement,
         isAllowReadOtpRenewals,
@@ -55,8 +55,8 @@ export const useMainNavItems = (): NavGroup[] => {
     const transactionOpsSuiteText = t('site.navLinks.transactionOpsSuite.text');
     const transactionOpsSuiteHref =
         t('site.navLinks.transactionOpsSuite.link') || '';
-    const dashboardText = t('site.navLinks.dashboard.text') || '';
-    const dashboardHref = t('site.navLinks.dashboard.link') || '';
+    const analyticsText = t('site.navLinks.analytics.text') || '';
+    const analyticsHref = t('site.navLinks.analytics.link') || '';
     const usageText = t('site.navLinks.usage.text') || '';
     const usageHref = t('site.navLinks.usage.link') || '';
     const accessManagement = t('site.navLinks.accessManagement.text');
@@ -173,15 +173,15 @@ export const useMainNavItems = (): NavGroup[] => {
         ),
     };
 
-    const dashboardLink = {
-        id: dashboardHref,
-        display: dashboardText,
+    const analyticsLink = {
+        id: analyticsHref,
+        display: analyticsText,
         icon: IconType.CHART_LINE,
         renderComponent: (
             <NavLink
                 type={NavElementType.Link}
-                href={dashboardHref}
-                onClick={() => handleClick(dashboardText)}
+                href={analyticsHref}
+                onClick={() => handleClick(analyticsText)}
             />
         ),
     };
@@ -249,7 +249,7 @@ export const useMainNavItems = (): NavGroup[] => {
     const usageLink = {
         id: usageHref,
         display: usageText,
-        icon: IconType.CHAT_SQUARE_BAR,
+        icon: IconType.CHART_SQUARE_BAR,
         renderComponent: (
             <NavLink type={NavElementType.Link} href={usageHref} />
         ),
@@ -276,7 +276,7 @@ export const useMainNavItems = (): NavGroup[] => {
             ],
         },
         {
-            items: [...(hasDashboardPermission ? [dashboardLink] : [])],
+            items: [...(hasAnalyticsPermission ? [analyticsLink] : [])],
         },
         {
             items: [

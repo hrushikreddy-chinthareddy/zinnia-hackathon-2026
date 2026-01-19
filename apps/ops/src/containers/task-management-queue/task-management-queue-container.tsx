@@ -1,4 +1,5 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import dayjs from 'dayjs';
 import dynamic from 'next/dynamic';
 import { TFunction, useTranslation } from 'next-i18next';
 import { useState, useCallback } from 'react';
@@ -23,6 +24,7 @@ import { TaskLabel, TaskStatus } from '@deps/models/case/task-instance';
 import { UserProfile } from '@deps/models/user-profile';
 import { TaskListingParams } from '@deps/pages/tasks';
 import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_outlined/filter.svg';
+import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys } from '@deps/types/search';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
@@ -82,6 +84,8 @@ type SearchParamsPayload = {
     queues?: string[];
     statuses?: string[];
     sortDirection?: string;
+    scheduledDateStart?: string;
+    scheduledDateEnd?: string;
     escalated?: boolean | null | undefined;
 };
 
@@ -151,6 +155,8 @@ const TaskManagementQueue = ({
             queues = [],
             statuses = [],
             escalated,
+            scheduledDateStart,
+            scheduledDateEnd,
         } = searchParams;
         const safeSearchParams = {
             ...searchParams,
@@ -166,6 +172,15 @@ const TaskManagementQueue = ({
             sortDirection: searchParams.sortDirection || sortDirection,
             sortBy: DEFAULT_SORTING_CONFIG.sortBy,
             ...(escalated !== undefined && { escalated }),
+            ...(scheduledDateStart &&
+                scheduledDateEnd && {
+                    scheduledDateStart: dayjs
+                        .utc(scheduledDateStart, NUMERIC_DATE_FORMAT)
+                        .toISOString(),
+                    scheduledDateEnd: dayjs
+                        .utc(scheduledDateEnd, NUMERIC_DATE_FORMAT)
+                        .toISOString(),
+                }),
         };
 
         return safeSearchParams;
@@ -243,6 +258,8 @@ const TaskManagementQueue = ({
                 ),
                 queues: additionalFilters.group,
                 escalated: additionalFilters.escalated,
+                scheduledDateStart: additionalFilters.scheduledDateStart,
+                scheduledDateEnd: additionalFilters.scheduledDateEnd,
             };
 
             const copy = { ...searchValue };
@@ -302,11 +319,14 @@ const TaskManagementQueue = ({
     };
 
     const handleFilterRemove = useCallback(
-        (filterName: string, value: string) => {
+        (filterName: string, value?: string) => {
             const updated = { ...searchValue.additionalFilters };
 
             if (filterName === FilterKeys.escalated) {
                 updated[filterName] = undefined;
+            } else if (filterName === FilterKeys.scheduledDateStart) {
+                updated[filterName] = '';
+                updated[FilterKeys.scheduledDateEnd] = '';
             } else {
                 const current = updated[filterName];
                 if (!current) return;
@@ -332,19 +352,31 @@ const TaskManagementQueue = ({
         [searchValue]
     );
 
+    function resetAdditionalFilters(additionalFilters: Record<string, any>) {
+        Object.keys(additionalFilters).forEach((key) => {
+            if (key === FilterKeys.statuses) return;
+
+            if (key === FilterKeys.escalated) {
+                additionalFilters[key] = undefined;
+            } else if (
+                key === FilterKeys.scheduledDateStart ||
+                key === FilterKeys.scheduledDateEnd
+            ) {
+                additionalFilters[key] = '';
+            } else {
+                additionalFilters[key] = [];
+            }
+        });
+
+        return additionalFilters;
+    }
+
     const handleReset = useCallback(() => {
         const newSearchValue = { ...searchValue };
         const statuses = newSearchValue?.additionalFilters?.statuses || [];
 
         if (newSearchValue.additionalFilters) {
-            Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                if (key === FilterKeys.statuses) return;
-                else if (key === FilterKeys.escalated) {
-                    newSearchValue.additionalFilters[key] = undefined;
-                } else {
-                    newSearchValue.additionalFilters[key] = [];
-                }
-            });
+            resetAdditionalFilters(newSearchValue.additionalFilters);
         }
 
         const { additionalFilters, ...payload } = newSearchValue;
@@ -395,14 +427,7 @@ const TaskManagementQueue = ({
         delete searchParams?.additionalFilters;
 
         if (newSearchValue?.additionalFilters) {
-            Object.keys(newSearchValue.additionalFilters).forEach((key) => {
-                if (key === FilterKeys.statuses) return;
-                else if (key === FilterKeys.escalated) {
-                    newSearchValue.additionalFilters[key] = undefined;
-                } else {
-                    newSearchValue.additionalFilters[key] = [];
-                }
-            });
+            resetAdditionalFilters(newSearchValue.additionalFilters);
 
             setSearchValue(newSearchValue);
 

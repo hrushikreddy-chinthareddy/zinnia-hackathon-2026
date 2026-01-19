@@ -59,6 +59,7 @@ export function ChangeAddressTemplate({
     const { customData, setCustomData } = formContext;
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
+
     const dynamicKey = customData.details.beneAddress
         ? DynamicKey.BENE_ADDRESS
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;

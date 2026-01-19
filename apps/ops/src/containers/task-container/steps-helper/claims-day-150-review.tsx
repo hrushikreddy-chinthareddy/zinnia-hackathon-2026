@@ -138,6 +138,8 @@ export const getDay150ReviewSteps = ({
                 <ConfirmStep
                     taskType={taskType}
                     taskInfoLink={taskInfoLink}
+                    isCta={true}
+                    ctaLink={`/cases/${task?.caseId}/progress`}
                 ></ConfirmStep>
             ),
             text: t('confirm'),

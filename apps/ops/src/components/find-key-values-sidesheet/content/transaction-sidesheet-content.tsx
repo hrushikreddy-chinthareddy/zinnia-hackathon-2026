@@ -1,4 +1,3 @@
-import { useQueryClient } from '@tanstack/react-query';
 import {
     Button,
     FieldData,
@@ -7,17 +6,20 @@ import {
     Label,
     FieldSize as BloomFieldSize,
     FieldTypes,
+    Loader,
+    LoaderVariant,
 } from '@zinnia/bloom/components';
-import dayjs from 'dayjs';
-import { useEffect, useMemo, ChangeEvent } from 'react';
+import { useEffect, useMemo, ChangeEvent, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
+import SidesheetCancelPending from '@deps/components/side-sheet/side-sheet-transaction/cancel-pending/side-sheet-cancel-pending';
+import SidesheetReverseRecreate from '@deps/components/side-sheet/side-sheet-transaction/reverse-recreate/side-sheet-reverse-recreate';
+import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useViewState } from '@deps/contexts/ViewStateContext';
 import { useDebounce } from '@deps/hooks/useDebounce';
-import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
-import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import useQueryStore from '@deps/utils/queryStore';
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { AccountingEntries, Transaction } from '@zinnia/api-types/types/sor';
 
 import { DataNodesRenderer } from '../components/data-node-renderer';
 import {
@@ -26,6 +28,7 @@ import {
     transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
+import TransactionSidesheetActions from '../transaction-sidesheet-actions';
 import {
     addLinkToPartyId,
     addToolTip,
@@ -39,32 +42,37 @@ import {
     groupTaxesSection,
     groupBasicsForTransaction,
     getAllParties,
+    addAccountingEntriesGroup,
 } from '../transformations/section-grouping';
+import {
+    getReversalTransactionId,
+    getTransactionAmount,
+    TransactionSidesheetViews,
+} from '../utils';
 
 export const TransactionSidesheetContent = ({
+    accountingEntries,
     transaction,
+    onTransactionSubmit,
 }: {
+    accountingEntries?: AccountingEntries[] | undefined;
     transaction: Transaction;
+    onTransactionSubmit?: () => void;
 }) => {
     const { treeState, setTreeState, searchValue, setSearchValue } =
         useTreeState();
     const { t } = useTranslation();
-    const queryClient = useQueryClient();
-    const [params] = useQueryStore();
-    const { planCode, id } = params;
-    const { data: policy } = usePolicyQuery(
-        String(planCode),
-        String(id),
-        dayjs(new Date()).format(NUMERIC_DATE_FORMAT), // Don't know if this is right, but we don't filter transactions by date
-        queryClient,
-        true
-    );
+
+    const { policy, policyDetails } = useContext(PolicyData);
+
+    const { viewState, setViewState } = useViewState();
+    const { handleOpen } = useSideSheetContext();
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
     // the map of partyId to party data is used to link party names within parties fields
     const allPartiesById = useMemo(() => {
-        if (!policy) {
+        if (!policy || !policyDetails.planCode || !policyDetails.policyNumber) {
             return undefined;
         }
         const policyNodes = buildRenderTreeFromSourceData(policy, t);
@@ -72,16 +80,21 @@ export const TransactionSidesheetContent = ({
             //FIXME: shoudln't run this often
             policyNodes,
             t,
-            planCode: String(planCode),
-            policyNumber: String(id),
+            planCode: policyDetails.planCode,
+            policyNumber: policyDetails.policyNumber,
         });
         return allPartiesById;
-    }, [policy, t, id, planCode]);
+    }, [policy, t, policyDetails]);
 
     const transactionNodes = useMemo(() => {
         if (!allPartiesById) {
             return [];
         }
+
+        const accountingEntriesNodes = buildRenderTreeFromSourceData(
+            accountingEntries,
+            t
+        );
 
         // Chains transformations for the entire tree
         return applyTransformationsToNodes(
@@ -89,8 +102,9 @@ export const TransactionSidesheetContent = ({
             // convert it into a structure that can be rendered
             // Full docs here: https://zinnia.atlassian.net/wiki/spaces/AU/pages/5738889232/Rendering+Data+Trees
             (nodes) => buildRenderTreeFromSourceData(nodes, t),
-            (nodes) => groupBasicsForTransaction(nodes), // Groups all top-level DataField nodes into a section
-            (nodes) => groupTaxesSection(nodes), // Combines various data into a Taxes section
+            groupBasicsForTransaction, // Groups all top-level DataField nodes into a section
+            groupTaxesSection, // Combines various data into a Taxes section
+            (nodes) => addAccountingEntriesGroup(nodes, accountingEntriesNodes),
             (nodes) =>
                 // Transforms the entire tree, chaining transformations on *each node*
                 transformNodes({
@@ -105,8 +119,10 @@ export const TransactionSidesheetContent = ({
                             // Adds a link to any partyId fields
                             addLinkToPartyId({
                                 node,
-                                planCode: String(planCode),
-                                policyNumber: String(id),
+                                planCode: String(policyDetails.planCode),
+                                policyNumber: String(
+                                    policyDetails.policyNumber
+                                ),
                                 allPartiesById,
                             }),
                         (node) =>
@@ -124,7 +140,7 @@ export const TransactionSidesheetContent = ({
                     ],
                 })
         )(transaction);
-    }, [transaction, allPartiesById, planCode, id, t]);
+    }, [transaction, allPartiesById, policyDetails, accountingEntries, t]);
 
     const matches = useMemo(
         () => searchNodes(transactionNodes, debouncedSearchValue),
@@ -137,8 +153,55 @@ export const TransactionSidesheetContent = ({
         setSearchValue(debouncedSearchValue);
     }, [debouncedSearchValue, setTreeState, setSearchValue]);
 
+    if (viewState === TransactionSidesheetViews.loading) {
+        return (
+            <div className={styles.loadingContainer}>
+                <Loader variant={LoaderVariant.Default} />
+            </div>
+        );
+    }
+
+    if (viewState === TransactionSidesheetViews.cancel) {
+        return (
+            <SidesheetCancelPending
+                amount={getTransactionAmount(transaction)}
+                closeSidesheet={() => {
+                    onTransactionSubmit && onTransactionSubmit();
+                    handleOpen(false);
+                }}
+                exitTransaction={() =>
+                    setViewState(TransactionSidesheetViews.default)
+                }
+                policyNumber={policy?.policyNumber}
+                planCode={policy?.product?.planCode}
+                transactionId={transaction?.transactionId}
+                transactionType={transaction?.transactionType}
+            />
+        );
+    }
+
+    if (viewState === TransactionSidesheetViews.reverse) {
+        return (
+            <SidesheetReverseRecreate
+                amount={getTransactionAmount(transaction)}
+                effectiveDate={transaction.effectiveDate}
+                exitTransaction={() =>
+                    setViewState(TransactionSidesheetViews.default)
+                }
+                closeSidesheet={() => {
+                    onTransactionSubmit && onTransactionSubmit();
+                    handleOpen(false);
+                }}
+                policyNumber={policy?.policyNumber}
+                planCode={policy?.product?.planCode}
+                transactionType={transaction?.transactionType}
+                reversalTransactionId={getReversalTransactionId(transaction)}
+            />
+        );
+    }
     return (
         <div className={styles.keyValuesContainer}>
+            <TransactionSidesheetActions transaction={transaction} />
             <FieldData
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setSearchValue(e.target.value)

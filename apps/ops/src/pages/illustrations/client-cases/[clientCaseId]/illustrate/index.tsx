@@ -54,7 +54,8 @@ export default function ClientCaseIllustrations({
     const carrierProductId = searchParams.get('planCode') || '';
     useSegmentPageTracker(
         additionalData.user,
-        SegmentPageName.IllustrationsDetails
+        SegmentPageName.IllustrationsDetails,
+        { client_case_id: clientCaseId }
     );
 
     const {
@@ -174,6 +175,7 @@ export default function ClientCaseIllustrations({
                             </section>
                             <section
                                 className={clsx(styles.illustrationContainer)}
+                                id="printable"
                             >
                                 <IllustrationDetails
                                     clientCase={clientCase}

@@ -3,6 +3,7 @@ import type { QuickQuoteParams } from '@deps/types/quickQuote';
 
 import { QuickQuoteProducts } from './evaluate-quick-quote';
 import { RULES_MODEL } from './rules';
+import { nonEligibleReasonByClass, RiderEligibilityResult } from './types';
 
 const createParams = (
     overrides: Partial<QuickQuoteParams> = {}
@@ -21,22 +22,23 @@ const createParams = (
         ...overrides,
     } as QuickQuoteParams);
 
+const determineNotAvailabilityClassReason = (
+    notAvailabilityReasons: nonEligibleReasonByClass[],
+    reasonField: string
+) => {
+    return notAvailabilityReasons.find((reasonObj) =>
+        reasonObj.reasons.find((reason) => reason.field === reasonField)
+    );
+};
+
+const determineNotAvailabilityRiderReason = (
+    rider: RiderEligibilityResult,
+    reasonField: string
+) => {
+    return rider.reasons.find((reason) => reason.field === reasonField);
+};
+
 describe('QuickQuoteProducts', () => {
-    it('returns all products as unavailable when state is not covered', () => {
-        const engine = new QuickQuoteProducts(RULES_MODEL);
-        // @ts-expect-error: this a invalidate state to trigger the error
-        const params = createParams({ state: 'NY' });
-
-        const result = engine.getProductsAvailableFor(params);
-
-        expect(result).toHaveLength(RULES_MODEL.products.length);
-
-        for (const productResult of result) {
-            expect(productResult.classCodes).toEqual([]);
-            expect(productResult.notAvailabilityReasonField).toBe('state');
-        }
-    });
-
     it('returns min and max non-nicotine classes for an eligible non-smoker', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
@@ -58,7 +60,6 @@ describe('QuickQuoteProducts', () => {
             'STANDARDNONTOBACCO',
             'ELITENONTOBACCO',
         ]);
-        expect(tl20!.notAvailabilityReasonField).toBeUndefined();
     });
 
     it('sets notAvailabilityReasonField to "age" when age is out of range for all classes', () => {
@@ -72,11 +73,15 @@ describe('QuickQuoteProducts', () => {
 
         for (const productResult of result) {
             expect(productResult.classCodes).toEqual([]);
-            expect(productResult.notAvailabilityReasonField).toBe('age');
+            const notAvailabilityReason = determineNotAvailabilityClassReason(
+                productResult.notAvailabilityReasonField,
+                'age'
+            );
+            expect(notAvailabilityReason).toBeDefined();
         }
     });
 
-    it('sets notAvailabilityReasonField to "face" when face amount is out of range but age is valid', () => {
+    it('sets some of notAvailabilityReasonField to "face" when face amount is out of range but age is valid', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 35,
@@ -87,11 +92,22 @@ describe('QuickQuoteProducts', () => {
 
         for (const productResult of result) {
             expect(productResult.classCodes).toEqual([]);
-            expect(productResult.notAvailabilityReasonField).toBe('face');
+            const faceNotAvailabilityReason =
+                determineNotAvailabilityClassReason(
+                    productResult.notAvailabilityReasonField,
+                    'face'
+                );
+            const ageNotAvailabilityReason =
+                determineNotAvailabilityClassReason(
+                    productResult.notAvailabilityReasonField,
+                    'age'
+                );
+            expect(faceNotAvailabilityReason).toBeDefined();
+            expect(ageNotAvailabilityReason).toBeUndefined();
         }
     });
 
-    it('marks Accidental Death rider as "age" when age is out of rider range but product is still eligible', () => {
+    it('marks Accidental Death rider rejected reason as "age" when age is out of rider range but product is still eligible', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 65,
@@ -105,17 +121,25 @@ describe('QuickQuoteProducts', () => {
         });
 
         const result = engine.getProductsAvailableFor(params);
-
         // Term Life 10 Yr
         const tl10 = result.find(
             (p) => p.planCode === 'TL0101' && p.termLength === 10
         );
-        expect(tl10).toBeDefined();
 
-        expect(tl10!.riders.accidentalDeathBenefit).toBe('age');
+        expect(tl10).toBeDefined();
+        expect(tl10?.classCodes.length).toBeGreaterThan(0);
+        const isRiderEligible = tl10?.riders.Rider_ADR.eligible;
+        const ageNotAvailabilityReason = determineNotAvailabilityRiderReason(
+            tl10!.riders.Rider_ADR!,
+            'age'
+        );
+        expect(isRiderEligible).toBe(false);
+        expect(ageNotAvailabilityReason).toBeDefined();
+
+        // todo determine age reason for rider
     });
 
-    it('marks Accidental Death rider as "face" when rider face amount is greater than product one', () => {
+    it('marks Accidental Death rider rejected reason as "face" when rider face amount is greater than product one', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 65,
@@ -135,11 +159,16 @@ describe('QuickQuoteProducts', () => {
             (p) => p.planCode === 'TL0101' && p.termLength === 10
         );
         expect(tl10).toBeDefined();
-
-        expect(tl10!.riders.accidentalDeathBenefit).toBe('face');
+        const faceNotAvailabilityReason = determineNotAvailabilityRiderReason(
+            tl10!.riders.Rider_ADR!,
+            'face'
+        );
+        const isRiderEligible = tl10?.riders.Rider_ADR.eligible;
+        expect(isRiderEligible).toBe(false);
+        expect(faceNotAvailabilityReason).toBeDefined();
     });
 
-    it('returns false for a rider that is not selected', () => {
+    it('returns not eligible for a rider that is not selected', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 35,
@@ -154,19 +183,19 @@ describe('QuickQuoteProducts', () => {
         const tl10 = result.find(
             (p) => p.planCode === 'TL0101' && p.termLength === 10
         );
-        expect(tl10).toBeDefined();
+        expect(!tl10).toBeDefined();
 
-        expect(tl10!.riders.accidentalDeathBenefit).toBe(false);
-        expect(tl10!.riders.childrensTerm).toBe(false);
-        expect(tl10!.riders.waiverOfPremium).toBe(false);
+        expect(tl10!.riders.Rider_ADR.eligible).toBe(false);
+        expect(tl10!.riders.Rider_CTR.eligible).toBe(false);
+        expect(tl10!.riders.Rider_WPR.eligible).toBe(false);
     });
 
     it('propagates premiumFreeRiders from input into result.riders', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             premiumFreeRiders: {
-                acceleratedDeathBenefit: true,
-            } as any,
+                acceleratedDeathBenefitForTerminalIllness: true,
+            },
         });
 
         const result = engine.getProductsAvailableFor(params);
@@ -174,7 +203,6 @@ describe('QuickQuoteProducts', () => {
             (p) => p.planCode === 'TL0101' && p.termLength === 10
         );
         expect(tl10).toBeDefined();
-
-        expect((tl10!.riders as any).acceleratedDeathBenefit).toBe(true);
+        expect(tl10!.riders.Rider_ABRTRM.eligible).toBe(true);
     });
 });

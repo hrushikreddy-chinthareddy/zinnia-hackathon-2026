@@ -1,14 +1,14 @@
-import { queryOptions, useQuery } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
+import { buildTransactionApiArgsFromFilters } from '@deps/components/history/filters/filter.helpers';
 import { HistoryFilters } from '@deps/contexts/HistoryFiltersContext';
-import { getTransactionsQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
-import {
-    BasePolicy,
-    Transaction,
-    TransactionStatus,
-} from '@zinnia/api-types/types/sor';
+import { getTransactionsSummaryQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
+import { TransactionSummary } from '@deps/types/transactions';
+import { BasePolicy, TransactionStatus } from '@zinnia/api-types/types/sor';
 
-export const initialFilterTransactions: { [key: string]: Transaction[] } = {
+export const initialFilterTransactions: {
+    [key: string]: TransactionSummary[];
+} = {
     [TransactionStatus.COMPLETED]: [],
     [TransactionStatus.PENDING]: [],
     [TransactionStatus.CANCELED]: [],
@@ -16,7 +16,7 @@ export const initialFilterTransactions: { [key: string]: Transaction[] } = {
     [TransactionStatus.REVERSED]: [],
 };
 
-const filteredTransactions = (transactions: Transaction[]) => {
+const filteredTransactions = (transactions: TransactionSummary[]) => {
     return (
         transactions?.reduce((acc, transaction) => {
             for (const status in acc) {
@@ -32,49 +32,31 @@ const filteredTransactions = (transactions: Transaction[]) => {
     );
 };
 
-export const useTransactionsOptions = (
-    historyFilters: HistoryFilters,
-    policy: BasePolicy,
-    multiTransactionTypes?: boolean,
-    enabled: boolean = true
-) => {
-    return queryOptions({
-        queryKey: [
-            'getTransactions',
-            historyFilters.eventFilter,
-            historyFilters.datesFilter,
-            policy.policyNumber,
-            policy.product?.planCode,
-            multiTransactionTypes,
-        ],
-
-        queryFn: () =>
-            getTransactionsQuery({
-                historyFilters: {
-                    eventFilter: historyFilters.eventFilter,
-                    datesFilter: historyFilters.datesFilter,
-                },
-                policyNumber: policy.policyNumber,
-                planCode: policy.product?.planCode,
-                multiTransactionTypes,
-            }),
-        enabled: enabled && !!policy.policyNumber && !!policy.product?.planCode,
-        select: (results) => filteredTransactions(results),
-    });
-};
-
 export const useTransactions = (
     policy: BasePolicy,
     historyFilters: HistoryFilters,
-    multiTransactionTypes: boolean = false,
+    transactionTypes: string[] | undefined,
     enabled?: boolean
 ) => {
     return useQuery({
-        ...useTransactionsOptions(
+        queryKey: [
+            'getTransactions',
             historyFilters,
-            policy,
-            multiTransactionTypes,
-            enabled
-        ),
+            policy.policyNumber,
+            policy.product?.planCode,
+            transactionTypes,
+        ],
+
+        queryFn: () => {
+            const args = buildTransactionApiArgsFromFilters(historyFilters);
+            return getTransactionsSummaryQuery({
+                ...args,
+                policyNumber: policy.policyNumber,
+                planCode: policy.product?.planCode,
+                transactionTypes,
+            });
+        },
+        enabled: enabled && !!policy.policyNumber && !!policy.product?.planCode,
+        select: (results) => filteredTransactions(results),
     });
 };

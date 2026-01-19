@@ -13,6 +13,7 @@ export enum ProcessType {
     DEFAULT_CASE = 'Operations Review',
     IDN_DEATH_CLAIM = 'IDN_DEATH_CLAIM',
     RMD = 'RMD',
+    PolicyUpdate = 'Policy Update',
 }
 
 export enum TypeOfPayment {

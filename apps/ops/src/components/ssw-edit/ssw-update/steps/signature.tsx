@@ -1,6 +1,7 @@
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
+import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
 import SignatureValidations from '@deps/components/otp-withdrawal-form/signature-validation/signature-validations';
 import TransactionNavigationButtons, {
     ParentPage,
@@ -47,6 +48,7 @@ const Signature = () => {
                     isFormStateReadOnly={false}
                     config={signaturesConfig}
                 />
+                <NoteSection />
             </div>
         </WorkflowCard>
     );

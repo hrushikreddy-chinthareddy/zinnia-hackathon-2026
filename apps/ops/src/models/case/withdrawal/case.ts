@@ -828,7 +828,7 @@ export interface UpsAccount {
 }
 
 export type FormComment = {
-    comment: string;
+    comment: string | null;
 };
 
 // ENUMS for various parts of the form

@@ -5,7 +5,7 @@ import {
     percentFormatify,
 } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
+import { DEFAULT_ERROR_STRING, toSentenceCase } from '@deps/utils/strings';
 
 import { findFieldInNode } from '../data-node-helpers/traversal';
 import { currencyFields } from '../translations/currency-fields';
@@ -13,6 +13,7 @@ import { dateFields } from '../translations/date-fields';
 import { grammarCorrections } from '../translations/grammar-corrections';
 import { industryTermToAbbrev } from '../translations/industry-term-to-abbrev';
 import { percentageFields } from '../translations/percentage-fields';
+import { sentenceCaseFields } from '../translations/sentence-case-fields';
 import { DataField, DataNode, DataSection, FieldType } from '../types';
 
 /**
@@ -153,6 +154,10 @@ export const formatAsDataValue = ({
     // Currency
     if (fieldName && currencyFields.has(fieldName))
         value = numberFormatify(Number(fieldData));
+
+    // Sentence Case
+    if (fieldName && sentenceCaseFields.has(fieldName))
+        value = toSentenceCase(fieldData);
 
     // Percentages
     if (fieldName && percentageFields.has(fieldName))
@@ -340,4 +345,56 @@ export const formatPartyLink = ({
     policyNumber: string;
 }) => {
     return `/policies/${planCode}/${policyNumber}/people/${partyId}`;
+};
+
+export const enumsMapping = ({
+    node,
+    t,
+    policyNomenclature,
+}: {
+    node: DataNode;
+    t: TFunction;
+    policyNomenclature?: string;
+}) => {
+    if (node.type === FieldType.field) {
+        const formattedValue =
+            t(`${policyNomenclature}.enums.${node.value}`, {
+                defaultValue: null,
+            }) ?? undefined;
+        return {
+            ...node,
+            value: formattedValue ?? node.value,
+        };
+    }
+    return node;
+};
+
+/**
+ * Adds a tooltip to a DataNode if it is a field
+ *
+ * @param node The node to add the tooltip to
+ * @param t The translation function
+ * @param policyNomenclature "policy" or "contract"
+ * @returns The node with the tooltip added
+ */
+export const getTooltipByValue = ({
+    node,
+    t,
+    policyNomenclature,
+}: {
+    node: DataNode;
+    t: TFunction;
+    policyNomenclature?: string;
+}) => {
+    if (node.type === FieldType.field) {
+        return {
+            ...node,
+            toolTip:
+                t(`${policyNomenclature}.toolTips.${node.value}`, {
+                    defaultValue: null,
+                    policyNomenclature,
+                }) ?? undefined,
+        };
+    }
+    return node;
 };

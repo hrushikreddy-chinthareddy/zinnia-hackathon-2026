@@ -1,9 +1,8 @@
 import { AxiosResponse } from 'axios';
 
+import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
 import { TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
-import { client } from '@deps/queries/api-utils/client';
-import { browserLogError } from '@deps/utils/browser-logging';
 import {
     logError,
     LoggingContext,
@@ -19,53 +18,29 @@ export interface SearchTransactionFilters {
 
 export interface SearchTransactionPayload {
     identifiers: { identifier: string; value: string }[];
+    entityType?: string[];
 }
 
 const transactionSearchUrl =
     apiServerBaseUrl + '/transactions/v1/transaction/search';
 
-export const searchTransactionsByPaymentRecordId = async (
-    filters: SearchTransactionFilters
-): Promise<TransactionData[] | null> => {
-    const loggingContext = {
-        file: 'queries/api/transaction-search',
-        function: 'searchTransactionsByPaymentRecordId',
-        inputs: { filters },
-    };
-
-    try {
-        const payload: SearchTransactionPayload = {
-            identifiers: [
-                {
-                    identifier: 'paymentRecordId',
-                    value: filters.paymentRecordId,
-                },
-            ],
-        };
-
-        const { data } = await client.post<
-            any,
-            AxiosResponse<TransactionData[]>
-        >(transactionSearchUrl, payload);
-        return data;
-    } catch (e: any) {
-        browserLogError('transactions::getTransactionsByCorrelationId::error', {
-            ...parseErrorInformation(e),
-            ...loggingContext,
-        });
-        return null;
-    }
-};
-
 export const searchTransactionsSSR = async (
     payload: SearchTransactionPayload,
     accessToken: string | undefined,
     loggingContext: LoggingContext
-): Promise<TransactionData[] | null> => {
+): Promise<TransactionData[] | BeneficiaryRecord[] | null> => {
     logInfo('transaction-search::searchTransactionsSSR::info', {
         ...loggingContext,
         payload,
     });
+
+    if (Object.keys(payload).length === 0) {
+        logInfo('transaction-search::searchTransactionsSSR::info', {
+            ...loggingContext,
+            message: 'Empty payload received',
+        });
+        return [];
+    }
     const config = {
         authorization: `Bearer ${accessToken}`,
         headers: {

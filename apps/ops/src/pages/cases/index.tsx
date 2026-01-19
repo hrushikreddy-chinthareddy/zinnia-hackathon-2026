@@ -28,6 +28,7 @@ import {
     initialFilters,
 } from '@deps/contexts/CaseManagementFilters';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { useSearchBarcontext } from '@deps/contexts/SearchBarContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -124,6 +125,13 @@ const CaseManagementDashboard = ({
     ] = useCaseFilterQueryStore();
     const limit = 25;
     const [loadedStoredFilters, setLoadedStoredFilters] = useState(false);
+
+    const { setShowFieldErrorMessage, validateValueToSearch } =
+        useSearchBarcontext();
+
+    useEffect(() => {
+        return () => setShowFieldErrorMessage(false);
+    }, []);
 
     const handleCreatedBySort = useCallback(
         (key: 'createdAt') => {
@@ -403,6 +411,9 @@ const CaseManagementDashboard = ({
                     userId: user.partyId,
                 }
             );
+
+            validateValueToSearch(value);
+
             setCaseManagementFilters((prevFilters) => ({
                 ...prevFilters,
                 searchValue: value,

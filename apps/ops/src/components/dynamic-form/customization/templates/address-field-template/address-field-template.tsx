@@ -2,7 +2,6 @@ import { getUiOptions, ObjectFieldTemplateProps } from '@rjsf/utils';
 
 import { helpInformation } from '../field-template/field-template';
 import styles from '../field-template/field-template.module.css';
-
 const widthClass = (width: number) => {
     return width === 100
         ? 'w-full lg:basis-[calc(100%-0.25rem)] '
@@ -16,7 +15,9 @@ const widthClass = (width: number) => {
         ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(33%-0.25rem)]'
         : width === 25
         ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(25%-0.25rem)]'
-        : 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(20%-0.25rem)]';
+        : width === 20
+        ? 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(20%-0.25rem)]'
+        : 'xs:basis-[calc(50%-0.25rem)] lg:basis-[calc(13%-0.25rem)]';
 };
 
 export default function AddressFieldTemplate({

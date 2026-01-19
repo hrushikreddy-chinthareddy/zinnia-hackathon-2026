@@ -152,12 +152,17 @@ export type CaseClickedEvent = BaseSegmentEventProps & {
 
 export type IllustrationsClickedEvent = BaseSegmentEventProps & {
     productName: string;
+    productMarketingName: string;
     productType: string;
     carrier: string;
 };
 
 export type IllustrationAddProductClickedEvent = BaseSegmentEventProps & {
     carrier: string;
+};
+
+export type IllustrationCalculateEvent = IllustrationsClickedEvent & {
+    illustrationId: string;
 };
 
 export type CaseTabClickedEvent = BaseSegmentEventProps & {
@@ -268,6 +273,7 @@ export enum SegmentTransactionType {
     JOINT_OWNER = 'joint_owner',
     PAYOR = 'payor',
     THIRD_PARTY = 'third_party',
+    ASSIGNEE = 'assignee',
 }
 
 export enum TransactionMode {
@@ -352,6 +358,7 @@ export enum TransactionSubmittedEventType {
     REMOVE_PAYOR = 'remove_payor',
     ADD_THIRD_PARTY = 'add_third_party',
     REMOVE_THIRD_PARTY = 'remove_third_party',
+    ADD_ASSIGNEE = 'add_assignee',
 }
 
 export type TransactionSuccessfulEvent = BaseSegmentEventProps & {

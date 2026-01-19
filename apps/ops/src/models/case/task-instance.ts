@@ -1,3 +1,4 @@
+import { Task } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import { AdditionalDataInstance } from './additional-data-instance';
@@ -131,6 +132,7 @@ export type AssignedTask<T = TaskStatus> = {
     identifiers: IdentifierInstance[];
     createdDate: string;
     updatedDate: string;
+    scheduledDate?: string;
 };
 
 export type DocumentData = {
@@ -152,6 +154,7 @@ export interface TaskSideSheetProps {
     taskName?: string;
     mappedDocuments?: TaskDocument[];
     onTaskClaimSuccess?: () => void;
+    onTaskUpdated?: (updatedTask: Task) => void;
 }
 
 export interface TaskQueueDrawerProps {
@@ -181,4 +184,12 @@ export type UnassignedTask<T = TaskStatus> = {
     taskDetails?: string;
     createdAt?: string;
     updatedAt?: string;
+    scheduledDate?: string;
 };
+
+export enum ColSpanConfig {
+    OpsManager = 10,
+    Default = 8,
+}
+
+export const STORAGE_KEY = 'taskQueue.visibleColumns.ops';

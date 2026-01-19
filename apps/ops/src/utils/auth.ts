@@ -17,6 +17,8 @@ export enum FgaRoles {
     ZINNIA_INTERNAL_VIEWER = 'role:zinnia_internal_viewer',
     ZINNIA_INTERNAL_PROCESSOR = 'role:zinnia_internal_processor',
     ILLUSTRATIONS_CREATE_CLIENT_CASE_EXPERIENCE = 'entity:zinnia_live_illustrations_client_case_sidesheet',
+    ZINNIA_LIVE_CASE_ACTIONS = 'entity:zinnia_live_case_actions',
+    REQUEST_CORRECTION = 'entity:write_request_case_correction',
 }
 
 export enum FgaRelation {
@@ -99,6 +101,16 @@ export function createBulkCheckBodyRequest(partyId: string) {
                 relation: FgaRelation.UiAccess,
                 object: FgaRoles.CALL_LOGS_ZL,
             },
+            {
+                user,
+                relation: FgaRelation.UiAccess,
+                object: FgaRoles.ZINNIA_LIVE_CASE_ACTIONS,
+            },
+            {
+                user,
+                relation: FgaRelation.UiAccess,
+                object: FgaRoles.REQUEST_CORRECTION,
+            },
         ],
     };
 }
@@ -119,7 +131,7 @@ export function checkIfUserIsSuperAdmin(
     );
 }
 
-export function checkIfUserHasDashboardAccess(
+export function checkIfUserHasAnalyticsAccess(
     bulkCheckTuples: Array<BulkCheckTuple>
 ) {
     const roleVals = {

@@ -14,14 +14,12 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
 import { getStateName } from '@deps/helpers/states.helpers';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export const CostBasisQualificationCard = ({
     policy,
 }: BasePolicyComponentArgs) => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'policy.detailCards.policyDetails',
-    });
+    const { t } = useTranslation();
 
     const [showAdditional, setShowAdditional] = useState(false);
 
@@ -34,9 +32,7 @@ export const CostBasisQualificationCard = ({
         style: 'currency',
     };
     const { costBasis, issueState, qualificationType } = policy;
-    const qualificationTypeValue = t(
-        `${qualificationType?.toLocaleLowerCase()}`
-    );
+    const qualificationTypeValue = t(`enums.${qualificationType || ''}`);
     const {
         preTaxEquityAndFiscalResponsibilityActBasis,
         preTechnicalAndMiscellaneousRevenueActAmount,
@@ -48,7 +44,10 @@ export const CostBasisQualificationCard = ({
         value: number | undefined
     ) => (
         <div>
-            <Label label={t(labelKey)} variant={LabelVariant.FieldLabel} />
+            <Label
+                label={t(`policy.detailCards.policyDetails.${labelKey}`)}
+                variant={LabelVariant.FieldLabel}
+            />
             <Content
                 details={numberFormatify(value ?? 0, currencyFormat)}
                 variant={ContentVariant.BodySm}
@@ -58,7 +57,10 @@ export const CostBasisQualificationCard = ({
 
     const renderTextField = (labelKey: string, value: string) => (
         <div>
-            <Label label={t(labelKey)} variant={LabelVariant.FieldLabel} />
+            <Label
+                label={t(`policy.detailCards.policyDetails.${labelKey}`)}
+                variant={LabelVariant.FieldLabel}
+            />
             <Content
                 details={value ?? DEFAULT_ERROR_STRING}
                 variant={ContentVariant.BodySm}
@@ -66,13 +68,15 @@ export const CostBasisQualificationCard = ({
         </div>
     );
 
-    const label = t('showdetailedCostBasis') || 'Show detailed cost basis info';
+    const label = t('policy.detailCards.policyDetails.showdetailedCostBasis');
 
     return (
         <CardContainer containerClassNames="border-b-2 border-gray-200">
             <div className="flex flex-row justify-between items-center">
                 <Typography variant={TypographyVariant.H2}>
-                    {t('costBasisAndQualification')}
+                    {t(
+                        'policy.detailCards.policyDetails.costBasisAndQualification'
+                    )}
                 </Typography>
                 <Toggle
                     ariaLabel={label}

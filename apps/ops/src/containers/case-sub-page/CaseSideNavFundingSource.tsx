@@ -16,8 +16,8 @@ import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/t
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
 import { DEFAULT_DATE_FORMAT } from '@deps/utils/dates';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Address, Country, State } from '@zinnia/api-types/types/sor';
 import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 

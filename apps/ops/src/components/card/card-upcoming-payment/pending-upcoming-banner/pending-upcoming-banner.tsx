@@ -1,11 +1,12 @@
 import { BannerAlert, BannerVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import useNavLink from '@deps/hooks/useNavLink';
 import { Processes, Statuses } from '@deps/models/case/case';
 import { getCases } from '@deps/queries/api/cases';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 type PendingUpcomingBannerProps = {
     policyNumber?: string;
@@ -16,11 +17,16 @@ const PendingUpcomingBanner = ({
     policyNumber,
     requestSubTypes,
 }: PendingUpcomingBannerProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'autopay.pendingBanner',
-    });
+    const { t } = useTranslation();
+
+    const bannerContainerRef = useRef<HTMLDivElement | null>(null);
+
+    const { setAriaLabelToChildLinks } = useNavLink();
 
     const { featureFlags } = useOptimizely();
+
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const [caseIds, setCaseIds] = useState<string[]>([]);
 
@@ -57,20 +63,33 @@ const PendingUpcomingBanner = ({
         fetchCases();
     }, [fetchCases]);
 
+    useEffect(() => {
+        if (caseIds.length > 0 && bannerContainerRef.current) {
+            setAriaLabelToChildLinks(bannerContainerRef, t('caseLinkText'));
+        }
+    }, [caseIds, setAriaLabelToChildLinks, t]);
+
     if (caseIds.length === 0) {
         return null;
     }
 
     return (
-        <div className="flex flex-col gap-4 bg-white md:p-6 lg:p-8 !pb-0">
+        <div
+            ref={bannerContainerRef}
+            className="flex flex-col gap-4 bg-white md:p-6 lg:p-8 !pb-0"
+        >
             {caseIds.map((caseId) => (
                 <BannerAlert
                     key={caseId}
                     variant={BannerVariant.Information}
-                    bodyText={t('text')}
+                    bodyText={
+                        systematicProgramTablesEnabled
+                            ? t('allFields.systematicProgramPendingBannerText')
+                            : t('autopay.pendingBanner.text')
+                    }
                     cta={{
                         href: `/cases/${caseId}`,
-                        text: t('caseLinkText'),
+                        text: t('autopay.pendingBanner.caseLinkText'),
                         target: '_blank',
                     }}
                 />

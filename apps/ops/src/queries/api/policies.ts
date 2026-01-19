@@ -3,6 +3,7 @@ import dayjs, { Dayjs } from 'dayjs';
 
 import { PaginationParams } from '@deps/components/pagination/pagination';
 import { PolicySortBy } from '@deps/components/policy-index/types';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import {
@@ -11,7 +12,17 @@ import {
     TransactionHistory,
 } from '@deps/models/case/withdrawal/case';
 import { VariableQuoteResponse } from '@deps/models/case/withdrawal/rmd';
+import {
+    apiServerBaseUrl,
+    baseAppUrl,
+    policyApiBaseUrl,
+} from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
+import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import {
+    PolicyTransactionSortField,
+    PolicyTransactionSortOrder,
+} from '@deps/queries/tanstack/transactions/types';
 import {
     isMockPolicyDetailsRequestEnabled,
     isMockPolicySearchRequestEnabled,
@@ -20,13 +31,22 @@ import {
     mockPolicy,
     mockPolicySearchResult,
 } from '@deps/services/mocks/sor-policy';
+import {
+    AccountingEntriesAPIParams,
+    AccountingEntriesAPIResponse,
+} from '@deps/types/accountingEntries';
 import { CheckTupleResponse } from '@deps/types/fga';
 import {
     PolicyReferenceSearchResponse,
     PolicySearchResult,
     SearchViewQuery,
 } from '@deps/types/search';
-import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
+import { TransactionSummary } from '@deps/types/transactions';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogWarn,
+} from '@deps/utils/browser-logging';
 import {
     fullyMaskPolicyResponse,
     lcPartyResponseSanitizer,
@@ -48,9 +68,6 @@ import {
     TransactionStatus,
     TransactionType,
 } from '@zinnia/api-types/types/sor';
-
-import { apiServerBaseUrl, baseAppUrl, policyApiBaseUrl } from '../api-config';
-import { serverApi } from '../api-utils/serverApiClient';
 
 export interface GetPolicyResponse {
     data: Policy;
@@ -510,28 +527,51 @@ export const getPolicyAccountInfoSSR = async (
     }
 };
 
+export const getPolicyAccountingEntries = async ({
+    limit = 50,
+    offset = 0,
+    ...optionalParams
+}: AccountingEntriesAPIParams): Promise<AccountingEntriesAPIResponse | null> => {
+    try {
+        let accountingEntriesUrl = `${baseAppUrl}/api/policy/v1/accountingentries`;
+
+        const queryParams = new URLSearchParams();
+        for (const [key, value] of Object.entries({
+            limit,
+            offset,
+            ...optionalParams,
+        })) {
+            if (value !== undefined) queryParams.append(key, String(value));
+        }
+
+        accountingEntriesUrl += `?${queryParams.toString()}`;
+
+        const results = await client.get<
+            null,
+            AxiosResponse<AccountingEntriesAPIResponse>
+        >(accountingEntriesUrl);
+
+        return results.data;
+    } catch (e) {
+        browserLogWarn('policies::getPolicyAccountingEntries::error', {
+            ...parseErrorInformation(e),
+        });
+        return null;
+    }
+};
+
 type PolicyNotesQuery = {
-    clientCode: string;
-    limit?: number;
-    offset?: number;
     policyNumber: string;
     planCode: string;
-    isLC?: boolean;
 };
 export const getPolicyNotesInfo = async ({
     policyNumber,
-    clientCode,
-    offset = 0,
-    limit = 10,
     planCode,
-    isLC,
 }: PolicyNotesQuery): Promise<PolicyNotesInfoResponse | null> => {
     try {
-        const fastEndPoint = `${baseUrl}/${planCode}/${policyNumber}/notes`;
-        const lcEndPoint = `${baseUrl}/notesinfo?clientCode=${clientCode}&policyNumber=${policyNumber}&offset=${offset}&limit=${limit}`;
-        const endpoint = isLC ? lcEndPoint : fastEndPoint;
+        const endpoint = `${baseUrl}/${planCode}/${policyNumber}/notes`;
 
-        if (!isLC && !planCode) {
+        if (!planCode) {
             browserLogError(
                 'getPolicyNotesInfo::planCode is required for FAST policies'
             );
@@ -784,8 +824,8 @@ interface PolicyTransactionQuery {
     limit?: number;
     offset?: number;
     planCode?: string;
-    sortField?: 'EFFECTIVEDATE' | 'PROCESSDATE' | 'REVERSALDATE';
-    sortOrder?: 'ASC' | 'DESC';
+    sortField?: PolicyTransactionSortField;
+    sortOrder?: PolicyTransactionSortOrder;
     status?: TransactionStatus | TransactionStatus[];
     transactionTypes?: readonly string[];
     year?: string;
@@ -795,6 +835,12 @@ interface PolicyTransactionQuery {
 }
 
 // Get policy transactions by transactionType
+// DEPRECATED (only Zahara supports detailed transactions on the search endpoint)
+/**
+ * @deprecated - only Zahara supports detailed transactions on the search endpoint.  Remove once the revised_history_table feature flag is cleaned up
+ * @param param0
+ * @returns
+ */
 export const getPolicyTransactions = async ({
     id: policyNumber,
     limit,
@@ -834,7 +880,61 @@ export const getPolicyTransactions = async ({
 
         return response.data.data;
     } catch (error: any) {
-        console.error('An error occurred while requesting transactions', error);
+        browserLogWarn(
+            'getPolicyTransactions:: An error occurred while requesting transactions',
+            error
+        );
+
+        return error.response;
+    }
+};
+
+interface PolicyTransactionsSummaryQuery {
+    endDate?: string; // Zahara API date format (YYYY-MM-DD)
+    limit?: number;
+    offset?: number;
+    planCode: string | undefined;
+    policyNumber: string | undefined;
+    reverseInitiatorOnly?: boolean;
+    sortField?: PolicyTransactionSortField;
+    sortOrder?: PolicyTransactionSortOrder;
+    startDate?: string; // Zahara API date format (YYYY-MM-DD)
+    status?: string[];
+    transactionTypes?: string[];
+    version?: number;
+    year?: string;
+}
+// Get summarized policy transactions by transactionType
+export const getPolicyTransactionsSummary = async ({
+    planCode,
+    policyNumber,
+    sortField = 'EFFECTIVEDATE',
+    sortOrder = 'ASC',
+    ...rest
+}: PolicyTransactionsSummaryQuery): Promise<TransactionSummary[]> => {
+    try {
+        const params = new URLSearchParams();
+
+        for (const [key, value] of Object.entries({
+            sortField,
+            sortOrder,
+            ...rest,
+            viewDetails: false, // Only Zahara supports viewDetails, so this should remain false for compatibility with other SORs
+        })) {
+            if (!isNullEmptyOrUndefined(value)) params.append(key, `${value}`);
+        }
+
+        const query = params.toString();
+        const url = `${baseUrl}/${planCode}/${policyNumber}/transactions?${query}`;
+
+        const response = await client.get<{ data: TransactionSummary[] }>(url);
+
+        return response.data.data;
+    } catch (error: any) {
+        browserLogWarn(
+            'getPolicyTransactionsSummary:: An error occurred while requesting transactions',
+            error
+        );
 
         return error.response;
     }

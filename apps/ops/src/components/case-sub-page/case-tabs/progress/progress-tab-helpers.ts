@@ -22,7 +22,7 @@ import {
     StepInstance,
 } from '@deps/models/case/step-instance';
 import { TaskInstance, TaskStatus } from '@deps/models/case/task-instance';
-import { DEFAULT_ERROR_STRING } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import {
     GroupedExceptions,

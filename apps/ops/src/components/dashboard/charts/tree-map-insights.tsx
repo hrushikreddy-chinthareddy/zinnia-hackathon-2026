@@ -19,7 +19,7 @@ import {
 } from '@deps/helpers/dashboard/dashboard-helpers';
 import { wholeNumberFormatify } from '@deps/helpers/numbers.helpers';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
-import styles from '@deps/pages/dashboard/Dashboard.module.css';
+import styles from '@deps/pages/analytics/Dashboard.module.css';
 import { getCaseInsights } from '@deps/queries/api/openai';
 import { ReactComponent as ChartBarsIcon } from '@deps/styles/elements/icons/illustrations/chart-bars.svg';
 import { ReactComponent as LightBulbIcon } from '@deps/styles/elements/icons/illustrations/light-bulb.svg';
@@ -285,12 +285,7 @@ export const TreeMapInsights = ({
                         </>
                     )}
                 </div>
-                <div
-                    className={clsx(
-                        'w-3/4 flex-col',
-                        sharedStyles.chartContainer
-                    )}
-                >
+                <div className={sharedStyles.chartContainer}>
                     <div>{FilterComponents}</div>
                     <div
                         className={clsx(

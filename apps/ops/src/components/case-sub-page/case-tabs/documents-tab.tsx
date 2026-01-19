@@ -13,10 +13,6 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import DocumentResultsPagination from '@deps/containers/subpages/documents-sub-page/documents-results-pagination';
 import DocumentsResultsTable from '@deps/containers/subpages/documents-sub-page/documents-results-table';
-import {
-    OptimizelyVariableKey,
-    useOptimizely,
-} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { Case } from '@deps/models/case/case';
 import {
@@ -26,8 +22,6 @@ import {
 } from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
-import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 import { Policy } from '@zinnia/api-types/types/sor';
 
@@ -63,13 +57,6 @@ export default function DocumentsTab({
     const limit = 25;
     const [caseOffset, setCaseOffset] = useState(0);
     const [policyOffset, setPolicyOffset] = useState(0);
-    const { featureFlagVariables } = useOptimizely();
-    const useV3 = isFeatureFlagVariableActive(
-        featureFlagVariables,
-        FEATURE_FLAG_VARIABLES.DOCUMENTS_V3_FEATURE_FLAG,
-        OptimizelyVariableKey.Clients,
-        caseDetails?.carrier?.toLocaleLowerCase() || ''
-    );
 
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!caseDetails?.id || !caseDetails?.carrier) {
@@ -163,19 +150,12 @@ export default function DocumentsTab({
         } = {},
         isLoading: loadingCaseDocuments,
     } = useQuery({
-        queryKey: [
-            'documentSearch',
-            caseDocumentSearchBody,
-            limit,
-            caseOffset,
-            useV3,
-        ],
+        queryKey: ['documentSearch', caseDocumentSearchBody, limit, caseOffset],
         queryFn: () =>
             getDocumentSearchResultsQuery(
                 caseDocumentSearchBody,
                 limit,
-                caseOffset,
-                useV3
+                caseOffset
             ),
     });
 
@@ -192,14 +172,12 @@ export default function DocumentsTab({
             policyDocumentSearchBody,
             limit,
             policyOffset,
-            useV3,
         ],
         queryFn: () =>
             getDocumentSearchResultsQuery(
                 policyDocumentSearchBody,
                 limit,
-                policyOffset,
-                useV3
+                policyOffset
             ),
         enabled: !!policyDocumentSearchBody?.policyNumber,
     });
@@ -289,6 +267,7 @@ export default function DocumentsTab({
                                             policy?.policyDates
                                                 ?.policyDeliveryDate
                                         }
+                                        context="case"
                                     />
                                 )}
 
@@ -341,6 +320,7 @@ export default function DocumentsTab({
                                             policy?.policyDates
                                                 ?.policyDeliveryDate
                                         }
+                                        context="case"
                                     />
                                 )}
                                 <DocumentResultsPagination
