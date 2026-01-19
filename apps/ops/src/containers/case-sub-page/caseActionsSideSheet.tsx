@@ -18,6 +18,7 @@ import { CaseAction } from '@deps/models/case/enums';
 import { escalateCase, getProcessReferenceData } from '@deps/queries/api/cases';
 import { browserLogError } from '@deps/utils/browser-logging';
 
+import styles from './styles.module.css';
 import SuccessErrorSideSheet from './success-error-side-sheet';
 
 interface Props {
@@ -34,6 +35,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `caseOverview.${action}Case`,
     });
+    const { t: tCommon } = useTranslation(TranslationFiles.COMMON);
     const [error, setError] = useState<string | undefined>();
     const [reason, setReason] = useState('');
     const [source, setSource] = useState('');
@@ -50,8 +52,12 @@ function CaseActionSideSheet({ caseId, action }: Props) {
 
     const validate = () => {
         const errors = {
-            reason: reason ? undefined : t('reasonRequired'),
-            source: source ? undefined : t('sourceRequired'),
+            reason: reason
+                ? undefined
+                : tCommon('allFields.prioritizationReasonRequired'),
+            source: source
+                ? undefined
+                : tCommon('allFields.prioritizationSourceRequired'),
         };
 
         setReasonError(errors.reason as string | undefined);
@@ -110,7 +116,9 @@ function CaseActionSideSheet({ caseId, action }: Props) {
             ]);
 
             if (!reasonData || !sourceData) {
-                setError(t('refDataError') as string);
+                setError(
+                    tCommon('allFields.prioritizationRefDataError') as string
+                );
                 setReasonOptions([]);
                 setSourceOptions([]);
                 return;
@@ -143,7 +151,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                     {t('detailsBody')}
                 </Typography>
 
-                <div className="flex flex-col gap-4 max-w-md">
+                <div className={styles.caseActionFieldsContainer}>
                     <Select
                         label={t('reasonLabel') as string}
                         size={FieldSize.Small}
@@ -164,7 +172,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                         name="case-prioritization-source"
                         message={sourceError}
                     />
-                    <div className="flex items-center gap-2">
+                    <div className={styles.caseActionNotificationRow}>
                         <Checkbox
                             checked={notify}
                             onChange={(isChecked: boolean) =>

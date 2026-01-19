@@ -102,14 +102,25 @@ export const getProcessReferenceData = async (
         if (queryString) {
             refUrl += `?${queryString}`;
         }
-        const { data } = await client.get<any>(refUrl);
+        const { data } = await client.get<
+            null,
+            AxiosResponse<
+                | ProcessReferenceData[]
+                | { referenceData: ProcessReferenceData[] }
+            >
+        >(refUrl);
 
-        return data?.referenceData ?? data;
+        const referenceData =
+            (data as { referenceData?: ProcessReferenceData[] })
+                .referenceData ?? (data as ProcessReferenceData[]);
+
+        return referenceData;
     } catch (error: any) {
         browserLogError('cases::Failed to get reference data', {
             ...parseErrorInformation(error),
             url: `${baseCasesUrl}/refdata/${key}`,
             key,
+            queryString,
             function: 'cases.getProcessReferenceData',
         });
         return null;
