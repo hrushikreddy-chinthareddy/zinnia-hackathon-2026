@@ -3209,7 +3209,8 @@
             "sourcePlaceholder": "Select a source",
             "reasonRequired": "Select a reason to continue.",
             "sourceRequired": "Select a source to continue.",
-            "notificationLabel": "Receive notification on changes to specified progress."
+            "notificationLabel": "Receive notification on changes to specified progress.",
+            "refDataError": "Unable to load prioritization reasons and sources. Please refresh and try again."
         },
         "deprioritizeCase": {
             "title": "De-prioritize Case",

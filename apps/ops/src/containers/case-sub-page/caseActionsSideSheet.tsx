@@ -109,14 +109,21 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                 getProcessReferenceData('CASE_ESCALATION_SOURCE'),
             ]);
 
+            if (!reasonData || !sourceData) {
+                setError(t('refDataError') as string);
+                setReasonOptions([]);
+                setSourceOptions([]);
+                return;
+            }
+
             setReasonOptions(
-                (reasonData || []).map((item) => ({
+                reasonData.map((item) => ({
                     label: item.value,
                     value: item.key,
                 }))
             );
             setSourceOptions(
-                (sourceData || []).map((item) => ({
+                sourceData.map((item) => ({
                     label: item.value,
                     value: item.key,
                 }))
