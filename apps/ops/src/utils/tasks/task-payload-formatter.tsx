@@ -276,8 +276,6 @@ export const getBeneficiaryChangePayload = (task: ManagementTask) => {
     const actionData = task?.data?.actionData || [];
     const formattedActionData = [...actionData];
 
-    console.log('inside getBeneficiaryChangePayload actionData', actionData);
-
     formattedActionData.map((data, index: number) => {
         formattedActionData[index] = {
             ...data,
@@ -293,16 +291,11 @@ export const getBeneficiaryChangePayload = (task: ManagementTask) => {
         };
     });
 
-    console.log(
-        'inside getBeneficiaryChangePayload formattedActionData',
-        formattedActionData
-    );
-
     return {
         ...task,
         data: {
             ...task.data,
-            actionData,
+            actionData: formattedActionData,
         },
     };
 };
