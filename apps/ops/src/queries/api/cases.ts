@@ -106,10 +106,12 @@ export const getProcessReferenceData = async (
 
         return data?.referenceData ?? data;
     } catch (error: any) {
-        console.error(
-            'getProcessReferenceData::An error occurred while getting reference data',
-            error
-        );
+        browserLogError('cases::Failed to get reference data', {
+            ...parseErrorInformation(error),
+            url: `${baseCasesUrl}/refdata/${key}`,
+            key,
+            function: 'cases.getProcessReferenceData',
+        });
         return null;
     }
 };

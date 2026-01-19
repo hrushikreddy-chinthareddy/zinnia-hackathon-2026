@@ -25,6 +25,11 @@ interface Props {
     action: CaseAction;
 }
 
+const REASON_TYPE_BY_ACTION: Record<CaseAction, string> = {
+    [CaseAction.Prioritize]: 'CASE_ESCALATION_REASON',
+    [CaseAction.Deprioritize]: 'CASE_DEESCALATION_REASON',
+};
+
 function CaseActionSideSheet({ caseId, action }: Props) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `caseOverview.${action}Case`,
@@ -43,22 +48,22 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     const [notify, setNotify] = useState(false);
     const sideSheet = useSideSheetContext();
 
+    const validate = () => {
+        const errors = {
+            reason: reason ? undefined : t('reasonRequired'),
+            source: source ? undefined : t('sourceRequired'),
+        };
+
+        setReasonError(errors.reason as string | undefined);
+        setSourceError(errors.source as string | undefined);
+
+        return !errors.reason && !errors.source;
+    };
+
     const handleSubmit = async () => {
         const isPrioritize = action === CaseAction.Prioritize;
 
-        if (!reason) {
-            setReasonError(t('reasonRequired') as string);
-        } else {
-            setReasonError(undefined);
-        }
-
-        if (!source) {
-            setSourceError(t('sourceRequired') as string);
-        } else {
-            setSourceError(undefined);
-        }
-
-        if (!reason || !source) {
+        if (!validate()) {
             return;
         }
 
@@ -97,10 +102,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
 
     useEffect(() => {
         const fetchRefData = async () => {
-            const reasonType =
-                action === CaseAction.Prioritize
-                    ? 'CASE_ESCALATION_REASON'
-                    : 'CASE_DEESCALATION_REASON';
+            const reasonType = REASON_TYPE_BY_ACTION[action];
 
             const [reasonData, sourceData] = await Promise.all([
                 getProcessReferenceData(reasonType),
