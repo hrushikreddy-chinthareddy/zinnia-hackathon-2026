@@ -20,7 +20,6 @@ import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
-    AccountType,
     AddressTypes,
     AmountType,
     FormDisbursement,
@@ -165,20 +164,6 @@ export default function useSbgcConfig(t: TFunction) {
                     classNames: 'col-start-1 w-full',
                 },
             ],
-            getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
-                if (paymentMethod.text !== PaymentMethod.EFT) {
-                    return DEFAULT_DISBURSEMENT_UPDATE;
-                }
-                const selectedBank = bank[0];
-                return {
-                    ...DEFAULT_DISBURSEMENT_UPDATE,
-                    accountHolder: selectedBank.nameOnBankAccount ?? '',
-                    accountNumber: selectedBank.accountNumber ?? '',
-                    accountType:
-                        selectedBank.accountType?.text ?? AccountType.Checking,
-                    bankRoutingNumber: selectedBank.routingNumber ?? '',
-                };
-            },
             generatePayloadFromSelection: (
                 defaultDisbursementInfo: any,
                 bankingInFile?: BankingDetails[] | null | []

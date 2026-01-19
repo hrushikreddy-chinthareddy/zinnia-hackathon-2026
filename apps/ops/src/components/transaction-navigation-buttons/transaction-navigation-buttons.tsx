@@ -113,10 +113,9 @@ const TransactionNavigationButtons = ({
             );
         }
 
-        router.push({
-            pathname: link,
-            query: { tab: TabOptions.myTasks },
-        });
+        const url = new URL(link, window.location.origin);
+        url.searchParams.set('tab', TabOptions.myTasks);
+        router.push(url.toString());
     }, [trackEventProps, sessionId, partyId, link, router]);
 
     return (

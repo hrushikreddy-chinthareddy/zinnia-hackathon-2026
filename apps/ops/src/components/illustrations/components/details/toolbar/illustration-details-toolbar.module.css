@@ -34,3 +34,9 @@
 
     gap: var(--measure-dimension-gap-md, 8px);
 }
+
+.menuContextualItem {
+    &:hover {
+        cursor: pointer;
+    }
+}

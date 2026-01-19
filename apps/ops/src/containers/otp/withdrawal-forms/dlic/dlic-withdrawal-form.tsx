@@ -4,7 +4,7 @@ import { useContext, useEffect } from 'react';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
-import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
+import FormDisbursementV2 from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import DistributionReason from '@deps/components/otp-withdrawal-form/form-restriction/distribution-reason';
@@ -129,7 +129,8 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
-            <FormDisbursement
+
+            <FormDisbursementV2
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={disbursementOptions}
             />

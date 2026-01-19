@@ -24,6 +24,14 @@ jest.mock('@deps/contexts/RoleChangeContext', () => ({
 jest.mock('@deps/contexts/WorkflowContainerContext', () => ({
     useWorkflow: jest.fn(),
 }));
+jest.mock('next/router', () => ({
+    useRouter: () => ({
+        query: {},
+        pathname: '/test',
+        push: jest.fn(),
+        replace: jest.fn(),
+    }),
+}));
 jest.mock(
     '@deps/containers/people-data-cards/address-card/address-card.helpers',
     () => ({

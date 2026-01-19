@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import { isEmpty } from 'lodash';
 
-import { getEvents } from '@deps/containers/subpages/activity-sub-page/event-feed/event-feed.helpers';
 import {
     DatesFilter,
     EventFilterKeys,
@@ -109,19 +108,6 @@ export const filterEventFilters = (
         ...newState,
         [filterKey]: [subfilter],
     };
-};
-
-export const getTransactionTypesFromHistoryFilters = (
-    historyFilters: HistoryFilters,
-    multiTransactionTypes?: boolean
-): string[] | undefined => {
-    if (hasFilter(historyFilters?.eventFilter)) {
-        return getEvents(
-            historyFilters.eventFilter,
-            multiTransactionTypes ?? false
-        );
-    }
-    return undefined;
 };
 
 export const buildTransactionApiArgsFromFilters = (

@@ -5,6 +5,10 @@ export const PERMISSIONS_COOKIE_NAME = `${
     isHttpsEnvironment() ? '__Host-' : ''
 }fga-permissions`;
 
+export const ROLES_COOKIE_NAME = `${
+    isHttpsEnvironment() ? '__Host-' : ''
+}user-roles`;
+
 export const DEFAULT_PERMISSIONS_COOKIE = '{"tuples":{},"carriers":{}}';
 
 type Relation = string; // a tuples relation

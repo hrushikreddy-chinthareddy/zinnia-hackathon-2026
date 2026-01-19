@@ -1,0 +1,15 @@
+.rmdCalculatorContainer {
+    margin-top: var(--measure-dimension-gap-lg);
+    border-bottom: 2px solid #f3f4f6;
+    padding: var(--measure-dimension-padding-lg);
+}
+
+.rmdCalculatorRow {
+    display: flex;
+    gap: var(--measure-dimension-gap-lg);
+}
+@media (min-width: 640px) {
+    .rmdCalculatorRow {
+        gap: var(--measure-dimension-gap-2xl);
+    }
+}

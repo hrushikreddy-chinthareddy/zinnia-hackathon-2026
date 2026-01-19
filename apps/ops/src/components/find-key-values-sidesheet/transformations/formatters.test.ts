@@ -24,6 +24,7 @@ jest.mock('@deps/helpers/string.helpers', () => ({
 
 jest.mock('@deps/utils/strings', () => ({
     DEFAULT_ERROR_STRING: '--',
+    toSentenceCase: () => 'Sentence case',
 }));
 
 jest.mock('../translations/currency-fields', () => ({
@@ -89,7 +90,7 @@ describe('formatAsDataValue', () => {
         expect(result).toBe('enums.KNOWN_ENUM');
     });
 
-    it('formats currency, percentage, and date based on field name', () => {
+    it('formats currency, percentage, sentence case, and date based on field name', () => {
         const currency = formatAsDataValue({
             fieldName: 'premiumAmount',
             fieldData: '100',
@@ -108,9 +109,16 @@ describe('formatAsDataValue', () => {
             t,
         });
 
+        const sentenceCase = formatAsDataValue({
+            fieldName: 'ledgerGroup',
+            fieldData: 'testData',
+            t,
+        });
+
         expect(currency).toBe('$100');
         expect(percent).toBe('25%');
         expect(date).toBe('date:2024-01-01');
+        expect(sentenceCase).toBe('Sentence case');
     });
 
     it('returns raw fieldData string when no special formatting applies', () => {

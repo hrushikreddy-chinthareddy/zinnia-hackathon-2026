@@ -5,8 +5,16 @@ import {
     Accordion as AccordionRoot,
     AccordionTrigger,
 } from '@radix-ui/react-accordion';
+import { useSearchParams } from 'next/navigation';
 import { TFunction, useTranslation } from 'next-i18next';
-import React, { ForwardedRef, ReactNode, useMemo, useState } from 'react';
+import React, {
+    ForwardedRef,
+    ReactNode,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { PopoverPlacement } from '@deps/components/popover/popover';
@@ -17,6 +25,7 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import { useTaskIdFromUrl } from '@deps/hooks/useTaskIdFromUrl';
 import { Case, Statuses } from '@deps/models/case/case';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
@@ -240,36 +249,71 @@ const Stages = ({
     stages: TransformedStage[];
     stepFilter?: (step: TransformedStep) => boolean;
 }) => {
+    const searchParams = useSearchParams();
+    const taskIdFromUrl = searchParams.get('taskId');
     // Default stages with exceptions to opened state
     const [openedStages, setOpenedStages] = useState<string[]>(
         stages
             .filter((stage) => stage.status === Statuses.Exception)
             .map((stage) => stage.id)
     );
+
+    const foundStageId = useMemo(() => {
+        if (!taskIdFromUrl) return undefined;
+        return stages.find((stage) =>
+            stage.steps.some(
+                (step) =>
+                    step.tasks.some((task) => task.id === taskIdFromUrl) ||
+                    Object.keys(step.exceptionsGroupedByTask).includes(
+                        taskIdFromUrl
+                    )
+            )
+        )?.id;
+    }, [taskIdFromUrl, stages]);
+
+    const foundStageIdRef = useRef(foundStageId);
+    useEffect(() => {
+        foundStageIdRef.current = foundStageId;
+    }, [foundStageId]);
+
+    useTaskIdFromUrl({
+        taskId: foundStageId && taskIdFromUrl ? taskIdFromUrl : undefined,
+        onTaskIdMatch: () => {
+            const currentStageId = foundStageIdRef.current;
+            if (currentStageId) {
+                setOpenedStages([currentStageId]);
+            }
+        },
+    });
+
     return (
         <>
-            {stages.map((stage, index) => (
-                <AccordionRoot
-                    type="multiple"
-                    key={index}
-                    value={openedStages}
-                    onValueChange={setOpenedStages}
-                >
-                    <AccordionItem
-                        className="rounded-lg border-2 border-gray-100 [&:has(h3:hover)]:border-accent1"
-                        key={stage.id}
-                        value={stage.id}
+            {stages.map((stage, index) => {
+                const isAccordionOpen = openedStages.includes(stage.id);
+                return (
+                    <AccordionRoot
+                        type="multiple"
+                        key={index}
+                        value={openedStages}
+                        onValueChange={setOpenedStages}
                     >
-                        <Stage stage={stage} />
-                        <AccordionContent>
-                            <Steps
-                                steps={stage.steps}
-                                stepFilter={stepFilter}
-                            />
-                        </AccordionContent>
-                    </AccordionItem>
-                </AccordionRoot>
-            ))}
+                        <AccordionItem
+                            className="rounded-lg border-2 border-gray-100 [&:has(h3:hover)]:border-accent1"
+                            key={stage.id}
+                            value={stage.id}
+                        >
+                            <Stage stage={stage} />
+                            <AccordionContent>
+                                <Steps
+                                    steps={stage.steps}
+                                    stepFilter={stepFilter}
+                                    isAccordionOpen={isAccordionOpen}
+                                />
+                            </AccordionContent>
+                        </AccordionItem>
+                    </AccordionRoot>
+                );
+            })}
         </>
     );
 };

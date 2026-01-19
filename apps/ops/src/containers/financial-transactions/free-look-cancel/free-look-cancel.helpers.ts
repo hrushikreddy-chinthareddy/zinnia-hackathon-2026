@@ -4,6 +4,7 @@ import { Withdrawal } from '@deps/contexts/transactions/WithdrawalContext.types'
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import {
+    DisbursementType,
     FreeLookCancellationRequest,
     PaymentForm,
 } from '@zinnia/api-types/types/bpm';
@@ -13,51 +14,51 @@ export const buildFreeLookCancelRequestBody = (
     wireCheckPaymentsEnabled: boolean
 ): FreeLookCancellationRequest => {
     const requestCorrelationId = withdrawal.correlationId || uuidV4();
+    const FULL_ALLOCATION_PERCENTAGE = 100.0;
+
+    const baseRequest: Partial<FreeLookCancellationRequest> = {
+        correlationId: requestCorrelationId,
+        effectiveDate: getUtcDate(withdrawal.effectiveDate),
+        reverseInitiator: false,
+        transactionAmounts: {
+            disbursementType:
+                withdrawal.disbursementType || DisbursementType.GROSS,
+            disbursementPaymentForm:
+                getDisbursementPaymentForm(withdrawal.paymentForm) ||
+                PaymentForm.CHECK,
+        },
+    };
 
     if (wireCheckPaymentsEnabled) {
         return {
-            caseId: withdrawal.caseId || '',
-            correlationId: requestCorrelationId,
-            effectiveDate: getUtcDate(withdrawal.effectiveDate),
+            ...baseRequest,
             parties: [
                 {
-                    allocationPercentage: 100,
-                    bankId: withdrawal.paymentBankId,
                     partyId: withdrawal.payeePartyId,
-                    paymentForm:
-                        withdrawal.paymentForm || ('ACH' as PaymentForm),
-                    addressId: withdrawal.paymentAddressId,
-                    forBenefitOfOrForFurtherCredit: withdrawal.fboFfc,
+                    paymentForm: withdrawal.paymentForm || PaymentForm.CHECK,
+                    allocationPercentage: FULL_ALLOCATION_PERCENTAGE,
+                    bankId: withdrawal.paymentBankId,
+                    ...(withdrawal.paymentAddressId && {
+                        addressId: withdrawal.paymentAddressId,
+                    }),
+                    ...(withdrawal.fboFfc && {
+                        forBenefitOfOrForFurtherCredit: withdrawal.fboFfc,
+                    }),
                 },
             ],
-            reverseInitiator: false,
-            transactionAmounts: {
-                disbursementType: withdrawal.disbursementType,
-                disbursementPaymentForm: getDisbursementPaymentForm(
-                    withdrawal.paymentForm
-                ),
-            },
-        };
+        } as FreeLookCancellationRequest;
     }
 
+    // For non-wire payments
     return {
-        caseId: withdrawal.caseId || '',
-        correlationId: requestCorrelationId,
-        effectiveDate: getUtcDate(withdrawal.effectiveDate),
-        parties: [
-            {
-                allocationPercentage: 100,
+        ...baseRequest,
+        payeeOrBeneficiary: {
+            partyId: withdrawal.payeePartyId,
+            paymentForm: withdrawal.paymentForm || PaymentForm.CHECK,
+            allocationPercentage: FULL_ALLOCATION_PERCENTAGE,
+            ...(withdrawal.paymentBankId && {
                 bankId: withdrawal.paymentBankId,
-                partyId: withdrawal.payeePartyId,
-                paymentForm: PaymentForm.ACH,
-            },
-        ],
-        reverseInitiator: false,
-        transactionAmounts: {
-            disbursementType: withdrawal.disbursementType,
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            // @ts-ignore
-            disbursementPaymentForm: PaymentForm.ACH,
+            }),
         },
-    };
+    } as FreeLookCancellationRequest;
 };

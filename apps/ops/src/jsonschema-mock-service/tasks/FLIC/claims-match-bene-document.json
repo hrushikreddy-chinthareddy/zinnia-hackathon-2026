@@ -23,7 +23,7 @@
                         },
                         "details": {
                             "type": "object",
-                            "title": "Details",
+                            "title": "",
                             "properties": {
                                 "documentEntityMatch": {
                                     "type": "object",

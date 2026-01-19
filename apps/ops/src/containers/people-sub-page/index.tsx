@@ -1,8 +1,9 @@
 import * as RadioGroup from '@radix-ui/react-radio-group';
 import { useQueries } from '@tanstack/react-query';
+import { Toggle } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import { PopoverPlacement } from '@deps/components/popover/popover';
@@ -39,8 +40,11 @@ import {
     countPartyRoles,
     normalizePartyRole,
 } from './people-sub-page.helpers';
+import styles from './people-sub-page.module.css';
 import SideSheetAllocations from '../../components/side-sheet/side-sheet-allocations/side-sheet-allocations';
 import PeoplePageHeaderContainer from '../page-header/people-page-header';
+
+const ALL_ROLES = 'All';
 
 export interface CardActionData {
     filteredData: NameTag[];
@@ -60,6 +64,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
     const { policy, refreshPolicy } = useContext(PolicyData);
 
     const { t } = useTranslation();
+    const [showArchived, setShowArchived] = useState(false);
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
     const router = useRouter();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
@@ -71,13 +76,35 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
             ) || [],
         [policy]
     );
+    const archivedPartyRoles = useMemo(
+        () =>
+            policy?.partyRoles?.filter(
+                (role) => !!role.endDate && isEndDated(role.endDate)
+            ) ?? [],
+        [policy]
+    );
     const countedRoles = useMemo(
-        () => countPartyRoles(extractedPartyRoles, t),
-        [extractedPartyRoles, t]
+        () =>
+            countPartyRoles(
+                showArchived ? archivedPartyRoles : extractedPartyRoles,
+                t
+            ),
+        [extractedPartyRoles, showArchived, archivedPartyRoles, t]
     );
     const nameTags = useMemo(
-        () => combineNameAndRoles(extractedParties, extractedPartyRoles, t),
-        [extractedParties, extractedPartyRoles, t]
+        () =>
+            combineNameAndRoles(
+                extractedParties,
+                showArchived ? archivedPartyRoles : extractedPartyRoles,
+                t
+            ),
+        [
+            extractedParties,
+            extractedPartyRoles,
+            showArchived,
+            archivedPartyRoles,
+            t,
+        ]
     );
 
     const { featureFlags } = useOptimizely();
@@ -107,6 +134,89 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
         );
         sideSheet.handleOpen(true);
     };
+
+    // Archived name tags filtered by the currently selected role,
+    // used to enable/disable the "Show archived parties" toggle.
+    const archivedNameTags = useMemo(() => {
+        const tags = combineNameAndRoles(
+            extractedParties,
+            archivedPartyRoles,
+            t
+        );
+
+        // If ALL is selected, just check if any archived exists
+        if (peopleRolesFilter.filterValue === ALL_ROLES) {
+            return tags;
+        }
+
+        // Otherwise, filter by selected role
+        return tags.filter((nameTag) =>
+            nameTag.partyRoles.some(
+                (partyRole) =>
+                    normalizePartyRole(partyRole as PartyRole) ===
+                    peopleRolesFilter.filterValue
+            )
+        );
+    }, [
+        extractedParties,
+        archivedPartyRoles,
+        peopleRolesFilter.filterValue,
+        t,
+    ]);
+
+    const hasVisibleRoleData = (role: string, tags: NameTag[]): boolean => {
+        if (role === ALL_ROLES) return tags.length > 0;
+
+        return tags.some((tag) =>
+            tag.partyRoles.some(
+                (partyRole) =>
+                    normalizePartyRole(partyRole as PartyRole) === role
+            )
+        );
+    };
+
+    const isArchivedToggleDisabled = archivedNameTags.length === 0;
+
+    useEffect(() => {
+        if (isArchivedToggleDisabled && showArchived) {
+            setShowArchived(false);
+        }
+    }, [isArchivedToggleDisabled, showArchived]);
+
+    // Prevent empty role state when toggling archived parties
+    useEffect(() => {
+        if (peopleRolesFilter.filterValue === ALL_ROLES) {
+            return;
+        }
+        const visibleTags = showArchived
+            ? archivedPartyRoles
+            : extractedPartyRoles;
+
+        const combinedTags = combineNameAndRoles(
+            extractedParties,
+            visibleTags,
+            t
+        );
+        const currentRole = peopleRolesFilter.filterValue;
+        if (
+            currentRole !== ALL_ROLES &&
+            !hasVisibleRoleData(currentRole, combinedTags)
+        ) {
+            setPeopleRolesFilter({
+                filterValue: ALL_ROLES,
+                filterTagList: convertToTagText(ALL_ROLES, t),
+            });
+        }
+    }, [
+        showArchived,
+        archivedPartyRoles,
+        extractedPartyRoles,
+        extractedParties,
+        peopleRolesFilter.filterValue,
+        setPeopleRolesFilter,
+        t,
+    ]);
+
     // Fetch data for agents if there are any
     const agentParties = useMemo(
         () =>
@@ -122,7 +232,6 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
             }),
         [nameTags]
     );
-
     const clientCode = policy?.carrierId;
     const { data: agentData } = useQueries({
         queries: agentParties?.map((party) => ({
@@ -168,7 +277,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
 
     // If `ALL` is selected, do not filter
     let filteredNameTags =
-        peopleRolesFilter.filterValue === 'All'
+        peopleRolesFilter.filterValue === ALL_ROLES
             ? nameTags
             : sortByAndThenBy<NameTag>(
                   nameTags.filter((nameTag) =>
@@ -232,24 +341,28 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
         AgentType.AGENT
     );
 
+    const handleToggle = () => {
+        setShowArchived((prevState) => !prevState);
+    };
+
     return (
         <ChipEnterContext.Provider value={{ chipEntered, setChipEntered }}>
             <PeoplePageHeaderContainer onClick={clearPeopleRolesFilter} />
-            <hr className="h-0.5 border-none bg-gray-200" />
+            <hr className={styles.sectionDivider} />
             {filteredNameTags.length > 0 && (
-                <div className="mx-4 my-6 flex flex-col gap-6 md:mx-6 lg:mx-8 lg:flex-row">
-                    <div className="lg:max-w-[308px]">
-                        <div className="field-label mb-2 text-gray-900">
+                <div className={styles.peoplePage}>
+                    <div className={styles.filterPanel}>
+                        <div className={`field-label ${styles.filterLabel}`}>
                             {t('people.filterByRole')}
                         </div>
                         <RadioGroup.Root
-                            className="flex flex-wrap gap-2"
-                            value={peopleRolesFilter.filterValue ?? 'All'}
+                            className={styles.filterChips}
+                            value={peopleRolesFilter.filterValue ?? ALL_ROLES}
                             aria-label="chips"
                             onValueChange={handleRadioClick}
                         >
-                            <RadioGroup.Item className="chip" value="All">
-                                All
+                            <RadioGroup.Item className="chip" value={ALL_ROLES}>
+                                {ALL_ROLES}
                             </RadioGroup.Item>
                             {countedRoles.map((role) => (
                                 <RadioGroup.Item
@@ -264,13 +377,31 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                         </RadioGroup.Root>
                     </div>
 
-                    <div className="flex flex-col h-fit w-full mx-4 my-6 gap-6 md:mx-6 lg:mx-8">
-                        <div className="flex w-full flex-row items-center gap-8 bg-gray-50 px-8 py-4 align-middle">
+                    <div className={styles.contentColumn}>
+                        <div className={styles.actionBar}>
                             <ManagePeople policy={policyDetails} />
+                            {featureFlags?.[
+                                FEATURE_FLAGS.REVISED_HISTORY_TABLE
+                            ] && (
+                                <>
+                                    <Toggle
+                                        labelId="show-archived-toggle"
+                                        text={
+                                            t(
+                                                'allFields.showArchivedParties'
+                                            ) ?? ''
+                                        }
+                                        onClick={handleToggle}
+                                        pressed={showArchived}
+                                        data-testid="show-archived-toggle"
+                                        isDisabled={isArchivedToggleDisabled}
+                                    />
+                                </>
+                            )}
                         </div>
-                        <div>
+                        <div className={styles.peopleInfo}>
                             {isBeneficiarySelected && (
-                                <div className="w-full">
+                                <div className={styles.fullWidth}>
                                     <BeneficiaryCardContainer
                                         title={t('people.primaryAllocation')}
                                         peopleCardData={peopleCardData}
@@ -314,7 +445,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                             )}
 
                             {isAgentSelected && (
-                                <div className="w-full">
+                                <div className={styles.fullWidth}>
                                     {commissionAllocationData?.length ? (
                                         <BeneficiaryCardContainer
                                             title={t(
