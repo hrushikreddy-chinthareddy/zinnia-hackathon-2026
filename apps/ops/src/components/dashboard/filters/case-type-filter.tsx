@@ -66,7 +66,6 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
     return (
         <Select
             className={className}
-            maxContentWidth
             label="Case type"
             options={processListOptions || []}
             size={FieldSize.XS}

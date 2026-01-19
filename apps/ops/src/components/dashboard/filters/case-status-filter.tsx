@@ -57,7 +57,6 @@ export const CaseStatusFilter: FC<CaseStatusFilterProps> = ({
 
     return (
         <Select
-            maxContentWidth
             label="Case status"
             options={options}
             value={convertCaseStatusKeysToValuesInObject}
