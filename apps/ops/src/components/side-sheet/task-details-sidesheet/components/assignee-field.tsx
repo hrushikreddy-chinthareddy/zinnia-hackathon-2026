@@ -1,19 +1,15 @@
 import { Loader, LoaderVariant } from '@zinnia/bloom/components';
 
-import AssigneePopover from '@deps/containers/task-management-queue/table-elements/assignee-popover';
+import AssigneePopover, {
+    AssigneePopoverPositionMode,
+} from '@deps/containers/task-management-queue/table-elements/assignee-popover';
 import {
     AssignedTask,
     ManagementTask,
-    TaskStatus,
     UnassignedTask,
-    TaskInstance,
 } from '@deps/models/case/task-instance';
 
-export type Task =
-    | ManagementTask
-    | TaskInstance
-    | AssignedTask
-    | UnassignedTask;
+export type Task = AssignedTask | UnassignedTask | ManagementTask;
 
 export interface AssigneeFieldProps {
     task: Task;
@@ -23,7 +19,11 @@ export interface AssigneeFieldProps {
         user: string;
         partyId: string;
     }>;
+    isOpen: boolean;
+    onOpen: () => void;
+    onClose: () => void;
     assigneeLoading: boolean;
+    actionLoader: boolean;
     searchValue: string;
     handleClick: () => void;
     handleSearch: (value: string) => void;
@@ -38,18 +38,20 @@ export interface AssigneeFieldProps {
     ) => Promise<void>;
 
     isAssigning?: boolean;
-    onTaskUpdated?: (
-        task: ManagementTask | TaskInstance | AssignedTask | UnassignedTask
-    ) => void;
+    onTaskUpdated?: (task: Task) => void;
 
     fallback?: React.ReactNode;
-    positionMode?: 'table' | 'portal';
+    positionMode?: AssigneePopoverPositionMode;
 }
 
 export const AssigneeField = ({
     task,
+    isOpen,
+    onOpen,
+    onClose,
     positionMode,
     isAssigning,
+    actionLoader,
     handleClick,
     handleSearch,
     assigneeList,
@@ -67,25 +69,23 @@ export const AssigneeField = ({
         );
     }
 
-    const canUsePopover =
-        task.status !== TaskStatus.Completed &&
-        task.status !== TaskStatus.Canceled;
-
-    if (canUsePopover) {
-        return (
-            <AssigneePopover
-                task={task}
-                positionMode={positionMode}
-                assignee={task.assignee}
-                assigneeList={assigneeList}
-                assigneeLoading={assigneeLoading}
-                searchValue={searchValue}
-                handleClick={handleClick}
-                handleSearch={handleSearch}
-                hasAssignee={hasAssignee}
-                handleTaskAssignAsAdmin={handleTaskAssignAsAdmin}
-                handleTaskUnassignAsAdmin={handleTaskUnassignAsAdmin}
-            />
-        );
-    }
+    return (
+        <AssigneePopover
+            task={task}
+            isOpen={isOpen}
+            onOpen={onOpen}
+            onClose={onClose}
+            positionMode={positionMode}
+            assignee={task.assignee}
+            assigneeList={assigneeList}
+            assigneeLoading={assigneeLoading}
+            actionLoader={actionLoader}
+            searchValue={searchValue}
+            handleClick={handleClick}
+            handleSearch={handleSearch}
+            hasAssignee={hasAssignee}
+            handleTaskAssignAsAdmin={handleTaskAssignAsAdmin}
+            handleTaskUnassignAsAdmin={handleTaskUnassignAsAdmin}
+        />
+    );
 };

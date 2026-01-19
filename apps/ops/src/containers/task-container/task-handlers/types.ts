@@ -226,6 +226,10 @@ export type Signatures = {
     isDesignationPresent?: boolean | null;
 };
 
+export const enum SubOptionsKeyName {
+    ExceptionSubRefs = 'exceptionSubRefs',
+}
+
 export enum TransactionSearchIdentifiers {
     PAYMENT_RECORD_ID = 'paymentRecordId',
     ZL_CASE_ID = 'zlCaseId',

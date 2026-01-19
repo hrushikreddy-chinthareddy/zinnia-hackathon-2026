@@ -7,6 +7,7 @@
     gap: var(--measure-dimension-z-space-2);
     padding-inline: var(--measure-dimension-z-space-4);
     white-space: nowrap;
+    width: 100%;
 
     &:hover,
     &:active {

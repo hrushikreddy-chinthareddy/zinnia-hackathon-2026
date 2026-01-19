@@ -1,0 +1,7 @@
+.small-loader {
+    --loader-size: 16px !important;
+}
+
+.default-loader {
+    --loader-size: 20px !important;
+}

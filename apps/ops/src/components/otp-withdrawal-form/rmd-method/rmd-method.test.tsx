@@ -605,6 +605,9 @@ describe('Utility Functions', () => {
                 rmdPrograms: [],
                 taxId: { text: null },
                 rmdMethod: null,
+                rmdYear: null,
+                priorYearMrdBasisValue: null,
+                calculatedAmount: null,
             });
         });
     });

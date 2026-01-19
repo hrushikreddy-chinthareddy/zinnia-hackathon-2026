@@ -11,6 +11,7 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import UnderwritingCard from '@deps/containers/people-data-cards/underwriting-card/underwriting-card';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import {
@@ -29,9 +30,12 @@ import {
     checkCommunicationPreferenceChangeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { TransactionPermission } from '@deps/utils/auth';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { PartyRole } from '@zinnia/api-types/types/sor';
 
+import styles from './person-sub-page.module.css';
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
+import ActivityCard from '../people-data-cards/activity-card/activity-card';
 
 export type PersonSubPageProps = {
     editable?: boolean;
@@ -44,6 +48,8 @@ export const PersonSubPage = ({
     editable = true,
 }: PersonSubPageProps) => {
     const { policy, policyDetails } = useContext(PolicyData);
+
+    const { featureFlags } = useOptimizely();
 
     const { t } = useTranslation();
 
@@ -223,7 +229,7 @@ export const PersonSubPage = ({
                 />
                 {beneficiaryRole && (
                     <>
-                        <hr className="h-0.5 border-none bg-gray-200" />
+                        <hr className={styles.sectionDivider} />
                         <AllocationCard
                             allocation={
                                 selectedPolicyParty?.beneficiaryPercentage
@@ -237,13 +243,13 @@ export const PersonSubPage = ({
                     </>
                 )}
 
-                <hr className="h-0.5 border-none bg-gray-200" />
+                <hr className={styles.sectionDivider} />
                 <IdentificationCard
                     selectedPolicyParty={newSelectedPolicyParty}
                     isAnnuity={policyDetails.isAnnuity}
                 />
 
-                <hr className="h-0.5 border-none bg-gray-200" />
+                <hr className={styles.sectionDivider} />
                 <PhoneCard
                     editable={
                         editable &&
@@ -256,7 +262,7 @@ export const PersonSubPage = ({
                     policyNumber={policyNumber}
                 />
 
-                <hr className="h-0.5 border-none bg-gray-200" />
+                <hr className={styles.sectionDivider} />
                 <EmailCard
                     editable={
                         editable &&
@@ -269,7 +275,7 @@ export const PersonSubPage = ({
                     policyNumber={policyNumber}
                 />
 
-                <hr className="h-0.5 border-none bg-gray-200" />
+                <hr className={styles.sectionDivider} />
                 <AddressCard
                     editable={
                         editable &&
@@ -282,7 +288,7 @@ export const PersonSubPage = ({
                     policyNumber={policyNumber}
                 />
 
-                <hr className="h-0.5 border-none bg-gray-200" />
+                <hr className={styles.sectionDivider} />
                 {!hasTPD && (
                     <BankCard
                         editable={editable}
@@ -298,7 +304,7 @@ export const PersonSubPage = ({
 
                 {isInsured && (
                     <>
-                        <hr className="h-0.5 border-none bg-gray-200" />
+                        <hr className={styles.sectionDivider} />
                         <UnderwritingCard
                             riskClass={getRiskClass(
                                 coverageParticipant?.riskClass
@@ -323,6 +329,16 @@ export const PersonSubPage = ({
                                 selectedPolicyParty?.gender,
                                 t
                             )}
+                        />
+                    </>
+                )}
+                {featureFlags?.[FEATURE_FLAGS.REVISED_HISTORY_TABLE] && (
+                    <>
+                        <hr className={styles.sectionDivider} />
+                        <ActivityCard
+                            selectedPolicyPartyRoles={selectedPolicyPartyRoles}
+                            newSelectedPolicyParty={newSelectedPolicyParty}
+                            selectedPolicyParty={selectedPolicyParty}
                         />
                     </>
                 )}

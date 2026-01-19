@@ -32,6 +32,14 @@ afterEach(() => {
 
 jest.mock('@deps/utils/server-logging');
 
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2',
+    () => ({
+        __esModule: true,
+        default: () => <div data-testid="form-disbursement-v2" />,
+    })
+);
+
 describe('DlicSSWForm', () => {
     window.HTMLElement.prototype.hasPointerCapture = jest.fn();
     window.HTMLElement.prototype.scrollIntoView = jest.fn();
@@ -258,5 +266,55 @@ describe('DlicSSWForm', () => {
         );
         expect(sswEditSelect).toBeInTheDocument();
         expect(sswProgram).toBeInTheDocument();
+    });
+
+    it('should render FormDisbursementV2 component', async () => {
+        const setMockData = jest.fn();
+
+        render(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    formData,
+                    formDisbursement,
+                    formDistribution,
+                    formErrors,
+                    formFullSurrenderAck,
+                    formLoan,
+                    formParty,
+                    formProgram,
+                    formRestriction,
+                    formSignature,
+                    formSource,
+                    formTaxWithholding,
+                    formTpaAuthorization,
+                    initialForm: {
+                        ...CaseDetails,
+                        caseId: 'CA0000359968',
+                        taskType: TaskType.SSW,
+                        source: 'Zinnia.TaskManagement',
+                        carrier: 'DLIC',
+                        createdDate: '',
+                        updatedDate: '',
+                        status: CaseStatus.Pending,
+                        taskId: '6551c49b18a0092d07bfa9db',
+                        data: {
+                            ...CaseDetails.data,
+                            agentEmailAddress: '',
+                            documentNumber: '',
+                            onbaseCaseId: '',
+                        },
+                    },
+                    setFormData: setMockData,
+                }}
+            >
+                <DlicSSWForm />
+            </FormDataContext.Provider>
+        );
+
+        const formDisbursementV2 = await waitFor(() =>
+            screen.getByTestId('form-disbursement-v2')
+        );
+        expect(formDisbursementV2).toBeInTheDocument();
     });
 });

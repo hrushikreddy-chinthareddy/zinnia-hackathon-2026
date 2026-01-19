@@ -21,6 +21,15 @@ jest.mock('@deps/pages/create-case', () => ({
     },
 }));
 
+jest.mock('next/router', () => ({
+    useRouter: () => ({
+        query: {},
+        pathname: '/test',
+        push: jest.fn(),
+        replace: jest.fn(),
+    }),
+}));
+
 const mockPolicy = {
     parties: [
         { partyId: 'Party_PO_Owner_1', firstName: 'John', lastName: 'Doe' },

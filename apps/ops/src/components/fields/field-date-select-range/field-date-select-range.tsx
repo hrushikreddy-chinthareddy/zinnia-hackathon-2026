@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import localData from 'dayjs/plugin/localeData';
-import React, { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useRef, useState } from 'react';
 
 import DatePicker from '@deps/components/date-picker/date-picker';
 import Field, {
@@ -30,6 +30,7 @@ export type FieldDateSelectRangeProps = {
     closeOnDateSelect?: boolean;
     placeholder?: string;
     size?: FieldSize;
+    isFutureDateDisabled?: boolean;
 };
 
 export default function FieldDateSelectRange({
@@ -46,6 +47,7 @@ export default function FieldDateSelectRange({
     closeOnDateSelect,
     placeholder,
     size = FieldSize.Default,
+    isFutureDateDisabled = true,
 }: FieldDateSelectRangeProps) {
     const [open, setOpen] = useState(false);
 
@@ -122,6 +124,7 @@ export default function FieldDateSelectRange({
         <div className="relative flex flex-row gap-10">
             <div className="w-full">
                 <Field
+                    className="cursor-pointer"
                     value={startValue}
                     onChange={startOnChange}
                     formatOptions={{ format: '##/##/####' }}
@@ -143,6 +146,7 @@ export default function FieldDateSelectRange({
             </div>
             <div className="w-full">
                 <Field
+                    className="cursor-pointer"
                     value={endValue}
                     onChange={endOnChange}
                     formatOptions={{ format: '##/##/####' }}
@@ -172,6 +176,7 @@ export default function FieldDateSelectRange({
                     open={open}
                     date={{ start, end }}
                     handleDateSelect={handleDateSelect}
+                    isFutureDateDisabled={isFutureDateDisabled}
                 />
             </div>
         </div>

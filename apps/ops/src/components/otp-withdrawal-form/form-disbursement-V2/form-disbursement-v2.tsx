@@ -19,10 +19,15 @@ import {
     PaymentMailType,
     PaymentMethod,
 } from '@deps/models/case/withdrawal/case';
-import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 
 import FormDisbursementSectionV2 from './form-disbursement-section-v2';
-import { BankingDetails, SelectedBanking } from './form-disbursement.types';
+import {
+    BankEntry,
+    BankInFile,
+    BankingDetails,
+    DisbursementOptions,
+    SelectedBanking,
+} from './form-disbursement.types';
 import { ConsentAvailable } from '../form-disbursement/form-disbursement-parts/consent-available';
 import { BankInfoType } from '../form-disbursement/form-disbursement-parts/masked-account-toggle';
 import { getDefaultFormDisbursementValues } from '../form-disbursement/form-disbursement.helpers';
@@ -35,7 +40,7 @@ export const FormDisbursementSelections = {
 export type FormDisbursementSelections = typeof FormDisbursementSelections;
 
 type FormDisbursementProps = {
-    options: PaymentMethodOption[];
+    options: DisbursementOptions;
     title?: string;
     isFormStateReadOnly?: boolean;
     defaultValue?: PaymentMethod | PaymentMailType;
@@ -70,7 +75,7 @@ export default function FormDisbursementV2({
         ? options?.find((val) => val.value === bankDetails?.paymentMethod)
         : undefined;
 
-    const selectedBankInfoOption = formDisbursement?.bank[0]?.isDirectDeposit
+    const selectedBankInfoOption = formDisbursement?.bank?.[0]?.isDirectDeposit
         ?.text
         ? BankInfoType.Full
         : BankInfoType.Masked;
@@ -114,8 +119,8 @@ export default function FormDisbursementV2({
     }, []);
 
     function checkEftLastSelection(
-        newBankDetails: any,
-        existingBankDetails: any
+        newBankDetails: BankEntry,
+        existingBankDetails?: BankInFile
     ) {
         if (
             newBankDetails?.accountNumber !==

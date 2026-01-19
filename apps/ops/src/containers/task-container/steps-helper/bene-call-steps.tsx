@@ -8,12 +8,17 @@ export const getBeneCallSteps = ({
     t,
     taskMetadata,
     task,
+    readOnly,
 }: GetStepsProps) => {
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || t('callforInformation'),
         isVisible: () => true,
         component: (
-            <ClaimsBeneficiaryCall key={`step_${index}`} taskType={taskType} />
+            <ClaimsBeneficiaryCall
+                key={`step_${index}`}
+                taskType={taskType}
+                readOnly={readOnly}
+            />
         ),
         text:
             metadata?.title ||

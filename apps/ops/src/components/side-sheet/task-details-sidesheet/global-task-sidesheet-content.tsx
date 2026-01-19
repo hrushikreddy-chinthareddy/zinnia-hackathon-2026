@@ -1,7 +1,6 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-    Button,
     Icon,
     IconType,
     Loader,
@@ -11,10 +10,11 @@ import {
     TabTrigger,
 } from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
+import clsx from 'clsx';
 import dayjs from 'dayjs';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -28,10 +28,12 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import CustomLoader from '@deps/components/loader/customLoader';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
+import { AssigneeField } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { createViewDownloadAction } from '@deps/containers/subpages/documents-sub-page/documents-results-table';
+import { AssigneePopoverPositionMode } from '@deps/containers/task-management-queue/table-elements/assignee-popover';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
@@ -53,12 +55,12 @@ import {
 import { IdentifierInstance } from '@deps/models/case/identifier-instance';
 import { EarlyTaskType, TaskSource } from '@deps/models/case/task';
 import {
-    ManagementTask,
     TaskStatus,
     TaskLabel,
     DocumentData,
     TaskSideSheetProps,
     TaskComment,
+    ManagementTask,
 } from '@deps/models/case/task-instance';
 import { getUserDataByPartyIds } from '@deps/queries/api/parties';
 import { searchUsersInGroupCSR } from '@deps/queries/api/server/fga/searchUsers';
@@ -80,7 +82,7 @@ import { ReactComponent as Progress } from '@deps/styles/elements/icons/icons_ou
 import { ReactComponent as Pause } from '@deps/styles/elements/icons/icons_outlined/pause.svg';
 import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
-import { removeFromCache, writeToCache } from '@deps/utils/cache';
+import { writeToCache } from '@deps/utils/cache';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { formatTimestamp } from '@deps/utils/dates';
 import { isProd } from '@deps/utils/environment.helpers';
@@ -88,8 +90,8 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
 
-import { AssigneeField } from './components/assignee-field';
 import styles from './global-task-side-sheet-content.module.css';
+import SidesheetButtons from './sidesheet-buttons';
 import {
     isAPIErrorInformation,
     isClaimNextTask,
@@ -208,6 +210,7 @@ const DocumentsListComponent = ({
 
 export default function GlobalTaskSideSheet({
     taskId,
+    caseId,
     type = 'case',
     taskDescription,
     taskName,
@@ -217,13 +220,13 @@ export default function GlobalTaskSideSheet({
     mappedDocuments,
 }: TaskSideSheetProps) {
     const { t } = useTranslation();
-    const [loading, setLoading] = useState(true);
-    const [task, setTask] = useState<ManagementTask | null>(null);
+    const queryClient = useQueryClient();
     const [activeTab, setActiveTab] = useState(TabOptions.Details);
     const [claimTaskLoader, setClaimTaskLoader] = useState(false);
     const [showAdditionalDocuments, setShowAdditionalDocuments] =
         useState(false);
     const [startLoader, setStartLoader] = useState(false);
+    const [goToCaseLoader, setGoToCaseLoader] = useState(false);
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
@@ -238,6 +241,7 @@ export default function GlobalTaskSideSheet({
     const [assigneeLoading, setAssigneeLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [assignLoader, setAssignLoader] = useState(false);
+    const [isAssigneePopoverOpen, setIsAssigneePopoverOpen] = useState(false);
 
     const handleTabChange = (value: string) =>
         setActiveTab(value as TabOptions);
@@ -249,6 +253,32 @@ export default function GlobalTaskSideSheet({
     const sideSheet = useSideSheetContext();
     const isOpsManagerView = type === OPS_MANAGER_VIEW_TASK;
 
+    const {
+        data: task,
+        isLoading: loading,
+        isFetching,
+    } = useQuery({
+        queryKey: ['taskInstance', taskId, isOpsManagerView],
+        queryFn: async () => {
+            const data = await getTaskInstance({ taskId });
+            if (data && !data.caseId) {
+                data.caseId = caseId;
+            }
+            if (!data) {
+                return;
+            }
+
+            let finalAssignee = NO_ASSIGNEE;
+
+            if (!isOpsManagerView) {
+                finalAssignee = data.assignee ?? data.prefferedAssignee ?? '';
+            } else {
+                finalAssignee = await resolveAssigneeForTask(data);
+            }
+            return { ...data, assignee: finalAssignee };
+        },
+        refetchOnMount: 'always',
+    });
     const readOnly = task?.status === TaskStatus.Completed || false;
 
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
@@ -321,23 +351,17 @@ export default function GlobalTaskSideSheet({
                     response?.id == task.id &&
                     user?.email
                 ) {
-                    setTask({
+                    queryClient.setQueryData(['taskInstance', taskId], {
                         ...task,
                         assignee: user.email,
                         assigneePartyId: (user.partyId as string) ?? '',
                     });
+                    await queryClient.invalidateQueries({
+                        queryKey: ['taskInstance', taskId],
+                    });
                     if (onTaskClaimSuccess) {
                         onTaskClaimSuccess();
                     }
-                    writeToCache(
-                        'getTaskInstance',
-                        { taskId },
-                        {
-                            ...task,
-                            assignee: user.email,
-                            assigneePartyId: (user.partyId as string) ?? '',
-                        }
-                    );
                     setErrorClaimingTask(false);
                     setClaimingTaskErrorMessage('');
                     browserLogInfo(
@@ -379,21 +403,32 @@ export default function GlobalTaskSideSheet({
         }
     };
 
-    const handleStart = async (taskId: string, taskStatus: TaskStatus) => {
+    const handleViewTask = async (
+        taskId: string,
+        editMode: boolean = false
+    ) => {
         const openNigoEntry = Object.values(EarlyTaskType).includes(
             task?.taskType as EarlyTaskType
         );
-        const url = openNigoEntry
-            ? `/nigo-entry?taskId=${taskId}`
-            : `/task/${taskId}`;
 
+        const getParam = (key: string = '&') =>
+            `${editMode ? `${key}mode=edit` : ''}`;
+
+        const url = openNigoEntry
+            ? `/nigo-entry?taskId=${taskId}${getParam('&')}`
+            : `/task/${taskId}${getParam('?')}`;
+        await router.push(url);
+        return;
+    };
+
+    const handleStart = async (taskId: string, taskStatus: TaskStatus) => {
         try {
             setStartLoader(true);
             if (
                 taskStatus === TaskStatus.InProgress ||
                 taskStatus === TaskStatus.Completed
             ) {
-                await router.push(url);
+                await handleViewTask(taskId, true);
             } else {
                 // Fetch the task instance
                 const taskData = await getTaskInstance({ taskId });
@@ -418,8 +453,10 @@ export default function GlobalTaskSideSheet({
                     body
                 );
                 if (response) {
-                    await router.push(url);
-                    removeFromCache('getTaskInstance', { taskId: taskId });
+                    await queryClient.invalidateQueries({
+                        queryKey: ['taskInstance', taskId],
+                    });
+                    await handleViewTask(taskId, true);
                     return;
                 }
             }
@@ -437,11 +474,12 @@ export default function GlobalTaskSideSheet({
         }
     };
 
-    const handleGoToCase = (caseId: string) => {
-        setStartLoader(true);
+    const handleGoToCase = async (caseId: string) => {
+        setGoToCaseLoader(true);
         if (caseId) {
-            router.push(`/cases/${caseId}`);
+            await router.push(`/cases/${caseId}`);
         }
+        setGoToCaseLoader(false);
     };
     async function resolveAssigneeForTask(task: ManagementTask) {
         if (!task.assigneePartyId) return NO_ASSIGNEE;
@@ -453,32 +491,6 @@ export default function GlobalTaskSideSheet({
 
         return findAssignee(parties, task.assigneePartyId);
     }
-
-    useEffect(() => {
-        const getTaskData = async () => {
-            const task = await getTaskInstance({ taskId });
-            if (!task) {
-                setTask(null);
-                setLoading(false);
-                return;
-            }
-
-            let finalAssignee = NO_ASSIGNEE;
-
-            if (!isOpsManagerView) {
-                finalAssignee = task.assignee ?? task.prefferedAssignee ?? '';
-            } else {
-                finalAssignee = await resolveAssigneeForTask(task);
-            }
-
-            setTask({
-                ...task,
-                assignee: finalAssignee,
-            });
-            setLoading(false);
-        };
-        getTaskData();
-    }, [taskId]);
 
     if (loading)
         return (
@@ -570,7 +582,7 @@ export default function GlobalTaskSideSheet({
                         {t('sideSheet.task.claimTask')}
                     </button>
                 ) : (
-                    <CustomLoader />
+                    <CustomLoader size="small" />
                 ))}
         </div>
     );
@@ -580,9 +592,10 @@ export default function GlobalTaskSideSheet({
             <TaskQueueDrawer
                 onClose={sideSheet.onClose}
                 taskId={task.id}
+                caseId={caseId}
                 taskStatus={task.status}
                 taskDescription={taskDescription}
-                taskName={taskName}
+                taskName={taskName ?? task.taskName}
             />
         );
         sideSheet.changeSideSheetContent(
@@ -591,6 +604,7 @@ export default function GlobalTaskSideSheet({
         );
         sideSheet.handleOpen(true);
     };
+
     const statuses = [
         {
             label: TaskLabel.Scheduled,
@@ -671,6 +685,21 @@ export default function GlobalTaskSideSheet({
     const shouldRenderStartButton =
         isCaseAndStartAble || isReadOnlyWithFeatureFlag;
 
+    const isTaskUnclaimed =
+        !task.assigneePartyId || task.assigneePartyId === '';
+
+    const isStartButtonVisible =
+        !isOpsManagerView &&
+        task.status !== TaskStatus.Completed &&
+        [TaskStatus.Scheduled, TaskStatus.InProgress, TaskStatus.New].includes(
+            task.status
+        ) &&
+        (isUserAssociatedWithTask || isTaskUnclaimed);
+
+    const isStartButtonDisabled =
+        startLoader || isTaskUnclaimed || !isUserAssociatedWithTask;
+
+    const isViewTaskButtonVisible = !isOpsManagerView;
     const carrierName =
         getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
 
@@ -744,7 +773,7 @@ export default function GlobalTaskSideSheet({
                 };
 
                 //Update the sidesheet UI
-                setTask(finalTask);
+                queryClient.setQueryData(['taskInstance', taskId], finalTask);
 
                 // Notify table row
                 onTaskUpdated?.(finalTask);
@@ -776,7 +805,7 @@ export default function GlobalTaskSideSheet({
                 };
 
                 ////Update the sidesheet UI
-                setTask(finalTask);
+                queryClient.setQueryData(['taskInstance', taskId], finalTask);
 
                 // Notify table row
                 onTaskUpdated?.(finalTask);
@@ -807,7 +836,8 @@ export default function GlobalTaskSideSheet({
                 <div className="col-span-2 mt-2 align-self">
                     {task?.status === TaskStatus.InProgress &&
                     task?.queue &&
-                    task?.assigneePartyId === user?.partyId &&
+                    (task?.assigneePartyId === user?.partyId ||
+                        !isOpsManagerView) &&
                     !Object.values(EarlyTaskType).includes(
                         task?.taskType as EarlyTaskType
                     ) ? (
@@ -943,6 +973,10 @@ export default function GlobalTaskSideSheet({
                     ) : (
                         <AssigneeField
                             task={task}
+                            isOpen={isAssigneePopoverOpen}
+                            onOpen={() => setIsAssigneePopoverOpen(true)}
+                            onClose={() => setIsAssigneePopoverOpen(false)}
+                            actionLoader={assignLoader}
                             isOpsManagerView={isOpsManagerView}
                             assigneeList={assigneeList}
                             assigneeLoading={assigneeLoading}
@@ -955,7 +989,7 @@ export default function GlobalTaskSideSheet({
                                 handleTaskUnassignAsAdmin
                             }
                             fallback={NoAssigneeComp}
-                            positionMode="portal"
+                            positionMode={AssigneePopoverPositionMode.Portal}
                             isAssigning={assignLoader}
                             onTaskUpdated={onTaskUpdated}
                         />
@@ -1009,52 +1043,29 @@ export default function GlobalTaskSideSheet({
                         {t('sideSheet.task.noAssignee')}
                     </div>
                 )}
-
-            {(shouldRenderStartButton || isOpsManagerView) && (
-                <div
-                    className={
-                        !isUserAssociatedWithTask
-                            ? 'flex flex-row items-center gap-1 pt-2'
-                            : 'flex flex-row items-center gap-1 pt-8'
-                    }
-                >
-                    <Button
-                        className={`${isOpsManagerView ? 'mt-4' : ''}`}
-                        mode="primary"
-                        disabled={
-                            isOpsManagerView ||
-                            task.status === TaskStatus.Completed
-                                ? false
-                                : !isUserAssociatedWithTask || startLoader
-                        }
-                        onClick={() =>
-                            isOpsManagerView
-                                ? handleGoToCase(task?.caseId)
-                                : handleStart(task.id, task.status)
-                        }
-                        data-testid="start-task-btm"
-                        aria-label={t('ariaLabel.startTask') as string}
-                        type="submit"
-                        size={startLoader ? 'large' : 'small'}
-                    >
-                        {isOpsManagerView ? (
-                            startLoader ? (
-                                <CustomLoader />
-                            ) : (
-                                t('sideSheet.task.goToCase')
-                            )
-                        ) : !startLoader ? (
-                            readOnly ? (
-                                t('sideSheet.task.viewTask')
-                            ) : (
-                                t('sideSheet.task.startTask')
-                            )
-                        ) : (
-                            <CustomLoader />
-                        )}
-                    </Button>
-                </div>
-            )}
+            <SidesheetButtons
+                className={clsx(
+                    styles.buttonContainer,
+                    isUserAssociatedWithTask
+                        ? styles.buttonContainerWithUser
+                        : styles.buttonContainerWithoutUser
+                )}
+                task={task}
+                startLoader={startLoader}
+                handleGoToCase={handleGoToCase}
+                handleViewTask={handleViewTask}
+                handleStart={handleStart}
+                isGoToCaseButtonVisible={isOpsManagerView}
+                isViewTaskButtonVisible={isViewTaskButtonVisible}
+                isViewTaskButtonDisabled={!task.data}
+                isStartButtonDisabled={isStartButtonDisabled}
+                isStartButtonVisible={
+                    shouldRenderStartButton && task.data
+                        ? isStartButtonVisible
+                        : false
+                }
+                goToCaseLoader={goToCaseLoader}
+            />
         </div>
     );
 
@@ -1215,7 +1226,7 @@ export default function GlobalTaskSideSheet({
                         </TabTrigger>
                     )}
                 </TabList>
-                {loading ? (
+                {loading || (isFetching && !startLoader) ? (
                     <div className="flex justify-center items-center h-screen">
                         <Loader />
                     </div>

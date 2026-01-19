@@ -270,7 +270,8 @@ export class PolicyDetails {
             // so they still have access to the cancellation functionality. The 15 is based on... a number that was chosen.
             // In the banner we still display the ACTUAL end date of the free look period.
             isInFreeLookPeriod:
-                this.policyStatus === PolicyStatus.ACTIVE &&
+                (this.policyStatus === PolicyStatus.ACTIVE ||
+                    this.policyStatus === PolicyStatus.PENDINGISSUED) &&
                 hadEndDate &&
                 dayjs().isBefore(
                     dayjs(freeLookCancellationDate).add(15, 'day')

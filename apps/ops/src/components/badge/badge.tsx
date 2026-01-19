@@ -9,7 +9,7 @@ export interface BadgeProps {
     variant: BadgeVariant;
     label: string;
     className?: string;
-    icon?: ReactElement<any, string | JSXElementConstructor<any>>;
+    icon?: ReactElement<any, string | JSXElementConstructor<any>> | null;
     rounded?: boolean;
     testId?: string;
 }

@@ -6,7 +6,10 @@ import {
     getDefaultFormDisbursementValues,
     updateBankingDetails,
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
-import { BankingDetails } from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
+import {
+    BankingDetails,
+    IFormDisbursement,
+} from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement.types';
 import { createValidator } from '@deps/containers/otp/utils/helper-utils';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { isIrrevocableBeneficiaryExistsLC } from '@deps/helpers/bank.helpers';
@@ -262,7 +265,7 @@ export const signaturesConfig = [
 export const getBankUpdatePayload = (
     initialForm: ActiveWithdrawalCase,
     bankUpdateDetails: DisbursementParts,
-    formDisbursement: FormDisbursement,
+    formDisbursement: FormDisbursement | IFormDisbursement,
     formSignature: FormSignature,
     document: DocumentData,
     bankUpdateType: BankUpdateType,
@@ -353,7 +356,7 @@ export const bankUpdateFormData = (
     status: TaskStatus,
     initialForm: ActiveWithdrawalCase,
     bankUpdateDetails: DisbursementParts,
-    formDisbursement: FormDisbursement,
+    formDisbursement: FormDisbursement | IFormDisbursement,
     formSignature: FormSignature,
     document: DocumentData,
     bankUpdateType: BankUpdateType,

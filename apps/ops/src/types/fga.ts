@@ -41,3 +41,21 @@ export type TupleResponse = {
 export type ListResponse = {
     objects: string[];
 };
+
+export type UserTupleKey = {
+    user: string;
+    relation: string;
+    object: string;
+    condition: string;
+};
+
+export type UserTuple = {
+    key: UserTupleKey;
+    timestamp: string;
+};
+
+export type UserTuplesData = {
+    tuples: UserTuple[];
+    continuation_token: string;
+    continuationToken: string;
+};
