@@ -1,5 +1,4 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { ReadTuplesResponse } from '@zinnia/api-types/types/fga';
 import { GetServerSidePropsContext } from 'next';
 
 import { getUserData } from '@deps/helpers/query-data.helpers';
@@ -10,6 +9,7 @@ import {
     setRolesCookie,
 } from '@deps/utils/permissionsCookie';
 import { LoggingContext } from '@deps/utils/server-logging';
+import { ReadTuplesResponse } from '@zinnia/api-types/types/fga';
 
 import * as readTuplesModule from './readTuples';
 
