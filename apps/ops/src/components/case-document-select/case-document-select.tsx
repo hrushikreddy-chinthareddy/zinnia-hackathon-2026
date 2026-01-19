@@ -16,6 +16,8 @@ import { getCases } from '@deps/queries/api/cases';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
+import styles from './case-document-select.module.css';
+
 export const PROCESS_WITHOUT_CASE_DOCUMENT = '';
 
 type CaseId = { caseId?: string; correlationId?: string } | undefined;
@@ -220,7 +222,7 @@ const CaseDocumentSelect = ({
 
     return (
         <fieldset
-            className={`flex flex-col gap-2 ${
+            className={`${styles.fieldset} ${
                 hasError ? 'case-document-error' : ''
             }`}
             data-error-id="caseId"
@@ -229,7 +231,7 @@ const CaseDocumentSelect = ({
             aria-describedby={hasError ? errorMessageId : undefined}
             tabIndex={hasError ? -1 : undefined}
         >
-            <legend className="flex items-center gap-1">
+            <legend className={styles.legend}>
                 <Label
                     label={t('transactions.caseDocumentSelect.label')}
                     sentenceCase={false}

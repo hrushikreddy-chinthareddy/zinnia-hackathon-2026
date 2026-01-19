@@ -16,6 +16,8 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { Address, AddressType } from '@zinnia/api-types/types/sor';
 
+import styles from './side-sheet-address.helpers.module.css';
+
 interface AdditionalAddressLineProps {
     disabled: boolean;
     label: string;
@@ -88,7 +90,7 @@ export const AdditionalAddressLine = ({
                 disabled={disabled}
                 onClick={removeAddressLine}
             >
-                <div className="flex items-center gap-1">
+                <div className={styles.removeButtonContainer}>
                     <TrashIcon height={20} width={20} />
                     <span>{t('allFields.remove')}</span>
                 </div>
