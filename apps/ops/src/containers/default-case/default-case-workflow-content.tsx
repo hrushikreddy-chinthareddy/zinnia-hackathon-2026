@@ -30,6 +30,10 @@ const DefaultCaseWorkflowContent = ({
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const { policy, caseDetails } = useDefaultCase();
     const owner = policy ? policyOwner(policy) : '';
+
+    const taskInfoLink = policy
+        ? `/policies/${policy?.product?.planCode}/${policy?.policyNumber}/policy/policy-details`
+        : `/cases/${caseDetails?.id}`;
     const handleProgressBarClick = (step: Step) => {
         if (
             step.isDisabled ||
@@ -47,7 +51,7 @@ const DefaultCaseWorkflowContent = ({
                 isVisible: () => true,
                 component: (
                     <MemoizedDefaultCaseFormStep
-                        taskInfoLink={''}
+                        taskInfoLink={taskInfoLink}
                         isSubmit={taskMetadata.length === index + 1}
                         taskMetadata={metadata}
                         key={`step_${index}`}
@@ -67,7 +71,7 @@ const DefaultCaseWorkflowContent = ({
                 component: (
                     <ConfirmStep
                         taskType={taskType as TaskType}
-                        taskInfoLink={''}
+                        taskInfoLink={taskInfoLink}
                         isCta={true}
                         ctaLink={'/cases'}
                         ctaText={t('cases') as string}

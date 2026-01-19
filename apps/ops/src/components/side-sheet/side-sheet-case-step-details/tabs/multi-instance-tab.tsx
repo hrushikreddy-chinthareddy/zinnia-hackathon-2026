@@ -1,4 +1,5 @@
 import { Button } from '@zinnia/bloom/components';
+import { useRouter } from 'next/router';
 import { useTranslation, TFunction } from 'next-i18next';
 
 import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
@@ -91,10 +92,13 @@ const getStepStatusText = (
 function SideSheetTask({ task }: { task: TaskView }) {
     const { t } = useTranslation();
     const sidesheet = useSideSheetContext();
+    const router = useRouter();
+    const caseId = router.query.id as string;
+
     const openSideSheet = () => {
         sidesheet.openSecondarySideSheet(
             task.description,
-            <GlobalTaskSideSheet taskId={task.id} />
+            <GlobalTaskSideSheet taskId={task.id} caseId={caseId} />
         );
     };
     return (

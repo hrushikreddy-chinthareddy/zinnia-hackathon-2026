@@ -76,9 +76,8 @@ export const getDay150ReviewSteps = ({
     t,
     task,
     taskMetadata,
+    readOnly,
 }: GetStepsProps) => {
-    const readOnly = task.status === TaskStatus.Completed;
-
     const beneAttempt =
         task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT] ?? {};
     const stepOneIsVisible =

@@ -678,3 +678,31 @@ input:-webkit-autofill:active {
 [data-state='open'] .chevron-down {
     transform: rotate(360deg);
 }
+
+@media print {
+    body.print-only * {
+        visibility: hidden;
+    }
+
+    #printable,
+    #printable * {
+        visibility: visible;
+    }
+
+    #printable {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+
+    #printable-no-scroll {
+        overflow: visible !important;
+        max-height: none !important;
+        height: auto !important;
+        scrollbar-width: none !important;
+
+        &::-webkit-scrollbar {
+            display: none !important;
+        }
+    }
+}

@@ -441,6 +441,9 @@ export interface RMD {
     rmdPrograms: RMDProgram[];
     taxId: { text: string | null };
     rmdMethod: RMDType | null;
+    rmdYear?: string | null;
+    priorYearMrdBasisValue?: number | null;
+    calculatedAmount?: number | null;
 }
 
 export interface QCD {

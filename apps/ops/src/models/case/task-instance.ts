@@ -148,6 +148,7 @@ export type DocumentData = {
 
 export interface TaskSideSheetProps {
     taskId: string;
+    caseId: string;
     type?: string;
     featureFlagDecisions?: FeatureFlags;
     taskDescription?: string;
@@ -162,6 +163,7 @@ export interface TaskQueueDrawerProps {
     getTasks?: () => void;
     taskStatus: TaskStatus;
     taskId: string;
+    caseId?: string;
     taskDescription?: string;
     taskName?: string;
 }

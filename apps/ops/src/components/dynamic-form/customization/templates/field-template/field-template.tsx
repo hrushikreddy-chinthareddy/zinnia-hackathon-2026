@@ -21,6 +21,7 @@ import {
 import { isStringWithBrackets } from '@deps/helpers/string.helpers';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import styles from './field-template.module.css';
 import { TransactionSummaryTemplate } from '../transaction-summary-template/transaction-summary-template';
@@ -152,15 +153,24 @@ export function FieldTemplate(props: FieldTemplateProps) {
 
     const renderCheckBoxesSelectWidgetList = (data: any) => {
         const items = Array.isArray(data) ? data : [data];
+        const subOptionsKeyName = uiOptions.subOptionsKeyName as string;
+        const itemLabelKey = uiOptions.readonlyItemLabelKey as string;
+        browserLogInfo(
+            'checkboxes-select-widget::Rendering list in readonly view with:',
+            {
+                subOptionsKeyName,
+            }
+        );
+
         return (
             <ol className="list-decimal ml-5">
                 {items.map((item: any, idx: number) => (
                     <li key={idx}>
-                        {item.detailedReason}
-                        {item.exceptionSubRefs &&
-                            item.exceptionSubRefs.length > 0 && (
+                        {item[itemLabelKey]}
+                        {item[subOptionsKeyName] &&
+                            item[subOptionsKeyName].length > 0 && (
                                 <ol className="list-[lower-alpha] ml-6 font-normal">
-                                    {item.exceptionSubRefs.map(
+                                    {item[subOptionsKeyName].map(
                                         (sub: any, subIdx: number) => (
                                             <li key={subIdx}>{sub.value}</li>
                                         )

@@ -437,6 +437,7 @@
         "nextMonthiversaryDate": "Prochaine date mensuelle",
         "nextPayment": "Prochain paiement",
         "nextProgramDate": "Date du programme suivant",
+        "noAssignee": "Aucun cessionnaire",
         "noContactNumbersSaved": "Aucun numéro de contact enregistré.",
         "noAddressSaved": "Aucune adresse enregistrée.",
         "noBankingDetailsSaved": "Aucune information bancaire enregistrée.",
@@ -598,6 +599,7 @@
         "selectCorrectionReason": "Sélectionner la raison de la correction",
         "selectCorrectionType": "Sélectionner le type de correction",
         "selectDateInRange": "Sélectionnez une date dans la plage:",
+        "selectDetails": "Sélectionner les détails",
         "selectDate": "Sélectionner une date",
         "selected": "Sélectionné",
         "selectEmailsOnFile": "Sélectionnez les e-mails enregistrés",
@@ -5756,6 +5758,7 @@
             "completedLabel": "Terminé le",
             "additionalDocuments": "Documents supplémentaires",
             "noAssignee": "Seul le responsable peut démarrer cette tâche",
+            "noPermissionToViewTask": "Vous n'avez pas les permissions pour voir cette tâche",
             "startTask": "Démarrer la tâche",
             "goToCase": "Aller au cas",
             "viewTask": "Afficher la tâche",
@@ -7401,7 +7404,14 @@
         },
         "requestOperationReview": {
             "label": "Demande de révision des opérations"
-        }
+        },
+        "createQualityAudit": "Créer un audit qualité",
+        "createQualityAuditTooltip": "Initier un audit qualité pour ce dossier.",
+        "createQualityAuditTooltipDisabled": "Indisponible : dossier non éligible ou autorisation refusée.",
+        "caseIsNotEligible": "La transaction n’est pas éligible à l’audit.",
+        "qualityAuditExisted": "Un audit qualité existe déjà pour ce dossier.",
+        "qualityAuditSuccess": "Audit qualité créé avec succès.",
+        "qualityAuditError": "Impossible de créer l’audit qualité."
     },
     "historyEventCard": {
         "bankAccountTypes": {

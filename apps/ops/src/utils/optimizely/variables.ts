@@ -5,6 +5,7 @@ export enum FEATURE_FLAG_VARIABLES {
     TASK_SAVE_AS_DRAFT = 'task-save-as-draft',
     TASK_CONTINUE_BUTTON_ENABLE = 'task-continue-button-enable',
     DOCUMENTS_V3_FEATURE_FLAG = 'documents-v3-update-client-wise',
+    CREATE_QUALITY_AUDIT = 'create-quality-audit',
     ASSIGNEE_CHANGE_TRANSACTION = 'assignee-change-transaction',
 }
 

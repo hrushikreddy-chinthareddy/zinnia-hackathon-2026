@@ -51,6 +51,7 @@
     "allFields": {
         "account": "Acct",
         "accountValue": "Account value",
+        "noAssignee": "No Assignee",
         "accountValueByPolicyYear": "Account value by {{policyNomenclature}} year",
         "accountValues": "Account values",
         "accountValueTooltip": "This is the cash value amount held within the owner's life insurance policy. The account value accumulates over time as premiums are paid and interest is earned.",
@@ -598,6 +599,7 @@
         "selectCorrectionReason": "Select correction reason",
         "selectCorrectionType": "Select correction type",
         "selectDateInRange": "Please select a date within range:",
+        "selectDetails": "Select Details",
         "selected": "Selected",
         "selectEmailsOnFile": "Select emails on file",
         "selectFormToContinue": "Select a form to continue.",
@@ -5832,6 +5834,7 @@
             "closedLabel": "Closed on",
             "additionalDocuments": "Additional Documents",
             "noAssignee": "Only the assignee can start this task",
+            "noPermissionToViewTask": "You do not have access to view this task",
             "startTask": "Start task",
             "goToCase": "Go to case",
             "viewTask": "View task",
@@ -7499,7 +7502,14 @@
         },
         "requestOperationReview": {
             "label": "Request Operations Review"
-        }
+        },
+        "createQualityAudit": "Create Quality Audit",
+        "createQualityAuditTooltip": "Initiate a Quality Audit for this case.",
+        "createQualityAuditTooltipDisabled": "Not available: case not eligible or permission denied.",
+        "caseIsNotEligible": "Transaction not eligible for auditing.",
+        "qualityAuditExisted": "Quality Audit case already exists.",
+        "qualityAuditSuccess": "Quality Audit created.",
+        "qualityAuditError": "Couldn’t create Quality Audit."
     },
     "historyEventCard": {
         "bankAccountTypes": {
