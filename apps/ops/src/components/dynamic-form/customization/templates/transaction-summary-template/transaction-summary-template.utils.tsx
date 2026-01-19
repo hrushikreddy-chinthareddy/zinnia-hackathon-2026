@@ -31,6 +31,7 @@ import {
     detectRoleChangeRequestType,
     resolveRoleChangePartyId,
     toFullName,
+    mergeIdentifications,
 } from '@deps/utils/tasks/role-change-data-entry.utils';
 
 export function getPartyMeta(item: SummaryItem) {
@@ -143,13 +144,33 @@ type RequestBodyBuilder = (customData: any) => any;
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
         const { task } = customData;
+
+        const actionData = Array.isArray(customData?.actionData)
+            ? customData.actionData.map((item: any) => {
+                  const uiParty = item?.party;
+                  return {
+                      ...item,
+                      party: uiParty
+                          ? {
+                                ...uiParty,
+                                addresses: cleanAddresses(uiParty.addresses),
+                                emails: cleanEmails(uiParty.emails),
+                                phones: cleanPhones(uiParty.phones),
+                                identifications: mergeIdentifications(
+                                    uiParty.identifications
+                                ),
+                            }
+                          : uiParty,
+                  };
+              })
+            : customData?.actionData;
         return {
             correlationid: uuidv4(),
             carrierId: task.carrier,
             planCode: task.data?.planCode,
             policyNumber: task.data?.policyNumber,
             contractInfo: customData?.contractInfo,
-            actionData: customData?.actionData,
+            actionData,
             signatureData: customData?.signatureData,
             policyStatus: customData?.policyStatus,
             caseId: '',
