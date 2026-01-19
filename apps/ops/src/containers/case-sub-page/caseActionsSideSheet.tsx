@@ -35,7 +35,9 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `caseOverview.${action}Case`,
     });
-    const { t: tCommon } = useTranslation(TranslationFiles.COMMON);
+    const { t: tCommon } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'allFields',
+    });
     const [error, setError] = useState<string | undefined>();
     const [reason, setReason] = useState('');
     const [source, setSource] = useState('');
@@ -54,10 +56,10 @@ function CaseActionSideSheet({ caseId, action }: Props) {
         const errors = {
             reason: reason
                 ? undefined
-                : tCommon('allFields.prioritizationReasonRequired'),
+                : tCommon('prioritizationReasonRequired'),
             source: source
                 ? undefined
-                : tCommon('allFields.prioritizationSourceRequired'),
+                : tCommon('prioritizationSourceRequired'),
         };
 
         setReasonError(errors.reason as string | undefined);
@@ -116,9 +118,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
             ]);
 
             if (!reasonData || !sourceData) {
-                setError(
-                    tCommon('allFields.prioritizationRefDataError') as string
-                );
+                setError(tCommon('prioritizationRefDataError') as string);
                 setReasonOptions([]);
                 setSourceOptions([]);
                 return;
