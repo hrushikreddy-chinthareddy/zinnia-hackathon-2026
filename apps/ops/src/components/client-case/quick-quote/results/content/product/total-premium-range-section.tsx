@@ -34,7 +34,7 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
         return null;
     }
 
-    const rows = termLengths?.map((termLength) => (
+    const rows = termLengths.map((termLength) => (
         <QuickQuoteResultTableRow
             key={termLength}
             cellsVariant={TypographyVariant.BodySmBold}

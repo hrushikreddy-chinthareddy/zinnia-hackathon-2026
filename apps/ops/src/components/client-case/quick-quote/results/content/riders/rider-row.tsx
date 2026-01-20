@@ -1,9 +1,11 @@
 import { useTranslation } from 'react-i18next';
 
+import { useRidersLabelMap } from '@deps/components/illustrations/components/details/content/use-riders-label-map';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePrintContext } from '@deps/contexts/printContext';
 import { NumberOrRange, QuickQuoteFormState } from '@deps/types/quickQuote';
 import { RiderDataItem } from '@deps/utils/quick-quotes-rules/types';
 
@@ -22,7 +24,9 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
     const { results } = useQuickQuoteResults();
     const params = useQuickQuoteParams();
     const { riderName } = props;
+    const { isPrinting } = usePrintContext();
     const isActive = !!params.riders[riderName];
+    const riderLabel = useRidersLabelMap()[riderName];
 
     if (!results) {
         return null;
@@ -37,9 +41,17 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
         })
     );
 
+    const rowHeader = isPrinting ? (
+        <Typography variant={TypographyVariant.FieldLabel}>
+            {riderLabel}
+        </Typography>
+    ) : (
+        <QuickQuoteRiderRowHeader riderName={riderName} />
+    );
+
     return (
         <QuickQuoteResultTableRow
-            rowHeader={<QuickQuoteRiderRowHeader riderName={riderName} />}
+            rowHeader={rowHeader}
             data={isActive ? data : []}
         >
             {!isActive && (

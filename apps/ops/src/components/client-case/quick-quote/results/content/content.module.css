@@ -8,6 +8,19 @@
         var(--color-base-border-border-subtle, #ccc);
 }
 
+.contentMainTableConfig {
+    &Display {
+        grid-template-columns: minmax(max-content, 420px) repeat(
+                var(--column-number),
+                minmax(auto, 360px)
+            );
+    }
+
+    &Print {
+        grid-template-columns: 185px repeat(2, 220px);
+    }
+}
+
 .contentSubtitle {
     margin-bottom: var(--measure-dimension-gap-lg, 16px);
 }

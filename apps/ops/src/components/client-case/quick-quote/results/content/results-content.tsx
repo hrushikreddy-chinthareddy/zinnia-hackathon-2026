@@ -1,9 +1,12 @@
+import clsx from 'clsx';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePrintContext } from '@deps/contexts/printContext';
 
 import styles from './content.module.css';
 import MaskedContainer from './masked-container/masked-container';
@@ -15,6 +18,17 @@ import { QuickQuoteResultSummarySection } from './summary-section';
 export const QuickQuoteResultsContent = () => {
     const { results, isFetching, isLoading } = useQuickQuoteResults();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { isPrinting } = usePrintContext();
+
+    const tableContainerClassnames = clsx(styles.contentMainTable, {
+        [styles.contentMainTableConfigDisplay]: !isPrinting,
+        [styles.contentMainTableConfigPrint]: isPrinting,
+    });
+
+    const tableContainerColumnsStyle = {
+        '--column-number': results?.length ?? 0,
+    } as React.CSSProperties;
+
     return (
         <>
             <Typography
@@ -28,10 +42,8 @@ export const QuickQuoteResultsContent = () => {
                 overlay={<QuoteLoader />}
             >
                 <div
-                    className={styles.contentMainTable}
-                    style={{
-                        gridTemplateColumns: `minmax(max-content, 420px) repeat(${results?.length}, minmax(auto, 360px))`,
-                    }}
+                    className={tableContainerClassnames}
+                    style={tableContainerColumnsStyle}
                 >
                     <QuickQuoteResultProductSection />
                     <QuickQuoteResultSummarySection />

@@ -9130,11 +9130,18 @@
             "updating": "Mise à jour du devis..."
         },
         "quickQuoteResults": {
+            "title": "Devis rapide",
+            "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
             "notAvailable": "Pas disponible",
             "notAvailableByTermLength": "Pas disponible pour un contrat de {{termLength}} ans:",
             "hasRiderErrors": "Certains suppléments ne sont pas inclus. Voir la couverture et le résumé.",
-            "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
-            "title": "Devis rapide",
+            "altLogo": "Logo de Farmers Insurance",
+            "product": {
+                "title": "Produit",
+                "totalPremiumRange": "Gamme Premium Totale",
+                "totalPremiumRangeRowHeader": "Durée de {{years}} année",
+                "totalPremiumRangeSubtitle": "(Gamme Base Premium + Avenants de politique)"
+            },
             "coverage": {
                 "basePremiumRange": "Gamme Base Premium",
                 "nYearTerm": "Durée de {{years}} année",
@@ -9147,12 +9154,6 @@
                 "minFaceAm": "Montant minimum du visage: {{amount}}",
                 "state": "Non disponible pour cet état",
                 "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police."
-            },
-            "product": {
-                "title": "Produit",
-                "totalPremiumRange": "Gamme Premium Totale",
-                "totalPremiumRangeRowHeader": "Durée de {{years}} année",
-                "totalPremiumRangeSubtitle": "(Gamme Base Premium + Avenants de politique)"
             },
             "riders": {
                 "title": "Avenants de politique",
