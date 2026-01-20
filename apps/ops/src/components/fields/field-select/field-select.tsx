@@ -34,16 +34,20 @@ export default function FieldSelect({
 }: FieldSelectProps) {
     const [open, setOpen] = useState(false);
 
-    const handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            setOpen(!open);
-        }
+    const handleEscapeKey = (e: KeyboardEvent) => {
         if (e.key === 'Escape' && open) {
             e.preventDefault();
             e.stopPropagation();
             setOpen(false);
         }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen(!open);
+        }
+        handleEscapeKey(e);
     };
 
     function getFrequentClasses(index: number) {
@@ -155,13 +159,7 @@ export default function FieldSelect({
                     ref={containerRef}
                     role="listbox"
                     aria-label={dropdownAriaLabel}
-                    onKeyDown={(e) => {
-                        if (e.key === 'Escape') {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            setOpen(false);
-                        }
-                    }}
+                    onKeyDown={handleEscapeKey}
                 >
                     <div className="max-h-[266px]">
                         {frequentOptions &&
