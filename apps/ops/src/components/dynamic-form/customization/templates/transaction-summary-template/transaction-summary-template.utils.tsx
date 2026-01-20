@@ -166,7 +166,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             : customData?.actionData;
         return {
             correlationid: customData?.correlationId ?? uuidv4(),
-            carrierId: task ? task.carrier : customData?.carrierId,
+            carrierId: task ? task.carrier : customData?.carrier,
             planCode: task ? task.data?.planCode : customData?.planCode,
             policyNumber: task
                 ? task.data?.policyNumber

@@ -108,7 +108,7 @@ export const getSelfServeTransactionData = async (
                     planCode,
                     effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
                     taskType: TaskType.Initiate_BeneChange_Transaction,
-                    carrierId: policy?.carrierId,
+                    carrier: policy?.carrierId,
                     policyStatus: policy?.policyStatus,
                     issueResolved: true,
                 },
