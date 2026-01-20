@@ -63,6 +63,14 @@ export const MenuContextual = ({
         [calculateAndSetPlacement]
     );
 
+    const handleOpenChange = useCallback(
+        (isOpen: boolean) => {
+            setOpen(isOpen);
+            onOpenChange(isOpen);
+        },
+        [onOpenChange]
+    );
+
     const placementClasses = clsx({
         'right-full': align === 'end' && (side === 'top' || side === 'bottom'),
         'left-full': align === 'start' && (side === 'top' || side === 'bottom'),
@@ -74,10 +82,7 @@ export const MenuContextual = ({
     return (
         <DropdownMenu.Root
             modal={false}
-            onOpenChange={(isOpen: boolean) => {
-                setOpen(isOpen);
-                onOpenChange(isOpen);
-            }}
+            onOpenChange={handleOpenChange}
             open={open}
         >
             <DropdownMenu.Trigger
