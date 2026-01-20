@@ -43,6 +43,7 @@ export const TaskWorkflowContent = ({
         const content = (
             <GlobalTaskSideSheet
                 taskId={task.id}
+                caseId={caseId}
                 type={'task'}
                 mappedDocuments={mappedDocuments}
             />

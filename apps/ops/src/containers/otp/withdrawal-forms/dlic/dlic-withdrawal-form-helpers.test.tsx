@@ -111,8 +111,26 @@ describe('Dlic withdrawal form config', () => {
                 const eftOption = disbursementOptions.find(
                     (option) => option.value === PaymentMethod.EFT
                 );
+
+                // Create the expected input structure that matches what the component passes
+                const disbursementInfo: any = {
+                    bank: [
+                        {
+                            accountNumber: bankingDetails.accountNumber,
+                            accountType: { text: bankingDetails.accountType },
+                            bankName: bankingDetails.bankName,
+                            bankRoutingNumber: bankingDetails.bankRoutingNumber,
+                            reEnterAccountNumber:
+                                bankingDetails.reEnterAccountNumber,
+                            reEnterBankRoutingNumber:
+                                bankingDetails.reEnterBankRoutingNumber,
+                        },
+                    ],
+                    bankVerification: undefined,
+                };
+
                 expect(
-                    eftOption?.generatePayloadFromSelection(bankingDetails)
+                    eftOption?.generatePayloadFromSelection(disbursementInfo)
                 ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
@@ -125,21 +143,14 @@ describe('Dlic withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount:
-                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            isDirectDepositValid: {
-                                text: bankingDetails.isDirectDepositValid,
-                            },
-                            bankFurtherCreditAccount:
-                                bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName:
-                                bankingDetails.bankFurtherCreditName,
-                            isDirectDeposit: { text: true },
-                            reEnterAccountNumber: '123',
-                            reEnterBankRoutingNumber: '123',
+                            reEnterAccountNumber:
+                                bankingDetails.reEnterAccountNumber,
+                            reEnterBankRoutingNumber:
+                                bankingDetails.reEnterBankRoutingNumber,
                         },
                     ],
+                    bankVerification: undefined,
                 });
             });
 
@@ -147,12 +158,24 @@ describe('Dlic withdrawal form config', () => {
                 const eftOption = disbursementOptions.find(
                     (option) => option.value === PaymentMethod.EFT
                 );
-                // const eftMasked: BankDetails = { ...DEFAULT_BANK_DETAILS, maskedAccountNumber: '1234', isDirectDeposit: { text: false } };
+
+                // Create the expected input structure for masked account
+                const disbursementInfo: any = {
+                    bank: [
+                        {
+                            accountNumber: '',
+                            accountType: { text: undefined },
+                            bankName: '',
+                            bankRoutingNumber: '',
+                            reEnterAccountNumber: undefined,
+                            reEnterBankRoutingNumber: undefined,
+                        },
+                    ],
+                    bankVerification: undefined,
+                };
+
                 expect(
-                    eftOption?.generatePayloadFromSelection({
-                        ...bankingDetails,
-                        isDirectDeposit: false,
-                    })
+                    eftOption?.generatePayloadFromSelection(disbursementInfo)
                 ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.EFT },
@@ -160,10 +183,17 @@ describe('Dlic withdrawal form config', () => {
                     bank: [
                         {
                             ...DEFAULT_BANK_DETAILS,
-                            maskedAccountNumber: '1234',
-                            isDirectDeposit: { text: false },
+                            accountNumber: '',
+                            accountType: {
+                                text: undefined,
+                            },
+                            bankName: '',
+                            routingNumber: '',
+                            reEnterAccountNumber: undefined,
+                            reEnterBankRoutingNumber: undefined,
                         },
                     ],
+                    bankVerification: undefined,
                 });
             });
 
@@ -171,13 +201,30 @@ describe('Dlic withdrawal form config', () => {
                 const wireOption = disbursementOptions.find(
                     (option) => option.value === PaymentMethod.Wire
                 );
+
+                // Create the expected input structure that matches what the component passes
+                const disbursementInfo: any = {
+                    bank: [
+                        {
+                            accountNumber: bankingDetails.accountNumber,
+                            accountType: bankingDetails.accountType,
+                            bankName: bankingDetails.bankName,
+                            bankRoutingNumber: bankingDetails.bankRoutingNumber,
+                            reEnterAccountNumber:
+                                bankingDetails.reEnterAccountNumber,
+                            reEnterBankRoutingNumber:
+                                bankingDetails.reEnterBankRoutingNumber,
+                        },
+                    ],
+                    bankVerification: null,
+                };
+
                 expect(
-                    wireOption?.generatePayloadFromSelection(bankingDetails)
+                    wireOption?.generatePayloadFromSelection(disbursementInfo)
                 ).toEqual({
                     thisIsMocked: true,
                     paymentMethod: { text: PaymentMethod.Wire },
                     paymentMailType: { text: null },
-                    //bank: [{ ...wireBankDetails, isDirectDeposit: { text: true }, isDirectDepositValid: { text: null } }],
                     bank: [
                         {
                             ...DEFAULT_BANK_DETAILS,
@@ -186,22 +233,14 @@ describe('Dlic withdrawal form config', () => {
                                 text: bankingDetails.accountType,
                             },
                             bankName: bankingDetails.bankName,
-                            nameOnBankAccount:
-                                bankingDetails.accountHolder ?? '',
                             routingNumber: bankingDetails.bankRoutingNumber,
-                            bankFurtherCreditAccount:
-                                bankingDetails.bankFurtherCreditAccount,
-                            bankFurtherCreditName:
-                                bankingDetails.bankFurtherCreditName,
-                            isDirectDeposit: { text: true },
-                            isDirectDepositValid: { text: null },
-                            reEnterAccountNumber: '123',
-                            reEnterBankRoutingNumber: '123',
+                            reEnterAccountNumber:
+                                bankingDetails.reEnterAccountNumber,
+                            reEnterBankRoutingNumber:
+                                bankingDetails.reEnterBankRoutingNumber,
                         },
                     ],
-                    voidCheck: bankingDetails?.isVoidCheckAttached,
-                    doesCheckMeetSecRequiremnt:
-                        bankingDetails?.doesCheckMeetSecurityRequirements,
+                    bankVerification: null,
                 });
             });
 

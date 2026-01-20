@@ -36,6 +36,7 @@ import MaskedAccountNumberToggle, {
 import { SelectedBankContext } from './form-disbursement-parts/pre-populate-banking-details';
 import FormDisbursementSection from './form-disbursement-section';
 import { BankingFields } from './form-disbursement.helpers';
+import { IFormDisbursement } from '../form-disbursement-V2/form-disbursement.types';
 
 // Selection options for payment method
 export const FormDisbursementSelections = {
@@ -46,8 +47,8 @@ export const FormDisbursementSelections = {
 export type FormDisbursementSelections = typeof FormDisbursementSelections;
 
 const getSelected = (
-    formDisbursement: FormDisbursementType
-): PaymentMailType | PaymentMethod | null => {
+    formDisbursement: FormDisbursementType | IFormDisbursement
+): PaymentMailType | PaymentMethod | null | undefined | string => {
     const paymentMethod = formDisbursement?.paymentMethod?.text;
     const paymentMailType = formDisbursement?.paymentMailType?.text;
     return paymentMethod === PaymentMailType.Check &&
@@ -87,7 +88,7 @@ type FormDisbursementProps = {
     options: PaymentMethodOption[];
     title?: string;
     selectionIdentifier?: (
-        val: FormDisbursementType
+        val: FormDisbursementType | IFormDisbursement
     ) => FormDisbursementSelectionsType;
     isFormStateReadOnly?: boolean;
     defaultValue?: PaymentMethod | PaymentMailType;
@@ -117,7 +118,7 @@ export default function FormDisbursement({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.distributionMethod',
     });
-    const [selected, setSelected] = useState(
+    const [selected, setSelected] = useState<any>(
         selectionIdentifier(formDisbursement) || defaultValue || null
     );
     const [supplementaryFields, setSupplementaryFields] = useState<
@@ -141,11 +142,11 @@ export default function FormDisbursement({
     const existingBankSelected = isLC
         ? isExistingBankLC(
               bankingDetails as LifeCadBanking[],
-              formDisbursement?.bank[0]?.bankName || ''
+              formDisbursement?.bank?.[0]?.bankName || ''
           )
         : isExistingBank(
               bankingDetails as BankAccountBase[],
-              formDisbursement?.bank[0].bankName || ''
+              formDisbursement?.bank?.[0]?.bankName || ''
           );
 
     useEffect(() => {

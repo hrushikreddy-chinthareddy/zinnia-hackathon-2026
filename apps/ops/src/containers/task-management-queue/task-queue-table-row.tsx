@@ -16,12 +16,16 @@ import Avatar from '@deps/components/avatar/avatar';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import IconButton from '@deps/components/icon-button/icon-button';
-import { AssigneeField } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
+import {
+    AssigneeField,
+    Task,
+} from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { useTaskIdFromUrl } from '@deps/hooks/useTaskIdFromUrl';
 import {
     getUserNameFromEmail,
     NO_ASSIGNEE,
@@ -174,6 +178,7 @@ const TaskQueueTableRow = ({
             <TaskQueueDrawer
                 onClose={sideSheet.onClose}
                 taskId={task.id}
+                caseId={task.caseId}
                 taskStatus={task.status}
                 taskName={task.taskName}
                 getTasks={() => {
@@ -188,9 +193,9 @@ const TaskQueueTableRow = ({
         sideSheet.handleOpen(true);
     };
 
-    const handleTaskClaimSuccess = () => {
+    const handleTaskClaimSuccess = useCallback(() => {
         getTasks(true);
-    };
+    }, [getTasks]);
 
     const handleTaskAssignAsAdmin = async (
         taskId: string,
@@ -247,13 +252,16 @@ const TaskQueueTableRow = ({
         }
     };
 
-    const updateRow = (updatedTask: any) => {
-        manageTableAfterAction(
-            task.id,
-            updatedTask.assigneePartyId,
-            updatedTask
-        );
-    };
+    const updateRow = useCallback(
+        (updatedTask: Task) => {
+            manageTableAfterAction(
+                task.id,
+                updatedTask.assigneePartyId,
+                updatedTask
+            );
+        },
+        [manageTableAfterAction, task.id]
+    );
 
     const handleClick = async () => {
         if (assigneeList.length === 0 && !assigneeLoading) {
@@ -296,7 +304,7 @@ const TaskQueueTableRow = ({
         );
     };
 
-    const openTaskSideSheet = () => {
+    const openTaskSideSheet = useCallback(() => {
         if (task) {
             const { taskName = '', id } = task;
             sideSheet.changeSideSheetContent(
@@ -311,6 +319,7 @@ const TaskQueueTableRow = ({
                     type={isOpsManagerView ? OPS_MANAGER_VIEW_TASK : 'case'}
                     featureFlagDecisions={featureFlagDecisions}
                     taskId={id}
+                    caseId={task?.caseId || ''}
                     taskDescription={task?.taskDetails}
                     onTaskClaimSuccess={handleTaskClaimSuccess}
                     onTaskUpdated={updateRow}
@@ -319,7 +328,20 @@ const TaskQueueTableRow = ({
             );
             sideSheet.handleOpen(true);
         }
-    };
+    }, [
+        task,
+        sideSheet,
+        t,
+        isOpsManagerView,
+        featureFlagDecisions,
+        handleTaskClaimSuccess,
+        updateRow,
+    ]);
+
+    useTaskIdFromUrl({
+        taskId: task?.id,
+        onTaskIdMatch: openTaskSideSheet,
+    });
 
     const statuses: StatusItem[] = [
         {

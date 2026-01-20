@@ -14,10 +14,13 @@ import {
     PaymentMethod,
     FormDisbursement as FormDisbursementType,
 } from '@deps/models/case/withdrawal/case';
-import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 
 import FormDisbursementV2 from './form-disbursement-v2';
-import { SelectedBanking, BankingDetails } from './form-disbursement.types';
+import {
+    SelectedBanking,
+    BankingDetails,
+    DisbursementOptions,
+} from './form-disbursement.types';
 import { DEFAULT_ADDRESS } from '../address-entry';
 
 jest.mock('next-i18next', () => ({
@@ -67,7 +70,7 @@ describe('FormDisbursementV2 Component', () => {
         return {} as FormDisbursementType;
     });
 
-    const disbursementOptions: PaymentMethodOption[] = [
+    const disbursementOptions: DisbursementOptions = [
         {
             label: 'caseWithdrawal.request.distributionMethod.eft',
             value: PaymentMethod.EFT,
@@ -1148,7 +1151,7 @@ describe('FormDisbursementV2 Component', () => {
             const setMockData = jest.fn();
             const setBankDetails = jest.fn();
 
-            const optionsWithConsent: PaymentMethodOption[] = [
+            const optionsWithConsent: DisbursementOptions = [
                 {
                     label: 'caseWithdrawal.request.distributionMethod.eft',
                     value: PaymentMethod.EFT,
@@ -1192,7 +1195,7 @@ describe('FormDisbursementV2 Component', () => {
             const setMockData = jest.fn();
             const setBankDetails = jest.fn();
 
-            const optionsWithConsent: PaymentMethodOption[] = [
+            const optionsWithConsent: DisbursementOptions = [
                 {
                     label: 'caseWithdrawal.request.distributionMethod.eft',
                     value: PaymentMethod.EFT,
@@ -1279,7 +1282,7 @@ describe('FormDisbursementV2 Component', () => {
             const setMockData = jest.fn();
             const setBankDetails = jest.fn();
 
-            const optionsWithConsent: PaymentMethodOption[] = [
+            const optionsWithConsent: DisbursementOptions = [
                 {
                     label: 'caseWithdrawal.request.distributionMethod.eft',
                     value: PaymentMethod.EFT,
@@ -1551,7 +1554,7 @@ describe('FormDisbursementV2 Component', () => {
             const setBankDetails = jest.fn();
             const setFormErrors = jest.fn();
 
-            const optionsWithoutPayload: PaymentMethodOption[] = [
+            const optionsWithoutPayload: DisbursementOptions = [
                 {
                     label: 'caseWithdrawal.request.distributionMethod.custom',
                     value: 'Custom' as PaymentMethod,

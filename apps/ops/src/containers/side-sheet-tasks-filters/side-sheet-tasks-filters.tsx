@@ -2,8 +2,8 @@ import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
 
 import Button, { ButtonType } from '@deps/components/button/button';
-import { FieldSize } from '@deps/components/fields/field';
-import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
+import { FieldSize, FieldVariant } from '@deps/components/fields/field';
+import FieldDateSelectRange from '@deps/components/fields/field-date-select-range/field-date-select-range';
 import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
@@ -16,6 +16,7 @@ import {
     getClientIdsByCarrierName,
 } from '@deps/utils/carriers';
 
+import { AdditionalFilters } from './side-sheet-tasks-filters-types';
 import styles from './side-sheet-tasks-filters.module.css';
 import { FILTER_KEYS } from './utils';
 
@@ -25,7 +26,8 @@ type FilterPayload = {
     carriers: string[];
     queues: string[];
     escalated?: boolean | null;
-    scheduledDate?: string;
+    scheduledDateStart?: string;
+    scheduledDateEnd?: string;
 };
 
 export interface SideSheetTasksResultsProps {
@@ -41,24 +43,13 @@ export interface SideSheetTasksResultsProps {
     clearFilters: () => void;
 }
 
-type Carriers = {
-    [key: string]: string;
-};
-
-type AdditionalFilters = {
-    carriers: Carriers;
-    group: string[];
-    scheduledDate?: string;
-    assignees: string[];
-    escalated?: boolean | null;
-};
-
 const initialAdditionalFilters: AdditionalFilters = {
     carriers: {},
     group: [],
     assignees: [],
     escalated: undefined,
-    scheduledDate: '',
+    scheduledDateStart: '',
+    scheduledDateEnd: '',
 };
 
 export default function SideSheetTasksResults({
@@ -143,12 +134,19 @@ export default function SideSheetTasksResults({
     };
 
     const handleSubmit = useCallback(() => {
-        const { carriers, group, escalated, scheduledDate } = additionalFilters;
+        const {
+            carriers,
+            group,
+            escalated,
+            scheduledDateStart,
+            scheduledDateEnd,
+        } = additionalFilters;
         const payload = {
             carriers: Object.keys(carriers),
             queues: group,
             escalated: escalated,
-            ...(scheduledDate && { scheduledDate }),
+            ...(scheduledDateStart &&
+                scheduledDateEnd && { scheduledDateStart, scheduledDateEnd }),
         };
 
         handleApplyFilters(additionalFilters, payload);
@@ -161,15 +159,26 @@ export default function SideSheetTasksResults({
         newAdditionalFilters.group = [];
         newAdditionalFilters.assignees = [];
         newAdditionalFilters.escalated = undefined;
-        newAdditionalFilters.scheduledDate = '';
+        newAdditionalFilters.scheduledDateStart = '';
+        newAdditionalFilters.scheduledDateEnd = '';
         setAdditionalFilters(newAdditionalFilters);
     };
 
-    const handleScheduledDateChange = (event: any) => {
-        const scheduledDate = event.target.value;
-        setAdditionalFilters((prevFilters) => ({
-            ...prevFilters,
-            scheduledDate,
+    const scheduledStartOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+
+        setAdditionalFilters((prev) => ({
+            ...prev,
+            scheduledDateStart: value,
+        }));
+    };
+
+    const scheduledEndOnChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+
+        setAdditionalFilters((prev) => ({
+            ...prev,
+            scheduledDateEnd: value,
         }));
     };
 
@@ -179,7 +188,7 @@ export default function SideSheetTasksResults({
         if (
             (additionalFilters?.group || []).length > 0 ||
             Object.keys(additionalFilters?.carriers || {}).length > 0 ||
-            additionalFilters?.scheduledDate ||
+            additionalFilters?.scheduledDateStart ||
             additionalFilters?.escalated !== undefined
         ) {
             clearFilters();
@@ -189,12 +198,18 @@ export default function SideSheetTasksResults({
     const selectedCarriers = additionalFilters.carriers ?? {};
 
     useEffect(() => {
-        const { carriers, queues, statuses, escalated, scheduledDate } =
-            searchValue.additionalFilters || {};
+        const {
+            carriers,
+            queues,
+            statuses,
+            escalated,
+            scheduledDateStart,
+            scheduledDateEnd,
+        } = searchValue.additionalFilters || {};
         const carrierFilterItems = getUniqueCarrierFilterItems();
 
         const isFiltersApplied =
-            [carriers, queues, statuses, scheduledDate].some(Boolean) ||
+            [carriers, queues, statuses, scheduledDateStart].some(Boolean) ||
             escalated !== undefined;
 
         if (isFiltersApplied) {
@@ -218,8 +233,8 @@ export default function SideSheetTasksResults({
                 ),
                 escalated: escalated,
                 group: queues || [],
-                taskStatus: statuses || [],
-                scheduledDate,
+                scheduledDateStart,
+                scheduledDateEnd,
             }));
             if (!groupList.length) {
                 setGroupList(allGroups || []);
@@ -251,7 +266,8 @@ export default function SideSheetTasksResults({
     const hasActiveFilters =
         (additionalFilters?.group || []).length > 0 ||
         Object.keys(additionalFilters?.carriers || {}).length > 0 ||
-        additionalFilters?.scheduledDate ||
+        additionalFilters?.scheduledDateStart ||
+        additionalFilters.scheduledDateEnd ||
         additionalFilters.escalated !== undefined;
 
     return (
@@ -294,22 +310,21 @@ export default function SideSheetTasksResults({
                     />
                           /> */}
 
-                    <div className={styles.dateFieldWrapper}>
-                        <FieldDateSelect
-                            value={additionalFilters.scheduledDate || ''}
+                    <div className={styles.fieldGroup}>
+                        <FieldDateSelectRange
+                            startValue={
+                                additionalFilters.scheduledDateStart || ''
+                            }
+                            endValue={additionalFilters.scheduledDateEnd || ''}
+                            startLabel={t('allFields.scheduledDate') as string}
+                            endLabel={t('allFields.scheduledDateEnd') as string}
+                            startOnChange={scheduledStartOnChange}
+                            endOnChange={scheduledEndOnChange}
+                            startVariant={FieldVariant.Default}
+                            endVariant={FieldVariant.Default}
+                            placeholder={t('allFields.selectDate') as string}
+                            closeOnDateSelect
                             size={FieldSize.Small}
-                            label={
-                                t(
-                                    `${REFINE_RESULTS_BASE_KEY}scheduledDate`
-                                ) as string
-                            }
-                            onChange={handleScheduledDateChange}
-                            placeholder={
-                                t(
-                                    `${REFINE_RESULTS_BASE_KEY}scheduledDatePlaceholder`
-                                ) as string
-                            }
-                            isClearable={true}
                             isFutureDateDisabled={false}
                         />
                     </div>

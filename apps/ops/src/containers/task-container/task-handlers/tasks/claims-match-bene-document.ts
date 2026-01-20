@@ -1,6 +1,9 @@
 import { getName } from '@deps/helpers/party-info-helpers';
 import { FormMetadata } from '@deps/models/case/task';
-import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
+import {
+    BeneficiaryRecord,
+    EntityTypes,
+} from '@deps/models/case/task/beneficiary-record';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { searchTransactionsSSR } from '@deps/queries/api/transaction-search';
 import { LoggingContext } from '@deps/utils/server-logging';
@@ -61,9 +64,13 @@ const claimsMatchBeneDocumentHandler: TaskHandler<
                 potentialMatchCriteria.identifiers?.find(
                     (id: { identifier: string }) => id.identifier === 'zlCaseId'
                 )?.value ?? '';
-            entityType = Array.isArray(potentialMatchCriteria.entityType)
-                ? potentialMatchCriteria.entityType[0] ?? ''
-                : potentialMatchCriteria.entityType ?? '';
+            entityType =
+                Array.isArray(potentialMatchCriteria.entityType) &&
+                potentialMatchCriteria.entityType.includes(
+                    EntityTypes.IDN_CLAIM_BENE_RECORD
+                )
+                    ? EntityTypes.IDN_CLAIM_BENE_RECORD
+                    : '';
         }
         return {
             zlCaseId,

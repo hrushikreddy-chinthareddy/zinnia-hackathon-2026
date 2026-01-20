@@ -1,5 +1,6 @@
 import { useQuery, UseQueryOptions } from '@tanstack/react-query';
 import { Icon, IconType } from '@zinnia/bloom/components';
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
@@ -28,6 +29,8 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
     const { sessionId, partyId: userPartyId } = usePermissionsContext();
+    const searchParams = useSearchParams();
+    const correlationId = searchParams?.get('correlationId');
     const shouldShowOwnerChange =
         featureFlags[FEATURE_FLAGS.OWNER_CHANGE_TRANSACTION];
     const shouldShowJointOwnerChange =
@@ -104,43 +107,58 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         policy,
         PolicyRole.ASSIGNEE
     );
+    const withCorrelationId = (href: string) => {
+        if (!correlationId) return href;
 
+        const separator = href.includes('?') ? '&' : '?';
+        return `${href}${separator}correlationId=${encodeURIComponent(
+            correlationId
+        )}`;
+    };
     const links = [
         {
-            href: t('site.navLinks.owner.link', {
-                id: policy.policyNumber,
-                planCode: policy.planCode,
-            }),
+            href: withCorrelationId(
+                t('site.navLinks.owner.link', {
+                    id: policy.policyNumber,
+                    planCode: policy.planCode,
+                })
+            ),
             name: t('site.navLinks.owner.text'),
             hideLabel: false,
             isEligible: manageOwnerEligibility?.isEligibleManageOwner,
             shouldShow: shouldShowOwnerChange,
         },
         {
-            href: t('site.navLinks.jointOwner.link', {
-                id: policy.policyNumber,
-                planCode: policy.planCode,
-            }),
+            href: withCorrelationId(
+                t('site.navLinks.jointOwner.link', {
+                    id: policy.policyNumber,
+                    planCode: policy.planCode,
+                })
+            ),
             name: t('site.navLinks.jointOwner.text'),
             hideLabel: false,
             isEligible: manageJointOwnerEligibility?.isEligibleManageJointOwner,
             shouldShow: shouldShowJointOwnerChange,
         },
         {
-            href: t('site.navLinks.payor.link', {
-                id: policy.policyNumber,
-                planCode: policy.planCode,
-            }),
+            href: withCorrelationId(
+                t('site.navLinks.payor.link', {
+                    id: policy.policyNumber,
+                    planCode: policy.planCode,
+                })
+            ),
             name: t('site.navLinks.payor.text'),
             hideLabel: false,
             isEligible: managePayorEligibility?.isEligibleManagePayor,
             shouldShow: shouldShowPayorChange,
         },
         {
-            href: t('site.navLinks.thirdPartyDesignee.link', {
-                id: policy.policyNumber,
-                planCode: policy.planCode,
-            }),
+            href: withCorrelationId(
+                t('site.navLinks.thirdPartyDesignee.link', {
+                    id: policy.policyNumber,
+                    planCode: policy.planCode,
+                })
+            ),
             name: t('site.navLinks.thirdPartyDesignee.text'),
             hideLabel: false,
             isEligible:
@@ -148,10 +166,12 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
             shouldShow: shouldShowThirdPartyDesigneeChange,
         },
         {
-            href: t('site.navLinks.beneficiary.link', {
-                id: policy.policyNumber,
-                planCode: policy.planCode,
-            }),
+            href: withCorrelationId(
+                t('site.navLinks.beneficiary.link', {
+                    id: policy.policyNumber,
+                    planCode: policy.planCode,
+                })
+            ),
             name: t('site.navLinks.beneficiary.text'),
             hideLabel: false,
             isEligible:

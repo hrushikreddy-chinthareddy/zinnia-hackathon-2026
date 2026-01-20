@@ -1,4 +1,3 @@
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 
 import { GetStepsProps } from './types';
@@ -13,15 +12,15 @@ export const getSuitabilityReviewSteps = ({
     taskInfoLink,
     t,
     taskMetadata,
+    readOnly,
 }: GetStepsProps) => {
-    const readOnly = task.status === TaskStatus.Completed;
     if (task.carrier === Carrier.SBGC) {
         return [
             {
                 isVisible: () => true,
                 component: (
                     <TaskFormStep
-                        readonly={true}
+                        readonly={readOnly}
                         key={`step_${0}`}
                         isSaveAsDraftEnabled={false}
                         isContinueButtonEnabled={true}

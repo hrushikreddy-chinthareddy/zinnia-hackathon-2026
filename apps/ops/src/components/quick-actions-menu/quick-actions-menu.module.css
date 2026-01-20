@@ -9,3 +9,9 @@
         color: var(--color-states-hover-text-hover-text-link);
     }
 }
+.toastContainer {
+    position: fixed;
+    bottom: 1rem;
+    right: 2.5rem;
+    z-index: 50;
+}

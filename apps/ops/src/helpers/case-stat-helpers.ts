@@ -37,3 +37,9 @@ export const getCaseInProgressDurationStats = (caseObj: {
         ms: differenceMs,
     };
 };
+
+export const QUALITY_AUDIT_REVIEW_QUEUE_ADMIN =
+    'quality_audit_review_queue_admin';
+
+export const QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR =
+    'quality_audit_review_queue_processor';
