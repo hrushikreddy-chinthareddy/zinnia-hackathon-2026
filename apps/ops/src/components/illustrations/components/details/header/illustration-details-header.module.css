@@ -1,6 +1,6 @@
 .headerWrapper {
     border-bottom: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
+        var(--color-base-border-light);
     padding: var(--measure-dimension-padding-3xl);
     display: grid;
     column-gap: var(--measure-dimension-gap-lg);
@@ -41,7 +41,7 @@
     &:link,
     &:visited {
         cursor: pointer;
-        color: var(--color-base-text-text-link);
+        color: var(--color-base-text-link);
     }
 
     &.enabled:hover {

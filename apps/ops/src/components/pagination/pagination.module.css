@@ -7,10 +7,10 @@
 
 .paginationItem {
     align-items: center;
-    border: 2px solid var(--color-base-icon-icon-action-text-link);
+    border: 2px solid var(--color-base-icon-action-text-link);
     border-radius: 0.25rem;
     background-color: transparent;
-    color: var(--color-base-icon-icon-action-text-link);
+    color: var(--color-base-icon-action-text-link);
     display: flex;
     justify-content: center;
     height: var(--measure-dimension-z-space-8);

@@ -66,7 +66,7 @@ export default function TaxDocumentsTable({
                             >
                                 <Icon
                                     type={IconType.CIRCLE_INFO}
-                                    color="var(--color-base-icon-icon-action-text-link)"
+                                    color="var(--color-base-icon-action-text-link)"
                                     height={16}
                                     width={16}
                                 />

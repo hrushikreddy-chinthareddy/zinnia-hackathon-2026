@@ -13,10 +13,10 @@
     border-radius: var(--measure-dimension-z-space-3);
 }
 .docLink {
-    color: var(--color-base-text-text-link);
+    color: var(--color-base-text-link);
 }
 .sourceLink a {
-    color: var(--color-base-text-text-link);
+    color: var(--color-base-text-link);
 }
 .feedbackControls {
     border-top: var(--color-fields-border-field-default-border) solid 1px;
@@ -127,5 +127,5 @@
     padding: var(--measure-dimension-z-space-2);
 }
 .textarea:focus {
-    border-color: var(--color-base-text-text-link);
+    border-color: var(--color-base-text-link);
 }

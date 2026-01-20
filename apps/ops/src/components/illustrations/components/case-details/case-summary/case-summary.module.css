@@ -22,17 +22,17 @@
     gap: var(--measure-dimension-gap-2xl);
 
     .label {
-        color: var(--color-base-text-text-primary);
+        color: var(--color-base-text-primary);
         font-feature-settings: 'liga' off, 'clig' off;
     }
 
     .value {
-        color: var(--color-base-text-text-primary);
+        color: var(--color-base-text-primary);
         display: block;
     }
 
     .caption {
-        color: var(--color-base-text-text-secondary);
+        color: var(--color-base-text-secondary);
         font-feature-settings: 'liga' off, 'clig' off;
     }
 }
