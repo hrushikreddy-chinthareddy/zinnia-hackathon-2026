@@ -19,6 +19,9 @@ import {
     CaseSearchBody,
     CaseSearchErrorResponse,
     CaseSearchResponse,
+    CreateQualityAuditErrorResponse,
+    CreateQualityAuditRequest,
+    CreateQualityAuditResponse,
 } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
@@ -536,6 +539,30 @@ export const escalateCase = async (
             url: baseCasesUrl,
             caseId,
             function: 'cases.escalateCase',
+        });
+        return error;
+    }
+};
+
+export const createQualityAuditForCaseId = async (
+    caseDetails: CreateQualityAuditRequest
+): Promise<CreateQualityAuditResponse | CreateQualityAuditErrorResponse> => {
+    try {
+        const qualityAuditUrl = `${baseAppUrl}/api/process/workflow/v1/qualityaudit`;
+        const response = await client.post<
+            CreateQualityAuditRequest,
+            AxiosResponse
+        >(qualityAuditUrl, caseDetails);
+        return { status: response.status, data: response.data };
+    } catch (error: any) {
+        console.error(
+            'createQualityAuditForCaseId::An error occurred creating quality audit',
+            error
+        );
+        browserLogError('cases::Failed to create quality audit', {
+            ...parseErrorInformation(error),
+            caseId: caseDetails.parentCaseId,
+            function: 'cases.createQualityAuditForCaseId',
         });
         return error;
     }

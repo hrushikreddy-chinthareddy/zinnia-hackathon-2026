@@ -2,6 +2,7 @@ import { getAccessToken } from '@auth0/nextjs-auth0';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { TASK_MODE_EDIT } from '@deps/constants/task';
 import { getNigoExceptions } from '@deps/containers/task-container/components/steps/nigo-details/nigo-details.helpers';
 import TaskContainer from '@deps/containers/task-container/task-container';
 import { applyDynamicOptions } from '@deps/containers/task-container/task-handlers/handle-task';
@@ -70,14 +71,27 @@ export const TaskPage: React.FC<TaskPageProps> = ({
     );
 };
 
+const redirectTo403 = () => {
+    return {
+        redirect: {
+            destination: '/403',
+            permanent: false,
+        },
+    };
+};
+
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, loggingContext) => {
             const user = await getUserData(context);
+            const { mode } = context.query;
+
+            const isEditMode = mode === TASK_MODE_EDIT;
+            const isViewMode = !isEditMode;
+
             const { locale = DEFAULT_LOCALE, query, req, res } = context;
             const taskId = (query.taskId as string) || '';
             const taskTypeOverride = (query.taskTypeOverride as string) || '';
-            const taskUserOverride = Boolean(query.taskUserOverride) || false;
             const taskSchemaOverride =
                 (query.taskSchemaOverride as string) || '';
             const carrierOverride = (query.taskCarrierOverride as string) || '';
@@ -104,12 +118,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ...loggingContext,
                     taskId,
                 });
-                return {
-                    redirect: {
-                        destination: '/403',
-                        permanent: false,
-                    },
-                };
+                return redirectTo403();
             }
 
             try {
@@ -149,41 +158,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                         caseId,
                         process,
                     });
-                    return {
-                        redirect: {
-                            destination: '/403',
-                            permanent: false,
-                        },
-                    };
-                }
-                if (
-                    !(
-                        !isProd() &&
-                        (taskUserOverride ||
-                            taskTypeOverride ||
-                            taskSchemaOverride)
-                    )
-                ) {
-                    if (
-                        !(
-                            user.partyId &&
-                            task.assigneePartyId &&
-                            task.assigneePartyId === user.partyId
-                        )
-                    ) {
-                        if (task.status !== TaskStatus.Completed) {
-                            logWarn('task/:id::task is not assigned to user', {
-                                ...loggingContext,
-                                assignee: task.assignee,
-                            });
-                            return {
-                                redirect: {
-                                    destination: '/403',
-                                    permanent: false,
-                                },
-                            };
-                        }
-                    }
+                    return redirectTo403();
                 }
 
                 let [isSaveAsDraftEnabled, isContinueButtonEnabled] =
@@ -268,9 +243,13 @@ export const getServerSideProps = withPageAuthAndLogging(
                 const { nigoExceptions, nigoSubExceptions } =
                     nigoExceptionResponse;
 
+                const taskIdQueryParam =
+                    taskId && isViewMode ? `?taskId=${taskId}` : '';
+
                 const taskInfoLink = context?.req?.headers?.referer
-                    ? new URL(context.req.headers.referer)?.pathname
-                    : '/home';
+                    ? new URL(context.req.headers.referer)?.pathname +
+                      taskIdQueryParam
+                    : `/home${taskIdQueryParam}`;
 
                 //transform schema options with api
                 await applyDynamicOptions(

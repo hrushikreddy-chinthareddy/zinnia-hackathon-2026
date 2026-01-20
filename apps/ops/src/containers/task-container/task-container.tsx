@@ -1,7 +1,9 @@
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { TASK_MODE_EDIT } from '@deps/constants/task';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
@@ -31,6 +33,11 @@ const TaskContainer = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'taskManagement.taskForm',
     });
+    const searchParams = useSearchParams();
+    const mode = searchParams.get('mode');
+    const isEditMode = mode === TASK_MODE_EDIT;
+    const readOnly = !isEditMode;
+
     const { featureFlags } = useOptimizely();
     const steps = stepsProvider.getSteps(taskType as TaskType, {
         carrierId: carrier,
@@ -46,6 +53,7 @@ const TaskContainer = ({
         task,
         isSaveAsDraftEnabled,
         isContinueButtonEnabled,
+        readOnly,
         featureFlags,
     });
     return (

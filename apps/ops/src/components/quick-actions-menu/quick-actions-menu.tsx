@@ -1,31 +1,47 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
-import { skipToken, useQuery } from '@tanstack/react-query';
+import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
+import { Toast, ToastVariant } from '@zinnia/bloom/components';
+import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 import { useTranslation, TFunction } from 'next-i18next';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState, useEffect } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
+import { PopoverPlacement } from '@deps/components/popover/popover';
 import {
     commonPopoverClasses,
     commonTriggerClasses,
 } from '@deps/components/popover/popover.helpers';
+import Tooltip from '@deps/components/tooltip/tooltip';
 import { TranslationFiles } from '@deps/config/translations';
 import CaseActionSideSheet from '@deps/containers/case-sub-page/caseActionsSideSheet';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import {
+    useOptimizely,
+    OptimizelyVariableKey,
+} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+import {
+    QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
+    QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
+} from '@deps/helpers/case-stat-helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { useFreelookCancellation } from '@deps/hooks/useFreelookCancellation';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
-import { Case, Statuses } from '@deps/models/case/case';
+import { Case, Statuses, QualityAuditStatus } from '@deps/models/case/case';
 import { CaseAction, ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
-import { TransactionResponseStatus } from '@deps/queries/api/bpm';
+import {
+    checkCaseQualityAuditEligibility,
+    TransactionResponseStatus,
+} from '@deps/queries/api/bpm';
+import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
 import {
     checkFullSurrenderWithdrawal,
     checkInitialDeathClaimExistsQuery,
@@ -46,12 +62,19 @@ import {
 import { TransactionPermission } from '@deps/utils/auth';
 import { isDemo } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { isFormFeatureEnabled } from '@deps/utils/optimizely/utils';
+import {
+    isFormFeatureEnabled,
+    isFeatureFlagVariableActive,
+} from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { Reason } from '@zinnia/api-types/types/sor';
 
 import { TextButton } from './quick-action-text-button';
+import styles from './quick-actions-menu.module.css';
+import { buildCreateQualityAuditPayload } from '../../containers/case-sub-page/case-helpers';
 import { NavElementType } from '../nav-element/nav-element';
 import SideSheetRequestCorrection from '../side-sheet/side-sheet-request-correction/side-sheet-request-correction';
+
 interface TranslateProps {
     t: TFunction;
 }
@@ -636,10 +659,14 @@ export const CaseMenuContextualContent = ({
     t,
     caseDetails,
     escalated,
+    setToastMessage,
+    setToastVariant,
 }: {
     t: TFunction;
     caseDetails: Case;
     escalated: boolean;
+    setToastMessage: (message: string | null) => void;
+    setToastVariant: (variant: ToastVariant | null) => void;
 }) => {
     const { featureFlags } = useOptimizely();
     const {
@@ -650,6 +677,10 @@ export const CaseMenuContextualContent = ({
         partyId: userPartyId,
     } = usePermissionsContext();
     const sideSheet = useSideSheetContext();
+    const { userTuplesData } = useCaseActivityContext();
+    const { featureFlagVariables } = useOptimizely();
+    const [isCaseEligibleForQualityAudit, setIsCaseEligibleForQualityAudit] =
+        useState(false);
 
     const displayRequestCorrection =
         featureFlags[FEATURE_FLAGS.WRITE_REQUEST_CASE_CORRECTION];
@@ -668,6 +699,21 @@ export const CaseMenuContextualContent = ({
         isCasePrioritizationEnabled &&
         hasPermissionToPrioritizeCases &&
         !isInactiveStatus;
+
+    useEffect(() => {
+        const qualityAuditEligibilityPayload =
+            buildCreateQualityAuditPayload(caseDetails);
+        const fetchQualityAuditEligibility = async () => {
+            const response = await checkCaseQualityAuditEligibility(
+                qualityAuditEligibilityPayload
+            );
+
+            if (response?.status === HttpStatusCode.Ok) {
+                setIsCaseEligibleForQualityAudit(true);
+            }
+        };
+        fetchQualityAuditEligibility();
+    }, [caseDetails]);
 
     const openRequestCorrectionSideSheet = () => {
         sideSheet.changeSideSheetContent(
@@ -729,43 +775,157 @@ export const CaseMenuContextualContent = ({
             }
         );
     };
+    const allowedQualityAuditRoles = [
+        QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
+        QUALITY_AUDIT_REVIEW_QUEUE_PROCESSOR,
+    ];
+
+    const carrier = caseDetails?.carrier?.toLowerCase();
+
+    let hasCreateQualityAuditPermission =
+        !!carrier &&
+        Object.entries(userTuplesData as Record<string, unknown>).some(
+            ([roleKey, carriers]) =>
+                allowedQualityAuditRoles.includes(roleKey) &&
+                Array.isArray(carriers) &&
+                carriers.some(
+                    (c): c is string =>
+                        typeof c === 'string' && c.toLowerCase() === carrier
+                )
+        );
+
+    hasCreateQualityAuditPermission =
+        hasCreateQualityAuditPermission &&
+        isFeatureFlagVariableActive(
+            featureFlagVariables,
+            FEATURE_FLAG_VARIABLES.CREATE_QUALITY_AUDIT,
+            OptimizelyVariableKey.Clients,
+            caseDetails?.carrier?.toLowerCase()
+        );
+
+    const isQualityAuditEligible =
+        hasCreateQualityAuditPermission && isCaseEligibleForQualityAudit;
+
+    const queryClient = useQueryClient();
+
+    const qaCreatedQueryKey = ['qualityAuditCreated', caseDetails.id];
+
+    const { data: isQualityAuditCreated = false } = useQuery<boolean>({
+        queryKey: qaCreatedQueryKey,
+        queryFn: () => false, // never actually fetches
+        staleTime: Infinity,
+        initialData: false,
+    });
+
+    const qualityAuditOption = React.useMemo(
+        () => ({
+            id: 'createQualityAudit',
+            name: t('createQualityAudit'),
+            isEligible: isQualityAuditEligible && !isQualityAuditCreated,
+            shouldShow: hasCreateQualityAuditPermission,
+            tooltip: !isCaseEligibleForQualityAudit
+                ? t('caseIsNotEligible')
+                : isQualityAuditCreated
+                ? t('qualityAuditExisted')
+                : isQualityAuditEligible
+                ? t('createQualityAuditTooltip')
+                : t('createQualityAuditTooltipDisabled'),
+        }),
+        [
+            t,
+            isQualityAuditEligible,
+            hasCreateQualityAuditPermission,
+            isCaseEligibleForQualityAudit,
+            isQualityAuditCreated,
+        ]
+    );
+    const handleCreateQualityAudit = async () => {
+        try {
+            const qualityAuditPayload =
+                buildCreateQualityAuditPayload(caseDetails);
+            const response = await createQualityAuditForCaseIdQuery(
+                qualityAuditPayload
+            );
+
+            const qualityAuditCode = response?.data?.code as
+                | QualityAuditStatus
+                | undefined;
+
+            if (
+                qualityAuditCode &&
+                [
+                    QualityAuditStatus.QA_CASE_ALREADY_EXISTS,
+                    QualityAuditStatus.QA_CASE_CREATED,
+                ].includes(qualityAuditCode)
+            ) {
+                queryClient.setQueryData(qaCreatedQueryKey, true);
+                setToastVariant(ToastVariant.Success);
+                setToastMessage(t('qualityAuditSuccess'));
+            }
+        } catch (error) {
+            console.error('quality audit error', error);
+            setToastVariant(ToastVariant.Error);
+            setToastMessage(t('qualityAuditError'));
+        }
+    };
 
     return (
-        <MenuContextualLabel label="" hideLabel={true}>
-            {canShowRequestCorrection && (
-                <MenuContextualItem
-                    content={t('cases.requestCorrection')}
-                    onClick={openRequestCorrectionSideSheet}
-                    openInNewTab={false}
-                    type={NavElementType.Button}
-                />
-            )}
-            {canShowPriorityActions && (
-                <MenuContextualItem
-                    content={
-                        escalated
-                            ? t('cases.deprioritize.title')
-                            : t('cases.prioritize.title')
-                    }
-                    onClick={escalated ? handleDeprioritize : handlePrioritize}
-                    type={NavElementType.Button}
-                />
-            )}
-            {isAllowOpsCaseReviewRequest && (
-                <MenuContextualItem
-                    content={t('requestOperationReview.label')}
-                    href={`/cases/${caseDetails.id}/operations-review`}
-                    onClick={() => {
-                        trackClick(
-                            'Raise a Service Request',
-                            `/cases/${caseDetails.id}/operations-review`
-                        );
-                    }}
-                    type={NavElementType.Link}
-                    openInNewTab={true}
-                />
-            )}
-        </MenuContextualLabel>
+        <>
+            <MenuContextualLabel label="" hideLabel={true}>
+                {hasCreateQualityAuditPermission && (
+                    <Tooltip
+                        key={qualityAuditOption.id}
+                        placement={PopoverPlacement.TopLeft}
+                        body={qualityAuditOption.tooltip}
+                        isTabbable={false}
+                        popoverClassName="md:mb-5"
+                    >
+                        <MenuContextualItem
+                            key={qualityAuditOption.id}
+                            content={qualityAuditOption.name}
+                            disabled={!qualityAuditOption.isEligible}
+                            onClick={handleCreateQualityAudit}
+                            type={NavElementType.Button}
+                        />
+                    </Tooltip>
+                )}
+                {canShowRequestCorrection && (
+                    <MenuContextualItem
+                        content={t('cases.requestCorrection')}
+                        onClick={openRequestCorrectionSideSheet}
+                        openInNewTab={false}
+                        type={NavElementType.Button}
+                    />
+                )}
+                {canShowPriorityActions && (
+                    <MenuContextualItem
+                        content={
+                            escalated
+                                ? t('cases.deprioritize.title')
+                                : t('cases.prioritize.title')
+                        }
+                        onClick={
+                            escalated ? handleDeprioritize : handlePrioritize
+                        }
+                        type={NavElementType.Button}
+                    />
+                )}
+                {isAllowOpsCaseReviewRequest && (
+                    <MenuContextualItem
+                        content={t('requestOperationReview.label')}
+                        href={`/cases/${caseDetails.id}/operations-review`}
+                        onClick={() => {
+                            trackClick(
+                                'Raise a Service Request',
+                                `/cases/${caseDetails.id}/operations-review`
+                            );
+                        }}
+                        type={NavElementType.Link}
+                        openInNewTab={true}
+                    />
+                )}
+            </MenuContextualLabel>
+        </>
     );
 };
 
@@ -793,6 +953,17 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'quickActions',
     });
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+    const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
+
+    useEffect(() => {
+        if (!toastMessage) return;
+        const id = setTimeout(() => {
+            setToastMessage(null);
+            setToastVariant(null);
+        }, 4000);
+        return () => clearTimeout(id);
+    }, [toastMessage]);
 
     return (
         <>
@@ -811,6 +982,8 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                             caseDetails={props.caseDetails}
                             t={t}
                             escalated={props.escalated}
+                            setToastMessage={setToastMessage}
+                            setToastVariant={setToastVariant}
                         />
                     )}
                 </MenuContextual>
@@ -833,6 +1006,8 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                                     caseDetails={props.caseDetails}
                                     t={t}
                                     escalated={props.escalated}
+                                    setToastMessage={setToastMessage}
+                                    setToastVariant={setToastVariant}
                                 />
                             )}
                         </MenuContextual>
@@ -852,6 +1027,12 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                     </ReactTooltip.Root>
                 </ReactTooltip.Provider>
             </div>
+
+            {toastMessage && toastVariant && (
+                <div className={styles.toastContainer}>
+                    <Toast variant={toastVariant}>{toastMessage}</Toast>
+                </div>
+            )}
         </>
     );
 };

@@ -1,0 +1,13 @@
+.validationContainer {
+    margin-top: var(--bloom-space-xl);
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+.checkboxContainer {
+    display: flex;
+    flex-direction: row;
+}
+.errorMessage {
+    margin-top: var(--bloom-space-2);
+}

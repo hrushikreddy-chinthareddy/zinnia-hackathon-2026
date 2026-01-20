@@ -120,7 +120,10 @@ export const buildForm = (
     return {
         ...initialForm,
         status,
-        data: getFormDataPayload(currentFormState, document),
+        data: getFormDataPayload(
+            currentFormState,
+            document
+        ) as ActiveWithdrawalCaseData,
     };
 };
 
@@ -134,6 +137,9 @@ export const buildFormV2 = (
         source: TaskSource.ZinniaTaskManagement,
         taskType: formState.initialForm.taskType,
         status,
-        data: getFormDataPayload(currentFormState, document),
+        data: getFormDataPayload(
+            currentFormState,
+            document
+        ) as ActiveWithdrawalCaseData,
     };
 };

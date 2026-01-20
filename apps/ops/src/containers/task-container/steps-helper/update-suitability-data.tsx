@@ -1,18 +1,15 @@
-import { TaskStatus } from '@deps/models/case/task-instance';
-
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
 export const getUpdateSuitabilityDataSteps = ({
-    task,
     taskType,
     taskInfoLink,
     t,
     taskMetadata,
+    readOnly,
 }: GetStepsProps) => {
-    const readOnly = task.status === TaskStatus.Completed;
     const steps: Step[] = [
         {
             isVisible: () => true,
@@ -36,7 +33,7 @@ export const getUpdateSuitabilityDataSteps = ({
             isVisible: () => true,
             component: (
                 <TaskFormStep
-                    readonly={true}
+                    readonly={readOnly}
                     isSaveAsDraftEnabled={false}
                     key={`step-${1}`}
                     isContinueButtonEnabled={true}

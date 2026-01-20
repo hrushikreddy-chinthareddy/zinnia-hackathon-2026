@@ -249,7 +249,7 @@ export const useMainNavItems = (): NavGroup[] => {
     const usageLink = {
         id: usageHref,
         display: usageText,
-        icon: IconType.CHAT_SQUARE_BAR,
+        icon: IconType.CHART_SQUARE_BAR,
         renderComponent: (
             <NavLink type={NavElementType.Link} href={usageHref} />
         ),

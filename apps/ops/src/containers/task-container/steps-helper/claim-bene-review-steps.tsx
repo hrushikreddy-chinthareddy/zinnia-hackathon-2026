@@ -1,5 +1,3 @@
-import { TaskStatus } from '@deps/models/case/task-instance';
-
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
@@ -11,8 +9,8 @@ export const getClaimBeneReviewSteps = ({
     taskMetadata,
     task,
     isContinueButtonEnabled,
+    readOnly,
 }: GetStepsProps) => {
-    const readOnly = task.status === TaskStatus.Completed;
     const dynamicSteps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
         isVisible: () => true,
@@ -20,7 +18,7 @@ export const getClaimBeneReviewSteps = ({
             <div className="bg-white shadow-elevation-light-04">
                 <TaskFormStep
                     taskInfoLink={taskInfoLink}
-                    isSubmit={readOnly ? false : true}
+                    isSubmit={!readOnly}
                     taskMetadata={metadata}
                     key={`step_${index}`}
                     readonly={readOnly}

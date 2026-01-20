@@ -1,0 +1,4 @@
+.sectionDivider {
+    border-top: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+}

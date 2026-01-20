@@ -149,3 +149,32 @@ export enum PolicyMetricValues {
     ExpenseCharge = 'ExpenseCharge',
     LapseProtection = 'LapseProtection',
 }
+
+export interface CreateQualityAuditRequest {
+    processType: string;
+    processSubType: string;
+    source: string;
+    parentCaseId: string;
+    clientCode: string;
+    correlationId?: string;
+    processEndDate: string;
+    auditRequestId: string;
+    policyNumber?: string;
+}
+export interface CreateQualityAuditResponse {
+    status: number;
+    data: {
+        code: string;
+        message: string;
+        refCaseId: string;
+        status: string;
+    };
+}
+
+export interface CreateQualityAuditErrorResponse {
+    data: {
+        err: string;
+    };
+    status: number;
+    message: string;
+}

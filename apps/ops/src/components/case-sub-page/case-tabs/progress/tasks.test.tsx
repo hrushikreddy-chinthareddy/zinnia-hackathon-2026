@@ -33,6 +33,31 @@ jest.mock('next-i18next', () => ({
     useTranslation: () => ({ t: mockT }),
 }));
 
+jest.mock('next/router', () => ({
+    useRouter: () => ({
+        query: { id: 'test-case-id' },
+        pathname: '/test',
+        asPath: '/test',
+        push: jest.fn(),
+        replace: jest.fn(),
+        reload: jest.fn(),
+        back: jest.fn(),
+        prefetch: jest.fn(),
+        beforePopState: jest.fn(),
+        events: {
+            on: jest.fn(),
+            off: jest.fn(),
+            emit: jest.fn(),
+        },
+        isFallback: false,
+        isLocaleDomain: false,
+        isReady: true,
+        defaultLocale: 'en',
+        domainLocales: [],
+        isPreview: false,
+    }),
+}));
+
 // Define mockChangeSideSheetContent and mockHandleOpen at the top level so they're accessible to the mock
 const mockChangeSideSheetContent = jest.fn();
 const mockHandleOpen = jest.fn();
@@ -105,6 +130,10 @@ jest.mock('@deps/contexts/OptimizelyContext', () => ({
 
 jest.mock('@deps/helpers/string.helpers', () => ({
     convertKebabedDateString: (date: string) => `formatted-${date}`,
+}));
+
+jest.mock('@deps/hooks/useTaskIdFromUrl', () => ({
+    useTaskIdFromUrl: jest.fn(),
 }));
 
 describe('Task Component', () => {

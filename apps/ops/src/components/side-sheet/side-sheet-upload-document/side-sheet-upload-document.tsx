@@ -61,6 +61,8 @@ const SideSheetUploadDocument = ({
                     const metaData = {
                         ...data,
                         sourceFileName: file.name,
+                        documentTypeDescription:
+                            data.documentTypeDescription ?? file.name,
                         documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                         fileType: getFileSubtype(blob),
                         docClassification:

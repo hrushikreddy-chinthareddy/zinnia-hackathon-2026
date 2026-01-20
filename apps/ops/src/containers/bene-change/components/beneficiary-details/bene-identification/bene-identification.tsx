@@ -276,6 +276,7 @@ const BeneficiaryIdentification = ({
                     displayName: 'Bene Change Supporting Document',
                     source: SOURCE,
                     sourceFileName: file.name,
+                    documentTypeDescription: file.name,
                     documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                     fileType: getFileSubtype(blob),
                     docClassification:

@@ -12,3 +12,9 @@
         border-radius: 4px;
     }
 }
+.toastContainer {
+    position: fixed;
+    bottom: 1rem;
+    right: 2.5rem;
+    z-index: 50;
+}

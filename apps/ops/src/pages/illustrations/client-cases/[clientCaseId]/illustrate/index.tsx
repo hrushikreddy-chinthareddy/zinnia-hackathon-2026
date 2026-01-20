@@ -175,6 +175,7 @@ export default function ClientCaseIllustrations({
                             </section>
                             <section
                                 className={clsx(styles.illustrationContainer)}
+                                id="printable"
                             >
                                 <IllustrationDetails
                                     clientCase={clientCase}
