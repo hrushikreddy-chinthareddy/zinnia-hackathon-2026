@@ -69,7 +69,6 @@ export const ExceptionStatusFilter = ({
     return (
         <Select
             className={className}
-            maxContentWidth
             label="Issue status"
             placeholder="All"
             options={ExceptionStatusOptions}
