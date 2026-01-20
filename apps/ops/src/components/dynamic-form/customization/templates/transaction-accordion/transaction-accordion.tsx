@@ -85,7 +85,8 @@ export const TransactionAccordionTemplate = (
             ? formContext.customData.signatureData.signatures
             : formContext.customData.signatureData.signatures?.filter(
                   (signature: any) =>
-                      signature.signType !== Roles.IRREVOCABLE_BENEFICIARY
+                      signature.signType !== Roles.IRREVOCABLE_BENEFICIARY &&
+                      signature.signType !== Roles.IRREVOCABLE
               );
     }
 
