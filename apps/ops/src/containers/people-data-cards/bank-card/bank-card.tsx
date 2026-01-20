@@ -56,6 +56,7 @@ export const BankCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.bank',
     });
+    const { t: tAllFields } = useTranslation();
 
     const sideSheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
@@ -121,7 +122,9 @@ export const BankCard = ({
                                 type={NavElementType.Button}
                                 variant={NavElementVariant.Default}
                                 disabled={!isEligible}
-                                aria-label={`${t('general.add')} ${t('label')}`}
+                                aria-label={`${tAllFields(
+                                    'allFields.add'
+                                )} ${tAllFields('allFields.bankingDetails')}`}
                             >
                                 {t('general.add')}
                             </NavElement>

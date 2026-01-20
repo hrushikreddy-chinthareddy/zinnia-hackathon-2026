@@ -51,6 +51,7 @@ const EmailCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.email',
     });
+    const { t: tAllFields } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
 
     const sideSheet = useSideSheetContext();
@@ -135,7 +136,9 @@ const EmailCard = ({
                             startIcon={<AddIcon width={20} height={20} />}
                             type={NavElementType.Button}
                             variant={NavElementVariant.Default}
-                            aria-label={`${t('general.add')} ${t('label')}`}
+                            aria-label={`${tAllFields(
+                                'allFields.add'
+                            )} ${tAllFields('allFields.email')}`}
                         >
                             {t('general.add')}
                         </NavElement>

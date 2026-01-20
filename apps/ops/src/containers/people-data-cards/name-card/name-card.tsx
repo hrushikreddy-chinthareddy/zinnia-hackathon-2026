@@ -61,9 +61,7 @@ export const NameCard: FC<INameCardProps> = ({
                         tabIndex={0}
                         className=" h-4"
                         onClick={handleEditClick}
-                        aria-label={
-                            t('people.sideSheet.name.editName') as string
-                        }
+                        aria-label={t('allFields.editName') as string}
                     >
                         <EditIcon
                             height={16}

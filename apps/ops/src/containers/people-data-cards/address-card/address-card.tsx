@@ -52,6 +52,7 @@ const AddressCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.address',
     });
+    const { t: tAllFields } = useTranslation();
 
     const sideSheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
@@ -137,7 +138,9 @@ const AddressCard = ({
                             startIcon={<AddIcon height={20} width={20} />}
                             type={NavElementType.Button}
                             variant={NavElementVariant.Default}
-                            aria-label={`${t('general.add')} ${t('label')}`}
+                            aria-label={`${tAllFields(
+                                'allFields.add'
+                            )} ${tAllFields('allFields.address')}`}
                         >
                             {t('general.add')}
                         </NavElement>

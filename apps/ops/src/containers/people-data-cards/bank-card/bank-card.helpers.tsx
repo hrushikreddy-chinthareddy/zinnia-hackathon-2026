@@ -115,12 +115,12 @@ export const BankAccounts = ({
                                             {isEligible ? (
                                                 <IconButton
                                                     aria-label={`${defaultT(
-                                                        'people.card.general.edit'
+                                                        'allFields.edit'
                                                     )} ${
                                                         branchName?.toLocaleUpperCase() ??
                                                         DEFAULT_ERROR_STRING
                                                     } ${defaultT(
-                                                        'people.card.bank.label'
+                                                        'allFields.bankingDetails'
                                                     )}`}
                                                     onClick={editClickHandler(
                                                         onEditClick,

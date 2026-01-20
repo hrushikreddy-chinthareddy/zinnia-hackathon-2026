@@ -175,7 +175,7 @@ export default function SideSheet({
                                                 onClick={handleClose}
                                                 aria-label={
                                                     t(
-                                                        'ariaLabel.closeDialog'
+                                                        'allFields.closeDialog'
                                                     ) as string
                                                 }
                                                 data-testid="close-button"

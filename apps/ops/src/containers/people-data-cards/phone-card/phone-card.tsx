@@ -53,6 +53,7 @@ const PhoneCard = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.card.phone',
     });
+    const { t: tAllFields } = useTranslation();
 
     const { policyDetails } = useContext(PolicyData);
     const sideSheet = useSideSheetContext();
@@ -138,7 +139,9 @@ const PhoneCard = ({
                             startIcon={<AddIcon height={20} width={20} />}
                             type={NavElementType.Button}
                             variant={NavElementVariant.Default}
-                            aria-label={`${t('general.add')} ${t('label')}`}
+                            aria-label={`${tAllFields(
+                                'allFields.add'
+                            )} ${tAllFields('allFields.phone')}`}
                         >
                             {t('general.add')}
                         </NavElement>
