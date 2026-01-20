@@ -76,6 +76,7 @@ export interface HistoryFilters {
     statusFilter?: TransactionStatus;
     yearFilter?: YearFilters;
     datesFilter?: DatesFilter;
+    transactionTypes?: string[];
 }
 
 export type SetHistoryFilters = Dispatch<SetStateAction<HistoryFilters>>;

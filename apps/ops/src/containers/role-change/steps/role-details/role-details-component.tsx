@@ -214,6 +214,7 @@ const RoleDetailsComponent = ({
                     displayName: getSupportingDocumentType(role),
                     source: SOURCE,
                     sourceFileName: file.name,
+                    documentTypeDescription: file.name,
                     documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                     fileType: getFileSubtype(blob),
                     docClassification:

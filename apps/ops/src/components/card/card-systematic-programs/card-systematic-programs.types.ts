@@ -17,6 +17,7 @@ export interface SystematicProgramsCardProps {
     programs: SystematicProgramsDetails[];
     setUpAction?: FooterContent;
     isLife?: boolean;
+    requestSubTypes?: string[];
 }
 
 export interface SystematicProgramsActiveTableProps {

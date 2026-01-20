@@ -1,5 +1,6 @@
 import { AxiosResponse } from 'axios';
 
+import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
 import { TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import {
@@ -17,6 +18,7 @@ export interface SearchTransactionFilters {
 
 export interface SearchTransactionPayload {
     identifiers: { identifier: string; value: string }[];
+    entityType?: string[];
 }
 
 const transactionSearchUrl =
@@ -26,7 +28,7 @@ export const searchTransactionsSSR = async (
     payload: SearchTransactionPayload,
     accessToken: string | undefined,
     loggingContext: LoggingContext
-): Promise<TransactionData[] | null> => {
+): Promise<TransactionData[] | BeneficiaryRecord[] | null> => {
     logInfo('transaction-search::searchTransactionsSSR::info', {
         ...loggingContext,
         payload,

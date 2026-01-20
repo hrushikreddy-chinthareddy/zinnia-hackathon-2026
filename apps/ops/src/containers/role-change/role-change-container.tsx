@@ -1,3 +1,4 @@
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
@@ -46,7 +47,8 @@ const RoleChangeContainer = ({
 
     const { policyNumber, product } = policy;
     const planCode = product?.planCode;
-
+    const searchParams = useSearchParams();
+    const correlationId = searchParams.get('correlationId');
     const leaveTransactionLink = `/policies/${planCode}/${policyNumber}/${ParentPage.People}`;
 
     useEffect(() => {
@@ -97,6 +99,7 @@ const RoleChangeContainer = ({
                         processType={Processes.PolicyUpdate}
                         processSubType={getProcessSubType()}
                         policy={policy}
+                        correlationId={correlationId || ''}
                         setState={setRoleData as StartStepSetState}
                         state={roleData as StartType}
                         title={t('start.title', { roleLabel }) as string}

@@ -1,3 +1,5 @@
+import { TabKeys } from '@deps/containers/people-data-cards/activity-card/activity-table/party-details-table';
+
 export enum SCREEN_BREAKPOINTS {
     xs = 320,
     sm = 500,
@@ -73,6 +75,14 @@ export const CALL_LOGS_TAB_QUERY_LIMIT = 100;
 export const LEGACY_START_DATE = '1900-01-01';
 export const LEGACY_END_DATE = '2999-12-31';
 
+export const PeopleActivityTabValues: Record<string, TabKeys> = {
+    roles: 'roles',
+    identification: 'identification',
+    phone: 'phone',
+    email: 'email',
+    address: 'address',
+    bankAccounts: 'bankAccounts',
+};
 export const PartyRoleId = {
     AnnuitantRoleId: '-1|0|1',
     OwnerRoleId: '0|0|2',

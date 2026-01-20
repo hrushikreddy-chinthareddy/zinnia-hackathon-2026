@@ -1,0 +1,123 @@
+.card {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.header {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.headerRow {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+@media (min-width: 768px) {
+    /* Reference: var(--breakpoint-md) */
+    .headerRow {
+        flex-direction: row;
+    }
+}
+
+.titleRow {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.title {
+    margin-right: 1.25rem;
+}
+
+.toggleRow {
+    margin-bottom: 1.25rem;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.tabsContainer {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.tabList {
+    width: 100%;
+    margin-bottom: 1.5rem;
+}
+
+.table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.headerCell {
+    white-space: nowrap;
+}
+
+.rolesTab th:nth-child(1) {
+    width: 20%;
+}
+
+.rolesTab th:nth-child(2) {
+    width: 20%;
+}
+
+.rolesTab th:nth-child(3) {
+    width: 20%;
+}
+
+.rolesTab th:nth-child(4) {
+    width: 40%;
+}
+
+.identificationTab th:nth-child(1) {
+    width: 25%;
+}
+
+.identificationTab th:nth-child(2) {
+    width: 20%;
+}
+
+.identificationTab th:nth-child(3) {
+    width: 15%;
+}
+
+.identificationTab th:nth-child(4) {
+    width: 15%;
+}
+.identificationTab th:nth-child(5) {
+    width: 25%;
+}
+
+.phoneTab th:nth-child(1) {
+    width: 15%;
+}
+
+.phoneTab th:nth-child(2) {
+    width: 25%;
+}
+
+.phoneTab th:nth-child(3) {
+    width: 20%;
+}
+
+.phoneTab th:nth-child(4) {
+    width: 20%;
+}
+
+.phoneTab th:nth-child(5) {
+    width: 20%;
+}
+
+.defaultTab th {
+    width: 25%;
+}

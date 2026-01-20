@@ -36,6 +36,7 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Operation_Review,
     TaskType.Agent_Change_Detail,
     TaskType.Claims_Death_Audit_Contract_Matching,
+    TaskType.Ownerchange_Data_Entry,
     TaskType.Giact_Call_Out,
     TaskType.Initiate_AssigneeChange_Transaction,
 ]);

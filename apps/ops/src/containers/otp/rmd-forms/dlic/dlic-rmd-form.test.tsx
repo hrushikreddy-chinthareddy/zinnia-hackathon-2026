@@ -44,6 +44,14 @@ jest.mock('@deps/utils/renderStateW4', () => ({
     isAllowedState: jest.fn(() => true),
 }));
 
+jest.mock(
+    '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2',
+    () => ({
+        __esModule: true,
+        default: () => <div data-testid="form-disbursement-v2" />,
+    })
+);
+
 const baseFormContext = {
     ...defaultFormDataContext,
     formData: CaseDetails.data.formRequest.formData,
@@ -125,6 +133,21 @@ describe('MassWithdrawalForm', () => {
             });
 
             expect(screen.getByTestId('w4p-checkbox')).toBeInTheDocument();
+        });
+    });
+
+    describe('FormDisbursementV2 rendering', () => {
+        it('should render FormDisbursementV2 component when form type is RMD', () => {
+            renderWithContext({
+                formProgram: {
+                    ...baseFormContext.formProgram,
+                    programType: { text: 'RMD' },
+                },
+            });
+
+            expect(
+                screen.getByTestId('form-disbursement-v2')
+            ).toBeInTheDocument();
         });
     });
 });

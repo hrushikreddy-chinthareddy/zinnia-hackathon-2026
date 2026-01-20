@@ -1,4 +1,10 @@
 import { render } from '@testing-library/react';
+import i18n from 'i18next';
+import { initReactI18next } from 'react-i18next';
+
+import enTranslations from 'public/locales/en/common.json';
+import esTranslations from 'public/locales/es/common.json';
+import frTranslations from 'public/locales/fr/common.json';
 
 import AssistiveText, { AssistiveTextVariant } from './assistive-text';
 
@@ -130,5 +136,175 @@ describe('AssistiveText', () => {
         expect(icon).not.toBeInTheDocument();
         expect(customIconElement).toBeInTheDocument();
         expect(customIconElement).toHaveTextContent('Custom Icon');
+    });
+});
+
+beforeAll(async () => {
+    await i18n.use(initReactI18next).init({
+        lng: 'en',
+        fallbackLng: 'en',
+        resources: {
+            en: { common: enTranslations },
+            es: { common: esTranslations },
+            fr: { common: frTranslations },
+        },
+        defaultNS: 'common',
+        interpolation: {
+            escapeValue: false,
+        },
+    });
+});
+
+describe('assistive text - Translation Tests', () => {
+    // Translation configurations
+    const translationConfigs = {
+        en: {
+            translations: enTranslations,
+        },
+        es: {
+            translations: esTranslations,
+        },
+        fr: {
+            translations: frTranslations,
+        },
+    };
+
+    describe.each([
+        ['English', 'en'],
+        ['Spanish', 'es'],
+        ['French', 'fr'],
+    ])('%s translations', (languageName, languageCode) => {
+        const config =
+            translationConfigs[languageCode as keyof typeof translationConfigs];
+
+        describe('with SYSTEMATIC_PROGRAMS_TABLE flag enabled', () => {
+            it(`should display missing amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t(
+                            'allFields.premiumAutopaySystematicProgramMissingAmountError'
+                        )}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.premiumAutopaySystematicProgramMissingAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t(
+                            'allFields.premiumAutopaySystematicProgramInvalidAmountError'
+                        )}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.premiumAutopaySystematicProgramInvalidAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display missing amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t(
+                            'allFields.loanAutopaySystematicProgramMissingAmountError'
+                        )}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.loanAutopaySystematicProgramMissingAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t(
+                            'allFields.loanAutopaySystematicProgramInvalidAmountError'
+                        )}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.loanAutopaySystematicProgramInvalidAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+        });
+
+        describe('with SYSTEMATIC_PROGRAMS_TABLE flag disabled ', () => {
+            it(`should display missing amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t(
+                            'allFields.premiumAutopayMissingAmountError'
+                        )}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.premiumAutopayMissingAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Premium Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t(
+                            'allFields.premiumAutopayInvalidAmountError'
+                        )}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.premiumAutopayInvalidAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display missing amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t('allFields.loanAutopayMissingAmountError')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.loanAutopayMissingAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+            it(`should display invalid amount error msg in ${languageName} for Loan Autopay`, async () => {
+                await i18n.changeLanguage(languageCode);
+                const { getByText } = render(
+                    <AssistiveText
+                        text={i18n.t('allFields.loanAutopayInvalidAmountError')}
+                        variant={AssistiveTextVariant.Error}
+                    />
+                );
+
+                const expectedText =
+                    config.translations.allFields.loanAutopayInvalidAmountError.trim();
+
+                expect(getByText(expectedText)).toBeInTheDocument();
+            });
+        });
     });
 });

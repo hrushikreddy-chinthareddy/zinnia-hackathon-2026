@@ -13,7 +13,6 @@ export interface GetTransactionsProps {
     planCode?: string;
     sortField?: PolicyTransactionSortField;
     sortOrder?: PolicyTransactionSortOrder;
-    multiTransactionTypes?: boolean;
 }
 
 export interface GetTransactionsSummaryProps {
