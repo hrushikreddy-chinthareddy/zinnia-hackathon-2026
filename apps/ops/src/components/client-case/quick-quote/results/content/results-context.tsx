@@ -110,7 +110,10 @@ export const QuickQuoteResultsProvider = ({
             return Object.entries(riders).some(([_, data]) =>
                 data.notAvailabilityReasonField?.some(
                     (reasons) =>
-                        reasons.termLengths && reasons.termLengths.length > 0
+                        reasons.termLengths &&
+                        reasons.termLengths.findIndex(
+                            (tl) => tl === termLength
+                        ) >= 0
                 )
             );
         },
@@ -123,6 +126,8 @@ export const QuickQuoteResultsProvider = ({
         ): TermQuickQuoteRiderNotAvailableItem[] => {
             const grouped = reasons.reduce(
                 (acc: TermQuickQuoteRiderNotAvailableItem[], reason) => {
+                    if (!reason.reasons) return acc;
+
                     const accReason = acc.find((a) =>
                         isEqual(a.reasons, reason.reasons)
                     );
@@ -417,11 +422,9 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
-
-                console.log('🚀 ~ QuickQuoteResultsProvider ~ result:', result);
                 return result;
             },
-            [products, variants]
+            [products, variants, groupRiderErrors]
         )
     );
 
