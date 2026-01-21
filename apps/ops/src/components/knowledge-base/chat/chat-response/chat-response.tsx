@@ -411,7 +411,7 @@ const ChatResponse = ({
                                             variant={
                                                 TypographyVariant.BodySmBold
                                             }
-                                            className="cursor-pointer text-[--color-base-text-text-link]"
+                                            className="cursor-pointer text-[--color-base-text-link]"
                                         >
                                             {t('chat.followUpButton')}
                                         </Typography>

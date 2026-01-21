@@ -16,7 +16,7 @@
         var(--measure-dimension-z-space-6, 24px)
         var(--measure-dimension-z-space-6, 24px);
     border-bottom: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
+        var(--color-base-border-light);
 }
 
 .bannerWrapper {

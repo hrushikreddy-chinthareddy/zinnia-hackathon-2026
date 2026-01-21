@@ -74,7 +74,6 @@ export function FieldTemplate(props: FieldTemplateProps) {
         assistiveColor,
         style = '',
         type,
-        inline,
         label: showLabel,
         titleVariant,
         rowFormData,
@@ -132,7 +131,6 @@ export function FieldTemplate(props: FieldTemplateProps) {
     );
 
     const isDataTypeInReadOnly = readonly && uiOptions?.dataType;
-    const isInlineWithoutLabel = !showLabel && inline;
 
     if (isQuoted && formData && typeof formData === 'string') {
         formData = `"${formData}"`;
@@ -221,8 +219,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         typeof formData === 'string' &&
                         !(schema.enum || format === 'numeric') &&
                         !isLink &&
-                        !isDataTypeInReadOnly &&
-                        !isInlineWithoutLabel
+                        !isDataTypeInReadOnly
                             ? formData
                             : children}
                         {!hideError && errors}

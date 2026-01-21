@@ -165,7 +165,11 @@
         "coveredParty": "Parte cubierta",
         "created": "Creado",
         "cumulativeGrossDeathBenefitAmount": "Monto acumulado bruto del beneficio por fallecimiento",
-        "cumulativeMatchPaymentAmount": "Monto acumulado de pagos de coincidencia",
+        "cumulativeMatchPaymentAmount": "Monto acumulado del pago de contrapartida",
+        "prioritizationReasonRequired": "Seleccione un motivo para continuar.",
+        "prioritizationSourceRequired": "Seleccione un origen para continuar.",
+        "prioritizationNotificationLabel": "Recibir notificaciones sobre cambios en el progreso especificado.",
+        "prioritizationRefDataError": "No se pudieron cargar los motivos y orígenes de priorización. Actualice la página e inténtelo de nuevo.",
         "cumulativePerCharge": "Por cargo acumulado",
         "cumulativePremiumSinceIssue": "Prima acumulada desde la emisión",
         "currency": "Moneda",
@@ -9217,16 +9221,23 @@
         },
         "quickQuoteResults": {
             "title": "Cotización rápida",
+            "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
+            "notAvailable": "No disponible",
+            "altLogo": "Logotipo de Farmers Insurance",
+            "notAvailableByTermLength": "No disponible para un contrato de {{termLength}} años:",
+            "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
+            "product": {
+                "title": "Producto",
+                "totalPremiumRange": "Gama Premium Total",
+                "totalPremiumRangeRowHeader": "{{years}} año plazo",
+                "totalPremiumRangeSubtitle": "(Rango de prima base + Adicionales)"
+            },
             "coverage": {
                 "basePremiumRange": "Rango de Prima Base",
                 "hint": "",
                 "nYearTerm": "{{years}} año plazo",
                 "title": "Cobertura y resumen"
             },
-            "notAvailable": "No disponible",
-            "notAvailableByTermLength": "No disponible para un contrato de {{termLength}} años:",
-            "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
-            "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailableReason": {
                 "maxAge": "Edad máxima de emisión: {{age}}",
                 "minAge": "Edad mínima de emisión: {{age}}",
@@ -9234,12 +9245,6 @@
                 "minFaceAm": "Monto nominal mínimo: {{amount}}",
                 "state": "No disponible para este estado",
                 "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
-            },
-            "product": {
-                "title": "Producto",
-                "totalPremiumRange": "Gama Premium Total",
-                "totalPremiumRangeRowHeader": "{{years}} año plazo",
-                "totalPremiumRangeSubtitle": "(Rango de prima base + Adicionales)"
             },
             "riders": {
                 "title": "Adicionales",

@@ -9,10 +9,10 @@
     border-right-width: 0;
 
     &.pinned {
-        border-bottom-color: var(--color-base-border-border-bold);
+        border-bottom-color: var(--color-base-border-bold);
         padding: var(--measure-dimension-padding-2xl);
-        background-color: var(--color-base-surface-surface-secondary);
-        box-shadow: var(--shadow-elevation-elevation-light-sm);
+        background-color: var(--color-base-surface-secondary);
+        box-shadow: var(--shadow-elevation-light-sm);
     }
 }
 
@@ -20,7 +20,7 @@
     justify-content: space-between;
     position: sticky;
     top: 0;
-    background-color: var(--color-base-surface-surface-primary);
+    background-color: var(--color-base-surface-primary);
     z-index: 3;
     padding-bottom: var(--measure-dimension-gap-lg);
 

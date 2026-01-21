@@ -36,7 +36,7 @@
         "@types/uuid": "^9.0.2",
         "@types/xml2js": "^0.4.14",
         "@typescript-eslint/eslint-plugin": "^6.18.1",
-        "@zinnia/bloom": "^6.13.0",
+        "@zinnia/bloom": "^7.0.0",
         "@zinnia/form-engine-sdk": "3.1.0",
         "@zinnia/xd-contact-management": "^1.23.0",
         "ag-grid-community": "29.2.0",

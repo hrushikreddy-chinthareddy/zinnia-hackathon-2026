@@ -2,7 +2,7 @@
     color: var(--color-grayscale-color-900-gray);
     background-color: var(--color-grayscale-color-white);
     border-radius: var(--measure-dimension-z-space-1);
-    box-shadow: var(--shadow-elevation-elevation-light-xs);
+    box-shadow: var(--shadow-elevation-light-xs);
     border: var(--color-nav-drawer-2-nav-drawer-item-2-active-border) 1px solid;
 }
 .activeItem svg {
@@ -182,7 +182,7 @@
     padding: 6px;
     border-radius: 999px;
     background: hsl(var(--color-black));
-    color: var(--color-base-text-text-white);
+    color: var(--color-base-text-white);
     cursor: pointer;
 }
 

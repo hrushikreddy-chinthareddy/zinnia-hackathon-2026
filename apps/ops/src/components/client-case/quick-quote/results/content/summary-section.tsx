@@ -21,9 +21,7 @@ export const QuickQuoteResultSummarySection = () => {
 
             <div className={styles.contentSubtable}>
                 <QuickQuoteBasePremiumRangeSection />
-
                 <QuickQuoteRidersSection />
-
                 <QuickQuotePremiumFreeRidersSection />
             </div>
         </section>

@@ -30,6 +30,6 @@
     margin-top: var(--measure-dimension-margin-xs);
     margin-bottom: var(--measure-dimension-margin-xs);
     border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
+        var(--color-base-border-light);
     border-radius: var(--measure-dimension-radius-sm);
 }
