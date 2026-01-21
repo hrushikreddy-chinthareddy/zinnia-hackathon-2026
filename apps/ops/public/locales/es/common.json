@@ -6480,7 +6480,8 @@
                     "SSN": "Número de Seguro Social",
                     "TIN": "TIN",
                     "EXTERNAL": "ID externo",
-                    "OTHER": "Otro"
+                    "OTHER": "Otro",
+                    "NPN": "Número Nacional de Productor"
                 }
             },
             "underwriting": "Suscripción",

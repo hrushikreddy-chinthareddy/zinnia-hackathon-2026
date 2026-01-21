@@ -6446,7 +6446,8 @@
                     "SSN": "Numéro de Sécurité Sociale",
                     "TIN": "NIF",
                     "EXTERNAL": "ID externe",
-                    "OTHER": "Autre"
+                    "OTHER": "Autre",
+                    "NPN": "Numéro National de Producteur"
                 }
             },
             "underwriting": "Souscription",
@@ -6687,7 +6688,7 @@
         "email": "E-mail",
         "fax": "Fax",
         "socialSecurityNumber": "Numéro de sécurité sociale",
-        "nationalProducerNumber": "Numéro national de producteur",
+        "nationalProducerNumber": "Numéro National de Producteur",
         "estimatedCompletion": "Achèvement estimé",
         "estimatedCompletionToolTip": "Prédiction générée par l'IA basée sur les temps d'achèvement historiques de cas similaires. L'estimation est définie lors de la création du cas et ne change pas au fur et à mesure de sa progression."
     },

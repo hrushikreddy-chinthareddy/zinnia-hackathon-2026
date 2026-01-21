@@ -6545,7 +6545,8 @@
                     "SSN": "Social Security number",
                     "TIN": "TIN",
                     "EXTERNAL": "External ID",
-                    "OTHER": "Other"
+                    "OTHER": "Other",
+                    "NPN": "National Producer number"
                 }
             },
             "underwriting": "Underwriting",
