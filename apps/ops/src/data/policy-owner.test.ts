@@ -87,9 +87,8 @@ const partyInfo: Party = {
         {
             identificationValue: '12345',
             identificationType: Identification.identificationType.SSN,
-            // FIXME: issueState/issueCountry now use nested Identification enums
-            issueState: 'CA' as Identification.issueState,
-            issueCountry: 'NA' as Identification.issueCountry,
+            issueState: Identification.issueState.CA,
+            issueCountry: Identification.issueCountry.US,
         },
     ],
 };
