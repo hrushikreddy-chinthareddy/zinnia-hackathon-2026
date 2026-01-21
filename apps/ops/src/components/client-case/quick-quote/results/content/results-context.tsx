@@ -1,4 +1,4 @@
-import { groupBy, includes, zip } from 'lodash';
+import { groupBy, includes, isEqual, zip } from 'lodash';
 import {
     createContext,
     ReactNode,
@@ -22,7 +22,6 @@ import {
     TermQuickQuoteRiderDataItem,
     RIDER_CODE_MAP,
     TermQuickQuoteRiderNotAvailableItem,
-    PlainTermQuickQuoteRiderNotAvailableItem,
 } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
@@ -122,61 +121,25 @@ export const QuickQuoteResultsProvider = ({
         (
             reasons: TermQuickQuoteRiderNotAvailableItem[]
         ): TermQuickQuoteRiderNotAvailableItem[] => {
-            let result: PlainTermQuickQuoteRiderNotAvailableItem[] = [];
-            reasons.forEach((r) => {
-                r.reasons?.forEach((re) => {
-                    result = [
-                        ...result,
-                        ...r.termLengths.map((tl) => {
-                            return { termLength: tl, reason: re };
-                        }),
-                    ];
-                });
-            });
-
-            const groupedReasons = result.reduce(
+            const grouped = reasons.reduce(
                 (acc: TermQuickQuoteRiderNotAvailableItem[], reason) => {
-                    const accReason = acc.find((ar) =>
-                        ar.reasons?.some(
-                            (r) =>
-                                r.field === reason.reason.field &&
-                                r.actual === reason.reason.actual &&
-                                ((typeof r.expected === 'string' &&
-                                    r.expected === reason.reason.expected) ||
-                                    (typeof r.expected !== 'string' &&
-                                        r.expected[0] ===
-                                            reason.reason.expected[0] &&
-                                        r.expected[1] ===
-                                            reason.reason.expected[1]))
-                        )
+                    const accReason = acc.find((a) =>
+                        isEqual(a.reasons, reason.reasons)
                     );
 
+                    // If not reason is already found in the accumulator, add it
                     if (!accReason) {
-                        const accReasonByTermLength = acc.find((r) =>
-                            r.termLengths.some((tl) => tl === reason.termLength)
-                        );
-                        if (accReasonByTermLength) {
-                            accReasonByTermLength.reasons?.push(reason.reason);
-                        } else {
-                            acc.push({
-                                termLengths: [reason.termLength],
-                                reasons: [reason.reason],
-                            });
-                        }
-                    } else if (
-                        accReason!.termLengths.every(
-                            (tl) => tl !== reason.termLength
-                        )
-                    ) {
-                        accReason.termLengths.push(reason.termLength);
+                        acc.push(reason);
+                    } else {
+                        // If found, add the term legth to the existing one
+                        accReason.termLengths.push(...reason.termLengths);
                     }
 
                     return acc;
                 },
                 []
             );
-
-            return groupedReasons;
+            return grouped;
         },
         []
     );
