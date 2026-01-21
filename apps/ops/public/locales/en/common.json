@@ -2807,7 +2807,8 @@
             "viewCaseDetails": "View case details",
             "caseStatus": "Case Status",
             "ownerSsn": "Owner/SSN",
-            "agentSsn": "Agent/SSN"
+            "agentSsn": "Agent/SSN",
+            "policy": "Policy"
         },
         "pageSize": "Rows per page",
         "results": "Results",
