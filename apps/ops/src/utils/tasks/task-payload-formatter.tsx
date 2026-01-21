@@ -281,6 +281,15 @@ export const getBeneficiaryChangePayload = (task: ManagementTask) => {
             ...data,
             party: {
                 ...data.party,
+                firstName: data.party.firstName ?? null,
+                middleName: data.party.middleName ?? null,
+                lastName:
+                    data.party.lastName ??
+                    (data.party.partyType !== PartyType.INDIVIDUAL
+                        ? data.party.fullName ?? null
+                        : null) ??
+                    null,
+                fullName: toFullName(data.party),
                 addresses: cleanAddresses(data.party.addresses),
                 emails: cleanEmails(data.party.emails),
                 phones: cleanPhones(data.party.phones),
