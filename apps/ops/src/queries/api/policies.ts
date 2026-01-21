@@ -42,6 +42,7 @@ import {
     SearchViewQuery,
 } from '@deps/types/search';
 import { TransactionSummary } from '@deps/types/transactions';
+import { TransactionType } from '@deps/types/transactionTypes';
 import {
     browserLogError,
     browserLogInfo,
@@ -61,12 +62,11 @@ import {
     parseErrorInformation,
 } from '@deps/utils/server-logging';
 import {
-    FullSurrenderQuoteResponse,
+    FullSurrenderOrSystematicProgramQuoteResponse,
     PartialWithdrawalOneTimeQuoteResponse,
     Policy,
     Transaction,
     TransactionStatus,
-    TransactionType,
 } from '@zinnia/api-types/types/sor';
 
 export interface GetPolicyResponse {
@@ -181,7 +181,8 @@ export const fetchPolicy = async (
     date?: string
 ): Promise<Policy | null> => {
     if (isMockPolicyDetailsRequestEnabled()) {
-        return mockPolicy;
+        // FIXME: Mock data may not fully match Policy type after API regeneration
+        return mockPolicy as unknown as Policy;
     }
 
     if (!id) {
@@ -313,7 +314,8 @@ export const getPolicyDetailsSsr = async (
     }
 
     if (isMockPolicyDetailsRequestEnabled()) {
-        return mockPolicy;
+        // FIXME: Mock data may not fully match Policy type after API regeneration
+        return mockPolicy as unknown as Policy;
     }
 
     try {
@@ -965,7 +967,7 @@ export const policyWithdrawalQuote = async (
         const { data } = await client.post<
             any,
             AxiosResponse<
-                | FullSurrenderQuoteResponse
+                | FullSurrenderOrSystematicProgramQuoteResponse
                 | PartialWithdrawalOneTimeQuoteResponse
             >
         >(

@@ -69,9 +69,9 @@ export const LapseQuickView = ({ policy }: BasePolicyComponentArgs) => {
                 />
                 <Content
                     details={
-                        reinstatement?.underwritingDecision === true
+                        reinstatement?.underwritingDecision === 1
                             ? String(t('enums.APPROVED'))
-                            : reinstatement?.underwritingDecision === false
+                            : reinstatement?.underwritingDecision === 0
                             ? String(t('enums.DECLINED'))
                             : DEFAULT_ERROR_STRING
                     }

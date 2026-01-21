@@ -7,10 +7,11 @@ import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { NewLoanRequestQuery } from '@deps/queries/api/bpm';
 import {
-    AdhocTransactionAmount,
+    AdhocTaxWithholdingInstructions,
     AllocationOption,
     AmountType,
     DisbursementPaymentForm,
+    LoanInterestType,
     LoanType,
     PartyRole,
     PaymentForm,
@@ -44,25 +45,26 @@ export const buildNewLoanRequestBody = (
                 allocationOption: AllocationOption.PRORATA,
             },
             reverseInitiator: false,
+            // FIXME: contribution type from context may not match API type
             taxWithholdingInstructions: [
                 {
                     ...newLoan.taxWithholdingInstructions[0],
                     filingStatus: newLoan.payeeFilingStatus,
-                    partyId: newLoan.payeePartyId,
+                    appliesToPartyId: newLoan.payeePartyId,
                     // TODO MG: confirm this is still the case
                     // Eligible payees are owners
                     partyRole: PartyRole.OWNER,
                     taxJurisdiction: newLoan.payeeTaxJurisdiction,
                     taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-                },
+                } as AdhocTaxWithholdingInstructions,
                 {
                     ...newLoan.taxWithholdingInstructions[1],
                     filingStatus: newLoan.payeeFilingStatus,
-                    partyId: newLoan.payeePartyId,
+                    appliesToPartyId: newLoan.payeePartyId,
                     partyRole: PartyRole.OWNER,
                     taxJurisdiction: newLoan.payeeTaxJurisdiction,
                     taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-                },
+                } as AdhocTaxWithholdingInstructions,
             ],
             transactionAmounts: {
                 amountType: AmountType.AMOUNT,
@@ -70,7 +72,7 @@ export const buildNewLoanRequestBody = (
                     newLoan.paymentForm
                 ) as DisbursementPaymentForm,
                 disbursementType: newLoan.disbursementType,
-                loanInterestType: AdhocTransactionAmount.loanInterestType.FIXED,
+                loanInterestType: LoanInterestType.FIXED,
                 loanType: LoanType.NONPREFERREDSTANDARDLOAN,
                 requestedAmount: Number(newLoan.amount),
             },
@@ -93,30 +95,31 @@ export const buildNewLoanRequestBody = (
             allocationOption: AllocationOption.PRORATA,
         },
         reverseInitiator: false,
+        // FIXME: contribution type from context may not match API type
         taxWithholdingInstructions: [
             {
                 ...newLoan.taxWithholdingInstructions[0],
                 filingStatus: newLoan.payeeFilingStatus,
-                partyId: newLoan.payeePartyId,
+                appliesToPartyId: newLoan.payeePartyId,
                 // Eligible payees are owners
                 partyRole: PartyRole.OWNER,
                 taxJurisdiction: newLoan.payeeTaxJurisdiction,
                 taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-            },
+            } as AdhocTaxWithholdingInstructions,
             {
                 ...newLoan.taxWithholdingInstructions[1],
                 filingStatus: newLoan.payeeFilingStatus,
-                partyId: newLoan.payeePartyId,
+                appliesToPartyId: newLoan.payeePartyId,
                 partyRole: PartyRole.OWNER,
                 taxJurisdiction: newLoan.payeeTaxJurisdiction,
                 taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-            },
+            } as AdhocTaxWithholdingInstructions,
         ],
         transactionAmounts: {
             amountType: AmountType.AMOUNT,
             disbursementPaymentForm: DisbursementPaymentForm.ACH,
             disbursementType: newLoan.disbursementType,
-            loanInterestType: AdhocTransactionAmount.loanInterestType.FIXED,
+            loanInterestType: LoanInterestType.FIXED,
             loanType: LoanType.NONPREFERREDSTANDARDLOAN,
             requestedAmount: Number(newLoan.amount),
         },

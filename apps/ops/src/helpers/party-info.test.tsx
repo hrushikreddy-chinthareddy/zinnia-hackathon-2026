@@ -3,23 +3,23 @@ import { render } from '@testing-library/react';
 import { Party } from '@deps/models/policy-sor-touchups/Party';
 import { mockT as t } from '@deps/setupTests';
 import {
-    PartyType,
-    PolicyCoverage,
-    Prefix,
-    RelationshipToParty,
-    Suffix,
-    Gender,
-    Country,
-    State,
-    PreferredCommunicationType,
-    AddressType,
-    PhoneType,
-    EmailType,
     AccountStatus,
     AccountType,
-    RiskClass,
-    SubStandardRating,
+    AddressType,
+    Country,
+    EmailType,
     EmploymentStatus,
+    Gender,
+    Parties,
+    PartyType,
+    PhoneType,
+    PolicyCoverage,
+    PolicyPartyRoles,
+    PreferredCommunicationType,
+    Prefix,
+    RiskClass,
+    State,
+    SubStandardRating,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -49,7 +49,7 @@ const partyInfo: Party & {
     lastName: 'SINGH-TC03',
     fullName: '',
     prefix: Prefix.MR,
-    suffix: Suffix.JR,
+    suffix: Parties.suffix.JR,
     gender: Gender.MALE,
     dateOfBirth: '2004-10-05',
     birthCountry: Country.US,
@@ -110,15 +110,15 @@ const partyInfo: Party & {
         },
     ],
     insured: {
-        employed: true,
+        employed: 1,
         employmentStatus: EmploymentStatus.RETIRED,
-        existingLifeInsurance: false,
+        existingLifeInsurance: 0,
         existingLifeInsuranceAmount: 0,
         householdIncome: 0,
-        isDependent: false,
+        isDependent: 0,
         occupation: '',
-        pendingOrPlanToBuyAdditional: false,
-        replaceLifeInsurance: false,
+        pendingOrPlanToBuyAdditional: 0,
+        replaceLifeInsurance: 0,
     },
     timestamp: '',
     trustDate: '',
@@ -127,7 +127,8 @@ const partyInfo: Party & {
     producerType: '',
 };
 
-const coverage: PolicyCoverage = {
+// FIXME: Mock data may not fully match PolicyCoverage type after API regeneration
+const coverage = {
     coverageLayers: [
         {
             coverageParticipants: [
@@ -185,7 +186,7 @@ describe('getPrefCommunicationType', () => {
 describe('getRelationshipToInsured', () => {
     it('should return correct relationship to insured', () => {
         const relationshipToInsured = getRelationshipToInsured(
-            RelationshipToParty.STEPFATHER,
+            PolicyPartyRoles.relationshipToParty.STEPFATHER,
             t
         );
 
@@ -227,7 +228,7 @@ describe('getBankAccountTypeAndAccount', () => {
 describe('findCoverageParticipant', () => {
     it('should return correct coverage participant', () => {
         const coverageParticipant = findCoverageParticipant(
-            coverage,
+            coverage as unknown as PolicyCoverage,
             partyInfo.partyId
         );
         expect(coverageParticipant?.partyId).toBe('Party_PI_1');
@@ -238,7 +239,7 @@ describe('getRiskClass', () => {
     it('should return correct risk class', () => {
         let riskClass;
         const coverageParticipant = findCoverageParticipant(
-            coverage,
+            coverage as unknown as PolicyCoverage,
             partyInfo.partyId
         );
         if (coverageParticipant) {
@@ -254,7 +255,7 @@ describe('getSubstandardRating', () => {
     it('should return correct substandard rating', () => {
         let substandardRating;
         const coverageParticipant = findCoverageParticipant(
-            coverage,
+            coverage as unknown as PolicyCoverage,
             partyInfo.partyId
         );
         if (coverageParticipant) {

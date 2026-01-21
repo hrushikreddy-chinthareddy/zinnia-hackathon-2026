@@ -18,20 +18,22 @@ import {
     Country,
     Email,
     EmailType,
-    IdentificationType,
+    Identification,
+    Parties,
     Phone,
     PhoneType,
     PartyType,
     State,
-    PartyBase,
 } from '@zinnia/api-types/types/sor';
+
+type PartyBase = Parties;
 
 export type RoleIdentification = {
     permanentResident?: string | null;
     usCitizen?: string | null;
     issueCountry?: string | null;
     endDate?: string | null;
-    identificationType?: IdentificationType;
+    identificationType?: Identification.identificationType;
     identificationValue?: string | null;
     startDate?: string;
 };
@@ -101,7 +103,7 @@ export const defaultRoleValue: RoleChangeContextType = {
                 {
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                     endDate: null,
-                    identificationType: IdentificationType.SSN,
+                    identificationType: Identification.identificationType.SSN,
                     identificationValue: '',
                     issueCountry: undefined,
                     usCitizen: null,
@@ -111,12 +113,12 @@ export const defaultRoleValue: RoleChangeContextType = {
                 {
                     addressLine1: '',
                     city: '',
-                    state: null,
+                    state: undefined,
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-                    endDate: null,
+                    endDate: undefined,
                     country: Country.US,
                     addressType: AddressType.RESIDENCE,
-                    isPreferred: true,
+                    isPreferred: 1,
                 },
             ],
             phones: [
@@ -124,18 +126,18 @@ export const defaultRoleValue: RoleChangeContextType = {
                     phoneType: PhoneType.MOBILE,
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                     countryCode: '1',
-                    endDate: null,
+                    endDate: undefined,
                     dialNumber: '',
-                    isPreferred: true,
+                    isPreferred: 1,
                 },
             ],
             emails: [
                 {
                     emailType: EmailType.PERSONAL,
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
-                    endDate: null,
+                    endDate: undefined,
                     emailAddress: '',
-                    isPreferred: true,
+                    isPreferred: 1,
                 },
             ],
             entityType: EntityTypeValue.Other,

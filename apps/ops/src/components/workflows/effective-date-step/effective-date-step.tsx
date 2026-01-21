@@ -19,11 +19,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import {
-    FeatureType,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
+import { FeatureType, Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 const EffectiveDate = ({
     policy,
@@ -78,7 +74,8 @@ const EffectiveDate = ({
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
                     trackEventProps={{
-                        type: TransactionType.FREE_LOOK_CANCELLATION,
+                        type: Transaction.transactionType
+                            .FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Date,
                     }}
                 />

@@ -1,5 +1,3 @@
-import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
-
 import { DataGroup, DataNode, DataSection, FieldType } from '../types';
 import {
     excludeNodeByCarrierRules,
@@ -49,8 +47,9 @@ describe('excludeNodesByLabel', () => {
 });
 
 describe('excludeNodeByCarrierRules', () => {
-    const LOB_LIFE = 'LOB_LIFE' as unknown as LineOfBusiness;
-    const PROD_TERM = 'PROD_TERM' as unknown as ProductType;
+    // FIXME: Using any cast since Product.lineOfBusiness is a nested enum
+    const LOB_LIFE = 'LOB_LIFE' as any;
+    const PROD_TERM = 'PROD_TERM' as any;
 
     it('returns node unchanged when node is not a field or section', () => {
         const group = makeGroup([]);

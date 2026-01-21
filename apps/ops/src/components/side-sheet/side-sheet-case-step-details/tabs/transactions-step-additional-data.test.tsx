@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
 
 import { toSentenceCase } from '@deps/helpers/string.helpers';
-import { PartyRole, PartyType } from '@deps/models/policy/sor-policy';
+import { PartyRole, PartyType } from '@zinnia/api-types/types/sor';
 
 import { TransactionsStepAdditionalData } from './transactions-step-additional-data';
 import {

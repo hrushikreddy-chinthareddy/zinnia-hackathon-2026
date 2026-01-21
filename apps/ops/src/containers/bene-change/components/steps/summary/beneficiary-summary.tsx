@@ -30,7 +30,8 @@ import {
 } from '@deps/helpers/string.helpers';
 import {
     Gender,
-    IdentificationType,
+    Identification,
+    Parties,
     PartyRole,
     PartyType,
     Policy,
@@ -231,10 +232,15 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
     return (
         <>
             {updatedBenes.map((item: any) => {
+                // FIXME: currentData is NameTag[] but hasBeneficiaryChanged expects Parties[]
                 const hasActualChanges =
                     item.action === Action.ADD ||
                     (item.action === Action.UPDATE &&
-                        hasBeneficiaryChanged(item, currentData, policy));
+                        hasBeneficiaryChanged(
+                            item,
+                            currentData as Parties[],
+                            policy
+                        ));
 
                 if (!hasActualChanges) {
                     return;
@@ -278,7 +284,8 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
 
                 const ssnIdentification = (existingIdentifications ?? []).find(
                     (id: any) =>
-                        id.identificationType === IdentificationType.SSN
+                        id.identificationType ===
+                        Identification.identificationType.SSN
                 ) as any;
 
                 const { isPerStirpes, isIrrevocable } = item?.beneInfo || {};
@@ -614,10 +621,10 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
                                 )}
                                 {renderFieldDynamically(
                                     t('beneficiaryInformation.irrevocable'),
-                                    existingIsIrrevocable == true
+                                    existingIsIrrevocable
                                         ? BooleanValue.Yes
                                         : BooleanValue.No,
-                                    isIrrevocable === true
+                                    isIrrevocable
                                         ? BooleanValue.Yes
                                         : BooleanValue.No,
                                     action

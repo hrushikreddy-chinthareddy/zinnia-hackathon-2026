@@ -29,8 +29,8 @@ import {
     Policy,
     Reason,
     SystematicProgram,
-    TransactionType,
     Policy as PolicyView,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
@@ -126,20 +126,23 @@ const AutopayContainer = ({
 
     const transactionType = useMemo(() => {
         if (parentPage === ParentPage.Premiums) {
-            return TransactionType.SUBSEQUENT_PREMIUM;
+            return Transaction.transactionType.SUBSEQUENT_PREMIUM;
         }
         if (parentPage === ParentPage.Withdrawals) {
             if (isSetUp) {
-                return TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP;
+                return Transaction.transactionType
+                    .SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP;
             }
             if (arrangementType === ArrangementType.WITHDRAWAL) {
-                return TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL;
+                return Transaction.transactionType
+                    .SYSTEMATIC_PARTIAL_WITHDRAWAL;
             }
-            return TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION;
+            return Transaction.transactionType
+                .SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION;
         }
         return isSetUp
-            ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            ? Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
+            : Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [isSetUp, parentPage, arrangementType]);
 
     autopay.arrangementType === ArrangementType.WITHDRAWAL

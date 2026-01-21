@@ -18,14 +18,14 @@ const availableFeature: PolicyFeature = {
     featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(11, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     endDate: dayjs().add(11, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
-    status: true,
+    status: 1,
     period: 12345, // Used in UI Logic
     effectiveDate: 'string',
     totalRequiredAmount: 0,
     totalMinimumRequiredAmount: 0,
     paymentAmount: 100.23, // Used in UI Logic
     totalPaymentAmount: 1000.34, // Used in UI Logic
-    underwritingDecision: false,
+    underwritingDecision: 0,
     approvalDate: undefined, // Used in UI Logic
 };
 
@@ -34,14 +34,14 @@ const activeFeature: PolicyFeature = {
     featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     endDate: dayjs().add(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
-    status: true,
+    status: 1,
     period: 10, // Used in UI Logic
     effectiveDate: 'string',
     totalRequiredAmount: 0,
     totalMinimumRequiredAmount: 0,
     paymentAmount: 0, // Used in UI Logic
     totalPaymentAmount: 0, // Used in UI Logic
-    underwritingDecision: false,
+    underwritingDecision: 0,
     approvalDate: dayjs().format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
 };
 
@@ -50,14 +50,14 @@ const terminatedFeature: PolicyFeature = {
     featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(2, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
     endDate: dayjs().subtract(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
-    status: true,
+    status: 1,
     period: 30, // Used in UI Logic
     effectiveDate: 'string',
     totalRequiredAmount: 0,
     totalMinimumRequiredAmount: 0,
     paymentAmount: 0, // Used in UI Logic
     totalPaymentAmount: 0, // Used in UI Logic
-    underwritingDecision: false,
+    underwritingDecision: 0,
     approvalDate: undefined, // Used in UI Logic
 };
 
@@ -65,14 +65,14 @@ const invalidFeature1: PolicyFeature = {
     timestamp: '1011',
     featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     endDate: dayjs().add(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
-    status: true,
+    status: 1,
     period: 5000, // Used in UI Logic
     effectiveDate: 'string',
     totalRequiredAmount: 0,
     totalMinimumRequiredAmount: 0,
     paymentAmount: 0, // Used in UI Logic
     totalPaymentAmount: 0, // Used in UI Logic
-    underwritingDecision: false,
+    underwritingDecision: 0,
     approvalDate: undefined, // Used in UI Logic
 };
 
@@ -80,14 +80,14 @@ const invalidFeature2: PolicyFeature = {
     timestamp: '1213',
     featureType: FeatureType.LAPSEPROTECTION, // Used in UI Logic
     startDate: dayjs().subtract(1, 'y').format(ZAHARA_API_DATE_FORMAT), // Used in UI Logic
-    status: true,
+    status: 1,
     period: 900, // Used in UI Logic
     effectiveDate: 'string',
     totalRequiredAmount: 0,
     totalMinimumRequiredAmount: 0,
     paymentAmount: 0, // Used in UI Logic
     totalPaymentAmount: 0, // Used in UI Logic
-    underwritingDecision: false,
+    underwritingDecision: 0,
     approvalDate: undefined, // Used in UI Logic
 };
 

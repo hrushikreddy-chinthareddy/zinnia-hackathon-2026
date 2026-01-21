@@ -13,7 +13,7 @@ import { Processes } from '@deps/models/case/case';
 import { validateFundTransfer } from '@deps/queries/api/fund-transfer';
 import { FUND_TRANSFER_STEP_WIDTH } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import { buildfundTransferRequestBody } from './fund-transfer.helpers';
 import Transfer from './transfer/transfer';
@@ -53,7 +53,7 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
                     title={t('start.title') as string}
                     subtitle={t('start.subtitle') as string}
                     trackEventProps={{
-                        type: TransactionType.FUND_TRANSFER,
+                        type: Transaction.transactionType.FUND_TRANSFER,
                         step: TransactionStep.Start,
                     }}
                 />

@@ -17,18 +17,16 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DistributionType,
     FeatureType,
-    PolicyFeatureBase,
     Policy,
+    PolicyFeature,
 } from '@zinnia/api-types/types/sor';
 
 const distributionMapping: { [key: DistributionType | string]: string } = {
     [DistributionType.AFFILIATEDAGENCY]:
         'policy.distributionType.affiliatedAgency',
     [DistributionType.BANKMARKET]: 'policy.distributionType.bankMarket',
-    [DistributionType.BROKERDEALER]: 'policy.distributionType.brokerDealer',
-    ['BROKER_DEALER' as DistributionType]:
-        'policy.distributionType.broker_Dealer',
-    [DistributionType.BROKERAGEINDEPENDENTMARKET]:
+    [DistributionType.BROKER_DEALER]: 'policy.distributionType.brokerDealer',
+    [DistributionType.BROKERAGE_INDEPENDENTMARKET]:
         'policy.distributionType.brokerageIndependentMarket',
     [DistributionType.CAPTIVEMARKET]: 'policy.distributionType.captiveMarket',
     [DistributionType.FINANCIALINSTITUTION]:
@@ -261,15 +259,15 @@ export const getApplicationDetailsData = (
     const multiplePolicyDiscountFeature = customFeatures.filter(
         (feature) =>
             feature.featureSubType ===
-            PolicyFeatureBase.featureSubType.MULTIPLEPOLICYDISCOUNT
+            PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT
     );
 
     const multiplePolicyDiscountIndicator =
         multiplePolicyDiscountFeature.reduce(
-            (acc: Pick<PolicyFeatureBase, 'featureIndicator'>, curr) => {
+            (acc: Pick<PolicyFeature, 'featureIndicator'>, curr) => {
                 if (
                     curr.featureSubType ===
-                    PolicyFeatureBase.featureSubType.MULTIPLEPOLICYDISCOUNT
+                    PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT
                 ) {
                     const { endDate, featureIndicator } = curr;
 
@@ -279,7 +277,7 @@ export const getApplicationDetailsData = (
                 }
                 return acc;
             },
-            { featureIndicator: false }
+            { featureIndicator: 0 }
         );
 
     // Group discount should only be shown for policies where the feature exists (DEPU-5046)

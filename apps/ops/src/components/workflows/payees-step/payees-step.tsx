@@ -95,6 +95,7 @@ const PayeesStep = ({
                 (payee) => payee?.partyId === currentPayeePartyId
             ) || eligiblePayees?.[0];
 
+        // FIXME: maritalStatus type from API may not match FilingStatus enum
         setState((prevState) => ({
             ...prevState,
             payeeFullName: buildFullNameFromParty(selectedPayee),

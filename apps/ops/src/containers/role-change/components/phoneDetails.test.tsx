@@ -38,7 +38,7 @@ const baseProps = {
         timezone: 'Asia/Kolkata',
         extension: '',
         remove: false,
-        isPreferred: false,
+        isPreferred: 0,
     },
     handlePhoneChange: jest.fn(),
     index: 0,

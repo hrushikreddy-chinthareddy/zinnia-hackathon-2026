@@ -8,10 +8,10 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
 import { sanitizeIdentifications } from '@deps/utils/sanitizers';
-import { Party, PartyType } from '@zinnia/api-types/types/sor';
+import { Parties, PartyType } from '@zinnia/api-types/types/sor';
 
 export interface PolicyOwnerProps {
-    owner?: Party;
+    owner?: Parties;
     planCode?: string;
     policyNumber?: string;
     displaySSN?: boolean;

@@ -66,7 +66,7 @@ export const mapWithdrawalsSubPage = ({
         freeWithdrawalAmount: withdrawalValues?.freeWithdrawalAmount,
         maximumWithdrawalAmount: withdrawalValues?.maximumWithdrawalAmount,
         marketValueAdjustmentIndicator:
-            marketValueAdjustment?.marketValueAdjustmentIndicator,
+            !!marketValueAdjustment?.marketValueAdjustmentIndicator,
         marketValueAdjustmentAmount:
             marketValueAdjustment?.marketValueAdjustmentAmount,
         yearToDateFreeWithdrawalAmount:

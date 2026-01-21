@@ -11,8 +11,8 @@ import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
-    IdentificationType,
-    Party,
+    Identification,
+    Parties,
     PartyType,
     Policy,
 } from '@zinnia/api-types/types/sor';
@@ -52,9 +52,10 @@ export const isEqualObjects = (obj1: any, obj2: any) => {
     return diffInFields.length > 0 ? false : true;
 };
 
+// FIXME: currentData may be NameTag[] which extends Parties but has different partyRoles type
 export const hasBeneficiaryChanged = (
     item: BeneficiaryItem,
-    currentData: Party[],
+    currentData: Parties[],
     policy: Policy
 ): boolean => {
     const existingParty = currentData?.find(
@@ -75,11 +76,11 @@ export const hasBeneficiaryChanged = (
     const partyInfo = item?.party?.info ?? {};
     const partyType = partyInfo?.partyType;
 
-    const fullName = getFullName(partyInfo as Party)
-        ? getFullName(partyInfo as Party)
+    const fullName = getFullName(partyInfo as Parties)
+        ? getFullName(partyInfo as Parties)
         : toTitleCase(partyInfo?.fullName);
-    const existingfullName = getFullName(existingParty as Party)
-        ? getFullName(existingParty as Party)
+    const existingfullName = getFullName(existingParty as Parties)
+        ? getFullName(existingParty as Parties)
         : toTitleCase(existingParty?.fullName);
 
     const infoChanged =
@@ -95,12 +96,13 @@ export const hasBeneficiaryChanged = (
         item?.party?.allocation?.beneficiaryPercentage;
 
     const existingIdentification = existingParty?.identifications?.find(
-        (id: any) => id.identificationType === IdentificationType.SSN
+        (id: any) =>
+            id.identificationType === Identification.identificationType.SSN
     );
 
     const entityChanged =
         partyType === PartyType.ORGANIZATION &&
-        existingParty?.entityType !== (partyInfo as Party)?.entityType;
+        existingParty?.entityType !== (partyInfo as Parties)?.entityType;
 
     const identificationChanged =
         existingIdentification?.identificationValue !== item?.party?.info?.ssn;

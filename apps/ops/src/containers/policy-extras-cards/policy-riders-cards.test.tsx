@@ -53,7 +53,7 @@ const baseRider = {
     tierTwoMaximumCriticalIllnessBenefitPercentage: undefined,
     timestamp: undefined,
     type: undefined,
-} as Rider;
+} as unknown as Rider;
 
 const availableRider = {
     ...baseRider,
@@ -157,13 +157,14 @@ describe('Policy Riders Cards', () => {
     beforeEach(() => {
         ogFeatures = mockPolicy.policyFeatures;
         ogRiders = mockPolicy.riders;
+        // FIXME: Mock rider data may not fully match Rider type after API regeneration
         mockPolicy.riders = [
-            availableRider,
-            activeRider,
-            termIllnessRider,
-            notElectedRider,
-            terminatedRider,
-        ];
+            availableRider as unknown as Rider,
+            activeRider as unknown as Rider,
+            termIllnessRider as unknown as Rider,
+            notElectedRider as unknown as Rider,
+            terminatedRider as unknown as Rider,
+        ] as Rider[];
         mockPolicy.policyFeatures = [];
         policyDetails = new PolicyDetails(mockPolicy);
     });

@@ -5,6 +5,7 @@ import {
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
 
+// FIXME: Mock data structure may not fully match Policy type
 export const basePolicy = {
     parties: [
         {
@@ -103,7 +104,7 @@ export const basePolicy = {
             status: 'ACTIVE',
         },
     ],
-} as Policy;
+} as unknown as Policy;
 
 export const pendingSubsequentTransaction = {
     caseId: '656fae9bdc0a1e5d6c35a983',
@@ -130,7 +131,7 @@ export const pendingSubsequentTransaction = {
         requestedAmount: 80,
     },
     transactionType: 'SubsequentPayment',
-} as Transaction;
+} as unknown as Transaction;
 
 export const newLoanNonTransaction = {
     action: 'ONLYONCE',
@@ -167,7 +168,7 @@ export const newLoanNonTransaction = {
     transactionId: '1132',
     transactionType: 'NewLoan',
     version: 1132,
-} as Transaction;
+} as unknown as Transaction;
 
 export const completedSubsequent = {
     action: 'SYSTEMATICPROGRAM',
@@ -199,4 +200,4 @@ export const completedSubsequent = {
     transactionId: '1077',
     transactionType: 'SubsequentPremium',
     version: 1077,
-} as Transaction;
+} as unknown as Transaction;

@@ -28,7 +28,7 @@ import {
     Email,
     PartyType,
     PhoneType,
-    IdentificationType,
+    Identification,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -195,7 +195,8 @@ export const getContractInfo = (ownerInfo: any, policy: Policy) => {
         if (item.taxId && policy.carrierId !== Carrier.FLIC) {
             updatedIdentifications = identifications?.map((identification) => {
                 if (
-                    identification.identificationType === IdentificationType.SSN
+                    identification.identificationType ===
+                    Identification.identificationType.SSN
                 ) {
                     return {
                         ...identification,
@@ -267,7 +268,8 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
     );
 
     const identifications = party?.identifications?.find(
-        (ids) => ids.identificationType === IdentificationType.SSN
+        (ids) =>
+            ids.identificationType === Identification.identificationType.SSN
     );
     const selectedParty = parties?.find((selectedItem: any) =>
         selectedItem?.partyRoleIds?.includes(item?.partyRole?.partyRoleId)

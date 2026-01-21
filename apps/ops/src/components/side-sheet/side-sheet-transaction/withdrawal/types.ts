@@ -3,14 +3,14 @@ import { TFunction } from 'next-i18next';
 import { Charge as TransactionCharge } from '@deps/models/policy-sor-touchups/Transaction';
 import {
     BankAccount,
-    FullSurrenderQuoteResponse,
     PartialWithdrawalOneTimeQuoteResponse,
     Policy,
     Transaction,
-    TransactionType,
 } from '@zinnia/api-types/types/sor';
 
 import { BaseTransactionSideSheetValues, PayeePaymentDetails } from '../types';
+
+import type { FullSurrenderOrSystematicProgramQuoteResponse } from '@zinnia/api-types/types/sor';
 
 export type Charge = {
     amount: string;
@@ -46,7 +46,7 @@ export interface WithdrawalSideSheetValues
     payeePaymentDetails?: PayeePaymentDetails[];
     effectiveDate?: string;
     processDate?: string;
-    transactionType?: TransactionType;
+    transactionType?: Transaction.transactionType;
 }
 
 export type WithdrawalChargesValues = {
@@ -59,7 +59,7 @@ export type WithdrawalChargesValues = {
 };
 
 export type WithdrawalQuoteResponse =
-    | FullSurrenderQuoteResponse
+    | FullSurrenderOrSystematicProgramQuoteResponse
     | PartialWithdrawalOneTimeQuoteResponse;
 
 export type WithdrawalDetailsValues = {
@@ -104,7 +104,7 @@ export type WithdrawalDetailsValues = {
     // This is the total charged from the withdrawal.
     totalChargeAmount?: number;
     // ---------------------
-    transactionType?: TransactionType;
+    transactionType?: Transaction.transactionType;
 };
 
 export type WithdrawalSideSheetProps = {

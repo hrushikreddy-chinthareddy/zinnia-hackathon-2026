@@ -1,4 +1,4 @@
-import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
+import { Product, ProductType } from '@zinnia/api-types/types/sor';
 
 import { transformNodes } from '../data-node-helpers/mutations';
 import {
@@ -45,7 +45,7 @@ export const excludeNodeByCarrierRules = ({
     planCode,
 }: {
     node: DataNode;
-    lineOfBusiness?: LineOfBusiness;
+    lineOfBusiness?: Product.lineOfBusiness;
     productType?: ProductType;
     planCode?: string;
 }) => {

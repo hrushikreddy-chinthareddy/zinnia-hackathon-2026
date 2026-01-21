@@ -28,11 +28,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import {
-    Identification,
-    IdentificationType,
-    PartyType,
-} from '@zinnia/api-types/types/sor';
+import { Identification, PartyType } from '@zinnia/api-types/types/sor';
 
 export interface IdentificationCardProps {
     editable?: boolean;
@@ -42,8 +38,8 @@ export interface IdentificationCardProps {
 
 const formatIdentificationValue = (identification: Identification): string => {
     switch (identification?.identificationType) {
-        case IdentificationType.SSN:
-        case IdentificationType.TIN:
+        case Identification.identificationType.SSN:
+        case Identification.identificationType.TIN:
             return formatSSN(identification?.identificationValue);
         default:
             return identification?.identificationValue || DEFAULT_ERROR_STRING;
@@ -52,17 +48,19 @@ const formatIdentificationValue = (identification: Identification): string => {
 
 const showState = (identification: Identification): boolean => {
     return [
-        IdentificationType.DRIVERLICENSENUMBER,
-        IdentificationType.STATEPHOTOID,
-        'DRIVERLICENSE' as IdentificationType,
+        Identification.identificationType.DRIVERLICENSENUMBER,
+        Identification.identificationType.STATEPHOTOID,
+        'DRIVERLICENSE' as Identification.identificationType,
     ].includes(
-        identification?.identificationType || ('' as IdentificationType)
+        identification?.identificationType ||
+            ('' as Identification.identificationType)
     );
 };
 
 const showCountry = (identification: Identification): boolean => {
-    return [IdentificationType.PASSPORT].includes(
-        identification?.identificationType || ('' as IdentificationType)
+    return [Identification.identificationType.PASSPORT].includes(
+        identification?.identificationType ||
+            ('' as Identification.identificationType)
     );
 };
 
@@ -79,8 +77,11 @@ const IdentificationDisplay = ({
                 identification.identificationType || 'Unknown'
             )}
             sentenceCase={
-                ![IdentificationType.SSN, IdentificationType.EXTERNAL].includes(
-                    identification.identificationType as IdentificationType
+                ![
+                    Identification.identificationType.SSN,
+                    Identification.identificationType.EXTERNAL,
+                ].includes(
+                    identification.identificationType as Identification.identificationType
                 )
             }
         >
@@ -90,7 +91,11 @@ const IdentificationDisplay = ({
                 </PiiWrapper>
                 {showState(identification) && (
                     <PiiWrapper className="text-gray-600">
-                        {getStateName(identification?.issueState)}
+                        {getStateName(
+                            identification?.issueState
+                                ? String(identification?.issueState)
+                                : undefined
+                        )}
                     </PiiWrapper>
                 )}
                 {showCountry(identification) && (

@@ -314,14 +314,14 @@ export const PersonSubPage = ({
                                 t
                             )}
                             disabled={
-                                selectedPolicyParty?.insured?.impairmentDetails
-                                    ?.disabled
+                                !!selectedPolicyParty?.insured
+                                    ?.impairmentDetails?.disabled
                             }
                             disabilityStartDate={
                                 selectedPolicyParty?.insured?.impairmentDetails
                                     ?.disabilityStartDate
                             }
-                            employed={selectedPolicyParty?.insured?.employed}
+                            employed={!!selectedPolicyParty?.insured?.employed}
                             employmentStatus={
                                 selectedPolicyParty?.insured?.employmentStatus
                             }

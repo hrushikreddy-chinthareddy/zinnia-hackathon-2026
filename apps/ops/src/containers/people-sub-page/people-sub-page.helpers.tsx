@@ -10,9 +10,9 @@ import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
 import {
+    Parties,
     PartyRole,
     PartyType,
-    Party,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
@@ -175,7 +175,7 @@ export const countPartyRoles = (
 };
 
 // Name Tag
-export interface NameTag extends Party {
+export interface NameTag extends Omit<Parties, 'partyRoles'> {
     tags: TagKey[];
     partyRoles: string[];
     partyRoleIds: any[];
@@ -184,7 +184,7 @@ export interface NameTag extends Party {
 }
 
 export const combineNameAndRoles = (
-    policyPartiesArr: Party[],
+    policyPartiesArr: Parties[],
     partyRolesArr: PolicyPartyRoles[],
     t: TFunction
 ): NameTag[] => {
@@ -220,7 +220,7 @@ export const combineNameAndRoles = (
             partyId,
             producerName,
             producerType,
-        }: Party & { producerName?: string; producerType?: string } =
+        }: Parties & { producerName?: string; producerType?: string } =
             policyParty;
 
         const existingNameTag = nameTags.find((nt) => {

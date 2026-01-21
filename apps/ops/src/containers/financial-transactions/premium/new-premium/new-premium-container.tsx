@@ -22,7 +22,7 @@ import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { Processes } from '@deps/models/case/case';
 import { validateOneTimePremium } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import { buildNewPremiumRequestBody } from './new-premium.helpers';
 
@@ -71,7 +71,8 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     title={t('newPremium.start.title') as string}
                     subtitle={t('newPremium.start.subtitle') as string}
                     trackEventProps={{
-                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        type: Transaction.transactionType
+                            .PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Start,
                     }}
                 />
@@ -96,7 +97,8 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     setState={setPremium as PayorStepSetState}
                     state={premium}
                     trackEventProps={{
-                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        type: Transaction.transactionType
+                            .PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Payor,
                     }}
                 />
@@ -114,7 +116,8 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                     state={premium}
                     validateTransaction={validateCall}
                     trackEventProps={{
-                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        type: Transaction.transactionType
+                            .PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Payment,
                     }}
                 />

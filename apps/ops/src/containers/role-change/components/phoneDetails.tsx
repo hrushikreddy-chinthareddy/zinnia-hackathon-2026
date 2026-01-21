@@ -276,7 +276,7 @@ function PhoneDetails({
                         {showPreferredCheckbox && (
                             <CheckboxText
                                 id={preferredPhoneId}
-                                checked={phone.isPreferred}
+                                checked={!!phone.isPreferred}
                                 label={t('fieldLabels.preferredPhone')}
                                 onChange={(checked) =>
                                     onPreferredPhoneChange?.(

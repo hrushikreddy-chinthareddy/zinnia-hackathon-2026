@@ -9,7 +9,7 @@ import {
     LEGACY_START_DATE,
 } from '@deps/types/constants';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { Phone, Party } from '@zinnia/api-types/types/sor';
+import { Parties, Phone } from '@zinnia/api-types/types/sor';
 
 import { calculateAgeNumber } from './age.helpers';
 
@@ -70,7 +70,7 @@ export const buildFullName = (
     return `${first}${space}${middle} ${last} ${suffixString}`;
 };
 
-export const buildFullNameFromParty = (party?: Party | Party | null) => {
+export const buildFullNameFromParty = (party?: Parties | Parties | null) => {
     if (!party) return DEFAULT_ERROR_STRING;
 
     if (party.fullName) return party.fullName;

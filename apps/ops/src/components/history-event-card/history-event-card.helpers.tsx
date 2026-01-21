@@ -16,22 +16,21 @@ import {
 } from '@deps/utils/strings';
 import {
     BankAccount,
+    Parties,
     Policy,
-    Party,
     Reason,
     Transaction,
     TransactionStatus,
-    TransactionType,
 } from '@zinnia/api-types/types/sor';
 
 import { GetBankAccount, PeopleChangeType } from './types';
 
 const typeByTransactionType = {
-    [TransactionType.ADDRESS_CHANGE]: 'address',
-    [TransactionType.EMAIL_CHANGE]: 'email',
-    [TransactionType.PHONE_NUMBER_CHANGE]: 'phoneNumber',
-    [TransactionType.BANK_ACCOUNT_CHANGE]: 'bankAccount',
-    [TransactionType.COMMUNICATION_PREFERENCE_CHANGE]:
+    [Transaction.transactionType.ADDRESS_CHANGE]: 'address',
+    [Transaction.transactionType.EMAIL_CHANGE]: 'email',
+    [Transaction.transactionType.PHONE_NUMBER_CHANGE]: 'phoneNumber',
+    [Transaction.transactionType.BANK_ACCOUNT_CHANGE]: 'bankAccount',
+    [Transaction.transactionType.COMMUNICATION_PREFERENCE_CHANGE]:
         'correspondencePreference',
 };
 
@@ -125,7 +124,7 @@ export const getPeopleChangeEventTitle = (
 export const getChangedParty = (
     policy: Policy,
     transaction: Transaction
-): Party | null => {
+): Parties | null => {
     return (
         policy?.parties?.find((p) => p.partyId === transaction.partyId) ?? null
     );
@@ -139,7 +138,7 @@ export const getEventTitle = (
 
     if (
         PeopleChangeTransactionTypes.includes(
-            transactionType as TransactionType
+            transactionType as Transaction.transactionType
         )
     ) {
         return toSentenceCase(getPeopleChangeEventTitle(transaction, t));
@@ -211,27 +210,29 @@ export const getHistoryEventCardValues = (
     const eventTitle = getEventTitle(transaction, t);
 
     switch (transactionType) {
-        case TransactionType.PAYMENT_INITIAL_PREMIUM:
-        case TransactionType.INITIAL_PREMIUM:
+        case Transaction.transactionType.PAYMENT_INITIAL_PREMIUM:
+        case Transaction.transactionType.INITIAL_PREMIUM:
             amount =
-                transactionType === TransactionType.PAYMENT_INITIAL_PREMIUM
+                transactionType ===
+                Transaction.transactionType.PAYMENT_INITIAL_PREMIUM
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? '';
             isClickable = true;
             break;
 
-        case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
-        case TransactionType.ONE_TIME_PREMIUM:
+        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case Transaction.transactionType.ONE_TIME_PREMIUM:
             amount =
-                transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM
+                transactionType ===
+                Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? '';
             isClickable = true;
             break;
 
-        case TransactionType.SUBSEQUENT_PREMIUM: {
+        case Transaction.transactionType.SUBSEQUENT_PREMIUM: {
             const systematicProgram = systematicPrograms?.find(
                 (sp) => sp.reason === Reason.PREMIUM
             );
@@ -244,7 +245,7 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case TransactionType.SUBSEQUENT_PAYMENT: {
+        case Transaction.transactionType.SUBSEQUENT_PAYMENT: {
             const systematicProgram = systematicPrograms?.find(
                 (sp) => sp.reason === Reason.PREMIUM
             );
@@ -257,7 +258,7 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case TransactionType.FULL_SURRENDER: {
+        case Transaction.transactionType.FULL_SURRENDER: {
             // try to cache this so isnt being called so many times
             const bankAccount = getBankAccount({
                 policy,
@@ -281,12 +282,14 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
-        case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
-        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL:
-        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
-        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
-        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP: {
+        case Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
+        case Transaction.transactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
+        case Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL:
+        case Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
+        case Transaction.transactionType
+            .SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
+        case Transaction.transactionType
+            .SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP: {
             const bankAccount = getBankAccount({
                 policy,
                 payorsOrPayees: payeeOrBeneficiaries,
@@ -312,26 +315,26 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME:
-        case TransactionType.LOAN_REPAYMENT_ONE_TIME: {
+        case Transaction.transactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME:
+        case Transaction.transactionType.LOAN_REPAYMENT_ONE_TIME: {
             amount =
                 isPending ||
                 transactionType ===
-                    TransactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME
+                    Transaction.transactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? t('historyEventCard.oneTimePayment');
             break;
         }
 
-        case TransactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT:
-        case TransactionType.SYSTEMATIC_LOAN_REPAYMENT: {
+        case Transaction.transactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT:
+        case Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT: {
             amount = appliedAmount || requestedAmount;
             eventBody = bankingBody ?? '';
             break;
         }
 
-        case TransactionType.NEW_LOAN: {
+        case Transaction.transactionType.NEW_LOAN: {
             amount = isPending
                 ? requestedAmount
                     ? -requestedAmount
@@ -341,30 +344,30 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case TransactionType.ACTIVATION:
+        case Transaction.transactionType.ACTIVATION:
             break;
 
-        case TransactionType.ANNIVERSARY:
+        case Transaction.transactionType.ANNIVERSARY:
             break;
 
-        case TransactionType.DEATH_CLAIM:
+        case Transaction.transactionType.DEATH_CLAIM:
             break;
 
-        case TransactionType.LAPSE:
+        case Transaction.transactionType.LAPSE:
             isClickable = true;
             break;
 
-        case TransactionType.ADDRESS_CHANGE:
-        case TransactionType.EMAIL_CHANGE:
-        case TransactionType.PHONE_NUMBER_CHANGE:
-        case TransactionType.BANK_ACCOUNT_CHANGE:
+        case Transaction.transactionType.ADDRESS_CHANGE:
+        case Transaction.transactionType.EMAIL_CHANGE:
+        case Transaction.transactionType.PHONE_NUMBER_CHANGE:
+        case Transaction.transactionType.BANK_ACCOUNT_CHANGE:
             eventBody = getFullName(
                 getChangedParty(policy, transaction as Transaction) ?? undefined
             );
 
             isClickable = true;
             break;
-        case TransactionType.FREE_LOOK_CANCELLATION: {
+        case Transaction.transactionType.FREE_LOOK_CANCELLATION: {
             const bankAccount = getBankAccount({
                 policy,
                 payorsOrPayees: payeeOrBeneficiaries,
@@ -387,7 +390,7 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case TransactionType.DISBURSEMENT: {
+        case Transaction.transactionType.DISBURSEMENT: {
             // The applied amount for disbursements is tied to each beneficiary, so we have to loop through.
             // this is almost always only 1 (it may always only be 1, but let's be careful).
             const totalAppliedAmount = payeeOrBeneficiaries?.reduce(
