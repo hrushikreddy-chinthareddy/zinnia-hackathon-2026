@@ -41,8 +41,7 @@ const mockPendingLapsePolicy: Policy = {
         generalLedgerPlanCode: 'V2201',
         holdingForm: HoldingForm.INDIVIDUAL,
     },
-    // FIXME: QualificationType not exported from API types
-    qualificationType: 'QUALIFIED' as Policy['qualificationType'],
+    qualificationType: Policy.qualificationType.QUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'AU29035902',

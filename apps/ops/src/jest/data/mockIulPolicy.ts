@@ -39,7 +39,6 @@ const partyRoles: PolicyPartyRoles[] = [
     { partyId: 'Party_PI_1', partyRole: PartyRole.INSURED },
 ];
 
-// FIXME: Mock data structure may not fully match Policy type after API regeneration
 export const mockIulPolicy = {
     partyRoles: partyRoles,
     product: {
