@@ -153,6 +153,15 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                       party: uiParty
                           ? {
                                 ...uiParty,
+                                firstName: uiParty.firstName ?? null,
+                                middleName: uiParty.middleName ?? null,
+                                lastName:
+                                    uiParty.lastName ??
+                                    (uiParty.partyType !== PartyType.INDIVIDUAL
+                                        ? uiParty.fullName ?? null
+                                        : null) ??
+                                    null,
+                                fullName: toFullName(uiParty),
                                 addresses: cleanAddresses(uiParty.addresses),
                                 emails: cleanEmails(uiParty.emails),
                                 phones: cleanPhones(uiParty.phones),
