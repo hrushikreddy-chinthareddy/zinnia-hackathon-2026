@@ -1,20 +1,24 @@
 import { HttpStatusCode } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import Button, {
     ButtonSize,
     ButtonVariant,
 } from '@deps/components/button/button';
+import Checkbox from '@deps/components/checkbox/checkbox';
+import { FieldSize } from '@deps/components/fields/field';
+import Select from '@deps/components/select/select';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { CaseAction } from '@deps/models/case/enums';
-import { escalateCase } from '@deps/queries/api/cases';
+import { escalateCase, getProcessReferenceData } from '@deps/queries/api/cases';
 import { browserLogError } from '@deps/utils/browser-logging';
 
+import styles from './styles.module.css';
 import SuccessErrorSideSheet from './success-error-side-sheet';
 
 interface Props {
@@ -22,18 +26,65 @@ interface Props {
     action: CaseAction;
 }
 
+enum ProcessRefDataKey {
+    EscalationReason = 'CASE_ESCALATION_REASON',
+    DeescalationReason = 'CASE_DEESCALATION_REASON',
+    EscalationSource = 'CASE_ESCALATION_SOURCE',
+}
+
+const REASON_TYPE_BY_ACTION: Record<CaseAction, ProcessRefDataKey> = {
+    [CaseAction.Prioritize]: ProcessRefDataKey.EscalationReason,
+    [CaseAction.Deprioritize]: ProcessRefDataKey.DeescalationReason,
+};
+
 function CaseActionSideSheet({ caseId, action }: Props) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `caseOverview.${action}Case`,
     });
+    const { t: tCommon } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'allFields',
+    });
     const [error, setError] = useState<string | undefined>();
+    const [reason, setReason] = useState('');
+    const [source, setSource] = useState('');
+    const [reasonOptions, setReasonOptions] = useState<
+        { label: string; value: string }[]
+    >([]);
+    const [sourceOptions, setSourceOptions] = useState<
+        { label: string; value: string }[]
+    >([]);
+    const [reasonError, setReasonError] = useState<string | undefined>();
+    const [sourceError, setSourceError] = useState<string | undefined>();
+    const [notify, setNotify] = useState(false);
     const sideSheet = useSideSheetContext();
 
+    const validate = () => {
+        const reasonError = reason
+            ? undefined
+            : tCommon('prioritizationReasonRequired');
+        const sourceError = source
+            ? undefined
+            : tCommon('prioritizationSourceRequired');
+
+        setReasonError(reasonError);
+        setSourceError(sourceError);
+
+        return !reasonError && !sourceError;
+    };
+
     const handleSubmit = async () => {
+        const isPrioritize = action === CaseAction.Prioritize;
+
+        if (!validate()) {
+            return;
+        }
+
         try {
             const response = await escalateCase(
                 caseId,
-                action === CaseAction.Prioritize
+                isPrioritize,
+                reason,
+                source
             );
             if (response) {
                 const content = (
@@ -61,6 +112,39 @@ function CaseActionSideSheet({ caseId, action }: Props) {
         }
     };
 
+    useEffect(() => {
+        const fetchRefData = async () => {
+            const reasonType = REASON_TYPE_BY_ACTION[action];
+
+            const [reasonData, sourceData] = await Promise.all([
+                getProcessReferenceData(reasonType),
+                getProcessReferenceData(ProcessRefDataKey.EscalationSource),
+            ]);
+
+            if (!reasonData || !sourceData) {
+                setError(tCommon('prioritizationRefDataError') as string);
+                setReasonOptions([]);
+                setSourceOptions([]);
+                return;
+            }
+
+            setReasonOptions(
+                reasonData.map((item) => ({
+                    label: item.value,
+                    value: item.key,
+                }))
+            );
+            setSourceOptions(
+                sourceData.map((item) => ({
+                    label: item.value,
+                    value: item.key,
+                }))
+            );
+        };
+
+        fetchRefData();
+    }, [action, tCommon]);
+
     return (
         <div className="flex flex-col py-10 pl-10 pr-5 justify-between h-full">
             <div className="flex flex-col gap-4 ">
@@ -70,6 +154,40 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                 <Typography variant={TypographyVariant.Body}>
                     {t('detailsBody')}
                 </Typography>
+
+                <div className={styles.caseActionFieldsContainer}>
+                    <Select
+                        label={t('reasonLabel') as string}
+                        size={FieldSize.Small}
+                        options={reasonOptions}
+                        value={reason}
+                        onChange={setReason}
+                        placeholder={t('reasonPlaceholder') as string}
+                        name="case-prioritization-reason"
+                        message={reasonError}
+                    />
+                    <Select
+                        label={t('sourceLabel') as string}
+                        size={FieldSize.Small}
+                        options={sourceOptions}
+                        value={source}
+                        onChange={setSource}
+                        placeholder={t('sourcePlaceholder') as string}
+                        name="case-prioritization-source"
+                        message={sourceError}
+                    />
+                    <div className={styles.caseActionNotificationRow}>
+                        <Checkbox
+                            checked={notify}
+                            onChange={(isChecked: boolean) =>
+                                setNotify(isChecked)
+                            }
+                        />
+                        <Typography variant={TypographyVariant.Body}>
+                            {t('notificationLabel') as string}
+                        </Typography>
+                    </div>
+                </div>
 
                 <div className="flex gap-2 items-end width-full justify-end pr-5">
                     <Button

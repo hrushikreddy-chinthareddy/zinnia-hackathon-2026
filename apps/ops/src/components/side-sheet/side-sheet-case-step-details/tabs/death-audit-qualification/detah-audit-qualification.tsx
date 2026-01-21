@@ -100,7 +100,7 @@ const DeathAuditQualification = ({
             <div className="flex flex-col w-full">
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
                     <div
-                        className="col-span-2 text-[--color-base-text-text-secondary]"
+                        className="col-span-2 text-[--color-base-text-secondary]"
                         data-testid="idn-case-id-label"
                     >
                         {t('deathAuditQualification.idnCaseId')}

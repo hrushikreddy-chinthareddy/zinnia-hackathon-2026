@@ -1,5 +1,5 @@
 .contentCard {
-    background-color: var(--color-base-surface-surface-primary);
+    background-color: var(--color-base-surface-primary);
     border: var(--measure-dimension-stroke-sm) solid
         var(--color-grayscale-color-200-gray);
     border-radius: var(--measure-dimension-radius-md);

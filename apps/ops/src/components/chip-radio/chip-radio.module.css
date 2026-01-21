@@ -4,7 +4,7 @@
     border-color: var(--color-chip-border-chip-default-border);
     border-radius: var(--measure-dimension-radius-sm);
     border-width: var(--measure-dimension-stroke-sm);
-    color: var(--color-base-text-text-primary);
+    color: var(--color-base-text-primary);
     display: flex;
     gap: var(--measure-dimension-gap-md);
     padding: var(--measure-dimension-padding-xs)

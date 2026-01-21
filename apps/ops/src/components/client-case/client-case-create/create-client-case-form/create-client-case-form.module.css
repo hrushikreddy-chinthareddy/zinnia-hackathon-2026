@@ -46,7 +46,7 @@
         }
 
         .ageLabel {
-            color: var(--color-base-text-text-secondary, #676767);
+            color: var(--color-base-text-secondary, #676767);
             padding-top: 20px;
         }
     }

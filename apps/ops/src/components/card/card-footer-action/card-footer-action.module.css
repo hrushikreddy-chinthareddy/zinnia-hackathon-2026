@@ -7,6 +7,6 @@
 .footerActionLink {
     font-size: var(--measure-font-sizing-content-body-font-size);
     font-weight: var(--string-font-weight-font-weight-semibold);
-    color: var(--color-base-text-text-link);
+    color: var(--color-base-text-link);
     cursor: pointer;
 }

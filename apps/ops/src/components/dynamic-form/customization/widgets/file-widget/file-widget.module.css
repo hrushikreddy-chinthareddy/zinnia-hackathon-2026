@@ -28,7 +28,7 @@
         #fff
     );
     border: var(--button-border-width) var(--button-border-style)
-        var(--color-base-border-border-subtle);
+        var(--color-base-border-subtle);
     color: var(--color-button-primary-button-primary-default-text);
 }
 .iconInput {
@@ -81,7 +81,7 @@
 
 .subTitle {
     font-size: 14px;
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .autoCompleteContainer {

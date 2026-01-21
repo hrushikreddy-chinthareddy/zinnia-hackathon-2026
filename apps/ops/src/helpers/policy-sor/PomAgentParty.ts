@@ -66,10 +66,12 @@ export const transformPomAgentDataToParty = (
                     agentData?.socialSecurityNumber || undefined,
             },
             {
-                identificationType: IdentificationType.OTHER,
+                // identificationType: IdentificationType.NPN, TODO: update to this instead of string when kong updates
+                identificationType: 'NPN' as IdentificationType,
                 identificationValue:
                     agentData?.nationalProducerNumber || undefined,
             },
+            ...(partyData.identifications ?? []),
         ],
     };
     return party;

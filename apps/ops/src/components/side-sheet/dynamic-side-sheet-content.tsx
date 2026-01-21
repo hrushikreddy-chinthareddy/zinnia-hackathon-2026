@@ -144,7 +144,7 @@ export default function DynamicSideSheetContent({
 
                     return (
                         <React.Fragment key={item.label + idx}>
-                            <div className="col-span-1 text-[--color-base-text-text-secondary] text-sm font-normal py-2 whitespace-nowrap ">
+                            <div className="col-span-1 text-[--color-base-text-secondary] text-sm font-normal py-2 whitespace-nowrap ">
                                 {item.label}
                             </div>
                             <div className="col-span-2 text-base text-gray-900 break-all text-sm font-normal py-2">

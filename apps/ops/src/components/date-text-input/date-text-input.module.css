@@ -4,7 +4,7 @@
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    color: var(--color-base-text-text-primary, #212121);
+    color: var(--color-base-text-primary, #212121);
     font-family: var(--font-family-primary, 'Open Sans');
     font-size: 14px;
     font-style: normal;
@@ -22,7 +22,7 @@
 
     &:focus-within {
         border-color: var(--color-fields-border-field-active-border);
-        box-shadow: var(--shadow-elevation-elevation-light-md);
+        box-shadow: var(--shadow-elevation-light-md);
     }
 
     .input {

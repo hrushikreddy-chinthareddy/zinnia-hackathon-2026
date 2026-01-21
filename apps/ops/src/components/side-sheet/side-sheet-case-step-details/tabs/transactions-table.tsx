@@ -125,7 +125,7 @@ export default function TransactionsTable({
                                         data-testid={`task-arrangement-type-${index}`}
                                     />
                                     <Content
-                                        className="text-[--color-base-text-text-secondary]"
+                                        className="text-[--color-base-text-secondary]"
                                         details={toSentenceCase(
                                             transaction.arrangementId
                                         )}
@@ -140,7 +140,7 @@ export default function TransactionsTable({
                                         data-testid={`task-arrangement-status-${index}`}
                                     />
                                     <Content
-                                        className="text-[--color-base-text-text-secondary]"
+                                        className="text-[--color-base-text-secondary]"
                                         details={terminateDate}
                                         variant={ContentVariant.BodySm}
                                         data-testid={`task-arrangement-terminate-date-${index}`}
