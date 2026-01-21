@@ -9270,7 +9270,7 @@
             "notAvailable": "Not Available",
             "altLogo": "Farmers Insurance Logo",
             "notAvailableByTermLengths": "Not available for terms ({{termLength}} years):",
-            "notAvailableByTermLength": "Not available for term {{termLength}} year:",
+            "notAvailableByTermLength": "Not available for term {{termLength}} years:",
             "hasRiderErrors": "Some riders not included. See Coverage & Summary.",
             "product": {
                 "title": "Product",
