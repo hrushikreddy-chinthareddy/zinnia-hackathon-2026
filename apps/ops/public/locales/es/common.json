@@ -9220,7 +9220,8 @@
             "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailable": "No disponible",
             "altLogo": "Logotipo de Farmers Insurance",
-            "notAvailableByTermLength": "No disponible para un contrato de {{termLength}} años:",
+            "notAvailableByTermLengths": "No disponible para términos ({{termLength}} años):",
+            "notAvailableByTermLength": "No disponible para término de {{termLength}} años:",
             "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
             "product": {
                 "title": "Producto",

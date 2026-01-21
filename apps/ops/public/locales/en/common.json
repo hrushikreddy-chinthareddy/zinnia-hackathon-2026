@@ -9238,7 +9238,8 @@
             "subtitle": "These quotes are based on monthly premium, EFT, no discounts.",
             "notAvailable": "Not Available",
             "altLogo": "Farmers Insurance Logo",
-            "notAvailableByTermLength": "Not available for {{termLength}}-year term:",
+            "notAvailableByTermLengths": "Not available for terms ({{termLength}} years):",
+            "notAvailableByTermLength": "Not available for term {{termLength}} year:",
             "hasRiderErrors": "Some riders not included. See Coverage & Summary.",
             "product": {
                 "title": "Product",

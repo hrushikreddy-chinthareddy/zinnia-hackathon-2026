@@ -9133,7 +9133,8 @@
             "title": "Devis rapide",
             "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
             "notAvailable": "Pas disponible",
-            "notAvailableByTermLength": "Pas disponible pour un contrat de {{termLength}} ans:",
+            "notAvailableByTermLengths": "Pas disponible pour un contrat ({{termLength}} ans):",
+            "notAvailableByTermLength": "Pas disponible pour un contrat {{termLength}} ans:",
             "hasRiderErrors": "Certains suppléments ne sont pas inclus. Voir la couverture et le résumé.",
             "altLogo": "Logo de Farmers Insurance",
             "product": {

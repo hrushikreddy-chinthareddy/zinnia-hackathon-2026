@@ -31,7 +31,11 @@ const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
                 {!termLength
                     ? t('clientCase.quickQuoteResults.notAvailable')
                     : t(
-                          'clientCase.quickQuoteResults.notAvailableByTermLength',
+                          `clientCase.quickQuoteResults.${
+                              termLength.length === 0
+                                  ? 'notAvailableByTermLength'
+                                  : 'notAvailableByTermLengths'
+                          }`,
                           {
                               termLength: termLength,
                           }
