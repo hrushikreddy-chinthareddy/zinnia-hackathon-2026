@@ -1,11 +1,11 @@
 import {
+    Outcome,
     Policy,
     Reason,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
 
-// FIXME: Mock data structure may not fully match Policy type
 export const basePolicy = {
     parties: [
         {
@@ -52,6 +52,7 @@ export const basePolicy = {
             amount: 80,
             amountType: 'AMOUNT',
             arrangementId: 'Arr_1',
+            externalArrangementId: 'ExtArr_1',
             arrType: 'PAYMENT',
             endDate: '2042-06-11',
             frequency: 'MONTHLY',
@@ -93,6 +94,7 @@ export const basePolicy = {
             amount: 25,
             amountType: 'AMOUNT',
             arrangementId: 'Systematic_Loan_Repayment_ID1',
+            externalArrangementId: 'ExtArr_2',
             arrangementType: 'LOANREPAYMENT',
             frequency: 'MONTHLY',
             nextProgramDate: '2024-01-06',
@@ -104,7 +106,7 @@ export const basePolicy = {
             status: 'ACTIVE',
         },
     ],
-} as unknown as Policy;
+} as Policy;
 
 export const pendingSubsequentTransaction = {
     caseId: '656fae9bdc0a1e5d6c35a983',
@@ -131,7 +133,7 @@ export const pendingSubsequentTransaction = {
         requestedAmount: 80,
     },
     transactionType: 'SubsequentPayment',
-} as unknown as Transaction;
+} as Transaction;
 
 export const newLoanNonTransaction = {
     action: 'ONLYONCE',
@@ -140,7 +142,7 @@ export const newLoanNonTransaction = {
     effectiveDate: '2023-12-06',
     externalTransactionId: 'AU35046202-NewLoan-2023-12-06-1658',
     ledgerDocId: '65709649dc0a1e5d6c35aecb',
-    outcome: true,
+    outcome: Outcome.TRUE,
     outcomeStatus: 'Pass',
     payors: [
         {
@@ -168,7 +170,7 @@ export const newLoanNonTransaction = {
     transactionId: '1132',
     transactionType: 'NewLoan',
     version: 1132,
-} as unknown as Transaction;
+} as Transaction;
 
 export const completedSubsequent = {
     action: 'SYSTEMATICPROGRAM',
@@ -177,7 +179,7 @@ export const completedSubsequent = {
     externalTransactionId: 'AU35046202-SubsequentPremium-2023-11-13-1478',
     ledgerDocId: '656fae83dc0a1e5d6c35a82b',
     lifecycleNo: 1,
-    outcome: true,
+    outcome: Outcome.TRUE,
     outcomeStatus: 'Pass',
     parentId: 'AU35046202-SubsequentPremium-2023-10-11-1382',
     payors: [
@@ -200,4 +202,4 @@ export const completedSubsequent = {
     transactionId: '1077',
     transactionType: 'SubsequentPremium',
     version: 1077,
-} as unknown as Transaction;
+} as Transaction;

@@ -36,7 +36,7 @@ const baseRider = {
     riderParticipant: [
         {
             insuredAgeAtIssue: undefined,
-            insuredId: undefined,
+            insuredID: undefined,
         },
     ],
     riderPaymentDate: undefined,
@@ -53,15 +53,15 @@ const baseRider = {
     tierTwoMaximumCriticalIllnessBenefitPercentage: undefined,
     timestamp: undefined,
     type: undefined,
-} as unknown as Rider;
+} as Rider;
 
 const availableRider = {
     ...baseRider,
     coverageId: CoverageId.ChronicIllness,
     riderName: 'Available Rider 1',
     riderParticipant: [
-        { insuredId: 'Party_PI_1' },
-        { insuredId: 'Party_PI_2' },
+        { insuredID: 'Party_PI_1' },
+        { insuredID: 'Party_PI_2' },
     ],
     status: 'ACTIVE' as Status,
     type: RiderType.RIDER,
@@ -91,9 +91,9 @@ const notElectedRider = {
     riderElected: RIDER_NOT_ELECTED,
     riderName: 'Not Elected Rider 1',
     riderParticipant: [
-        { insuredId: 'Party_PI_1' },
-        { insuredId: 'Party_PI_2' },
-        { insuredId: 'Party_PI_3' },
+        { insuredID: 'Party_PI_1' },
+        { insuredID: 'Party_PI_2' },
+        { insuredID: 'Party_PI_3' },
     ],
     type: RiderType.RIDER,
 };
@@ -103,9 +103,9 @@ const terminatedRider = {
     coverageId: CoverageId.OverloanProtection,
     riderName: 'Terminated Rider 1',
     riderParticipant: [
-        { insuredId: 'Party_PI_1' },
-        { insuredId: 'Party_PI_2' },
-        { insuredId: 'Party_PI_3' },
+        { insuredID: 'Party_PI_1' },
+        { insuredID: 'Party_PI_2' },
+        { insuredID: 'Party_PI_3' },
     ],
     status: 'TERMINATED' as Status,
     type: RiderType.INTEGRATEDRIDER,
@@ -157,14 +157,13 @@ describe('Policy Riders Cards', () => {
     beforeEach(() => {
         ogFeatures = mockPolicy.policyFeatures;
         ogRiders = mockPolicy.riders;
-        // FIXME: Mock rider data may not fully match Rider type after API regeneration
         mockPolicy.riders = [
-            availableRider as unknown as Rider,
-            activeRider as unknown as Rider,
-            termIllnessRider as unknown as Rider,
-            notElectedRider as unknown as Rider,
-            terminatedRider as unknown as Rider,
-        ] as Rider[];
+            availableRider,
+            activeRider,
+            termIllnessRider,
+            notElectedRider,
+            terminatedRider,
+        ];
         mockPolicy.policyFeatures = [];
         policyDetails = new PolicyDetails(mockPolicy);
     });

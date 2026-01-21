@@ -181,8 +181,7 @@ export const fetchPolicy = async (
     date?: string
 ): Promise<Policy | null> => {
     if (isMockPolicyDetailsRequestEnabled()) {
-        // FIXME: Mock data may not fully match Policy type after API regeneration
-        return mockPolicy as unknown as Policy;
+        return mockPolicy;
     }
 
     if (!id) {
@@ -314,8 +313,7 @@ export const getPolicyDetailsSsr = async (
     }
 
     if (isMockPolicyDetailsRequestEnabled()) {
-        // FIXME: Mock data may not fully match Policy type after API regeneration
-        return mockPolicy as unknown as Policy;
+        return mockPolicy;
     }
 
     try {

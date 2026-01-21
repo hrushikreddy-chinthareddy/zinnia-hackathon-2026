@@ -829,4 +829,4 @@ export const mockPolicy = {
     },
     systematicPrograms: [mockPremiumSystematicProgram],
     fixedCostPeriod: 20,
-} as unknown as Policy;
+} as Policy;

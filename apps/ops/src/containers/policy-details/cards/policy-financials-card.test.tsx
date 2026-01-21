@@ -4,12 +4,8 @@ import { render, screen, cleanup, fireEvent } from '@testing-library/react';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { PopoverTest } from '@deps/jest/constants/test-id-constants';
 import { mockPolicy } from '@deps/services/mocks/sor-policy-iul';
-import { Policy } from '@zinnia/api-types/types/sor';
 
 import { PolicyFinancialsCard } from './policy-financials-card';
-
-// FIXME: Mock data may not fully match Policy type after API regeneration
-const typedMockPolicy = mockPolicy as unknown as Policy;
 
 const mockQueryClient = new QueryClient({
     defaultOptions: {
@@ -43,9 +39,7 @@ describe('verify correct labels and tooltip values are present', () => {
     it('should contain correct labels', () => {
         render(
             <QueryClientProvider client={mockQueryClient}>
-                <PolicyFinancialsCard
-                    policy={new PolicyDetails(typedMockPolicy)}
-                />
+                <PolicyFinancialsCard policy={new PolicyDetails(mockPolicy)} />
             </QueryClientProvider>
         );
 
@@ -58,9 +52,7 @@ describe('verify correct labels and tooltip values are present', () => {
     it('should correctly display the death benefit tooltip', async () => {
         render(
             <QueryClientProvider client={mockQueryClient}>
-                <PolicyFinancialsCard
-                    policy={new PolicyDetails(typedMockPolicy)}
-                />
+                <PolicyFinancialsCard policy={new PolicyDetails(mockPolicy)} />
             </QueryClientProvider>
         );
 
@@ -83,9 +75,7 @@ describe('verify correct labels and tooltip values are present', () => {
     it('should correctly display the account value tooltip', async () => {
         render(
             <QueryClientProvider client={mockQueryClient}>
-                <PolicyFinancialsCard
-                    policy={new PolicyDetails(typedMockPolicy)}
-                />
+                <PolicyFinancialsCard policy={new PolicyDetails(mockPolicy)} />
             </QueryClientProvider>
         );
 
@@ -108,9 +98,7 @@ describe('verify correct labels and tooltip values are present', () => {
     it('should correctly display the net surrender value tooltip', async () => {
         render(
             <QueryClientProvider client={mockQueryClient}>
-                <PolicyFinancialsCard
-                    policy={new PolicyDetails(typedMockPolicy)}
-                />
+                <PolicyFinancialsCard policy={new PolicyDetails(mockPolicy)} />
             </QueryClientProvider>
         );
 
@@ -133,9 +121,7 @@ describe('verify correct labels and tooltip values are present', () => {
     it('should correctly display the cost basis tooltip', async () => {
         render(
             <QueryClientProvider client={mockQueryClient}>
-                <PolicyFinancialsCard
-                    policy={new PolicyDetails(typedMockPolicy)}
-                />
+                <PolicyFinancialsCard policy={new PolicyDetails(mockPolicy)} />
             </QueryClientProvider>
         );
 

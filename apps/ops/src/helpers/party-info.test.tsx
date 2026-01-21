@@ -127,10 +127,10 @@ const partyInfo: Party & {
     producerType: '',
 };
 
-// FIXME: Mock data may not fully match PolicyCoverage type after API regeneration
-const coverage = {
+const coverage: PolicyCoverage = {
     coverageLayers: [
         {
+            coverageTerm: 0,
             coverageParticipants: [
                 {
                     flatExtra: [],
@@ -228,7 +228,7 @@ describe('getBankAccountTypeAndAccount', () => {
 describe('findCoverageParticipant', () => {
     it('should return correct coverage participant', () => {
         const coverageParticipant = findCoverageParticipant(
-            coverage as unknown as PolicyCoverage,
+            coverage,
             partyInfo.partyId
         );
         expect(coverageParticipant?.partyId).toBe('Party_PI_1');
@@ -239,7 +239,7 @@ describe('getRiskClass', () => {
     it('should return correct risk class', () => {
         let riskClass;
         const coverageParticipant = findCoverageParticipant(
-            coverage as unknown as PolicyCoverage,
+            coverage,
             partyInfo.partyId
         );
         if (coverageParticipant) {
@@ -255,7 +255,7 @@ describe('getSubstandardRating', () => {
     it('should return correct substandard rating', () => {
         let substandardRating;
         const coverageParticipant = findCoverageParticipant(
-            coverage as unknown as PolicyCoverage,
+            coverage,
             partyInfo.partyId
         );
         if (coverageParticipant) {

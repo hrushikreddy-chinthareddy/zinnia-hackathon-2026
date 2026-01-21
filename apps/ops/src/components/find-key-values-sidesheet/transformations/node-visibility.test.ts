@@ -1,3 +1,5 @@
+import { Product, ProductType } from '@zinnia/api-types/types/sor';
+
 import { DataGroup, DataNode, DataSection, FieldType } from '../types';
 import {
     excludeNodeByCarrierRules,
@@ -12,8 +14,8 @@ jest.mock('../translations/exclude-fields', () => ({
 
 jest.mock('../translations/carrier-rules', () => ({
     sectionVisibility: {
-        lifeOnly: new Set(['LOB_LIFE']),
-        productOnly: new Set(['PROD_TERM']),
+        lifeOnly: new Set(['LIFE']),
+        productOnly: new Set(['TERM']),
         planOnly: new Set(['PLAN123']),
     },
 }));
@@ -47,9 +49,8 @@ describe('excludeNodesByLabel', () => {
 });
 
 describe('excludeNodeByCarrierRules', () => {
-    // FIXME: Using any cast since Product.lineOfBusiness is a nested enum
-    const LOB_LIFE = 'LOB_LIFE' as any;
-    const PROD_TERM = 'PROD_TERM' as any;
+    const LOB_LIFE = Product.lineOfBusiness.LIFE;
+    const PROD_TERM = ProductType.TERM;
 
     it('returns node unchanged when node is not a field or section', () => {
         const group = makeGroup([]);
