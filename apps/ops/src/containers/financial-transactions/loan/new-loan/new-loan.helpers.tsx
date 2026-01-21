@@ -50,27 +50,27 @@ export const buildNewLoanRequestBody = (
                 {
                     ...newLoan.taxWithholdingInstructions[0],
                     filingStatus: newLoan.payeeFilingStatus,
-                    appliesToPartyId: newLoan.payeePartyId,
+                    partyId: newLoan.payeePartyId,
                     // TODO MG: confirm this is still the case
                     // Eligible payees are owners
                     partyRole: PartyRole.OWNER,
                     taxJurisdiction: newLoan.payeeTaxJurisdiction,
                     taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-                } as AdhocTaxWithholdingInstructions,
+                } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
                 {
                     ...newLoan.taxWithholdingInstructions[1],
                     filingStatus: newLoan.payeeFilingStatus,
-                    appliesToPartyId: newLoan.payeePartyId,
+                    partyId: newLoan.payeePartyId,
                     partyRole: PartyRole.OWNER,
                     taxJurisdiction: newLoan.payeeTaxJurisdiction,
                     taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-                } as AdhocTaxWithholdingInstructions,
+                } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
             ],
             transactionAmounts: {
                 amountType: AmountType.AMOUNT,
                 disbursementPaymentForm: getDisbursementPaymentForm(
                     newLoan.paymentForm
-                ) as DisbursementPaymentForm,
+                ),
                 disbursementType: newLoan.disbursementType,
                 loanInterestType: LoanInterestType.FIXED,
                 loanType: LoanType.NONPREFERREDSTANDARDLOAN,
@@ -100,20 +100,20 @@ export const buildNewLoanRequestBody = (
             {
                 ...newLoan.taxWithholdingInstructions[0],
                 filingStatus: newLoan.payeeFilingStatus,
-                appliesToPartyId: newLoan.payeePartyId,
+                partyId: newLoan.payeePartyId,
                 // Eligible payees are owners
                 partyRole: PartyRole.OWNER,
                 taxJurisdiction: newLoan.payeeTaxJurisdiction,
                 taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-            } as AdhocTaxWithholdingInstructions,
+            } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
             {
                 ...newLoan.taxWithholdingInstructions[1],
                 filingStatus: newLoan.payeeFilingStatus,
-                appliesToPartyId: newLoan.payeePartyId,
+                partyId: newLoan.payeePartyId,
                 partyRole: PartyRole.OWNER,
                 taxJurisdiction: newLoan.payeeTaxJurisdiction,
                 taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-            } as AdhocTaxWithholdingInstructions,
+            } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
         ],
         transactionAmounts: {
             amountType: AmountType.AMOUNT,
