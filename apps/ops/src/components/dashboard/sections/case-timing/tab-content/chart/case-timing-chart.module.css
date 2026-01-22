@@ -7,7 +7,7 @@
     margin-bottom: 1px;
     padding-bottom: var(--measure-dimension-gap-md);
     padding-top: var(--measure-dimension-padding-3xl);
-    border-bottom: 1px solid var(--color-base-border-border-light);
+    border-bottom: 1px solid var(--color-base-border-light);
 }
 .processSelect {
     margin-top: var(--measure-dimension-gap-lg);

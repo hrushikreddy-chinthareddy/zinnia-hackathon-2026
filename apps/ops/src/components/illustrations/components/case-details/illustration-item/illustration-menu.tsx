@@ -23,6 +23,8 @@ import { IllustrationStatuses } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
+import styles from './illustration-menu.module.css';
+
 interface IllustrationMenuProps {
     isSelectForApplicationVisible?: boolean;
 }
@@ -97,7 +99,7 @@ const IllustrationMenu = ({
                 closeIcon="X"
                 onCancel={() => setOpenArchiveConfirmation(false)}
                 content={
-                    <div className="flex flex-col items-center text-black gap-2 py-20">
+                    <div className="flex flex-col items-center gap-2 py-20 text-black">
                         <Icon
                             type={IconType.ALERT_EXCLAMATION}
                             alt={
@@ -107,6 +109,7 @@ const IllustrationMenu = ({
                             }
                             height={50}
                             width={50}
+                            className={styles.archiveIcon}
                         />
                         <Heading as={HeadingVariant.h3}>
                             {
@@ -139,7 +142,7 @@ const IllustrationMenu = ({
                         </Button>
                         <Button
                             onClick={() => setOpenArchiveConfirmation(false)}
-                            mode="secondary"
+                            mode="link"
                             data-testid="cancel-archive-btn"
                             aria-label={
                                 t(

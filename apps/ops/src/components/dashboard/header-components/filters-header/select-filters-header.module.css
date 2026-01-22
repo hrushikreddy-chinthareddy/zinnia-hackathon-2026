@@ -14,7 +14,7 @@
     justify-content: space-between;
 
     &.pinned {
-        border-bottom-color: var(--color-base-border-border-bold);
+        border-bottom-color: var(--color-base-border-bold);
         padding: var(--measure-dimension-padding-2xl)
             var(--measure-dimension-padding-2xl) 0;
         box-shadow: var(--shadow-elevation-elevation-light-sm);

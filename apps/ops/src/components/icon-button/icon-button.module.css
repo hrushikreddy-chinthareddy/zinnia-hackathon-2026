@@ -1,7 +1,7 @@
 .iconButton {
     align-items: center;
     border-radius: 0.75rem;
-    color: var(--color-base-icon-icon-action-text-link);
+    color: var(--color-base-icon-action-text-link);
     display: flex;
     font-family: var(--string-core-typography-font-family-font-family-primary);
     height: var(--measure-dimension-z-space-6);

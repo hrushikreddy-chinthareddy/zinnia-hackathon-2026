@@ -4,6 +4,7 @@ import {
     FieldData,
     FieldSize,
     FieldTypes,
+    IconType,
     Label,
     Select,
 } from '@zinnia/bloom/components';
@@ -11,6 +12,7 @@ import { Controller } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
+import { usePrintContext } from '@deps/contexts/printContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
 
 import styles from './results-form.module.css';
@@ -23,6 +25,7 @@ export const QuickQuoteResultsPageForm = () => {
         formState: { errors, isValid },
     } = useQuickQuoteResultsForm();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { printSection } = usePrintContext();
 
     const usStateSelectList = getStateCodesForSelectInput();
     const sexAtBirthButtonItems = [
@@ -176,6 +179,17 @@ export const QuickQuoteResultsPageForm = () => {
                 disabled={!isValid}
             >
                 <span className="button-sm">Update quote</span>
+            </Button>
+            <Button
+                mode="link"
+                data-testid="print-pdf-btn"
+                type="button"
+                size="small"
+                iconType={IconType.DOCUMENT_REPORT}
+                className={styles.printPDFButton}
+                onClick={() => printSection(true)}
+            >
+                View as PDF
             </Button>
         </div>
     );

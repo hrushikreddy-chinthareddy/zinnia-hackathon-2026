@@ -75,7 +75,7 @@
         "amountExcessToGuideline": "Montant excédant la référence",
         "amountExcessToModifiedEndowmentContract": "Montant excédant MEC",
         "amountType": "Type de montant",
-        "analyticsDashboard": "Tableau de bord du transporteur",
+        "analyticsDashboard": "Analytique",
         "annualBenefitAmount": "Montant annuel de la prestation",
         "annualizedPremium": "Prime annualisée",
         "annualPremium": "Prime annuelle",
@@ -168,6 +168,10 @@
         "created": "Créé",
         "cumulativeGrossDeathBenefitAmount": "Montant brut cumulé de la prestation décès",
         "cumulativeMatchPaymentAmount": "Montant cumulé du paiement d'appariement",
+        "prioritizationReasonRequired": "Sélectionnez une raison pour continuer.",
+        "prioritizationSourceRequired": "Sélectionnez une source pour continuer.",
+        "prioritizationNotificationLabel": "Recevoir une notification en cas de changement de l’avancement spécifié.",
+        "prioritizationRefDataError": "Impossible de charger les raisons et sources de priorisation. Veuillez actualiser et réessayer.",
         "cumulativePerCharge": "Cumul par charge",
         "cumulativePremiumSinceIssue": "Prime cumulée depuis l'émission",
         "currency": "Devise",
@@ -762,6 +766,7 @@
         "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande"
     },
     "enums": {
+        "ACCUMULATEDEARNINGS": "Gains accumulés",
         "Activation": "Activation",
         "ACTIVE": "Actif",
         "AdditionalBenefitEnd": "Fin de prestation supplémentaire",
@@ -896,6 +901,8 @@
         "DRIVERLICENSE": "Le permis de conduire",
         "DRIVERLICENSENUMBER": "Le permis de conduire",
         "EARLYDISTRIBUTIONFROMSAVINGSINCENTIVEMATCHPLANFOREMPLOYEES": "Distribution anticipée du plan d'épargne incitative",
+        "EARNINGSLIQIUDITYFIRST": "Liquidité des gains en premier",
+        "EARNINGSLIQUIDITYLAST": "Liquidité des gains en dernier",
         "EARNINGSONLY": "Intérêts uniquement",
         "EDUCATIONEXPENSE": "Frais d'éducation",
         "EFT": "Virement électronique",
@@ -951,6 +958,7 @@
         "FIXED": "Fixe",
         "FIXEDANNUITY": "Rente fixe",
         "FIXEDINDEXEDANNUITY": "Rente indexée fixe",
+        "FIXEDMODIFIEDEARNINGS": "Gains modifiés fixes",
         "FlatExtraChange": "Changement de supplément fixe",
         "ForceOut": "Sortie forcée",
         "FREELOOK": "Période de réflexion",
@@ -974,6 +982,7 @@
         "GuaranteedAccumulationBenefitPeriodEnd": "Fin de la période de prestations d'accumulation garanties",
         "GuaranteedDeathBenefitRollUpRenew": "Renouvellement de cumul de prestation décès garantie",
         "GuaranteedIndexRates": "Taux d'index garantis",
+        "GUARANTEEDWITHDRAWALBENEFIT": "Prestation de retrait garantie",
         "GuaranteedWithdrawalBenefitInterestAdjustment": "Ajustement d'intérêt de prestation de retrait garantie",
         "GuaranteedWithdrawalBenefitPaymentLockIn": "Blocage du paiement de prestation de retrait garantie",
         "GuaranteedWithdrawalBenefitRollUpRenew": "Renouvellement de cumul de prestation de retrait garantie",
@@ -1038,6 +1047,7 @@
         "LEGAL": "Juridique",
         "LEVEL": "Niveau",
         "LIFE": "Vie",
+        "LIFEEXPECTANCY": "Espérance de vie",
         "LIFEONLY": "Vie uniquement",
         "LiquidatedUnclaimedProperty": "Biens non réclamés liquidés",
         "LIVINGCLAIMPENDING": "Réclamation vie en attente",
@@ -6439,7 +6449,8 @@
                     "SSN": "Numéro de Sécurité Sociale",
                     "TIN": "NIF",
                     "EXTERNAL": "ID externe",
-                    "OTHER": "Autre"
+                    "OTHER": "Autre",
+                    "NPN": "Numéro National de Producteur"
                 }
             },
             "underwriting": "Souscription",
@@ -6680,7 +6691,7 @@
         "email": "E-mail",
         "fax": "Fax",
         "socialSecurityNumber": "Numéro de sécurité sociale",
-        "nationalProducerNumber": "Numéro national de producteur",
+        "nationalProducerNumber": "Numéro National de Producteur",
         "estimatedCompletion": "Achèvement estimé",
         "estimatedCompletionToolTip": "Prédiction générée par l'IA basée sur les temps d'achèvement historiques de cas similaires. L'estimation est définie lors de la création du cas et ne change pas au fur et à mesure de sa progression."
     },
@@ -9133,11 +9144,18 @@
             "updating": "Mise à jour du devis..."
         },
         "quickQuoteResults": {
+            "title": "Devis rapide",
+            "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
             "notAvailable": "Pas disponible",
             "notAvailableByTermLength": "Pas disponible pour un contrat de {{termLength}} ans:",
             "hasRiderErrors": "Certains suppléments ne sont pas inclus. Voir la couverture et le résumé.",
-            "subtitle": "Ces devis sont basés sur une prime mensuelle, EFT, sans remise.",
-            "title": "Devis rapide",
+            "altLogo": "Logo de Farmers Insurance",
+            "product": {
+                "title": "Produit",
+                "totalPremiumRange": "Gamme Premium Totale",
+                "totalPremiumRangeRowHeader": "Durée de {{years}} année",
+                "totalPremiumRangeSubtitle": "(Gamme Base Premium + Avenants de politique)"
+            },
             "coverage": {
                 "basePremiumRange": "Gamme Base Premium",
                 "nYearTerm": "Durée de {{years}} année",
@@ -9150,12 +9168,6 @@
                 "minFaceAm": "Montant minimum du visage: {{amount}}",
                 "state": "Non disponible pour cet état",
                 "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police."
-            },
-            "product": {
-                "title": "Produit",
-                "totalPremiumRange": "Gamme Premium Totale",
-                "totalPremiumRangeRowHeader": "Durée de {{years}} année",
-                "totalPremiumRangeSubtitle": "(Gamme Base Premium + Avenants de politique)"
             },
             "riders": {
                 "title": "Avenants de politique",

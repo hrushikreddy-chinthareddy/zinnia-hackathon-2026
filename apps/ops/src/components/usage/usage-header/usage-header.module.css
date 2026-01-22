@@ -8,8 +8,8 @@
     border-right-width: 0;
 
     &.pinned {
-        border-bottom-color: var(--color-base-border-border-bold);
+        border-bottom-color: var(--color-base-border-bold);
         padding: var(--measure-dimension-padding-2xl);
-        box-shadow: var(--shadow-elevation-elevation-light-sm);
+        box-shadow: var(--shadow-elevation-light-sm);
     }
 }

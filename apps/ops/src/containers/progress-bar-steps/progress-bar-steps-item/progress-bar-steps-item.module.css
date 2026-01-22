@@ -1,7 +1,7 @@
 .stepButton {
     align-items: center;
     border: 2px solid transparent;
-    border-right-color: var(--color-base-border-border-light);
+    border-right-color: var(--color-base-border-light);
     display: flex;
     justify-content: center;
     height: 56px;
@@ -17,16 +17,16 @@
     }
 
     &.disabled {
-        background-color: var(--color-base-surface-surface-secondary);
+        background-color: var(--color-base-surface-secondary);
         cursor: not-allowed;
 
         &:hover {
             border-color: transparent;
-            border-right-color: var(--color-base-border-border-light);
+            border-right-color: var(--color-base-border-light);
         }
 
         & .stepContent {
-            color: var(--color-base-text-text-secondary);
+            color: var(--color-base-text-secondary);
         }
     }
 

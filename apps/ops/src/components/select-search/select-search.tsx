@@ -224,7 +224,7 @@ const SelectSearch = ({
                             )} ${label}`}
                             height={24}
                             width={24}
-                            color="var(--color-base-icon-icon-action-text-link)"
+                            color="var(--color-base-icon-action-text-link)"
                         />
                         <span className="sr-only">
                             {t(

@@ -23,12 +23,14 @@ export const SelectFiltersHeader = ({
     carrierHeaderIsIntersecting,
     carrierHeaderEntry,
     path,
+    usageTabEnabled,
 }: {
     brokerDealersSSR: DashboardResponseData[];
     authorizedCarriers: string[];
     carrierHeaderIsIntersecting: boolean;
     carrierHeaderEntry?: IntersectionObserverEntry;
     path?: string;
+    usageTabEnabled: boolean;
 }) => {
     const { t } = useTranslation();
     const [container, setContainer] = useState<HTMLDivElement | null>(null);
@@ -92,7 +94,10 @@ export const SelectFiltersHeader = ({
                 />
             </div>
             <div className={styles.tabsNav}>
-                <DashboardTabNav path={path} />
+                <DashboardTabNav
+                    path={path}
+                    usageTabEnabled={usageTabEnabled}
+                />
             </div>
         </div>
     );

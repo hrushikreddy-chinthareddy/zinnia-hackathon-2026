@@ -1,10 +1,10 @@
 .navContainer {
     --nav-expanded-width: 240px;
-    background-color: var(--color-base-surface-surface-carrier);
+    background-color: var(--color-base-surface-carrier);
     /* for the sake of the animation hiding text properly we're using a border instead of padding */
     /* that way whatever is overflowing behind the border is hidden */
     border: var(--measure-dimension-z-space-2) solid
-        var(--color-base-surface-surface-carrier);
+        var(--color-base-surface-carrier);
     height: 100vh;
     position: sticky;
     transition: 300ms ease-in-out;
@@ -121,7 +121,7 @@ div:has(> .searchInput)::before {
 }
 
 .navList {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
     display: flex;
     flex-direction: column;
     height: 100%;
@@ -201,7 +201,7 @@ div:has(> .searchInput)::before {
     &[aria-current='page'] {
         background-color: var(--color-grayscale-color-white);
         border-radius: var(--measure-dimension-z-space-1);
-        box-shadow: var(--shadow-elevation-elevation-light-xs);
+        box-shadow: var(--shadow-elevation-light-xs);
         border-color: var(--color-nav-drawer-2-nav-drawer-item-2-active-border);
         color: var(--color-grayscale-color-900-gray);
         svg {

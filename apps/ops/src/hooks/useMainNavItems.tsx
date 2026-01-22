@@ -25,7 +25,6 @@ export const useMainNavItems = (): NavGroup[] => {
         isOpsManagerView,
         showWelbSalesMaterials,
         isAllowReadIllustrations,
-        hasUsagePermission,
         hasAiAssistantPermissions,
         hasTestHarnessAccess,
         hasMarketConnectContacts,
@@ -57,8 +56,6 @@ export const useMainNavItems = (): NavGroup[] => {
         t('site.navLinks.transactionOpsSuite.link') || '';
     const analyticsText = t('site.navLinks.analytics.text') || '';
     const analyticsHref = t('site.navLinks.analytics.link') || '';
-    const usageText = t('site.navLinks.usage.text') || '';
-    const usageHref = t('site.navLinks.usage.link') || '';
     const accessManagement = t('site.navLinks.accessManagement.text');
     const marketingStorefrontText = t('site.navLinks.marketingStorefront.text');
     const marketingStorefrontHref =
@@ -246,15 +243,6 @@ export const useMainNavItems = (): NavGroup[] => {
         renderComponent: <UserContextMenu name={user?.name || ''} />,
     };
 
-    const usageLink = {
-        id: usageHref,
-        display: usageText,
-        icon: IconType.CHART_SQUARE_BAR,
-        renderComponent: (
-            <NavLink type={NavElementType.Link} href={usageHref} />
-        ),
-    };
-
     const navGroups: NavGroup[] = [
         {
             items: [
@@ -280,7 +268,6 @@ export const useMainNavItems = (): NavGroup[] => {
         },
         {
             items: [
-                ...(hasUsagePermission ? [usageLink] : []),
                 ...(hasAiAssistantPermissions ? [aiAssistantLink] : []),
                 ...(isSuperAdmin ? [accessManagementLink] : []),
                 ...(showWelbSalesMaterials ? [toppanMerrillLink] : []),

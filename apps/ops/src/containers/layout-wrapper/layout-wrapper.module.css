@@ -1,7 +1,7 @@
 .bodyContainer {
     --nav-expanded-width: 240px;
-    background: var(--color-base-surface-surface-primary);
-    box-shadow: var(--shadow-elevation-elevation-light-sm);
+    background: var(--color-base-surface-primary);
+    box-shadow: var(--shadow-elevation-light-sm);
     border-radius: var(--measure-dimension-radius-md);
     max-width: 1440px;
     margin: var(--measure-dimension-z-space-2)

@@ -159,7 +159,7 @@ const FundsTable = ({ funds, loading, policy, caption }: FundsTableProps) => {
                             >
                                 <Icon
                                     type={IconType.CIRCLE_INFO}
-                                    color="var(--color-base-icon-icon-action-text-link)"
+                                    color="var(--color-base-icon-action-text-link)"
                                     height={16}
                                     width={16}
                                 />
@@ -196,7 +196,7 @@ const FundsTable = ({ funds, loading, policy, caption }: FundsTableProps) => {
                                 >
                                     <Icon
                                         type={IconType.CIRCLE_INFO}
-                                        color="var(--color-base-icon-icon-action-text-link)"
+                                        color="var(--color-base-icon-action-text-link)"
                                         height={16}
                                         width={16}
                                     />
@@ -237,7 +237,7 @@ const FundsTable = ({ funds, loading, policy, caption }: FundsTableProps) => {
                                     <TableCell className={styles.nameCell}>
                                         <button
                                             onClick={() => openSideBar(fund)}
-                                            className="cursor-pointer text-[var(--color-base-text-text-link)] underline underline-offset-4 bg-transparent border-none p-0 text-left"
+                                            className="cursor-pointer text-[var(--color-base-text-link)] underline underline-offset-4 bg-transparent border-none p-0 text-left"
                                         >
                                             <Content
                                                 details={fund.fundName}

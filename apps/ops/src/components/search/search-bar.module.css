@@ -40,7 +40,7 @@
 .dropdownTrigger {
     align-items: center;
     border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-subtle);
+        var(--color-base-border-subtle);
     border-radius: var(--measure-dimension-radius-md)
         var(--measure-dimension-radius-md) 0 0;
     background: var(--color-grayscale-color-white);
@@ -56,7 +56,7 @@
     &:focus-visible,
     &:focus,
     &:active {
-        border-color: var(--color-base-border-border-subtle);
+        border-color: var(--color-base-border-subtle);
         outline-color: var(--color-semantics-color-semantic-focus);
         outline-offset: var(--measure-dimension-stroke-sm);
         position: relative;
