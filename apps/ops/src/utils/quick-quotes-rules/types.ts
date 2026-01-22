@@ -163,8 +163,11 @@ export type DataItem = {
     notAvailabilityReasons?: IneligibilityReason[];
 };
 
+export type RiderInegilibilityReason = {
+    termLengths: number[];
+    reasons?: IneligibilityReason[] | undefined;
+};
+
 export type RiderDataItem = Omit<DataItem, 'notAvailabilityReasons'> & {
-    notAvailabilityReasons?: Partial<
-        Record<number, IneligibilityReason[] | undefined>
-    >;
+    notAvailabilityReasons?: RiderInegilibilityReason[];
 };
