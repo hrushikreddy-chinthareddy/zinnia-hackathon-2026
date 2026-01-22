@@ -191,7 +191,7 @@ export const QuickQuoteResultsProvider = ({
 
             return grouped;
         },
-        []
+        [sanitizeReasonArray]
     );
 
     // TODO: Get real variations based on params
