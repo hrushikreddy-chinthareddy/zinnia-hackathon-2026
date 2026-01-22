@@ -3,9 +3,9 @@ import { TabContent, TabGroup } from '@zinnia/bloom/components';
 import Highcharts from 'highcharts';
 import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
+import { SelectFiltersHeader } from '@deps/components/dashboard/header-components/filters-header/select-filters-header';
 import { AnalyticsTabs, UsageTabs } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
@@ -59,7 +59,6 @@ const AnalyticsPage = ({
     usageTabEnabled,
 }: AnalyticsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
-    const carrierHeaderRef = useRef<HTMLDivElement>(null);
     const [slug, setSlug] = useState(path.split('?')[0].split('/').at(-1));
     const [tab, setTab] = useState(
         path.split('?')[1]?.split('=')?.at(-1) ?? undefined
@@ -103,12 +102,11 @@ const AnalyticsPage = ({
         <>
             <PageHead titleKey="analytics" />
             <DashboardResponsiveLayout>
-                <FiltersHeader
+                <SelectFiltersHeader
                     carrierHeaderIsIntersecting={carrierHeaderIsIntersecting}
-                    carrierHeaderEntry={carrierHeaderEntry}
                     authorizedCarriers={authorizedCarriers}
                     brokerDealersSSR={brokerDealersSSR}
-                    ref={carrierHeaderRef}
+                    carrierHeaderEntry={carrierHeaderEntry}
                     path={slug}
                     usageTabEnabled={usageTabEnabled}
                 />

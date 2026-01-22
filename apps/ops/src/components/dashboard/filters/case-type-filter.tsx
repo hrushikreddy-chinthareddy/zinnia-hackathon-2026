@@ -38,8 +38,8 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
 
     const processFilter = {
         caseStatus,
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
     };
 
     const { data: processListOptions } = useQuery({
@@ -66,7 +66,6 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
     return (
         <Select
             className={className}
-            maxContentWidth
             label="Case type"
             options={processListOptions || []}
             size={FieldSize.XS}

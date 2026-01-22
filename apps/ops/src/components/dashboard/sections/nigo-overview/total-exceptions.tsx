@@ -46,8 +46,8 @@ export const TotalExceptions: FC = () => {
             Statuses.NotStarted,
             Statuses.Inprogress,
         ],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         exceptionCreatedDateStart: oneWeekStartDate,
         exceptionCreatedDateEnd: oneWeekEndDate,
     };
@@ -59,8 +59,8 @@ export const TotalExceptions: FC = () => {
             Statuses.NotStarted,
             Statuses.Inprogress,
         ],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         exceptionCreatedDateStart: twoWeekStartDate,
         exceptionCreatedDateEnd: twoWeekEndDate,
     };
