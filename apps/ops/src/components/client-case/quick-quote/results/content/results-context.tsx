@@ -120,6 +120,47 @@ export const QuickQuoteResultsProvider = ({
         []
     );
 
+    /**
+     * Method implemented to facilitate the comparisson  between reasons
+     * specifically and mainly to the scenario where the reason was due to the min age validation.
+     * There were cases where the error was not being grouped because the max expected age was different,
+     * in those scenarios, the reason array comparisson didn't match.
+     * To deal with it, we sanitize the reasons array and in case the error reason was due to a min age validation
+     * the max expected age is being overriden. This is only for the comparisson step, we are still saving the
+     * original reasons array.
+     *
+     * @example
+     * [
+     *  { field: 'age', value: 15, expected: [18, 60] },
+     *  { field: 'face', ... }}
+     * ]
+     * @returns
+     * [
+     *  { field: 'age', value: 15, expected: [18, 0] },
+     *  { field: 'face', ... }}
+     * ]
+     */
+    const sanitizeReasonArray = useCallback(
+        (
+            reasons: IneligibilityReason[] | undefined
+        ): IneligibilityReason[] | undefined => {
+            return reasons?.map((r) => {
+                // For errors other than age, return them
+                if (r.field !== 'age') return r;
+
+                const minAge = r.expected[0];
+                // If the error was due to the age is lesser than the minimun, override the max range to homologate with other reasons
+                const maxAge = r.actual <= minAge ? 0 : r.expected[1];
+
+                return {
+                    ...r,
+                    expected: [minAge, maxAge],
+                };
+            });
+        },
+        []
+    );
+
     const groupRiderErrors = useCallback(
         (
             reasons: TermQuickQuoteRiderNotAvailableItem[]
@@ -129,7 +170,10 @@ export const QuickQuoteResultsProvider = ({
                     if (!reason.reasons) return acc;
 
                     const accReason = acc.find((a) =>
-                        isEqual(a.reasons, reason.reasons)
+                        isEqual(
+                            sanitizeReasonArray(a.reasons),
+                            sanitizeReasonArray(reason.reasons)
+                        )
                     );
 
                     // If not reason is already found in the accumulator, add it
@@ -144,6 +188,7 @@ export const QuickQuoteResultsProvider = ({
                 },
                 []
             );
+
             return grouped;
         },
         []
