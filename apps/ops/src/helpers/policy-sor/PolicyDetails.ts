@@ -10,6 +10,7 @@ import {
     DistributionType,
     DeathBenefitOptionType,
     LineOfBusiness,
+    MatchSegment,
     PartyRole,
     Policy,
     PolicyFeature,
@@ -28,13 +29,25 @@ import { Features } from './Features';
 import { Parties, PolicyParty } from './Parties';
 import { SystematicPrograms } from './SystematicPrograms';
 import { isNullEmptyOrUndefined } from '../string.helpers';
-
 export type BasePolicyComponentArgs = {
     policy: PolicyDetails;
 };
 
+// FIX ME -- our SOR types are out of date.  DEPU-8766 will resolve that and should remove this patch
+type MatchSegmentFix = MatchSegment & {
+    unvestedPremiumBonus?: number | undefined | null;
+    totalRecapturedPremiumBonus?: number | undefined | null;
+};
+
+// FIX ME -- our SOR types are out of date.  DEPU-8766 will resolve that and should remove this patch
+type PolicyFix = Policy & {
+    allocation?: Policy['allocation'] & {
+        matchSegment?: MatchSegmentFix;
+    };
+};
+
 export class PolicyDetails {
-    private policyRaw: Policy;
+    private policyRaw: PolicyFix;
     public accountValue: number | undefined;
     public allParties: PolicyParty[] = [];
     public carrierId: string | undefined;
@@ -82,7 +95,7 @@ export class PolicyDetails {
     public isTPA: boolean;
     public deliveryDate: string | undefined;
 
-    constructor(policy: Policy = {}) {
+    constructor(policy: PolicyFix = {}) {
         this.policyRaw = policy;
 
         this.parties = new Parties(policy);
@@ -238,7 +251,7 @@ export class PolicyDetails {
         return this.features.getFeaturesByType(featureType);
     }
 
-    public get policy(): Policy {
+    public get policy(): PolicyFix {
         return this.policyRaw;
     }
 
