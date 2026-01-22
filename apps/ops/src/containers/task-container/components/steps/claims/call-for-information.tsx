@@ -32,7 +32,6 @@ import {
     formatPhone,
 } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { NOOP } from '@deps/types/constants';
 import { Phone } from '@zinnia/api-types/types/sor';
@@ -60,9 +59,11 @@ function CallForInformation({
     setFormErrors,
     beneficiary,
     setBeneficiary,
+    readOnly,
     t,
 }: {
     task: any;
+    readOnly: boolean;
     setTask: React.Dispatch<React.SetStateAction<any>>;
     onContinueReady?: (fn: () => void) => void;
     correlationId: string;
@@ -86,7 +87,6 @@ function CallForInformation({
         },
     ]);
 
-    const readOnly = task.status === TaskStatus.Completed;
     const dynamicKey = task?.data?.details?.beneCall
         ? DynamicKey.BENE_CALL
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
