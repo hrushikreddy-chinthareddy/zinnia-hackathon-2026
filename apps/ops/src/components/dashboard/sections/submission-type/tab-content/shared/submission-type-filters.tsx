@@ -43,7 +43,6 @@ export const SubmissionTypeFilters = () => {
             <div className={sharedStyles.filterGroup}>
                 <Select
                     className={sharedStyles.filterItem}
-                    maxContentWidth
                     label="Group by"
                     options={submissionVsOptions}
                     value={submissionVs}
