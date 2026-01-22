@@ -8,7 +8,7 @@
     border-right-width: 0;
     position: sticky;
     top: 0;
-    background-color: var(--color-base-surface-surface-primary);
+    background-color: var(--color-base-surface-primary);
     z-index: 3;
     padding-bottom: var(--measure-dimension-gap-lg);
     justify-content: space-between;
@@ -34,10 +34,6 @@
         flex: 1;
         min-width: 240px;
         max-width: 400px;
-    }
-
-    &.pinned {
-        z-index: 4;
     }
 }
 
