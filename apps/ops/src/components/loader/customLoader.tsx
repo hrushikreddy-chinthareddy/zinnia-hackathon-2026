@@ -1,19 +1,19 @@
 import { Loader } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import React from 'react';
 
+import styles from './styles.module.css';
 interface CustomLoaderProps {
-    size?: string;
+    size?: 'small' | 'default';
+    className?: string;
 }
 
-const CustomLoader: React.FC<CustomLoaderProps> = ({ size = '20px' }) => {
+const CustomLoader: React.FC<CustomLoaderProps> = ({
+    size = 'small | default',
+    className = '',
+}) => {
     return (
-        <div
-            style={
-                {
-                    '--loader-size': size,
-                } as React.CSSProperties
-            }
-        >
+        <div className={clsx(styles[`${size}-loader`], className)}>
             <Loader />
         </div>
     );

@@ -1,6 +1,6 @@
 .radioGroupOption {
     border: var(--measure-border-width-stroke-sm) solid
-        var(--color-base-border-border-subtle);
+        var(--color-base-border-subtle);
     border-radius: var(--measure-border-radius-radius-md);
     padding: var(--measure-dimension-padding-2xl);
     margin: var(--measure-dimension-margin-xxs);
@@ -22,7 +22,7 @@
 
 .radixRadioGroupItem {
     border: var(--measure-border-width-stroke-sm) solid
-        var(--color-base-border-border-subtle);
+        var(--color-base-border-subtle);
     border-radius: var(--measure-border-radius-radius-md);
     padding: var(--measure-dimension-padding-2xl);
     margin: var(--measure-dimension-margin-xxs);
@@ -32,7 +32,7 @@
     direction: column;
     width: 190px;
     &[data-state='checked'] {
-        border-color: var(--color-base-border-border-secondary-color);
+        border-color: var(--color-base-border-secondary-color);
     }
 }
 

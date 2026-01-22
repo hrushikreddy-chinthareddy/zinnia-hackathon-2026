@@ -1,4 +1,4 @@
-import { AxiosResponse } from 'axios';
+import { AxiosResponse, HttpStatusCode } from 'axios';
 
 import { Reg60FormData } from '@deps/containers/otp/reg60-forms/reg60.types';
 import {
@@ -34,6 +34,7 @@ import {
 const baseCasesV2Url = `${baseAppUrl}/api/case/v2/cases`;
 const tasksV2Url = `${baseAppUrl}/api/case/v2/tasks`;
 const ssrCasesUrlV2 = `${se2ApiServerUrlV2}`;
+const baseTasksUrl = `${baseAppUrl}/api/case/v1/tasks`;
 
 export const getCaseTaskByIdSSR = async (
     taskId: string,
@@ -85,6 +86,28 @@ export const getCaseTaskByIdSSR = async (
         return null;
     }
 };
+export const getTaskSummaryById = async (
+    query: any
+): Promise<ManagementTask<TaskStatus> | null> => {
+    try {
+        const { data } = await client.get<any, AxiosResponse>(
+            `${baseTasksUrl}/${query.taskId}/summary`,
+            query
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError(
+            'getTaskInstance::An error occurred while getting Task Instance from the Task Assignee Summary API',
+            {
+                ...parseErrorInformation(error),
+                query,
+                file: 'queries/api/v2/task',
+                function: 'getTaskSummary',
+            }
+        );
+        return null;
+    }
+};
 export const getTaskInstance = async (
     query: any
 ): Promise<ManagementTask | null> => {
@@ -97,6 +120,10 @@ export const getTaskInstance = async (
 
         return data;
     } catch (error: any) {
+        if (HttpStatusCode.Forbidden === error.status) {
+            const taskSummary = await getTaskSummaryById(query);
+            return taskSummary;
+        }
         browserLogError(
             'getTaskInstance::An error occurred while getting Task Instance',
             {

@@ -67,10 +67,10 @@ export default function RMDOptions({
         }
     };
     useEffect(() => {
-        if (isFormStateReadOnly && rmdData?.amount?.text !== '') {
+        if (isFormStateReadOnly && rmdData?.amount?.text != null) {
             setShowAmount(true);
         }
-    }, []);
+    }, [rmdData?.amount?.text, isFormStateReadOnly]);
 
     useEffect(() => {
         onDataChange({

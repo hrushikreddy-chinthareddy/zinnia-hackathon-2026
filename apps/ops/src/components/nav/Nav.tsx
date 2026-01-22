@@ -272,7 +272,7 @@ export const Nav = ({
                                                                 }
                                                                 className={clsx(
                                                                     styles.listItem__link,
-                                                                    'typography-content-body color-base-text-text-secondary'
+                                                                    'typography-content-body color-base-text-secondary'
                                                                 )}
                                                             >
                                                                 <>

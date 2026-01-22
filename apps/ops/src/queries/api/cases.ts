@@ -19,6 +19,9 @@ import {
     CaseSearchBody,
     CaseSearchErrorResponse,
     CaseSearchResponse,
+    CreateQualityAuditErrorResponse,
+    CreateQualityAuditRequest,
+    CreateQualityAuditResponse,
 } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
@@ -90,6 +93,40 @@ export const createCase = async (
             function: 'cases.createCase',
         });
         return error.response;
+    }
+};
+
+export const getProcessReferenceData = async (
+    key: string,
+    queryString: string = ''
+): Promise<ProcessReferenceData[] | null> => {
+    try {
+        let refUrl = `${baseAppUrl}/api/case/v1/refdata/${key}`;
+        if (queryString) {
+            refUrl += `?${queryString}`;
+        }
+        const { data } = await client.get<
+            null,
+            AxiosResponse<
+                | ProcessReferenceData[]
+                | { referenceData: ProcessReferenceData[] }
+            >
+        >(refUrl);
+
+        const referenceData =
+            (data as { referenceData?: ProcessReferenceData[] })
+                .referenceData ?? (data as ProcessReferenceData[]);
+
+        return referenceData;
+    } catch (error: any) {
+        browserLogError('cases::Failed to get reference data', {
+            ...parseErrorInformation(error),
+            url: `${baseCasesUrl}/refdata/${key}`,
+            key,
+            queryString,
+            function: 'cases.getProcessReferenceData',
+        });
+        return null;
     }
 };
 
@@ -516,13 +553,17 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
 
 export const escalateCase = async (
     caseId: string,
-    escalate: boolean
+    escalate: boolean,
+    reason: string,
+    source: string
 ): Promise<AxiosResponse | null> => {
     try {
         const url = `${baseCasesUrl2}/${caseId}/escalate`;
 
         const response = await client.patch(url, {
             escalated: escalate,
+            reason,
+            source,
         });
         browserLogInfo('cases::Successfully created a case', {
             url: baseCasesUrl,
@@ -536,6 +577,30 @@ export const escalateCase = async (
             url: baseCasesUrl,
             caseId,
             function: 'cases.escalateCase',
+        });
+        return error;
+    }
+};
+
+export const createQualityAuditForCaseId = async (
+    caseDetails: CreateQualityAuditRequest
+): Promise<CreateQualityAuditResponse | CreateQualityAuditErrorResponse> => {
+    try {
+        const qualityAuditUrl = `${baseAppUrl}/api/process/workflow/v1/qualityaudit`;
+        const response = await client.post<
+            CreateQualityAuditRequest,
+            AxiosResponse
+        >(qualityAuditUrl, caseDetails);
+        return { status: response.status, data: response.data };
+    } catch (error: any) {
+        console.error(
+            'createQualityAuditForCaseId::An error occurred creating quality audit',
+            error
+        );
+        browserLogError('cases::Failed to create quality audit', {
+            ...parseErrorInformation(error),
+            caseId: caseDetails.parentCaseId,
+            function: 'cases.createQualityAuditForCaseId',
         });
         return error;
     }

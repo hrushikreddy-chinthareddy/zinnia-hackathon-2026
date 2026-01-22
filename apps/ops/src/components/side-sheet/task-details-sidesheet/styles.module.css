@@ -1,0 +1,12 @@
+.customLoader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidesheetButtons {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--measure-dimension-z-space-1);
+}

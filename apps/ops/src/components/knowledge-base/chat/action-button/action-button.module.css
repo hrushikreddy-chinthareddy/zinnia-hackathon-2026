@@ -51,7 +51,7 @@
     transform: translate(-50%, -50%);
     width: 100%;
     height: 100%;
-    background-color: var(--color-base-text-text-carrier);
+    background-color: var(--color-base-text-carrier);
     border-radius: var(--measure-dimension-radius-lg);
     z-index: 0;
 }
@@ -84,16 +84,16 @@
     fill: currentColor;
     stroke: currentColor;
     transform-origin: center;
-    color: var(--color-base-surface-surface-primary);
+    color: var(--color-base-surface-primary);
 }
 
 .actionButton:disabled {
     .textButton {
-        color: var(--color-base-text-text-secondary);
+        color: var(--color-base-text-secondary);
     }
 
     .path {
-        color: var(--color-base-text-text-secondary);
+        color: var(--color-base-text-secondary);
     }
 
     &:before {
@@ -115,7 +115,7 @@
         background: var(--bg-color-gradient-linear);
         mask: linear-gradient(
             transparent 0%,
-            var(--color-base-surface-surface-primary) 120%
+            var(--color-base-surface-primary) 120%
         );
         animation: rotate 2s linear infinite;
     }
@@ -140,7 +140,7 @@
     position: relative;
     z-index: 10;
     font-size: 1rem;
-    color: var(--color-base-surface-surface-primary);
+    color: var(--color-base-surface-primary);
 }
 
 @media screen and (max-width: 768px) {
@@ -181,7 +181,7 @@
 .stopIcon {
     width: 1.5rem;
     height: 1.5rem;
-    color: var(--color-base-surface-surface-primary);
+    color: var(--color-base-surface-primary);
 }
 
 .stopButton:disabled {

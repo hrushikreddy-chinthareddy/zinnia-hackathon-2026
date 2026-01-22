@@ -3,7 +3,7 @@
     padding: var(--measure-dimension-gap-lg);
 
     .selectionTitle {
-        color: var(--color-base-text-text-primary);
+        color: var(--color-base-text-primary);
         font-feature-settings: 'liga' off, 'clig' off;
         padding: var(--measure-dimension-gap-lg) 0;
     }
@@ -30,7 +30,7 @@
     }
 
     .chevron {
-        color: var(--color-base-icon-icon-default);
+        color: var(--color-base-icon-default);
     }
     .arrowDown {
         transform: rotate(180deg);

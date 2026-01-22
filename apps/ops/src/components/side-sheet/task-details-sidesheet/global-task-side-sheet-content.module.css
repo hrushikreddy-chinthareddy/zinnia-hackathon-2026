@@ -1,6 +1,18 @@
+.buttonContainer {
+    margin-top: 16px;
+}
+
+.buttonContainerWithUser {
+    padding-top: 32px;
+}
+
+.buttonContainerWithoutUser {
+    padding-top: 8px;
+}
+
 .labelCell {
     grid-column: span 1 / span 1;
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .valueRow {

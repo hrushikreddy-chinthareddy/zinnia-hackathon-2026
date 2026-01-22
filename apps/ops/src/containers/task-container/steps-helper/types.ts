@@ -18,6 +18,7 @@ export type GetStepsProps = {
     task?: any;
     isSaveAsDraftEnabled: boolean;
     isContinueButtonEnabled: boolean;
+    readOnly: boolean;
     featureFlags: FeatureFlags;
 };
 

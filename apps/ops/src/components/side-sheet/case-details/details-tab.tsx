@@ -53,7 +53,7 @@ function DetailsTab({
             <div className="flex float-start">
                 <PolicyCarrierLogo carrierId={clientCode} />
                 <div>
-                    <div className="text-md text-[--color-base-text-text-secondary]">
+                    <div className="text-md text-[--color-base-text-secondary]">
                         {carrierName}
                     </div>
                     <div className="text-md">
@@ -65,33 +65,33 @@ function DetailsTab({
                 </div>
             </div>
             <div className=" grid grid-cols-2 gap-2 text-md">
-                <div className="col-span-1  text-[--color-base-text-text-secondary]">
+                <div className="col-span-1  text-[--color-base-text-secondary]">
                     {t('applicationSignedDate')}
                 </div>
                 <div className="col-span-1">{formattedApplicationDate}</div>
-                <div className="col-span-1  text-[--color-base-text-text-secondary]">
+                <div className="col-span-1  text-[--color-base-text-secondary]">
                     {t('issueState')}
                 </div>
                 <div className="col-span-1">
                     {policy?.issueState || DEFAULT_ERROR_STRING}
                 </div>
-                <div className="col-span-1  text-[--color-base-text-text-secondary]">
+                <div className="col-span-1  text-[--color-base-text-secondary]">
                     {t('qualificationType')}
                 </div>
                 <div className="col-span-1">
                     {policy?.qualificationType || DEFAULT_ERROR_STRING}
                 </div>
-                <div className="col-span-1  text-[--color-base-text-text-secondary]">
+                <div className="col-span-1  text-[--color-base-text-secondary]">
                     {t('contractValue')}
                 </div>
                 <div className="col-span-1">{formattedContractValue}</div>{' '}
-                <div className="col-span-1  text-[--color-base-text-text-secondary]">
+                <div className="col-span-1  text-[--color-base-text-secondary]">
                     {t('policyDate')}
                 </div>
                 <div className="col-span-1">{formattedIssueDate}</div>
             </div>
             {url && (
-                <div className="text-[--color-base-text-text-link] font-semibold text-md ">
+                <div className="text-[--color-base-text-link] font-semibold text-md ">
                     <NavElement
                         className={'whitespace-normal break-words'}
                         href={url}

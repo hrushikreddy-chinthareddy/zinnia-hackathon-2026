@@ -12,7 +12,6 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { ExceptionRef } from '@deps/models/case/task';
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { searchNigoExceptionRefs } from '@deps/queries/api/v1/exceptionRefs';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
@@ -21,6 +20,7 @@ import { convertToCamelCase } from '@deps/utils/strings';
 import { useGetCaseDocs } from './task-review.helpers';
 
 interface TaskReviewProps {
+    readOnly: boolean;
     caseId: string;
     clientCode: string;
     activeDocType: DocumentTypeView;
@@ -31,6 +31,7 @@ interface TaskReviewProps {
 }
 
 export const TaskReview = ({
+    readOnly,
     clientCode,
     activeDocType,
     taskType,
@@ -143,10 +144,9 @@ export const TaskReview = ({
     };
 
     const { documentName, documentId } = workingDocument?.[0] || {};
-    const readyOnly = task.status === TaskStatus.Completed;
 
     useEffect(() => {
-        if (readyOnly) {
+        if (readOnly) {
             const missingInformationValue = !task.data?.missingInformation;
             const sectionOption = String(missingInformationValue);
             setSectionOption(sectionOption);
@@ -200,7 +200,7 @@ export const TaskReview = ({
                     </div>
                 )}
                 <Radio
-                    readonly={readyOnly}
+                    readonly={readOnly}
                     items={sectionOptions}
                     label={''}
                     onChange={(event) => onOptionSelection(event.target.value)}
@@ -211,7 +211,7 @@ export const TaskReview = ({
                         <div className="mb-4 mt-12 w-[436px]">
                             <Select
                                 isMultiselect
-                                readOnly={readyOnly}
+                                readOnly={readOnly}
                                 options={exceptionOptions.reduce(
                                     (unique, item, index) => {
                                         const existingItem = unique.find(

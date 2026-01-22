@@ -104,8 +104,8 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
             Statuses.Exception,
             Statuses.NotStarted,
         ],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         createdDateStart: timerange.from,
         process: formatProcessFilter(selectedProcess),
     };
@@ -163,7 +163,7 @@ export const SubmissionTypeProvider: FC<PropsWithChildren> = ({ children }) => {
     });
 
     useEffect(() => {
-        if (Object.keys(selectedCarriers).length === 1) {
+        if (selectedCarriers.length === 1) {
             setSubmissionVs(CaseCountGroupByEnum.PRODUCT_NAME);
         } else {
             setSubmissionVs(CaseCountGroupByEnum.CARRIER);

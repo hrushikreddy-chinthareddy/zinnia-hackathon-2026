@@ -20,7 +20,7 @@
     justify-content: center;
     padding: var(--measure-dimension-padding-4xl);
     border: var(--measure-dimension-stroke-sm) dashed
-        var(--color-base-border-border-subtle);
+        var(--color-base-border-subtle);
 }
 
 .secondaryText {
@@ -32,6 +32,6 @@
 }
 
 .linkText {
-    color: var(--color-base-text-text-link);
+    color: var(--color-base-text-link);
     font-weight: 600;
 }

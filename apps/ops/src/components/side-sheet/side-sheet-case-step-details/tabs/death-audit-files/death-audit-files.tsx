@@ -104,7 +104,7 @@ const DeathAuditFiles = ({
                         <React.Fragment key={`summary-item-${index}`}>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t(summaryItem.label)}
                             </Typography>

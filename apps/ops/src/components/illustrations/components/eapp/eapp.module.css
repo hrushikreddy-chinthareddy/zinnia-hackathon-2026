@@ -6,7 +6,7 @@
 
 .headerWrapper {
     border-bottom: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
+        var(--color-base-border-light);
     padding: var(--measure-dimension-padding-2xl)
         var(--measure-dimension-padding-3xl) 0
         var(--measure-dimension-padding-3xl);
@@ -28,12 +28,12 @@
 }
 
 .headerTitle {
-    color: var(--color-base-text-text-carrier);
+    color: var(--color-base-text-carrier);
 }
 
 .headerSubtitle {
-    /* color: var(--color-base-text-text-secondary); */
-    color: var(--color-base-text-text-primary, #212121);
+    /* color: var(--color-base-text-secondary); */
+    color: var(--color-base-text-primary, #212121);
 }
 
 .applicationWrapper {
@@ -62,8 +62,8 @@
 
 .applicationSidebar {
     width: 200px;
-    background-color: var(--color-base-surface-surface-secondary);
-    border-left: 1px solid var(--color-base-border-border-light);
+    background-color: var(--color-base-surface-secondary);
+    border-left: 1px solid var(--color-base-border-light);
 }
 
 /* Stack sidebar under body at 500px or less */
@@ -76,7 +76,7 @@
     .applicationSidebar {
         width: 100%;
         border-left: none;
-        border-top: 1px solid var(--color-base-border-border-light);
+        border-top: 1px solid var(--color-base-border-light);
     }
 }
 

@@ -6,7 +6,7 @@
 }
 
 .progressBar__steps {
-    border-bottom: 2px solid var(--color-base-border-border-subtle);
+    border-bottom: 2px solid var(--color-base-border-subtle);
     display: flex;
     overflow-x: auto;
     gap: 1px;

@@ -1,36 +1,25 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
-import { CarrierListItem } from '@deps/components/dashboard/types';
-
-interface DashboardStoreTypes {
-    selectedCarriers: CarrierListItem;
-    selectedBrokerDealers: CarrierListItem;
-    updateSelectedCarriers: (value: CarrierListItem) => void;
-    updateSelectedBrokerDealers: (value: CarrierListItem) => void;
+interface DashboardStoreSelectFilterTypes {
+    selectedCarriers: string[];
+    selectedBrokerDealers: string[];
+    updateSelectedCarriers: (value: string[]) => void;
+    updateSelectedBrokerDealers: (value: string[]) => void;
 }
-//Split comma-joined carrierId keys (e.g. {"1,2": "Carrier Name"}) into separate entries ({"1":"Carrier Name","2":"Carrier Name"})
-const transformObject = (
-    inputObj: Record<string, string>
-): Record<string, string> => {
-    const outputObj: Record<string, string> = {};
-
-    for (const [key, value] of Object.entries(inputObj)) {
-        const keys = key.split(',');
-        keys.forEach((singleKey) => {
-            outputObj[singleKey.trim()] = value;
-        });
-    }
-
-    return outputObj;
-};
 
 export const useDashboardStore = create(
-    devtools<DashboardStoreTypes>((set) => ({
-        selectedCarriers: {},
-        selectedBrokerDealers: {},
-        updateSelectedCarriers: (val: CarrierListItem) => {
-            const transformedVal = transformObject(val);
+    devtools<DashboardStoreSelectFilterTypes>((set) => ({
+        selectedCarriers: [],
+        selectedBrokerDealers: [],
+
+        updateSelectedCarriers: (val: string[]) => {
+            // values can be comma separated ["PRUD, ALLS", "DLIC"] and API expects uppercase values
+            const transformedVal = val
+                .flatMap((carrierString) =>
+                    carrierString.split(',').map((string) => string.trim())
+                )
+                .map((val) => val.toUpperCase());
             return set(
                 { selectedCarriers: transformedVal },
                 undefined,
@@ -38,11 +27,13 @@ export const useDashboardStore = create(
             );
         },
 
-        updateSelectedBrokerDealers: (val: CarrierListItem) =>
-            set(
-                { selectedBrokerDealers: val },
+        updateSelectedBrokerDealers: (val: string[]) => {
+            const transformedVal = val.map((val) => val.toUpperCase());
+            return set(
+                { selectedBrokerDealers: transformedVal },
                 undefined,
                 'dashboard/updateSelectedBroker'
-            ),
+            );
+        },
     }))
 );
