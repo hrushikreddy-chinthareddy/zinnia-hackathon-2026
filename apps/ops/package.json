@@ -93,7 +93,7 @@
         "zustand": "^4.5.4"
     },
     "devDependencies": {
-        "@datadog/datadog-ci": "^2.19.1",
+        "@datadog/datadog-ci": "^3.22.2",
         "@faker-js/faker": "^8.0.2",
         "@next/eslint-plugin-next": "^13.3.0",
         "@storybook/addon-a11y": "^7.6.4",
