@@ -1,13 +1,13 @@
 .contactContainer {
     border: var(--measure-dimension-stroke-sm, 2px) solid
-        var(--color-base-border-border-light, #ededed);
+        var(--color-base-border-light, #ededed);
     border-radius: var(--measure-dimension-radius-sm, 0.25rem);
 }
 
 .carrierLogo {
     flex-shrink: 0;
     border: var(--measure-dimension-stroke-xs, 1px) solid
-        var(--color-base-border-border-light, #ededed);
+        var(--color-base-border-light, #ededed);
     border-radius: var(--measure-dimension-radius-sm, 0.25rem);
 }
 
@@ -34,7 +34,7 @@
 .topBar {
     padding: var(--measure-dimension-padding-2xl, 1rem);
     border-bottom: var(--measure-dimension-stroke-xs, 1px) solid
-        var(--color-base-border-border-light, #ededed);
+        var(--color-base-border-light, #ededed);
 }
 
 .productInfo {
@@ -45,7 +45,7 @@
 .cases {
     &:not(:last-child) {
         border-bottom: var(--measure-dimension-stroke-xs, 1px) solid
-            var(--color-base-border-border-light, #ededed);
+            var(--color-base-border-light, #ededed);
     }
 }
 

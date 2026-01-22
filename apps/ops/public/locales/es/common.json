@@ -10,11 +10,8 @@
     "last14Days": "Últimos 14 días",
     "last30Days": "Últimos 30 días",
     "yearToDate": "Año hasta la fecha",
-    "caseStatsDashboardTitle": "Estadísticas de casos",
     "customRange": "Rango personalizado",
     "allAgents": "Todos los Agentes",
-    "allDistributors": "Todos los Distribuidores",
-    "allCarriers": "Todos los Transportistas",
     "caseStatCharHeader": "{{count}} Casos Activos",
     "insights": "Perspectivas",
     "selectProcessType": "Seleccionar Tipo de Proceso",
@@ -50,6 +47,7 @@
         }
     },
     "allFields": {
+        "all": "Todo",
         "account": "Cuenta",
         "accountValue": "Valor de la cuenta",
         "accountValueByPolicyYear": "Valor de la cuenta por año de {{policyNomenclature}}",
@@ -77,7 +75,7 @@
         "amountExcessToGuideline": "Monto excedente a la directriz",
         "amountExcessToModifiedEndowmentContract": "Monto excedente al MEC",
         "amountType": "Tipo de monto",
-        "analyticsDashboard": "Panel de Transportista",
+        "analyticsDashboard": "Analítica",
         "annualBenefitAmount": "Monto anual del beneficio",
         "annualizedPremium": "Prima anualizada",
         "annualPremium": "Prima anual",
@@ -115,6 +113,7 @@
         "cancelProgram": "Cancelar programa",
         "carrierId": "ID del transportista",
         "carrierName": "Nombre de la compañía",
+        "carriers": "Transportistas",
         "caseId": "ID du dossier",
         "cases": "Casos",
         "caseIdSearchError": "Ingrese un Case Id para mostrar resultados de búsqueda",
@@ -133,6 +132,7 @@
         "claimStatutoryInterestAmount": "Montant des intérêts légaux de la réclamation",
         "claimStatutoryInterestRate": "Taux d'intérêt légal de la réclamation",
         "closeDialog": "Cerrar diálogo",
+        "closed": "Cerrado",
         "collapseAll": "Contraer todo",
         "combinedFunds": "Fondos",
         "commissionOption": "Opción de comisión",
@@ -169,7 +169,11 @@
         "coveredParty": "Parte cubierta",
         "created": "Creado",
         "cumulativeGrossDeathBenefitAmount": "Monto acumulado bruto del beneficio por fallecimiento",
-        "cumulativeMatchPaymentAmount": "Monto acumulado de pagos de coincidencia",
+        "cumulativeMatchPaymentAmount": "Monto acumulado del pago de contrapartida",
+        "prioritizationReasonRequired": "Seleccione un motivo para continuar.",
+        "prioritizationSourceRequired": "Seleccione un origen para continuar.",
+        "prioritizationNotificationLabel": "Recibir notificaciones sobre cambios en el progreso especificado.",
+        "prioritizationRefDataError": "No se pudieron cargar los motivos y orígenes de priorización. Actualice la página e inténtelo de nuevo.",
         "cumulativePerCharge": "Por cargo acumulado",
         "cumulativePremiumSinceIssue": "Prima acumulada desde la emisión",
         "currency": "Moneda",
@@ -453,6 +457,8 @@
         "noTransactionsTitle": "Actualmente no hay transacciones {{status}}.",
         "numberOfOccurrence": "Número de ocurrencias",
         "numberOfWithdrawal": "Total de retiros tomados",
+        "open": "Abierto",
+        "openClosed": "Abierto-Cerrado",
         "openInNewWindow": "Abre en nueva ventana",
         "optedNextProgramDate": "Fecha elegida del próximo programa",
         "or": "o",
@@ -762,6 +768,7 @@
         "bpm500Error": "Ocurrió un error al validar su solicitud"
     },
     "enums": {
+        "ACCUMULATEDEARNINGS": "Ganancias acumuladas",
         "ACH": "ACH",
         "Activation": "Activación",
         "ACTIVE": "Activo",
@@ -909,6 +916,8 @@
         "DRIVERLICENSENUMBER": "Licencia de conducir",
         "DTCC": "DTCC",
         "EARLYDISTRIBUTIONFROMSAVINGSINCENTIVEMATCHPLANFOREMPLOYEES": "Distribución anticipada de plan simple",
+        "EARNINGSLIQIUDITYFIRST": "Liquidez de ganancias primero",
+        "EARNINGSLIQUIDITYLAST": "Liquidez de ganancias al final",
         "EARNINGSONLY": "Solo ganancias",
         "EDUCATIONEXPENSE": "Gasto educativo",
         "EFT": "Transferencia electrónica",
@@ -965,6 +974,7 @@
         "FIXED": "Fijo",
         "FIXEDANNUITY": "Anualidad fija",
         "FIXEDINDEXEDANNUITY": "Anualidad fija indexada",
+        "FIXEDMODIFIEDEARNINGS": "Ganancias modificadas fijas",
         "FlatExtraChange": "Cambio de cargo adicional fijo",
         "ForceOut": "Desalojo forzoso",
         "FREELOOK": "Período de prueba",
@@ -990,6 +1000,7 @@
         "GuaranteedAccumulationBenefitPeriodEnd": "Fin del período de beneficio de acumulación garantizado",
         "GuaranteedDeathBenefitRollUpRenew": "Renovación de acumulación de beneficio por fallecimiento garantizado",
         "GuaranteedIndexRates": "Tasas de índice garantizadas",
+        "GUARANTEEDWITHDRAWALBENEFIT": "Beneficio de retiro garantizado",
         "GuaranteedWithdrawalBenefitInterestAdjustment": "Ajuste de interés de beneficio de retiro garantizado",
         "GuaranteedWithdrawalBenefitPaymentLockIn": "Bloqueo de pago de beneficio de retiro garantizado",
         "GuaranteedWithdrawalBenefitRollUpRenew": "Renovación de acumulación de beneficio de retiro garantizado",
@@ -1059,6 +1070,7 @@
         "LEGAL": "Legal",
         "LEVEL": "Nivel",
         "LIFE": "Vida",
+        "LIFEEXPECTANCY": "Esperanza de vida",
         "LIFEONLY": "Solo vida",
         "LIFEWITHCASHREFUND": "Vida con reembolso en efectivo",
         "LIFEWITHINSTALLMENTREFUND": "Vida con reembolso en cuotas",
@@ -6476,7 +6488,8 @@
                     "SSN": "Número de Seguro Social",
                     "TIN": "TIN",
                     "EXTERNAL": "ID externo",
-                    "OTHER": "Otro"
+                    "OTHER": "Otro",
+                    "NPN": "Número Nacional de Productor"
                 }
             },
             "underwriting": "Suscripción",
@@ -9223,16 +9236,24 @@
         },
         "quickQuoteResults": {
             "title": "Cotización rápida",
+            "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
+            "notAvailable": "No disponible",
+            "altLogo": "Logotipo de Farmers Insurance",
+            "notAvailableByTermLengths": "No disponible para términos ({{termLength}} años):",
+            "notAvailableByTermLength": "No disponible para término de {{termLength}} años:",
+            "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
+            "product": {
+                "title": "Producto",
+                "totalPremiumRange": "Gama Premium Total",
+                "totalPremiumRangeRowHeader": "{{years}} año plazo",
+                "totalPremiumRangeSubtitle": "(Rango de prima base + Adicionales)"
+            },
             "coverage": {
                 "basePremiumRange": "Rango de Prima Base",
                 "hint": "",
                 "nYearTerm": "{{years}} año plazo",
                 "title": "Cobertura y resumen"
             },
-            "notAvailable": "No disponible",
-            "notAvailableByTermLength": "No disponible para un contrato de {{termLength}} años:",
-            "hasRiderErrors": "Algunos adicionales no están incluidos. Ver cobertura y resumen.",
-            "subtitle": "Estas cotizaciones se basan en prima mensual, EFT, sin descuentos.",
             "notAvailableReason": {
                 "maxAge": "Edad máxima de emisión: {{age}}",
                 "minAge": "Edad mínima de emisión: {{age}}",
@@ -9240,12 +9261,6 @@
                 "minFaceAm": "Monto nominal mínimo: {{amount}}",
                 "state": "No disponible para este estado",
                 "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
-            },
-            "product": {
-                "title": "Producto",
-                "totalPremiumRange": "Gama Premium Total",
-                "totalPremiumRangeRowHeader": "{{years}} año plazo",
-                "totalPremiumRangeSubtitle": "(Rango de prima base + Adicionales)"
             },
             "riders": {
                 "title": "Adicionales",

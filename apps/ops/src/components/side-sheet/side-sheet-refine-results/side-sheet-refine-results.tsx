@@ -557,7 +557,7 @@ export default function SideSheetRefineResults({
                 </div>
                 <div
                     className={
-                        Object.keys(selectedCarriers).length
+                        selectedCarriers.length
                             ? `border-b-2 border-b-gray-100 pb-8`
                             : ''
                     }

@@ -23,7 +23,7 @@
 
 .fieldLabel {
     display: flex;
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 
     .toolTipIcon {
         margin-left: var(--measure-dimension-padding-xs);
@@ -47,7 +47,7 @@
 
     &:first-child {
         border: var(--measure-dimension-stroke-sm) solid
-            var(--color-base-border-border-light);
+            var(--color-base-border-light);
         border-radius: var(--measure-dimension-radius-sm);
     }
 }
@@ -58,7 +58,7 @@
 
 .subSectionStd + .subSectionStd {
     border-top: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
+        var(--color-base-border-light);
     padding-top: var(--measure-dimension-padding-xl);
     &:last-child {
         padding-bottom: 0;
@@ -69,7 +69,7 @@
     padding: var(--measure-dimension-padding-xl);
     gap: var(--measure-dimension-margin-xs);
     border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
+        var(--color-base-border-light);
     border-radius: var(--measure-dimension-radius-sm);
 }
 
@@ -89,9 +89,9 @@
 }
 
 .emptySearch {
-    background-color: var(--color-base-surface-surface-secondary);
+    background-color: var(--color-base-surface-secondary);
     border: var(--measure-dimension-stroke-sm) dashed;
-    border-color: var(--color-base-border-border-light);
+    border-color: var(--color-base-border-light);
     border-radius: var(--measure-dimension-radius-sm);
     padding: var(--measure-dimension-padding-xl);
     text-align: center;

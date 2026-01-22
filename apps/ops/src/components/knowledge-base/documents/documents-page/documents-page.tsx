@@ -338,7 +338,7 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
                                         <TableCell
                                             tabIndex={0}
                                             data-testid="document-name"
-                                            className="typography-content-body-sm text-[--color-base-text-text-link] cursor-pointer"
+                                            className="typography-content-body-sm text-[--color-base-text-link] cursor-pointer"
                                             onClick={() => {
                                                 handleOpenDocumentPreview({
                                                     name,

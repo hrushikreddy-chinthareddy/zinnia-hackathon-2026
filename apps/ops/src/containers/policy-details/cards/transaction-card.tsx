@@ -55,7 +55,7 @@ const TransactionCard: React.FC<TransactionCardProps> = ({
                     type={IconType.CHEVRON_RIGHT}
                     height={18}
                     width={18}
-                    color="var(--color-base-text-text-link)"
+                    color="var(--color-base-text-link)"
                 />
             </div>
             <dl className="mt-4">

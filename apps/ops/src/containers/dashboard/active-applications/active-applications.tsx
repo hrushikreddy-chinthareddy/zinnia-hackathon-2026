@@ -16,8 +16,8 @@ export const ActiveApplications: FC = () => {
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
         (state) => state
     );
-    const carriers = Object.keys(selectedCarriers);
-    const brokers = Object.keys(selectedBrokerDealers);
+    const carriers = selectedCarriers;
+    const brokers = selectedBrokerDealers;
     const baseFilter: CaseCountInputFilter = {
         caseStatus: [
             Statuses.InProgress,

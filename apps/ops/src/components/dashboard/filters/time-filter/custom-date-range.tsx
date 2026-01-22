@@ -73,7 +73,7 @@ export const CustomDateRange: FC<CustomDateRangeProps> = ({
                     className={clsx(
                         'typography-labels-field-label mb-1 ',
                         handleTimerangeChange &&
-                            'text-[var(--color-base-text-text-link)] cursor-pointer'
+                            'text-[var(--color-base-text-link)] cursor-pointer'
                     )}
                 >
                     {rangeText}

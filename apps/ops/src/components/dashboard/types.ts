@@ -18,3 +18,19 @@ export const TabTitles = {
 } as const;
 
 export type TabTitle = keyof typeof TabTitles;
+
+export const UsageTabs = {
+    LOGINS: 'logins',
+    PAGE_VIEWS: 'page-views',
+    ACTIVITY: 'activity',
+} as const;
+
+export type TUsageTab = keyof typeof UsageTabs;
+
+export const UsageTabTitles = {
+    LOGINS: 'LOGINS',
+    PAGEVIEWS: 'PAGEVIEWS',
+    ACTIVITY: 'ACTIVITY',
+} as const;
+
+export type UsageTabTitle = keyof typeof UsageTabTitles;

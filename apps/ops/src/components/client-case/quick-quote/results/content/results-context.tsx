@@ -1,4 +1,4 @@
-import { groupBy, includes, zip } from 'lodash';
+import { groupBy, includes, isEqual, zip } from 'lodash';
 import {
     createContext,
     ReactNode,
@@ -21,6 +21,7 @@ import {
     QuickQuoteParams,
     TermQuickQuoteRiderDataItem,
     RIDER_CODE_MAP,
+    TermQuickQuoteRiderNotAvailableItem,
 } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
@@ -106,9 +107,44 @@ export const QuickQuoteResultsProvider = ({
             riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
             termLength: number
         ): boolean => {
-            return Object.entries(riders).some(
-                ([_, data]) => data.notAvailabilityReasonField?.[termLength]
+            return Object.entries(riders).some(([_, data]) =>
+                data.notAvailabilityReasonField?.some(
+                    (reasons) =>
+                        reasons.termLengths &&
+                        reasons.termLengths.findIndex(
+                            (tl) => tl === termLength
+                        ) >= 0
+                )
             );
+        },
+        []
+    );
+
+    const groupRiderErrors = useCallback(
+        (
+            reasons: TermQuickQuoteRiderNotAvailableItem[]
+        ): TermQuickQuoteRiderNotAvailableItem[] => {
+            const grouped = reasons.reduce(
+                (acc: TermQuickQuoteRiderNotAvailableItem[], reason) => {
+                    if (!reason.reasons) return acc;
+
+                    const accReason = acc.find((a) =>
+                        isEqual(a.reasons, reason.reasons)
+                    );
+
+                    // If not reason is already found in the accumulator, add it
+                    if (!accReason) {
+                        acc.push(reason);
+                    } else {
+                        // If found, add the term legth to the existing one
+                        accReason.termLengths.push(...reason.termLengths);
+                    }
+
+                    return acc;
+                },
+                []
+            );
+            return grouped;
         },
         []
     );
@@ -316,32 +352,30 @@ export const QuickQuoteResultsProvider = ({
                                                 );
 
                                             const reasonsByTermLength =
-                                                Object.fromEntries(
+                                                groupRiderErrors(
                                                     Object.entries(
                                                         groupedByTermLength
-                                                    )
-                                                        .map(
-                                                            ([
-                                                                termLength,
-                                                                data,
-                                                            ]) => {
-                                                                return [
-                                                                    termLength,
+                                                    ).map(
+                                                        ([
+                                                            termLength,
+                                                            data,
+                                                        ]) => {
+                                                            return {
+                                                                termLengths: [
+                                                                    parseInt(
+                                                                        termLength
+                                                                    ),
+                                                                ],
+                                                                reasons:
                                                                     extractRiderNotAvailabilityReason(
                                                                         data,
                                                                         RIDER_CODE_MAP[
                                                                             riderName
                                                                         ]
                                                                     ),
-                                                                ] as const;
-                                                            }
-                                                        )
-                                                        .filter(
-                                                            ([_, value]) =>
-                                                                value &&
-                                                                value?.length >
-                                                                    0
-                                                        )
+                                                            } as TermQuickQuoteRiderNotAvailableItem;
+                                                        }
+                                                    )
                                                 );
 
                                             if (
@@ -357,9 +391,8 @@ export const QuickQuoteResultsProvider = ({
                                                             (v) => v != null
                                                         ),
                                                         notAvailabilityReasonField:
-                                                            Object.keys(
-                                                                reasonsByTermLength
-                                                            ).length > 0
+                                                            reasonsByTermLength.length >
+                                                            0
                                                                 ? reasonsByTermLength
                                                                 : undefined,
                                                     },
@@ -373,9 +406,8 @@ export const QuickQuoteResultsProvider = ({
                                                         values
                                                     ),
                                                     notAvailabilityReasonField:
-                                                        Object.keys(
-                                                            reasonsByTermLength
-                                                        ).length > 0
+                                                        reasonsByTermLength.length >
+                                                        0
                                                             ? reasonsByTermLength
                                                             : undefined,
                                                 },
@@ -390,10 +422,9 @@ export const QuickQuoteResultsProvider = ({
                         (item): item is Exclude<typeof item, undefined> =>
                             item != null
                     );
-
                 return result;
             },
-            [products, variants]
+            [products, variants, groupRiderErrors]
         )
     );
 

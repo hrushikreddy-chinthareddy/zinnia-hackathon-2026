@@ -24,8 +24,8 @@ export const NIGOTransactions: FC = () => {
             Statuses.NotStarted,
             Statuses.Inprogress,
         ],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         createdDateStart: oneYearAgoISO,
     };
 

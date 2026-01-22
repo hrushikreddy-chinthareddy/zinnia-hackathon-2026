@@ -54,9 +54,8 @@ const TempNavInactive = ({
                 type={NavElementType.Link}
                 tabIndex={0}
                 style={{
-                    backgroundColor:
-                        'var(--color-base-surface-surface-tertiary)',
-                    color: 'var(--color-base-text-text-secondary)',
+                    backgroundColor: 'var(--color-base-surface-tertiary)',
+                    color: 'var(--color-base-text-secondary)',
                 }}
                 className={clsx(
                     'pointer-events-none flex items-center whitespace-nowrap rounded-sm px-2 py-1 align-middle font-semibold',

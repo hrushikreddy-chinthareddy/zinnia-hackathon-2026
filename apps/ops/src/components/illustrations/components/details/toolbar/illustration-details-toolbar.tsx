@@ -20,6 +20,7 @@ import { useIllustrationActions } from '@deps/components/illustrations/helpers/h
 import { useSelectedIllustration } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { useSubmit } from '@deps/components/illustrations/providers/SubmitProvider';
 import { TranslationFiles } from '@deps/config/translations';
+import { usePrintContext } from '@deps/contexts/printContext';
 import { getIllustrationCalculationStatus } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import {
     IllustrationsClientCase,
@@ -62,6 +63,7 @@ export default function IllustrationDetailsToolbar({
     const { onNewSubmit } = useSubmit();
     const handleSelectForApplication = useSelectIllustrationForApplication();
     const { sendIllustrationsClickedEvent } = useIllustrationAnalytics();
+    const { printSection } = usePrintContext();
 
     const { product } = selectedIllustration ?? {};
 
@@ -156,13 +158,6 @@ export default function IllustrationDetailsToolbar({
         handleSelectForApplication();
     };
 
-    // This function will be added to a button after design provided
-    const onPrintIllustrationSummary = () => {
-        document.body.classList.add('print-only');
-        window.print();
-        document.body.classList.remove('print-only');
-    };
-
     useEffect(() => {
         if (isError) {
             setIsPdfGenerationErrorVisible(true);
@@ -200,7 +195,7 @@ export default function IllustrationDetailsToolbar({
                     )}
                     <MenuContextualItem
                         content="Summary"
-                        onClick={onPrintIllustrationSummary}
+                        onClick={() => printSection(false)}
                         className={styles.menuContextualItem}
                     />
                 </MenuContextual>

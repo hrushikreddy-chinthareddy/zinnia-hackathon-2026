@@ -47,7 +47,7 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
                     tabIndex={0}
                     className={clsx(
                         styles.contextTrigger,
-                        'typography-content-body color-base-text-text-secondary'
+                        'typography-content-body color-base-text-secondary'
                     )}
                 >
                     <Icon className={styles.icon} type={IconType.USER} />

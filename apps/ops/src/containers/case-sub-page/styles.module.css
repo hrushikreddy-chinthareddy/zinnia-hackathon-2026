@@ -1,5 +1,5 @@
 .container {
-    background-color: var(--color-base-surface-surface-primary);
+    background-color: var(--color-base-surface-primary);
 }
 
 .breadcrumb:hover:after {
@@ -39,4 +39,17 @@
     flex-direction: column;
     gap: 8px;
     padding: 4px;
+}
+
+.caseActionFieldsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 28rem;
+}
+
+.caseActionNotificationRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }

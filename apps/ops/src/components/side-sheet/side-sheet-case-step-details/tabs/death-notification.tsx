@@ -236,7 +236,7 @@ const DeathNotificationSidesheet = ({
                     {t('deathNotification.notifierDetails.title')}
                 </label>
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t(
                             'deathNotification.notifierDetails.dateOfNotification'
                         )}
@@ -248,7 +248,7 @@ const DeathNotificationSidesheet = ({
                         {data.notifiers.dateOfNotification ||
                             DEFAULT_ERROR_STRING}
                     </Typography>
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('deathNotification.notifierDetails.notifierRole')}
                     </div>
                     <Typography
@@ -257,7 +257,7 @@ const DeathNotificationSidesheet = ({
                     >
                         {data.notifiers.notifierRole || DEFAULT_ERROR_STRING}
                     </Typography>
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('deathNotification.notifierDetails.notifierName')}
                     </div>
                     <Typography
@@ -269,7 +269,7 @@ const DeathNotificationSidesheet = ({
                                 DEFAULT_ERROR_STRING}
                         </PiiWrapper>
                     </Typography>
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t(
                             'deathNotification.notifierDetails.notifierPhoneNumber'
                         )}
@@ -286,7 +286,7 @@ const DeathNotificationSidesheet = ({
                                 : DEFAULT_ERROR_STRING}
                         </PiiWrapper>
                     </Typography>
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('deathNotification.notifierDetails.beneOnFileFlag')}
                     </div>
                     <Typography
@@ -299,7 +299,7 @@ const DeathNotificationSidesheet = ({
                     </Typography>
                     {data.notifiers.notifierRole === RoleType.Other && (
                         <>
-                            <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                            <div className="col-span-2 text-[--color-base-text-secondary]">
                                 {t(
                                     'deathNotification.notifierDetails.relationshipToInsured'
                                 )}
@@ -335,7 +335,7 @@ const DeathNotificationSidesheet = ({
                                     &nbsp;({toTitleCase(owner.party.partyRole)})
                                 </Typography>
                                 <div className="grid grid-cols-5 gap-2 text-md align-center">
-                                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                                    <div className="col-span-2 text-[--color-base-text-secondary]">
                                         {t(
                                             'deathNotification.ownerDetails.foreignDeathFlag'
                                         )}
@@ -348,7 +348,7 @@ const DeathNotificationSidesheet = ({
                                             ? t('deathNotification.labels.yes')
                                             : t('deathNotification.labels.no')}
                                     </Typography>
-                                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                                    <div className="col-span-2 text-[--color-base-text-secondary]">
                                         {t(
                                             'deathNotification.ownerDetails.dateOfDeath'
                                         )}
@@ -398,7 +398,7 @@ const DeathNotificationSidesheet = ({
                                 </Typography>
                                 {hasValidNotification ? (
                                     <div className="grid grid-cols-5 gap-2 text-md align-center">
-                                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                                        <div className="col-span-2 text-[--color-base-text-secondary]">
                                             {t(
                                                 `deathNotification.beneficiaryDetails.${bene.notificationMethod.toLowerCase()}`
                                             )}

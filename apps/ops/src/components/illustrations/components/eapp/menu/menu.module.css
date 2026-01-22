@@ -20,7 +20,7 @@
         var(--measure-dimension-padding-2xl) var(--measure-dimension-padding-lg);
     cursor: pointer;
     position: relative;
-    color: var(--color-base-text-text-primary);
+    color: var(--color-base-text-primary);
     font-weight: var(--font-weight-labels-field-label-font-weight);
     white-space: nowrap;
     &:hover {

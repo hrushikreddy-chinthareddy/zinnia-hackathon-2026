@@ -4,7 +4,7 @@
 
 .questionHeaderWrapper {
     margin-bottom: var(--measure-dimension-margin-xs);
-    color: var(--color-base-Text-text-primary, #212121);
+    color: var(--color-base-text-primary, #212121);
 
     /* DESKTOP/headline-4-d */
     font-family: var(--font-family-headlines-desktop-h4-font-family, Lato);
