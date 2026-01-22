@@ -59,7 +59,7 @@ function AddressTab({ addresses, planCode, policyNumber }: AddressTabProps) {
                 <EmptyCard text={t('noAddressesAvailable')} />
             )}
             {url && (
-                <div className="text-[--color-base-text-text-link] font-semibold text-md p-4">
+                <div className="text-[--color-base-text-link] font-semibold text-md p-4">
                     <NavElement
                         className={'whitespace-normal break-words'}
                         href={url}

@@ -1,6 +1,6 @@
 .container {
     position: relative;
-    background-color: var(--color-base-surface-surface-primary);
+    background-color: var(--color-base-surface-primary);
 }
 
 .statBlock {

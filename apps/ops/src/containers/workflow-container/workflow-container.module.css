@@ -1,5 +1,5 @@
 .contentContainer {
-    border: 2px solid var(--color-base-border-border-subtle);
+    border: 2px solid var(--color-base-border-subtle);
     border-radius: 8px;
 }
 
@@ -9,5 +9,5 @@
     flex-direction: column;
     flex-grow: 1;
     width: 100%;
-    background-color: var(--color-base-surface-surface-primary);
+    background-color: var(--color-base-surface-primary);
 }

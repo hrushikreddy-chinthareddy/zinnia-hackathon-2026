@@ -6,19 +6,19 @@ import {
     PREMIUM_RIDER_ELIGIBILITY_LIST,
     RIDER_ELIGIBILITY_LIST,
 } from './rules';
-
-import type {
-    ProductClassResult,
-    RulesModel,
-    RiderRule,
-    IneligibilityReason,
-    ClassEligibilityResult,
-    getEligibleClassProps,
-    RiderInputNormalized,
-    RiderEligibilityResult,
-    RiderAlternatives,
-    ProductClassResultRiders,
-    RiderCode,
+import {
+    type ProductClassResult,
+    type RulesModel,
+    type RiderRule,
+    type IneligibilityReason,
+    type ClassEligibilityResult,
+    type getEligibleClassProps,
+    type RiderInputNormalized,
+    type RiderEligibilityResult,
+    type RiderAlternatives,
+    type ProductClassResultRiders,
+    type RiderCode,
+    isRiderADR,
 } from './types';
 
 /**
@@ -369,18 +369,22 @@ export class QuickQuoteProducts {
         }
 
         if (faceMin && faceMax) {
-            isFaceInRange = this.isWithin(
-                riderFaceAmount,
-                faceMin,
-                Math.min(faceMax, productFaceAmount)
-            );
+            isFaceInRange = this.isWithin(riderFaceAmount, faceMin, faceMax);
             if (!isFaceInRange) {
                 nonEligibleReasons.push({
                     field: 'face',
-                    expected: [faceMin, Math.min(faceMax, productFaceAmount)],
+                    expected: [faceMin, faceMax],
                     actual: riderFaceAmount,
                 });
             }
+        }
+
+        if (isRiderADR(riderCode) && riderFaceAmount > productFaceAmount) {
+            nonEligibleReasons.push({
+                field: 'adrMaxFace',
+                expected: [0, productFaceAmount],
+                actual: riderFaceAmount,
+            });
         }
 
         return {

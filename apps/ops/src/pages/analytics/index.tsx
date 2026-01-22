@@ -1,11 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { TabContent, TabGroup } from '@zinnia/bloom/components';
 import Highcharts from 'highcharts';
-import { useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import FiltersHeader from '@deps/components/dashboard/header-components/filters-header/filters-header';
-import { AnalyticsTabs } from '@deps/components/dashboard/types';
+import { AnalyticsTabs, UsageTabs } from '@deps/components/dashboard/types';
 import { PageHead } from '@deps/components/page-title';
 import { TranslationFiles } from '@deps/config/translations';
 import { DashboardResponsiveLayout } from '@deps/containers/dashboard/dashboard-responsive-layout';
@@ -21,12 +22,18 @@ import {
 } from '@deps/queries/api/dashboard';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { listCarriersPage } from '@deps/queries/api/server/fga/listCarriers';
+import { AnalyticsRouteValues } from '@deps/types/constants';
 import { FgaRelation } from '@deps/types/fga';
 import {
     SegmentPageName,
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
 import { FgaRoles } from '@deps/utils/auth';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    FeatureFlags,
+    optimizelyService,
+} from '@deps/utils/optimizely/optimizely';
 import {
     logWarn,
     parseErrorInformation,
@@ -35,11 +42,13 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import Cases from './content/cases';
+import Usage from './content/usage';
 
 interface AnalyticsPageProps extends SegmentTrackedPageProps {
     authorizedCarriers: string[];
     brokerDealersSSR: DashboardResponseData[];
     path: string;
+    usageTabEnabled: boolean;
 }
 
 const AnalyticsPage = ({
@@ -47,15 +56,15 @@ const AnalyticsPage = ({
     brokerDealersSSR,
     user,
     path,
+    usageTabEnabled,
 }: AnalyticsPageProps) => {
     useSegmentPageTracker(user, SegmentPageName.Dashboard);
-    const params = useSearchParams();
-    const tabParam = params.get('tab') ?? '';
-    const slug = path.split('/').at(-1);
     const carrierHeaderRef = useRef<HTMLDivElement>(null);
-    const isTabValid = Object.values(AnalyticsTabs).some(
-        (value) => value === tabParam
+    const [slug, setSlug] = useState(path.split('?')[0].split('/').at(-1));
+    const [tab, setTab] = useState(
+        path.split('?')[1]?.split('=')?.at(-1) ?? undefined
     );
+    const router = useRouter();
 
     const {
         isIntersecting: carrierHeaderIsIntersecting,
@@ -74,6 +83,22 @@ const AnalyticsPage = ({
         });
     }, []);
 
+    useEffect(() => {
+        const url = router.asPath.split('?');
+        const tab = url?.[1]?.split('=')?.at(-1);
+        const slug = url?.[0]?.split('/')?.at(-1);
+
+        if (!tab) {
+            if (slug === AnalyticsRouteValues.cases) {
+                setTab(AnalyticsTabs.ACTIVE_APPLICATIONS);
+            }
+            if (slug === AnalyticsRouteValues.usage) {
+                setTab(UsageTabs.LOGINS);
+            }
+        }
+        setSlug(slug);
+    }, [router.asPath]);
+
     return (
         <>
             <PageHead titleKey="analytics" />
@@ -85,11 +110,16 @@ const AnalyticsPage = ({
                     brokerDealersSSR={brokerDealersSSR}
                     ref={carrierHeaderRef}
                     path={slug}
+                    usageTabEnabled={usageTabEnabled}
                 />
-                <Cases
-                    tab={isTabValid ? tabParam : undefined}
-                    ref={tabContentRef}
-                />
+                <TabGroup defaultValue={slug} value={slug} ref={tabContentRef}>
+                    <TabContent value={AnalyticsRouteValues.cases}>
+                        <Cases tab={tab} />
+                    </TabContent>
+                    <TabContent value={AnalyticsRouteValues.usage}>
+                        <Usage tab={tab} />
+                    </TabContent>
+                </TabGroup>
             </DashboardResponsiveLayout>
         </>
     );
@@ -115,6 +145,20 @@ export const getServerSideProps = withPageAuthAndLogging(
                 return serverSidePropsLogout();
             }
 
+            if (
+                !(
+                    resolvedUrl.includes(AnalyticsRouteValues.usage) ||
+                    resolvedUrl.includes(AnalyticsRouteValues.cases)
+                )
+            ) {
+                return {
+                    redirect: {
+                        destination: `/analytics/${AnalyticsRouteValues.cases}`,
+                        permanent: false,
+                    },
+                };
+            }
+
             const doesUserHavePagePermission = await checkTuplePage(
                 context,
                 FgaRelation.UiAccess,
@@ -122,6 +166,34 @@ export const getServerSideProps = withPageAuthAndLogging(
                 loggingContext
             );
             if (!doesUserHavePagePermission) {
+                return {
+                    redirect: {
+                        destination: '/403',
+                        permanent: false,
+                    },
+                };
+            }
+
+            const featureFlagDecisions: FeatureFlags =
+                await optimizelyService.getFeatureFlagDecisions(
+                    user.sub,
+                    loggingContext
+                );
+            const doesUserHaveUsagePermission = await checkTuplePage(
+                context,
+                FgaRelation.UiAccess,
+                FgaRoles.USAGE_DASHBOARD_ENTITY,
+                loggingContext
+            );
+
+            const usageTabEnabled =
+                doesUserHaveUsagePermission &&
+                featureFlagDecisions[FEATURE_FLAGS.USAGE_STATS_DASHBOARD];
+
+            if (
+                !usageTabEnabled &&
+                resolvedUrl.includes(AnalyticsRouteValues.usage)
+            ) {
                 return {
                     redirect: {
                         destination: '/403',
@@ -160,6 +232,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     brokerDealersSSR: filteredBrokerDealers,
                     path: resolvedUrl,
                     user,
+                    usageTabEnabled,
                     ...translations,
                 },
             };

@@ -96,6 +96,40 @@ export const createCase = async (
     }
 };
 
+export const getProcessReferenceData = async (
+    key: string,
+    queryString: string = ''
+): Promise<ProcessReferenceData[] | null> => {
+    try {
+        let refUrl = `${baseAppUrl}/api/case/v1/refdata/${key}`;
+        if (queryString) {
+            refUrl += `?${queryString}`;
+        }
+        const { data } = await client.get<
+            null,
+            AxiosResponse<
+                | ProcessReferenceData[]
+                | { referenceData: ProcessReferenceData[] }
+            >
+        >(refUrl);
+
+        const referenceData =
+            (data as { referenceData?: ProcessReferenceData[] })
+                .referenceData ?? (data as ProcessReferenceData[]);
+
+        return referenceData;
+    } catch (error: any) {
+        browserLogError('cases::Failed to get reference data', {
+            ...parseErrorInformation(error),
+            url: `${baseCasesUrl}/refdata/${key}`,
+            key,
+            queryString,
+            function: 'cases.getProcessReferenceData',
+        });
+        return null;
+    }
+};
+
 export const getCases = async (
     query: CaseSearchBody,
     featureFlags: FeatureFlags
@@ -519,13 +553,17 @@ export const getCaseDocuments = async (id: string): Promise<CaseDocument[]> => {
 
 export const escalateCase = async (
     caseId: string,
-    escalate: boolean
+    escalate: boolean,
+    reason: string,
+    source: string
 ): Promise<AxiosResponse | null> => {
     try {
         const url = `${baseCasesUrl2}/${caseId}/escalate`;
 
         const response = await client.patch(url, {
             escalated: escalate,
+            reason,
+            source,
         });
         browserLogInfo('cases::Successfully created a case', {
             url: baseCasesUrl,

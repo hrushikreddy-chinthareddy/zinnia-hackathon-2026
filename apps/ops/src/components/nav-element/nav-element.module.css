@@ -1,6 +1,6 @@
 .navLink {
     &.text {
-        color: var(--color-base-text-text-primary);
+        color: var(--color-base-text-primary);
     }
     &.disabled {
         color: var(--color-states-inactive-text-inactive-text-link);

@@ -44,7 +44,7 @@
     width: 24px;
     margin-right: 8px;
     background: #fff;
-    border: 1px solid var(--color-base-border-border-subtle);
+    border: 1px solid var(--color-base-border-subtle);
     border-radius: 4px;
 }
 
@@ -67,7 +67,7 @@
 
 /* misc */
 .secondaryText {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .ml2 {

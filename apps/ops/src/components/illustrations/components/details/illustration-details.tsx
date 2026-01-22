@@ -2,6 +2,7 @@ import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 
+import { PrintProvider } from '@deps/contexts/printContext';
 import { getIllustrationQueryOptions } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { getNewBusinessEApp } from '@deps/queries/tanstack/newBusinessQueries/newBusinessQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
@@ -84,26 +85,28 @@ export default function IllustrationDetails({
             versionedAnswers={versionedAnswers}
         >
             <IllustrationDetailProvider value={fullIllustration ?? null}>
-                <Skeleton loading={isLoading}>
-                    <IllustrationDetailsHeader
-                        title={illustration.title}
-                        carrier={getProductCarrierName(product)}
-                        eAppId={eAppId}
-                        eAppLink={getEAppLink()}
-                        hasIllustrationSelected={hasIllustrationSelected()}
-                    />
-                </Skeleton>
-                <Skeleton loading={isLoading}>
-                    <IllustrationDetailsToolbar
-                        status={illustration.status}
-                        isLoading={isLoading}
-                        clientCase={clientCase}
-                        illustrationId={illustration.id}
-                        eAppId={eAppId}
-                        planCode={product.planCode}
-                    />
-                </Skeleton>
-                <IllustrationDetailsContent />
+                <PrintProvider>
+                    <Skeleton loading={isLoading}>
+                        <IllustrationDetailsHeader
+                            title={illustration.title}
+                            carrier={getProductCarrierName(product)}
+                            eAppId={eAppId}
+                            eAppLink={getEAppLink()}
+                            hasIllustrationSelected={hasIllustrationSelected()}
+                        />
+                    </Skeleton>
+                    <Skeleton loading={isLoading}>
+                        <IllustrationDetailsToolbar
+                            status={illustration.status}
+                            isLoading={isLoading}
+                            clientCase={clientCase}
+                            illustrationId={illustration.id}
+                            eAppId={eAppId}
+                            planCode={product.planCode}
+                        />
+                    </Skeleton>
+                    <IllustrationDetailsContent />
+                </PrintProvider>
             </IllustrationDetailProvider>
         </EAppProviders>
     );

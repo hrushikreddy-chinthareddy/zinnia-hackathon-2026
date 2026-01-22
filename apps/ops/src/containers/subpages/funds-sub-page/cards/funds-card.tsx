@@ -115,7 +115,7 @@ const FundsCard = ({
                 >
                     <Icon
                         type={IconType.CIRCLE_INFO}
-                        color="var(--color-base-icon-icon-action-text-link)"
+                        color="var(--color-base-icon-action-text-link)"
                         height={16}
                         width={16}
                     />
@@ -132,7 +132,7 @@ const FundsCard = ({
                             <button
                                 className={`flex items-center gap-1 ${
                                     isEligibleToEdit
-                                        ? 'text-[var(--color-base-text-text-link)]'
+                                        ? 'text-[var(--color-base-text-link)]'
                                         : 'text-[var(--color-states-inactive-text-inactive-text)]'
                                 }`}
                                 onClick={

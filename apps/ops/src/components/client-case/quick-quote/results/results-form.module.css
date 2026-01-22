@@ -22,15 +22,22 @@
     .faceAmountInput {
         width: 165px;
     }
+
     .updateQuoteButton {
         align-self: self-end;
 
-        width: 124px;
+        width: 132px;
         height: 36px;
     }
 
     .errorMsg {
         color: var(--color-status-text-status-error-text, #db004f);
         font: var(--typography-content-caption-selected);
+    }
+
+    .printPDFButton {
+        align-self: self-end;
+        margin-left: auto;
+        margin-bottom: 8px;
     }
 }

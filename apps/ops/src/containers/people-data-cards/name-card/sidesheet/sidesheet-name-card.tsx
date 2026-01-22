@@ -261,6 +261,7 @@ export const SidesheetNameCard = ({
                     displayName: DISPLAY_NAME,
                     source: SOURCE,
                     sourceFileName: file.name,
+                    documentTypeDescription: file.name,
                     documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                     fileType: getFileSubtype(blob),
                     docClassification:

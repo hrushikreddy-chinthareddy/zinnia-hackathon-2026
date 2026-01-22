@@ -14,7 +14,7 @@
     --color-secondary-color-primary-lightest: var(
         --color-primary-color-primary-lightest
     );
-    --bg-primary-lightest: var(--color-base-surface-surface-secondary);
+    --bg-primary-lightest: var(--color-base-surface-secondary);
     --bg-color-gradient-linear: linear-gradient(
         0.26turn,
         #ffc600 -12.77%,
@@ -30,14 +30,14 @@
 
 @layer base {
     h1 {
-        color: var(--color-base-text-text-carrier);
+        color: var(--color-base-text-carrier);
         font: var(--typography-desktop-headline-1-d);
         @media screen and (max-width: 768px) {
             font: var(--typography-mobile-headline-1-m);
         }
     }
     h2 {
-        color: var(--color-base-text-text-carrier);
+        color: var(--color-base-text-carrier);
         font: var(--typography-desktop-headline-2-d);
         @media screen and (max-width: 768px) {
             font: var(--typography-mobile-headline-2-m);
@@ -236,7 +236,7 @@ body {
         }
     }
     .tooltip-primary {
-        color: var(--color-base-icon-icon-action-text-link);
+        color: var(--color-base-icon-action-text-link);
     }
 
     .subtitle {
@@ -251,7 +251,7 @@ body {
     .text-links-sm {
         position: relative;
         font: var(--typography-nav-links);
-        color: var(--color-base-text-text-link);
+        color: var(--color-base-text-link);
         text-decoration: none;
 
         &:hover {
@@ -322,7 +322,7 @@ body {
         &[aria-checked='true'] {
             background-color: var(--color-chip-surface-chip-selected-fill);
             border-color: var(--color-chip-border-chip-selected-border);
-            color: var(--color-base-text-text-light);
+            color: var(--color-base-text-light);
         }
     }
     .progress-bar {

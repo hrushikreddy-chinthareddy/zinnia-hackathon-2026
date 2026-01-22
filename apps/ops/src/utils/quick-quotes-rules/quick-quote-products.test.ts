@@ -139,7 +139,7 @@ describe('QuickQuoteProducts', () => {
         // todo determine age reason for rider
     });
 
-    it('marks Accidental Death rider rejected reason as "face" when rider face amount is greater than product one', () => {
+    it('marks Accidental Death rider rejected reason as "adrMaxFace" when rider face amount is greater than product one', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 65,
@@ -161,7 +161,7 @@ describe('QuickQuoteProducts', () => {
         expect(tl10).toBeDefined();
         const faceNotAvailabilityReason = determineNotAvailabilityRiderReason(
             tl10!.riders.Rider_ADR!,
-            'face'
+            'adrMaxFace'
         );
         const isRiderEligible = tl10?.riders.Rider_ADR.eligible;
         expect(isRiderEligible).toBe(false);

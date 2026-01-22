@@ -11,6 +11,16 @@ jest.mock('@deps/utils/optimizely/flags', () => ({
 }));
 
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
+jest.mock('next/navigation', () => ({
+    useSearchParams: () => ({
+        get: (key: string) => {
+            if (key === 'correlationId') {
+                return 'test-correlation-id';
+            }
+            return null;
+        },
+    }),
+}));
 
 import ManagePeople from './manage-people';
 // Mocks

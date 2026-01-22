@@ -296,7 +296,7 @@ export function ChangeAddressTemplate({
                             onClick={
                                 isTaskCompleted ? () => {} : handleCardClick
                             }
-                            className={`flex justify-center items-center text-[var(--color-base-text-text-link)] ${
+                            className={`flex justify-center items-center text-[var(--color-base-text-link)] ${
                                 isTaskCompleted
                                     ? 'cursor-not-allowed opacity-50'
                                     : 'cursor-pointer'

@@ -403,7 +403,7 @@ export function IllustrationScheduler(props: Props) {
                                             >
                                                 <Icon
                                                     type={IconType.CIRCLE_INFO}
-                                                    color="var(--color-base-icon-icon-action-text-link)"
+                                                    color="var(--color-base-icon-action-text-link)"
                                                     width={16}
                                                     height={16}
                                                 />

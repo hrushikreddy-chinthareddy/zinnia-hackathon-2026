@@ -31,6 +31,7 @@ interface FiltersHeaderProps {
     carrierHeaderIsIntersecting: boolean;
     carrierHeaderEntry?: IntersectionObserverEntry;
     path?: string;
+    usageTabEnabled: boolean;
 }
 
 const getUniqueCarrierFilterItems = (
@@ -61,6 +62,7 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
             carrierHeaderIsIntersecting,
             carrierHeaderEntry,
             path,
+            usageTabEnabled,
         },
         ref
     ) => {
@@ -289,7 +291,10 @@ const FiltersHeader = forwardRef<HTMLDivElement, FiltersHeaderProps>(
                     </div>
                 </div>
                 <div className={styles.tabsNav}>
-                    <DashboardTabNav path={path} />
+                    <DashboardTabNav
+                        path={path}
+                        usageTabEnabled={usageTabEnabled}
+                    />
                 </div>
             </div>
         );

@@ -54,7 +54,7 @@ export default function IllustrationDetailsContentRiders() {
                 ))}
             </dl>
             {!!entries.length && !isIUL && (
-                <div className="col-span-3 col-start-4 text-end [font:var(--typography-labels-label-sm-alt)] [color:var(--color-base-text-text-secondary)]">
+                <div className="col-span-3 col-start-4 text-end [font:var(--typography-labels-label-sm-alt)] [color:var(--color-base-text-secondary)]">
                     {t(
                         'clientCase.illustrationDetails.riders.includedInPremiumsFootNote'
                     )}

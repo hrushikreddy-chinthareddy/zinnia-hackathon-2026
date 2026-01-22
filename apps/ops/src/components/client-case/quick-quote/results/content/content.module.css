@@ -5,7 +5,20 @@
     row-gap: var(--measure-dimension-gap-lg, 16px);
 
     --results-table-border: var(--measure-dimension-stroke-xs, 1px) solid
-        var(--color-base-border-border-subtle, #ccc);
+        var(--color-base-border-subtle, #ccc);
+}
+
+.contentMainTableConfig {
+    &Display {
+        grid-template-columns: minmax(max-content, 420px) repeat(
+                var(--column-number),
+                minmax(auto, 360px)
+            );
+    }
+
+    &Print {
+        grid-template-columns: 185px repeat(2, 220px);
+    }
 }
 
 .contentSubtitle {
@@ -67,14 +80,14 @@
         var(--measure-dimension-padding-3xl, 24px);
     column-gap: var(--measure-dimension-gap-sm, 4px);
 
-    background-color: var(--color-base-surface-surface-tertiary);
+    background-color: var(--color-base-surface-tertiary);
 }
 
 .contentTableRowHeader {
     padding: var(--measure-dimension-padding-lg, 8px)
         var(--measure-dimension-padding-3xl, 24px);
 
-    background-color: var(--color-base-surface-surface-secondary);
+    background-color: var(--color-base-surface-secondary);
 }
 
 .contentTableRowHeader,
@@ -105,7 +118,7 @@
 
 .notAvailableRiderText,
 .notAvailableText {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .productHeaderTitle,
@@ -120,7 +133,7 @@
 .productHeaderTitle {
     align-self: stretch;
 
-    background-color: var(--color-base-surface-surface-secondary);
+    background-color: var(--color-base-surface-secondary);
 }
 
 .productInfoCell {
@@ -131,11 +144,11 @@
 }
 
 .productInfoCellCarrier {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .premiumFreeRidersHeading {
-    background-color: var(--color-base-surface-surface-secondary);
+    background-color: var(--color-base-surface-secondary);
 }
 
 .riderRowHeader {
