@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import { TFunction } from 'next-i18next';
 
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
 
@@ -67,13 +68,14 @@ export type StatusDisplayText = 'Open' | 'Closed' | 'Open-Closed' | 'All';
  * @param selectedCarriers - Object of selected carriers from store
  * @returns Carrier name or "All Carriers"
  */
-export const getCarrierName = (selectedCarriers: {
-    [key: string]: string;
-}): string => {
-    const carrierKeys = Object.keys(selectedCarriers);
-    if (carrierKeys.length === 0) return 'All Carriers';
-    if (carrierKeys.length === 1) return selectedCarriers[carrierKeys[0]];
-    return 'All Carriers';
+export const getCarrierName = (
+    selectedCarriers: string[],
+    t: TFunction
+): string => {
+    const carrierKeys = selectedCarriers;
+    if (carrierKeys.length === 0) return t('allFields.allCarriers');
+    if (carrierKeys.length === 1) return carrierKeys[0];
+    return t('allFields.allCarriers');
 };
 
 /**
@@ -82,7 +84,8 @@ export const getCarrierName = (selectedCarriers: {
  * @returns Display text: "Open", "Closed", "Open-Closed", or "All"
  */
 export const getStatusDisplayText = (
-    selectedStatus: TaskStatus[]
+    selectedStatus: TaskStatus[],
+    t: TFunction
 ): StatusDisplayText => {
     const hasOpen =
         selectedStatus.includes(TaskStatus.OPEN) ||
@@ -92,10 +95,10 @@ export const getStatusDisplayText = (
         selectedStatus.includes(TaskStatus.COMPLETED) ||
         selectedStatus.includes(TaskStatus.COMPLETE);
 
-    if (hasOpen && hasClosed) return 'Open-Closed';
-    if (hasOpen) return 'Open';
-    if (hasClosed) return 'Closed';
-    return 'All';
+    if (hasOpen && hasClosed) return t('allFields.openClosed');
+    if (hasOpen) return t('allFields.open');
+    if (hasClosed) return t('allFields.closed');
+    return t('allFields.all');
 };
 
 /**

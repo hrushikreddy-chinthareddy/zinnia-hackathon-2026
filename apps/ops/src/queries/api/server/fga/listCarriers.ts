@@ -106,7 +106,7 @@ const getCarrierListSSR = async (
             logCtx
         );
 
-        const reponse: ApiResponse<string[]> = {
+        const response: ApiResponse<string[]> = {
             data: listCarrierCheck?.data?.carriers || [],
             error: null,
         };
@@ -125,14 +125,14 @@ const getCarrierListSSR = async (
                     },
                 }
             );
-            reponse.error = {
+            response.error = {
                 status: listCarrierCheck.status,
                 message: listCarrierCheck.statusText,
                 name: 'Error getting carrier list',
             };
         }
 
-        return reponse;
+        return response;
     } catch (error: any) {
         logWarn(
             'getCarrierListServerSSR::An error occurred while getting the carrier list',

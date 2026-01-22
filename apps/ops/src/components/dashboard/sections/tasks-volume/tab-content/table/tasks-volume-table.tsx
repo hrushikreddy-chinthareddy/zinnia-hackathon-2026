@@ -43,6 +43,7 @@ enum SortByOptions {
 export const TasksVolumeTable = () => {
     const [offset, setOffset] = useState(0);
     const limit = 6; // Show 6 case types per page
+    const { t } = useTranslation();
 
     const {
         taskVolumeData,
@@ -56,12 +57,12 @@ export const TasksVolumeTable = () => {
     const { selectedCarriers } = useDashboardStore((state) => state);
 
     const carrierName = useMemo(
-        () => getCarrierName(selectedCarriers),
-        [selectedCarriers]
+        () => getCarrierName(selectedCarriers, t),
+        [selectedCarriers, t]
     );
     const statusText = useMemo(
-        () => getStatusDisplayText(selectedStatus),
-        [selectedStatus]
+        () => getStatusDisplayText(selectedStatus, t),
+        [selectedStatus, t]
     );
 
     const flattenedData = useMemo(
@@ -112,7 +113,6 @@ export const TasksVolumeTable = () => {
     const handleExportCSV = useCallback(() => {
         downloadCSV(flattenedData, csvFileName, CSV_COLUMNS);
     }, [flattenedData, csvFileName]);
-    const { t } = useTranslation();
 
     return (
         <CardContainer>
