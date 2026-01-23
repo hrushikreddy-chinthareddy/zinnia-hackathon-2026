@@ -6,7 +6,6 @@ import Button, {
     ButtonSize,
     ButtonVariant,
 } from '@deps/components/button/button';
-import Checkbox from '@deps/components/checkbox/checkbox';
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
 import Typography, {
@@ -55,7 +54,6 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     >([]);
     const [reasonError, setReasonError] = useState<string | undefined>();
     const [sourceError, setSourceError] = useState<string | undefined>();
-    const [notify, setNotify] = useState(false);
     const sideSheet = useSideSheetContext();
 
     const validate = () => {
