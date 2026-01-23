@@ -176,17 +176,6 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                         name="case-prioritization-source"
                         message={sourceError}
                     />
-                    <div className={styles.caseActionNotificationRow}>
-                        <Checkbox
-                            checked={notify}
-                            onChange={(isChecked: boolean) =>
-                                setNotify(isChecked)
-                            }
-                        />
-                        <Typography variant={TypographyVariant.Body}>
-                            {t('notificationLabel') as string}
-                        </Typography>
-                    </div>
                 </div>
 
                 <div className="flex gap-2 items-end width-full justify-end pr-5">
