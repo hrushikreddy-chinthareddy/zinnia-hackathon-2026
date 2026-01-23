@@ -698,7 +698,7 @@ export const mockPolicy = {
         },
         modifiedEndowmentContract: {
             amountExcessToModifiedEndowmentContract: 0,
-            modifiedEndowmentContractStatus: Number(false), // TODO: API spec is wrong
+            modifiedEndowmentContractStatus: false,
             modifiedEndowmentContractStatusDate: '',
             modifiedEndowmentContractTestDate: '',
             sevenPayLimit: 0,
@@ -717,7 +717,7 @@ export const mockPolicy = {
         {
             reducedPaidUpFaceAmount: undefined,
             featureType: FeatureType.CUSTOMFEATURE,
-            featureIndicator: Number(false), // TODO: API spec is wrong
+            featureIndicator: false,
             featureOption: undefined,
             startDate: undefined,
             endDate: '2024-08-02',
@@ -742,7 +742,7 @@ export const mockPolicy = {
         {
             reducedPaidUpFaceAmount: undefined,
             featureType: FeatureType.CUSTOMFEATURE,
-            featureIndicator: Number(true), // TODO: API spec is wrong
+            featureIndicator: true,
             featureOption: undefined,
             startDate: undefined,
             endDate: undefined,

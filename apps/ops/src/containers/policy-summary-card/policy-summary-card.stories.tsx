@@ -62,7 +62,7 @@ const mockPendingLapsePolicy: Policy = {
             featureType: FeatureType.LAPSEASSESSMENT,
             startDate: '2024-03-07',
             endDate: '2024-05-07',
-            status: 1,
+            status: true,
             totalRequiredAmount: 2554.56,
             totalMinimumRequiredAmount: 2554.56,
         },

@@ -402,7 +402,7 @@ export const mockPolicy: Policy = {
             // amount: null,
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 18,
                 },
             ],
@@ -440,7 +440,7 @@ export const mockPolicy: Policy = {
             // amount: null,
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 18,
                 },
             ],
@@ -478,7 +478,7 @@ export const mockPolicy: Policy = {
             // amount: null,
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 18,
                 },
             ],
@@ -516,7 +516,7 @@ export const mockPolicy: Policy = {
             // amount: null,
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 18,
                 },
             ],
@@ -590,7 +590,7 @@ export const mockPolicy: Policy = {
             featureType: FeatureType.LAPSEASSESSMENT,
             // startDate: null,
             // endDate: null,
-            status: 0, // FIXME: API spec is wrong
+            status: false,
             // period: null,
             // effectiveDate: null,
             totalRequiredAmount: 0,
@@ -794,7 +794,7 @@ export const mockPolicy: Policy = {
             modifiedEndowmentContractTestDate: '2024-02-11',
             amountExcessToModifiedEndowmentContract: 0,
             // modifiedEndowmentContractStatusDate: null,
-            modifiedEndowmentContractStatus: 0, // FIXME: API spec changed from boolean to number
+            modifiedEndowmentContractStatus: false,
             sevenPayTestBasis: 1040,
             sevenPayPremium: 25074.702628,
             sevenPayStartDate: '2022-07-11',

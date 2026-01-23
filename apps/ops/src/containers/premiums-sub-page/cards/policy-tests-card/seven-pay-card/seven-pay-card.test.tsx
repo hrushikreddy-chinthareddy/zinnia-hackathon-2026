@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react';
 
 import SevenPayCard from './seven-pay-card';
 
-// FIXME: Mock data may not fully match TestValues type after API regeneration
 const testValues = {
     modifiedEndowmentContract: {
         amountExcessToGuideline: 0,
@@ -11,7 +10,7 @@ const testValues = {
         guidelineLevelPremium: 5000,
         guidelinePremiumTestDate: '2023-12-23',
         guidelineSinglePremium: 70000,
-        modifiedEndowmentContractStatus: 0,
+        modifiedEndowmentContractStatus: false,
         modifiedEndowmentContractStatusDate: undefined,
         modifiedEndowmentContractTestDate: '2023-12-23',
         sevenPayLimit: 30000,
@@ -53,7 +52,7 @@ describe('SevenPayCard', () => {
             ...testValues,
             modifiedEndowmentContract: {
                 ...testValues.modifiedEndowmentContract,
-                modifiedEndowmentContractStatus: 1,
+                modifiedEndowmentContractStatus: true,
                 sevenPayTestBasis: 40000,
             },
         };

@@ -216,7 +216,7 @@ const getRiderInsuredContent = (
     { riderName, riderParticipant }: Rider
 ): React.ReactNode => {
     const insuredIds = riderParticipant?.map(
-        (participants) => participants.insuredID
+        (participants) => participants.insuredId
     );
 
     if (!insuredIds?.length) {

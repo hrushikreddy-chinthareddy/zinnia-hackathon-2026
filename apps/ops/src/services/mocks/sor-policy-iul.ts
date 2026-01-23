@@ -118,12 +118,12 @@ export const mockPolicy: Policy = {
             amount: 5000,
             riderParticipant: [
                 {
-                    insuredID: 'Party_CI_Coverage_Ins_1',
+                    insuredId: 'Party_CI_Coverage_Ins_1',
                     insuredAgeAtIssue: 4,
                 },
             ],
             charge: {},
-            qualifiedAdditionalBenefit: 1, // FIXME: API spec is wrong
+            qualifiedAdditionalBenefit: true,
         },
         {
             type: RiderType.RIDER,
@@ -136,12 +136,12 @@ export const mockPolicy: Policy = {
             coverageId: 'Rider_OPR',
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 50,
                 },
             ],
             charge: {},
-            qualifiedAdditionalBenefit: 0,
+            qualifiedAdditionalBenefit: false,
         },
         {
             type: RiderType.RIDER,
@@ -154,14 +154,14 @@ export const mockPolicy: Policy = {
             coverageId: 'Rider_ABRCHR',
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 50,
                 },
             ],
             charge: {},
             maximumChronicIllnessBenefitPercentage: 50,
             maximumPeriodicPaymentPeriod: 120,
-            qualifiedAdditionalBenefit: 0,
+            qualifiedAdditionalBenefit: false,
         },
         {
             type: RiderType.RIDER,
@@ -174,7 +174,7 @@ export const mockPolicy: Policy = {
             coverageId: 'Rider_ABRCRI',
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 50,
                 },
             ],
@@ -184,7 +184,7 @@ export const mockPolicy: Policy = {
             tierOneMaximumCriticalIllnessBenefitAmount: 5000,
             tierTwoMaximumCriticalIllnessBenefitPercentage: 50,
             tierTwoMaximumCriticalIllnessBenefitAmount: 500000,
-            qualifiedAdditionalBenefit: 0,
+            qualifiedAdditionalBenefit: false,
         },
         {
             type: RiderType.RIDER,
@@ -197,12 +197,12 @@ export const mockPolicy: Policy = {
             coverageId: 'Rider_ABRTRM',
             riderParticipant: [
                 {
-                    insuredID: 'Party_PI_1',
+                    insuredId: 'Party_PI_1',
                     insuredAgeAtIssue: 50,
                 },
             ],
             charge: {},
-            qualifiedAdditionalBenefit: 0,
+            qualifiedAdditionalBenefit: false,
         },
     ],
     systematicPrograms: [
@@ -249,7 +249,7 @@ export const mockPolicy: Policy = {
         {
             featureType: FeatureType.REINSTATEMENT,
             period: 0,
-            underwritingDecision: 1, // FIXME: API spec is wrong
+            underwritingDecision: true,
         },
     ],
     allocation: {
@@ -455,7 +455,7 @@ export const mockPolicy: Policy = {
         totalYearToDatePremiumAmount: 333,
         modifiedEndowmentContractAuthorization:
             AccountValues.modifiedEndowmentContractAuthorization.FALSE,
-        projectedLapseIndicator: 0, // FIXME: API spec is wrong
+        projectedLapseIndicator: false,
         policyGainAmount: 0,
         uncollectedCharges: 0,
         annualTargetPremium: 272.76,
@@ -497,7 +497,7 @@ export const mockPolicy: Policy = {
         modifiedEndowmentContract: {
             modifiedEndowmentContractTestDate: '2025-06-01',
             amountExcessToModifiedEndowmentContract: 0,
-            modifiedEndowmentContractStatus: 0, // FIXME: API spec is wrong
+            modifiedEndowmentContractStatus: false,
             sevenPayTestBasis: 324.12,
             sevenPayPremium: 3792.44,
             sevenPayStartDate: '2024-06-01',
@@ -681,14 +681,14 @@ export const mockPolicy: Policy = {
                 },
             ],
             insured: {
-                existingLifeInsurance: 0, // FIXME: API spec is wrong
-                replaceLifeInsurance: 0, // FIXME: API spec is wrong
-                pendingOrPlanToBuyAdditional: 0, // FIXME: API spec is wrong
-                isDependent: 0, // FIXME: API spec is wrong
-                employed: 0, // FIXME: API spec is wrong
+                existingLifeInsurance: false,
+                replaceLifeInsurance: false,
+                pendingOrPlanToBuyAdditional: false,
+                isDependent: false,
+                employed: false,
                 deathDetails: {},
                 impairmentDetails: {
-                    disabled: 0, // FIXME: API spec is wrong
+                    disabled: false,
                 },
             },
             bankDetails: [
@@ -816,12 +816,12 @@ export const mockPolicy: Policy = {
                 },
             ],
             insured: {
-                existingLifeInsurance: 0, // FIXME: API spec is wrong
+                existingLifeInsurance: false,
                 existingLifeInsuranceAmount: undefined,
-                replaceLifeInsurance: 0, // FIXME: API spec is wrong
-                pendingOrPlanToBuyAdditional: 0, // FIXME: API spec is wrong
-                isDependent: 0, // FIXME: API spec is wrong
-                employed: 0, // FIXME: API spec is wrong
+                replaceLifeInsurance: false,
+                pendingOrPlanToBuyAdditional: false,
+                isDependent: false,
+                employed: false,
                 employmentStatus: undefined,
                 occupation: undefined,
                 householdIncome: undefined,
@@ -830,7 +830,7 @@ export const mockPolicy: Policy = {
                     causeOfDeath: undefined,
                 },
                 impairmentDetails: {
-                    disabled: 0, // FIXME: API spec is wrong
+                    disabled: false,
                     disabilityStartDate: undefined,
                 },
             },

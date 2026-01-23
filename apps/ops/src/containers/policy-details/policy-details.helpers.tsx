@@ -277,7 +277,7 @@ export const getApplicationDetailsData = (
                 }
                 return acc;
             },
-            { featureIndicator: 0 }
+            { featureIndicator: false }
         );
 
     // Group discount should only be shown for policies where the feature exists (DEPU-5046)

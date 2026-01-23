@@ -27,7 +27,7 @@ const baseProps = {
         emailAddress: 'test@example.com',
         emailType: EmailType.PERSONAL,
         remove: false,
-        isPreferred: 0,
+        isPreferred: false,
     },
     handleEmailChange: jest.fn(),
     index: 0,

@@ -68,7 +68,7 @@ const baseProps = {
         zipCode: '12345',
         zipCodeExtension: '6789',
         remove: false,
-        isPreferred: 0,
+        isPreferred: false,
     },
     handleAddressChange: jest.fn(),
     index: 0,
