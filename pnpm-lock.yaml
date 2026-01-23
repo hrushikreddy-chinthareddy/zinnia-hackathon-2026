@@ -28,7 +28,7 @@ importers:
         version: 0.4.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@auth0/nextjs-auth0':
         specifier: ^2.2.0
-        version: 2.7.0(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
+        version: 2.7.0(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))
       '@datadog/browser-logs':
         specifier: ^4.46.0
         version: 4.50.1(@datadog/browser-rum@4.50.1)
@@ -43,7 +43,7 @@ importers:
         version: 1.7.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@next/third-parties':
         specifier: ^14.2.3
-        version: 14.2.33(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 14.2.33(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@optimizely/optimizely-sdk':
         specifier: ^5.3.4
         version: 5.4.0(@babel/runtime@7.28.6)
@@ -228,11 +228,11 @@ importers:
         specifier: ^3.0.1
         version: 3.0.1
       next:
-        specifier: ^14.2.34
-        version: 14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+        specifier: ^14.2.35
+        version: 14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       next-i18next:
         specifier: ^13.1.5
-        version: 13.3.0(@types/react@18.3.26)(i18next@22.5.1)(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-i18next@12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 13.3.0(@types/react@18.3.26)(i18next@22.5.1)(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-i18next@12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       nookies:
         specifier: ^2.5.2
         version: 2.5.2
@@ -332,7 +332,7 @@ importers:
         version: 0.2.3
       '@storybook/nextjs':
         specifier: ^7.6.4
-        version: 7.6.20(@swc/core@1.15.1(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/webpack@5.28.5(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(type-fest@4.41.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.104.1(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))
+        version: 7.6.20(@swc/core@1.15.1(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/webpack@5.28.5(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(type-fest@4.41.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.104.1(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))
       '@storybook/react':
         specifier: ^7.6.4
         version: 7.6.20(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.9.3)
@@ -446,7 +446,7 @@ importers:
         version: 13.3.0(enquirer@2.4.1)
       next-router-mock:
         specifier: ^0.9.2
-        version: 0.9.13(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
+        version: 0.9.13(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       node-mocks-http:
         specifier: ^1.17.2
         version: 1.17.2(@types/express@4.17.25)(@types/node@18.11.18)
@@ -2216,8 +2216,8 @@ packages:
   '@ndelangen/get-tarball@3.0.9':
     resolution: {integrity: sha512-9JKTEik4vq+yGosHYhZ1tiH/3WpUS0Nh0kej4Agndhox8pAdWhEx5knFVRcb/ya9knCRCs1rPxNrSXTDdfVqpA==}
 
-  '@next/env@14.2.34':
-    resolution: {integrity: sha512-iuGW/UM+EZbn2dm+aLx+avo1rVap+ASoFr7oLpTBVW2G2DqhD5l8Fme9IsLZ6TTsp0ozVSFswidiHK1NGNO+pg==}
+  '@next/env@14.2.35':
+    resolution: {integrity: sha512-DuhvCtj4t9Gwrx80dmz2F4t/zKQ4ktN8WrMwOuVzkJfBilwAwGr6v16M5eI8yCuZ63H9TTuEU09Iu2HqkzFPVQ==}
 
   '@next/eslint-plugin-next@13.5.11':
     resolution: {integrity: sha512-0qjDhes9UTSxirt/dYzrv20hs8SUhcIOvlEioj5+XucVrBHihnAk6Om7Vzk+VZ2nRE7tcShm/6lH1xSkJ3XMpg==}
@@ -8917,10 +8917,9 @@ packages:
       next: '>=10.0.0'
       react: '>=17.0.0'
 
-  next@14.2.34:
-    resolution: {integrity: sha512-s7mRraWlkEVRLjHHdu5khn0bSnmUh+U+YtigBc+t2Ge7jJHFIVBZna+W9Jcx7b04HhM7eJWrNJ2A+sQs9gJ3eg==}
+  next@14.2.35:
+    resolution: {integrity: sha512-KhYd2Hjt/O1/1aZVX3dCwGXM1QmOV4eNM2UTacK5gipDdPN/oHHK/4oVGy7X8GMfPMsUTUEmGlsy0EY1YGAkig==}
     engines: {node: '>=18.17.0'}
-    deprecated: This version has a security vulnerability. Please upgrade to a patched version. See https://nextjs.org/blog/security-update-2025-12-11 for more details.
     hasBin: true
     peerDependencies:
       '@opentelemetry/api': ^1.1.0
@@ -11833,7 +11832,7 @@ snapshots:
       react: 18.3.1
       react-dom: 18.3.1(react@18.3.1)
 
-  '@auth0/nextjs-auth0@2.7.0(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
+  '@auth0/nextjs-auth0@2.7.0(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))':
     dependencies:
       '@panva/hkdf': 1.2.1
       cookie: 0.5.0
@@ -11841,7 +11840,7 @@ snapshots:
       http-errors: 1.8.1
       joi: 17.13.3
       jose: 4.15.9
-      next: 14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       openid-client: 5.7.1
       tslib: 2.8.1
       url-join: 4.0.1
@@ -14988,7 +14987,7 @@ snapshots:
       pump: 3.0.3
       tar-fs: 2.1.4
 
-  '@next/env@14.2.34': {}
+  '@next/env@14.2.35': {}
 
   '@next/eslint-plugin-next@13.5.11':
     dependencies:
@@ -15025,9 +15024,9 @@ snapshots:
   '@next/swc-win32-x64-msvc@14.2.33':
     optional: true
 
-  '@next/third-parties@14.2.33(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
+  '@next/third-parties@14.2.33(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)':
     dependencies:
-      next: 14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       third-party-capital: 1.0.20
 
@@ -17530,7 +17529,7 @@ snapshots:
 
   '@storybook/mdx2-csf@1.1.0': {}
 
-  '@storybook/nextjs@7.6.20(@swc/core@1.15.1(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/webpack@5.28.5(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(type-fest@4.41.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.104.1(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))':
+  '@storybook/nextjs@7.6.20(@swc/core@1.15.1(@swc/helpers@0.5.17))(@swc/helpers@0.5.17)(@types/webpack@5.28.5(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(type-fest@4.41.0)(typescript@5.9.3)(webpack-hot-middleware@2.26.1)(webpack@5.104.1(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))':
     dependencies:
       '@babel/core': 7.28.5
       '@babel/plugin-syntax-bigint': 7.8.3(@babel/core@7.28.5)
@@ -17560,7 +17559,7 @@ snapshots:
       fs-extra: 11.3.2
       image-size: 1.2.1
       loader-utils: 3.3.1
-      next: 14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       node-polyfill-webpack-plugin: 2.0.1(webpack@5.104.1(@swc/core@1.15.1(@swc/helpers@0.5.17))(esbuild@0.18.20))
       pnp-webpack-plugin: 1.7.0(typescript@5.9.3)
       postcss: 8.5.6
@@ -23381,7 +23380,7 @@ snapshots:
 
   netmask@2.0.2: {}
 
-  next-i18next@13.3.0(@types/react@18.3.26)(i18next@22.5.1)(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-i18next@12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
+  next-i18next@13.3.0(@types/react@18.3.26)(i18next@22.5.1)(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-i18next@12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
       '@babel/runtime': 7.28.4
       '@types/hoist-non-react-statics': 3.3.7(@types/react@18.3.26)
@@ -23389,20 +23388,20 @@ snapshots:
       hoist-non-react-statics: 3.3.2
       i18next: 22.5.1
       i18next-fs-backend: 2.6.0
-      next: 14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
       react-i18next: 12.3.1(i18next@22.5.1)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
     transitivePeerDependencies:
       - '@types/react'
 
-  next-router-mock@0.9.13(next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
+  next-router-mock@0.9.13(next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1):
     dependencies:
-      next: 14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      next: 14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       react: 18.3.1
 
-  next@14.2.34(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
+  next@14.2.35(@babel/core@7.28.6)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1):
     dependencies:
-      '@next/env': 14.2.34
+      '@next/env': 14.2.35
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
       caniuse-lite: 1.0.30001764
