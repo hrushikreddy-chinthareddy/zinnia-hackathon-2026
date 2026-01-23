@@ -169,7 +169,6 @@
         "cumulativeMatchPaymentAmount": "Monto acumulado del pago de contrapartida",
         "prioritizationReasonRequired": "Seleccione un motivo para continuar.",
         "prioritizationSourceRequired": "Seleccione un origen para continuar.",
-        "prioritizationNotificationLabel": "Recibir notificaciones sobre cambios en el progreso especificado.",
         "prioritizationRefDataError": "No se pudieron cargar los motivos y orígenes de priorización. Actualice la página e inténtelo de nuevo.",
         "cumulativePerCharge": "Por cargo acumulado",
         "cumulativePremiumSinceIssue": "Prima acumulada desde la emisión",
