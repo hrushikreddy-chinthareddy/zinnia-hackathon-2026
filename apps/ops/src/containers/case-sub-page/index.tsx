@@ -42,6 +42,7 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         hasCallLogsAccess,
         hasNotesAccess,
         hasPermissionToPrioritizeCases,
+        hasDocumentAccess,
         showZinniaLiveCaseActions,
     } = usePermissionsContext();
     const router = useRouter();
@@ -93,9 +94,11 @@ const CaseOverview = ({ caseDetails, tab }: CaseOverviewProps) => {
         });
         const isNotesTab = query?.tab === CaseDetailsTabValues['notes'];
         const isCallLogsTab = query?.tab === CaseDetailsTabValues['call-logs'];
+        const isDocumentsTab = query?.tab === CaseDetailsTabValues['documents'];
         if (
             (isNotesTab && !hasNotesAccess) ||
-            (isCallLogsTab && !hasCallLogsAccess)
+            (isCallLogsTab && !hasCallLogsAccess) ||
+            (isDocumentsTab && !hasDocumentAccess)
         ) {
             router.push(`${baseAppUrl}/cases/${caseDetails?.id}/progress`);
             setTabVal(CaseDetailsTabValues.progress);

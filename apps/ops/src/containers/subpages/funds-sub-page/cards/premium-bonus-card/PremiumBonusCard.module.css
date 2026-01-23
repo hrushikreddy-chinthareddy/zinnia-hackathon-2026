@@ -1,0 +1,33 @@
+.cardContainer {
+    border-bottom: var(--measure-dimension-stroke-sm, 2px) solid
+        var(--color-base-border-light);
+}
+
+.headerContainer {
+    display: flex;
+    gap: var(--measure-dimension-gap-sm);
+}
+
+.loaderContainer {
+    margin-top: var(--measure-dimension-padding-2xl);
+}
+
+.fieldsContainer {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(min-content, max-content));
+    gap: var(--measure-dimension-gap-lg) var(--measure-dimension-gap-2xl);
+    margin-top: var(--measure-dimension-padding-2xl);
+}
+
+@media (min-width: 768px) {
+    .fieldsContainer {
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+@media (min-width: 1025px) {
+    .fieldsContainer {
+        margin-left: var(--measure-dimension-padding-2xl);
+    }
+}

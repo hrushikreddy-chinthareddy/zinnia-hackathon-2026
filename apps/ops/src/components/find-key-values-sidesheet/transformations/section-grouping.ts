@@ -29,6 +29,7 @@ import {
     isDataField,
     isDataSectionOrGroup,
     isDataSectionOrField,
+    isDataGroup,
 } from '../data-node-helpers/predicates';
 import { defaultNotAvailableFields } from '../translations/default-not-available-fields';
 
@@ -525,8 +526,52 @@ function groupAllocation({
     if (combinedFunds) {
         combinedFundsSection.children.push(...combinedFunds);
     }
+    const matchSegment = groupPremiumBonusSegment({
+        allocationNode: allocation,
+    });
+
+    if (matchSegment) {
+        combinedFundsSection.children.push(matchSegment);
+    }
 
     return combinedFundsSection;
+}
+
+function groupPremiumBonusSegment({
+    allocationNode,
+}: {
+    allocationNode: DataSection | undefined;
+}): DataSection | undefined {
+    if (!allocationNode) {
+        return undefined;
+    }
+    const matchSegmentSection = findSectionInNodes({
+        nodes: allocationNode?.children ?? [],
+        key: 'matchSegment',
+    });
+
+    if (!matchSegmentSection) {
+        return undefined;
+    }
+
+    const premiumBonusFields = [
+        'unvestedPremiumBonus',
+        'totalRecapturedPremiumBonus',
+        'matchVestingDate',
+        'generalLedgerFundCode',
+        'vestingPeriod',
+    ];
+
+    return {
+        type: FieldType.section,
+        label: 'premiumBonus',
+        children: matchSegmentSection.children.filter(
+            (node) =>
+                isDataGroup(node) ||
+                (isDataSectionOrField(node) &&
+                    premiumBonusFields.includes(node.label))
+        ),
+    };
 }
 
 /**

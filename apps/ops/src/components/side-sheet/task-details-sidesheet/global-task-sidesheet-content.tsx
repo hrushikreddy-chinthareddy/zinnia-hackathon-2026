@@ -699,7 +699,11 @@ export default function GlobalTaskSideSheet({
     const isStartButtonDisabled =
         startLoader || isTaskUnclaimed || !isUserAssociatedWithTask;
 
-    const isViewTaskButtonVisible = !isOpsManagerView;
+    const openNigoEntry = Object.values(EarlyTaskType).includes(
+        task?.taskType as EarlyTaskType
+    );
+
+    const isViewTaskButtonVisible = !isOpsManagerView && !openNigoEntry;
     const carrierName =
         getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
 
