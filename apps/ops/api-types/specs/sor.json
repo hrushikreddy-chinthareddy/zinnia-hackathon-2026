@@ -2830,11 +2830,7 @@
             "description": "MEC Authorization refers to the approval process required when a life insurance policy is classified as a Modified Endowment Contract (MEC). A MEC is a permanent life insurance policy that fails the IRS \"7-Pay Test,\" resulting in different tax treatment of policy loans and withdrawals. MEC Authorization is typically required from the policyholder before processing transactions that could convert the policy into a MEC, ensuring they understand the tax consequences."
           },
           "projectedLapseIndicator": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The Projected Lapse Indicator is a forecast that indicates whether a life insurance policy is expected to lapse within the next policy year based on its current account value, premium payments, cost of insurance (COI), and other policy charges"
           },
           "policyGainAmount": {
@@ -2884,12 +2880,8 @@
             "example": 99.99
           },
           "suppressionIndicator": {
-            "type": "number",
-            "description": "The Suppression Indicator is a flag or marker used in policy administration systems to prevent certain actions, notifications, or transactions from being processed or displayed. It is commonly applied to billing, statements, reports, or policy updates based on specific business rules",
-            "enum": [
-              true,
-              false
-            ]
+            "type": "boolean",
+            "description": "The Suppression Indicator is a flag or marker used in policy administration systems to prevent certain actions, notifications, or transactions from being processed or displayed. It is commonly applied to billing, statements, reports, or policy updates based on specific business rules"
           },
           "interestEarned": {
             "type": "number",
@@ -2908,11 +2900,7 @@
             "format": "double"
           },
           "employeeRetirementIncomeSecurityActIndicator": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "ERISA Indicator is a field that specifies whether a policy or contract is subject to the Employee Retirement Income Security Act of 1974 (ERISA) — a federal law that governs certain employer-sponsored retirement and benefit plans in the U.S."
           },
           "cumulativePremiumReceived": {
@@ -3104,11 +3092,7 @@
         "type": "object",
         "properties": {
           "marketValueAdjustmentIndicator": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The MVA Indicator is a flag or marker that indicates whether a Market Value Adjustment (MVA) applies to an annuity or investment. This adjustment impacts the contract value when withdrawals or surrenders occur before the end of the contract’s term"
           },
           "marketValueAdjustmentAmount": {
@@ -3250,11 +3234,7 @@
             "example": "2023-01-01T00:00:00.000Z"
           },
           "modifiedEndowmentContractStatus": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The MEC Status indicates whether a life insurance policy has been classified as a Modified Endowment Contract (MEC) under IRS regulations. This status determines the tax treatment of withdrawals, loans, and distributions from the policy"
           },
           "sevenPayTestBasis": {
@@ -3810,7 +3790,7 @@
       "RiderParticipant": {
         "type": "object",
         "properties": {
-          "insuredID": {
+          "insuredId": {
             "type": "string",
             "description": "A unique identifier assigned to the insured individual within the system who was covered under this rider",
             "example": "Party_PI_1"
@@ -4144,20 +4124,12 @@
             "$ref": "#/components/schemas/UnderwritingStatus"
           },
           "unbornChildIndicator": {
-            "type": "number",
-            "description": "This will be set to yes if there is no Child rider insured to support Unborn Child",
-            "enum": [
-              true,
-              false
-            ]
+            "type": "boolean",
+            "description": "This will be set to yes if there is no Child rider insured to support Unborn Child"
           },
           "qualifiedAdditionalBenefit": {
-            "type": "number",
-            "description": "Indicates whether the rider provides a qualified benefit under IRS or insurance regulations",
-            "enum": [
-              true,
-              false
-            ]
+            "type": "boolean",
+            "description": "Indicates whether the rider provides a qualified benefit under IRS or insurance regulations"
           },
           "effectiveDate": {
             "type": "string",
@@ -4252,12 +4224,8 @@
             "description": "The maximum duration over which payments can be made under the rider ( in Months)"
           },
           "claimStatus": {
-            "type": "number",
-            "description": "The current status of a claim filed under the rider",
-            "enum": [
-              true,
-              false
-            ]
+            "type": "boolean",
+            "description": "The current status of a claim filed under the rider"
           },
           "nextEvaluationDate": {
             "type": "string",
@@ -4341,11 +4309,7 @@
             "example": 10.51
           },
           "additionalBenefitUsedUp": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Indicates whether the ADL benefit is utilised on the contract."
           },
           "totalBenefit": {
@@ -4737,11 +4701,7 @@
             "$ref": "#/components/schemas/FeatureType"
           },
           "featureIndicator": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "A Feature Indicator in life insurance and annuities refers to a binary flag (Yes/No, True/False, or Enabled/Disabled) that signifies whether a specific policy feature, rider, or benefit is included in the contract. It helps insurers, agents, and policyholders quickly identify which optional or standard benefits apply to a policy"
           },
           "featureOption": {
@@ -4785,12 +4745,8 @@
             "description": "End date of the feature"
           },
           "status": {
-            "type": "number",
-            "description": "A Feature Status in life insurance and annuities indicates the current state or activation condition of a specific feature within a policy or contract. It reflects whether a feature is active, inactive, pending, or restricted, helping insurers, agents, and policyholders track policy functionality",
-            "enum": [
-              true,
-              false
-            ]
+            "type": "boolean",
+            "description": "A Feature Status in life insurance and annuities indicates the current state or activation condition of a specific feature within a policy or contract. It reflects whether a feature is active, inactive, pending, or restricted, helping insurers, agents, and policyholders track policy functionality"
           },
           "period": {
             "type": "number",
@@ -4853,11 +4809,7 @@
             "example": 100
           },
           "underwritingDecision": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The Reinstatement Underwriting Decision refers to the evaluation process and approval or denial of a reinstatement request for a lapsed life insurance policy or annuity contract. When a policy lapses due to non-payment, the insurer requires underwriting to determine if the policy can be reinstated based on financial, medical, and risk factors"
           },
           "approvalDate": {
@@ -5666,11 +5618,7 @@
             "description": "Deprecated - kept for backward compatibility. Use preferredPhoneId under party section. The Preferred Phone ID refers to the unique identifier of the phone number designated as the primary contact number for a given individual or entity when multiple phone numbers are associated with the same party"
           },
           "isAddressSameAsOwner": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Boolean 0 = No 1 = Yes to denote if the email is the preferred"
           },
           "lastContactDate": {
@@ -6720,11 +6668,7 @@
             "$ref": "#/components/schemas/Country"
           },
           "isPreferred": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "TBD"
           },
           "addressId": {
@@ -6802,11 +6746,7 @@
             "example": "null"
           },
           "isPreferred": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The Preferred Phone Indicator is a boolean flag or attribute assigned to each phone number associated with a party, used to identify which phone number should be used as the primary contact number for communication"
           },
           "phoneId": {
@@ -6849,11 +6789,7 @@
             "example": "will.smith@gmail.com"
           },
           "isPreferred": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The Preferred Email Indicator is a boolean flag associated with each email address linked to a party, used to designate which email address should be treated as the primary contact for electronic communications"
           },
           "emailId": {
@@ -7145,11 +7081,7 @@
         "type": "object",
         "properties": {
           "disabled": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Any disability details of the insured"
           },
           "disabilityStartDate": {
@@ -7184,11 +7116,7 @@
         "type": "object",
         "properties": {
           "existingLifeInsurance": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Any existing life insurance details of the insured"
           },
           "existingLifeInsuranceAmount": {
@@ -7198,35 +7126,19 @@
             "description": "The existing life insurance amount of the insured"
           },
           "replaceLifeInsurance": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Any life insurance replacement details of the insured"
           },
           "pendingOrPlanToBuyAdditional": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Any details of pending or plan to buy additional life insurance of the insured"
           },
           "isDependent": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Any dependent details of the insured"
           },
           "employed": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Any employment details of the insured"
           },
           "employmentStatus": {
@@ -7449,27 +7361,15 @@
             "$ref": "#/components/schemas/PartyStatus"
           },
           "isPartyBeneficiaryNonNatural": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "A boolean field that indicates whether the beneficiary of a Party (when the Party is a Trust) is Non-Natural. This data point is captured for taxation purposes, as Trusts established for individuals are taxed differently from those benefiting entities"
           },
           "isIrrevocable": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is irrevocable. If yes, when doing any changes the beneficiary must also sign forms"
           },
           "isRequiredMinimumDistributionDesignated": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is designated to be included in Joint RMD calculations"
           },
           "lastContactDate": {
@@ -8169,11 +8069,7 @@
             "example": 161.81698
           },
           "modifiedEndowmentContractStatus": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Indicates if the original policy being exchanged is classified as MEC"
           },
           "outstandingLoanRolloverAmount": {
@@ -8273,7 +8169,7 @@
       "FundDistributionSegment": {
         "type": "object",
         "properties": {
-          "segmentID": {
+          "segmentId": {
             "type": "string",
             "description": "A unique identifier assigned to a particular segment for a specific fund account within the investment structure",
             "example": "segment1"
@@ -8295,7 +8191,7 @@
       "FundDistribution": {
         "type": "object",
         "properties": {
-          "fundID": {
+          "fundId": {
             "type": "string",
             "description": "A unique identifier assigned to a specific fund account within the investment structure",
             "example": "FundAccount1"
@@ -8328,7 +8224,7 @@
       "SegmentActivity": {
         "type": "object",
         "properties": {
-          "segmentID": {
+          "segmentId": {
             "type": "string",
             "description": "A unique identifier assigned to a particular segment for a specific fund account within the investment structure",
             "example": "segment1"
@@ -8356,7 +8252,7 @@
       "FundActivitySegment": {
         "type": "object",
         "properties": {
-          "segmentID": {
+          "segmentId": {
             "type": "string",
             "description": "A unique identifier assigned to a particular segment for a specific fund account within the investment structure",
             "example": "segment1"
@@ -8375,7 +8271,7 @@
       "FundActivity": {
         "type": "object",
         "properties": {
-          "fundID": {
+          "fundId": {
             "type": "string",
             "description": "A unique identifier assigned to a specific fund account within the investment structure",
             "example": "FundAccount1"
@@ -8429,7 +8325,7 @@
       "LoanActivitySegment": {
         "type": "object",
         "properties": {
-          "segmentID": {
+          "segmentId": {
             "type": "string",
             "description": "A unique identifier assigned to a specific loan segment",
             "example": "Segment1"
@@ -8620,11 +8516,7 @@
             "description": "The portion of the transaction amount eligible for taxation"
           },
           "taxableFlag": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Indicates whether the transaction is taxable"
           },
           "appliedTaxRate": {
@@ -8930,11 +8822,7 @@
             "description": "Specifies the type of transaction being performed, such as Premium Payment, Loan Repayment, Anniversary etc"
           },
           "systematicOrBillingChangeIndicator": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Indicates whether a transaction results in any setup, update, or modification to a systematic program or billing change. This field is set to true whenever any part of the systematic program or billing is modified, including changes to its configuration or associated fields"
           },
           "requestDate": {
@@ -9360,27 +9248,15 @@
             "$ref": "#/components/schemas/PartyStatus"
           },
           "isPartyBeneficiaryNonNatural": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "A boolean field that indicates whether the beneficiary of a Party (when the Party is a Trust) is Non-Natural. This data point is captured for taxation purposes, as Trusts established for individuals are taxed differently from those benefiting entities"
           },
           "isIrrevocable": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is irrevocable. If yes, when doing any changes the beneficiary must also sign forms"
           },
           "isRequiredMinimumDistributionDesignated": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is designated to be included in Joint RMD calculations"
           },
           "lastContactDate": {
@@ -9527,11 +9403,7 @@
             "$ref": "#/components/schemas/Country"
           },
           "isPreferred": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "TBD"
           }
         }
@@ -9585,11 +9457,7 @@
             "example": "null"
           },
           "isPreferred": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The Preferred Phone Indicator is a boolean flag or attribute assigned to each phone number associated with a party, used to identify which phone number should be used as the primary contact number for communication"
           }
         }
@@ -9618,11 +9486,7 @@
             "example": "will.smith@gmail.com"
           },
           "isPreferred": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "The Preferred Email Indicator is a boolean flag associated with each email address linked to a party, used to designate which email address should be treated as the primary contact for electronic communications"
           }
         }
@@ -9897,27 +9761,15 @@
             "$ref": "#/components/schemas/PartyStatus"
           },
           "isPartyBeneficiaryNonNatural": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "A boolean field that indicates whether the beneficiary of a Party (when the Party is a Trust) is Non-Natural. This data point is captured for taxation purposes, as Trusts established for individuals are taxed differently from those benefiting entities"
           },
           "isIrrevocable": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is irrevocable. If yes, when doing any changes the beneficiary must also sign forms"
           },
           "isRequiredMinimumDistributionDesignated": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is designated to be included in Joint RMD calculations"
           },
           "lastContactDate": {
@@ -12470,11 +12322,7 @@
             "description": "Date (with pattern \"yyyy-mm-dd\")"
           },
           "reverseInitiator": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ]
+            "type": "boolean"
           },
           "policyFeatures": {
             "type": "array",
@@ -12601,7 +12449,7 @@
             "format": "date-time",
             "type": "string"
           },
-          "TokenID": {
+          "TokenId": {
             "type": "string"
           },
           "JurisdictionStateCode": {
@@ -12640,7 +12488,7 @@
           "CashValue",
           "LengthofTerm",
           "LastUpdated",
-          "TokenID",
+          "TokenId",
           "JurisdictionStateCode",
           "Owners"
         ]
@@ -12735,7 +12583,7 @@
           "OrgName": {
             "type": "string"
           },
-          "TaxID": {
+          "TaxId": {
             "type": "string"
           },
           "PersonType": {
@@ -12797,7 +12645,7 @@
           "RoleStatus",
           "FullName",
           "OrgName",
-          "TaxID",
+          "TaxId",
           "PersonType",
           "SrcPartyType",
           "Email",
@@ -12845,7 +12693,7 @@
           "clientCode": {
             "type": "string"
           },
-          "externalUserIDValid": {
+          "externalUserIdValid": {
             "type": "string"
           }
         },
@@ -12860,7 +12708,7 @@
           "apiName",
           "externalTransactionName",
           "clientCode",
-          "externalUserIDValid"
+          "externalUserIdValid"
         ]
       },
       "PolicyCommonRequestValue": {
@@ -13009,7 +12857,7 @@
           "programCounter": {
             "type": "number"
           },
-          "moneySrcID": {
+          "moneySrcId": {
             "type": "number"
           },
           "firstNextDate": {
@@ -13085,7 +12933,7 @@
           "loanId",
           "grossDisbInd",
           "programCounter",
-          "moneySrcID",
+          "moneySrcId",
           "firstNextDate",
           "waive",
           "waiveMVA",
@@ -13526,7 +13374,7 @@
           "PlanCode": {
             "type": "string"
           },
-          "UserID": {
+          "UserId": {
             "type": "string"
           },
           "TransactionDate": {
@@ -13546,7 +13394,7 @@
           "ClientCode",
           "ContractNumber",
           "PlanCode",
-          "UserID",
+          "UserId",
           "TransactionDate",
           "TransactionTime",
           "Withdrawal"
@@ -13655,11 +13503,7 @@
             "$ref": "#/components/schemas/AddressBase"
           },
           "isAddressSameAsOwner": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Boolean 0 = No 1 = Yes to denote if the email is the preferred"
           },
           "transactionReason": {
@@ -14047,27 +13891,15 @@
             "$ref": "#/components/schemas/PartyStatus"
           },
           "isPartyBeneficiaryNonNatural": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "A boolean field that indicates whether the beneficiary of a Party (when the Party is a Trust) is Non-Natural. This data point is captured for taxation purposes, as Trusts established for individuals are taxed differently from those benefiting entities"
           },
           "isIrrevocable": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is irrevocable. If yes, when doing any changes the beneficiary must also sign forms"
           },
           "isRequiredMinimumDistributionDesignated": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "An indicator if the beneficiary is designated to be included in Joint RMD calculations"
           },
           "lastContactDate": {
@@ -14402,11 +14234,7 @@
             "$ref": "#/components/schemas/TestValues"
           },
           "marketValueAdjustmentProduct": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Flag to identify whether the contract is MVA product or not"
           },
           "accountValues": {
@@ -14981,7 +14809,7 @@
       "Payee": {
         "type": "object",
         "properties": {
-          "partyID": {
+          "partyId": {
             "type": "string",
             "description": "Party ID is a unique identifier assigned to a party (individual or entity) involved in an insurance or annuity contract. This identifier helps ensure accurate data exchange and tracking across insurance transactions",
             "example": "Party_PI_1"
@@ -14989,14 +14817,14 @@
           "percentage": {
             "type": "number"
           },
-          "bankID": {
+          "bankId": {
             "type": "string"
           }
         },
         "required": [
-          "partyID",
+          "partyId",
           "percentage",
-          "bankID"
+          "bankId"
         ]
       },
       "TaxWithholdingInstructions": {
@@ -15202,13 +15030,13 @@
       "BankDetails": {
         "type": "object",
         "properties": {
-          "recordID": {
+          "recordId": {
             "type": "number"
           },
-          "appliesToPartyID": {
+          "appliesToPartyId": {
             "type": "string"
           },
-          "financialInstitutionPartyID": {
+          "financialInstitutionPartyId": {
             "type": "string"
           },
           "startDate": {
@@ -15249,9 +15077,9 @@
           }
         },
         "required": [
-          "recordID",
-          "appliesToPartyID",
-          "financialInstitutionPartyID",
+          "recordId",
+          "appliesToPartyId",
+          "financialInstitutionPartyId",
           "startDate",
           "endDate",
           "nameOnAccount",
@@ -15328,10 +15156,10 @@
           "policyNumber": {
             "type": "string"
           },
-          "partyMasterID": {
+          "partyMasterId": {
             "type": "string"
           },
-          "partyID": {
+          "partyId": {
             "type": "string"
           },
           "idReferenceNo": {
@@ -15448,7 +15276,7 @@
           "riskDetails": {
             "$ref": "#/components/schemas/RiskDetails"
           },
-          "financialInstitutionPartyID": {
+          "financialInstitutionPartyId": {
             "type": "string"
           },
           "percentage": {
@@ -15464,8 +15292,8 @@
           "ledgerDocId",
           "timestamp",
           "policyNumber",
-          "partyMasterID",
-          "partyID",
+          "partyMasterId",
+          "partyId",
           "idReferenceNo",
           "beneficiaryPercentage",
           "partyType",
@@ -15499,7 +15327,7 @@
           "disabled",
           "disabilityStartDate",
           "riskDetails",
-          "financialInstitutionPartyID",
+          "financialInstitutionPartyId",
           "percentage",
           "version"
         ]
@@ -15514,7 +15342,7 @@
       "CaseRequest": {
         "type": "object",
         "properties": {
-          "caseCorrelationID": {
+          "caseCorrelationId": {
             "type": "string"
           },
           "caseId": {
@@ -15526,13 +15354,13 @@
           "requestSource": {
             "type": "string"
           },
-          "carrierID": {
+          "carrierId": {
             "type": "string"
           },
-          "productID": {
+          "productId": {
             "type": "string"
           },
-          "userID": {
+          "userId": {
             "type": "string"
           },
           "policyNumber": {
@@ -15540,13 +15368,13 @@
           }
         },
         "required": [
-          "caseCorrelationID",
+          "caseCorrelationId",
           "caseId",
           "caseStatus",
           "requestSource",
-          "carrierID",
-          "productID",
-          "userID",
+          "carrierId",
+          "productId",
+          "userId",
           "policyNumber"
         ]
       },
@@ -15590,13 +15418,13 @@
           "partyRole": {
             "type": "string"
           },
-          "partyID": {
+          "partyId": {
             "type": "string"
           }
         },
         "required": [
           "partyRole",
-          "partyID"
+          "partyId"
         ]
       },
       "FinancialTransaction": {
@@ -15618,16 +15446,16 @@
           "policyNumber": {
             "type": "string"
           },
-          "transactionID": {
+          "transactionId": {
             "type": "string"
           },
-          "externalTransactionID": {
+          "externalTransactionId": {
             "type": "string"
           },
-          "correlationID": {
+          "correlationId": {
             "type": "string"
           },
-          "parentID": {
+          "parentId": {
             "type": "string"
           },
           "transType": {
@@ -15730,10 +15558,10 @@
             "type": "boolean",
             "default": false
           },
-          "caseID": {
+          "caseId": {
             "type": "string"
           },
-          "partyID": {
+          "partyId": {
             "type": "string"
           },
           "requestType": {
@@ -15748,7 +15576,7 @@
           "programType": {
             "type": "string"
           },
-          "systematicProgramID": {
+          "systematicProgramId": {
             "type": "string"
           },
           "frequency": {
@@ -15776,10 +15604,10 @@
           "ledgerDocId",
           "timestamp",
           "policyNumber",
-          "transactionID",
-          "externalTransactionID",
-          "correlationID",
-          "parentID",
+          "transactionId",
+          "externalTransactionId",
+          "correlationId",
+          "parentId",
           "transType",
           "requestDate",
           "effectiveDate",
@@ -15804,12 +15632,12 @@
           "payor",
           "payeeOrBeneficiary",
           "lifecycleNo",
-          "caseID",
-          "partyID",
+          "caseId",
+          "partyId",
           "caseRequest",
           "caseResponse",
           "programType",
-          "systematicProgramID",
+          "systematicProgramId",
           "frequency",
           "startDate",
           "endDate",
@@ -16904,11 +16732,7 @@
             "description": "The portion of the transaction amount eligible for taxation"
           },
           "taxableFlag": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Indicates whether the transaction is taxable"
           }
         }
@@ -17215,11 +17039,7 @@
             "$ref": "#/components/schemas/ClaimStatus"
           },
           "proofOfDeathReceived": {
-            "type": "number",
-            "enum": [
-              true,
-              false
-            ],
+            "type": "boolean",
             "description": "Whether proof of death is received"
           }
         }
@@ -20145,7 +19965,7 @@
             "type": "string",
             "description": "The Plan Code is a carrier-assigned unique identifier used to distinguish a specific product, rate structure, and version of a life insurance or annuity policy. It ensures accurate policy tracking, pricing, and administration"
           },
-          "formID": {
+          "formId": {
             "type": "string"
           },
           "issuingCompany": {
@@ -21547,7 +21367,7 @@
           "clientCode": {
             "type": "string"
           },
-          "externalUserIDValid": {
+          "externalUserIdValid": {
             "type": "boolean"
           }
         },
@@ -21562,7 +21382,7 @@
           "apiName",
           "externalTransactionName",
           "clientCode",
-          "externalUserIDValid"
+          "externalUserIdValid"
         ]
       },
       "PolicyCommonRequest": {
