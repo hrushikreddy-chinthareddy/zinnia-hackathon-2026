@@ -6,6 +6,7 @@ import SectionRiders from './summary/riders-section';
 import SummaryHeader from './summary/summary-header';
 import SectionCashValue from './summary/summary-section-cash-value';
 import SectionCoverage from './summary/summary-section-coverage';
+import SectionInsured from './summary/summary-section-insured';
 import SectionPremium from './summary/summary-section-premium';
 
 type IllustrationContentSummaryProps = {
@@ -21,8 +22,8 @@ export default function IllustrationSelectForApplicationSummary({
     return (
         <div className={styles.contentSummary}>
             <SummaryHeader {...props} />
+            <SectionInsured />
             <SectionCoverage clientCase={clientCase} />
-
             <SectionPremium />
             <SectionRiders />
             <SectionCashValue />

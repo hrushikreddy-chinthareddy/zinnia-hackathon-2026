@@ -230,6 +230,18 @@ export const getSbulMatchRate = async (
     }
 };
 
+export const getPremiumBonusRate = async (
+    policy: PolicyDetails,
+    effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)
+) => {
+    return await getProductRate(
+        policy,
+        ConfiguredSettingId.BonusRate,
+        'RIDER_BONUS',
+        effectiveDate
+    );
+};
+
 export const getCurrentInterestRate = async (
     policy: PolicyDetails,
     effectiveDate: string = dayjs().format(ZAHARA_API_DATE_FORMAT)

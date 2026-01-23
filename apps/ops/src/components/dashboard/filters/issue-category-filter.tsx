@@ -63,7 +63,6 @@ export const IssueCategoryFilter: FC<IssueCategoryFilterProps> = ({
     return (
         <Select
             className={className}
-            maxContentWidth
             label="Issue category"
             placeholder="All"
             options={categoryFilterOptions || []}

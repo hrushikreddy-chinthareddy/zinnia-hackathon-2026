@@ -34,4 +34,5 @@ export const sectionVisibility: Record<
     testValues: LIFE_ONLY,
     requiredMinimumDistribution: ANNUITY_ONLY,
     combinedFunds: ANNUITY_UL_IUL,
+    premiumBonus: ANNUITY_ONLY,
 };
