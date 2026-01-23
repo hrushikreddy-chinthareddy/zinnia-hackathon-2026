@@ -2684,6 +2684,9 @@
                         "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
                     }
                 },
+                "noResultsYet": "You don’t have any policies or contracts yet.",
+                "resultsSoon": "You’ll soon see policies and contracts here. If you think something is missing, check with your administrator.",
+                "noResultsForSearch": "We couldn't find a contract or policy that matches your search.",
                 "notFound": "We couldn't find a contract or policy that matches your search.",
                 "tryAgain": "Check your input and try again.",
                 "issues": "Still having issues?",
