@@ -59,9 +59,10 @@ export const getReturnedWithheldTaxesDisplay = (
     type BPMWithheldAmount = TaxWithheldAmount & {
         withholdAmount: TaxWithheldAmount['withheldAmount'];
     };
-    const withheldAmount: BPMWithheldAmount | undefined = taxWithheldAmounts?.find(
-        (tw) => tw.taxWithholdingType === withholdingType
-    ) as BPMWithheldAmount | undefined;
+    const withheldAmount: BPMWithheldAmount | undefined =
+        taxWithheldAmounts?.find(
+            (tw) => tw.taxWithholdingType === withholdingType
+        ) as BPMWithheldAmount | undefined;
     if (
         !withheldAmount?.withholdAmount &&
         emptyFormat === DEFAULT_ERROR_STRING
