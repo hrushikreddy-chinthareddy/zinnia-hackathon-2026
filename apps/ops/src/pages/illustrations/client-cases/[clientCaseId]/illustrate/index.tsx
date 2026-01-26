@@ -81,8 +81,6 @@ export default function ClientCaseIllustrations({
         })
     );
 
-    console.log(clientCaseUserHierarchy?.carrier.carrierShortName);
-
     const {
         data: products = [],
         isLoading: isLoadingProducts,
