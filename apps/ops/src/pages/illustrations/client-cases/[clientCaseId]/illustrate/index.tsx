@@ -73,13 +73,15 @@ export default function ClientCaseIllustrations({
         ),
     });
 
+    // TODO: Still necessary?
     const { data: clientCaseUserHierarchy } = useQuery(
         buildHierarchyQueryOptions({
             sellingCode: clientCase?.agentDetails?.sellingCode,
-            // TODO: Use the correct carrier code for this client case
-            carrierShortName: 'FNWL',
+            carrierShortName: clientCase?.carrierCode?.[0] || '',
         })
     );
+
+    console.log(clientCaseUserHierarchy?.carrier.carrierShortName);
 
     const {
         data: products = [],
