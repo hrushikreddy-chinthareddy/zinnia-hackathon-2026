@@ -17,8 +17,6 @@ export interface CardInfoProps extends JestProps {
     title: string;
 }
 
-console.log('test');
-
 const CardInfo = ({
     className,
     cta,
