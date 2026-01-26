@@ -65,14 +65,21 @@ export const getReturnedWithheldTaxesDisplay = (
         ) as BPMWithheldAmount | undefined;
     if (
         !withheldAmount?.withholdAmount &&
+        !withheldAmount?.withheldAmount &&
         emptyFormat === DEFAULT_ERROR_STRING
     ) {
         return DEFAULT_ERROR_STRING;
-    } else if (!withheldAmount?.withholdAmount && emptyFormat === 0) {
+    } else if (
+        !withheldAmount?.withholdAmount &&
+        !withheldAmount?.withheldAmount &&
+        emptyFormat === 0
+    ) {
         return numberFormatify(emptyFormat);
     }
 
-    return negativeNumberFormatify(withheldAmount?.withholdAmount);
+    return negativeNumberFormatify(
+        withheldAmount?.withheldAmount ?? withheldAmount?.withholdAmount
+    );
 };
 
 export const getTaxWithheldByType = (
