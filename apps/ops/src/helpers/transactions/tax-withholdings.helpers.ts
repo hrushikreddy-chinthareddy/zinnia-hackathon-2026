@@ -54,19 +54,24 @@ export const getReturnedWithheldTaxesDisplay = (
     withholdingType: TaxWithholdingType,
     emptyFormat: string | number
 ): string => {
-    const withheldAmount = taxWithheldAmounts?.find(
+    // FIXME: This is a hack TS compile, since the property coming back from BPM is wrong
+    // When bpm fixes the property to the correct `withheldAmount`, this should be removed
+    type BPMWithheldAmount = TaxWithheldAmount & {
+        withholdAmount: TaxWithheldAmount['withheldAmount'];
+    };
+    const withheldAmount: BPMWithheldAmount | undefined = taxWithheldAmounts?.find(
         (tw) => tw.taxWithholdingType === withholdingType
-    );
+    ) as BPMWithheldAmount | undefined;
     if (
-        !withheldAmount?.withheldAmount &&
+        !withheldAmount?.withholdAmount &&
         emptyFormat === DEFAULT_ERROR_STRING
     ) {
         return DEFAULT_ERROR_STRING;
-    } else if (!withheldAmount?.withheldAmount && emptyFormat === 0) {
+    } else if (!withheldAmount?.withholdAmount && emptyFormat === 0) {
         return numberFormatify(emptyFormat);
     }
 
-    return negativeNumberFormatify(withheldAmount?.withheldAmount);
+    return negativeNumberFormatify(withheldAmount?.withholdAmount);
 };
 
 export const getTaxWithheldByType = (
