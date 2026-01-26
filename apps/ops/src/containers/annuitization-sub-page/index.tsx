@@ -120,8 +120,11 @@ export const AnnuitizationSubPage = () => {
             {!systematicProgramTablesEnabled && (
                 <UpcomingPaymentCard
                     bankDetails={payeeBankDetails}
-                    inactiveText={t('upcoming.inactive.text') as string}
-                    inactiveHeaderText={t('upcoming.inactive.header') as string}
+                    inactiveText={
+                        t('upcoming.inactive.text', {
+                            type: 'payout',
+                        }) as string // TODO: verify this dynamic string value
+                    }
                     footerLinks={footerContent as FooterContent[]}
                     autopayAmount={upcomingPayout?.amount}
                     paymentText={t('upcoming.payoutAmount') as string}

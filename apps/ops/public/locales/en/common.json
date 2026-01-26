@@ -6717,8 +6717,7 @@
             "payoutAmount": "Payout amount",
             "payoutDateText": "Next payout",
             "inactive": {
-                "text": "Looks like there's no upcoming payouts.",
-                "header": "Nothing's scheduled yet."
+                "text": "There are currently no {{type}} systematic programs set up."
             }
         },
         "manageAutopay": "Manage autopay"

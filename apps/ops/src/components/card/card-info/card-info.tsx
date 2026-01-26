@@ -14,7 +14,7 @@ export interface CardInfoProps extends JestProps {
     icon?: ReactNode;
     secondaryCta?: ReactNode;
     subtitle?: ReactNode;
-    title: string;
+    title?: string;
 }
 
 const CardInfo = ({
@@ -32,7 +32,9 @@ const CardInfo = ({
             data-testid={testId}
         >
             {icon}
-            <h3 className="typography-desktop-headline-3-d">{title}</h3>
+            {title && (
+                <h3 className="typography-desktop-headline-3-d">{title}</h3>
+            )}
             <p>{subtitle}</p>
             {cta && (
                 <Button
