@@ -16,7 +16,7 @@ import {
 import { Signature } from '@zinnia/api-types/types/case';
 import {
     AdhocSystematicProgram,
-    FullSurrenderQuoteResponse,
+    FullSurrenderOrSystematicProgramQuoteResponse,
     OneTimePremiumRequest,
     PartialWithdrawalOneTimeQuoteResponse,
     SystematicProgramUpdateRequest,
@@ -89,7 +89,7 @@ export interface CancelTransactionResponse
 export interface TransactionResponse {
     status: string | number;
     quoteResponse?:
-        | FullSurrenderQuoteResponse
+        | FullSurrenderOrSystematicProgramQuoteResponse
         | PartialWithdrawalOneTimeQuoteResponse;
     validationResult?: ValidationResult[];
     data?: any;

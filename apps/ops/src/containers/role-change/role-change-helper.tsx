@@ -31,8 +31,8 @@ import {
 import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 import {
     Country,
-    IdentificationType,
-    Party,
+    Identification,
+    Parties,
     PartyRole,
     PartyType,
     Policy,
@@ -277,7 +277,7 @@ export const countryOptions = [
 ];
 
 export const checkForIrrevocableBeneficiaries = (
-    parties: Array<Party>,
+    parties: Array<Parties>,
     roles: Array<PolicyPartyRoles>
 ) => {
     const activeBeneficiaryRoles = roles.filter(
@@ -288,7 +288,7 @@ export const checkForIrrevocableBeneficiaries = (
     );
     for (const role of activeBeneficiaryRoles) {
         const party = parties.find(
-            (party: Party) => party.partyId === role.partyId
+            (party: Parties) => party.partyId === role.partyId
         );
         if (party && party.isIrrevocable) {
             return true;
@@ -386,7 +386,9 @@ export const getActiveRoleParty = (
                 const ssnIdentification = (
                     existingData.identifications ?? []
                 ).find(
-                    (id) => id.identificationType === IdentificationType.SSN
+                    (id) =>
+                        id.identificationType ===
+                        Identification.identificationType.SSN
                 ) as any;
 
                 if (ssnIdentification) {
@@ -833,7 +835,7 @@ export const createTransactionLink = (
     return defaultConfig;
 };
 
-export const getPartyName = (party: Party | undefined): string => {
+export const getPartyName = (party: Parties | undefined): string => {
     if (!party) {
         return DEFAULT_ERROR_STRING;
     }

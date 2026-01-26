@@ -45,7 +45,7 @@ import {
     Address,
     Policy,
     TaxWithheldAmount,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalType } from '../amount/types';
@@ -112,8 +112,8 @@ const Summary = ({ policy }: SummaryProps) => {
 
     const transactionType = useMemo(() => {
         return withdrawal.type === WithdrawalType.Surrender
-            ? TransactionType.FULL_SURRENDER
-            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+            ? Transaction.transactionType.FULL_SURRENDER
+            : Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     const handleContinue = async () => {

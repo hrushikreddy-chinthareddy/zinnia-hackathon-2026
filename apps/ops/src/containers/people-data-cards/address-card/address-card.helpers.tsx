@@ -25,7 +25,7 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
-import { Address, AddressType, Party } from '@zinnia/api-types/types/sor';
+import { Address, AddressType, Parties } from '@zinnia/api-types/types/sor';
 
 interface AddressesProps {
     addresses: Address[];
@@ -45,7 +45,7 @@ interface FormattedAddressProps {
 }
 
 type SortAddressesByType = Pick<
-    Party,
+    Parties,
     'addresses' | 'preferredAddressIndicator'
 >;
 

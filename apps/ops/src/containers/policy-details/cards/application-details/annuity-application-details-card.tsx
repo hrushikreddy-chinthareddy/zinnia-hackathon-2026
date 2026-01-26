@@ -27,7 +27,12 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import { getAgentDataQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { AgentData } from '@deps/types/agents';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { PartyType, Policy, PartyRole } from '@zinnia/api-types/types/sor';
+import {
+    Parties,
+    PartyType,
+    Policy,
+    PartyRole,
+} from '@zinnia/api-types/types/sor';
 
 import { getApplicationDetailsData } from '../../policy-details.helpers';
 
@@ -110,7 +115,8 @@ export function AnnuityApplicationDetailsCard({
                 !!policy.policyNumber &&
                 !!policy.product?.planCode,
             select: (data: AgentData | undefined) =>
-                data ? new AgentParty(data, agent) : undefined,
+                // FIXME: agent is NameTag but AgentParty expects Parties
+                data ? new AgentParty(data, agent as Parties) : undefined,
         })),
         combine: (results) => {
             const overallLoading = results.some((result) => result.isLoading);

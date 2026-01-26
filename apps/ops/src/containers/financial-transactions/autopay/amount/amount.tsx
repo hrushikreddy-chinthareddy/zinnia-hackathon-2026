@@ -32,7 +32,7 @@ import {
     Frequency,
     Status,
     AmountType as AutopayAmountType,
-    TransactionType,
+    Transaction,
     FeatureType,
 } from '@zinnia/api-types/types/sor';
 
@@ -145,8 +145,8 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
 
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
-            ? TransactionType.SUBSEQUENT_PREMIUM
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            ? Transaction.transactionType.SUBSEQUENT_PREMIUM
+            : Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {

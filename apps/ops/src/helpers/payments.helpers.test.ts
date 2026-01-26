@@ -1,6 +1,6 @@
 import {
-    FlatExtraType,
-    Party,
+    FlatExtra,
+    Parties,
     PolicyCoverage,
     SystematicProgram,
 } from '@zinnia/api-types/types/sor';
@@ -10,11 +10,12 @@ import { getBankDetails, getFlatExtra, getParty } from './payments.helpers';
 describe('payments.helper.ts', () => {
     describe('getBankDetails', () => {
         it('should return the first bank detail if party has bankDetails', () => {
-            const party: Party = {
+            const party: Parties = {
                 bankDetails: [{ accountNumber: '12345', bankId: '1' }],
             };
             const systematicProgram: SystematicProgram = {
                 parties: [{ bankId: '1' }],
+                externalArrangementId: '1',
             };
             expect(getBankDetails(party, systematicProgram)).toEqual({
                 accountNumber: '12345',
@@ -27,18 +28,21 @@ describe('payments.helper.ts', () => {
         });
 
         it('should return undefined if party has no bankDetails', () => {
-            const party: Party = {};
+            const party: Parties = {};
             const systematicProgram: SystematicProgram = {
                 parties: [{ bankId: '1' }],
+                externalArrangementId: '1',
             };
             expect(getBankDetails(party, systematicProgram)).toBeUndefined();
         });
 
         it('should return undefined if systematicprogram has no parties', () => {
-            const party: Party = {
+            const party: Parties = {
                 bankDetails: [{ accountNumber: '12345', bankId: '1' }],
             };
-            const systematicProgram: SystematicProgram = {};
+            const systematicProgram: SystematicProgram = {
+                externalArrangementId: '1',
+            };
             expect(getBankDetails(party, systematicProgram)).toBeUndefined();
         });
     });
@@ -51,15 +55,19 @@ describe('payments.helper.ts', () => {
                         coverageParticipants: [
                             {
                                 flatExtra: [
-                                    { flatExtraType: FlatExtraType.TEMP },
+                                    {
+                                        flatExtraType:
+                                            FlatExtra.flatExtraType.TEMPORARY,
+                                    },
                                 ],
                             },
                         ],
+                        coverageTerm: 1,
                     },
                 ],
             };
             expect(getFlatExtra(coverage)).toEqual([
-                { flatExtraType: FlatExtraType.TEMP },
+                { flatExtraType: FlatExtra.flatExtraType.TEMPORARY },
             ]);
         });
 
@@ -73,10 +81,11 @@ describe('payments.helper.ts', () => {
         });
 
         it('should return an empty array if coverageParticipants has no flatExtra', () => {
-            const coverage: PolicyCoverage = {
+            const coverage = {
                 coverageLayers: [
                     {
                         coverageParticipants: [{}],
+                        coverageTerm: 1,
                     },
                 ],
             };
@@ -86,12 +95,13 @@ describe('payments.helper.ts', () => {
 
     describe('getParty', () => {
         it('should return the party with the matching partyId', () => {
-            const parties: Party[] = [
+            const parties: Parties[] = [
                 { partyId: '1', firstName: 'Party-1' },
                 { partyId: '2', firstName: 'Party-2' },
             ];
-            const systematicProgram: SystematicProgram = {
+            const systematicProgram = {
                 parties: [{ partyId: '2' }],
+                externalArrangementId: '1',
             };
             expect(getParty(parties, systematicProgram)).toEqual({
                 partyId: '2',
@@ -100,16 +110,18 @@ describe('payments.helper.ts', () => {
         });
 
         it('should return undefined if parties is undefined', () => {
-            const systematicProgram: SystematicProgram = {
-                party: [{ partyId: '1' }],
+            const systematicProgram = {
+                parties: [{ partyId: '1' }],
+                externalArrangementId: '1',
             };
             expect(getParty(undefined, systematicProgram)).toBeUndefined();
         });
 
         it('should return undefined if no party matches the partyId', () => {
-            const parties: Party[] = [{ partyId: '1', firstName: 'Party-1' }];
-            const systematicProgram: SystematicProgram = {
-                party: [{ partyId: '2' }],
+            const parties: Parties[] = [{ partyId: '1', firstName: 'Party-1' }];
+            const systematicProgram = {
+                parties: [{ partyId: '2' }],
+                externalArrangementId: '1',
             };
             expect(getParty(parties, systematicProgram)).toBeUndefined();
         });

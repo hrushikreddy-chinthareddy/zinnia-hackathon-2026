@@ -8,7 +8,7 @@ import { TransactionResponse } from '@deps/queries/api/bpm';
 import {
     Address,
     Email,
-    Party,
+    Parties,
     PartyType,
     Phone,
 } from '@zinnia/api-types/types/sor';
@@ -109,10 +109,8 @@ export interface BeneficiaryItem {
     };
 }
 
-export interface ExtendedParty extends Party {
+export interface ExtendedParty extends Parties {
     isPerStirpes?: boolean;
-    isIrrevocable?: boolean;
-    beneficiaryPercentage?: number;
 }
 
 export interface SignatureInfo {

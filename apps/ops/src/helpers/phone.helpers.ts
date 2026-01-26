@@ -1,4 +1,4 @@
-import { Party, Phone, PhoneType } from '@zinnia/api-types/types/sor';
+import { Parties, Phone, PhoneType } from '@zinnia/api-types/types/sor';
 
 import { isEndDated } from './date.helpers';
 
@@ -65,7 +65,7 @@ export function formatPhoneNumberWithExtension(phone: Phone): string {
 }
 
 interface BestAvailableContactNumberProps {
-    party: Party;
+    party: Parties;
 }
 
 export interface BestAvailableContactNumberResponse {

@@ -5,8 +5,8 @@ import {
     TransactionResponse,
 } from '@deps/queries/api/bpm';
 import {
-    LineOfBusiness,
     Policy,
+    Product,
     ProductType,
     Reason,
 } from '@zinnia/api-types/types/sor';
@@ -24,11 +24,16 @@ export abstract class LifeAsset {
     }
 
     isLifePolicy() {
-        return this.policy.product?.lineOfBusiness === LineOfBusiness.LIFE;
+        return (
+            this.policy.product?.lineOfBusiness === Product.lineOfBusiness.LIFE
+        );
     }
 
     isAnnuity() {
-        return this.policy.product?.lineOfBusiness === LineOfBusiness.ANNUITY;
+        return (
+            this.policy.product?.lineOfBusiness ===
+            Product.lineOfBusiness.ANNUITY
+        );
     }
 
     abstract checkEligibilitySystematicPrograms(): Promise<TransactionResponse>;
@@ -117,7 +122,7 @@ export class AnnuityAsset extends LifeAsset {
 
 export class LifeAssetFactory {
     static getLifeAsset(policy: Policy): LifeAsset {
-        if (policy.product?.lineOfBusiness === LineOfBusiness.LIFE) {
+        if (policy.product?.lineOfBusiness === Product.lineOfBusiness.LIFE) {
             if (policy.product?.productType === ProductType.UNIVERSALLIFE) {
                 return new ULAsset(policy);
             } else if (
@@ -126,7 +131,9 @@ export class LifeAssetFactory {
                 // TODO: what is the product type for IUL assets?
                 return new IULAsset(policy);
             }
-        } else if (policy.product?.lineOfBusiness === LineOfBusiness.ANNUITY) {
+        } else if (
+            policy.product?.lineOfBusiness === Product.lineOfBusiness.ANNUITY
+        ) {
             return new AnnuityAsset(policy);
 
             // example of specific productType
