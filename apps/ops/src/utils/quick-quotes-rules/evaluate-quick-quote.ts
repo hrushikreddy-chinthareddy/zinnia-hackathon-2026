@@ -356,6 +356,7 @@ export class QuickQuoteProducts {
         const { ageMin, ageMax, faceMin, faceMax } = riderRuleAlternatives;
         let isAgeInRange = true;
         let isFaceInRange = true;
+        let isADRAmountLessThanProduct = true;
 
         if (ageMin && ageMax) {
             isAgeInRange = this.isWithin(insuredAge, ageMin, ageMax);
@@ -379,19 +380,23 @@ export class QuickQuoteProducts {
             }
         }
 
-        if (isRiderADR(riderCode) && riderFaceAmount > productFaceAmount) {
-            nonEligibleReasons.push({
-                field: 'adrMaxFace',
-                expected: [0, productFaceAmount],
-                actual: riderFaceAmount,
-            });
+        if (isRiderADR(riderCode)) {
+            isADRAmountLessThanProduct = riderFaceAmount <= productFaceAmount;
+            if (!isADRAmountLessThanProduct) {
+                nonEligibleReasons.push({
+                    field: 'adrMaxFace',
+                    expected: [0, productFaceAmount],
+                    actual: riderFaceAmount,
+                });
+            }
         }
 
         return {
             riderName,
             riderCode,
             evaluated: true,
-            eligible: isAgeInRange && isFaceInRange,
+            eligible:
+                isAgeInRange && isFaceInRange && isADRAmountLessThanProduct,
             reasons: nonEligibleReasons,
         };
     }
