@@ -175,13 +175,7 @@ const UpcomingPaymentCard = ({
                         data-testid={UpcomingPaymentCardTest.INACTIVE}
                         className="flex h-[195px] w-full max-w-[inherit] flex-col justify-center rounded border-2 border-dashed border-gray-100 bg-gray-50"
                         icon={inactiveIcon}
-                        title={
-                            inactiveHeaderText
-                                ? (inactiveHeaderText ||
-                                      t('inactive.header')) ??
-                                  undefined
-                                : undefined
-                        }
+                        title={inactiveHeaderText}
                         subtitle={inactiveText || t('inactive.text')}
                     />
                 )}
