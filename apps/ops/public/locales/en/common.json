@@ -170,7 +170,6 @@
         "cumulativeMatchPaymentAmount": "Cumulative match payment amount",
         "prioritizationReasonRequired": "Select a reason to continue.",
         "prioritizationSourceRequired": "Select a source to continue.",
-        "prioritizationNotificationLabel": "Receive notification on changes to specified progress.",
         "prioritizationRefDataError": "Unable to load prioritization reasons and sources. Please refresh and try again.",
         "cumulativePerCharge": "Cumulative per charge",
         "cumulativePremiumSinceIssue": "Cumulative premium since issue",
@@ -3283,7 +3282,6 @@
             "sourcePlaceholder": "Select a source",
             "reasonRequired": "Select a reason to continue.",
             "sourceRequired": "Select a source to continue.",
-            "notificationLabel": "Receive notification on changes to specified progress.",
             "refDataError": "Unable to load prioritization reasons and sources. Please refresh and try again."
         },
         "deprioritizeCase": {
@@ -3303,8 +3301,7 @@
             "sourceLabel": "De-prioritization source",
             "sourcePlaceholder": "Select a source",
             "reasonRequired": "Select a reason to continue.",
-            "sourceRequired": "Select a source to continue.",
-            "notificationLabel": "Receive notification on changes to specified progress."
+            "sourceRequired": "Select a source to continue."
         },
         "navDrawer": {
             "topStatus": "Top Status",
