@@ -2707,6 +2707,7 @@
         "noTasksMessage": "Haga clic en 'Reclamar Tarea' para empezar.",
         "noTasks": "No hay tareas disponibles para su perfil en este momento.",
         "claimTaskError": "Error al reclamar tarea: ",
+        "fetchTaskError": "No se pueden obtener tareas",
         "unassignTaskError": "Error al desasignar tarea: ",
         "assignTaskError": "Error al asignar tarea",
         "unassignTask": "Desasignar Tarea",
