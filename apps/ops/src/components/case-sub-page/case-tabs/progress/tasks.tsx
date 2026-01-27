@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
+import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
@@ -30,8 +31,9 @@ export function Task({
     const sideSheet = useSideSheetContext();
     const { featureFlags } = useOptimizely();
     const router = useRouter();
-    const clientCaseId = router.query.id as string;
+    const caseActivityContext = useCaseActivityContext();
 
+    const clientCaseId = router.query.id as string;
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
             `${
@@ -43,8 +45,10 @@ export function Task({
             <GlobalTaskSideSheet
                 featureFlagDecisions={featureFlags}
                 taskId={task.id}
+                queue={task.queue}
                 caseId={clientCaseId || ''}
                 taskDescription={task.description}
+                carrier={caseActivityContext?.caseDetails?.carrier}
             />
         );
         sideSheet.handleOpen(true);

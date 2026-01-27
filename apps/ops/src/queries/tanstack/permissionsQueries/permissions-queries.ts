@@ -4,6 +4,8 @@ import {
     checkTuple,
     getCarrierList,
 } from '@deps/queries/api/fga';
+import { baseAppUrl } from '@deps/queries/api-config';
+import { client } from '@deps/queries/api-utils/client';
 import { BulkCheckTuple, FGA_Tuple } from '@deps/utils/auth';
 import {
     checkPermissionsCookieForTuple,
@@ -144,4 +146,57 @@ export const doesUserHavePagePermissionQuery = async (
     }
 
     return false;
+};
+export interface CheckQueueAccessRequest {
+    user: string;
+    relation: 'read_queue' | 'write_queue';
+    object: string;
+}
+
+interface CheckQueueAccessResponse {
+    allowed: boolean;
+}
+
+export const checkQueueAccess = async (
+    partyId: string,
+    queue?: string,
+    relation: 'read_queue' | 'write_queue' = 'read_queue'
+): Promise<boolean> => {
+    if (!queue) return false;
+
+    try {
+        const url = `${baseAppUrl}/api/fga/v1/check`;
+        const requestBody: CheckQueueAccessRequest = {
+            user: `party:${partyId}`,
+            relation,
+            object: `queue:${queue}`,
+        };
+
+        const response = await client.post<
+            CheckQueueAccessRequest,
+            { data: CheckQueueAccessResponse }
+        >(url, requestBody);
+        console.log('response', response);
+        return response?.data?.allowed;
+    } catch (error) {
+        console.error('Error in checkQueueAccess:', error);
+        return false;
+    }
+};
+
+export const checkQueuePermissions = async (
+    partyId: string,
+    queue?: string
+): Promise<{ canRead: boolean; canWrite: boolean }> => {
+    console.log('partyId', partyId, queue);
+    if (!partyId || !queue) {
+        return { canRead: false, canWrite: false };
+    }
+
+    const [canRead, canWrite] = await Promise.all([
+        checkQueueAccess(partyId, queue, 'read_queue'),
+        checkQueueAccess(partyId, queue, 'write_queue'),
+    ]);
+
+    return { canRead, canWrite };
 };
