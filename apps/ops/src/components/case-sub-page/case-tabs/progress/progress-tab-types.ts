@@ -8,6 +8,7 @@ export type TaskView = {
     status: string;
     updatedAt: string;
     taskName?: string;
+    queue: string;
 };
 
 export type ExceptionView = {
