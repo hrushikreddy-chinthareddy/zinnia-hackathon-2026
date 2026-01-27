@@ -521,7 +521,7 @@ export class TransformedCase {
                 return (
                     !isTaskMappedToStep(taskId) &&
                     !isTaskMappedToException(taskId) &&
-                    task?.queue
+                    typeof task.queue === 'string'
                 );
             })
 
@@ -534,6 +534,7 @@ export class TransformedCase {
                 updatedAt: task.updatedAt,
                 hasParentException: false,
                 parentExceptionStatus: null,
+                queue: task.queue as string,
             }));
 
         this.processSubType = (
@@ -583,6 +584,7 @@ export class TransformedCase {
             status: foundTask.status,
             updatedAt: foundTask.updatedAt,
             taskName: foundTask.taskName || '',
+            queue: foundTask.queue || '',
         };
     }
     // Builds an ExceptionView from an ExceptionInstance
