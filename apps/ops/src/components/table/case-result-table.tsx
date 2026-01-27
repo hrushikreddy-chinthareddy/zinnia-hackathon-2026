@@ -399,10 +399,6 @@ interface CaseResultTableProps {
     sortBy: string | null;
     caseSearchLoading: boolean;
     loadingMessage: string;
-    /**
-     * Whether any filters have been applied to the search results.
-     * True if advanced filters or detailed search criteria are active.
-     */
     isFiltered?: boolean;
 }
 
