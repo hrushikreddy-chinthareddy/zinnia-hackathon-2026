@@ -214,7 +214,6 @@ export default function CallLogsTab({
                             />
                         }
                         title={t('sideSheet.callLogsEmptyTitle')}
-                        subtitle={t('sideSheet.callLogsEmptyText')}
                         className="mt-8"
                     />
                 </div>

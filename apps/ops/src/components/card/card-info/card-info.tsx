@@ -14,7 +14,7 @@ export interface CardInfoProps extends JestProps {
     icon?: ReactNode;
     secondaryCta?: ReactNode;
     subtitle?: ReactNode;
-    title?: string;
+    title?: string | null;
 }
 
 const CardInfo = ({

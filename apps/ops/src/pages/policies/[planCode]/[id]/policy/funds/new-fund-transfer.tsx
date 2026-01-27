@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react';
 import PageLoader, {
     PageLoaderVariant,
 } from '@deps/components/page-loader/page-loader';
+import { PageHead } from '@deps/components/page-title';
 import FundTransferContainer from '@deps/containers/financial-transactions/fund-transfer/fund-transfer-container';
 import { FundTransferProvider } from '@deps/contexts/transactions/FundTransferContext';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';

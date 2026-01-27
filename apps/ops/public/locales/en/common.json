@@ -5834,7 +5834,7 @@
         "notes": "Notes ({{count}})",
         "notesEmptyTitle": "No notes yet.",
         "notesEmptyText": "Looks like there aren't any notes attached to this case.",
-        "callLogsEmptyTitle": "No related calls yet.",
+        "callLogsEmptyTitle": "No related calls available.",
         "callLogsEmptyText": "Looks like there are no related calls assigned to this case.",
         "callID": "Call ID",
         "backToCallList": "Back to call listing",
