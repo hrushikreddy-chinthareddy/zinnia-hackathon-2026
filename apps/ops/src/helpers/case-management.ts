@@ -476,3 +476,58 @@ export const getValidFullName = (owner: PartyInstance | FullName) => {
 
     return fullName;
 };
+
+/**
+ * Determines if any filters have been applied (advanced filters or search bar searches).
+ * Returns true if any additional filter differs from the default empty state,
+ * or if any search values have been entered in the search bar.
+ */
+export const hasActiveAdvancedFilters = (
+    additionalFilters: CaseSearchAdditionalFilters,
+    searchValue?: SearchViewQuery
+): boolean => {
+    const {
+        brokerDealerName,
+        createdDateStart,
+        createdDateEnd,
+        updatedDateStart,
+        updatedDateEnd,
+        age,
+        caseStatus,
+        processTypes,
+        requestSubType,
+        carriers,
+        products,
+        category,
+        reason,
+        escalated,
+        detailedReason,
+        issueStatus,
+        notInCaseStatus,
+    } = additionalFilters;
+
+    const hasAdvancedFilters =
+        (brokerDealerName !== undefined && brokerDealerName !== '') ||
+        (createdDateStart !== undefined && createdDateStart !== '') ||
+        (createdDateEnd !== undefined && createdDateEnd !== '') ||
+        (updatedDateStart !== undefined && updatedDateStart !== '') ||
+        (updatedDateEnd !== undefined && updatedDateEnd !== '') ||
+        (age !== undefined && age !== '') ||
+        (caseStatus !== undefined && caseStatus.length > 0) ||
+        (processTypes !== undefined && processTypes.size > 0) ||
+        (requestSubType !== undefined && requestSubType.size > 0) ||
+        (carriers !== undefined && Object.keys(carriers).length > 0) ||
+        (products !== undefined && products.size > 0) ||
+        (category !== undefined && category !== '') ||
+        (reason !== undefined && reason !== '') ||
+        (escalated !== undefined && escalated !== null) ||
+        (detailedReason !== undefined && detailedReason !== '') ||
+        (issueStatus !== undefined && issueStatus.length > 0) ||
+        (notInCaseStatus !== undefined && notInCaseStatus.length > 0);
+
+    const hasSearchValue = !!(
+        searchValue && Object.values(searchValue).some((value) => value)
+    );
+
+    return hasAdvancedFilters || hasSearchValue;
+};

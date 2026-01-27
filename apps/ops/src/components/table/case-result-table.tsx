@@ -399,25 +399,55 @@ interface CaseResultTableProps {
     sortBy: string | null;
     caseSearchLoading: boolean;
     loadingMessage: string;
+    /**
+     * Whether any filters have been applied to the search results.
+     * True if advanced filters or detailed search criteria are active.
+     */
+    isFiltered?: boolean;
 }
 
 const NoResultsRow = ({
     loadingMessage,
     caseSearchLoading,
+    isFiltered,
 }: {
     searchValues: SearchViewQuery | undefined;
     loadingMessage: string;
     caseSearchLoading: boolean;
+    isFiltered?: boolean;
 }) => {
     const { t } = useTranslation();
+    const noResultsMessage = isFiltered ? (
+        <>
+            <b>
+                {t(
+                    'caseManagementDashboard.search.empty.noResultsFilteredTitle'
+                )}
+            </b>
+            <br />
+            {t(
+                'caseManagementDashboard.search.empty.noResultsFilteredParagraph'
+            )}
+        </>
+    ) : (
+        <>
+            <b>
+                {t(
+                    'caseManagementDashboard.search.empty.noResultsUnfilteredTitle'
+                )}
+            </b>
+            <br />
+            {t(
+                'caseManagementDashboard.search.empty.noResultsUnfilteredParagraph'
+            )}
+        </>
+    );
 
     return (
         <TableRow>
             <TableCell colSpan={7} className="text-center">
                 <Typography variant={TypographyVariant.BodySm} className="my-4">
-                    {caseSearchLoading
-                        ? loadingMessage
-                        : t('caseManagementDashboard.search.empty.title')}
+                    {caseSearchLoading ? loadingMessage : noResultsMessage}
                 </Typography>
             </TableCell>
         </TableRow>
@@ -431,6 +461,7 @@ export const CaseResultTable = ({
     sortBy,
     caseSearchLoading,
     loadingMessage,
+    isFiltered,
 }: CaseResultTableProps) => {
     const { t } = useTranslation();
 
@@ -530,6 +561,7 @@ export const CaseResultTable = ({
                         searchValues={searchValues}
                         caseSearchLoading={caseSearchLoading}
                         loadingMessage={loadingMessage}
+                        isFiltered={isFiltered}
                     />
                 )}
             </TableBody>
