@@ -35,7 +35,7 @@
 
     .datePickerContainer {
         display: flex;
-        align-items: center;
+        align-items: start;
         gap: 20px;
 
         .datePicker {
@@ -47,6 +47,7 @@
 
         .ageLabel {
             color: var(--color-base-text-secondary, #676767);
+            padding-top: 30px;
         }
     }
 
