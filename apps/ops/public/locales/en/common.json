@@ -5199,7 +5199,7 @@
                 "interestRateTooltip": "This is the rate of growth being earned on the amount invested within a fixed fund.",
                 "nextSweepDate": "Next sweep date",
                 "nextSweepDateTooltip": "On this date, all money in the holding fund will be \"swept\" or moved into the policy's various funds, according to the owner's selected fund allocations. In most cases, the sweep date happens on the same date every month.",
-                "noFunds": "Nothing to show.",
+                "noFunds": "No funds available.",
                 "type": "Type",
                 "years": "$t(temporal.years, {{count}})",
                 "sheetDetail": "Details",

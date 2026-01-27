@@ -16,7 +16,6 @@ export interface CardInfoProps extends JestProps {
     subtitle?: ReactNode;
     title?: string;
 }
-console.log('test');
 
 const CardInfo = ({
     className,
