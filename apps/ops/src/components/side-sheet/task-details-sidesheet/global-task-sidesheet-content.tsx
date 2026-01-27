@@ -69,9 +69,14 @@ import {
     assignTaskAsAdmin,
     unAssignTaskAsAdmin,
 } from '@deps/queries/api/v1/task-admin';
-import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
+import {
+    getTaskInstance,
+    getTaskSummaryById,
+    updateTask,
+} from '@deps/queries/api/v2/task';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
+import { checkQueuePermissions } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
@@ -214,6 +219,8 @@ export default function GlobalTaskSideSheet({
     taskDescription,
     taskName,
     featureFlagDecisions,
+    queue,
+    carrier,
     onTaskClaimSuccess,
     onTaskUpdated,
     mappedDocuments,
@@ -243,6 +250,17 @@ export default function GlobalTaskSideSheet({
     const { user } = useUser();
     const sideSheet = useSideSheetContext();
     const isOpsManagerView = type === OPS_MANAGER_VIEW_TASK;
+    console.log('finalqueue', carrier, queue);
+
+    const getFinalAssignee = async (
+        task: ManagementTask,
+        isManagerView: boolean
+    ): Promise<string> => {
+        if (!isManagerView) {
+            return task.assignee ?? task.prefferedAssignee ?? '';
+        }
+        return await resolveAssigneeForTask(task);
+    };
 
     const {
         data: task,
@@ -251,22 +269,44 @@ export default function GlobalTaskSideSheet({
     } = useQuery({
         queryKey: ['taskInstance', taskId, isOpsManagerView],
         queryFn: async () => {
-            const data = await getTaskInstance({ taskId });
-            if (data && !data.caseId) {
-                data.caseId = caseId;
-            }
-            if (!data) {
-                return;
-            }
+            const finalQueue =
+                carrier && queue
+                    ? `${carrier.toLowerCase()}_${queue.toLowerCase()}`
+                    : '';
+            const queueaccess = await checkQueuePermissions(
+                user?.partyId || '',
+                finalQueue
+            );
 
-            let finalAssignee = NO_ASSIGNEE;
+            if (queueaccess.canWrite !== false) {
+                const data = await getTaskInstance({ taskId });
+                if (!data) {
+                    return;
+                }
+                if (!data.caseId) {
+                    data.caseId = caseId;
+                }
 
-            if (!isOpsManagerView) {
-                finalAssignee = data.assignee ?? data.prefferedAssignee ?? '';
+                const finalAssignee = await getFinalAssignee(
+                    data,
+                    isOpsManagerView
+                );
+                return { ...data, assignee: finalAssignee };
             } else {
-                finalAssignee = await resolveAssigneeForTask(data);
+                const data = await getTaskSummaryById({ taskId });
+                if (!data) {
+                    return;
+                }
+                if (!data.caseId) {
+                    data.caseId = caseId;
+                }
+
+                const finalAssignee = await getFinalAssignee(
+                    data,
+                    isOpsManagerView
+                );
+                return { ...data, assignee: finalAssignee };
             }
-            return { ...data, assignee: finalAssignee };
         },
         refetchOnMount: 'always',
     });
