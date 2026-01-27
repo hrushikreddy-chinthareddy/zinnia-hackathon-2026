@@ -2,23 +2,21 @@ import { getSession } from '@auth0/nextjs-auth0';
 import { GetServerSidePropsContext } from 'next';
 
 import { getUserData } from '@deps/helpers/query-data.helpers';
-import { serverApi } from '@deps/queries/api-utils/serverApiClient';
-import { ApiResponse } from '@deps/types/api-response';
+import { EnterpriseTokenApi } from '@deps/services/enterprise-api-token-http';
 import {
     getRolesFromCookie,
     setRolesCookie,
 } from '@deps/utils/permissionsCookie';
 import { LoggingContext } from '@deps/utils/server-logging';
-import { ReadTuplesResponse } from '@zinnia/api-types/types/fga';
 
 import * as readTuplesModule from './readTuples';
 
 jest.mock('@auth0/nextjs-auth0');
-jest.mock('@deps/queries/api-utils/serverApiClient');
+jest.mock('@deps/services/enterprise-api-token-http');
 jest.mock('@deps/helpers/query-data.helpers');
 jest.mock('@deps/utils/permissionsCookie');
 
-const serverApiMock = jest.mocked(serverApi);
+const EnterpriseTokenApiMock = jest.mocked(EnterpriseTokenApi);
 const getSessionMock = jest.mocked(getSession);
 const getUserDataMock = jest.mocked(getUserData);
 const getRolesFromCookieMock = jest.mocked(getRolesFromCookie);
@@ -58,35 +56,16 @@ describe('readTuples', () => {
                     name: 'Error reading tuple',
                 },
             });
-            expect(serverApiMock.get).not.toHaveBeenCalled();
+            expect(EnterpriseTokenApiMock.get).not.toHaveBeenCalled();
         });
 
         it('returns data when server responds 200', async () => {
-            serverApiMock.get.mockResolvedValueOnce({
+            EnterpriseTokenApiMock.get.mockResolvedValueOnce({
                 status: 200,
                 statusText: 'OK',
-                data: { tuples: [{ key: { object: 'role:ABC_admin' } }] },
-                error: null,
-            } as ApiResponse<ReadTuplesResponse>);
-
-            const res = await readTuplesModule.readUserTuples(
-                'token',
-                'q=1',
-                logCtx
-            );
-
-            expect(serverApiMock.get).toHaveBeenCalledTimes(1);
-            expect(res).toEqual({
-                data: { tuples: [{ key: { object: 'role:ABC_admin' } }] },
-                error: null,
-            });
-        });
-
-        it('returns an error object when server responds non-200', async () => {
-            serverApiMock.get.mockResolvedValueOnce({
-                status: 403,
-                statusText: 'Forbidden',
-                data: null,
+                json: async () => ({
+                    tuples: [{ key: { object: 'role:ABC_admin' } }],
+                }),
             } as any);
 
             const res = await readTuplesModule.readUserTuples(
@@ -95,7 +74,27 @@ describe('readTuples', () => {
                 logCtx
             );
 
-            expect(serverApiMock.get).toHaveBeenCalledTimes(1);
+            expect(EnterpriseTokenApiMock.get).toHaveBeenCalledTimes(1);
+            expect(res).toEqual({
+                data: { tuples: [{ key: { object: 'role:ABC_admin' } }] },
+                error: null,
+            });
+        });
+
+        it('returns an error object when server responds non-200', async () => {
+            EnterpriseTokenApiMock.get.mockResolvedValueOnce({
+                status: 403,
+                statusText: 'Forbidden',
+                json: async () => null,
+            } as any);
+
+            const res = await readTuplesModule.readUserTuples(
+                'token',
+                'q=1',
+                logCtx
+            );
+
+            expect(EnterpriseTokenApiMock.get).toHaveBeenCalledTimes(1);
             expect(res).toEqual({
                 data: null,
                 error: {
@@ -107,7 +106,7 @@ describe('readTuples', () => {
         });
 
         it('returns a 500 error object when the request throws', async () => {
-            serverApiMock.get.mockRejectedValueOnce(new Error('boom'));
+            EnterpriseTokenApiMock.get.mockRejectedValueOnce(new Error('boom'));
 
             const res = await readTuplesModule.readUserTuples(
                 'token',
@@ -115,7 +114,7 @@ describe('readTuples', () => {
                 logCtx
             );
 
-            expect(serverApiMock.get).toHaveBeenCalledTimes(1);
+            expect(EnterpriseTokenApiMock.get).toHaveBeenCalledTimes(1);
             expect(res).toEqual({
                 data: null,
                 error: {
@@ -150,7 +149,7 @@ describe('readTuples', () => {
             );
 
             expect(res).toEqual({ admin: ['ABC'] });
-            expect(serverApiMock.get).not.toHaveBeenCalled();
+            expect(EnterpriseTokenApiMock.get).not.toHaveBeenCalled();
             expect(setRolesCookieMock).not.toHaveBeenCalled();
         });
 
@@ -164,17 +163,17 @@ describe('readTuples', () => {
                 accessToken: 'token',
             } as any);
 
-            serverApiMock.get.mockResolvedValueOnce({
+            EnterpriseTokenApiMock.get.mockResolvedValueOnce({
                 status: 200,
                 statusText: 'OK',
-                data: {
+                json: async () => ({
                     tuples: [
                         { key: { object: 'role:ABC_admin' } },
                         { key: { object: 'role:XYZ_admin' } },
                         { key: { object: 'role:ABC_viewer' } },
                     ],
-                },
-            });
+                }),
+            } as any);
 
             const res = await readTuplesModule.readAndStoreUserRolesCookie(
                 ctx,
@@ -185,7 +184,7 @@ describe('readTuples', () => {
                 admin: ['ABC', 'XYZ'],
                 viewer: ['ABC'],
             });
-            expect(serverApiMock.get).toHaveBeenCalledTimes(1);
+            expect(EnterpriseTokenApiMock.get).toHaveBeenCalledTimes(1);
             expect(setRolesCookieMock).toHaveBeenCalledTimes(1);
             expect(setRolesCookieMock).toHaveBeenCalledWith(
                 {
@@ -207,18 +206,18 @@ describe('readTuples', () => {
                 accessToken: 'token',
             } as any);
 
-            serverApiMock.get.mockResolvedValueOnce({
+            EnterpriseTokenApiMock.get.mockResolvedValueOnce({
                 status: 200,
                 statusText: 'OK',
-                data: {
+                json: async () => ({
                     tuples: [
                         { key: { object: 'role:ABC' } },
                         { key: { object: 'not-a-role' } },
                         { key: {} },
                         {},
                     ],
-                },
-            });
+                }),
+            } as any);
 
             const res = await readTuplesModule.readAndStoreUserRolesCookie(
                 ctx,
@@ -226,7 +225,7 @@ describe('readTuples', () => {
             );
 
             expect(res).toEqual({});
-            expect(serverApiMock.get).toHaveBeenCalledTimes(1);
+            expect(EnterpriseTokenApiMock.get).toHaveBeenCalledTimes(1);
             expect(setRolesCookieMock).toHaveBeenCalledTimes(1);
             expect(setRolesCookieMock).toHaveBeenCalledWith(
                 {},

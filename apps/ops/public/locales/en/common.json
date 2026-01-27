@@ -2713,6 +2713,7 @@
         "noTasks": "No tasks available for your profile at this time.",
         "claimTaskError": "Claim task error: ",
         "unassignTaskError": "Unassign task error",
+        "fetchTaskError": "Unable to fetch tasks",
         "assignTaskError": "Assign task error",
         "unassignTask": "Unassign Task",
         "unassign": "Unassign",

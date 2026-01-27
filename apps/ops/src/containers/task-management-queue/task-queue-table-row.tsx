@@ -25,18 +25,15 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
+import { useTaskAssignee } from '@deps/hooks/useTaskAssignee';
 import { useTaskIdFromUrl } from '@deps/hooks/useTaskIdFromUrl';
-import {
-    getUserNameFromEmail,
-    NO_ASSIGNEE,
-} from '@deps/hooks/useTaskManagementQueue';
+import { NO_ASSIGNEE } from '@deps/hooks/useTaskManagementQueue';
 import {
     AssignedTask,
     TaskStatus,
     UnassignedTask,
 } from '@deps/models/case/task-instance';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
-import { searchUsersInGroupCSR } from '@deps/queries/api/server/fga/searchUsers';
 import { unassignTask } from '@deps/queries/api/v1/task';
 import {
     assignTaskAsAdmin,
@@ -75,7 +72,6 @@ type TaskQueueTableRowProps = {
     setOpenPopoverTaskId: (id: string | null) => void;
 };
 
-const PROCESSOR_ROLE = 'processor';
 export const OPS_MANAGER_VIEW_TASK = 'opsManagerView-task';
 
 export type StatusItem = {
@@ -101,19 +97,16 @@ const TaskQueueTableRow = ({
     const router = useRouter();
     const [_timer] = useState(performance.now());
     const [actionLoader, setActionLoader] = useState(false);
-    const [assigneeList, setAssigneeList] = useState<
-        { user: string; partyId: string }[]
-    >([]);
-    const [allAssigneeList, setAllAssigneeList] = useState<
-        { user: string; partyId: string }[]
-    >([]);
-    const [assigneeLoading, setAssigneeLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
 
     const [_loader, setLoader] = useState(false);
     const { taskType: _taskType, status: _status, carrier } = task;
     const carrierName =
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
+
+    const { allAssigneeList, assigneeLoading, refetch } = useTaskAssignee({
+        task,
+    });
 
     const handleUnassignTask = async (taskId: string) => {
         setActionLoader(true);
@@ -263,45 +256,20 @@ const TaskQueueTableRow = ({
         [manageTableAfterAction, task.id]
     );
 
-    const handleClick = async () => {
+    const handleClick = () => {
         if (assigneeList.length === 0 && !assigneeLoading) {
-            try {
-                setAssigneeLoading(true);
-                const usersData = await searchUsersInGroupCSR({
-                    carrier: task.carrier,
-                    queue: task.queue,
-                    access: PROCESSOR_ROLE,
-                });
-
-                const mappedUsers =
-                    usersData?.users.map((u: any) => ({
-                        user: getUserNameFromEmail(u.email),
-                        partyId: u.id.split(':')[1],
-                    })) || [];
-
-                setAllAssigneeList(mappedUsers);
-                setAssigneeList(mappedUsers);
-            } catch (error) {
-                browserLogError('Error fetching assignee list');
-            } finally {
-                setAssigneeLoading(false);
-            }
+            refetch();
         }
     };
 
-    const handleSearch = (value: string) => {
-        setSearchValue(value);
+    const assigneeList = allAssigneeList
+        ? allAssigneeList.filter((assignee) =>
+              assignee?.user?.toLowerCase().includes(searchValue.toLowerCase())
+          )
+        : [];
 
-        if (!value.trim()) {
-            setAssigneeList(allAssigneeList);
-            return;
-        }
-
-        setAssigneeList(
-            allAssigneeList.filter((a) =>
-                a.user.toLowerCase().includes(value.toLowerCase())
-            )
-        );
+    const handleSearch = (searchValue: string): void => {
+        setSearchValue(searchValue);
     };
 
     const openTaskSideSheet = useCallback(() => {
@@ -441,13 +409,7 @@ const TaskQueueTableRow = ({
     const onAssigneeClose = useCallback(() => {
         setOpenPopoverTaskId(null);
         setSearchValue('');
-        setAssigneeList(allAssigneeList);
-    }, [
-        setOpenPopoverTaskId,
-        setSearchValue,
-        setAssigneeList,
-        allAssigneeList,
-    ]);
+    }, [setOpenPopoverTaskId, setSearchValue]);
 
     const showBadge =
         task.escalated &&
