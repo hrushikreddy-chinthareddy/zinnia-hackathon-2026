@@ -2737,6 +2737,9 @@
                         "permissionDeniedTooltip": "Vous n'avez pas accès à cette transaction pour {{carrier}}."
                     }
                 },
+                "noResultsYet": "Vous n'avez pas encore de polices ou de contrats.",
+                "resultsSoon": "Vous verrez bientôt des polices et des contrats ici. Si vous pensez que quelque chose manque, consultez votre administrateur.",
+                "noResultsForSearch": "Nous n'avons pas pu trouver un contrat ou une police correspondant à votre recherche.",
                 "notFound": "We couldn't find a contract or policy that matches your search.",
                 "tryAgain": "Check your input and try again.",
                 "issues": "Still having issues?",
@@ -2914,6 +2917,10 @@
                 }
             },
             "empty": {
+                "noResultsUnfilteredTitle": "Aucun dossier à afficher en ce moment.",
+                "noResultsUnfilteredParagraph": "Vous verrez bientôt des dossiers ici. Si vous pensez que quelque chose manque, consultez votre administrateur.",
+                "noResultsFilteredTitle": "Nous n'avons pas pu trouver de dossier correspondant à votre recherche.",
+                "noResultsFilteredParagraph": "Vérifiez votre saisie et réessayez.",
                 "title": "Rien à montrer.",
                 "paragraph": "Ne vous inquiétez pas, c'est probablement juste une faute de frappe. Vérifiez votre saisie et réessayez.",
                 "action": {
@@ -5056,7 +5063,7 @@
             "linkedTo": "Ce document est lié à ce blah {{type}}.",
             "loadingDocuments": "Chargement des documents...",
             "name": "Nom",
-            "noResults": "Il semble qu'il n'y ait aucun document à afficher.",
+            "noResults": "Aucun document disponible.",
             "received": "Reçu",
             "receivedDate": "Date de réception",
             "results": "Résultats: {{total}}",
@@ -5108,7 +5115,7 @@
                 "interestRateTooltip": "Ceci est le taux de croissance généré sur le montant investi dans un fonds fixe.",
                 "nextSweepDate": "Prochaine date de balayage",
                 "nextSweepDateTooltip": "À cette date, tout l'argent du fonds de réserve sera \"balayé\" ou transféré dans les différents fonds de la police, selon les allocations de fonds sélectionnées par le propriétaire. Dans la plupart des cas, la date de balayage se produit le même jour chaque mois.",
-                "noFunds": "Rien à afficher.",
+                "noFunds": "Aucun fonds disponible.",
                 "type": "Type",
                 "years": "$t(temporal.years, {{count}})",
                 "sheetDetail": "Détails",
@@ -5741,7 +5748,7 @@
         "notes": "Remarques",
         "notesEmptyTitle": "Aucune note pour l'instant.",
         "notesEmptyText": "On dirait qu’aucune note n’est jointe à cette affaire.",
-        "callLogsEmptyTitle": "Aucun appel associé pour l'instant.",
+        "callLogsEmptyTitle": "Aucun appel lié disponible.",
         "callLogsEmptyText": "Il semble qu'aucun appel associé ne soit affecté à ce cas.",
         "callID": "ID d'appel",
         "backToCallList": "Retour à l'historique d'appels",
@@ -6617,8 +6624,7 @@
             "payoutAmount": "Montant du paiement",
             "payoutDateText": "Prochain paiement",
             "inactive": {
-                "text": "Il semble qu'il n'y ait pas de paiements à venir.",
-                "header": "Rien n'est encore prévu."
+                "text": "Il n'y a actuellement pas de {{type}} programmes systématiques configurés."
             }
         },
         "manageAutopay": "Gérer paiement automatique"
@@ -9025,6 +9031,10 @@
             "lastModified": "Dernière modification",
             "emptyState": "Il n'y a pas encore de cas clients",
             "loadingMessage": "Chargement des dossiers clients…",
+            "noResultsUnfilteredTitle": "Aucun cas de client à afficher en ce moment.",
+            "noResultsUnfilteredParagraph": "Vous verrez bientôt des cas de clients ici. Si vous pensez que quelque chose manque, consultez votre administrateur.",
+            "noResultsFilteredTitle": "Nous n'avons pas pu trouver de cas de client correspondant à votre recherche.",
+            "noResultsFilteredParagraph": "Vérifiez votre saisie et réessayez.",
             "viewClientCaseDetails": "Afficher les détails du dossier client",
             "viewClientCaseNumber": "Voir les détails du cas client {{clientCaseNumber}}"
         },

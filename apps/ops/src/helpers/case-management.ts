@@ -477,11 +477,6 @@ export const getValidFullName = (owner: PartyInstance | FullName) => {
     return fullName;
 };
 
-/**
- * Determines if any filters have been applied (advanced filters or search bar searches).
- * Returns true if any additional filter differs from the default empty state,
- * or if any search values have been entered in the search bar.
- */
 export const hasActiveAdvancedFilters = (
     additionalFilters: CaseSearchAdditionalFilters,
     searchValue?: SearchViewQuery

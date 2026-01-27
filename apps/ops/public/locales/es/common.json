@@ -2681,6 +2681,9 @@
                         "permissionDeniedTooltip": "No tiene acceso a esta transacción para {{carrier}}."
                     }
                 },
+                "noResultsYet": "Aún no tienes ninguna póliza o contrato.",
+                "resultsSoon": "Pronto verás pólizas y contratos aquí. Si crees que falta algo, consulta con tu administrador.",
+                "noResultsForSearch": "No pudimos encontrar un contrato o póliza que coincida con tu búsqueda.",
                 "notFound": "No pudimos encontrar un contrato o póliza que coincida con su búsqueda.",
                 "tryAgain": "Verifique su entrada e intente nuevamente.",
                 "issues": "¿Sigue teniendo problemas?",
@@ -2962,6 +2965,10 @@
                 }
             },
             "empty": {
+                "noResultsUnfilteredTitle": "No hay casos que mostrar ahora.",
+                "noResultsUnfilteredParagraph": "Pronto verás casos aquí. Si crees que falta algo, consulta con tu administrador.",
+                "noResultsFilteredTitle": "No pudimos encontrar un caso que coincida con tu búsqueda.",
+                "noResultsFilteredParagraph": "Comprueba tu entrada e intenta de nuevo.",
                 "title": "Nada que mostrar.",
                 "paragraph": "No se preocupe, probablemente sea solo un error tipográfico. Verifique su entrada y vuelva a intentarlo.",
                 "action": {
@@ -5110,7 +5117,7 @@
             "linkedTo": "Este documento está vinculado a este {{type}}.",
             "loadingDocuments": "Cargando documentos...",
             "name": "Nombre",
-            "noResults": "Parece que no hay documentos que mostrar.",
+            "noResults": "No hay documentos disponibles.",
             "received": "Recibido",
             "receivedDate": "Fecha de recepción",
             "results": "Resultados: {{total}}",
@@ -5161,7 +5168,7 @@
                 "interestRateTooltip": "Esta es la tasa de crecimiento que se está ganando en el monto invertido dentro de un fondo fijo.",
                 "nextSweepDate": "Próxima fecha de barrido",
                 "nextSweepDateTooltip": "En esta fecha, todo el dinero en el fondo de retención será \"barrido\" o transferido a los diversos fondos de la póliza, según las asignaciones de fondos seleccionadas por el propietario. En la mayoría de los casos, la fecha de barrido ocurre en la misma fecha todos los meses.",
-                "noFunds": "Nada que mostrar.",
+                "noFunds": "No hay fondos disponibles.",
                 "type": "Tipo",
                 "years": "$t(temporal.years, {{count}})",
                 "sheetDetail": "Detalles",
@@ -5784,7 +5791,7 @@
         "notes": "Notas ({{count}})",
         "notesEmptyTitle": "Aún no hay notas.",
         "notesEmptyText": "Parece que no hay notas adjuntas a este caso.",
-        "callLogsEmptyTitle": "Aún no hay llamadas relacionadas.",
+        "callLogsEmptyTitle": "No hay llamadas relacionadas disponibles.",
         "callLogsEmptyText": "Parece que no hay llamadas relacionadas asignadas a este caso.",
         "callID": "ID de llamada",
         "backToCallList": "Volver a la lista de llamadas",
@@ -6651,8 +6658,7 @@
             "payoutAmount": "Monto del pago",
             "payoutDateText": "Próximo pago",
             "inactive": {
-                "text": "Parece que no hay pagos próximos.",
-                "header": "Aún no hay nada programado."
+                "text": "Actualmente no hay {{type}} programas sistemáticos configurados."
             }
         },
         "manageAutopay": "Administrar pago automático"
@@ -9110,6 +9116,10 @@
             "lastModified": "Última modificación",
             "loadingMessage": "Cargando casos de clientes...",
             "emptyState": "Aún no hay casos de clientes",
+            "noResultsUnfilteredTitle": "No hay casos de clientes para mostrar ahora.",
+            "noResultsUnfilteredParagraph": "Pronto verás casos de clientes aquí. Si crees que falta algo, consulta con tu administrador.",
+            "noResultsFilteredTitle": "No pudimos encontrar un caso de cliente que coincida con tu búsqueda.",
+            "noResultsFilteredParagraph": "Comprueba tu entrada e intenta de nuevo.",
             "viewClientCaseDetails": "Ver detalles del client case",
             "viewClientCaseNumber": "Ver detalles del client case {{clientCaseNumber}}"
         },
