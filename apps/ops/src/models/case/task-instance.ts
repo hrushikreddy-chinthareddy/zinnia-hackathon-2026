@@ -154,8 +154,8 @@ export interface TaskSideSheetProps {
     taskDescription?: string;
     taskName?: string;
     mappedDocuments?: TaskDocument[];
-    queue: string;
-    carrier: string;
+    queue?: string;
+    carrier?: string;
     onTaskClaimSuccess?: () => void;
     onTaskUpdated?: (updatedTask: Task) => void;
 }
