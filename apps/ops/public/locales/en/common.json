@@ -5147,7 +5147,7 @@
             "linkedTo": "This document is linked to this {{type}}.",
             "loadingDocuments": "Loading documents...",
             "name": "Name",
-            "noResults": "Looks like there aren't any documents to display.",
+            "noResults": "No documents available.",
             "received": "Received",
             "receivedDate": "Date received",
             "results": "Results: {{total}}",
