@@ -45,15 +45,15 @@
 
     &.error {
         border-color: #ff000082;
-
-        .input::placeholder {
-            color: #ff000082;
-        }
     }
 }
 
-.errorMessage small {
-    color: #ff0000ae;
+label.errorMessage {
+    color: #ff000082;
     margin-left: var(--measure-dimension-stroke-sm);
-    visibility: visible;
+    display: none;
+
+    &.display {
+        display: block;
+    }
 }

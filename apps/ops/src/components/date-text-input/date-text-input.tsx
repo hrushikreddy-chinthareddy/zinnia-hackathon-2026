@@ -1,7 +1,6 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useRef, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { isValidDate } from '@deps/utils/dates';
 
@@ -11,6 +10,7 @@ interface DateTextInputProps {
     onChange: (args0: any) => void;
     defaultDate?: string | undefined;
     disabled?: boolean;
+    errorMessage?: string | null;
 }
 
 const REGEXP_PATTERN_DATE = 'd{2}/d{2}/d{4}';
@@ -19,10 +19,11 @@ const DateTextInput = ({
     onChange,
     defaultDate = '',
     disabled = false,
+    errorMessage,
 }: DateTextInputProps) => {
-    const { t } = useTranslation();
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState(defaultDate);
+    const [isValidDateFormat, setIsValidDateFormat] = useState(true);
 
     const handleContainerClick = () => {
         inputRef?.current?.focus();
@@ -49,17 +50,27 @@ const DateTextInput = ({
         onChange(input);
         const formatted = formatDateInput(input);
         setValue(formatted);
+
+        if (errorMessage && formatted.length >= 10) {
+            setIsValidDateFormat(isValidDate(formatted));
+        } else if (errorMessage && !formatted) {
+            setIsValidDateFormat(true);
+        }
     };
 
-    const isValidDateFormat = () => {
-        return value && !isValidDate(value);
+    const validateDate = (date: string) => {
+        if (errorMessage && date) {
+            setIsValidDateFormat(isValidDate(date));
+        } else if (errorMessage && !date) {
+            setIsValidDateFormat(true);
+        }
     };
 
     return (
         <>
             <div
                 className={clsx(styles.inputContainer, {
-                    [styles.error]: isValidDateFormat(),
+                    [styles.error]: !isValidDateFormat,
                 })}
                 onClick={handleContainerClick}
             >
@@ -74,16 +85,16 @@ const DateTextInput = ({
                     pattern={REGEXP_PATTERN_DATE}
                     placeholder="mm/dd/yyyy"
                     disabled={disabled}
+                    onBlur={() => validateDate(value)}
                 />
                 <Icon type={IconType.CALENDAR} />
             </div>
             <label
-                className={clsx({ [styles.errorMessage]: isValidDateFormat() })}
-                style={{ visibility: 'hidden' }}
+                className={clsx(styles.errorMessage, {
+                    [styles.display]: !isValidDateFormat,
+                })}
             >
-                <small>
-                    {t('clientCase.createClientCaseForm.dateErrorMessage')}
-                </small>
+                <small>{errorMessage}</small>
             </label>
         </>
     );
