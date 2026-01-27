@@ -1,5 +1,9 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+
+import { isValidDate } from '@deps/utils/dates';
 
 import styles from './date-text-input.module.css';
 
@@ -16,6 +20,7 @@ const DateTextInput = ({
     defaultDate = '',
     disabled = false,
 }: DateTextInputProps) => {
+    const { t } = useTranslation();
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState(defaultDate);
 
@@ -46,22 +51,41 @@ const DateTextInput = ({
         setValue(formatted);
     };
 
+    const isValidDateFormat = () => {
+        return value && !isValidDate(value);
+    };
+
     return (
-        <div className={styles.inputContainer} onClick={handleContainerClick}>
-            <input
-                ref={inputRef}
-                className={styles.input}
-                id="date"
-                type="text"
-                value={value}
-                onChange={handleChange}
-                maxLength={10}
-                pattern={REGEXP_PATTERN_DATE}
-                placeholder="mm/dd/yyyy"
-                disabled={disabled}
-            />
-            <Icon type={IconType.CALENDAR} />
-        </div>
+        <>
+            <div
+                className={clsx(styles.inputContainer, {
+                    [styles.error]: isValidDateFormat(),
+                })}
+                onClick={handleContainerClick}
+            >
+                <input
+                    ref={inputRef}
+                    className={styles.input}
+                    id="date"
+                    type="text"
+                    value={value}
+                    onChange={handleChange}
+                    maxLength={10}
+                    pattern={REGEXP_PATTERN_DATE}
+                    placeholder="mm/dd/yyyy"
+                    disabled={disabled}
+                />
+                <Icon type={IconType.CALENDAR} />
+            </div>
+            <label
+                className={clsx({ [styles.errorMessage]: isValidDateFormat() })}
+                style={{ visibility: 'hidden' }}
+            >
+                <small>
+                    {t('clientCase.createClientCaseForm.dateErrorMessage')}
+                </small>
+            </label>
+        </>
     );
 };
 

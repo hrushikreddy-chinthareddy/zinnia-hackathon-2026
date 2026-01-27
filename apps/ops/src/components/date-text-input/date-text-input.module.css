@@ -42,4 +42,18 @@
     &:has(.input:read-only) {
         background-color: var(--color-states-inactive-surface-inactive-fill);
     }
+
+    &.error {
+        border-color: #ff000082;
+
+        .input::placeholder {
+            color: #ff000082;
+        }
+    }
+}
+
+.errorMessage small {
+    color: #ff0000ae;
+    margin-left: var(--measure-dimension-stroke-sm);
+    visibility: visible;
 }
