@@ -22,8 +22,10 @@ import nextI18nextConfig from 'next-i18next.config';
 
 export default function OrderEntryPage({
     accessToken,
+    transactionId,
 }: {
     accessToken: string;
+    transactionId: string;
 }) {
     const getAccessToken = useCallback(async () => {
         return accessToken;
@@ -46,7 +48,10 @@ export default function OrderEntryPage({
 
     return (
         <div>
-            <zen-order-entry id="order-entry"></zen-order-entry>
+            <zen-order-entry
+                id="order-entry"
+                data-transaction-id={transactionId}
+            ></zen-order-entry>
         </div>
     );
 }
@@ -54,7 +59,22 @@ export default function OrderEntryPage({
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, _loggingContext) => {
-            const { locale = DEFAULT_LOCALE, req, res } = context;
+            const { locale = DEFAULT_LOCALE, params, req, res } = context;
+            const { transactionId } = params ?? {};
+
+            if (!transactionId) {
+                logInfo(
+                    'orderEntryPage::Missing orderId or customerId in params',
+                    _loggingContext
+                );
+                return {
+                    redirect: {
+                        destination: '/404',
+                        permanent: false,
+                    },
+                };
+            }
+
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
@@ -76,7 +96,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                     _loggingContext
                 );
 
-            if (!featureFlagDecisions[FEATURE_FLAGS.MARKET_CONNECT_ENABLED]) {
+            if (
+                !featureFlagDecisions[FEATURE_FLAGS.MARKET_CONNECT_ORDER_ENTRY]
+            ) {
                 logInfo(
                     'customersPage::Feature flag not enabled',
                     _loggingContext
@@ -100,6 +122,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ...translations,
                     user,
                     accessToken,
+                    transactionId,
                 },
             };
         },

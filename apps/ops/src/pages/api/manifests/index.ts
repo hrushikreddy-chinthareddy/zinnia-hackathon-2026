@@ -18,35 +18,7 @@ interface Config {
     };
 }
 
-const mockConfigs: Config[] = [
-    {
-        manifest: {
-            module: 'zinnia-screen-one',
-            version: '1.0.0',
-            assets: {
-                css: [
-                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/ZinniaScreenOneModule.css`,
-                ],
-                js: [
-                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/ZinniaScreenOneModule.js`,
-                ],
-            },
-        },
-    },
-    {
-        manifest: {
-            module: 'zinnia-screen-two',
-            version: '1.0.0',
-            assets: {
-                css: [
-                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/ZinniaScreenTwoModule.css`,
-                ],
-                js: [
-                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/ZinniaScreenTwoModule.js`,
-                ],
-            },
-        },
-    },
+const manifests: Config[] = [
     {
         manifest: {
             module: 'order-entry',
@@ -71,7 +43,7 @@ export default withAuthAndLogging(
         try {
             const configs: Config[] = [];
             modules.forEach((module: { name: string; version: string }) => {
-                const config = mockConfigs.find(
+                const config = manifests.find(
                     (config) => config.manifest.module === module.name
                 );
                 if (config) {

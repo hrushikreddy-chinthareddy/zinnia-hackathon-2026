@@ -28,6 +28,7 @@ export function useZEmbedInit(config: ZinniaConfig): ZEmbedInitResult {
                     clientId: 'zinnia-live',
                     modules: config.modules,
                     debug: config.debug,
+                    apiUrl: process.env.NEXT_PUBLIC_ZEMBED_API_URL,
                     accessToken: config.accessToken,
                 });
 
