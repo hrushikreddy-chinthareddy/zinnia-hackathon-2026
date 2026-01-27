@@ -9212,6 +9212,10 @@
             "lastModified": "Last modified",
             "loadingMessage": "Loading client cases...",
             "emptyState": "There are no client cases yet",
+            "noResultsUnfilteredTitle": "No client cases to show right now.",
+            "noResultsUnfilteredParagraph": "You’ll soon see client cases here. If you think something is missing, check with your administrator.",
+            "noResultsFilteredTitle": "We couldn't find a client case that matches your search.",
+            "noResultsFilteredParagraph": "Check your input and try again.",
             "viewClientCaseDetails": "View client case details",
             "viewClientCaseNumber": "View client case {{clientCaseNumber}} details"
         },

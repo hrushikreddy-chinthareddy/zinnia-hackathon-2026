@@ -24,7 +24,10 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useIllustrationsClientCase } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    IllustrationsClientCase,
+    ClientCaseSearchInputs,
+} from '@deps/types/illustrations';
 import { ProductType, ProductTypeLabel } from '@deps/types/product';
 import { formatRelativeTime } from '@deps/utils/dates';
 import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
@@ -37,7 +40,8 @@ const generateTableContent = (
     clientCases: IllustrationsClientCase[],
     t: TFunction,
     onRowClick: (url: string, clientCaseId: string) => void,
-    isLoading = true
+    isLoading = true,
+    isFiltered: boolean = false
 ) => {
     if (isLoading) {
         return (
@@ -168,22 +172,61 @@ const generateTableContent = (
                 </TableRow>
             );
         });
+    } else {
+        if (isFiltered) {
+            return (
+                <TableRow className={styles.tableEmptyStateRow}>
+                    <TableCell colSpan={6} align="center">
+                        <Typography variant={TypographyVariant.BodyBold}>
+                            {t(
+                                'clientCase.clientCaseTable.noResultsFilteredTitle'
+                            )}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {t(
+                                'clientCase.clientCaseTable.noResultsFilteredParagraph'
+                            )}
+                        </Typography>
+                    </TableCell>
+                </TableRow>
+            );
+        } else {
+            return (
+                <TableRow className={styles.tableEmptyStateRow}>
+                    <TableCell colSpan={6} align="center">
+                        <Typography variant={TypographyVariant.BodyBold}>
+                            {t(
+                                'clientCase.clientCaseTable.noResultsUnfilteredTitle'
+                            )}
+                        </Typography>
+                        <Typography variant={TypographyVariant.BodySm}>
+                            {t(
+                                'clientCase.clientCaseTable.noResultsUnfilteredParagraph'
+                            )}
+                        </Typography>
+                    </TableCell>
+                </TableRow>
+            );
+        }
     }
 
-    return (
-        <TableRow className={styles.tableEmptyStateRow}>
-            <TableCell colSpan={8} align="center">
-                <Typography variant={TypographyVariant.BodySm}>
-                    {t('clientCase.clientCaseTable.emptyState')}
-                </Typography>
-            </TableCell>
-        </TableRow>
+};
+
+// Helper function to check if any filters are applied
+const isResultsFiltered = (filters: ClientCaseSearchInputs): boolean => {
+    return Object.entries(filters).some(
+        ([key, value]) =>
+            // Check search filters, excluding pagination and sorting fields
+            !['limit', 'offset', 'sortBy', 'sortDir'].includes(key) &&
+            value !== '' &&
+            value !== undefined &&
+            value !== null
     );
 };
 
 export const ClientCaseTable = () => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { results, isLoading } = useIllustrationsClientCase();
+    const { results, isLoading, filters } = useIllustrationsClientCase();
     const router = useRouter();
     const { sendClientCaseClicked } = useIllustrationAnalytics();
 
@@ -191,6 +234,8 @@ export const ClientCaseTable = () => {
         sendClientCaseClicked(clientCaseId, href);
         router.push(href);
     };
+
+    const filteredResults = isResultsFiltered(filters);
 
     return (
         <Table>
@@ -265,7 +310,8 @@ export const ClientCaseTable = () => {
                     results?.results || [],
                     t,
                     goToClientCase,
-                    isLoading
+                    isLoading,
+                    filteredResults
                 )}
             </TableBody>
         </Table>
