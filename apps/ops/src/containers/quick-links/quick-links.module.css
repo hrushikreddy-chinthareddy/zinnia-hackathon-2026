@@ -5,6 +5,6 @@
     text-decoration: none;
 
     &:focus-visible {
-        border-radius: 4px;
+        border-radius: var(--measure-dimension-radius-sm);
     }
 }
