@@ -308,7 +308,7 @@ describe('groupSingleFundDetails', () => {
         const rateSectionResult = segmentSection.children[1] as DataSection;
         expect(rateSectionResult.type).toBe(FieldType.section);
         expect(rateSectionResult.label).toBe(
-            'allFields.segment SEG001 allFields.rates'
+            'allFields.segment SEG001 RATE001 allFields.rates'
         );
         expect(rateSectionResult.children).toHaveLength(2);
     });

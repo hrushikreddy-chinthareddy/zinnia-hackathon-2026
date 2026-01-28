@@ -637,7 +637,7 @@ export function groupSingleFundDetails({
                                 type: FieldType.section,
                                 label: `${t('allFields.segment')} ${
                                     segmentNode.label
-                                } ${t('allFields.rates')}`,
+                                } ${rateNode.label} ${t('allFields.rates')}`,
                                 children: rateFields,
                             };
                         }) ?? [];
