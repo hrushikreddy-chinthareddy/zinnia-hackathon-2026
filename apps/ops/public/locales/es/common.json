@@ -6658,7 +6658,8 @@
             "payoutAmount": "Monto del pago",
             "payoutDateText": "Próximo pago",
             "inactive": {
-                "text": "Actualmente no hay {{type}} programas sistemáticos configurados."
+                "text": "Parece que no hay pagos próximos.",
+                "header": "Aún no hay nada programado."
             }
         },
         "manageAutopay": "Administrar pago automático"
