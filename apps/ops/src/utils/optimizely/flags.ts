@@ -154,6 +154,7 @@ export enum FEATURE_FLAGS {
     MARKET_CONNECT_USER_PROFILE = 'market_connect_user_profile',
     MARKET_CONNECT_DELETE_CUSTOMER = 'market_connect_delete_customer',
     MARKET_CONNECT_ADD_CUSTOMER = 'market_connect_add_customer',
+    MARKET_CONNECT_ORDER_ENTRY = 'market_connect_order_entry',
     PARTY_NAME_CHANGE_TRANSACTION = 'party_name_change_transaction',
     SEND_CORRESPONDENCE = 'send_correspondence',
     POLICY_INDEX_TABLE_VIEW = 'policy_index_table_view',
