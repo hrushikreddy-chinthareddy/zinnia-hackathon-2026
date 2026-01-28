@@ -2388,13 +2388,9 @@
             }
         },
         "beneChange": {
-            "start": {
-                "title": "Gérer les bénéficiaires",
-                "subTitle": "Vous pouvez gérer vos bénéficiaires ici"
-            },
-            "confirm": {
-                "subTitle": "Les bénéficiaires ont été mis à jour"
-            }
+            "title": "Gérer les bénéficiaires",
+            "subTitle": "Vous pouvez gérer vos bénéficiaires ici",
+            "confirmSubTitle": "Les bénéficiaires ont été mis à jour"
         }
     },
     "welcome": {

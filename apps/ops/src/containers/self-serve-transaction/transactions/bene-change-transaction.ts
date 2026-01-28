@@ -48,7 +48,10 @@ export const beneChangeSubmitHandler =
                 caseId,
             };
         } catch (error) {
-            browserLogError('Error submitting bene change::', { error });
+            browserLogError('Error submitting bene change::', {
+                error,
+                payload,
+            });
             return {
                 response: null,
                 isSuccess: false,

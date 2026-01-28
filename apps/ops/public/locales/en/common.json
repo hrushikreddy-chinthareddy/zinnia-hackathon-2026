@@ -2328,13 +2328,9 @@
             }
         },
         "beneChange": {
-            "start": {
-                "title": "Manage Beneficiaries",
-                "subTitle": "Here you can manage your beneficiaries"
-            },
-            "confirm": {
-                "subTitle": "Beneficiaries have been updated"
-            }
+            "title": "Manage Beneficiaries",
+            "subTitle": "Here you can manage your beneficiaries",
+            "confirmSubTitle": "Beneficiaries have been updated"
         }
     },
     "welcome": {

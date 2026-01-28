@@ -12,7 +12,7 @@ export function PartyCardFieldTemplate(props: PartyCardFieldTemplateProps) {
     const { properties, formContext } = props;
     const { setCustomData } = formContext;
     const updatedActionData = [...(formContext.parentActionData || [])];
-    const prevActionDataRef = useRef<any>(undefined);
+    const prevActionDataRef = useRef<ActionDataItem[]>(undefined);
 
     const updateItem = (item: ActionDataItem) => ({
         ...item,

@@ -121,9 +121,9 @@ export const getSelfServeTransactionData = async (
                 ],
                 parentPage: ParentPage.CreateCase,
                 leaveTransactionLink: '/',
-                startStepTitle: 'beneChange.start.title',
-                startStepSubtitle: 'beneChange.start.subTitle',
-                confirmStepSubtitle: 'beneChange.confirm.subTitle',
+                startStepTitle: 'beneChange.title',
+                startStepSubtitle: 'beneChange.subTitle',
+                confirmStepSubtitle: 'beneChange.confirmSubTitle',
                 submitResponseHandler: beneChangeSubmitHandler,
             };
         }

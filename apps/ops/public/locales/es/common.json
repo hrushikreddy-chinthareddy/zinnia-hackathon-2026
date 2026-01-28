@@ -2333,13 +2333,9 @@
             }
         },
         "beneChange": {
-            "start": {
-                "title": "Administrar beneficiarios",
-                "subTitle": "Aquí puede administrar sus beneficiarios"
-            },
-            "confirm": {
-                "subTitle": "Los beneficiarios se han actualizado"
-            }
+            "title": "Administrar beneficiarios",
+            "subTitle": "Aquí puede administrar sus beneficiarios",
+            "confirmSubTitle": "Los beneficiarios se han actualizado"
         }
     },
     "welcome": {
