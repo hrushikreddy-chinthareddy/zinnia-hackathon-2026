@@ -190,6 +190,11 @@ export const getFormErrors = ({
             addressLine1: t('errors.streetAddress') as string,
         };
     }
+    if (!zipCode) {
+        errors = { ...errors, zipCode: t('errors.zipCode') as string };
+    } else if (zipCode.length < 5) {
+        errors = { ...errors, zipCode: t('errors.invalidZip') as string };
+    }
 
     if (!city) {
         errors = { ...errors, city: t('errors.city') as string };
@@ -197,12 +202,6 @@ export const getFormErrors = ({
 
     if (!state) {
         errors = { ...errors, state: t('errors.state') as string };
-    }
-
-    if (!zipCode) {
-        errors = { ...errors, zipCode: t('errors.zipCode') as string };
-    } else if (zipCode.length < 5) {
-        errors = { ...errors, zipCode: t('errors.invalidZip') as string };
     }
 
     return errors;

@@ -102,21 +102,21 @@ export const getFormErrors = ({
         }
     }
 
-    if (isEmpty(supportingDocumentMatchesWithNewName)) {
-        errors.supportingDocumentMatchesWithNewName = String(
-            t('people.sideSheet.name.errors.supportingDocumentNotMatchesError')
+    if (!uploadedFiles.length) {
+        errors.supportingDocumentRequired = String(
+            t('allFields.supportingDocumentRequired')
         );
     }
 
-    if (!uploadedFiles.length) {
-        errors.supportingDocumentRequired = String(
-            t('people.sideSheet.name.errors.supportingDocumentRequired')
+    if (isEmpty(supportingDocumentMatchesWithNewName)) {
+        errors.supportingDocumentMatchesWithNewName = String(
+            t('allFields.supportingDocumentMatchesWithNewNameRequired')
         );
     }
 
     if (isEmpty(signaturePresentOnDocumentForAllOwners)) {
         errors.signaturePresentOnDocumentForAllOwners = String(
-            t('people.sideSheet.name.errors.signatureNotPresentOnDocument')
+            t('allFields.signaturePresentOnDocumentRequired')
         );
     }
 

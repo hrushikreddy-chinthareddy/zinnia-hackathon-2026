@@ -636,6 +636,9 @@
         "status": "Active status",
         "submit": "Submit",
         "submitted": "Submitted! ",
+        "supportingDocumentMatchesWithNewNameRequired": "Supporting Document Name matches with New Name field is required",
+        "supportingDocumentRequired": "At least one supporting document is required.",
+        "signaturePresentOnDocumentRequired": "Signature Present on Document for all Owners field is required",
         "subtype": "Subtype",
         "suppressionIndicator": "Suppression indicator",
         "surrenderValue": "Surrender value",
@@ -6147,8 +6150,7 @@
                 "general": {
                     "addLine": "Add unit number, suite, floor, etc.",
                     "addAdressLine": "Add address line (e.g. floor, suite, etc)",
-                    "cancel": "Cancel",
-                    "remove": "Remove"
+                    "cancel": "Cancel"
                 },
                 "labels": {
                     "address": "Address",

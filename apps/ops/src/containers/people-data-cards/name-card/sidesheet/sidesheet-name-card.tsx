@@ -674,58 +674,68 @@ export const SidesheetNameCard = ({
 
                     {getContent()}
 
-                    <FileUpload
-                        value={uploadedFiles}
-                        onChange={handleFilesChange}
-                        error={uploadError}
-                        required={true}
-                    />
-                    <AssistiveText
-                        variant={AssistiveTextVariant.Error}
-                        text={currentErrors?.supportingDocumentRequired ?? ''}
-                    />
-
-                    <Radio
-                        items={documentMatchesOptions}
-                        orientation={RadioOrientation.Vertical}
-                        onChange={handleSupportingDocumentMatchesWithNewName}
-                        value={supportingDocumentMatchesWithNewName}
-                        required={true}
-                        disabled={false}
-                        label={t('supportingDocMatches') as string}
-                        name={'supportingDocumentMatchesWithNewName'}
-                        variant={RadioVariant.Default}
-                    />
-                    <AssistiveText
-                        variant={AssistiveTextVariant.Error}
-                        text={
-                            currentErrors?.supportingDocumentMatchesWithNewName ??
-                            ''
-                        }
-                    />
-                    <Radio
-                        items={documentAttachedOptions}
-                        orientation={RadioOrientation.Vertical}
-                        onChange={handleSignPresentChange}
-                        value={signaturePresentOnDocumentForAllOwners}
-                        required={true}
-                        label={t('signPresent') as string}
-                        name={'signaturePresentOnDocumentForAllOwners'}
-                        variant={RadioVariant.Default}
-                    />
-                    {signaturePresentOnDocumentForAllOwners === 'Yes' && (
+                    <div data-error-id="supportingDocumentRequired">
+                        <FileUpload
+                            value={uploadedFiles}
+                            onChange={handleFilesChange}
+                            error={uploadError}
+                            required={true}
+                        />
                         <AssistiveText
                             variant={AssistiveTextVariant.Error}
-                            text={currentErrors?.dateOfSignature ?? ''}
+                            text={
+                                currentErrors?.supportingDocumentRequired ?? ''
+                            }
                         />
-                    )}
-                    <AssistiveText
-                        variant={AssistiveTextVariant.Error}
-                        text={
-                            currentErrors?.signaturePresentOnDocumentForAllOwners ??
-                            ''
-                        }
-                    />
+                    </div>
+
+                    <div data-error-id="supportingDocumentMatchesWithNewName">
+                        <Radio
+                            items={documentMatchesOptions}
+                            orientation={RadioOrientation.Vertical}
+                            onChange={
+                                handleSupportingDocumentMatchesWithNewName
+                            }
+                            value={supportingDocumentMatchesWithNewName}
+                            required={true}
+                            disabled={false}
+                            label={t('supportingDocMatches') as string}
+                            name={'supportingDocumentMatchesWithNewName'}
+                            variant={RadioVariant.Default}
+                        />
+                        <AssistiveText
+                            variant={AssistiveTextVariant.Error}
+                            text={
+                                currentErrors?.supportingDocumentMatchesWithNewName ??
+                                ''
+                            }
+                        />
+                    </div>
+                    <div data-error-id="signaturePresentOnDocumentForAllOwners">
+                        <Radio
+                            items={documentAttachedOptions}
+                            orientation={RadioOrientation.Vertical}
+                            onChange={handleSignPresentChange}
+                            value={signaturePresentOnDocumentForAllOwners}
+                            required={true}
+                            label={t('signPresent') as string}
+                            name={'signaturePresentOnDocumentForAllOwners'}
+                            variant={RadioVariant.Default}
+                        />
+                        {signaturePresentOnDocumentForAllOwners === 'Yes' && (
+                            <AssistiveText
+                                variant={AssistiveTextVariant.Error}
+                                text={currentErrors?.dateOfSignature ?? ''}
+                            />
+                        )}
+                        <AssistiveText
+                            variant={AssistiveTextVariant.Error}
+                            text={
+                                currentErrors?.signaturePresentOnDocumentForAllOwners ??
+                                ''
+                            }
+                        />
+                    </div>
 
                     <TransactionCta
                         className="mt-4"

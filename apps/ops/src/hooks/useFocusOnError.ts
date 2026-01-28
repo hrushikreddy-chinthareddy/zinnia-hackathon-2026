@@ -39,10 +39,22 @@ export const useFocusOnError = <T extends object | undefined>(
                     `[data-error-id="${firstErrorKey}"]`
                 );
 
-                // Find focusable element within the container
-                const firstErrorElement = errorContainer?.querySelector(
-                    'input, textarea, select, [tabindex]:not([tabindex="-1"])'
-                ) as HTMLElement;
+                // Find all potential focusable elements within the container
+                const focusableElements = errorContainer?.querySelectorAll(
+                    'input, textarea, select, button, [tabindex]:not([tabindex="-1"])'
+                );
+
+                // Find the first visible, focusable element (skip hidden inputs like file inputs)
+                const firstErrorElement = focusableElements
+                    ? (Array.from(focusableElements).find((el) => {
+                          const htmlEl = el as HTMLElement;
+                          const isHidden =
+                              htmlEl.classList.contains('hidden') ||
+                              htmlEl.getAttribute('type') === 'hidden' ||
+                              htmlEl.offsetParent === null;
+                          return !isHidden;
+                      }) as HTMLElement)
+                    : null;
 
                 if (firstErrorElement) {
                     firstErrorElement.focus();
