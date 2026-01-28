@@ -43,7 +43,10 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { buildFullNameFromParty } from '@deps/helpers/string.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { useFocusOnError } from '@deps/hooks/useFocusOnError';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -205,10 +208,7 @@ const SideSheetBank = ({
     const handleValidation = async () => {
         const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) {
-            triggerErrorFocus();
-            return;
-        }
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
         let response;
         if (isAdd) {
             response = await validateNonFinancialTransaction({
@@ -270,10 +270,7 @@ const SideSheetBank = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) {
-            triggerErrorFocus();
-            return;
-        }
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         let response;
         if (isAdd) {

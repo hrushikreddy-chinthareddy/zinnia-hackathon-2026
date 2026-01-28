@@ -50,7 +50,10 @@ import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { getStateCodes } from '@deps/helpers/states.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { useFocusOnError } from '@deps/hooks/useFocusOnError';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -240,10 +243,7 @@ const SideSheetAddress = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ address, caseId, isDelete, t });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) {
-            triggerErrorFocus();
-            return;
-        }
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         if (isDelete) {
             setViewState(ViewState.Warn);

@@ -41,7 +41,10 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { useFocusOnError } from '@deps/hooks/useFocusOnError';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -197,10 +200,7 @@ const SideSheetEmail = ({
         const caseId = body.caseId;
         const errors = getFormErrors({ email, caseId, isDelete, t: defaultT });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) {
-            triggerErrorFocus();
-            return;
-        }
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         if (isDelete) {
             if (

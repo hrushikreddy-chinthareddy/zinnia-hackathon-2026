@@ -5,6 +5,17 @@ interface UseFocusOnErrorReturn {
     triggerErrorFocus: () => void;
 }
 
+export const hasErrorsAndFocus = <T extends object>(
+    errors: T,
+    triggerErrorFocus: () => void
+): boolean => {
+    if (Object.keys(errors).length > 0) {
+        triggerErrorFocus();
+        return true;
+    }
+    return false;
+};
+
 export const useFocusOnError = <T extends object | undefined>(
     errors: T
 ): UseFocusOnErrorReturn => {

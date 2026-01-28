@@ -52,7 +52,10 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
-import { useFocusOnError } from '@deps/hooks/useFocusOnError';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -209,10 +212,7 @@ export const SideSheetPhone = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ caseId, isDelete, phone, t: defaultT });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) {
-            triggerErrorFocus();
-            return;
-        }
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         if (isDelete) {
             setViewState(ViewState.Warn);
