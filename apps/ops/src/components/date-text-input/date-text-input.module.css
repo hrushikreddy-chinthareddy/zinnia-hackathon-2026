@@ -44,12 +44,12 @@
     }
 
     &.error {
-        border-color: #ff000082;
+        border-color: var(--color-status-text-status-error-text, #db004f);
     }
 }
 
 label.errorMessage {
-    color: #ff000082;
+    color: var(--color-status-text-status-error-text, #db004f);
     margin-left: var(--measure-dimension-stroke-sm);
     display: none;
 
