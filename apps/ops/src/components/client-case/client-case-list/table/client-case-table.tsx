@@ -212,7 +212,6 @@ const generateTableContent = (
 
 };
 
-// Helper function to check if any filters are applied
 const isResultsFiltered = (filters: ClientCaseSearchInputs): boolean => {
     return Object.entries(filters).some(
         ([key, value]) =>
