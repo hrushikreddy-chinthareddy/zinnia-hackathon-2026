@@ -227,10 +227,10 @@ const manifests: Config[] = [
             assets: {
                 // Use local version for this module
                 css: [
-                    'http://localhost:3000/zembed/modules/OrderEntry/v1/OrderEntryModule.css',
+                    'http://localhost:3000/modules/OrderEntry/v1/OrderEntryModule.css',
                 ],
                 js: [
-                    'http://localhost:3000/zembed/modules/OrderEntry/v1/OrderEntryModule.js',
+                    'http://localhost:3000/modules/OrderEntry/v1/OrderEntryModule.js',
                 ],
             },
         },
