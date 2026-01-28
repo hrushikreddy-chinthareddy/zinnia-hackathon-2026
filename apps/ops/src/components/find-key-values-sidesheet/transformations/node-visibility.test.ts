@@ -67,10 +67,11 @@ describe('excludeNodesByLabel', () => {
         );
     });
 
-    it('excludes fields based on funds useCase', () => {
+    it('excludes fields based on funds useCase, but not default useCase', () => {
         const investmentTypeField = makeField('investmentType', 'FIXED');
         const modelNameField = makeField('modelName', 'Test Model');
         const fundNameField = makeField('fundName', 'Test Fund');
+        const notHiddenSection = makeSection('hiddenSection', []);
 
         expect(
             excludeNodeByLabel({ node: investmentTypeField, useCase: 'funds' })
@@ -81,6 +82,9 @@ describe('excludeNodesByLabel', () => {
         expect(
             excludeNodeByLabel({ node: fundNameField, useCase: 'funds' })
         ).toEqual(fundNameField);
+        expect(
+            excludeNodeByLabel({ node: notHiddenSection, useCase: 'funds' })
+        ).toEqual(notHiddenSection);
     });
 
     it('does not exclude funds-specific fields when using default useCase', () => {
