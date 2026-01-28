@@ -89,13 +89,11 @@ const DateTextInput = ({
                 />
                 <Icon type={IconType.CALENDAR} />
             </div>
-            <label
-                className={clsx(styles.errorMessage, {
-                    [styles.display]: !isValidDateFormat,
-                })}
-            >
-                <small>{errorMessage}</small>
-            </label>
+            {!isValidDateFormat && (
+                <label className={clsx(styles.errorMessage)}>
+                    <small>{errorMessage}</small>
+                </label>
+            )}
         </>
     );
 };

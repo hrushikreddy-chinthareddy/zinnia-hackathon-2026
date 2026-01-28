@@ -51,9 +51,4 @@
 label.errorMessage {
     color: var(--color-status-text-status-error-text, #db004f);
     margin-left: var(--measure-dimension-stroke-sm);
-    display: none;
-
-    &.display {
-        display: block;
-    }
 }
