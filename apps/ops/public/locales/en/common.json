@@ -243,7 +243,7 @@
         "emailRequired": "Email is required.",
         "emailTooltip": "Please enter a valid email address.  Only one email address is allowed in this field.",
         "emptySearch": "No matches found",
-        "emptySystematicProgramsTable": "There are currently no {{type}} systematic programs.",
+        "emptySystematicProgramsTable": "There are currently no {{type}} systematic programs set up.",
         "endDate": "End date",
         "endingAccountValue": "Ending account value",
         "endingIn": "{{accountType}} ending in {{accountNumber}}",
@@ -6721,7 +6721,8 @@
             "payoutAmount": "Payout amount",
             "payoutDateText": "Next payout",
             "inactive": {
-                "text": "There are currently no {{type}} systematic programs set up."
+                "text": "Looks like there's no upcoming payouts.",
+                "header": "Nothing's scheduled yet."
             }
         },
         "manageAutopay": "Manage autopay"
