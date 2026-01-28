@@ -5,9 +5,8 @@ import { getPolicyTransaction } from '@deps/queries/api/policies';
 import {
     Policy,
     Transaction,
-    Transaction_Payor,
+    TransactionPayor,
     TransactionStatus,
-    TransactionType,
 } from '@zinnia/api-types/types/sor';
 
 import { getPaymentMethod } from '../side-sheet-transaction.helpers';
@@ -31,13 +30,13 @@ export const getReverseRecreateTransactionSideSheetValues = (
 
     const isPending = transaction.status === TransactionStatus.PENDING;
     const amount =
-        transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM
+        transactionType === Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
             ? paymentAmount
             : appliedAmount;
 
     const paymentMethod = getPaymentMethod(
         policy,
-        payors as Transaction_Payor[],
+        payors as TransactionPayor[],
         t
     );
 
@@ -72,7 +71,8 @@ export const getReverseRecreateTransactionSideSheetValues = (
         const isPending = status === TransactionStatus.PENDING;
 
         const amount =
-            transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM
+            transactionType ===
+            Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
                 ? paymentAmount
                 : appliedAmount;
 

@@ -30,6 +30,7 @@ describe('SystematicProgramsCard', () => {
     const generateMockActiveProgram = (): SystematicProgram => ({
         status: Status.ACTIVE,
         arrangementId: ArrangementType.PAYMENT,
+        externalArrangementId: 'ext_1',
         amount: faker.number.int({ min: 100, max: 5000 }),
         frequency: Frequency.MONTHLY,
         nextProgramDate: generateKebabDate(),
@@ -40,6 +41,7 @@ describe('SystematicProgramsCard', () => {
     const generateMockTerminatedProgram = (): SystematicProgram => ({
         status: Status.TERMINATED,
         arrangementId: ArrangementType.PAYMENT,
+        externalArrangementId: 'ext_2',
         amount: faker.number.int({ min: 100, max: 5000 }),
         frequency: Frequency.MONTHLY,
         endDate: generateKebabDate(),

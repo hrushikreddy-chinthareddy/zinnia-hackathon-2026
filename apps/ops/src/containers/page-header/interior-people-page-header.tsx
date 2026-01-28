@@ -23,10 +23,10 @@ import { checkExistingNameChangeEligibilityQuery } from '@deps/queries/tanstack/
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
+    Parties,
     PartyRole,
     PartyStatus,
     PartyType,
-    Party,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
@@ -35,7 +35,7 @@ import { NameCard } from '../people-data-cards/name-card/name-card';
 import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
 
 interface InteriorPeoplePageHeaderContainerProps {
-    selectedPolicyParty?: Party & {
+    selectedPolicyParty?: Parties & {
         producerName?: string;
         producerType?: string;
     };

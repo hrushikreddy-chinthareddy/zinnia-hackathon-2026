@@ -8,7 +8,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
-import { Party } from '@zinnia/api-types/types/sor';
+import { Parties } from '@zinnia/api-types/types/sor';
 
 import NavElement, {
     NavElementSize,
@@ -42,7 +42,7 @@ export const Breadcrumb = ({
 
     const checkBreadcrumbForPartyPii = (
         breadcrumbText?: string,
-        PolicyPartyRoles?: Party[]
+        PolicyPartyRoles?: Parties[]
     ) => {
         const partyNames = PolicyPartyRoles?.map(
             (party) =>

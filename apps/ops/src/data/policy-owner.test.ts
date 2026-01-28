@@ -1,17 +1,17 @@
 import { Party } from '@deps/models/policy-sor-touchups/Party';
 import {
     Address,
-    PartyType,
-    Suffix,
-    Gender,
-    Country,
-    State,
-    PreferredCommunicationType,
     AddressType,
-    PhoneType,
+    Country,
     EmailType,
     EmploymentStatus,
-    IdentificationType,
+    Gender,
+    Identification,
+    Parties,
+    PartyType,
+    PhoneType,
+    PreferredCommunicationType,
+    State,
 } from '@zinnia/api-types/types/sor';
 
 import { toPolicyOwnerDto } from './policy-owner';
@@ -24,7 +24,7 @@ const partyInfo: Party = {
     middleName: 'KISHOR',
     lastName: 'SINGH-TC03',
     fullName: '',
-    suffix: Suffix.JR,
+    suffix: Parties.suffix.JR,
     gender: Gender.MALE,
     dateOfBirth: '2004-10-05',
     birthCountry: Country.US,
@@ -86,9 +86,9 @@ const partyInfo: Party = {
     identifications: [
         {
             identificationValue: '12345',
-            identificationType: IdentificationType.SSN,
-            issueState: State.CA,
-            issueCountry: Country.NA,
+            identificationType: Identification.identificationType.SSN,
+            issueState: Identification.issueState.CA,
+            issueCountry: Identification.issueCountry.US,
         },
     ],
 };

@@ -1,7 +1,7 @@
 import { Channel } from '@deps/models/case/renewal/case-renewal';
 import { SignatureWithdrawal } from '@deps/models/case/withdrawal/case';
 import {
-    Party,
+    Parties,
     PartyRole,
     PartyType,
     PolicyPartyRoles,
@@ -99,7 +99,7 @@ export const getChannel = (documentId: string): Channel => {
 
 export const isAnnuitantSignatureRequired = (
     partyRoles: PolicyPartyRoles[],
-    parties: Party[]
+    parties: Parties[]
 ) => {
     const partyItem = partyRoles?.find(
         (item) => item.partyRole === PartyRole.OWNER

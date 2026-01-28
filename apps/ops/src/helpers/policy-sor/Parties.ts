@@ -9,8 +9,7 @@ import {
     EntityType,
     Gender,
     Identification,
-    IdentificationType,
-    Party,
+    Parties as ApiParties,
     PartyRole,
     PartyType,
     PreferredCommunicationType,
@@ -50,7 +49,7 @@ const orderedRoles = [
 ];
 
 export class PolicyParty {
-    party: Party;
+    party: ApiParties;
     public partyRolesList: PolicyPartyRoles[] = [];
     public addresses: Addresses;
     public ageInYears: number | undefined;
@@ -75,7 +74,7 @@ export class PolicyParty {
     public identifications: Identification[] | undefined;
     public citizenCountry: Country | undefined;
 
-    constructor(party: Party = {}) {
+    constructor(party: ApiParties = {}) {
         this.ageInYears = calculateAgeNumber(party.dateOfBirth);
         this.firstName = party.firstName;
         this.formattedBirthDate = convertKebabedDateString(party.dateOfBirth);
@@ -118,7 +117,7 @@ export class PolicyParty {
         return this.party.identifications?.find(
             (identification) =>
                 identification.identificationType ===
-                ('DRIVERLICENSE' as IdentificationType)
+                ('DRIVERLICENSE' as Identification.identificationType)
         );
     }
 
@@ -126,11 +125,11 @@ export class PolicyParty {
         return this.party.identifications?.filter(
             (identification) =>
                 identification.identificationType ===
-                IdentificationType.PASSPORT
+                Identification.identificationType.PASSPORT
         );
     }
 
-    public get ssn(): string | undefined {
+    public get ssn(): string | null | undefined {
         return this.party.identifications?.find(
             (identification) => identification.identificationType === 'SSN'
         )?.identificationValue;
@@ -140,14 +139,15 @@ export class PolicyParty {
         return this.party.identifications?.find(
             (identification) =>
                 identification.identificationType ===
-                IdentificationType.STATEPHOTOID
+                Identification.identificationType.STATEPHOTOID
         );
     }
 
     public get taxId() {
         return this.party.identifications?.find(
             (identification) =>
-                identification.identificationType === IdentificationType.TIN
+                identification.identificationType ===
+                Identification.identificationType.TIN
         );
     }
 

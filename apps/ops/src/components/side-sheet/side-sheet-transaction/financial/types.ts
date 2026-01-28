@@ -1,4 +1,4 @@
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 export interface BaseFinancialTransactionSideSheetModel {
     content?: string;
@@ -6,20 +6,20 @@ export interface BaseFinancialTransactionSideSheetModel {
     title?: string;
 }
 
-export const FinancialTransactionTypes: TransactionType[] = [
-    TransactionType.PAYMENT_INITIAL_PREMIUM,
-    TransactionType.INITIAL_PREMIUM,
-    TransactionType.ONE_TIME_PREMIUM,
-    TransactionType.PAYMENT_ONE_TIME_PREMIUM,
-    TransactionType.SUBSEQUENT_PAYMENT,
-    TransactionType.SUBSEQUENT_PREMIUM,
-    TransactionType.FULL_SURRENDER,
-    TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
-    TransactionType.FREE_LOOK_CANCELLATION,
-    TransactionType.NEW_LOAN,
-    TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
-    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
-    TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+export const FinancialTransactionTypes: Transaction.transactionType[] = [
+    Transaction.transactionType.PAYMENT_INITIAL_PREMIUM,
+    Transaction.transactionType.INITIAL_PREMIUM,
+    Transaction.transactionType.ONE_TIME_PREMIUM,
+    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
+    Transaction.transactionType.SUBSEQUENT_PAYMENT,
+    Transaction.transactionType.SUBSEQUENT_PREMIUM,
+    Transaction.transactionType.FULL_SURRENDER,
+    Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
+    Transaction.transactionType.FREE_LOOK_CANCELLATION,
+    Transaction.transactionType.NEW_LOAN,
+    Transaction.transactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];

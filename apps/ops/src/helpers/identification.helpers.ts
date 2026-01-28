@@ -1,16 +1,13 @@
-import {
-    Identification,
-    IdentificationType,
-} from '@zinnia/api-types/types/sor';
+import { Identification } from '@zinnia/api-types/types/sor';
 
 import { isEndDated } from './date.helpers';
 
 // The ID Types that are displayed in the main section of the card
 export const MAIN_IDENTIFICATION_TYPES = [
-    IdentificationType.SSN,
-    IdentificationType.TIN,
-    IdentificationType.EXTERNAL,
-    IdentificationType.OTHER,
+    Identification.identificationType.SSN,
+    Identification.identificationType.TIN,
+    Identification.identificationType.EXTERNAL,
+    Identification.identificationType.OTHER,
 ];
 
 /**

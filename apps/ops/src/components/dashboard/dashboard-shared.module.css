@@ -67,12 +67,14 @@
 
 .multiselectDropdowns {
     @media screen and (min-width: 1025px) {
-        width: 150px;
-        min-width: 150px;
+        width: var(--measure-dimension-z-space-38);
+        min-width: var(--measure-dimension-z-space-38);
     }
 }
 
 .filterItem {
+    min-width: var(--measure-dimension-z-space-38);
+
     @media screen and (min-width: 1025px) {
         flex: 1 1 auto;
         width: auto;
@@ -106,11 +108,11 @@
 .pieChartColumn {
     align-items: center;
     border-radius: 1px 4px 4px 1px;
-    background: var(--color-base-surface-surface-secondary, #f8f8f8);
+    background: var(--color-base-surface-secondary, #f8f8f8);
     padding: var(--measure-dimension-padding-4xl);
 
     @media screen and (min-width: 1440px) {
-        border-left: 2px solid var(--color-base-border-border-light, #ededed);
+        border-left: 2px solid var(--color-base-border-light, #ededed);
         padding: var(--measure-dimension-padding-5xl) 0 0 0;
     }
 }

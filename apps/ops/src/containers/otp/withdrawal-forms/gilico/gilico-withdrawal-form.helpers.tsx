@@ -52,7 +52,7 @@ import {
     FormDisbursementSelections,
 } from '@deps/models/case/withdrawal/disbursement-types';
 import { PartyRole, PartyType } from '@deps/models/policy/sor-policy';
-import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import { Parties, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../utils/form-validator.helpers';
@@ -241,7 +241,7 @@ export default function getGilicoConfig(
 
     const validatePartyTypeCompany = (
         partyRoles: PolicyPartyRoles[],
-        parties: Party[] | LifeCadParty[]
+        parties: Parties[] | LifeCadParty[]
     ) => {
         const partyRoleOwnerDetails = partyRoles?.find(
             (item) => item?.partyRole === PartyRole.OWNER
@@ -249,7 +249,7 @@ export default function getGilicoConfig(
 
         const policyPartyType = parties?.find(
             (pp) => pp?.partyId === partyRoleOwnerDetails?.partyId
-        ) as Party;
+        ) as Parties;
 
         const filterAnnuitantDetails = parties?.find(
             (pp) =>
@@ -262,12 +262,14 @@ export default function getGilicoConfig(
         const annuitantState =
             filterAnnuitantDetails?.addresses?.[0]?.state?.toUpperCase() ?? '';
 
+        // FIXME: 'CUSTODIAN' is not a valid value for PartyType according to Kong
         return (
-            qualType === FASTQualTypes.CUSTODIALINDIVIDUALRETIREMENTACCOUNT &&
-            formSubtype === FormSubtype.FullWithdrawal &&
-            (policyPartyType?.partyType === PartyType.ORGANIZATION ||
-                policyPartyType?.partyType === PartyType.CUSTODIAN) &&
-            spousalSignatureStateCodes.includes(annuitantState)
+            (qualType === FASTQualTypes.CUSTODIALINDIVIDUALRETIREMENTACCOUNT &&
+                formSubtype === FormSubtype.FullWithdrawal &&
+                policyPartyType?.partyType === PartyType.ORGANIZATION) ||
+            (policyPartyType?.partyType &&
+                String(policyPartyType?.partyType) === PartyType.CUSTODIAN &&
+                spousalSignatureStateCodes.includes(annuitantState))
         );
     };
 

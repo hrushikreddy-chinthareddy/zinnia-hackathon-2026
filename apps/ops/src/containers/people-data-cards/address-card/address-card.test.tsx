@@ -5,16 +5,15 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import {
     Address,
     AddressType,
-    Party,
     Country,
-    State,
-    Prefix,
-    Suffix,
-    Gender,
-    TrustType,
     EntityType,
-    PreferredCommunicationType,
+    Gender,
+    Parties,
     PartyType,
+    PreferredCommunicationType,
+    Prefix,
+    State,
+    TrustType,
 } from '@zinnia/api-types/types/sor';
 
 import AddressCard from './address-card';
@@ -48,7 +47,7 @@ describe('AddressCard', () => {
             zipCode: '10001',
             zipCodeExtension: '',
         };
-        const party: Party = {
+        const party: Parties = {
             partyId: '789',
             beneficiaryPercentage: 50,
             partyType: PartyType.INDIVIDUAL,
@@ -57,7 +56,7 @@ describe('AddressCard', () => {
             lastName: 'Smith',
             fullName: 'John Doe Smith',
             prefix: Prefix.MR,
-            suffix: Suffix.JR,
+            suffix: Parties.suffix.JR,
             gender: Gender.MALE,
             dateOfBirth: '1980-01-01',
             attainedAge: 43,
@@ -262,7 +261,7 @@ describe('AddressCard', () => {
                 zipCodeExtension: '',
             },
         ];
-        const party: Party = {
+        const party: Parties = {
             partyId: '789',
             beneficiaryPercentage: 50,
             partyType: PartyType.INDIVIDUAL,
@@ -271,7 +270,7 @@ describe('AddressCard', () => {
             lastName: 'Smith',
             fullName: 'John Doe Smith',
             prefix: Prefix.MR,
-            suffix: Suffix.JR,
+            suffix: Parties.suffix.JR,
             gender: Gender.MALE,
             dateOfBirth: '1980-01-01',
             attainedAge: 43,
@@ -305,7 +304,7 @@ describe('AddressCard', () => {
     });
 
     it('should not render anything if there are no addresses', () => {
-        const party: Party = {
+        const party: Parties = {
             partyId: '789',
             beneficiaryPercentage: 50,
             partyType: PartyType.INDIVIDUAL,
@@ -314,7 +313,7 @@ describe('AddressCard', () => {
             lastName: 'Smith',
             fullName: 'John Doe Smith',
             prefix: Prefix.MR,
-            suffix: Suffix.JR,
+            suffix: Parties.suffix.JR,
             gender: Gender.MALE,
             dateOfBirth: '1980-01-01',
             attainedAge: 43,

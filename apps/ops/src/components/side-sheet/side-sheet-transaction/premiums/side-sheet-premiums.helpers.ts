@@ -13,9 +13,8 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import {
     Policy,
     Transaction,
-    Transaction_Payor,
+    TransactionPayor,
     TransactionStatus,
-    TransactionType,
 } from '@zinnia/api-types/types/sor';
 
 import { getPaymentMethod } from '../side-sheet-transaction.helpers';
@@ -44,11 +43,11 @@ export const getAutopayPremiumSideSheetValues = (
         const isCanceled = status === TransactionStatus.CANCELED;
         const paymentMethod = getPaymentMethod(
             policy,
-            payors as Transaction_Payor[],
+            payors as TransactionPayor[],
             t
         );
         const isPayment =
-            transactionType === TransactionType.SUBSEQUENT_PAYMENT;
+            transactionType === Transaction.transactionType.SUBSEQUENT_PAYMENT;
         const reverseRecreateEnabled =
             featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
 
@@ -112,13 +111,13 @@ export const getInitialPremiumSideSheetValues = (
 
     const amount =
         isCanceled ||
-        transactionType === TransactionType.PAYMENT_INITIAL_PREMIUM
+        transactionType === Transaction.transactionType.PAYMENT_INITIAL_PREMIUM
             ? paymentAmount
             : appliedAmount;
 
     const paymentMethod = getPaymentMethod(
         policy,
-        payors as Transaction_Payor[],
+        payors as TransactionPayor[],
         t
     );
 
@@ -158,7 +157,8 @@ export const getOneTimePremiumSideSheetValues = (
         const isPending = status === ('Pending' as TransactionStatus);
         const isCanceled = status === ('Canceled' as TransactionStatus);
         const isPayment =
-            transactionType === TransactionType.PAYMENT_ONE_TIME_PREMIUM;
+            transactionType ===
+            Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM;
 
         const amount = isCanceled || isPayment ? paymentAmount : appliedAmount;
 
@@ -173,7 +173,7 @@ export const getOneTimePremiumSideSheetValues = (
             effectiveDate: convertKebabedDateString(effectiveDate),
             paymentMethod: getPaymentMethod(
                 policy,
-                payors as Transaction_Payor[],
+                payors as TransactionPayor[],
                 t
             ),
             processDate: convertKebabedDateString(processDate),
@@ -193,8 +193,8 @@ export const getOneTimePremiumSideSheetValues = (
                 isCanceled || isPending ? paymentAmount : requestedAmount,
             transactionId,
             transactionType: isPending
-                ? TransactionType.PAYMENT_ONE_TIME_PREMIUM
-                : TransactionType.ONE_TIME_PREMIUM,
+                ? Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
+                : Transaction.transactionType.ONE_TIME_PREMIUM,
             transactionValue: amount || requestedAmount,
         };
     } catch (error) {

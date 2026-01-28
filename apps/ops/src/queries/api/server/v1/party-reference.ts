@@ -48,7 +48,9 @@ export const partyRefSearch = async (
         const partyReferenceResponse = await EnterpriseTokenApi.post(
             partyReferenceUrl,
             JSON.stringify(searchReq),
-            {},
+            {
+                headers: { 'Content-Type': 'application/json' },
+            },
             loggingContext
         );
         const partyReferenceResponseObject =

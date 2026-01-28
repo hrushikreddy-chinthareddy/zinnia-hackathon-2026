@@ -12,8 +12,7 @@ export default {
             <div
                 className="container"
                 style={{
-                    backgroundColor:
-                        'var(--color-base-surface-surface-primary)',
+                    backgroundColor: 'var(--color-base-surface-primary)',
                     padding: 'var(--measure-dimension-padding-xl)',
                 }}
             >

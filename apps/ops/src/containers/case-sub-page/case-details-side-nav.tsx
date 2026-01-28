@@ -134,7 +134,7 @@ const CaseDetailsSideNav = ({
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t('sidenav.type')}
                             </Typography>
@@ -149,7 +149,7 @@ const CaseDetailsSideNav = ({
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t('sidenav.submissionType')}
                             </Typography>
@@ -164,7 +164,7 @@ const CaseDetailsSideNav = ({
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t('sidenav.transactionId')}
                             </Typography>
@@ -179,7 +179,7 @@ const CaseDetailsSideNav = ({
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t('sidenav.submissionSource')}
                             </Typography>
@@ -195,7 +195,7 @@ const CaseDetailsSideNav = ({
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t('sidenav.submittedBy')}
                             </Typography>
@@ -212,7 +212,7 @@ const CaseDetailsSideNav = ({
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t('sidenav.navButtons.document')}
                             </Typography>
@@ -239,7 +239,7 @@ const CaseDetailsSideNav = ({
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
+                                className="text-[--color-base-text-secondary]"
                             >
                                 {t('sidenav.navButtons.deliveryType')}
                             </Typography>
@@ -257,7 +257,7 @@ const CaseDetailsSideNav = ({
                             <div>
                                 <Typography
                                     variant={TypographyVariant.BodySm}
-                                    className="text-[--color-base-text-text-secondary]"
+                                    className="text-[--color-base-text-secondary]"
                                 >
                                     {t('sidenav.navButtons.correspondence')}
                                 </Typography>
@@ -292,7 +292,7 @@ const CaseDetailsSideNav = ({
                                 <React.Fragment key={idx}>
                                     <Typography
                                         variant={TypographyVariant.BodySm}
-                                        className="text-[--color-base-text-text-secondary]"
+                                        className="text-[--color-base-text-secondary]"
                                     >
                                         {t(`sidenav.${parentCaseKey}`)}
                                     </Typography>
@@ -327,7 +327,7 @@ const CaseDetailsSideNav = ({
                             <div className="flex items-center gap-1">
                                 <Typography
                                     variant={TypographyVariant.BodySm}
-                                    className="text-[--color-base-text-text-secondary]"
+                                    className="text-[--color-base-text-secondary]"
                                 >
                                     {t('sidenav.estimatedCompletion')}
                                 </Typography>
@@ -366,7 +366,7 @@ const CaseDetailsSideNav = ({
                             <>
                                 <Typography
                                     variant={TypographyVariant.BodySm}
-                                    className="text-[--color-base-text-text-secondary]"
+                                    className="text-[--color-base-text-secondary]"
                                 >
                                     {t('sidenav.name')}
                                 </Typography>
@@ -386,7 +386,7 @@ const CaseDetailsSideNav = ({
                             <>
                                 <Typography
                                     variant={TypographyVariant.BodySm}
-                                    className="text-[--color-base-text-text-secondary]"
+                                    className="text-[--color-base-text-secondary]"
                                 >
                                     {t('sidenav.socialSecurityNumber')}
                                 </Typography>
@@ -403,7 +403,7 @@ const CaseDetailsSideNav = ({
                             <>
                                 <Typography
                                     variant={TypographyVariant.BodySm}
-                                    className="text-[--color-base-text-text-secondary]"
+                                    className="text-[--color-base-text-secondary]"
                                 >
                                     {t('sidenav.nationalProducerNumber')}
                                 </Typography>

@@ -105,7 +105,7 @@
 }
 
 .agentEmail {
-    color: var(--color-base-text-text-secondary, #676767);
+    color: var(--color-base-text-secondary, #676767);
     font-weight: var(--string-font-weight-font-weight-regular, 400);
 }
 

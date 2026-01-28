@@ -80,7 +80,7 @@ describe('SideSheetBank helpers', () => {
                 },
                 {
                     label: 'people.card.bank.purpose.oneTimeWire',
-                    value: BankAccountPurpose.ONETIMEWIREEE,
+                    value: BankAccountPurpose.ONETIMEWIRE,
                 },
             ]);
         });

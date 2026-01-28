@@ -1,7 +1,7 @@
 import { CarrierName } from '@zinnia/bloom/components';
 import { useCallback } from 'react';
 
-import { Party } from '@zinnia/api-types/types/sor';
+import { Parties } from '@zinnia/api-types/types/sor';
 
 import useUserCarrier from './useUserCarrier';
 
@@ -20,7 +20,7 @@ export default function useAddOrEditPhoneOrEmailClick<T = void>({
     party,
 }: {
     defaultCallback: Callback<T>;
-    party: Party | undefined;
+    party: Parties | undefined;
 }) {
     const userCarrier = useUserCarrier();
 

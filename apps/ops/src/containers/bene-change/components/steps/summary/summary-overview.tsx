@@ -10,7 +10,7 @@ import { Action } from '@deps/constants/policy';
 import { useBeneChange } from '@deps/containers/bene-change/bene-change-provider';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
+import { Parties, PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
 import { getTagVariant, hasBeneficiaryChanged } from './summary-step.helpers';
 
@@ -75,9 +75,14 @@ const SummaryOverview = ({ policy }: { policy: Policy }) => {
                 const allocation =
                     item?.party?.allocation?.beneficiaryPercentage ?? 0;
 
+                // FIXME: currentData is NameTag[] but hasBeneficiaryChanged expects Parties[]
                 const hasActualChanges =
                     item.action === Action.UPDATE &&
-                    hasBeneficiaryChanged(item, currentData, policy);
+                    hasBeneficiaryChanged(
+                        item,
+                        currentData as Parties[],
+                        policy
+                    );
                 const action =
                     item?.action === Action.UPDATE
                         ? hasActualChanges

@@ -3,7 +3,7 @@
     &:not(:last-child) {
         .policyCardContainer {
             border-bottom: var(--measure-dimension-stroke-xs, 1px) solid
-                var(--color-base-border-border-light, #ededed);
+                var(--color-base-border-light, #ededed);
         }
     }
 }
@@ -27,11 +27,11 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    color: var(--color-base-text-text-primary, #212121);
+    color: var(--color-base-text-primary, #212121);
 }
 
 .timeAgo {
-    color: var(--color-base-text-text-secondary, #676767);
+    color: var(--color-base-text-secondary, #676767);
 }
 
 .policyCardRightSide {
@@ -55,6 +55,6 @@
 .carrierLogo {
     flex-shrink: 0;
     border: var(--measure-dimension-stroke-xs, 1px) solid
-        var(--color-base-border-border-light, #ededed);
+        var(--color-base-border-light, #ededed);
     border-radius: var(--measure-dimension-radius-sm, 0.25rem);
 }

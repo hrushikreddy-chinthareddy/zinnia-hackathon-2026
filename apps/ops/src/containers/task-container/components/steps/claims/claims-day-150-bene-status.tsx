@@ -18,7 +18,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
-import { TaskStatus } from '@deps/models/case/task-instance';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
@@ -151,7 +150,7 @@ export const ClaimBeneStatus = ({
 
                 <div className="py-2">
                     <Radio
-                        isDisabled={task.status === TaskStatus.Completed}
+                        isDisabled={readOnly}
                         id="beneStatus"
                         value={isBeneDeceased}
                         groupLabel={t('isDeceased') as string}
@@ -202,7 +201,7 @@ export const ClaimBeneStatus = ({
                     <div className="grid grid-cols-4">
                         <div className="col-span-1">
                             <BeneficiaryDeceased
-                                readOnly={task.status === TaskStatus.Completed}
+                                readOnly={readOnly}
                                 beneficiary={beneficiary}
                                 setBeneficiary={setBeneficiary}
                                 t={t}

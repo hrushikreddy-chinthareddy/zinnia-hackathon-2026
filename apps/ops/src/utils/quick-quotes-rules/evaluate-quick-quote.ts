@@ -6,19 +6,19 @@ import {
     PREMIUM_RIDER_ELIGIBILITY_LIST,
     RIDER_ELIGIBILITY_LIST,
 } from './rules';
-
-import type {
-    ProductClassResult,
-    RulesModel,
-    RiderRule,
-    IneligibilityReason,
-    ClassEligibilityResult,
-    getEligibleClassProps,
-    RiderInputNormalized,
-    RiderEligibilityResult,
-    RiderAlternatives,
-    ProductClassResultRiders,
-    RiderCode,
+import {
+    type ProductClassResult,
+    type RulesModel,
+    type RiderRule,
+    type IneligibilityReason,
+    type ClassEligibilityResult,
+    type getEligibleClassProps,
+    type RiderInputNormalized,
+    type RiderEligibilityResult,
+    type RiderAlternatives,
+    type ProductClassResultRiders,
+    type RiderCode,
+    isRiderADR,
 } from './types';
 
 /**
@@ -356,6 +356,7 @@ export class QuickQuoteProducts {
         const { ageMin, ageMax, faceMin, faceMax } = riderRuleAlternatives;
         let isAgeInRange = true;
         let isFaceInRange = true;
+        let isADRAmountLessThanProduct = true;
 
         if (ageMin && ageMax) {
             isAgeInRange = this.isWithin(insuredAge, ageMin, ageMax);
@@ -369,15 +370,22 @@ export class QuickQuoteProducts {
         }
 
         if (faceMin && faceMax) {
-            isFaceInRange = this.isWithin(
-                riderFaceAmount,
-                faceMin,
-                Math.min(faceMax, productFaceAmount)
-            );
+            isFaceInRange = this.isWithin(riderFaceAmount, faceMin, faceMax);
             if (!isFaceInRange) {
                 nonEligibleReasons.push({
                     field: 'face',
-                    expected: [faceMin, Math.min(faceMax, productFaceAmount)],
+                    expected: [faceMin, faceMax],
+                    actual: riderFaceAmount,
+                });
+            }
+        }
+
+        if (isRiderADR(riderCode)) {
+            isADRAmountLessThanProduct = riderFaceAmount <= productFaceAmount;
+            if (!isADRAmountLessThanProduct) {
+                nonEligibleReasons.push({
+                    field: 'adrMaxFace',
+                    expected: [0, productFaceAmount],
                     actual: riderFaceAmount,
                 });
             }
@@ -387,7 +395,8 @@ export class QuickQuoteProducts {
             riderName,
             riderCode,
             evaluated: true,
-            eligible: isAgeInRange && isFaceInRange,
+            eligible:
+                isAgeInRange && isFaceInRange && isADRAmountLessThanProduct,
             reasons: nonEligibleReasons,
         };
     }

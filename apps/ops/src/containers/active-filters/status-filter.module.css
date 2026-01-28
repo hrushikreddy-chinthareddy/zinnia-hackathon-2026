@@ -25,7 +25,7 @@
     font-weight: var(--font-weight-content-body-sm-font-weight);
     border: var(--measure-dimension-stroke-xs) solid;
     cursor: pointer;
-    color: var(--color-base-text-text-primary);
+    color: var(--color-base-text-primary);
     min-width: 210px;
     @media (max-width: 768px) {
         min-height: 56px;

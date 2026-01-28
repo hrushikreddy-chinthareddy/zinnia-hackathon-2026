@@ -33,10 +33,10 @@ const STATUS_TO_ICON: Record<Status, IconType> = {
 
 const STATUS_TO_COLOR: Record<Status, string> = {
     [Status.Complete]: 'var(--color-status-icon-status-success-icon, #007BFA)',
-    [Status.Progress]: 'var(--color-base-icon-icon-dark)',
-    [Status.NotStarted]: 'var(--color-base-icon-icon-default)',
+    [Status.Progress]: 'var(--color-base-icon-dark)',
+    [Status.NotStarted]: 'var(--color-base-icon-default)',
     [Status.Issue]: 'var(--color-status-icon-status-error-icon, #DB004F)',
-    [Status.Default]: 'var(--color-base-icon-icon-default)',
+    [Status.Default]: 'var(--color-base-icon-default)',
 };
 
 const PizzaTracker = ({ steps, className }: PizzaTrackerProps) => {

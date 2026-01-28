@@ -1,11 +1,11 @@
 import { WidgetProps } from '@rjsf/utils';
+import { useQuery } from '@tanstack/react-query';
 import {
     IconType,
     Icon,
     AssistiveText,
     AssistiveTextVariant,
 } from '@zinnia/bloom/components';
-import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { useState, ChangeEvent, useEffect, useRef } from 'react';
@@ -16,9 +16,7 @@ import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ActionTypes } from '@deps/models/case/task';
 import { TaskDocument } from '@deps/models/case/task-instance';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import { browserLogError } from '@deps/utils/browser-logging';
 import { handleKeyDown } from '@deps/utils/events';
-import { parseErrorInformation } from '@deps/utils/server-logging';
 import {
     SearchRequest,
     MetadataSearchResponse,
@@ -28,7 +26,7 @@ import { FileAttachmentProps } from '../../widgets/file-widget/file-widget';
 import style from '../../widgets/file-widget/file-widget.module.css';
 
 export const FileSearchField = ({
-    attachments,
+    attachments = [],
     setAttachments,
     widgetProps = {} as WidgetProps,
 }: FileAttachmentProps) => {
@@ -43,16 +41,13 @@ export const FileSearchField = ({
     } = widgetProps;
     const limit = 25;
     const offset = 0;
-    const [documents, setDocuments] = useState<MetadataSearchResponse[]>(
-        attachments || []
-    );
 
     const [filteredDocuments, setFilteredDocuments] = useState<
         MetadataSearchResponse[]
     >([]);
     const [inputValue, setInputValue] = useState<string>('');
     const inputRef = useRef<HTMLDivElement>(null);
-    const [fetchingDocuments, setFetchingDocuments] = useState<boolean>(false);
+
     const [error, setError] = useState<boolean>(false);
     const { t } = useTranslation(undefined, {
         keyPrefix: 'taskManagementQueue',
@@ -61,65 +56,22 @@ export const FileSearchField = ({
     const extractedCaseId = caseKey
         ? replacePlaceholders(caseKey, formContext?.customData)
         : '';
+    const extractedCarrier = formContext?.customData?.carrier;
+    const caseId = extractedCaseId || formContext?.customData?.caseId;
 
-    useEffect(() => {
-        const fetchApiData = async () => {
-            setFetchingDocuments(true);
-            const searchBody: SearchRequest = {
-                documentClassification:
-                    SearchRequest.documentClassification.INBOUND,
-                zinniaLiveCaseId:
-                    extractedCaseId || formContext?.customData?.caseId,
-                parentCarrierCode: formContext?.customData?.carrier,
-            };
-            try {
-                const { data, status } = await getDocumentSearchResultsQuery(
-                    searchBody,
-                    limit,
-                    offset
-                );
-                if (data) {
-                    setDocuments(data as MetadataSearchResponse[]);
-                } else if (status !== HttpStatusCode.Ok) {
-                    browserLogError(
-                        'fetchLinkedDocuments::Error fetching linked documents',
-                        {
-                            ...parseErrorInformation(error),
-                            caseId: formContext?.customData?.caseId,
-                            carrier: formContext?.customData?.carrier,
-                            fileName: 'autocomplete-widget-fetchApiData',
-                        }
-                    );
-                }
-            } catch (err) {
-                browserLogError(
-                    'fetchLinkedDocuments::Unexpected error occurred',
-                    {
-                        ...parseErrorInformation(err),
-                        caseId: formContext?.caseId,
-                        carrier: formContext?.carrier,
-                        fileName: 'autocomplete-widget::fetchApiData',
-                    }
-                );
-            } finally {
-                setFetchingDocuments(false);
-            }
-        };
-        if (attachments?.length) {
-            setDocuments(attachments);
-            setError(false);
-        } else {
-            fetchApiData();
-        }
-    }, [
-        error,
-        extractedCaseId,
-        formContext?.carrier,
-        formContext?.caseId,
-        formContext?.customData?.carrier,
-        formContext?.customData?.caseId,
-        attachments,
-    ]);
+    const searchParams: SearchRequest = {
+        documentClassification: SearchRequest.documentClassification.INBOUND,
+        zinniaLiveCaseId: caseId,
+        parentCarrierCode: extractedCarrier,
+    };
+
+    const { data: documents = [], isLoading } = useQuery({
+        queryKey: ['documentSearch', searchParams, limit, offset],
+        queryFn: () =>
+            getDocumentSearchResultsQuery(searchParams, limit, offset),
+        enabled: !!caseId && !!extractedCarrier,
+        select: (data) => (data.data || []) as MetadataSearchResponse[],
+    });
 
     const onFocusHandler = () => {
         if (readonly) {
@@ -237,11 +189,11 @@ export const FileSearchField = ({
                 />
             )}
             <div className="max-h-[300px] overflow-y-auto ">
-                {filteredDocuments.map((document) => (
+                {filteredDocuments.map((document, index) => (
                     <ClickContainer
                         ariaLabel={`different address`}
                         onClick={() => handleDocumentSelection(document)}
-                        key={document.documentId}
+                        key={`${index}-${document.documentId}`}
                         classes={style.detailContainer}
                     >
                         <div className={style.card}>
@@ -265,14 +217,14 @@ export const FileSearchField = ({
                     </ClickContainer>
                 ))}
             </div>
-            {!fetchingDocuments && !documents.length && (
+            {!isLoading && !documents.length && (
                 <AssistiveText
                     text={t('noDocumentFound')}
                     variant={AssistiveTextVariant.Error}
                     className="mt-2"
                 />
             )}
-            {fetchingDocuments && (
+            {isLoading && (
                 <AssistiveText
                     text={t('fetchingDocuments')}
                     variant={AssistiveTextVariant.Info}

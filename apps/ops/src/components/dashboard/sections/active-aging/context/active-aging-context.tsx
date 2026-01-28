@@ -101,6 +101,8 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
     const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(
         CaseCountGroupByEnum.PROCESS_SUB_TYPE
     );
+
+    // NOTE: Need to use feature flag to decide which store to pull from
     const { selectedCarriers, selectedBrokerDealers } = useDashboardStore(
         (state) => state
     );
@@ -114,8 +116,8 @@ export const ActiveAgingProvider: FC<PropsWithChildren> = ({ children }) => {
 
     const filter = {
         caseStatus: Object.keys(caseStatus) as Statuses[],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         createdDateStart,
         process: formatProcessFilter(selectedProcess),
     };

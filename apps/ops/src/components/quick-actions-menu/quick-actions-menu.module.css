@@ -4,7 +4,7 @@
     display: flex;
     width: fit-content;
     gap: var(--measure-dimension-z-space-1);
-    color: var(--color-base-icon-icon-action-text-link);
+    color: var(--color-base-icon-action-text-link);
     &:hover {
         color: var(--color-states-hover-text-hover-text-link);
     }

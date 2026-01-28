@@ -3,7 +3,7 @@
 }
 
 .fadedText {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .row {
@@ -53,7 +53,7 @@
     content: '';
     position: absolute;
     inset: -1px 0;
-    border: 1px solid var(--color-states-focus-focus-border);
+    border: 1px solid var(--color-states-focus-border);
     border-radius: 0;
     pointer-events: none;
     z-index: 15;
@@ -88,21 +88,21 @@
 }
 
 .opsManagerTaskTable tbody tr:has(.taskLink:focus-visible) .stickyTaskCol {
-    border-top: 1px solid var(--color-states-focus-focus-border);
-    border-bottom: 1px solid var(--color-states-focus-focus-border);
-    border-left: 1px solid var(--color-states-focus-focus-border);
+    border-top: 1px solid var(--color-states-focus-border);
+    border-bottom: 1px solid var(--color-states-focus-border);
+    border-left: 1px solid var(--color-states-focus-border);
 }
 
 .opsManagerTaskTable tbody tr:has(.taskLink:focus-visible) .stickyStatusCol {
-    border-top: 1px solid var(--color-states-focus-focus-border);
-    border-bottom: 1px solid var(--color-states-focus-focus-border);
+    border-top: 1px solid var(--color-states-focus-border);
+    border-bottom: 1px solid var(--color-states-focus-border);
 }
 
 .opsManagerTaskTable tbody tr:focus-visible td,
 .opsManagerTaskTable tbody tr:focus-visible .stickyTaskCol,
 .opsManagerTaskTable tbody tr:focus-visible .stickyStatusCol {
     background: var(--color-grayscale-color-50-gray);
-    outline: 1px solid var(--color-states-focus-focus-border);
+    outline: 1px solid var(--color-states-focus-border);
     outline-offset: -2px;
 }
 
@@ -116,23 +116,24 @@
 }
 
 .opsManagerTaskTable table thead tr th:global(.sr-only) + th {
-    border-top-left-radius: 8px;
+    border-top-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .opsManagerTaskTable table thead tr:first-child th:last-child {
-    border-top-right-radius: 8px;
+    border-top-right-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .opsManagerTaskTable table tbody tr:last-child td.taskLinkContainer + td {
-    border-bottom-left-radius: 8px;
+    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .opsManagerTaskTable table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 8px;
+    border-bottom-right-radius: var(--measure-dimension-radius-md, 0.25rem);
+    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .loaderCell {
-    border-bottom-left-radius: 8px;
+    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .taskLink:focus,
@@ -190,7 +191,7 @@
 }
 
 .unassignButton {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .tooltipText {

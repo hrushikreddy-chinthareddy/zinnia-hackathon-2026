@@ -28,7 +28,6 @@ export const QuickQuoteRidersSection = () => {
                     <QuickQuoteRiderRow key={riderName} riderName={riderName} />
                 )
             )}
-
             <QuickQuoteRiderSubtotalRow />
         </QuickQuoteResultTableSection>
     );

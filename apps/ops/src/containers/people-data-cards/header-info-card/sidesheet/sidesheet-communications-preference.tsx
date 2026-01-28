@@ -57,7 +57,7 @@ import {
     PreferredCommunicationType,
     Email,
     Address,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 import { sortEmailsByType } from '../../email-card/email-card.helpers';
@@ -495,7 +495,8 @@ export const SidesheetCommunicationsPreference = ({
                         }}
                         stopLoading={!loading}
                         trackEventProps={{
-                            type: TransactionType.COMMUNICATION_PREFERENCE_CHANGE,
+                            type: Transaction.transactionType
+                                .COMMUNICATION_PREFERENCE_CHANGE,
                             correlationId: body.correlationId,
                         }}
                         newSpinner={true}

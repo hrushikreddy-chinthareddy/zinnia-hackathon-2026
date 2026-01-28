@@ -3,7 +3,7 @@ import { LifeCadPartyRoles } from '@deps/models/case/withdrawal/case';
 import { PartyRoleId } from '@deps/types/constants';
 import {
     BankAccount,
-    Party,
+    Parties,
     PartyRole,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
@@ -77,7 +77,7 @@ export const isIrrevocableBeneficiaryExistsLC = (parties: LifeCadParty[]) => {
 };
 
 export const isIrrevocableBeneficiaryExists = (
-    parties: Party[],
+    parties: Parties[],
     partyRoles: PolicyPartyRoles[]
 ) => {
     const bene = partyRoles?.find(

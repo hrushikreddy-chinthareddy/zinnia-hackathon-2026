@@ -127,7 +127,7 @@ const ReceiveNewDocument = ({
 
             <div className="flex flex-col w-full mt-2">
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('receiveNewDocument.source')}
                     </div>
                     <div className="col-span-3" data-testid="document-source">
@@ -135,7 +135,7 @@ const ReceiveNewDocument = ({
                     </div>
                 </div>
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('receiveNewDocument.deceasedSsn')}
                     </div>
                     <div className="col-span-3" data-testid="document-ssn">
@@ -143,7 +143,7 @@ const ReceiveNewDocument = ({
                     </div>
                 </div>
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('receiveNewDocument.deceasedFirstName')}
                     </div>
                     <div
@@ -156,7 +156,7 @@ const ReceiveNewDocument = ({
                     </div>
                 </div>
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('receiveNewDocument.deceasedLastName')}
                     </div>
                     <div
@@ -169,7 +169,7 @@ const ReceiveNewDocument = ({
                     </div>
                 </div>
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('receiveNewDocument.deceasedDob')}
                     </div>
                     <div
@@ -184,7 +184,7 @@ const ReceiveNewDocument = ({
                     </div>
                 </div>
                 <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
-                    <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                    <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('receiveNewDocument.deceasedDod')}
                     </div>
                     <div

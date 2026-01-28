@@ -24,7 +24,7 @@
     min-height: 100%;
     gap: var(--measure-dimension-z-space-2);
     padding-bottom: var(--measure-dimension-z-space-6);
-    border-color: var(--color-base-border-border-light);
+    border-color: var(--color-base-border-light);
     border-bottom-width: 1px;
 
     h3 {
@@ -75,5 +75,5 @@
     grid-column-start: 1;
     text-align: end;
     font: var(--typography-labels-label-sm-alt);
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }

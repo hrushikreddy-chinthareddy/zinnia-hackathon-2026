@@ -1,6 +1,6 @@
 import {
     CoverageLayer,
-    Party,
+    Parties,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
@@ -91,7 +91,7 @@ export interface ProductRateQueryProps {
     errorMessage?: string;
     planCode?: string;
     partyRoles?: PolicyPartyRoles[];
-    parties?: Party[];
+    parties?: Parties[];
     policyYear?: number;
     resourceId?: ConfiguredSettingId;
 }

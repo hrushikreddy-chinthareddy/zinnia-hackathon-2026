@@ -31,7 +31,7 @@ import { DefaultValue } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 interface TransferProps {
     policy: Policy;
@@ -471,7 +471,7 @@ const Transfer = ({
                         secondaryCta={secondaryCta}
                         stopLoading={!loading}
                         trackEventProps={{
-                            type: TransactionType.FUND_TRANSFER,
+                            type: Transaction.transactionType.FUND_TRANSFER,
                             step: TransactionStep.Transfer,
                         }}
                         newSpinner={true}

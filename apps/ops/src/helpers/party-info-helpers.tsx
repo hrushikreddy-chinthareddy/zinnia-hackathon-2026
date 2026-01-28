@@ -16,12 +16,12 @@ import {
     CoverageParticipants,
     EmploymentStatus,
     Gender,
+    Parties,
     PartyType,
     Policy,
-    Party,
     PolicyCoverage,
+    PolicyPartyRoles,
     PreferredCommunicationType,
-    RelationshipToParty,
     RiskClass,
     SubStandardRating,
 } from '@zinnia/api-types/types/sor';
@@ -58,7 +58,7 @@ export const getHeaderIcon = (partyType: string | undefined): JSX.Element => {
     }
 };
 
-export const getPartyFullName = (partyInfo: Party | undefined): string => {
+export const getPartyFullName = (partyInfo: Parties | undefined): string => {
     const { partyType } = partyInfo || {};
     switch (partyType) {
         case PartyType.INDIVIDUAL:
@@ -74,7 +74,7 @@ export const getPartyFullName = (partyInfo: Party | undefined): string => {
 
 export const getHeaderText = (
     partyInfo:
-        | (Party & {
+        | (Parties & {
               producerName?: string;
               producerType?: string;
           })
@@ -121,7 +121,7 @@ export const getHeaderText = (
 export const getSelectedPolicyParty = (
     policy: Policy,
     personId: string | string[] | undefined
-): Party | null => {
+): Parties | null => {
     if (!personId || typeof personId !== 'string') return null;
     return (
         policy.parties?.find((person) => person.partyId === personId) ?? null
@@ -142,7 +142,7 @@ function formatAddress(address: Address) {
 }
 
 export const getPrefCommunicationType = (
-    partyInfo: Party | null,
+    partyInfo: Parties | null,
     t: TFunction
 ): JSX.Element | null => {
     const { preferredCommunicationType } = partyInfo || {};
@@ -215,43 +215,43 @@ export const getPrefCommunicationType = (
 };
 
 export const getRelationshipToInsured = (
-    relationshipToInsured: RelationshipToParty | null,
+    relationshipToInsured: PolicyPartyRoles.relationshipToParty | null,
     t: TFunction
 ): string | null => {
     switch (relationshipToInsured) {
-        case RelationshipToParty.CHILD:
+        case PolicyPartyRoles.relationshipToParty.CHILD:
             return t('relationshipToInsured.child');
-        case RelationshipToParty.SON:
+        case PolicyPartyRoles.relationshipToParty.SON:
             return t('relationshipToInsured.son');
-        case RelationshipToParty.DAUGHTER:
+        case PolicyPartyRoles.relationshipToParty.DAUGHTER:
             return t('relationshipToInsured.daughter');
-        case RelationshipToParty.GRANDCHILD:
+        case PolicyPartyRoles.relationshipToParty.GRANDCHILD:
             return t('relationshipToInsured.grandchild');
-        case RelationshipToParty.BROTHER:
+        case PolicyPartyRoles.relationshipToParty.BROTHER:
             return t('relationshipToInsured.brother');
-        case RelationshipToParty.SISTER:
+        case PolicyPartyRoles.relationshipToParty.SISTER:
             return t('relationshipToInsured.sister');
-        case RelationshipToParty.FATHER:
+        case PolicyPartyRoles.relationshipToParty.FATHER:
             return t('relationshipToInsured.father');
-        case RelationshipToParty.MOTHER:
+        case PolicyPartyRoles.relationshipToParty.MOTHER:
             return t('relationshipToInsured.mother');
-        case RelationshipToParty.STEPFATHER:
+        case PolicyPartyRoles.relationshipToParty.STEPFATHER:
             return t('relationshipToInsured.stepfather');
-        case RelationshipToParty.STEPMOTHER:
+        case PolicyPartyRoles.relationshipToParty.STEPMOTHER:
             return t('relationshipToInsured.stepmother');
-        case RelationshipToParty.SPOUSE:
+        case PolicyPartyRoles.relationshipToParty.SPOUSE:
             return t('relationshipToInsured.spouse');
-        case RelationshipToParty.DOMESTICPARTNER:
+        case PolicyPartyRoles.relationshipToParty.DOMESTICPARTNER:
             return t('relationshipToInsured.domesticPartner');
-        case RelationshipToParty.LIFEPARTNER:
+        case PolicyPartyRoles.relationshipToParty.LIFEPARTNER:
             return t('relationshipToInsured.lifePartner');
-        case RelationshipToParty.FIANCE:
+        case PolicyPartyRoles.relationshipToParty.FIANCE:
             return t('relationshipToInsured.fiance');
-        case RelationshipToParty.EXECUTORS:
+        case PolicyPartyRoles.relationshipToParty.EXECUTORS:
             return t('relationshipToInsured.executors');
-        case RelationshipToParty.SELF:
+        case PolicyPartyRoles.relationshipToParty.SELF:
             return t('relationshipToInsured.self');
-        case RelationshipToParty.OTHER:
+        case PolicyPartyRoles.relationshipToParty.OTHER:
             return t('relationshipToInsured.other');
         default:
             return relationshipToInsured;
@@ -483,7 +483,7 @@ export const getAddressType = (
     }
 };
 
-export const getFullName = (party: Party | undefined): string => {
+export const getFullName = (party: Parties | undefined): string => {
     if (!party) {
         return DEFAULT_ERROR_STRING;
     }
@@ -506,7 +506,7 @@ export const getFullName = (party: Party | undefined): string => {
  * const party = { prefix: 'Mr.', firstName: 'John', middleName: 'Jacob', lastName: 'Doe', suffix: 'Jr.' };
  * const firstLastName = getFirstLastName(party); // Returns: "Mr. John Doe Jr."
  */
-export const getFirstLastName = (party: Party | undefined): string => {
+export const getFirstLastName = (party: Parties | undefined): string => {
     if (!party) {
         return DEFAULT_ERROR_STRING;
     }
@@ -518,7 +518,7 @@ export const getFirstLastName = (party: Party | undefined): string => {
     );
 };
 
-export const getName = (party: Party | undefined): string => {
+export const getName = (party: Parties | undefined): string => {
     if (!party) {
         return DEFAULT_ERROR_STRING;
     }
