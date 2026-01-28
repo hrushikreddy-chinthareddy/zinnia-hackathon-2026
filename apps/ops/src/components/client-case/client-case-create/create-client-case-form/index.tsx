@@ -620,6 +620,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     )
                                 ),
                             })}
+                            errorMessage={t(
+                                'clientCase.createClientCaseForm.dateErrorMessage'
+                            )}
                             disabled={!canEditInsuredDetails}
                         />
                     </div>

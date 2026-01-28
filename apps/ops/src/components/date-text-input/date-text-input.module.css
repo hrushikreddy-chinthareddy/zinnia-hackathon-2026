@@ -42,4 +42,13 @@
     &:has(.input:read-only) {
         background-color: var(--color-states-inactive-surface-inactive-fill);
     }
+
+    &.error {
+        border-color: var(--color-status-text-status-error-text, #db004f);
+    }
+}
+
+label.errorMessage {
+    color: var(--color-status-text-status-error-text, #db004f);
+    margin-left: var(--measure-dimension-stroke-sm);
 }
