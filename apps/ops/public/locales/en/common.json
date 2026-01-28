@@ -9320,6 +9320,7 @@
             "maleButton": "Male",
             "femaleButton": "Female",
             "dateLabel": "Date of birth",
+            "dateErrorMessage": "DOB format is mm/dd/yyyy",
             "ageLabel": "Current Age",
             "riskLabel": "Risk class",
             "nicotineUserLabel": "Nicotine user",

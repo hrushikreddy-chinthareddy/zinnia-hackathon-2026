@@ -9101,6 +9101,7 @@
             "maleButton": "Homme",
             "femaleButton": "Femme",
             "dateLabel": "Date de naissance",
+            "dateErrorMessage": "Le format est mm/jj/aaaa",
             "ageLabel": "Âge actuel",
             "riskLabel": "Classe de risque",
             "nicotineUserLabel": "Utilisateur de nicotine",
