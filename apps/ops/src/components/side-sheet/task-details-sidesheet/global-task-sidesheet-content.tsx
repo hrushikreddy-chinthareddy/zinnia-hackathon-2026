@@ -267,7 +267,14 @@ export default function GlobalTaskSideSheet({
         isLoading: loading,
         isFetching,
     } = useQuery({
-        queryKey: ['taskInstance', taskId, isOpsManagerView],
+        queryKey: [
+            'taskInstance',
+            taskId,
+            isOpsManagerView,
+            carrier,
+            queue,
+            user?.partyId,
+        ],
         queryFn: async () => {
             const finalQueue =
                 carrier && queue
