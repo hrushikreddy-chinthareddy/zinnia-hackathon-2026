@@ -1,6 +1,6 @@
-import { Party, Policy } from '@zinnia/api-types/types/sor';
+import { Parties, Policy } from '@zinnia/api-types/types/sor';
 
-export const policyOwner = (policy: Policy): Party | undefined => {
+export const policyOwner = (policy: Policy): Parties | undefined => {
     const ownerParty = policy?.partyRoles?.find((p) =>
         ['Owner', 'OWNER'].includes(p.partyRole || '')
     );

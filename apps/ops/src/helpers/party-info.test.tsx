@@ -3,23 +3,23 @@ import { render } from '@testing-library/react';
 import { Party } from '@deps/models/policy-sor-touchups/Party';
 import { mockT as t } from '@deps/setupTests';
 import {
-    PartyType,
-    PolicyCoverage,
-    Prefix,
-    RelationshipToParty,
-    Suffix,
-    Gender,
-    Country,
-    State,
-    PreferredCommunicationType,
-    AddressType,
-    PhoneType,
-    EmailType,
     AccountStatus,
     AccountType,
-    RiskClass,
-    SubStandardRating,
+    AddressType,
+    Country,
+    EmailType,
     EmploymentStatus,
+    Gender,
+    Parties,
+    PartyType,
+    PhoneType,
+    PolicyCoverage,
+    PolicyPartyRoles,
+    PreferredCommunicationType,
+    Prefix,
+    RiskClass,
+    State,
+    SubStandardRating,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -49,7 +49,7 @@ const partyInfo: Party & {
     lastName: 'SINGH-TC03',
     fullName: '',
     prefix: Prefix.MR,
-    suffix: Suffix.JR,
+    suffix: Parties.suffix.JR,
     gender: Gender.MALE,
     dateOfBirth: '2004-10-05',
     birthCountry: Country.US,
@@ -130,6 +130,7 @@ const partyInfo: Party & {
 const coverage: PolicyCoverage = {
     coverageLayers: [
         {
+            coverageTerm: 0,
             coverageParticipants: [
                 {
                     flatExtra: [],
@@ -185,7 +186,7 @@ describe('getPrefCommunicationType', () => {
 describe('getRelationshipToInsured', () => {
     it('should return correct relationship to insured', () => {
         const relationshipToInsured = getRelationshipToInsured(
-            RelationshipToParty.STEPFATHER,
+            PolicyPartyRoles.relationshipToParty.STEPFATHER,
             t
         );
 

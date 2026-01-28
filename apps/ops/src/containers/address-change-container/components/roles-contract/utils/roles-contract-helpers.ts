@@ -7,11 +7,11 @@ import { TagKey } from '@deps/types/components';
 import {
     Address,
     AddressBase,
+    Parties,
     PartyRole,
     Phone,
     PhoneType,
     Policy,
-    Party,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
@@ -38,7 +38,7 @@ import { getRoleToLabelKeyMap } from '../../../utils/address-change-helpers';
 const isAddressAndPhoneMatch = (
     address: Address | undefined,
     homePhone: Phone | undefined,
-    policyParty: Party
+    policyParty: Parties
 ) => {
     const partyAddress = mapAddressToAddressCardData(
         policyParty?.addresses?.[0]
@@ -64,7 +64,7 @@ const isAddressAndPhoneMatch = (
     );
 };
 
-const isExistingEmail = (email: string, policyParty: Party) => {
+const isExistingEmail = (email: string, policyParty: Parties) => {
     return (
         typeof policyParty?.emails?.[0]?.emailAddress === 'string' &&
         email.toLowerCase().trim() ===
@@ -87,7 +87,7 @@ export const isRowAlreadySelected = (
 
 export const groupPartiesByAddress = (
     roles: PolicyPartyRoles[],
-    parties: Party[],
+    parties: Parties[],
     qualificationType: string,
     t: TFunction,
     getDefaultAddress: boolean = true
@@ -192,7 +192,7 @@ export const groupPartiesByAddress = (
 
 export const partyCardsEmail = (
     roles: PolicyPartyRoles[],
-    parties: Party[],
+    parties: Parties[],
     qualificationType: string,
     t: TFunction
 ): PartyAddressCard[] => {

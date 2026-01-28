@@ -18,7 +18,6 @@ import {
 import { v4 as uuidV4 } from 'uuid';
 
 import { UserProfile } from '@deps/models/user-profile';
-import { readAndStoreUserRolesCookie } from '@deps/queries/api/server/fga/readTuples';
 
 import pino from './pino-server';
 
@@ -345,7 +344,10 @@ export const withPageAuthAndLogging: WithPageAuthAndLogging = (
             logTrace('next-server page view', loggingContext);
 
             // Trigger user roles cookie to populate if expired
-            await readAndStoreUserRolesCookie(context, loggingContext);
+
+            // A.S. This was disabled because it requires the read_tuples permission,
+            // which most users don't have
+            // await readAndStoreUserRolesCookie(context, loggingContext);
 
             const pageSpecificProps = await getServerSideProps(
                 context,

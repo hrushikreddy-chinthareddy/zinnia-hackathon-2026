@@ -36,7 +36,7 @@ import {
     Address,
     ArrangementType,
     Policy,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
@@ -81,10 +81,10 @@ const SetUpSummary = ({ policy }: SummaryProps) => {
 
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
-            ? TransactionType.SUBSEQUENT_PREMIUM
+            ? Transaction.transactionType.SUBSEQUENT_PREMIUM
             : isSetUp
-            ? TransactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            ? Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
+            : Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [isSetUp, parentPage]);
 
     const handleContinue = async () => {

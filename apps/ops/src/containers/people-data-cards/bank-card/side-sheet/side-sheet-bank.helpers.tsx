@@ -183,7 +183,7 @@ export const getPurposeOptions = ({ t }: GetPurposeOptions) => [
     },
     {
         label: t('people.card.bank.purpose.oneTimeWire'),
-        value: BankAccountPurpose.ONETIMEWIREEE,
+        value: BankAccountPurpose.ONETIMEWIRE,
     },
 ];
 

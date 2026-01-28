@@ -127,6 +127,7 @@ describe('PendoAnalyticsInit', () => {
                 firstLogin: '2024-01-01T00:00:00.000Z',
                 // Internal flag comes from isInternalZinniaUser mock
                 isInternalZinniaUser: 'true',
+                /*
                 roles: ['admin', 'processor'],
                 carrierAccessList: ['ELIC', 'SBUL'],
                 roleToCarrierMap: [
@@ -134,6 +135,7 @@ describe('PendoAnalyticsInit', () => {
                     'admin:SBUL',
                     'processor:SBUL',
                 ],
+                */
             },
             account: {
                 id: 'zinnia',

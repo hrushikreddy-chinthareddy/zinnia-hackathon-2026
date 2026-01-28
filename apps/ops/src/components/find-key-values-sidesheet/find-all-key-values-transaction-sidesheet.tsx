@@ -16,7 +16,7 @@ import {
     getAccountingEntries,
     getAccountingEntriesQueryKey,
 } from '@deps/queries/tanstack/policyQueries/policyQueries';
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
 
@@ -43,7 +43,7 @@ export const FindAllKeyValuesTransactionSidesheet = ({
     planCode: string | undefined;
     onOpenChange: Dispatch<SetStateAction<boolean>>;
     transactionId: string | undefined;
-    transactionType: TransactionType | undefined;
+    transactionType: Transaction.transactionType | undefined;
     onTransactionSubmit?: () => void;
 }) => {
     const { t } = useTranslation();

@@ -66,6 +66,7 @@ export interface PermissionsContextProps {
     showRequestCorrection: boolean;
     isAllowOpsCaseReviewRequest: boolean;
     hasPermissionToPrioritizeCases: boolean;
+    hasDocumentAccess: boolean;
     hasMarketConnectContacts: boolean;
     isSuperIllustrator: boolean;
 }
@@ -248,6 +249,17 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         queryFn: () =>
             doesUserHavePagePermissionQuery(
                 UserPermission.AllowWriteCasePriority,
+                partyId
+            ),
+        enabled: !!partyId,
+        staleTime: FIFTEEN_MINUTES_IN_MS,
+    });
+
+    const { data: readDocument } = useQuery({
+        queryKey: ['readDocument', partyId],
+        queryFn: () =>
+            doesUserHavePagePermissionQuery(
+                UserPermission.AllowReadDocument,
                 partyId
             ),
         enabled: !!partyId,
@@ -462,6 +474,7 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
+                hasDocumentAccess: !!readDocument,
                 showZinniaLiveCaseActions:
                     !!fgaRoleData?.showZinniaLiveCaseActions,
                 showRequestCorrection: !!fgaRoleData?.showRequestCorrection,

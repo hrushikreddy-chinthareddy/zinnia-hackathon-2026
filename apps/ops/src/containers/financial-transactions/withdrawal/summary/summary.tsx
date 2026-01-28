@@ -24,6 +24,7 @@ import PayeeSummaryCard, {
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import {
+    forcePositiveNumber,
     normalizeNumber,
     numberFormatify,
 } from '@deps/helpers/numbers.helpers';
@@ -45,7 +46,7 @@ import {
     Address,
     Policy,
     TaxWithheldAmount,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalType } from '../amount/types';
@@ -112,8 +113,8 @@ const Summary = ({ policy }: SummaryProps) => {
 
     const transactionType = useMemo(() => {
         return withdrawal.type === WithdrawalType.Surrender
-            ? TransactionType.FULL_SURRENDER
-            : TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+            ? Transaction.transactionType.FULL_SURRENDER
+            : Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     const handleContinue = async () => {
@@ -166,7 +167,12 @@ const Summary = ({ policy }: SummaryProps) => {
                             tooltipBody={t('requestedWithdrawalTooltip')}
                         />
                         <Typography variant={TypographyVariant.Value}>
-                            {numberFormatify(amount)}
+                            {numberFormatify(
+                                forcePositiveNumber(
+                                    validationResponse?.quoteResponse
+                                        ?.transactionAmounts?.appliedAmount
+                                )
+                            )}
                         </Typography>
                         <Typography variant={TypographyVariant.Caption}>
                             {t('disbursement', {
@@ -293,7 +299,12 @@ const Summary = ({ policy }: SummaryProps) => {
                     payeeName={payeeFullName}
                     paymentType={paymentForm}
                     ownerTaxState={ownerTaxState}
-                    requestedAmountDollarAmount={numberFormatify(amount)}
+                    requestedAmountDollarAmount={numberFormatify(
+                        forcePositiveNumber(
+                            validationResponse?.quoteResponse
+                                ?.transactionAmounts?.appliedAmount
+                        )
+                    )}
                     // TODO MG: confirm this comment is valid
                     // Hardcoded for MVP - get back null usually (should that be 100?)
                     totalAllocationAmount={totalPayment}

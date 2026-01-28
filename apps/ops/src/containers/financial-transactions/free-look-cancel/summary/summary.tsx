@@ -34,7 +34,7 @@ import {
     Address,
     Policy,
     DisbursementPaymentForm,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 import styles from './summary.module.css';
@@ -178,7 +178,8 @@ const Summary = ({ policy }: SummaryProps) => {
                     policyNumber={policyNumber}
                     submitLabel={t('submitCancellation') as string}
                     trackEventProps={{
-                        type: TransactionType.FREE_LOOK_CANCELLATION,
+                        type: Transaction.transactionType
+                            .FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Summary,
                     }}
                 />

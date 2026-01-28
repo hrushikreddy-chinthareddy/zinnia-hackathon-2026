@@ -5,7 +5,6 @@ import { isInternalZinniaUser } from '@deps/helpers/user.helpers';
 import useUserCarrier from '@deps/hooks/user-carrier-specific/useUserCarrier';
 import { UserProfile as ZinniaUserProfile } from '@deps/models/user-profile';
 import { browserLogError } from '@deps/utils/browser-logging';
-import { getRolesFromCookie } from '@deps/utils/permissionsCookie';
 import { PendoOptions } from 'globals';
 
 // Account for additional properties on the user profile
@@ -18,13 +17,17 @@ const PendoAnalyticsInit = () => {
     const carrier = useUserCarrier();
 
     const initOptions = useMemo((): PendoOptions | undefined => {
+        /*
         const userRolesMap = getRolesFromCookie();
         if (!userRolesMap) {
             return undefined;
         }
+        */
 
         if (user?.partyId && carrier) {
             const isInternalUser = isInternalZinniaUser(user);
+
+            /*
             const roles = Object.keys(userRolesMap);
 
             // Combine and deduplicate carriers
@@ -40,6 +43,7 @@ const PendoAnalyticsInit = () => {
                     )
                 )
                 .flat();
+            */
 
             return {
                 visitor: {
@@ -47,9 +51,11 @@ const PendoAnalyticsInit = () => {
                     email: user.email ?? undefined,
                     firstLogin: user.updated_at ?? undefined,
                     isInternalZinniaUser: String(isInternalUser ?? false),
+                    /*
                     roles,
                     carrierAccessList,
                     roleToCarrierMap,
+                    */
                 },
                 account: {
                     id: carrier, // Indicates the source of traffic (Zinnia Live vs 3rt party portal)

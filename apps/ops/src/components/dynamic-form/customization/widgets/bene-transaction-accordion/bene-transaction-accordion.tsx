@@ -4,16 +4,16 @@ import { useRef, useState, useEffect } from 'react';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { Action, EntityTypeValue, Roles } from '@deps/constants/policy';
+import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import {
     AddressType,
     EmailType,
-    IdentificationType,
+    Identification,
     PartyRole,
     PartyType,
     PhoneType,
-    RelationshipToInsured,
-} from '@deps/models/policy/sor-policy';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import styles from './bene-transaction-accordion.module.css';
 import { BeneficiaryRole, PanelHeights, TabTitle } from './types';
@@ -182,13 +182,15 @@ const TransactionAccordion = ({
                 identifications: [
                     {
                         identificationValue: null,
-                        identificationType: IdentificationType.SSN,
+                        identificationType:
+                            Identification.identificationType.SSN,
                     },
                 ],
             },
             partyRole: {
                 partyRole: PartyRole.PRIMARYBENEFICIARY,
-                relationshipToParty: RelationshipToInsured.OTHER,
+                relationshipToParty:
+                    PolicyPartyRoles.relationshipToInsured.OTHER,
             },
         };
 

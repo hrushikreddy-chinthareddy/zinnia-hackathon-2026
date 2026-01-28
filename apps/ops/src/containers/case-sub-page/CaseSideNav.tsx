@@ -25,7 +25,7 @@ import {
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { LineOfBusiness } from '@zinnia/api-types/types/sor';
+import { Product } from '@zinnia/api-types/types/sor';
 
 import CaseDetailsSideNav from './case-details-side-nav';
 import { getSideNavData } from './case-helpers';
@@ -90,7 +90,7 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { loadingPolicy, policy } = useCaseActivityContext();
     const [isAnnuity, setIsAnnuity] = useState(
-        policy?.product?.lineOfBusiness === LineOfBusiness.LIFE
+        policy?.product?.lineOfBusiness === Product.lineOfBusiness.LIFE
     );
     const imageSrc = getCarrierLogoByClientId(data?.carrier);
 
@@ -98,7 +98,7 @@ const ContractDetails = ({ data }: CaseSideNavProps) => {
 
     useEffect(() => {
         setIsAnnuity(
-            policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY
+            policy?.product?.lineOfBusiness === Product.lineOfBusiness.ANNUITY
         );
     }, [loadingPolicy, policy]);
 

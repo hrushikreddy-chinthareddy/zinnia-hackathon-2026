@@ -9,7 +9,6 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DistributionType,
     DeathBenefitOptionType,
-    LineOfBusiness,
     PartyRole,
     Policy,
     PolicyFeature,
@@ -117,10 +116,12 @@ export class PolicyDetails {
         // 'Annuity Product' seems to be coming to us a lot from the LC Annuities.
         // ToDo: remove once this is fixed
         this.isAnnuity =
-            policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY ||
             policy?.product?.lineOfBusiness ===
-                ('Annuity Product' as LineOfBusiness);
-        this.isLife = policy?.product?.lineOfBusiness === LineOfBusiness.LIFE;
+                Product.lineOfBusiness.ANNUITY ||
+            policy?.product?.lineOfBusiness ===
+                ('Annuity Product' as Product.lineOfBusiness);
+        this.isLife =
+            policy?.product?.lineOfBusiness === Product.lineOfBusiness.LIFE;
         this.isTerm = policy.product?.productType === ProductType.TERM;
         this.issueDate = policy.policyDates?.issueDate;
         this.issueState = policy.issueState;

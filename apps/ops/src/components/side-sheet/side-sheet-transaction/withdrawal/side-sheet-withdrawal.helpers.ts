@@ -26,12 +26,11 @@ import {
     AllocationOption,
     AmountType,
     DisbursementType,
-    FullSurrenderQuoteResponse,
+    FullSurrenderOrSystematicProgramQuoteResponse,
     Policy,
     TaxWithholdingType,
     Transaction,
     TransactionStatus,
-    TransactionType,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -159,7 +158,7 @@ const getWithdrawalDetails = (
         reversalDate,
     } = values;
 
-    if (transactionType === TransactionType.FULL_SURRENDER) {
+    if (transactionType === Transaction.transactionType.FULL_SURRENDER) {
         return [
             {
                 label: t(
@@ -227,7 +226,7 @@ const getWithdrawalDetails = (
         ];
     } else if (
         withdrawalDetailsTransactions.includes(
-            transactionType as TransactionType
+            transactionType as Transaction.transactionType
         ) &&
         (disbursementType === DisbursementType.GROSS ||
             disbursementType === DisbursementType.NET)
@@ -337,16 +336,22 @@ const getWithdrawalDetails = (
 };
 
 const getRequestedWithdrawalAmount = (
+    transaction: Transaction,
     amount: number | undefined,
     status: TransactionStatus | undefined,
-    quote?: WithdrawalQuoteResponse | FullSurrenderQuoteResponse
+    quote?:
+        | WithdrawalQuoteResponse
+        | FullSurrenderOrSystematicProgramQuoteResponse
 ): number => {
     let requestedAmount: number | undefined = 0;
 
     if (status === TransactionStatus.PENDING && quote?.transactionAmounts) {
-        requestedAmount = TransactionType.FULL_SURRENDER
-            ? quote?.transactionAmounts?.requestedAmount
-            : quote?.transactionAmounts?.appliedAmount;
+        // TODO: This was very likely a bug, but run by MG to confirm
+        requestedAmount =
+            transaction.transactionType ===
+            Transaction.transactionType.FULL_SURRENDER
+                ? quote?.transactionAmounts?.requestedAmount
+                : quote?.transactionAmounts?.appliedAmount;
     } else {
         requestedAmount = amount;
     }
@@ -362,7 +367,10 @@ const getActualWithdrawalAmount = (
 ): number => {
     let withdrawalAmount = 0;
 
-    if (transaction.transactionType === TransactionType.FULL_SURRENDER) {
+    if (
+        transaction.transactionType ===
+        Transaction.transactionType.FULL_SURRENDER
+    ) {
         if (quote?.transactionAmounts?.requestedAmount) {
             withdrawalAmount = quote?.transactionAmounts?.requestedAmount;
         } else {
@@ -370,7 +378,7 @@ const getActualWithdrawalAmount = (
         }
     } else if (
         withdrawalDetailsTransactions.includes(
-            transaction.transactionType as TransactionType
+            transaction.transactionType as Transaction.transactionType
         )
     ) {
         if (quote?.transactionAmounts?.appliedAmount) {
@@ -436,6 +444,7 @@ const getWithdrawalDetailsValues = (
 
     return {
         requestedWithdrawalAmount: getRequestedWithdrawalAmount(
+            transaction,
             amount,
             status,
             quote
@@ -593,7 +602,7 @@ export const getWithdrawalSideSheetValues = (
         actualWithdrawalAmount: detailsValues.actualWithdrawalAmount,
         cancelCta:
             transaction?.status === TransactionStatus.PENDING &&
-            transactionType === TransactionType.FULL_SURRENDER
+            transactionType === Transaction.transactionType.FULL_SURRENDER
                 ? (t('policy.history.sidesheet.cancelSurrender') as string)
                 : undefined,
         disbursementType: detailsValues.disbursementType,

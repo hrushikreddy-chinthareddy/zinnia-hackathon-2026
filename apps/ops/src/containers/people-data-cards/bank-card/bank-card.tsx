@@ -27,13 +27,13 @@ import {
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { BankAccount, Party } from '@zinnia/api-types/types/sor';
+import { BankAccount, Parties } from '@zinnia/api-types/types/sor';
 
 import { filterPastEndDate } from '../people-data-cards.utils';
 
 export interface BankCardProps {
     editable?: boolean;
-    party?: Party;
+    party?: Parties;
     planCode?: string;
     policyNumber?: string;
     isUserPermissionedToEditCards?: boolean;

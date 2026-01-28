@@ -329,7 +329,7 @@ function AddressDetails({
                             <CheckboxText
                                 id={preferredAddressId}
                                 label={t('labels.preferredAddress')}
-                                checked={address.isPreferred}
+                                checked={!!address.isPreferred}
                                 onChange={(checked) =>
                                     onPreferredAddressChange?.(
                                         preferredAddressId,
