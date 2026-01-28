@@ -47,7 +47,7 @@ export function useZEmbedInit(config: ZinniaConfig): ZEmbedInitResult {
         };
 
         initializeZEmbed();
-    }, [config]);
+    }, [config.accessToken, config.debug, config.modules]);
 
     return { success, error };
 }
