@@ -10,8 +10,9 @@ import {
     findInNode,
     findFieldInNode,
     findSectionInNodes,
+    findValueInNodes,
 } from '../data-node-helpers/traversal';
-import { FieldType, DataNode, DataSection } from '../types';
+import { FieldType, DataNode, DataSection, DataField } from '../types';
 import {
     formatAsDataValue,
     formatPartyLink,
@@ -572,6 +573,93 @@ function groupPremiumBonusSegment({
                     premiumBonusFields.includes(node.label))
         ),
     };
+}
+
+/**
+ * Groups a single combined fund into a 3-level nested structure for the Revised Fund Sidesheet.
+ *
+ * Structure:
+ * - Level 1: Fund (header = fundName, contains all fund-level fields)
+ * - Level 2: Segments (accordion per segment, title = "Segment {segmentId}")
+ * - Level 3: Rates (accordion per rate within segment, title = "Segment {segmentId} rates")
+ *
+ * @param nodes - Array of data nodes from buildRenderTreeFromSourceData
+ * @param t - Translation function
+ * @returns Grouped fund section with nested segments and rates
+ */
+export function groupSingleFundDetails({
+    nodes,
+    t,
+}: {
+    nodes: DataNode[];
+    t: TFunction;
+}): DataSection[] {
+    const fundName = findValueInNodes({ nodes, key: 'fundName' });
+    const fundId = findValueInNodes({ nodes, key: 'fundId' });
+    const fundLabel = fundName || fundId;
+
+    if (!fundLabel) {
+        return [];
+    }
+
+    // Collect all fund-level fields (excluding nested sections)
+    const fundFields: DataField[] = nodes.filter(isDataField);
+
+    // Process Level 2: Segments
+    const fundSegmentsSection = findSectionInNodes({
+        nodes,
+        key: 'fundSegments',
+    });
+
+    const relabeledSegmentSections: DataSection[] =
+        fundSegmentsSection?.children
+            .filter(isDataSection)
+            .map((segmentNode) => {
+                // Collect all segment fields (excluding nested sections like 'rates')
+                const segmentFields: DataNode[] =
+                    segmentNode.children.filter(isDataField);
+
+                // Process Level 3: Rates
+                const ratesSection = findSectionInNodes({
+                    nodes: segmentNode.children,
+                    key: 'rates',
+                });
+
+                const rateSections: DataSection[] =
+                    ratesSection?.children
+                        .filter(isDataSection)
+                        .map((rateNode) => {
+                            // Collect all rate fields
+                            const rateFields: DataNode[] =
+                                rateNode.children.filter(isDataField);
+
+                            return {
+                                type: FieldType.section,
+                                label: `${t('allFields.segment')} ${
+                                    segmentNode.label
+                                } ${t('allFields.rates')}`,
+                                children: rateFields,
+                            };
+                        }) ?? [];
+
+                // Build segment section with nested rates
+                const segmentSection: DataSection = {
+                    type: FieldType.section,
+                    label: `${t('allFields.segment')} ${segmentNode.label}`,
+                    children: [...segmentFields, ...rateSections],
+                };
+
+                return segmentSection;
+            }) ?? [];
+
+    // Build final fund section
+    return [
+        {
+            type: FieldType.section,
+            label: fundLabel,
+            children: [...fundFields, ...relabeledSegmentSections],
+        },
+    ];
 }
 
 /**

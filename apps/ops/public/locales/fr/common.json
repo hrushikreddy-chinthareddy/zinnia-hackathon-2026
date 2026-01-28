@@ -46,7 +46,6 @@
             "C": "Soldé signifie que le paiement a été traité avec succès. Le paiement est terminé."
         }
     },
-
     "allFields": {
         "account": "Cpt",
         "accountValue": "Valeur du compte",
@@ -55,7 +54,6 @@
         "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire. La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
         "accountType": "Type de compte",
         "accountNumber": "Numéro de compte",
-        "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire.  La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
         "activityTooltipDescription": "Cliquez sur un type de transaction pour plus de détails sur les décomptes.  Utilisez le fil d'Ariane au-dessus du graphique pour revenir à tous les types de transaction.",
         "actions": "Actions",
         "actuarialPresentValue": "Valeur actuelle actuarielle",
@@ -598,10 +596,12 @@
         "riderStoredIncomeBalance": "Solde de revenu stocké de l'avenant",
         "roles": "Rôles",
         "role": "Rôle",
+        "rates": "taux",
         "routingNumber": "Numéro de routage",
         "scheduledDate": "Date prévue",
         "scheduledDateEnd": "Date prévue (fin de la plage)",
-        "segmentActivity": "Actividad del segmento",
+        "segment": "Segment",
+        "segmentActivity": "Activité du segment",
         "segmentId": "ID du segment",
         "selectAddressToContinue": "Sélectionnez une adresse pour continuer.",
         "selectCorrectionReason": "Sélectionner la raison de la correction",

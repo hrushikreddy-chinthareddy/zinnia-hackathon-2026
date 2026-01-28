@@ -567,7 +567,6 @@
         "reinstatementPeriod": "Reinstatement period",
         "reinstatementPeriodTooltip": "This tells you how much time following lapse date the owner has to begin the process to reinstate the policy. Some policies don't have a reinstatement period. In that case, a lapsed policy has ended for good.",
         "relationship": "Relationship",
-        "reinstatementPeriodTooltip": "This tells you how much time following lapse date the owner has to begin the process to reinstate the policy.  Some policies don't have a reinstatement period.  In that case, a lapsed policy has ended for good.",
         "remainingDeathBenefitAmount": "Remaining death benefit amount",
         "remainingRequiredMinimumDistributionAmount": "Remaining RMD amount",
         "remove": "Remove",
@@ -598,9 +597,11 @@
         "riderStoredIncomeBalance": "Rider stored income balance",
         "roles": "Roles",
         "role": "Role",
+        "rates": "rates",
         "routingNumber": "Routing number",
         "scheduledDate": "Scheduled Date",
         "scheduledDateEnd": "Scheduled Date (end range)",
+        "segment": "Segment",
         "segmentActivity": "Segment activity",
         "segmentId": "Segment ID",
         "selectAddressToContinue": "Select an address to continue.",
@@ -1346,7 +1347,6 @@
         "YearBeginningRefreshAndRecalculation": "Year beginning refresh and recalculation",
         "YearEndGain": "Year end gain"
     },
-
     "site": {
         "name": "Zinnia Live",
         "home": {
@@ -8135,7 +8135,6 @@
             "nigoDetails": "Missing Information",
             "summary": "Summary"
         },
-
         "taskReview": {
             "title": "Input Suitability Data",
             "subTitle": "Are all required sections complete?",

@@ -595,10 +595,12 @@
         "riderStoredIncomeBalance": "Saldo de ingresos almacenados del beneficio adicional",
         "roles": "Roles",
         "role": "Role",
+        "rates": "tasas",
         "routingNumber": "Número de ruta",
         "scheduledDate": "Fecha programada",
         "scheduledDateEnd": "Fecha programada (rango final)",
-        "segmentActivity": "Activité du segment",
+        "segment": "Segmento",
+        "segmentActivity": "Actividad del segmento",
         "segmentId": "ID del segmento",
         "selectAddressToContinue": "Seleccione una dirección para continuar.",
         "selectCorrectionReason": "Seleccione el motivo de la corrección",
@@ -8040,7 +8042,6 @@
             "nigoDetails": "Información Faltante",
             "summary": "Resumen"
         },
-
         "taskReview": {
             "title": "Ingresar Datos de Idoneidad",
             "subTitle": "¿Están completas todas las secciones requeridas?",
