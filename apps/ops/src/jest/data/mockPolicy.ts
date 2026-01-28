@@ -5,16 +5,15 @@ import {
     Currency,
     State,
     PolicyStatus,
-    QualificationType,
+    PolicyFeature,
     Frequency,
-    LineOfBusiness,
     PartyRole,
     Policy,
+    PolicyCoverage,
     PolicyPartyRoles,
     ProductType,
     Reason,
     SystematicProgram,
-    CoverageBand,
     RiderType,
     RiskClass,
     SubStandardRating,
@@ -30,9 +29,9 @@ import {
     InvestmentType,
     FundAccountType,
     LoanType,
-    IdentificationType,
+    Identification,
     FeatureType,
-    PolicyFeatureBase,
+    Product,
 } from '@zinnia/api-types/types/sor';
 
 const partyRoles: PolicyPartyRoles[] = [
@@ -45,17 +44,19 @@ const partyRoles: PolicyPartyRoles[] = [
     { partyId: 'Party_PI_1', partyRole: PartyRole.INSURED },
 ];
 
-export const mockPremiumSystematicProgram: Partial<SystematicProgram> = {
+export const mockPremiumSystematicProgram: SystematicProgram = {
     amount: 300,
     nextProgramDate: '2024-10-14',
     reason: Reason.PREMIUM,
     frequency: Frequency.MONTHLY,
+    externalArrangementId: '123',
 };
 
-export const mockPolicy: Policy = {
+// FIXME: Mock data may not fully match Policy type after API regeneration
+export const mockPolicy = {
     partyRoles: partyRoles,
     product: {
-        lineOfBusiness: LineOfBusiness.LIFE,
+        lineOfBusiness: Product.lineOfBusiness.LIFE,
         planName: 'SB UL Premium Match',
         productType: ProductType.UNIVERSALLIFE,
         marketingName: 'Everly Life',
@@ -65,7 +66,7 @@ export const mockPolicy: Policy = {
         generalLedgerPlanCode: 'V2201',
         holdingForm: HoldingForm.INDIVIDUAL,
     },
-    qualificationType: QualificationType.NONQUALIFIED,
+    qualificationType: Policy.qualificationType.NONQUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'AU29035902',
@@ -107,7 +108,7 @@ export const mockPolicy: Policy = {
         minimumCoverageAmount: 10000,
         maximumCoverageAmount: 10000000,
         coverageChangeEffectiveDate: '2024-03-28',
-        coverageBand: CoverageBand.BAND1,
+        coverageBand: PolicyCoverage.coverageBand.BAND1,
         maximumAnnualCoverageChangeAllowedPerPolicy: 1,
         minimumCoverageDecreaseAmount: 10000,
         maximumCoverageDecreaseAmount: 239999,
@@ -150,6 +151,7 @@ export const mockPolicy: Policy = {
                         ],
                     },
                 ],
+                coverageTerm: 12,
             },
         ],
     },
@@ -177,16 +179,17 @@ export const mockPolicy: Policy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: IdentificationType.SSN,
+                    identificationType: Identification.identificationType.SSN,
                     identificationValue: '650-21-4576',
-                    issueState: State.CA,
-                    issueCountry: Country.US,
+                    issueState: Identification.issueState.CA,
+                    issueCountry: Identification.issueCountry.US,
                 },
                 {
-                    identificationType: IdentificationType.DRIVERLICENSENUMBER,
+                    identificationType:
+                        Identification.identificationType.DRIVERLICENSENUMBER,
                     identificationValue: '',
-                    issueState: State.NJ,
-                    issueCountry: Country.US,
+                    issueState: Identification.issueState.NJ,
+                    issueCountry: Identification.issueCountry.US,
                 },
             ],
             addresses: [
@@ -288,16 +291,17 @@ export const mockPolicy: Policy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: IdentificationType.SSN,
+                    identificationType: Identification.identificationType.SSN,
                     identificationValue: '650-21-4576',
-                    issueState: State.CA,
-                    issueCountry: Country.US,
+                    issueState: Identification.issueState.CA,
+                    issueCountry: Identification.issueCountry.US,
                 },
                 {
-                    identificationType: IdentificationType.DRIVERLICENSENUMBER,
+                    identificationType:
+                        Identification.identificationType.DRIVERLICENSENUMBER,
                     identificationValue: '',
-                    issueState: State.NJ,
-                    issueCountry: Country.US,
+                    issueState: Identification.issueState.NJ,
+                    issueCountry: Identification.issueCountry.US,
                 },
             ],
             addresses: [
@@ -371,16 +375,17 @@ export const mockPolicy: Policy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: IdentificationType.SSN,
+                    identificationType: Identification.identificationType.SSN,
                     identificationValue: '650-21-4576',
-                    issueState: State.CA,
-                    issueCountry: Country.US,
+                    issueState: Identification.issueState.CA,
+                    issueCountry: Identification.issueCountry.US,
                 },
                 {
-                    identificationType: IdentificationType.DRIVERLICENSENUMBER,
+                    identificationType:
+                        Identification.identificationType.DRIVERLICENSENUMBER,
                     identificationValue: '',
-                    issueState: State.NJ,
-                    issueCountry: Country.US,
+                    issueState: Identification.issueState.NJ,
+                    issueCountry: Identification.issueCountry.US,
                 },
             ],
             addresses: [
@@ -681,6 +686,7 @@ export const mockPolicy: Policy = {
         totalWithdrawalAmount: 345,
         totalYearToDateWithdrawalTaken: 0,
         yearToDateNumberOfWithdrawal: 0,
+        yearToDateFreeWithdrawalAmount: 0,
     },
     testValues: {
         guidelinePremium: {
@@ -731,8 +737,7 @@ export const mockPolicy: Policy = {
             frequency: undefined,
             paymentForm: undefined,
             featureId: undefined,
-            featureSubType:
-                PolicyFeatureBase.featureSubType.MULTIPLEPOLICYDISCOUNT,
+            featureSubType: PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT,
         },
         {
             reducedPaidUpFaceAmount: undefined,
@@ -757,8 +762,7 @@ export const mockPolicy: Policy = {
             frequency: undefined,
             paymentForm: undefined,
             featureId: undefined,
-            featureSubType:
-                PolicyFeatureBase.featureSubType.MULTIPLEPOLICYDISCOUNT,
+            featureSubType: PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT,
         },
     ],
     allocation: {
@@ -825,4 +829,4 @@ export const mockPolicy: Policy = {
     },
     systematicPrograms: [mockPremiumSystematicProgram],
     fixedCostPeriod: 20,
-};
+} as Policy;

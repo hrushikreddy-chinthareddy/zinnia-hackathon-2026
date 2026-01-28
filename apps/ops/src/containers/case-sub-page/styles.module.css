@@ -47,9 +47,3 @@
     gap: 16px;
     max-width: 28rem;
 }
-
-.caseActionNotificationRow {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}

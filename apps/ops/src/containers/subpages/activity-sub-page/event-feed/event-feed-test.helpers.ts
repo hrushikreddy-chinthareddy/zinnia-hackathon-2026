@@ -1,4 +1,5 @@
 import {
+    Outcome,
     Policy,
     Reason,
     Transaction,
@@ -51,6 +52,7 @@ export const basePolicy = {
             amount: 80,
             amountType: 'AMOUNT',
             arrangementId: 'Arr_1',
+            externalArrangementId: 'ExtArr_1',
             arrType: 'PAYMENT',
             endDate: '2042-06-11',
             frequency: 'MONTHLY',
@@ -92,6 +94,7 @@ export const basePolicy = {
             amount: 25,
             amountType: 'AMOUNT',
             arrangementId: 'Systematic_Loan_Repayment_ID1',
+            externalArrangementId: 'ExtArr_2',
             arrangementType: 'LOANREPAYMENT',
             frequency: 'MONTHLY',
             nextProgramDate: '2024-01-06',
@@ -139,7 +142,7 @@ export const newLoanNonTransaction = {
     effectiveDate: '2023-12-06',
     externalTransactionId: 'AU35046202-NewLoan-2023-12-06-1658',
     ledgerDocId: '65709649dc0a1e5d6c35aecb',
-    outcome: true,
+    outcome: Outcome.TRUE,
     outcomeStatus: 'Pass',
     payors: [
         {
@@ -176,7 +179,7 @@ export const completedSubsequent = {
     externalTransactionId: 'AU35046202-SubsequentPremium-2023-11-13-1478',
     ledgerDocId: '656fae83dc0a1e5d6c35a82b',
     lifecycleNo: 1,
-    outcome: true,
+    outcome: Outcome.TRUE,
     outcomeStatus: 'Pass',
     parentId: 'AU35046202-SubsequentPremium-2023-10-11-1382',
     payors: [

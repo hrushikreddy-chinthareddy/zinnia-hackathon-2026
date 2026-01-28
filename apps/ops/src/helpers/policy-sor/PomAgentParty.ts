@@ -3,8 +3,8 @@ import {
     AddressType,
     Country,
     EmailType,
-    IdentificationType,
-    Party,
+    Identification,
+    Parties,
     State,
 } from '@zinnia/api-types/types/sor';
 
@@ -13,12 +13,12 @@ import { PolicyParty } from './Parties';
 export const transformPomAgentDataToParty = (
     // TODO: replace PomAgentData type with POM_Producer_Models_SearchProducersResult
     agentData: PomAgentData | undefined,
-    partyData: Party
-): Party & {
+    partyData: Parties
+): Parties & {
     producerType: string | undefined;
     producerName: string | undefined;
 } => {
-    const party: Party & {
+    const party: Parties & {
         producerType: string | undefined;
         producerName: string | undefined;
     } = {
@@ -61,13 +61,13 @@ export const transformPomAgentDataToParty = (
         partyId: agentData?.partyId || undefined,
         identifications: [
             {
-                identificationType: IdentificationType.SSN,
+                identificationType: Identification.identificationType.SSN,
                 identificationValue:
                     agentData?.socialSecurityNumber || undefined,
             },
             {
                 // identificationType: IdentificationType.NPN, TODO: update to this instead of string when kong updates
-                identificationType: 'NPN' as IdentificationType,
+                identificationType: 'NPN' as Identification.identificationType,
                 identificationValue:
                     agentData?.nationalProducerNumber || undefined,
             },
@@ -84,7 +84,7 @@ export default class PomAgentParty extends PolicyParty {
     public businessName: string | undefined;
     public channel: string | undefined;
 
-    constructor(agent: PomAgentData | undefined, party: Party = {}) {
+    constructor(agent: PomAgentData | undefined, party: Parties = {}) {
         super(transformPomAgentDataToParty(agent, party));
     }
 }

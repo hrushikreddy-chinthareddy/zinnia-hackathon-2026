@@ -69,7 +69,7 @@ import {
     BankAccountPurpose,
     Party,
     Policy,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
@@ -535,7 +535,7 @@ const SideSheetBank = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: TransactionType.BANK_ACCOUNT_CHANGE,
+                    type: Transaction.transactionType.BANK_ACCOUNT_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

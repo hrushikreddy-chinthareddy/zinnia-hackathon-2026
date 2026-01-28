@@ -1,4 +1,4 @@
-import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
+import { Product, ProductType } from '@zinnia/api-types/types/sor';
 
 import { DataGroup, DataNode, DataSection, FieldType } from '../types';
 import {
@@ -14,8 +14,8 @@ jest.mock('../translations/exclude-fields', () => ({
 
 jest.mock('../translations/carrier-rules', () => ({
     sectionVisibility: {
-        lifeOnly: new Set(['LOB_LIFE']),
-        productOnly: new Set(['PROD_TERM']),
+        lifeOnly: new Set(['LIFE']),
+        productOnly: new Set(['TERM']),
         planOnly: new Set(['PLAN123']),
     },
 }));
@@ -49,8 +49,8 @@ describe('excludeNodesByLabel', () => {
 });
 
 describe('excludeNodeByCarrierRules', () => {
-    const LOB_LIFE = 'LOB_LIFE' as unknown as LineOfBusiness;
-    const PROD_TERM = 'PROD_TERM' as unknown as ProductType;
+    const LOB_LIFE = Product.lineOfBusiness.LIFE;
+    const PROD_TERM = ProductType.TERM;
 
     it('returns node unchanged when node is not a field or section', () => {
         const group = makeGroup([]);

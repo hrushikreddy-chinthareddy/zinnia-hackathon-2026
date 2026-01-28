@@ -64,7 +64,7 @@ import {
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { Party, PartyType, Prefix, Suffix } from '@zinnia/api-types/types/sor';
+import { Parties, PartyType, Prefix } from '@zinnia/api-types/types/sor';
 
 import {
     convertToBase64,
@@ -78,7 +78,7 @@ interface ISidesheetNameCard {
     planCode?: string;
     onCancel: () => void;
     policyDetails: PolicyDetails;
-    selectedPolicyParty?: Party;
+    selectedPolicyParty?: Parties;
 }
 
 interface IDocuments {
@@ -123,7 +123,7 @@ export const SidesheetNameCard = ({
     const [middleName, setMiddleName] = useState(
         selectedPolicyParty?.middleName ?? ''
     );
-    const [suffix, setSuffix] = useState<Suffix | undefined>(
+    const [suffix, setSuffix] = useState<Parties.suffix | undefined>(
         selectedPolicyParty?.suffix
     );
     const [prefix, setPrefix] = useState<Prefix | undefined>(
@@ -167,11 +167,11 @@ export const SidesheetNameCard = ({
     const [dateOfSignature, setDateOfSignature] = useState('');
     const [dateOfSignatureError, setDateOfSignatureError] = useState(false);
     const suffixOptions = [
-        Suffix.I,
-        Suffix.II,
-        Suffix.III,
-        Suffix.JR,
-        Suffix.SN,
+        Parties.suffix.I,
+        Parties.suffix.II,
+        Parties.suffix.III,
+        Parties.suffix.JR,
+        Parties.suffix.SN,
     ].map((option) => ({ label: option, value: option }));
     const [selectedOption, setSelectedOption] = useState('');
     const documentMatchesOptions = ['Yes', 'No'].map((option) => ({
@@ -594,7 +594,7 @@ export const SidesheetNameCard = ({
                                         aria-label={t('suffix') as string}
                                         label={t('suffix') as string}
                                         onChange={(value) => {
-                                            setSuffix(value as Suffix);
+                                            setSuffix(value as Parties.suffix);
                                         }}
                                         options={suffixOptions}
                                         size={FieldSize.Small}

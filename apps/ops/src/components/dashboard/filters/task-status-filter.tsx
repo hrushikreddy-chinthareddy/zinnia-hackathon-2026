@@ -102,7 +102,6 @@ export const TaskStatusFilter = () => {
 
     return (
         <Select
-            maxContentWidth
             label={String(t('caseStats.tasks.filters.status.label') ?? '')}
             placeholder={String(
                 t('caseStats.tasks.filters.status.placeholder') ?? ''

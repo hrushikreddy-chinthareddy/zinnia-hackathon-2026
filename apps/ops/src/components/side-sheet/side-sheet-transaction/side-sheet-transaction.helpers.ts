@@ -7,8 +7,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Policy,
     Transaction,
-    Transaction_Payor,
-    TransactionType,
+    TransactionPayor,
 } from '@zinnia/api-types/types/sor';
 
 import { getNewLoanSideSheetValues } from './loan/side-sheet-loan.helpers';
@@ -26,7 +25,7 @@ import { WithdrawalSideSheetValues } from './withdrawal/types';
 
 export const getPaymentMethod = (
     policy: Policy,
-    payors: Transaction_Payor[],
+    payors: TransactionPayor[],
     t: TFunction
 ): string => {
     const [paymentMethod] = getPaymentMethods(policy, payors) ?? [];
@@ -55,40 +54,42 @@ export const getFinancialTransactionSideSheetValues = (
     const { transactionType } = transaction;
 
     switch (transactionType) {
-        case TransactionType.PAYMENT_INITIAL_PREMIUM:
-        case TransactionType.INITIAL_PREMIUM:
+        case Transaction.transactionType.PAYMENT_INITIAL_PREMIUM:
+        case Transaction.transactionType.INITIAL_PREMIUM:
             return getInitialPremiumSideSheetValues(policy, transaction, t);
-        case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
-        case TransactionType.ONE_TIME_PREMIUM:
+        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case Transaction.transactionType.ONE_TIME_PREMIUM:
             return getOneTimePremiumSideSheetValues(
                 policy,
                 transaction,
                 t,
                 featureFlags || {}
             );
-        case TransactionType.SUBSEQUENT_PAYMENT:
-        case TransactionType.SUBSEQUENT_PREMIUM:
+        case Transaction.transactionType.SUBSEQUENT_PAYMENT:
+        case Transaction.transactionType.SUBSEQUENT_PREMIUM:
             return getAutopayPremiumSideSheetValues(
                 policy,
                 transaction,
                 t,
                 featureFlags || {}
             );
-        case TransactionType.FULL_SURRENDER:
-        case TransactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
-        case TransactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
-        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL:
-        case TransactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
-        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
-        case TransactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP:
+        case Transaction.transactionType.FULL_SURRENDER:
+        case Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME:
+        case Transaction.transactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
+        case Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL:
+        case Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
+        case Transaction.transactionType
+            .SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
+        case Transaction.transactionType
+            .SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP:
             return getWithdrawalSideSheetValues(policy, transaction, t);
-        case TransactionType.FREE_LOOK_CANCELLATION:
+        case Transaction.transactionType.FREE_LOOK_CANCELLATION:
             return getFreeLookCancellationSideSheetValues(
                 policy,
                 transaction,
                 t
             );
-        case TransactionType.NEW_LOAN:
+        case Transaction.transactionType.NEW_LOAN:
             return getNewLoanSideSheetValues(policy, transaction, t);
         default:
             return {};

@@ -10,14 +10,14 @@ import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
-import { Party, Address, Email, Phone } from '@zinnia/api-types/types/sor';
+import { Parties, Address, Email, Phone } from '@zinnia/api-types/types/sor';
 
 import SideSheetPeopleHeader from '../side-sheet-people-header/side-sheet-people-header';
 import { SidesheetCommunicationsPreference } from './sidesheet/sidesheet-communications-preference';
 import { FormattedAddress } from '../address-card/address-card.helpers';
 
 type HeaderInfoCardProps = {
-    selectedPolicyParty?: Party;
+    selectedPolicyParty?: Parties;
     children: React.ReactNode;
     t: TFunction;
     editable?: boolean;
@@ -45,7 +45,7 @@ export const HeaderInfoCard: FC<HeaderInfoCardProps> = ({
 };
 
 type CommunicationPreferenceFieldProps = {
-    partyInfo?: Party;
+    partyInfo?: Parties;
     t: TFunction;
     editable?: boolean;
     isUserPermissionedToEditCards?: boolean;

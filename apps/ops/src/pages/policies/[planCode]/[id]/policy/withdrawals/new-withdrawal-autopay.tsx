@@ -12,14 +12,18 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { AutopayProvider } from '@deps/contexts/transactions/AutopayContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
-import { Status } from '@deps/models/policy/sor-policy';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkSystematicProgramEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { getServerSidePropsPolicyDetailsPage } from '@deps/utils/page';
 import { withPageAuthAndLogging } from '@deps/utils/server-logging';
-import { ArrangementType, Policy, Reason } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    Policy,
+    Reason,
+    Status,
+} from '@zinnia/api-types/types/sor';
 
 export interface WithdrawalAutopayProps {
     policy: Policy;

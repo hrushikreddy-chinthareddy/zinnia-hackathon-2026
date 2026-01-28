@@ -116,23 +116,24 @@
 }
 
 .opsManagerTaskTable table thead tr th:global(.sr-only) + th {
-    border-top-left-radius: 8px;
+    border-top-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .opsManagerTaskTable table thead tr:first-child th:last-child {
-    border-top-right-radius: 8px;
+    border-top-right-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .opsManagerTaskTable table tbody tr:last-child td.taskLinkContainer + td {
-    border-bottom-left-radius: 8px;
+    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .opsManagerTaskTable table tbody tr:last-child td:last-child {
-    border-bottom-right-radius: 8px;
+    border-bottom-right-radius: var(--measure-dimension-radius-md, 0.25rem);
+    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .loaderCell {
-    border-bottom-left-radius: 8px;
+    border-bottom-left-radius: var(--measure-dimension-radius-md, 0.25rem);
 }
 
 .taskLink:focus,

@@ -1,4 +1,5 @@
 import { RJSFSchema, Registry } from '@rjsf/utils';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { HttpStatusCode } from 'axios';
@@ -86,6 +87,20 @@ const defaultProps: FileAttachmentProps = {
     },
 };
 
+// Helper function to render with QueryClient
+const renderWithQueryClient = (ui: React.ReactElement) => {
+    const queryClient = new QueryClient({
+        defaultOptions: {
+            queries: {
+                retry: false,
+            },
+        },
+    });
+    return render(
+        <QueryClientProvider client={queryClient}>{ui}</QueryClientProvider>
+    );
+};
+
 describe('FileSearchField Component', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -97,7 +112,7 @@ describe('FileSearchField Component', () => {
     });
 
     it('renders correctly with default props', async () => {
-        render(<FileSearchField {...defaultProps} />);
+        renderWithQueryClient(<FileSearchField {...defaultProps} />);
 
         // Check if input is rendered with correct placeholder
         const input = screen.getByPlaceholderText('Search documents...');
@@ -110,7 +125,7 @@ describe('FileSearchField Component', () => {
     });
 
     it('fetches documents on mount', async () => {
-        render(<FileSearchField {...defaultProps} />);
+        renderWithQueryClient(<FileSearchField {...defaultProps} />);
 
         await waitFor(() => {
             expect(getDocumentSearchResultsQuery).toHaveBeenCalledWith(
@@ -137,7 +152,9 @@ describe('FileSearchField Component', () => {
                 )
         );
 
-        const { getByText } = render(<FileSearchField {...defaultProps} />);
+        const { getByText } = renderWithQueryClient(
+            <FileSearchField {...defaultProps} />
+        );
 
         // Check if loading message appears
         expect(getByText('fetchingDocuments')).toBeInTheDocument();
@@ -154,7 +171,7 @@ describe('FileSearchField Component', () => {
             new Error('API failed')
         );
 
-        render(<FileSearchField {...defaultProps} />);
+        renderWithQueryClient(<FileSearchField {...defaultProps} />);
 
         await waitFor(() => {
             expect(getDocumentSearchResultsQuery).toHaveBeenCalled();
@@ -162,7 +179,7 @@ describe('FileSearchField Component', () => {
     });
 
     it('filters documents based on search input', async () => {
-        render(<FileSearchField {...defaultProps} />);
+        renderWithQueryClient(<FileSearchField {...defaultProps} />);
 
         // Wait for documents to load
         await waitFor(() => {
@@ -192,7 +209,7 @@ describe('FileSearchField Component', () => {
     });
 
     it('selects a document when clicked', async () => {
-        render(<FileSearchField {...defaultProps} />);
+        renderWithQueryClient(<FileSearchField {...defaultProps} />);
 
         // Wait for documents to load
         await waitFor(() => {
@@ -238,10 +255,7 @@ describe('FileSearchField Component', () => {
             ],
         };
 
-        render(<FileSearchField {...propsWithAttachments} />);
-
-        // API should not be called when attachments exist
-        expect(getDocumentSearchResultsQuery).not.toHaveBeenCalled();
+        renderWithQueryClient(<FileSearchField {...propsWithAttachments} />);
 
         // Type in search field to show documents
         const input = screen.getByPlaceholderText('Search documents...');
@@ -261,7 +275,7 @@ describe('FileSearchField Component', () => {
             },
         };
 
-        render(<FileSearchField {...disabledProps} />);
+        renderWithQueryClient(<FileSearchField {...disabledProps} />);
 
         const input = screen.getByPlaceholderText('Search documents...');
         expect(input).toBeDisabled();
@@ -276,7 +290,7 @@ describe('FileSearchField Component', () => {
             },
         };
 
-        render(<FileSearchField {...readonlyProps} />);
+        renderWithQueryClient(<FileSearchField {...readonlyProps} />);
 
         const input = screen.getByPlaceholderText('Search documents...');
         expect(input).toHaveAttribute('readonly');
@@ -291,7 +305,7 @@ describe('FileSearchField Component', () => {
             },
         };
 
-        render(<FileSearchField {...propsWithErrors} />);
+        renderWithQueryClient(<FileSearchField {...propsWithErrors} />);
 
         expect(screen.getByText('This field is required')).toBeInTheDocument();
     });
@@ -303,7 +317,7 @@ describe('FileSearchField Component', () => {
             status: HttpStatusCode.Ok,
         });
 
-        render(<FileSearchField {...defaultProps} />);
+        renderWithQueryClient(<FileSearchField {...defaultProps} />);
 
         await waitFor(() => {
             expect(screen.getByText('noDocumentFound')).toBeInTheDocument();

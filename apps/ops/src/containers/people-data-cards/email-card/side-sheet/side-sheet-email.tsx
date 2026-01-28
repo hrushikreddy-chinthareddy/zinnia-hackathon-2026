@@ -60,10 +60,10 @@ import {
 import {
     Email,
     EmailType,
-    Party,
+    Parties,
     Policy,
     PreferredCommunicationType,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
@@ -71,7 +71,7 @@ dayjs.extend(utc);
 export type SideSheetEmailProps = {
     isOnlyEmail: boolean;
     onCancel: () => void;
-    party?: Party;
+    party?: Parties;
     policy?: Policy;
     planCode?: string;
     policyNumber?: string;
@@ -422,7 +422,7 @@ const SideSheetEmail = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: TransactionType.EMAIL_CHANGE,
+                    type: Transaction.transactionType.EMAIL_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker';
 
 import { AdditionalCharge } from '@deps/components/card/card-transactions/card-transactions';
-import { FlatExtra, FlatExtraType } from '@zinnia/api-types/types/sor';
+import { FlatExtra } from '@zinnia/api-types/types/sor';
 
 export const generatePolicyValue = (costBasis: number) => {
     return {
@@ -28,8 +28,8 @@ export const generateFlatExtra = (): FlatExtra => ({
     }),
     flatExtraStartDate: `${faker.date.past()}`,
     flatExtraType: faker.helpers.arrayElement(
-        Object.keys(FlatExtraType)
-    ) as FlatExtraType,
+        Object.keys(FlatExtra.flatExtraType)
+    ) as FlatExtra.flatExtraType,
 });
 
 export const generateAdditionalCharges = (x: number, tooltips = false) =>

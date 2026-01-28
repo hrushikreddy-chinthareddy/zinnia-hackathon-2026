@@ -11,9 +11,9 @@ import {
 
 const tSpy = jest.fn((str) => str);
 
-const setupTest = <T>(props: T) => {
+const setupTest = <T extends Partial<Policy>>(props: T) => {
     const { coverage, parties, partyRoles, policyFeatures } = mockPolicy;
-    const policy = {
+    const policy: Partial<Policy> = {
         issueState: 'NY',
         policyNumber: '12345',
         currency: 'USD',

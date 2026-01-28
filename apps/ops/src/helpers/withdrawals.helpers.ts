@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { Policy } from '@zinnia/api-types/types/sor';
+import { Policy, PolicyChargeType } from '@zinnia/api-types/types/sor';
 
 interface MapWithdrawalsSubPage {
     isEligible: boolean;
@@ -29,11 +29,16 @@ export const mapWithdrawalsSubPage = ({
     const {
         accountValues,
         allocation,
+        charges,
         withdrawalValues,
         marketValueAdjustment,
     } = policy;
 
     let allowedAnnualWithdrawals = 0;
+
+    const mvaChargeType = charges?.find(
+        (charge) => charge.chargeType === PolicyChargeType.MARKETVALUEADJUSTMENT
+    );
 
     const eligibleAccountValue =
         Number(accountValues?.beginningAccountValue) > 0;
@@ -66,9 +71,8 @@ export const mapWithdrawalsSubPage = ({
         freeWithdrawalAmount: withdrawalValues?.freeWithdrawalAmount,
         maximumWithdrawalAmount: withdrawalValues?.maximumWithdrawalAmount,
         marketValueAdjustmentIndicator:
-            marketValueAdjustment?.marketValueAdjustmentIndicator,
-        marketValueAdjustmentAmount:
-            marketValueAdjustment?.marketValueAdjustmentAmount,
+            !!marketValueAdjustment?.marketValueAdjustmentIndicator,
+        marketValueAdjustmentAmount: mvaChargeType?.uncollectedPerCharge,
         yearToDateFreeWithdrawalAmount:
             withdrawalValues?.yearToDateFreeWithdrawalAmount,
         totalYearToDateWithdrawalTaken:

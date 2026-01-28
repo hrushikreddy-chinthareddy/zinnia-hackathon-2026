@@ -7,9 +7,9 @@ import {
 } from '@deps/constants/party-roles';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
+    Parties,
     PartyRole,
     PartyType,
-    Party,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
@@ -25,7 +25,7 @@ jest.mock('next-i18next', () => ({
 }));
 
 describe('combineNameAndRoles', () => {
-    const mockPolicyPartiesArr: Party[] = [
+    const mockPolicyPartiesArr: Parties[] = [
         {
             partyId: '1',
             partyType: PartyType.INDIVIDUAL,
@@ -48,22 +48,22 @@ describe('combineNameAndRoles', () => {
         {
             partyId: '1',
             partyRole: PartyRole.COVERAGEINSURED,
-            partyRoleId: 1,
+            partyRoleId: '1',
         },
         {
             partyId: '1',
             partyRole: PartyRole.ASSIGNEE,
-            partyRoleId: 2,
+            partyRoleId: '2',
         },
         {
             partyId: '2',
             partyRole: PartyRole.ASSIGNEE,
-            partyRoleId: 2,
+            partyRoleId: '2',
         },
         {
             partyId: '3',
             partyRole: PartyRole.COVERAGEINSURED,
-            partyRoleId: 1,
+            partyRoleId: '1',
         },
     ];
 
@@ -96,7 +96,7 @@ describe('combineNameAndRoles', () => {
                     { text: TitleCasedPartyRole.RiderInsured },
                 ],
                 partyRoles: [PartyRole.COVERAGEINSURED, PartyRole.ASSIGNEE],
-                partyRoleIds: [1, 2],
+                partyRoleIds: ['1', '2'],
             },
             {
                 partyId: '2',
@@ -104,7 +104,7 @@ describe('combineNameAndRoles', () => {
                 fullName: 'Example Trust',
                 tags: [{ text: TitleCasedPartyRole.Assignee }],
                 partyRoles: [PartyRole.ASSIGNEE],
-                partyRoleIds: [2],
+                partyRoleIds: ['2'],
             },
             {
                 partyId: '3',
@@ -112,7 +112,7 @@ describe('combineNameAndRoles', () => {
                 organizationCode: 'ORGCODE',
                 tags: [{ text: TitleCasedPartyRole.RiderInsured }],
                 partyRoles: [PartyRole.COVERAGEINSURED],
-                partyRoleIds: [1],
+                partyRoleIds: ['1'],
             },
         ]);
     });
@@ -158,7 +158,7 @@ describe('combineNameAndRoles', () => {
                 lastName: 'Doe',
                 tags: [{ text: TitleCasedPartyRole.RiderInsured }],
                 partyRoles: [PartyRole.COVERAGEINSURED],
-                partyRoleIds: [1],
+                partyRoleIds: ['1'],
             },
         ]);
     });

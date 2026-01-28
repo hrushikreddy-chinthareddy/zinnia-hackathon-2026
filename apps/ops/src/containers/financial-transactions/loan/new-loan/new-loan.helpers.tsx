@@ -7,10 +7,11 @@ import { getUtcDate } from '@deps/helpers/date.helpers';
 import { getDisbursementPaymentForm } from '@deps/helpers/transactions/payment.helpers';
 import { NewLoanRequestQuery } from '@deps/queries/api/bpm';
 import {
-    AdhocTransactionAmount,
+    AdhocTaxWithholdingInstructions,
     AllocationOption,
     AmountType,
     DisbursementPaymentForm,
+    LoanInterestType,
     LoanType,
     PartyRole,
     PaymentForm,
@@ -44,6 +45,7 @@ export const buildNewLoanRequestBody = (
                 allocationOption: AllocationOption.PRORATA,
             },
             reverseInitiator: false,
+            // FIXME: contribution type from context may not match API type
             taxWithholdingInstructions: [
                 {
                     ...newLoan.taxWithholdingInstructions[0],
@@ -54,7 +56,7 @@ export const buildNewLoanRequestBody = (
                     partyRole: PartyRole.OWNER,
                     taxJurisdiction: newLoan.payeeTaxJurisdiction,
                     taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-                },
+                } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
                 {
                     ...newLoan.taxWithholdingInstructions[1],
                     filingStatus: newLoan.payeeFilingStatus,
@@ -62,15 +64,15 @@ export const buildNewLoanRequestBody = (
                     partyRole: PartyRole.OWNER,
                     taxJurisdiction: newLoan.payeeTaxJurisdiction,
                     taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-                },
+                } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
             ],
             transactionAmounts: {
                 amountType: AmountType.AMOUNT,
                 disbursementPaymentForm: getDisbursementPaymentForm(
                     newLoan.paymentForm
-                ) as DisbursementPaymentForm,
+                ),
                 disbursementType: newLoan.disbursementType,
-                loanInterestType: AdhocTransactionAmount.loanInterestType.FIXED,
+                loanInterestType: LoanInterestType.FIXED,
                 loanType: LoanType.NONPREFERREDSTANDARDLOAN,
                 requestedAmount: Number(newLoan.amount),
             },
@@ -93,6 +95,7 @@ export const buildNewLoanRequestBody = (
             allocationOption: AllocationOption.PRORATA,
         },
         reverseInitiator: false,
+        // FIXME: contribution type from context may not match API type
         taxWithholdingInstructions: [
             {
                 ...newLoan.taxWithholdingInstructions[0],
@@ -102,7 +105,7 @@ export const buildNewLoanRequestBody = (
                 partyRole: PartyRole.OWNER,
                 taxJurisdiction: newLoan.payeeTaxJurisdiction,
                 taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-            },
+            } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
             {
                 ...newLoan.taxWithholdingInstructions[1],
                 filingStatus: newLoan.payeeFilingStatus,
@@ -110,13 +113,13 @@ export const buildNewLoanRequestBody = (
                 partyRole: PartyRole.OWNER,
                 taxJurisdiction: newLoan.payeeTaxJurisdiction,
                 taxRateToUse: TaxRateToUse.NOWITHHOLDINGELECTED,
-            },
+            } as AdhocTaxWithholdingInstructions, // FIXME: mismatcch between AdhocTaxWithholdingInstructions and TaxWithholdingInstructions
         ],
         transactionAmounts: {
             amountType: AmountType.AMOUNT,
             disbursementPaymentForm: DisbursementPaymentForm.ACH,
             disbursementType: newLoan.disbursementType,
-            loanInterestType: AdhocTransactionAmount.loanInterestType.FIXED,
+            loanInterestType: LoanInterestType.FIXED,
             loanType: LoanType.NONPREFERREDSTANDARDLOAN,
             requestedAmount: Number(newLoan.amount),
         },

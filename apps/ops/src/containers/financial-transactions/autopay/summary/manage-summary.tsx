@@ -39,7 +39,7 @@ import {
     ArrangementType,
     Frequency,
     Policy,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
@@ -86,8 +86,8 @@ const ManageSummary = ({ policy }: SummaryProps) => {
     // TODO MG: this is duped three times at least
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
-            ? TransactionType.SUBSEQUENT_PREMIUM
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            ? Transaction.transactionType.SUBSEQUENT_PREMIUM
+            : Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 
     const systematicProgram = policy.systematicPrograms?.find(

@@ -28,7 +28,7 @@ import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { toTitleCase } from '@deps/utils/strings';
-import { PartyRole } from '@zinnia/api-types/types/sor';
+import { Parties, PartyRole } from '@zinnia/api-types/types/sor';
 
 import ManagePeople from './manage-people';
 import {
@@ -255,7 +255,8 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                 !!policy.product?.planCode,
             select: (data) =>
                 data
-                    ? new PomAgentParty(data as PomAgentData, party) // [PomAgentParty] => { ...party: data }
+                    ? // FIXME: party is NameTag but PomAgentParty expects Parties
+                      new PomAgentParty(data as PomAgentData, party as Parties) // [PomAgentParty] => { ...party: data }
                     : undefined,
         })),
 

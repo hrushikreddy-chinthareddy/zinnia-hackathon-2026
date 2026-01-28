@@ -17,9 +17,8 @@ import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { DataDefinition } from '@deps/types/data';
 import {
     Policy,
-    LineOfBusiness,
+    Product,
     Transaction,
-    TransactionType,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
 
@@ -41,17 +40,17 @@ export const TransactionSidesheetViews = {
 };
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_REVERSAL = [
-    TransactionType.ONE_TIME_PREMIUM,
-    TransactionType.PAYMENT_ONE_TIME_PREMIUM,
-    TransactionType.SUBSEQUENT_PAYMENT,
-    TransactionType.SUBSEQUENT_PREMIUM,
+    Transaction.transactionType.ONE_TIME_PREMIUM,
+    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
+    Transaction.transactionType.SUBSEQUENT_PAYMENT,
+    Transaction.transactionType.SUBSEQUENT_PREMIUM,
 ];
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_CANCEL = [
-    TransactionType.FULL_SURRENDER,
-    TransactionType.NEW_LOAN,
-    TransactionType.ONE_TIME_PREMIUM,
-    TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+    Transaction.transactionType.FULL_SURRENDER,
+    Transaction.transactionType.NEW_LOAN,
+    Transaction.transactionType.ONE_TIME_PREMIUM,
+    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
 ];
 
 /**
@@ -69,11 +68,11 @@ export const getReversalTransactionId = (
     }
 
     switch (transaction.transactionType) {
-        case TransactionType.ONE_TIME_PREMIUM:
-        case TransactionType.SUBSEQUENT_PREMIUM:
+        case Transaction.transactionType.ONE_TIME_PREMIUM:
+        case Transaction.transactionType.SUBSEQUENT_PREMIUM:
             return transaction.parentId;
-        case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
-        case TransactionType.SUBSEQUENT_PAYMENT:
+        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case Transaction.transactionType.SUBSEQUENT_PAYMENT:
         default:
             return transaction.transactionId;
     }
@@ -94,18 +93,18 @@ export const getTransactionAmount = (
     const { appliedAmount, paymentAmount, requestedAmount } =
         transaction?.transactionAmounts ?? {};
     switch (transaction?.transactionType) {
-        case TransactionType.NEW_LOAN:
+        case Transaction.transactionType.NEW_LOAN:
             return transaction?.transactionAmounts?.requestedAmount;
-        case TransactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
             return paymentAmount || requestedAmount;
-        case TransactionType.ONE_TIME_PREMIUM:
+        case Transaction.transactionType.ONE_TIME_PREMIUM:
             return appliedAmount || requestedAmount;
-        case TransactionType.SUBSEQUENT_PAYMENT:
-        case TransactionType.SUBSEQUENT_PREMIUM:
+        case Transaction.transactionType.SUBSEQUENT_PAYMENT:
+        case Transaction.transactionType.SUBSEQUENT_PREMIUM:
             return transaction?.status === TransactionStatus.PENDING
                 ? paymentAmount
                 : appliedAmount;
-        case TransactionType.FULL_SURRENDER:
+        case Transaction.transactionType.FULL_SURRENDER:
             return undefined;
         default:
             return appliedAmount || requestedAmount;
@@ -117,7 +116,8 @@ export const getTransactionAmount = (
  */
 export const prepareSearchableData = (policy: Policy, t: TFunction) => {
     const dto = generatePolicyAnnuityDetailsDto(policy);
-    const isLifePolicy = policy.product?.lineOfBusiness === LineOfBusiness.LIFE;
+    const isLifePolicy =
+        policy.product?.lineOfBusiness === Product.lineOfBusiness.LIFE;
     const isTermLife = isLifePolicy && isTermLifeProduct(policy);
     const colDefs = isLifePolicy
         ? isTermLife

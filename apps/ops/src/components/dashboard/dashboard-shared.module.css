@@ -67,12 +67,14 @@
 
 .multiselectDropdowns {
     @media screen and (min-width: 1025px) {
-        width: 150px;
-        min-width: 150px;
+        width: var(--measure-dimension-z-space-38);
+        min-width: var(--measure-dimension-z-space-38);
     }
 }
 
 .filterItem {
+    min-width: var(--measure-dimension-z-space-38);
+
     @media screen and (min-width: 1025px) {
         flex: 1 1 auto;
         width: auto;

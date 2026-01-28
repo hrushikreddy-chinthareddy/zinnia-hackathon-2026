@@ -15,7 +15,7 @@ import {
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { withdrawalDetailsTransactions } from '@deps/helpers/transaction-types.helpers';
 import { DEFAULT_ERROR_STRING, toTitleCase } from '@deps/utils/strings';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalSideSheetValues } from './types';
 
@@ -63,15 +63,17 @@ const SideSheetWithdrawalContent = ({
     } = values || {};
     let transactionTypeLabel;
 
-    if (transactionType === TransactionType.FULL_SURRENDER) {
+    if (transactionType === Transaction.transactionType.FULL_SURRENDER) {
         transactionTypeLabel = t('historyEventCard.surrender');
     } else if (
         withdrawalDetailsTransactions.includes(
-            transactionType as TransactionType
+            transactionType as Transaction.transactionType
         )
     ) {
         transactionTypeLabel = t('historyEventCard.withdrawal');
-    } else if (transactionType == TransactionType.FREE_LOOK_CANCELLATION) {
+    } else if (
+        transactionType == Transaction.transactionType.FREE_LOOK_CANCELLATION
+    ) {
         transactionTypeLabel = t('enums.FreeLookCancellation');
     }
 
@@ -133,7 +135,8 @@ const SideSheetWithdrawalContent = ({
                     <hr className="my-6 h-0.5 bg-gray-200" />
                 </>
             )}
-            {transactionType !== TransactionType.FREE_LOOK_CANCELLATION && (
+            {transactionType !==
+                Transaction.transactionType.FREE_LOOK_CANCELLATION && (
                 <>
                     <section>
                         <div className="mb-4 flex items-center gap-4">

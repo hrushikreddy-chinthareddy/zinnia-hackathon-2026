@@ -40,9 +40,9 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime, toTitleCase } from '@deps/helpers/string.helpers';
+import { useTaskAssignee } from '@deps/hooks/useTaskAssignee';
 import {
     DEFAULT_ASSIGNEE_FIELDS,
-    getUserNameFromEmail,
     findAssignee,
     NO_ASSIGNEE,
 } from '@deps/hooks/useTaskManagementQueue';
@@ -63,7 +63,6 @@ import {
     ManagementTask,
 } from '@deps/models/case/task-instance';
 import { getUserDataByPartyIds } from '@deps/queries/api/parties';
-import { searchUsersInGroupCSR } from '@deps/queries/api/server/fga/searchUsers';
 import { ClaimNextTask } from '@deps/queries/api/v1/claim-task';
 import { claimTask } from '@deps/queries/api/v1/task';
 import {
@@ -231,14 +230,6 @@ export default function GlobalTaskSideSheet({
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
 
-    const [assigneeList, setAssigneeList] = useState<
-        { user: string; partyId: string }[]
-    >([]);
-    const [allAssigneeList, setAllAssigneeList] = useState<
-        { user: string; partyId: string }[]
-    >([]);
-
-    const [assigneeLoading, setAssigneeLoading] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [assignLoader, setAssignLoader] = useState(false);
     const [isAssigneePopoverOpen, setIsAssigneePopoverOpen] = useState(false);
@@ -279,6 +270,11 @@ export default function GlobalTaskSideSheet({
         },
         refetchOnMount: 'always',
     });
+
+    const { allAssigneeList, assigneeLoading, refetch } = useTaskAssignee({
+        task: task ?? ({} as ManagementTask),
+    });
+
     const readOnly = task?.status === TaskStatus.Completed || false;
 
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
@@ -707,45 +703,14 @@ export default function GlobalTaskSideSheet({
     const carrierName =
         getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
 
-    const handleClick = async () => {
-        if (assigneeList.length === 0 && !assigneeLoading) {
-            try {
-                setAssigneeLoading(true);
-                const usersData = await searchUsersInGroupCSR({
-                    carrier: task.carrier,
-                    queue: task.queue,
-                    access: 'processor',
-                });
-
-                const mappedUsers =
-                    usersData?.users.map((u: any) => ({
-                        user: getUserNameFromEmail(u.email),
-                        partyId: u.id.split(':')[1],
-                    })) || [];
-
-                setAssigneeList(mappedUsers);
-                setAllAssigneeList(mappedUsers);
-            } catch (error) {
-                browserLogError('Error fetching assignee list');
-            } finally {
-                setAssigneeLoading(false);
-            }
-        }
+    const handleSearch = (searchValue: string): void => {
+        setSearchValue(searchValue);
     };
 
-    const handleSearch = (value: string) => {
-        setSearchValue(value);
-
-        if (!value.trim()) {
-            setAssigneeList(allAssigneeList);
-            return;
+    const handleClick = () => {
+        if (allAssigneeList.length === 0 && !assigneeLoading) {
+            refetch();
         }
-
-        setAssigneeList(
-            allAssigneeList.filter((a) =>
-                a.user.toLowerCase().includes(value.toLowerCase())
-            )
-        );
     };
 
     const handleTaskAssignAsAdmin = async (
@@ -982,7 +947,7 @@ export default function GlobalTaskSideSheet({
                             onClose={() => setIsAssigneePopoverOpen(false)}
                             actionLoader={assignLoader}
                             isOpsManagerView={isOpsManagerView}
-                            assigneeList={assigneeList}
+                            assigneeList={allAssigneeList}
                             assigneeLoading={assigneeLoading}
                             searchValue={searchValue}
                             handleClick={handleClick}

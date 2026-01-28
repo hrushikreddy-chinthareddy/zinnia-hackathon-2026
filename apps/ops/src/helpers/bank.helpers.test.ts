@@ -3,7 +3,7 @@ import { cleanup } from '@testing-library/react';
 import { LifeCadPartyRoles } from '@deps/models/case/withdrawal/case';
 import {
     BankAccount,
-    Party,
+    Parties,
     PartyRole,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
@@ -84,7 +84,7 @@ describe('helpers/bank.helpers', () => {
     });
 
     describe('SOR helpers', () => {
-        const sorParty = (overrides: Partial<Party> = {}): Party =>
+        const sorParty = (overrides: Partial<Parties> = {}): Parties =>
             ({ partyId: 'P1', ...overrides } as any);
         const beneRole = (partyId: string): PolicyPartyRoles =>
             ({ partyRole: PartyRole.PRIMARYBENEFICIARY, partyId } as any);
@@ -125,7 +125,7 @@ describe('helpers/bank.helpers', () => {
         });
 
         it('isIrrevocableBeneficiaryExists checks presence of primary beneficiary in roles matched by partyId', () => {
-            const parties: Party[] = [
+            const parties: Parties[] = [
                 sorParty({ partyId: 'A' }),
                 sorParty({ partyId: 'B' }),
             ];

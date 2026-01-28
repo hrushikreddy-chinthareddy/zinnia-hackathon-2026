@@ -50,6 +50,7 @@ export default function CaseSubPage({
         hasCallLogsAccess,
         hasNotesAccess,
         isZinniaInternalViewer,
+        hasDocumentAccess,
     } = usePermissionsContext();
     const { policy } = usePolicyDataContext();
     const { featureFlags } = useOptimizely();
@@ -96,24 +97,26 @@ export default function CaseSubPage({
                             )}
                         </Typography>
                     </TabTrigger>
-                    <TabTrigger
-                        value={CaseDetailsTabValues.documents}
-                        onClick={trackTabClick('Documents')}
-                    >
-                        <Icon
-                            width={20}
-                            height={20}
-                            className="hidden lg:block"
-                            type={IconType.DOCUMENT_TEXT}
-                        />
-                        <Typography variant={TypographyVariant.LabelMdAlt}>
-                            {toTitleCase(
-                                t(
-                                    `caseOverview.tabs.${CaseDetailsTabValues.documents}`
-                                ) ?? ''
-                            )}
-                        </Typography>
-                    </TabTrigger>
+                    {hasDocumentAccess && (
+                        <TabTrigger
+                            value={CaseDetailsTabValues.documents}
+                            onClick={trackTabClick('Documents')}
+                        >
+                            <Icon
+                                width={20}
+                                height={20}
+                                className="hidden lg:block"
+                                type={IconType.DOCUMENT_TEXT}
+                            />
+                            <Typography variant={TypographyVariant.LabelMdAlt}>
+                                {toTitleCase(
+                                    t(
+                                        `caseOverview.tabs.${CaseDetailsTabValues.documents}`
+                                    ) ?? ''
+                                )}
+                            </Typography>
+                        </TabTrigger>
+                    )}
                     {hasNotesAccess && (
                         <TabTrigger
                             value={CaseDetailsTabValues.notes}
@@ -201,12 +204,17 @@ export default function CaseSubPage({
                 >
                     <ProgressTab caseDetails={caseDetails} />
                 </TabContent>
-                <TabContent
-                    className="w-full"
-                    value={CaseDetailsTabValues.documents}
-                >
-                    <DocumentsTab caseDetails={caseDetails} policy={policy} />
-                </TabContent>
+                {hasDocumentAccess && (
+                    <TabContent
+                        className="w-full"
+                        value={CaseDetailsTabValues.documents}
+                    >
+                        <DocumentsTab
+                            caseDetails={caseDetails}
+                            policy={policy}
+                        />
+                    </TabContent>
+                )}
                 {hasNotesAccess && (
                     <TabContent
                         className="w-full"

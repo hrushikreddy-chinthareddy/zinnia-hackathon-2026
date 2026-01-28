@@ -1,9 +1,10 @@
 import { getSession } from '@auth0/nextjs-auth0';
+import { HttpStatusCode } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
-import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import { EnterpriseTokenApi } from '@deps/services/enterprise-api-token-http';
 import { ApiResponse } from '@deps/types/api-response';
 import {
     getRolesFromCookie,
@@ -46,20 +47,18 @@ export const readUserTuples = async (
     const url = `${readUsersTuplesUrlSsr}?${queryString}`;
 
     try {
-        const usersTuples = await serverApi.get<ReadTuplesResponse>(
+        const usersTuples = await EnterpriseTokenApi.get(
             url,
-            {
-                authorization: `Bearer ${accessToken}`,
-            },
+            {},
             loggingContext
         );
 
         const response: ApiResponse<ReadTuplesResponse> = {
-            data: null,
+            data: (await usersTuples.json()) || null,
             error: null,
         };
 
-        if (usersTuples.status !== 200) {
+        if (usersTuples.status !== HttpStatusCode.Ok) {
             logWarn('checkTuple::An error occurred while checking tuple', {
                 ...loggingContext,
                 file: 'queries/api/fga',
@@ -76,8 +75,6 @@ export const readUserTuples = async (
 
             return response;
         }
-
-        response.data = usersTuples?.data;
 
         return response;
     } catch (error: any) {
@@ -101,6 +98,39 @@ export const readUserTuples = async (
 
         return ret;
     }
+};
+
+export const userRolesMap = (tuples: ReadTuplesResponse['tuples']) => {
+    return tuples?.reduce<Record<string, string[]>>(
+        (acc, { key: relationalData }) => {
+            if (
+                !relationalData ||
+                typeof relationalData !== 'object' ||
+                !('object' in relationalData)
+            ) {
+                return acc;
+            }
+            const { object } = relationalData;
+            // Anything between 'role:' and the first '_' will be treated as the carrier code,
+            // and everything after the first '_' will be treated as the role type (generic role)
+            // This is a stopgap solution until personas are implemented in FGA
+            const [_, carrierCode, roleType] =
+                object.match(/^role:([^_]+)_(.+)$/) ?? [];
+
+            if (!roleType) {
+                return acc;
+            }
+
+            return {
+                ...acc, // Existing roles
+                [roleType]: [
+                    ...(acc[roleType] || []), // Existing carrier codes
+                    carrierCode,
+                ],
+            };
+        },
+        {}
+    );
 };
 
 export const readAndStoreUserRolesCookie = async (
@@ -129,41 +159,13 @@ export const readAndStoreUserRolesCookie = async (
             loggingContext
         );
 
-        const userRolesMap = result.data?.tuples?.reduce<
-            Record<string, string[]>
-        >((acc, { key: relationalData }) => {
-            if (
-                !relationalData ||
-                typeof relationalData !== 'object' ||
-                !('object' in relationalData)
-            ) {
-                return acc;
-            }
-            const { object } = relationalData;
-            // Anything between 'role:' and the first '_' will be treated as the carrier code,
-            // and everything after the first '_' will be treated as the role type (generic role)
-            // This is a stopgap solution until personas are implemented in FGA
-            const [_, carrierCode, roleType] =
-                object.match(/^role:([^_]+)_(.+)$/) ?? [];
+        const rolesMap = userRolesMap(result.data?.tuples);
 
-            if (!roleType) {
-                return acc;
-            }
-
-            return {
-                ...acc, // Existing roles
-                [roleType]: [
-                    ...(acc[roleType] || []), // Existing carrier codes
-                    carrierCode,
-                ],
-            };
-        }, {});
-
-        if (userRolesMap) {
-            setRolesCookie(userRolesMap, ctx.req, ctx.res);
+        if (rolesMap) {
+            setRolesCookie(rolesMap, ctx.req, ctx.res);
         }
 
-        return userRolesMap;
+        return rolesMap;
     } catch (e) {
         logError(
             'readUserTuplePage::An error occurred while reading users tuple',

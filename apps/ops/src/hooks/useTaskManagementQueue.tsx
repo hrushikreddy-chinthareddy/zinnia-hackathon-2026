@@ -138,6 +138,12 @@ const useTaskManagementQueue = ({
         }
     };
 
+    const mapTasksToUnassigned = (tasks: (AssignedTask | UnassignedTask)[]) =>
+        tasks.map((task) => ({
+            ...task,
+            assignee: NO_ASSIGNEE,
+        }));
+
     const attachAssigneesToTasks = async (
         tasks: (AssignedTask | UnassignedTask)[]
     ): Promise<(AssignedTask | UnassignedTask)[]> => {
@@ -145,21 +151,36 @@ const useTaskManagementQueue = ({
             .filter((task) => task.assigneePartyId)
             .map((task) => task.assigneePartyId as string);
 
-        if (!partyIds.length)
-            return tasks.map((task) => ({ ...task, assignee: NO_ASSIGNEE }));
+        if (!partyIds.length) {
+            return mapTasksToUnassigned(tasks);
+        }
 
-        const { parties } = await getUserDataByPartyIds({
-            partyIds,
-            fields: DEFAULT_ASSIGNEE_FIELDS,
-        });
+        try {
+            const { parties } = await getUserDataByPartyIds({
+                partyIds,
+                fields: DEFAULT_ASSIGNEE_FIELDS,
+            });
 
-        return tasks.map((task) => ({
-            ...task,
-            assignee:
-                ASSIGNEE_PARTY_ID_FIELD in task
+            return tasks.map((task) => {
+                const hasAssigneePartyId = ASSIGNEE_PARTY_ID_FIELD in task;
+                const assignee = hasAssigneePartyId
                     ? findAssignee(parties, task.assigneePartyId)
-                    : NO_ASSIGNEE,
-        }));
+                    : NO_ASSIGNEE;
+
+                return { ...task, assignee };
+            });
+        } catch (error) {
+            browserLogError(
+                'attachAssigneesToTasks::Error while fetching task assignee details',
+                {
+                    ...parseErrorInformation(error),
+                    partyIds,
+                    fields: DEFAULT_ASSIGNEE_FIELDS,
+                }
+            );
+
+            return mapTasksToUnassigned(tasks);
+        }
     };
 
     const getManagerTask = async (

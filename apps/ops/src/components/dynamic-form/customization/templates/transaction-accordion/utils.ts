@@ -1,4 +1,4 @@
-import { PartyRole } from '@deps/models/policy/sor-policy';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import { BeneficiaryRole, TabTitle } from './types';
 

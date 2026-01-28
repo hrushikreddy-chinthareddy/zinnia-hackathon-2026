@@ -22,7 +22,7 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import { buildFreeLookCancelRequestBody } from '../free-look-cancel.helpers';
 
@@ -64,7 +64,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: TransactionType.FREE_LOOK_CANCELLATION,
+                type: Transaction.transactionType.FREE_LOOK_CANCELLATION,
                 correlationId: requestBody.correlationId,
             }
         );

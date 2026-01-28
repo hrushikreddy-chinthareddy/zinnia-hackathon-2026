@@ -72,8 +72,8 @@ import {
     Phone,
     PhoneType,
     Party,
-    TransactionType,
     Policy,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
@@ -523,7 +523,7 @@ export const SideSheetPhone = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: TransactionType.PHONE_NUMBER_CHANGE,
+                    type: Transaction.transactionType.PHONE_NUMBER_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

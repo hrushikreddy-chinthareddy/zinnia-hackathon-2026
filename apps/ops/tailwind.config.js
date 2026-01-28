@@ -114,16 +114,26 @@ module.exports = {
                         fontWeight: 500,
                     },
                 ],
-                'field-label': 'var(--measure-font-sizing-type-tokens-field-label-font-size)',
-                'field-label-sm': 'var(--measure-font-sizing-type-tokens-field-label-sm-font-size)',
-                'content-value': 'var(--measure-font-sizing-type-tokens-content-value-font-size)',
-                'content-caption': 'var(--measure-font-sizing-type-tokens-content-caption-font-size)',
-                'label-sm-alt': 'var(--measure-font-sizing-type-tokens-label-sm-alt-font-size)',
-                'label-sm': 'var(--measure-font-sizing-type-tokens-label-sm-font-size)',
-                'label-md': 'var(--measure-font-sizing-type-tokens-label-md-font-size)',
-                'label-lg': 'var(--measure-font-sizing-type-tokens-label-lg-font-size)',
-                'links-sm': 'var(--measure-font-sizing-type-tokens-nav-sm-font-size)',
-                'body-sm': 'var(--measure-font-sizing-font-size-font-size-x-small)',
+                'field-label':
+                    'var(--measure-font-sizing-type-tokens-field-label-font-size)',
+                'field-label-sm':
+                    'var(--measure-font-sizing-type-tokens-field-label-sm-font-size)',
+                'content-value':
+                    'var(--measure-font-sizing-type-tokens-content-value-font-size)',
+                'content-caption':
+                    'var(--measure-font-sizing-type-tokens-content-caption-font-size)',
+                'label-sm-alt':
+                    'var(--measure-font-sizing-type-tokens-label-sm-alt-font-size)',
+                'label-sm':
+                    'var(--measure-font-sizing-type-tokens-label-sm-font-size)',
+                'label-md':
+                    'var(--measure-font-sizing-type-tokens-label-md-font-size)',
+                'label-lg':
+                    'var(--measure-font-sizing-type-tokens-label-lg-font-size)',
+                'links-sm':
+                    'var(--measure-font-sizing-type-tokens-nav-sm-font-size)',
+                'body-sm':
+                    'var(--measure-font-sizing-font-size-font-size-x-small)',
             },
             lineHeight: {
                 4.5: '18px',
@@ -193,14 +203,20 @@ module.exports = {
                 '3xl': 'var(--measure-dimension-z-space-8)',
             },
             fontFamily: {
-                primary: 'var(--string-core-typography-font-family-font-family-primary)',
-                secondary: 'var(--string-core-typography-font-family-font-family-secondary)',
-                headings: 'var(--string-core-typography-font-family-font-family-headings)',
-                subtitles: 'var(--string-core-typography-font-family-font-family-subtitles)',
-                buttons: 'var(--string-core-typography-font-family-font-family-buttons)',
+                primary:
+                    'var(--string-core-typography-font-family-font-family-primary)',
+                secondary:
+                    'var(--string-core-typography-font-family-font-family-secondary)',
+                headings:
+                    'var(--string-core-typography-font-family-font-family-headings)',
+                subtitles:
+                    'var(--string-core-typography-font-family-font-family-subtitles)',
+                buttons:
+                    'var(--string-core-typography-font-family-font-family-buttons)',
                 body: 'var(--string-core-typography-font-family-font-family-body)',
                 links: 'var(--string-core-typography-font-family-font-family-links)',
-                navigation: 'var(--string-core-typography-font-family-font-family-navigation)',
+                navigation:
+                    'var(--string-core-typography-font-family-font-family-navigation)',
             },
             colors: {
                 primary: {
@@ -219,7 +235,7 @@ module.exports = {
                 },
                 accent1: 'var(--color-accent-color-accent-one)',
                 accent2: 'var(--color-accent-color-accent-two)',
-                background: 'var(--color-base-surface-surface-tertiary)',
+                background: 'var(--color-base-surface-tertiary)',
                 gray: {
                     50: 'rgb(var(--color-50-gray) / <alpha-value>)',
                     100: 'rgb(var(--color-100-gray) / <alpha-value>)',
@@ -263,19 +279,23 @@ module.exports = {
                 },
                 semantic: {
                     info: {
-                        DEFAULT: 'var(--color-semantics-color-semantic-information)',
+                        DEFAULT:
+                            'var(--color-semantics-color-semantic-information)',
                         light: 'var(--color-semantics-color-semantic-information-light)',
                     },
                     success: {
-                        DEFAULT: 'var(--color-semantics-color-semantic-success)',
+                        DEFAULT:
+                            'var(--color-semantics-color-semantic-success)',
                         light: 'var(--color-semantics-color-semantic-success-light)',
                     },
                     pending: {
-                        DEFAULT: 'var(--color-semantics-color-semantic-pending)',
+                        DEFAULT:
+                            'var(--color-semantics-color-semantic-pending)',
                         light: 'var(--color-semantics-color-semantic-pending-light)',
                     },
                     warning: {
-                        DEFAULT: 'var(--color-semantics-color-semantic-warning)',
+                        DEFAULT:
+                            'var(--color-semantics-color-semantic-warning)',
                         light: 'var(--color-semantics-color-semantic-warning-light)',
                     },
                     error: {
@@ -283,45 +303,46 @@ module.exports = {
                         light: 'var(--color-semantics-color-semantic-error-light)',
                     },
                     focus: 'var(--color-semantics-color-semantic-focus)',
-                    highlight: 'var(--color-semantics-color-semantic-text-highlight)',
+                    highlight:
+                        'var(--color-semantics-color-semantic-text-highlight)',
                 },
                 surface: {
-                    primary: 'var(--color-base-surface-surface-primary)',
-                    secondary: 'var(--color-base-surface-surface-secondary)',
-                    tertiary: 'var(--color-base-surface-surface-tertiary)',
-                    quaternary: 'var(--color-base-surface-surface-quaternary)',
-                    bold: 'var(--color-base-surface-surface-bold)',
-                    dark: 'var(--color-base-surface-surface-dark)',
-                    darker: 'var(--color-base-surface-surface-darker)',
-                    textHighlight: 'var(--color-base-surface-surface-text-highlight)',
+                    primary: 'var(--color-base-surface-primary)',
+                    secondary: 'var(--color-base-surface-secondary)',
+                    tertiary: 'var(--color-base-surface-tertiary)',
+                    quaternary: 'var(--color-base-surface-quaternary)',
+                    bold: 'var(--color-base-surface-bold)',
+                    dark: 'var(--color-base-surface-dark)',
+                    darker: 'var(--color-base-surface-darker)',
+                    textHighlight: 'var(--color-base-surface-text-highlight)',
                 },
                 border: {
-                    light: 'var(--color-base-border-border-light)',
+                    light: 'var(--color-base-border-light)',
                     selected: 'var(--color-base-border-selected-border)',
                     hover: 'var(--color-states-hover-border-hover-border)',
-                    subtle: 'var(--color-base-border-border-subtle)',
+                    subtle: 'var(--color-base-border-subtle)',
                 },
-                link: 'var(--color-base-icon-icon-action-text-link)',
+                link: 'var(--color-base-icon-action-text-link)',
             },
             boxShadow: {
-                xs: 'var(--shadow-elevation-elevation-light-xs)',
-                sm: 'var(--shadow-elevation-elevation-light-sm)',
-                md: 'var(--shadow-elevation-elevation-light-md)',
-                lg: 'var(--shadow-elevation-elevation-light-lg)',
-                xl: 'var(--shadow-elevation-elevation-light-xl)',
-                '2xl': 'var(--shadow-elevation-elevation-light-2xl)',
-                'xs-dark': 'var(--shadow-elevation-elevation-dark-xs)',
-                'sm-dark': 'var(--shadow-elevation-elevation-dark-sm)',
-                'md-dark': 'var(--shadow-elevation-elevation-dark-md)',
-                'lg-dark': 'var(--shadow-elevation-elevation-dark-lg)',
-                'xl-dark': 'var(--shadow-elevation-elevation-dark-xl)',
-                '2xl-dark': 'var(--shadow-elevation-elevation-dark-2xl)',
-                'elevation-light-04': 'var(--shadow-elevation-elevation-light-sm)',
-                'elevation-light-08': 'var(--shadow-elevation-elevation-light-md)',
-                'elevation-light-16': 'var(--shadow-elevation-elevation-light-lg)',
-                'elevation-light-32': 'var(--shadow-elevation-elevation-light-2xl)',
-                'elevation-04': 'var(--shadow-elevation-elevation-dark-sm)',
-                'elevation-dark-08': 'var(--shadow-elevation-elevation-dark-md)',
+                xs: 'var(--shadow-elevation-light-xs)',
+                sm: 'var(--shadow-elevation-light-sm)',
+                md: 'var(--shadow-elevation-light-md)',
+                lg: 'var(--shadow-elevation-light-lg)',
+                xl: 'var(--shadow-elevation-light-xl)',
+                '2xl': 'var(--shadow-elevation-light-2xl)',
+                'xs-dark': 'var(--shadow-elevation-dark-xs)',
+                'sm-dark': 'var(--shadow-elevation-dark-sm)',
+                'md-dark': 'var(--shadow-elevation-dark-md)',
+                'lg-dark': 'var(--shadow-elevation-dark-lg)',
+                'xl-dark': 'var(--shadow-elevation-dark-xl)',
+                '2xl-dark': 'var(--shadow-elevation-dark-2xl)',
+                'elevation-light-04': 'var(--shadow-elevation-light-sm)',
+                'elevation-light-08': 'var(--shadow-elevation-light-md)',
+                'elevation-light-16': 'var(--shadow-elevation-light-lg)',
+                'elevation-light-32': 'var(--shadow-elevation-light-2xl)',
+                'elevation-04': 'var(--shadow-elevation-dark-sm)',
+                'elevation-dark-08': 'var(--shadow-elevation-dark-md)',
             },
             transitionProperty: {
                 height: 'height',
@@ -335,7 +356,7 @@ module.exports = {
         transitionDelay: {
             600: '600ms',
         },
-        typography: theme => ({
+        typography: (theme) => ({
             DEFAULT: {
                 css: {
                     code: {
@@ -372,5 +393,8 @@ module.exports = {
             },
         }),
     },
-    plugins: [require('@tailwindcss/typography'), require('@tailwindcss/forms')],
+    plugins: [
+        require('@tailwindcss/typography'),
+        require('@tailwindcss/forms'),
+    ],
 };
