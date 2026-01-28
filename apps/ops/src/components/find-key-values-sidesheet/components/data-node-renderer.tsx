@@ -36,7 +36,7 @@ export function renderNode(
         case FieldType.field: {
             return (
                 <DataField
-                    key={`${node.label}-${index}`}
+                    key={`field-${node.label}-${index}`}
                     dataField={[node.label, node.value]}
                     link={node.link}
                     toolTip={node.toolTip}
@@ -48,6 +48,7 @@ export function renderNode(
         case FieldType.section: {
             return (
                 <Section
+                    key={`section-${node.label}-${index}`}
                     label={node.label}
                     tags={node.tags}
                     isPIILabel={node.isPIILabel}
