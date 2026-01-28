@@ -1,19 +1,17 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import '@testing-library/jest-dom/jest-globals';
+import { useUser } from '@auth0/nextjs-auth0/client';
 import {
     QueryClient,
     QueryClientProvider,
     useQuery,
 } from '@tanstack/react-query';
+import { render, screen, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance, getTaskSummaryById } from '@deps/queries/api/v2/task';
-
-import { useUser } from '@auth0/nextjs-auth0/client';
-
 import { checkQueuePermissions } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 
 import GlobalTaskSideSheet from './global-task-sidesheet-content';
@@ -43,36 +41,27 @@ const renderWithQueryClient = (
     };
 };
 
+// Mock React Query
 jest.mock('@tanstack/react-query', () => ({
     ...jest.requireActual('@tanstack/react-query'),
     useQuery: jest.fn(),
 }));
 
-const mockCheckQueuePermissions = jest.fn();
-
+// Mock task API
 jest.mock('@deps/queries/api/v2/task', () => ({
     getTaskInstance: jest.fn(),
     getTaskSummaryById: jest.fn(),
 }));
 
+// Mock permissions
+const mockCheckQueuePermissions = jest.fn();
+
 jest.mock(
     '@deps/queries/tanstack/permissionsQueries/permissions-queries',
-    () => {
-        const original = jest.requireActual(
-            '@deps/queries/tanstack/permissionsQueries/permissions-queries'
-        );
-        return {
-            ...original,
-            checkQueuePermissions: jest.fn((...args) =>
-                mockCheckQueuePermissions(...args)
-            ),
-            checkQueueAccess: jest.fn(),
-        };
-    }
-);
-
-const { checkQueueAccess } = jest.requireMock(
-    '@deps/queries/tanstack/permissionsQueries/permissions-queries'
+    () => ({
+        checkQueuePermissions: (...args: any[]) =>
+            mockCheckQueuePermissions(...args),
+    })
 );
 
 // Mock the API client
