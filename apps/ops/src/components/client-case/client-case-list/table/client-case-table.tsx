@@ -22,7 +22,10 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useIllustrationsClientCase } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
-import { calculateAge } from '@deps/helpers/string.helpers';
+import {
+    calculateAge,
+    isNullEmptyOrUndefined,
+} from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import {
     IllustrationsClientCase,
@@ -54,6 +57,23 @@ const generateTableContent = (
             </TableRow>
         );
     }
+    const noResultsMessage = () => {
+        const dynamicValue = isFiltered ? 'Filtered' : 'Unfiltered';
+        console.log('dynamicValue', dynamicValue);
+        return (
+            <>
+                <b>
+                    {t(
+                        `clientCase.clientCaseTable.noResults${dynamicValue}Title`
+                    )}
+                </b>
+                <br />
+                {t(
+                    `clientCase.clientCaseTable.noResults${dynamicValue}Paragraph`
+                )}
+            </>
+        );
+    };
 
     if (clientCases.length > 0) {
         return clientCases.map((caseData) => {
@@ -173,41 +193,15 @@ const generateTableContent = (
             );
         });
     } else {
-        if (isFiltered) {
-            return (
-                <TableRow className={styles.tableEmptyStateRow}>
-                    <TableCell colSpan={6} align="center">
-                        <Typography variant={TypographyVariant.BodyBold}>
-                            {t(
-                                'clientCase.clientCaseTable.noResultsFilteredTitle'
-                            )}
-                        </Typography>
-                        <Typography variant={TypographyVariant.BodySm}>
-                            {t(
-                                'clientCase.clientCaseTable.noResultsFilteredParagraph'
-                            )}
-                        </Typography>
-                    </TableCell>
-                </TableRow>
-            );
-        } else {
-            return (
-                <TableRow className={styles.tableEmptyStateRow}>
-                    <TableCell colSpan={6} align="center">
-                        <Typography variant={TypographyVariant.BodyBold}>
-                            {t(
-                                'clientCase.clientCaseTable.noResultsUnfilteredTitle'
-                            )}
-                        </Typography>
-                        <Typography variant={TypographyVariant.BodySm}>
-                            {t(
-                                'clientCase.clientCaseTable.noResultsUnfilteredParagraph'
-                            )}
-                        </Typography>
-                    </TableCell>
-                </TableRow>
-            );
-        }
+        return (
+            <TableRow className={styles.tableEmptyStateRow}>
+                <TableCell colSpan={6} align="center">
+                    <Typography variant={TypographyVariant.BodyBold}>
+                        {noResultsMessage()}
+                    </Typography>
+                </TableCell>
+            </TableRow>
+        );
     }
 
 };
@@ -217,9 +211,7 @@ const isResultsFiltered = (filters: ClientCaseSearchInputs): boolean => {
         ([key, value]) =>
             // Check search filters, excluding pagination and sorting fields
             !['limit', 'offset', 'sortBy', 'sortDir'].includes(key) &&
-            value !== '' &&
-            value !== undefined &&
-            value !== null
+            !isNullEmptyOrUndefined(value)
     );
 };
 
@@ -235,7 +227,6 @@ export const ClientCaseTable = () => {
     };
 
     const filteredResults = isResultsFiltered(filters);
-
     return (
         <Table>
             <TableHeader>

@@ -477,48 +477,36 @@ export const getValidFullName = (owner: PartyInstance | FullName) => {
     return fullName;
 };
 
+const isFilterActive = (value: any): boolean => {
+    if (value === undefined || value === null) {
+        return false;
+    }
+    if (typeof value === 'boolean') {
+        // Booleans are active if they're not null/undefined (even if false)
+        return true;
+    }
+    if (typeof value === 'string') {
+        return value !== '';
+    }
+    if (value instanceof Set) {
+        return value.size > 0;
+    }
+    if (Array.isArray(value)) {
+        return value.length > 0;
+    }
+    if (typeof value === 'object') {
+        return Object.keys(value).length > 0;
+    }
+    return false;
+};
+
 export const hasActiveAdvancedFilters = (
     additionalFilters: CaseSearchAdditionalFilters,
     searchValue?: SearchViewQuery
 ): boolean => {
-    const {
-        brokerDealerName,
-        createdDateStart,
-        createdDateEnd,
-        updatedDateStart,
-        updatedDateEnd,
-        age,
-        caseStatus,
-        processTypes,
-        requestSubType,
-        carriers,
-        products,
-        category,
-        reason,
-        escalated,
-        detailedReason,
-        issueStatus,
-        notInCaseStatus,
-    } = additionalFilters;
-
-    const hasAdvancedFilters =
-        (brokerDealerName !== undefined && brokerDealerName !== '') ||
-        (createdDateStart !== undefined && createdDateStart !== '') ||
-        (createdDateEnd !== undefined && createdDateEnd !== '') ||
-        (updatedDateStart !== undefined && updatedDateStart !== '') ||
-        (updatedDateEnd !== undefined && updatedDateEnd !== '') ||
-        (age !== undefined && age !== '') ||
-        (caseStatus !== undefined && caseStatus.length > 0) ||
-        (processTypes !== undefined && processTypes.size > 0) ||
-        (requestSubType !== undefined && requestSubType.size > 0) ||
-        (carriers !== undefined && Object.keys(carriers).length > 0) ||
-        (products !== undefined && products.size > 0) ||
-        (category !== undefined && category !== '') ||
-        (reason !== undefined && reason !== '') ||
-        (escalated !== undefined && escalated !== null) ||
-        (detailedReason !== undefined && detailedReason !== '') ||
-        (issueStatus !== undefined && issueStatus.length > 0) ||
-        (notInCaseStatus !== undefined && notInCaseStatus.length > 0);
+    const hasAdvancedFilters = Object.values(additionalFilters).some((value) =>
+        isFilterActive(value)
+    );
 
     const hasSearchValue = !!(
         searchValue && Object.values(searchValue).some((value) => value)

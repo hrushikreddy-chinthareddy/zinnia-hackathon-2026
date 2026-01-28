@@ -413,37 +413,30 @@ const NoResultsRow = ({
     isFiltered?: boolean;
 }) => {
     const { t } = useTranslation();
-    const noResultsMessage = isFiltered ? (
-        <>
-            <b>
+
+    const noResultsMessage = () => {
+        const dynamicValue = isFiltered ? 'Filtered' : 'Unfiltered';
+
+        return (
+            <>
+                <b>
+                    {t(
+                        `caseManagementDashboard.search.empty.noResults${dynamicValue}Title`
+                    )}
+                </b>
+                <br />
                 {t(
-                    'caseManagementDashboard.search.empty.noResultsFilteredTitle'
+                    `caseManagementDashboard.search.empty.noResults${dynamicValue}Paragraph`
                 )}
-            </b>
-            <br />
-            {t(
-                'caseManagementDashboard.search.empty.noResultsFilteredParagraph'
-            )}
-        </>
-    ) : (
-        <>
-            <b>
-                {t(
-                    'caseManagementDashboard.search.empty.noResultsUnfilteredTitle'
-                )}
-            </b>
-            <br />
-            {t(
-                'caseManagementDashboard.search.empty.noResultsUnfilteredParagraph'
-            )}
-        </>
-    );
+            </>
+        );
+    };
 
     return (
         <TableRow>
             <TableCell colSpan={7} className="text-center">
                 <Typography variant={TypographyVariant.BodySm} className="my-4">
-                    {caseSearchLoading ? loadingMessage : noResultsMessage}
+                    {caseSearchLoading ? loadingMessage : noResultsMessage()}
                 </Typography>
             </TableCell>
         </TableRow>
