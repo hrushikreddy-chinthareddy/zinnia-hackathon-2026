@@ -41,6 +41,10 @@ interface FundsTableProps {
      * (e.g., elected vs non-elected funds).
      */
     caption?: string;
+    /**
+     * Whether the funds are elected or not.
+     */
+    isElected?: boolean;
 }
 
 export enum FundTypes {
@@ -52,7 +56,13 @@ export enum FundTypes {
 const hasSideSheet = (fundType: string | undefined) =>
     fundType === FundTypes.Index || fundType === FundTypes.Variable;
 
-const FundsTable = ({ funds, loading, policy, caption }: FundsTableProps) => {
+const FundsTable = ({
+    funds,
+    loading,
+    policy,
+    caption,
+    isElected = false,
+}: FundsTableProps) => {
     const sideSheet = useSideSheetContext();
     const { featureFlags } = useOptimizely();
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -294,16 +304,18 @@ const FundsTable = ({ funds, loading, policy, caption }: FundsTableProps) => {
                         </TableRow>
                     ) : (
                         funds?.map((fund, index) => {
-                            const rowClassName = isRevisedFundSidesheetEnabled
-                                ? 'cursor-pointer hover:bg-[var(--color-base-surface-secondary)]'
-                                : '';
-
                             return (
                                 <TableRow
                                     key={`fund-${fund.fundId}-${index}`}
-                                    className={rowClassName}
+                                    className={
+                                        isRevisedFundSidesheetEnabled &&
+                                        isElected
+                                            ? styles.clickableRow
+                                            : ''
+                                    }
                                     onClick={
-                                        isRevisedFundSidesheetEnabled
+                                        isRevisedFundSidesheetEnabled &&
+                                        isElected
                                             ? () => handleFundClick(fund)
                                             : undefined
                                     }
