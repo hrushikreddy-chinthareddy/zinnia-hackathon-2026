@@ -49,6 +49,7 @@ import Custom404Page from '@deps/pages/404s';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
 import { baseAppUrl } from '@deps/queries/api-config';
+import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import {
     getPolicyQuery,
