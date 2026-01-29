@@ -59,7 +59,7 @@ const generateTableContent = (
     }
     const noResultsMessage = () => {
         const dynamicValue = isFiltered ? 'Filtered' : 'Unfiltered';
-        console.log('dynamicValue', dynamicValue);
+
         return (
             <>
                 <b>
