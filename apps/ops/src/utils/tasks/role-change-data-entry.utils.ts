@@ -104,15 +104,15 @@ export function getDefaultRoleChangeParty() {
         endDate: null,
     };
 }
-export const toFullName = (party: Party): string | null =>
-    toTitleCase(
-        [
-            party.prefix,
-            party.firstName,
-            party.middleName,
-            party.lastName,
-            party.suffix,
-        ]
+export const toFullName = (party: Party): string | null => {
+    const suffix = party.suffix;
+
+    const baseName = toTitleCase(
+        [party.prefix, party.firstName, party.middleName, party.lastName]
             .filter(Boolean)
             .join(' ')
-    ) || null;
+    );
+
+    const full = [baseName, suffix].filter(Boolean).join(' ');
+    return full || null;
+};

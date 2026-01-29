@@ -2477,6 +2477,11 @@
             "confirm": {
                 "subTitle": "Assignee Change updates were submitted."
             }
+        },
+        "beneChange": {
+            "title": "Manage Beneficiaries",
+            "subTitle": "Here you can manage your beneficiaries",
+            "confirmSubTitle": "Beneficiaries have been updated"
         }
     },
     "welcome": {
@@ -9323,6 +9328,7 @@
             "maleButton": "Male",
             "femaleButton": "Female",
             "dateLabel": "Date of birth",
+            "dateErrorMessage": "DOB format is mm/dd/yyyy",
             "ageLabel": "Current Age",
             "riskLabel": "Risk class",
             "nicotineUserLabel": "Nicotine user",

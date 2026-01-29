@@ -140,7 +140,7 @@ export class PolicyParty {
             (identification) =>
                 identification.identificationType ===
                 Identification.identificationType.STATEPHOTOID
-        );
+        )?.identificationValue;
     }
 
     public get taxId() {
@@ -148,7 +148,7 @@ export class PolicyParty {
             (identification) =>
                 identification.identificationType ===
                 Identification.identificationType.TIN
-        );
+        )?.identificationValue;
     }
 
     public get partyRoles(): PolicyPartyRoles[] {
