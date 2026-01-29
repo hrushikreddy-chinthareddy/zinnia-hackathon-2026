@@ -85,8 +85,10 @@ const FundsTable = ({
             return undefined;
         }
 
-        const funds = policy.policy?.allocation?.funds ?? [];
-        const fund = funds.find((f) => f.fundId === selectedFund.fundId);
+        const policyFunds = policy.policy?.allocation?.funds ?? [];
+        const policyFund = policyFunds.find(
+            (f) => f.fundId === selectedFund.fundId
+        );
 
         const fundAllocationsInvestments =
             policy.policy?.allocation?.fundAllocationsInvestments ?? [];
@@ -94,12 +96,24 @@ const FundsTable = ({
             (f) => f.fundId === selectedFund.fundId
         );
 
+        const fundDetails = funds?.find(
+            (f) => f.fundId === selectedFund.fundId
+        );
+        console.log('.....', fundDetails);
         // Returned combined fund data
         return {
-            ...fund,
+            ...policyFund,
             ...fundAllocationsInvestment,
+            glCode: fundDetails?.glCode,
+            minimumTransferAmount: fundDetails?.minimumTransferAmount,
+            rateEffectiveDate: fundDetails?.rateEffectiveDate,
+            sweepToFundId: fundDetails?.sweepToFundId,
+            bonusPeriodFrequency: fundDetails?.bonusPeriodFrequency,
+            interestRate: fundDetails?.interestRate,
+            maximumIllustrativeInterestRate:
+                fundDetails?.maximumIllustrativeInterestRate,
         };
-    }, [isRevisedFundSidesheetEnabled, selectedFund, policy]);
+    }, [isRevisedFundSidesheetEnabled, selectedFund, policy, funds]);
 
     if (!loading && !funds?.length) {
         return (
@@ -368,7 +382,10 @@ const FundsTable = ({
                                         className={styles.interestRateCell}
                                     >
                                         <Content
-                                            details={fund.interestRate}
+                                            details={
+                                                fund.interestRate ??
+                                                DEFAULT_ERROR_STRING
+                                            }
                                             variant={ContentVariant.BodySm}
                                         />
                                     </TableCell>

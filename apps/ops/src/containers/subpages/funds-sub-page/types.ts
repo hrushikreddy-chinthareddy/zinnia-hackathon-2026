@@ -65,6 +65,13 @@ export interface FundViewModel {
     // Fixed, Index, Variable etc
     // funds[0].fundType
     type?: string;
+
+    glCode?: string;
+    minimumTransferAmount?: number;
+    rateEffectiveDate?: string;
+    sweepToFundId?: string;
+    bonusPeriodFrequency?: number;
+    maximumIllustrativeInterestRate?: number;
 }
 
 export interface MatchViewModel {
