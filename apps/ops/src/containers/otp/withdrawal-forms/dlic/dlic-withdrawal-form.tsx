@@ -4,6 +4,7 @@ import { useContext, useEffect } from 'react';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormDisbursementV2 from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import FormProgramPartialWithdrawal from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
@@ -13,16 +14,21 @@ import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import HasPreviousNigo from '@deps/components/previous-nigo-check/has-previous-nigo-check';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
 import useDlicConfig from './dlic-withdrawal-form-helpers';
 
 export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
+    const { featureFlags } = useOptimizely();
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+    const isDelawareBankSecFeatsEnabled =
+        featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
 
     const {
         formValidation,
@@ -33,13 +39,14 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
         signaturesNotaryConfig,
         formPartyConfigs,
         disbursementOptions,
+        disbursementOptionsV2,
         fundWithdrawnMethodOptions,
         selectOneOptions,
         w4pSignaturesConfig,
         eSignatureFieldConfig,
         reasonOptions,
         hasPreviousNigoPlanCodes,
-    } = useDlicConfig(t);
+    } = useDlicConfig(t, isDelawareBankSecFeatsEnabled);
     const {
         formProgram,
         setFormProgram,
@@ -129,11 +136,18 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
                     w4pSignaturesConfig={w4pSignaturesConfig}
                 />
             )}
+            {isDelawareBankSecFeatsEnabled ? (
+                <FormDisbursementV2
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={disbursementOptionsV2}
+                />
+            ) : (
+                <FormDisbursement
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={disbursementOptions}
+                />
+            )}
 
-            <FormDisbursementV2
-                isFormStateReadOnly={isFormStateReadOnly}
-                options={disbursementOptions}
-            />
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}
                 config={signaturesConfig}

@@ -62,7 +62,7 @@ jest.mock('@deps/types/constants', () => ({
 describe('getDlicConfig', () => {
     const t: TFunction = ((key: string) => key) as unknown as TFunction;
 
-    const config = getDlicConfig(t);
+    const config = getDlicConfig(t, false);
 
     it('should return all expected config keys', () => {
         expect(config.formValidation).toBeDefined();
