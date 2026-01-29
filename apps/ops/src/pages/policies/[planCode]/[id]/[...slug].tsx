@@ -173,6 +173,15 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
 
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
 
+    const policyDataValue = useMemo(
+        () => ({
+            policy: policy as Policy,
+            policyDetails,
+            refreshPolicy: refetchPolicy,
+        }),
+        [policy, policyDetails, refetchPolicy]
+    );
+
     const getTransactionData = useCallback(async () => {
         let transactionType;
         if (slug && slug.length > 0) {
@@ -364,13 +373,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     return (
         <BlurOverlayLoader loading={isFetching}>
             <PolicyLayout policyDetails={policy}>
-                <PolicyData.Provider
-                    value={{
-                        policy,
-                        policyDetails: new PolicyDetails(policy),
-                        refreshPolicy: refetchPolicy,
-                    }}
-                >
+                <PolicyData.Provider value={policyDataValue}>
                     {/* Only the sub pages re-render on filter changes */}
                     <PeopleRolesFilterProvider>
                         <PageHead titleKey={subPageTitleKey} />
