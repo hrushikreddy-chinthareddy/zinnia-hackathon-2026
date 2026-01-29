@@ -2474,6 +2474,11 @@
             "confirm": {
                 "subTitle": "Assignee Change updates were submitted."
             }
+        },
+        "beneChange": {
+            "title": "Manage Beneficiaries",
+            "subTitle": "Here you can manage your beneficiaries",
+            "confirmSubTitle": "Beneficiaries have been updated"
         }
     },
     "welcome": {

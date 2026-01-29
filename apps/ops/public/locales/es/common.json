@@ -2470,6 +2470,11 @@
             "confirm": {
                 "subTitle": "Las actualizaciones del cambio de asignado se enviaron."
             }
+        },
+        "beneChange": {
+            "title": "Administrar beneficiarios",
+            "subTitle": "Aquí puede administrar sus beneficiarios",
+            "confirmSubTitle": "Los beneficiarios se han actualizado"
         }
     },
     "welcome": {
