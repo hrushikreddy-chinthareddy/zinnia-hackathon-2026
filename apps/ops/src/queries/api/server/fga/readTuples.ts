@@ -1,5 +1,4 @@
 import { getSession } from '@auth0/nextjs-auth0';
-import { ReadTuplesResponse } from '@zinnia/api-types/types/fga';
 import { HttpStatusCode } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
@@ -17,6 +16,7 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import { ReadTuplesResponse } from '@zinnia/api-types/types/fga';
 
 const readUsersTuplesUrlSsr = `${apiServerBaseUrl}/fga/v1/tuples`;
 

@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { User } from '@zinnia/api-types/types/fga';
 
 import { PROCESSOR_ROLE } from '@deps/helpers/ops-manager.helpers';
 import {
@@ -9,6 +8,7 @@ import {
 } from '@deps/models/case/task-instance';
 import { SearchUsersQuery } from '@deps/queries/tanstack/usersQueries/usersQueries';
 import { FIVE_MINUTES_IN_MS } from '@deps/types/constants';
+import { User } from '@zinnia/api-types/types/fga';
 
 import { getUserNameFromEmail } from './useTaskManagementQueue';
 

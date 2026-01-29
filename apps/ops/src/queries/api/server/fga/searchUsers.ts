@@ -1,5 +1,4 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
-import { User } from '@zinnia/api-types/types/fga';
 import { AxiosResponse } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
@@ -14,6 +13,7 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import { User } from '@zinnia/api-types/types/fga';
 
 const searchUsersUrlSsr = `${apiServerBaseUrl}/fga/v1/search-users`;
 
