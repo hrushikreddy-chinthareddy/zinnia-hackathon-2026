@@ -422,12 +422,11 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         () => ({
             customData,
             setCustomData: (patch: any) => {
-                setCustomData((prev: any) => ({
-                    ...prev,
-                    ...patch,
-                    task: {
-                        ...prev.task,
-                        data: { ...prev.task.data, ...patch },
+                setTask((ogTask: any) => ({
+                    ...ogTask,
+                    data: {
+                        ...ogTask.data,
+                        ...patch,
                     },
                 }));
             },

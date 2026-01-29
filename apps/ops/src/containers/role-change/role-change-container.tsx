@@ -1,3 +1,4 @@
+import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
@@ -12,11 +13,7 @@ import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { Processes } from '@deps/models/case/case';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import {
-    PartyRole,
-    Policy,
-    TransactionType,
-} from '@zinnia/api-types/types/sor';
+import { PartyRole, Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import { buildSignatures, getActiveRoleParty } from './role-change-helper';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -46,7 +43,8 @@ const RoleChangeContainer = ({
 
     const { policyNumber, product } = policy;
     const planCode = product?.planCode;
-
+    const searchParams = useSearchParams();
+    const correlationId = searchParams.get('correlationId');
     const leaveTransactionLink = `/policies/${planCode}/${policyNumber}/${ParentPage.People}`;
 
     useEffect(() => {
@@ -97,12 +95,13 @@ const RoleChangeContainer = ({
                         processType={Processes.PolicyUpdate}
                         processSubType={getProcessSubType()}
                         policy={policy}
+                        correlationId={correlationId || ''}
                         setState={setRoleData as StartStepSetState}
                         state={roleData as StartType}
                         title={t('start.title', { roleLabel }) as string}
                         subtitle={'' as string}
                         trackEventProps={{
-                            type: TransactionType.ADD_OWNER,
+                            type: Transaction.transactionType.ADD_OWNER,
                             step: TransactionStep.Start,
                         }}
                         type={SourceType.Case}

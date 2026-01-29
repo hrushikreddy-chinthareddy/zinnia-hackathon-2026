@@ -32,6 +32,7 @@ export const UnderwritingCardContainer = () => {
     const coverage: PolicyCoverage = {
         coverageLayers: [
             {
+                coverageTerm: 0,
                 coverageParticipants: [
                     {
                         flatExtra: [],

@@ -1,12 +1,12 @@
 .footerActionText {
     cursor: not-allowed;
     font-weight: var(--string-font-weight-font-weight-semibold);
-    color: var(--color-300-gray);
+    color: var(--color-states-inactive-text-inactive-text);
 }
 
 .footerActionLink {
     font-size: var(--measure-font-sizing-content-body-font-size);
     font-weight: var(--string-font-weight-font-weight-semibold);
-    color: var(--color-600-cerulean);
+    color: var(--color-base-text-link);
     cursor: pointer;
 }

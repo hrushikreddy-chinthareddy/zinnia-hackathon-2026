@@ -350,10 +350,9 @@
                                                 "enum": [
                                                     "EMAIL",
                                                     "REGULARMAIL",
-                                                    "null"
+                                                    null
                                                 ],
-                                                "title": "Preferred contact method",
-                                                "default": "null"
+                                                "title": "Preferred contact method"
                                             },
                                             "addresses": {
                                                 "type": "array",
@@ -1028,7 +1027,7 @@
                                                     {
                                                         "properties": {
                                                             "preferredCommunicationType": {
-                                                                "const": "null"
+                                                                "const": null
                                                             }
                                                         }
                                                     }
@@ -1086,11 +1085,7 @@
                             "allowContentDisabled": true
                         },
                         "items": {
-                            "ui:order": [
-                                "action",
-                                "party",
-                                "preferredCommunicationType"
-                            ],
+                            "ui:order": ["action", "party"],
                             "ui:options": {
                                 "ObjectFieldTemplate": "PartyCardFieldTemplate",
                                 "label": false,
@@ -1483,8 +1478,7 @@
                                             "Email",
                                             "Mail",
                                             "Not specified"
-                                        ],
-                                        "allowNullValue": true
+                                        ]
                                     }
                                 },
                                 "addresses": {

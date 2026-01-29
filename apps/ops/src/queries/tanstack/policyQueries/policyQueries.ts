@@ -6,14 +6,30 @@ import { Carrier } from '@deps/models/case/withdrawal/case';
 import { getAgentData } from '@deps/queries/api/agents';
 import {
     fetchPolicy,
+    getPolicyAccountingEntries,
     searchPolicies,
     searchPolicy,
 } from '@deps/queries/api/policies';
 import { MOCK_COOKIE_KEY } from '@deps/queries/api-utils/serverClientUtils';
 import { getMockPolicy } from '@deps/services/mocks/mock-policy.helpers';
+import { AccountingEntriesAPIParams } from '@deps/types/accountingEntries';
 import { SearchViewQuery } from '@deps/types/search';
 
 export const getPolicyQueryKey = 'policyData';
+
+export const getAccountingEntriesQueryKey = 'accountingEntries';
+
+export const getAccountingEntries = async (
+    args: AccountingEntriesAPIParams
+) => {
+    const response = await getPolicyAccountingEntries(args);
+
+    if (!response) {
+        throw 'No accounting entries found';
+    }
+    return response;
+};
+
 export const getPolicyQuery = async (
     id: string,
     planCode: string,

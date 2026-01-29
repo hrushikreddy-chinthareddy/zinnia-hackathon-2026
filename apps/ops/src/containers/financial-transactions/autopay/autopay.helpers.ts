@@ -39,7 +39,6 @@ export const buildSystematicProgramUpdateRequestBody = (
         correlationId: autopay.correlationId || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: autopay.reverseInitiator,
-        externalTransactionId: '',
         systematicProgram: {
             amount: Number(autopay.paymentAmount),
             arrangementType: autopay.arrangementType,
@@ -92,7 +91,6 @@ export const buildSystematicWithdrawalProgramUpdateRequestBody = (
         correlationId: autopay.correlationId || uuidV4(),
         effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
         reverseInitiator: autopay.reverseInitiator,
-        externalTransactionId: '',
         systematicProgram: {
             amount: Number(autopay.paymentAmount),
             arrangementType: autopay.arrangementType,

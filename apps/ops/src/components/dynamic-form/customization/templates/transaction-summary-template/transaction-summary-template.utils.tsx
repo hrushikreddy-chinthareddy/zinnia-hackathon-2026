@@ -13,7 +13,6 @@ import {
 } from '@deps/helpers/string.helpers';
 import { TaskType } from '@deps/models/case/task';
 import { SorSystem } from '@deps/models/policy/enums';
-import { PartyType } from '@deps/models/policy/sor-policy';
 import { TransactionResponse } from '@deps/queries/api/bpm';
 import { validateRoleChange } from '@deps/queries/api/role-change';
 import {
@@ -33,6 +32,7 @@ import {
     toFullName,
     mergeIdentifications,
 } from '@deps/utils/tasks/role-change-data-entry.utils';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 export function getPartyMeta(item: SummaryItem) {
     const party = item.party || {};

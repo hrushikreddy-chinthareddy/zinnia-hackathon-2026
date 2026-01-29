@@ -29,8 +29,57 @@ import {
     isDataField,
     isDataSectionOrGroup,
     isDataSectionOrField,
+    isDataGroup,
 } from '../data-node-helpers/predicates';
 import { defaultNotAvailableFields } from '../translations/default-not-available-fields';
+
+const filterAccountingEntryDataFields = (accountingEntry: DataNode) => {
+    if (!isDataSection(accountingEntry)) {
+        return [accountingEntry];
+    }
+    const entryFieldsToDisplay = [
+        'accountEntryType',
+        'accountNumber',
+        'accountPeriod',
+        'ledgerType',
+        'ledgerGroup',
+        'sourceSystem',
+        'state',
+        'currency',
+        'amount',
+        'fundId',
+        'distributionChannel',
+        'accountingMethod',
+        'transactionDate',
+        'unit',
+    ];
+
+    return accountingEntry?.children
+        ?.filter(isDataField || isDataSection)
+        ?.filter((child) => entryFieldsToDisplay.includes(child.label));
+};
+
+export const addAccountingEntriesGroup = (
+    data: DataNode[],
+    accountingEntries: DataNode[]
+): DataNode[] => {
+    if (!accountingEntries?.length) return data;
+
+    const cleanedAccountingEntries = accountingEntries.map(
+        filterAccountingEntryDataFields
+    );
+
+    const accountingEntriesSection: DataSection = {
+        type: FieldType.section,
+        label: 'accounting',
+        children: [
+            { type: FieldType.group, children: cleanedAccountingEntries },
+        ],
+    };
+
+    return [...data, accountingEntriesSection];
+};
+
 /**
  * Groups basics for policy
  *
@@ -477,8 +526,52 @@ function groupAllocation({
     if (combinedFunds) {
         combinedFundsSection.children.push(...combinedFunds);
     }
+    const matchSegment = groupPremiumBonusSegment({
+        allocationNode: allocation,
+    });
+
+    if (matchSegment) {
+        combinedFundsSection.children.push(matchSegment);
+    }
 
     return combinedFundsSection;
+}
+
+function groupPremiumBonusSegment({
+    allocationNode,
+}: {
+    allocationNode: DataSection | undefined;
+}): DataSection | undefined {
+    if (!allocationNode) {
+        return undefined;
+    }
+    const matchSegmentSection = findSectionInNodes({
+        nodes: allocationNode?.children ?? [],
+        key: 'matchSegment',
+    });
+
+    if (!matchSegmentSection) {
+        return undefined;
+    }
+
+    const premiumBonusFields = [
+        'unvestedPremiumBonus',
+        'totalRecapturedPremiumBonus',
+        'matchVestingDate',
+        'generalLedgerFundCode',
+        'vestingPeriod',
+    ];
+
+    return {
+        type: FieldType.section,
+        label: 'premiumBonus',
+        children: matchSegmentSection.children.filter(
+            (node) =>
+                isDataGroup(node) ||
+                (isDataSectionOrField(node) &&
+                    premiumBonusFields.includes(node.label))
+        ),
+    };
 }
 
 /**

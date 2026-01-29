@@ -17,7 +17,7 @@ import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { useAccountInfo } from '@deps/hooks/otp-withdrawal/useAccountInfo';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
-import { QualTypes } from '@deps/models/case/withdrawal/case';
+import { QualTypes, RMDType } from '@deps/models/case/withdrawal/case';
 import {
     CalculateRmdBody,
     RmdParty,
@@ -28,9 +28,10 @@ import {
 import { getVariableQuote } from '@deps/queries/api/policies';
 import { calculateRmd } from '@deps/queries/api/rmd-calculation';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { RelationshipToParty } from '@zinnia/api-types/types/sor';
+import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
-import { RMDMethodId, frequencyToValue } from './rmd-method';
+import styles from './rmd-calculator.module.css';
+import { DEFAULT_RMD, RMDMethodId, frequencyToValue } from './rmd-method';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const noop = () => {};
@@ -108,6 +109,7 @@ const calculateAgeDifference = (
 
 interface RMDCalculatorProps {
     isFormStateReadOnly?: boolean;
+    rmdMethod: RMDType;
 }
 
 const getAnnuitants = (parties: LifeCadParty[]) => {
@@ -134,20 +136,26 @@ const getOwnerDOB = (parties: LifeCadParty[]) => {
 
 export default function RMDCalculator({
     isFormStateReadOnly,
+    rmdMethod,
 }: RMDCalculatorProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.rmdMethod',
     });
-    const { initialForm, parties } = useContext(FormDataContext);
+    const { initialForm, parties, setFormProgram, formProgram } =
+        useContext(FormDataContext);
     const { contractStatus, qualType } = useAccountInfo(
         initialForm?.data?.contractNum,
         initialForm.carrier as string
     );
     const currentDate = dayjs().format('YYYY');
-    const [rmdYear, setRmdYear] = useState<string>(currentDate);
+    const [rmdYear, setRmdYear] = useState<string>(
+        formProgram?.rmd?.rmdYear || currentDate
+    );
     const [priorYearMrdBasisValue, setPriorYearMrdBasisValue] =
-        useState<number>(0);
-    const [calculatedAmount, setCalculatedAmount] = useState<number>(0);
+        useState<number>(formProgram?.rmd?.priorYearMrdBasisValue || 0);
+    const [calculatedAmount, setCalculatedAmount] = useState<number>(
+        formProgram?.rmd?.calculatedAmount || 0
+    );
     const [rmdFactor, setRmdFactor] = useState<number>(0);
     const [apiError, setApiError] = useState<string>('');
     const [loader, setLoader] = useState(false);
@@ -179,7 +187,7 @@ export default function RMDCalculator({
                 );
                 if (ageDifference > 10) {
                     annuitant.relationshipToInsured =
-                        RelationshipToParty.SPOUSE;
+                        PolicyPartyRoles.relationshipToParty.SPOUSE;
                 }
             }
 
@@ -238,16 +246,22 @@ export default function RMDCalculator({
             }
         };
 
-        getRMDFactor(rmdYear);
+        if (!isFormStateReadOnly) {
+            getRMDFactor(rmdYear);
+        }
     }, [rmdYear, debouncedValue]);
 
     // calculate rmd
     useEffect(() => {
-        rmdFactor !== 0
-            ? setCalculatedAmount(
-                  Number(priorYearMrdBasisValue) / Number(rmdFactor)
-              )
-            : setCalculatedAmount(0);
+        if (!isFormStateReadOnly) {
+            rmdFactor !== 0
+                ? setCalculatedAmount(
+                      Number(priorYearMrdBasisValue) / Number(rmdFactor)
+                  )
+                : setCalculatedAmount(0);
+        } else {
+            setCalculatedAmount(formProgram?.rmd?.calculatedAmount || 0);
+        }
     }, [priorYearMrdBasisValue, rmdFactor]);
 
     useEffect(() => {
@@ -281,7 +295,9 @@ export default function RMDCalculator({
             }
         };
 
-        getRMDBasisValue(rmdYear);
+        if (!isFormStateReadOnly) {
+            getRMDBasisValue(rmdYear);
+        }
     }, [rmdYear]);
 
     const updateMRDBasisValue = (event: ChangeEvent<HTMLInputElement>) => {
@@ -289,9 +305,26 @@ export default function RMDCalculator({
         setPriorYearMrdBasisValue(Number(value));
     };
 
+    useEffect(() => {
+        const rmd = {
+            ...DEFAULT_RMD,
+            ...formProgram?.rmd,
+            rmdMethod: rmdMethod,
+        };
+        setFormProgram((prevProgram) => ({
+            ...prevProgram,
+            rmd: {
+                ...rmd,
+                rmdYear: rmdYear,
+                priorYearMrdBasisValue: priorYearMrdBasisValue,
+                calculatedAmount: calculatedAmount,
+            },
+        }));
+    }, [rmdYear, priorYearMrdBasisValue, calculatedAmount]);
+
     return (
-        <div className="mt-4 border-b-2 border-gray-100 p-2">
-            <div className="flex gap-4 sm:gap-8">
+        <div className={styles.rmdCalculatorContainer}>
+            <div className={styles.rmdCalculatorRow}>
                 <div>
                     <Field
                         label={t(`rmdYear`) as string}
@@ -310,6 +343,7 @@ export default function RMDCalculator({
                                 : FieldVariant.Default
                         }
                         data-testid={`rmdyear`}
+                        disabled={isFormStateReadOnly}
                     />
                     {apiError && (
                         <AssistiveText
@@ -336,6 +370,7 @@ export default function RMDCalculator({
                             : FieldVariant.Default
                     }
                     data-testid={`priorYearMrdBasisValue`}
+                    disabled={isFormStateReadOnly}
                 />
 
                 {loader ? (
@@ -355,6 +390,7 @@ export default function RMDCalculator({
                         type={FieldType.BaseActive}
                         data-testid={`calculatedAmount`}
                         variant={FieldVariant.Inactive}
+                        disabled={isFormStateReadOnly}
                     />
                 )}
             </div>

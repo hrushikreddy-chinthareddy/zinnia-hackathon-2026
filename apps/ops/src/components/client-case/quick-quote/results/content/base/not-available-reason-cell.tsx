@@ -9,16 +9,14 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     IneligibilityReason,
     NotAvailabilityReasonField,
+    RiderInegilibilityReason,
 } from '@deps/utils/quick-quotes-rules/types';
 
-import { useQuickQuoteParams } from '../../params-context';
 import styles from '../content.module.css';
 
 type QuickQuoteNotAvailableReasonCellProps = {
     className?: string;
-    reasons?:
-        | IneligibilityReason[]
-        | Partial<Record<number, IneligibilityReason[]>>;
+    reasons?: IneligibilityReason[] | RiderInegilibilityReason[];
 };
 
 const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
@@ -33,7 +31,11 @@ const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
                 {!termLength
                     ? t('clientCase.quickQuoteResults.notAvailable')
                     : t(
-                          'clientCase.quickQuoteResults.notAvailableByTermLength',
+                          `clientCase.quickQuoteResults.${
+                              termLength.length === 0
+                                  ? 'notAvailableByTermLength'
+                                  : 'notAvailableByTermLengths'
+                          }`,
                           {
                               termLength: termLength,
                           }
@@ -49,7 +51,6 @@ const NotAvailabilityReasonLabel = ({
     reason: IneligibilityReason;
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const { faceAmount } = useQuickQuoteParams();
 
     const formatToCurrency = (value: number) =>
         numberFormatify(value, {
@@ -84,11 +85,7 @@ const NotAvailabilityReasonLabel = ({
     if (reason.field === 'face') {
         const maxFaceAmount = reason.expected[1];
         const minFaceAmount = reason.expected[0];
-        if (reason.actual > faceAmount) {
-            faceAmountMessage = t(
-                'clientCase.quickQuoteResults.notAvailableReason.riderFaceAmount'
-            );
-        } else if (reason.actual > maxFaceAmount) {
+        if (reason.actual > maxFaceAmount) {
             faceAmountMessage = t(
                 'clientCase.quickQuoteResults.notAvailableReason.maxFaceAm',
                 {
@@ -105,9 +102,17 @@ const NotAvailabilityReasonLabel = ({
         }
     }
 
+    let adrMaxFaceMessage = '';
+    if (reason.field === 'adrMaxFace') {
+        adrMaxFaceMessage = t(
+            'clientCase.quickQuoteResults.notAvailableReason.riderFaceAmount'
+        );
+    }
+
     const reasonMessageMap = {
         age: ageMessage,
         face: faceAmountMessage,
+        adrMaxFace: adrMaxFaceMessage,
         state: t('clientCase.quickQuoteResults.notAvailableReason.state'),
         termLength: t('clientCase.quickQuoteResults.notAvailable'),
     } satisfies Record<
@@ -129,9 +134,23 @@ export const QuickQuoteNotAvailableReasonCell = ({
     className,
     reasons,
 }: QuickQuoteNotAvailableReasonCellProps) => {
+    const isRiderReason = (
+        reasons: IneligibilityReason[] | RiderInegilibilityReason[] | undefined
+    ): reasons is RiderInegilibilityReason[] => {
+        if (reasons === undefined) return false;
+
+        const result =
+            Array.isArray(reasons) &&
+            reasons.every(
+                (r) => Object.keys(r).findIndex((k) => k === 'termLengths') >= 0
+            );
+
+        return result;
+    };
+
     return (
         <div className={clsx(styles.notAvailableReasonCell, className)}>
-            {Array.isArray(reasons) ? (
+            {!isRiderReason(reasons) ? (
                 <div>
                     <NotAvailableLabel />
                     <ul className={styles.reasonList}>
@@ -146,11 +165,14 @@ export const QuickQuoteNotAvailableReasonCell = ({
                         })}
                     </ul>
                 </div>
-            ) : typeof reasons === 'object' ? (
-                Object.entries(reasons).map(([termLength, reasons]) => {
+            ) : isRiderReason(reasons) ? (
+                reasons.map(({ termLengths, reasons }, idx) => {
+                    const concatenatedTermLengths = termLengths?.join(', ');
                     return (
-                        <div key={`${termLength}`}>
-                            <NotAvailableLabel termLength={termLength} />
+                        <div key={`${idx}`}>
+                            <NotAvailableLabel
+                                termLength={concatenatedTermLengths}
+                            />
                             <ul className={styles.reasonList}>
                                 {reasons &&
                                     reasons.map((reason) => (

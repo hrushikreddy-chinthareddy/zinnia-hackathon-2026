@@ -16,7 +16,7 @@ import TransactionNavigationButtons, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -34,11 +34,12 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     ArrangementType,
     Frequency,
     Policy,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
@@ -65,10 +66,11 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         paymentAddress,
     } = autopay;
 
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: `${translationKeyPrefix}.summary`,
-    });
-    const { t: defaultT } = useTranslation();
+    const { t } = useTranslation();
+
+    const { featureFlags } = useOptimizely();
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
     const [showSelectionError, setShowSelectionError] =
         useState<boolean>(false);
@@ -84,8 +86,8 @@ const ManageSummary = ({ policy }: SummaryProps) => {
     // TODO MG: this is duped three times at least
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
-            ? TransactionType.SUBSEQUENT_PREMIUM
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            ? Transaction.transactionType.SUBSEQUENT_PREMIUM
+            : Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 
     const systematicProgram = policy.systematicPrograms?.find(
@@ -107,13 +109,21 @@ const ManageSummary = ({ policy }: SummaryProps) => {
     const comparisonData = [
         {
             header: '',
-            new: t('newAutopayDetails'),
-            current: t('current'),
+            new: t(
+                `allFields.${translationKeyPrefix}Summary${
+                    systematicProgramTablesEnabled
+                        ? 'NewSystematicProgramDetail'
+                        : 'NewAutopayDetail'
+                }`
+            ),
+            current: t(`${translationKeyPrefix}.summary.current`),
         },
         ...(isWithdrawalAutopay
             ? [
                   {
-                      header: t('distributionType'),
+                      header: t(
+                          `${translationKeyPrefix}.summary.distributionType`
+                      ),
                       new:
                           arrangementType == ArrangementType.WITHDRAWAL
                               ? 'Withdrawal'
@@ -129,29 +139,26 @@ const ManageSummary = ({ policy }: SummaryProps) => {
         ...(isWithdrawalAutopay
             ? [
                   {
-                      header: t('type'),
+                      header: t(`${translationKeyPrefix}.summary.type`),
                       new: 'Dollar',
                       current: 'Dollar',
                   },
               ]
             : []),
         {
-            header: t('amount'),
+            header: t(`${translationKeyPrefix}.summary.amount`),
             new: numberFormatify(paymentAmount),
             current: numberFormatify(systematicProgram?.amount),
         },
         {
-            header: t('frequency'),
-            new: toTitleCase(getFrequency(frequency, defaultT)),
+            header: t(`${translationKeyPrefix}.summary.frequency`),
+            new: toTitleCase(getFrequency(frequency, t)),
             current: toTitleCase(
-                getFrequency(
-                    systematicProgram?.frequency as Frequency,
-                    defaultT
-                )
+                getFrequency(systematicProgram?.frequency as Frequency, t)
             ),
         },
         {
-            header: t('nextPaymentDate'),
+            header: t(`${translationKeyPrefix}.summary.nextPaymentDate`),
             new: dayjs(effectiveDate, NUMERIC_DATE_FORMAT).format(
                 DEFAULT_EXTENDED_DATE_FORMAT
             ),
@@ -161,19 +168,19 @@ const ManageSummary = ({ policy }: SummaryProps) => {
             ).format(DEFAULT_EXTENDED_DATE_FORMAT),
         },
         {
-            header: t('fundAllocation'),
+            header: t(`${translationKeyPrefix}.summary.fundAllocation`),
             new: 'Pro rata',
             current: 'Pro rata',
         },
         {
-            header: t('payor'),
+            header: t(`${translationKeyPrefix}.summary.payor`),
             new: payorFullName || payeeFullName,
             current: buildFullNameFromParty(currentPayorParty),
         },
         ...(isWithdrawalAutopay
             ? [
                   {
-                      header: t('fbo'),
+                      header: t(`${translationKeyPrefix}.summary.fbo`),
                       new: fboFfc ?? 'N/A',
                       current:
                           systematicProgram?.parties?.[0]
@@ -214,11 +221,13 @@ const ManageSummary = ({ policy }: SummaryProps) => {
 
     return (
         <div className="responsive-padding rounded">
-            <Typography variant={TypographyVariant.H1}>{t('label')}</Typography>
+            <Typography variant={TypographyVariant.H1}>
+                {t(`${translationKeyPrefix}.summary.label`)}
+            </Typography>
             <Typography className="mb-6 mt-2" variant={TypographyVariant.Body}>
                 {validationSucceeded
-                    ? t('status200subtitle')
-                    : t('status400subtitle')}
+                    ? t(`${translationKeyPrefix}.summary.status200subtitle`)
+                    : t(`${translationKeyPrefix}.summary.status400subtitle`)}
             </Typography>
             <div>
                 <div className="overflow-x-scroll">
@@ -240,7 +249,9 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                         )}
                         <div className="mt-6 flex flex-row">
                             <CheckboxText
-                                label={t('submitWithErrorsText')}
+                                label={t(
+                                    `${translationKeyPrefix}.summary.submitWithErrorsText`
+                                )}
                                 checked={isChecked}
                                 onChange={() => setIsChecked(!isChecked)}
                             />
@@ -251,7 +262,9 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                 {showSelectionError && !isChecked && (
                     <AssistiveText
                         variant={AssistiveTextVariant.Error}
-                        text={t('missingCheckToConfirm')}
+                        text={t(
+                            `${translationKeyPrefix}.summary.missingCheckToConfirm`
+                        )}
                     />
                 )}
 
@@ -264,8 +277,14 @@ const ManageSummary = ({ policy }: SummaryProps) => {
                     policyNumber={policyNumber}
                     submitLabel={
                         validationSucceeded
-                            ? (t('updateAutopay') as string)
-                            : (t('submit') as string)
+                            ? t(
+                                  `allFields.${translationKeyPrefix}Summary${
+                                      systematicProgramTablesEnabled
+                                          ? 'UpdateSystematicProgram'
+                                          : 'UpdateAutopay'
+                                  }`
+                              ) ?? ''
+                            : t(`${translationKeyPrefix}.summary.submit`) ?? ''
                     }
                     trackEventProps={{
                         type: transactionType,

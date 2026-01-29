@@ -31,6 +31,10 @@ import {
     mockPolicy,
     mockPolicySearchResult,
 } from '@deps/services/mocks/sor-policy';
+import {
+    AccountingEntriesAPIParams,
+    AccountingEntriesAPIResponse,
+} from '@deps/types/accountingEntries';
 import { CheckTupleResponse } from '@deps/types/fga';
 import {
     PolicyReferenceSearchResponse,
@@ -38,6 +42,7 @@ import {
     SearchViewQuery,
 } from '@deps/types/search';
 import { TransactionSummary } from '@deps/types/transactions';
+import { TransactionType } from '@deps/types/transactionTypes';
 import {
     browserLogError,
     browserLogInfo,
@@ -57,12 +62,11 @@ import {
     parseErrorInformation,
 } from '@deps/utils/server-logging';
 import {
-    FullSurrenderQuoteResponse,
+    FullSurrenderOrSystematicProgramQuoteResponse,
     PartialWithdrawalOneTimeQuoteResponse,
     Policy,
     Transaction,
     TransactionStatus,
-    TransactionType,
 } from '@zinnia/api-types/types/sor';
 
 export interface GetPolicyResponse {
@@ -523,6 +527,39 @@ export const getPolicyAccountInfoSSR = async (
     }
 };
 
+export const getPolicyAccountingEntries = async ({
+    limit = 50,
+    offset = 0,
+    ...optionalParams
+}: AccountingEntriesAPIParams): Promise<AccountingEntriesAPIResponse | null> => {
+    try {
+        let accountingEntriesUrl = `${baseAppUrl}/api/policy/v1/accountingentries`;
+
+        const queryParams = new URLSearchParams();
+        for (const [key, value] of Object.entries({
+            limit,
+            offset,
+            ...optionalParams,
+        })) {
+            if (value !== undefined) queryParams.append(key, String(value));
+        }
+
+        accountingEntriesUrl += `?${queryParams.toString()}`;
+
+        const results = await client.get<
+            null,
+            AxiosResponse<AccountingEntriesAPIResponse>
+        >(accountingEntriesUrl);
+
+        return results.data;
+    } catch (e) {
+        browserLogWarn('policies::getPolicyAccountingEntries::error', {
+            ...parseErrorInformation(e),
+        });
+        return null;
+    }
+};
+
 type PolicyNotesQuery = {
     policyNumber: string;
     planCode: string;
@@ -928,7 +965,7 @@ export const policyWithdrawalQuote = async (
         const { data } = await client.post<
             any,
             AxiosResponse<
-                | FullSurrenderQuoteResponse
+                | FullSurrenderOrSystematicProgramQuoteResponse
                 | PartialWithdrawalOneTimeQuoteResponse
             >
         >(

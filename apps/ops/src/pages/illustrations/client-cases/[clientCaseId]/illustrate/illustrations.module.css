@@ -30,6 +30,6 @@
 
 .separator {
     border-top: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-light);
+        var(--color-base-border-light);
     margin-left: -48px;
 }

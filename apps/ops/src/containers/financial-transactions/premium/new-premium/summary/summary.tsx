@@ -33,7 +33,7 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Address, Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Address, Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;
@@ -212,7 +212,8 @@ const Summary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     trackEventProps={{
-                        type: TransactionType.PAYMENT_ONE_TIME_PREMIUM,
+                        type: Transaction.transactionType
+                            .PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Summary,
                     }}
                 />

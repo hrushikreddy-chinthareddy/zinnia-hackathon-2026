@@ -17,6 +17,7 @@
     display: flex;
     justify-content: space-between;
     cursor: default;
+    gap: 2rem;
 }
 
 .assigneeInlinePortal {
@@ -64,7 +65,7 @@
 }
 
 .unassignBtn {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .tooltip {
@@ -153,4 +154,10 @@
 
 .assigneeName {
     color: #1f2937;
+}
+
+.popoverPortalWrapper {
+    position: fixed;
+    z-index: 10000;
+    pointer-events: auto;
 }

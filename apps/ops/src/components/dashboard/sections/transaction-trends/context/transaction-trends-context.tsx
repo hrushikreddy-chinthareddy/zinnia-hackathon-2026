@@ -79,7 +79,7 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
         Processes | ExtendedProcesses
     >(Processes.NewBusiness);
     const [groupBy, setGroupBy] = useState<CaseCountGroupByEnum>(
-        Object.keys(selectedCarriers).length
+        selectedCarriers.length
             ? CaseCountGroupByEnum.PROCESS_SUB_TYPE
             : CaseCountGroupByEnum.CARRIER
     );
@@ -100,8 +100,8 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
         updatedDateEnd: startOfTomorrowLocalIso(timerange.to),
         process: formatProcessFilter(selectedProcess),
         caseStatus: [Statuses.Completed, Statuses.Canceled],
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
     };
 
     const {
@@ -138,7 +138,7 @@ export const TransactionTrendsProvider: FC<PropsWithChildren> = ({
 
     // If there is a selected carrier, default to the product name. Otherwise back to carrier
     useEffect(() => {
-        if (selectedCarriers && Object.keys(selectedCarriers).length) {
+        if (selectedCarriers && selectedCarriers.length) {
             setGroupBy(CaseCountGroupByEnum.PROCESS_SUB_TYPE);
         } else {
             setGroupBy(CaseCountGroupByEnum.CARRIER);

@@ -16,6 +16,7 @@ export type NotAvailabilityReasonField =
     | 'age'
     | 'state'
     | 'face'
+    | 'adrMaxFace'
     | 'termLength'
     | 'state'
     | undefined;
@@ -23,6 +24,11 @@ export type NotAvailabilityReasonField =
 export type IneligibilityReason =
     | {
           field: 'age';
+          expected: [number, number];
+          actual: number;
+      }
+    | {
+          field: 'adrMaxFace'; // New error type to consider ADR Riders when amount is greater than product face amount
           expected: [number, number];
           actual: number;
       }
@@ -130,6 +136,8 @@ export type RiderCode =
     | 'Rider_ABRTRM'
     | 'Rider_CGR';
 
+export const isRiderADR = (riderCode: RiderCode) => riderCode === 'Rider_ADR';
+
 export interface PremiumRiderEligibilityList {
     riderName: RiderName;
     riderCode: RiderCode;
@@ -155,8 +163,11 @@ export type DataItem = {
     notAvailabilityReasons?: IneligibilityReason[];
 };
 
+export type RiderInegilibilityReason = {
+    termLengths: number[];
+    reasons?: IneligibilityReason[] | undefined;
+};
+
 export type RiderDataItem = Omit<DataItem, 'notAvailabilityReasons'> & {
-    notAvailabilityReasons?: Partial<
-        Record<number, IneligibilityReason[] | undefined>
-    >;
+    notAvailabilityReasons?: RiderInegilibilityReason[];
 };

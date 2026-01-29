@@ -70,7 +70,7 @@ export const getUserDataByPartyIds = async (
         const response = await client.post<
             GetUserDataByPartyIdsPayload,
             AxiosResponse
-        >(`${baseAppUrl}/api/party/v1/parties/reference/batch-get`, payload);
+        >(`${baseAppUrl}/api/party/v1/parties/queue-users/batch-get`, payload);
 
         return { parties: response?.data?.parties };
     } catch (error: any) {

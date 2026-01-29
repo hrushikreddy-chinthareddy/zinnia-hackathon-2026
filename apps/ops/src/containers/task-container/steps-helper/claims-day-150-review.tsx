@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-import { TaskStatus } from '@deps/models/case/task-instance';
-
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { Claims150Call } from '../components/steps/claims/claim-150-call';
@@ -14,7 +12,13 @@ import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep } from '../components/steps/task-form/task-form-step';
 
 // Wrapper component for ClaimBeneStatus that manages its own state
-const ClaimBeneStatusWithState = ({ task }: { task: any }) => {
+const ClaimBeneStatusWithState = ({
+    task,
+    readOnly,
+}: {
+    task: any;
+    readOnly: boolean;
+}) => {
     const [beneficiary, setBeneficiary] = useState<UpdatedBeneficiaryRecord>(
         task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
             ?.beneficiaryChangeDetail || {
@@ -27,7 +31,6 @@ const ClaimBeneStatusWithState = ({ task }: { task: any }) => {
             beneDeathDate: null,
         }
     );
-    const readOnly = task.status === TaskStatus.Completed;
 
     return (
         <ClaimBeneStatus
@@ -42,9 +45,11 @@ const ClaimBeneStatusWithState = ({ task }: { task: any }) => {
 const Claims150CallWithState = ({
     task,
     taskType,
+    readOnly,
 }: {
     task: any;
     taskType: any;
+    readOnly: boolean;
 }) => {
     const [beneficiary, setBeneficiary] = useState<UpdatedBeneficiaryRecord>(
         task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
@@ -58,7 +63,6 @@ const Claims150CallWithState = ({
             beneDeathDate: null,
         }
     );
-    const readOnly = task.status === TaskStatus.Completed;
 
     return (
         <Claims150Call
@@ -76,9 +80,8 @@ export const getDay150ReviewSteps = ({
     t,
     task,
     taskMetadata,
+    readOnly,
 }: GetStepsProps) => {
-    const readOnly = task.status === TaskStatus.Completed;
-
     const beneAttempt =
         task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT] ?? {};
     const stepOneIsVisible =
@@ -92,7 +95,9 @@ export const getDay150ReviewSteps = ({
             isVisible: () => {
                 return true;
             },
-            component: <ClaimBeneStatusWithState task={task} />,
+            component: (
+                <ClaimBeneStatusWithState task={task} readOnly={readOnly} />
+            ),
             text: t('tabs.beneficiaryStatus'),
             index: 0,
             isCompleted: true,
@@ -125,7 +130,11 @@ export const getDay150ReviewSteps = ({
                 return stepTwoIsVisible;
             },
             component: (
-                <Claims150CallWithState task={task} taskType={taskType} />
+                <Claims150CallWithState
+                    task={task}
+                    taskType={taskType}
+                    readOnly={readOnly}
+                />
             ),
             text: t('tabs.call'),
             index: 2,

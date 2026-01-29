@@ -5,6 +5,7 @@ import { v4 as uuidV4 } from 'uuid';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { CreateQualityAuditRequest } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import {
@@ -15,7 +16,7 @@ import {
 import { Signature } from '@zinnia/api-types/types/case';
 import {
     AdhocSystematicProgram,
-    FullSurrenderQuoteResponse,
+    FullSurrenderOrSystematicProgramQuoteResponse,
     OneTimePremiumRequest,
     PartialWithdrawalOneTimeQuoteResponse,
     SystematicProgramUpdateRequest,
@@ -88,7 +89,7 @@ export interface CancelTransactionResponse
 export interface TransactionResponse {
     status: string | number;
     quoteResponse?:
-        | FullSurrenderQuoteResponse
+        | FullSurrenderOrSystematicProgramQuoteResponse
         | PartialWithdrawalOneTimeQuoteResponse;
     validationResult?: ValidationResult[];
     data?: any;
@@ -137,9 +138,23 @@ export interface ValidationResult {
     resolution: string;
 }
 
+interface AxiosErrorResponse {
+    response?: {
+        data?: any;
+        status?: number;
+        statusText?: string;
+        headers?: any;
+    };
+    data?: any;
+    message?: string;
+}
+
 export enum TransactionResponseStatus {
     Failure = 'failure',
     Success = 'success',
+}
+export interface CaseQualityAuditEligibilityResponse {
+    status: string | number;
 }
 
 export const checkEligibilityLoanRepaymentOneTime = async (
@@ -178,6 +193,41 @@ export const checkEligibilityLoanRepaymentOneTime = async (
     }
 };
 
+export const validateFreeLookCancellation = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    query: FreeLookCancellationRequest
+): Promise<TransactionResponse> => {
+    try {
+        browserLogInfo(
+            'validateFreeLookCancellation::validating free look cancellation',
+            { payload: query }
+        );
+        const response = await client.post<
+            FreeLookCancellationRequest,
+            AxiosResponse<TransactionResponse>
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/validation`,
+            query
+        );
+        return response.data;
+    } catch (error: unknown) {
+        const axiosError = error as AxiosErrorResponse;
+        console.log('errorfinal', error);
+        browserLogError(
+            'validateFreeLookCancellation::an error occurred during validation',
+            { error, policyNumber, planCode, payload: query }
+        );
+        return (
+            axiosError?.response?.data ||
+            axiosError?.data || {
+                status: 'error',
+                message: axiosError?.message || 'An unknown error occurred',
+            }
+        );
+    }
+};
+
 export const checkEligibilityNewLoan = async (
     planCode: string | undefined,
     policyNumber: string | undefined,
@@ -206,7 +256,7 @@ export const checkEligibilityNewLoan = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilityNewLoan::an error occurred during eligibility check',
             error
         );
@@ -226,7 +276,7 @@ export const checkEligibilityOneTimePremium = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilityOneTimePremium::an error occurred during eligibility check',
             error
         );
@@ -249,7 +299,7 @@ export const checkEligibilityPartialWithdrawalOneTime = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilityPartialWithdrawalOneTime::an error occurred during eligibility check',
             error
         );
@@ -270,7 +320,7 @@ export const checkEligibilitySystematicPrograms = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'checkEligibilitySystematicPrograms::an error occurred during eligibility check',
             error
         );
@@ -369,7 +419,7 @@ export const validateFullSurrenderWithdrawal = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateFullSurrenderWithdrawal::an error occurred during validation',
             error
         );
@@ -394,7 +444,7 @@ export const validateLoanPayment = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateLoanPayment::an error occurred during validation',
             error
         );
@@ -416,7 +466,7 @@ export const validateNewLoan = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateNewLoan::an error occurred during validation',
             error
         );
@@ -441,7 +491,7 @@ export const validateOneTimePremium = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validateOneTimePremium::an error occurred during validation',
             error
         );
@@ -466,7 +516,7 @@ export const validatePartialWithdrawalOneTime = async (
 
         return data;
     } catch (error: any) {
-        console.error(
+        browserLogError(
             'validatePartialWithdrawalOneTime::an error occurred during validation',
             error
         );
@@ -835,6 +885,40 @@ export const checkEligibilityFreelookCancellation = async (
             url: `${baseUrl}/policies/${planCode}/${policyNumber}/freelookcancellation/eligibilitycheck`,
             function: 'checkEligibilityFreelookCancellation',
         });
+        return error?.data;
+    }
+};
+
+export const checkCaseQualityAuditEligibility = async (
+    query: CreateQualityAuditRequest
+): Promise<CaseQualityAuditEligibilityResponse> => {
+    const caseQualityAuditUrl = `${baseAppUrl}/api/process/workflow/v1/qualityaudit/eligibilitycheck`;
+
+    try {
+        browserLogInfo(
+            'CaseQualityAuditEligibility::Initiating eligibility check',
+            {
+                payload: query,
+                url: caseQualityAuditUrl,
+                function: 'checCaseQualityAuditEligibility',
+            }
+        );
+
+        const response = await client.post<
+            CreateQualityAuditRequest,
+            AxiosResponse
+        >(caseQualityAuditUrl, query);
+        return { status: response.status };
+    } catch (error: any) {
+        browserLogError(
+            'CaseQualityAuditEligibility::Eligibility check failed',
+            {
+                ...parseErrorInformation(error),
+                payload: query,
+                url: caseQualityAuditUrl,
+                function: 'checCaseQualityAuditEligibility',
+            }
+        );
         return error?.data;
     }
 };

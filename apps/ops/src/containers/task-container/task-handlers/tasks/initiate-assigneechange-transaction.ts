@@ -10,7 +10,6 @@ import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import {
     EmailType,
-    IdentificationType,
     PartyType,
     PhoneType,
 } from '@deps/models/policy/sor-policy';
@@ -18,7 +17,9 @@ import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
+import { Identification as ApiIdentification } from '@zinnia/api-types/types/sor';
 
+import { getCheckBoxesSelectWidgetUiSchema } from '../../task.helpers';
 import {
     TaskHandler,
     Reason,
@@ -103,7 +104,8 @@ const getIdentifications = (
 ): Identification[] => {
     const ids = ensureArray(identifications);
     const ssn = ids.find(
-        (id) => id.identificationType === IdentificationType.SSN
+        (id) =>
+            id.identificationType === ApiIdentification.identificationType.SSN
     );
     if (ssn) {
         return [
@@ -116,7 +118,7 @@ const getIdentifications = (
     }
     return [
         {
-            identificationType: IdentificationType.SSN,
+            identificationType: ApiIdentification.identificationType.SSN,
             identificationValue: null,
             endDate: null,
         },
@@ -344,14 +346,11 @@ const initiateAssigneeChangeTransactionHandler: TaskHandler<
 
         if (metadata && metadata.length > 0) {
             metadata[0].uiSchema = metadata[0].uiSchema || {};
-            (metadata[0].uiSchema as any).declineReason = {
-                'ui:dataPath': ['declineReason'],
-                'ui:options': {
-                    label: true,
-                    widget: 'CheckBoxesSelectWidget',
+            (metadata[0].uiSchema as any).declineReason =
+                getCheckBoxesSelectWidgetUiSchema({
                     enumOptions: declineReasonOptions,
-                },
-            };
+                    dataPath: ['declineReason'],
+                });
         }
 
         if (task) {

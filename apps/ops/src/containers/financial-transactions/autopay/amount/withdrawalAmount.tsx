@@ -24,7 +24,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
-import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -35,13 +35,14 @@ import {
 } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     Policy,
     Frequency,
     ArrangementType,
     AmountType as AutopayAmountType,
     Status,
-    TransactionType,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
@@ -76,9 +77,12 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
         arrangementType,
     } = autopay;
 
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: `${translationKeyPrefix}.amount`,
-    });
+    const { t } = useTranslation();
+
+    const { featureFlags } = useOptimizely();
+    const systematicProgramTablesEnabled =
+        featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
+
     const [errors, setErrors] = useState<Errors>({});
     const { systematicPrograms, policyDates, policyNumber, product } = policy;
 
@@ -94,8 +98,11 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
 
     const { goToNext } = useWorkflow();
     const dateLabel = useMemo(
-        () => (isSetUp ? t('paymentStartDate') : t('nextPaymentDate')),
-        [isSetUp, t]
+        () =>
+            isSetUp
+                ? t(`${translationKeyPrefix}.amount.paymentStartDate`)
+                : t(`${translationKeyPrefix}.amount.nextPaymentDate`),
+        [isSetUp, t, translationKeyPrefix]
     );
 
     useEffect(() => {
@@ -136,8 +143,8 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
 
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
-            ? TransactionType.SUBSEQUENT_PREMIUM
-            : TransactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            ? Transaction.transactionType.SUBSEQUENT_PREMIUM
+            : Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,33 +187,66 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
             errors = {
                 ...errors,
                 effectiveDate: isSetUp
-                    ? `${t('missingStartDateError')}`
-                    : `${t('missingNextPaymentDateError')}`,
+                    ? `${t(
+                          `${translationKeyPrefix}.amount.missingStartDateError`
+                      )}`
+                    : `${t(
+                          `${translationKeyPrefix}.amount.missingNextPaymentDateError`
+                      )}`,
             };
         } else if (!dayjs(effectiveDate, NUMERIC_DATE_FORMAT).isValid()) {
             errors = {
                 ...errors,
                 effectiveDate: isSetUp
-                    ? `${t('invalidStartDateError')}`
-                    : `${t('invalidNextPaymentDateError')}`,
+                    ? `${t(
+                          `${translationKeyPrefix}.amount.invalidStartDateError`
+                      )}`
+                    : `${t(
+                          `${translationKeyPrefix}.amount.invalidNextPaymentDateError`
+                      )}`,
             };
         }
 
         if (!distributionType) {
             errors = {
                 ...errors,
-                distributionType: `${t('missingDistributionError')}`,
+                distributionType: `${t(
+                    `${translationKeyPrefix}.amount.missingDistributionError`
+                )}`,
             };
         }
 
         if (!frequency) {
-            errors = { ...errors, frequency: `${t('missingFrequencyError')}` };
+            errors = {
+                ...errors,
+                frequency: `${t(
+                    `${translationKeyPrefix}.amount.missingFrequencyError`
+                )}`,
+            };
         }
 
         if (isNullEmptyOrUndefined(paymentAmount)) {
-            errors = { ...errors, paymentAmount: `${t('missingAmountError')}` };
+            errors = {
+                ...errors,
+                paymentAmount: `${t(
+                    `${translationKeyPrefix}.amount.${
+                        systematicProgramTablesEnabled
+                            ? 'missingAmountErrorSP'
+                            : 'missingAmountError'
+                    }`
+                )}`,
+            };
         } else if (Number(paymentAmount) < 1) {
-            errors = { ...errors, paymentAmount: `${t('invalidAmountError')}` };
+            errors = {
+                ...errors,
+                paymentAmount: `${t(
+                    `${translationKeyPrefix}.amount.${
+                        systematicProgramTablesEnabled
+                            ? 'invalidAmountErrorSP'
+                            : 'invalidAmountError'
+                    }`
+                )}`,
+            };
         }
 
         setErrors(errors);
@@ -236,13 +276,25 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
     };
 
     const items: RadioItem[] = [
-        { label: t('monthly'), value: Frequency.MONTHLY },
-        { label: t('quarterly'), value: Frequency.QUARTERLY },
-        { label: t('annually'), value: Frequency.ANNUAL },
+        {
+            label: t(`${translationKeyPrefix}.amount.monthly`),
+            value: Frequency.MONTHLY,
+        },
+        {
+            label: t(`${translationKeyPrefix}.amount.quarterly`),
+            value: Frequency.QUARTERLY,
+        },
+        {
+            label: t(`${translationKeyPrefix}.amount.annually`),
+            value: Frequency.ANNUAL,
+        },
     ];
 
     const amountOptions = [
-        { label: t('dollar'), value: AutopayAmountType.AMOUNT },
+        {
+            label: t(`${translationKeyPrefix}.amount.dollar`),
+            value: AutopayAmountType.AMOUNT,
+        },
         // {label:t('earnings'), value: AutopayAmountType.EARNINGSONLY}
     ];
 
@@ -261,7 +313,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
 
     return (
         <WorkflowCard
-            title={t('label')}
+            title={t(`${translationKeyPrefix}.amount.label`)}
             footerContent={
                 <TransactionNavigationButtons
                     handleContinue={handleContinue}
@@ -281,7 +333,9 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                         variant={TypographyVariant.LabelLg}
                         data-testid="withdrawal-amount-label"
                     >
-                        {t('withdrawalTypeLabel')}
+                        {t(
+                            `${translationKeyPrefix}.amount.withdrawalTypeLabel`
+                        )}
                     </Typography>
                 )}
                 <div
@@ -292,7 +346,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                         variant={TypographyVariant.LabelMd}
                         data-testid="withdrawal-amount-label"
                     >
-                        {t('distributionType')}
+                        {t(`${translationKeyPrefix}.amount.distributionType`)}
                     </Typography>
                     {isSetUp ? (
                         <>
@@ -337,7 +391,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                 </div>
                 <SelectSimple
                     className="flex max-w-[246px] placeholder:text-gray-400 mt-2"
-                    label={t('type') as string}
+                    label={t(`${translationKeyPrefix}.amount.type`) ?? ''}
                     options={amountOptions}
                     onChange={(value) =>
                         setAutopay({
@@ -352,10 +406,12 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                 />
                 {
                     <Field
-                        data-testid={t('paymentAmount') as string}
                         size={FieldSize.Small}
                         className="max-w-[160px]"
-                        label={t('paymentAmount') as string}
+                        label={
+                            t(`${translationKeyPrefix}.amount.paymentAmount`) ??
+                            ''
+                        }
                         leading="$"
                         type={FieldType.BaseActive}
                         value={String(numberFormatify(autopay.paymentAmount))}
@@ -374,7 +430,9 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                     />
                 }
                 <Radio
-                    label={`${t('paymentFrequency')}`}
+                    label={`${t(
+                        `${translationKeyPrefix}.amount.paymentFrequency`
+                    )}`}
                     items={items}
                     value={String(autopay.frequency)}
                     onChange={handleFrequencyChange}
@@ -404,13 +462,25 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                 />
 
                 <Typography variant={TypographyVariant.LabelLg}>
-                    {t('fundDisbursementTypeLabel')}
+                    {t(
+                        `${translationKeyPrefix}.amount.fundDisbursementTypeLabel`
+                    )}
                 </Typography>
                 <FieldLabel
-                    label={t('fundDisbursementType') as string}
-                    labelTooltip={t('fundDisbursementType') as string}
+                    label={
+                        t(
+                            `${translationKeyPrefix}.amount.fundDisbursementType`
+                        ) ?? ''
+                    }
+                    labelTooltip={
+                        t(
+                            `${translationKeyPrefix}.amount.fundDisbursementType`
+                        ) ?? ''
+                    }
                     labelTooltipBody={
-                        t('fundDisbursementTypeTooltip') as string
+                        t(
+                            `${translationKeyPrefix}.amount.fundDisbursementTypeTooltip`
+                        ) ?? ''
                     }
                 />
                 <div className="flex">
@@ -425,7 +495,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                         className="ml-2"
                         variant={TypographyVariant.Body}
                     >
-                        {t('proRata')}
+                        {t(`${translationKeyPrefix}.amount.proRata`)}
                     </Typography>
                 </div>
                 <div className="flex">
@@ -441,7 +511,7 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
                         className="ml-2 cursor-not-allowed text-gray-300"
                         variant={TypographyVariant.Body}
                     >
-                        {t('customFunds')}
+                        {t(`${translationKeyPrefix}.amount.customFunds`)}
                     </Typography>
                 </div>
             </div>

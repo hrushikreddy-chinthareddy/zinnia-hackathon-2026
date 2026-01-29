@@ -172,15 +172,18 @@ interface TermQuickQuoteNotAvailableItem
     extends TermQuickQuoteBaseDataItem,
         QuickQuoteNotAvailableBaseItem {}
 
+export type TermQuickQuoteRiderNotAvailableItem = {
+    termLengths: number[];
+    reasons?: IneligibilityReason[] | undefined;
+};
+
 type TermQuickQuoteDataItem =
     | TermQuickQuoteAvailableDataItem
     | TermQuickQuoteNotAvailableItem;
 
 export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;
-    notAvailabilityReasonField?: Partial<
-        Record<number, IneligibilityReason[] | undefined>
-    >;
+    notAvailabilityReasonField?: TermQuickQuoteRiderNotAvailableItem[];
 };
 
 export interface TermQuickQuoteResultData {
@@ -194,3 +197,8 @@ export type QuickQuoteResult = TermQuickQuoteResult;
 export const isTermResult = (
     result: QuickQuoteResult
 ): result is TermQuickQuoteResult => result.productType === ProductTypes.TERM;
+
+export type PlainTermQuickQuoteRiderNotAvailableItem = {
+    termLength: number;
+    reason: IneligibilityReason;
+};

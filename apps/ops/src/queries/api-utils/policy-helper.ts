@@ -2,7 +2,7 @@ import {
     BeneChangePayload,
     ExtendedParty,
 } from '@deps/contexts/BeneChangeContext';
-import { Party, Policy } from '@zinnia/api-types/types/sor';
+import { Parties, Policy } from '@zinnia/api-types/types/sor';
 
 export function updateIdentificationsFromPolicy(
     policy: Policy | null,
@@ -11,7 +11,7 @@ export function updateIdentificationsFromPolicy(
     const identificationsByPartyId: Record<string, any[]> = {};
 
     if (policy?.parties && Array.isArray(policy.parties)) {
-        policy.parties.forEach((party: Party) => {
+        policy.parties.forEach((party: Parties) => {
             if (
                 party.identifications &&
                 Array.isArray(party.identifications) &&

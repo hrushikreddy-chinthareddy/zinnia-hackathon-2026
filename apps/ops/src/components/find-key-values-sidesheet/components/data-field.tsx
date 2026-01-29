@@ -49,7 +49,7 @@ export const DataField = ({
                             trigger={
                                 <Icon
                                     type={IconType.CIRCLE_INFO}
-                                    color="var(--color-base-icon-icon-tooltip)"
+                                    color="var(--color-base-icon-tooltip)"
                                     small
                                     className={styles.toolTipIcon}
                                 />

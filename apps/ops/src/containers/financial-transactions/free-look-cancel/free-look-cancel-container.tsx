@@ -18,11 +18,13 @@ import WorkflowContainer from '@deps/containers/workflow-container/workflow-cont
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
 import { Processes } from '@deps/models/case/case';
+import { validateFreeLookCancellation } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import Confirm from './confirm/confirm';
+import { buildFreeLookCancelRequestBody } from './free-look-cancel.helpers';
 import Summary from './summary/summary';
 
 const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
@@ -40,6 +42,18 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
     const summaryLabel = t('withdrawals.summary.label');
     const confirmLabel = t('withdrawals.confirm.label');
 
+    const validateCall = async () => {
+        const requestBody = buildFreeLookCancelRequestBody(
+            withdrawal,
+            wireCheckPaymentsEnabled
+        );
+
+        return validateFreeLookCancellation(
+            policy.product?.planCode,
+            policy.policyNumber,
+            requestBody
+        );
+    };
     const correlationIdFromRoute =
         typeof router?.query?.correlationId === 'string'
             ? router?.query?.correlationId
@@ -56,7 +70,8 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     state={withdrawal}
                     title={t('cancelFreeLook.start.title') as string}
                     trackEventProps={{
-                        type: TransactionType.FREE_LOOK_CANCELLATION,
+                        type: Transaction.transactionType
+                            .FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Start,
                     }}
                     processSubType={[Processes.FreeLookCancellation]}
@@ -89,7 +104,8 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     setState={setWithdrawal as PayeesStepSetState}
                     state={withdrawal}
                     trackEventProps={{
-                        type: TransactionType.FREE_LOOK_CANCELLATION,
+                        type: Transaction.transactionType
+                            .FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Payees,
                     }}
                 />
@@ -105,6 +121,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     policy={policy}
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
+                    validateTransaction={validateCall}
                     transactionName={TransactionName.Freelook}
                 />
             ) : (
@@ -113,6 +130,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                     policy={policy}
                     setState={setWithdrawal as PaymentStepSetState}
                     state={withdrawal}
+                    validateTransaction={validateCall}
                 />
             ),
             screenReaderLabel: paymentLabel,

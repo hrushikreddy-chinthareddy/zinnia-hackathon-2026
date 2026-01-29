@@ -3,7 +3,7 @@ import {
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
 import { Party } from '@deps/models/case/withdrawal/case';
-import { EmailType, AddressType } from '@deps/models/policy/sor-policy';
+import { AddressType, EmailType } from '@zinnia/api-types/types/sor';
 
 export enum DeliveryMethods {
     Email = 'EMAIL',

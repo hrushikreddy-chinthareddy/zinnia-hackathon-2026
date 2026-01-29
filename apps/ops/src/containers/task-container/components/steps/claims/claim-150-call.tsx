@@ -82,6 +82,7 @@ export const Claims150Call = ({
                     setFormErrors={setFormErrors}
                     beneficiary={beneficiary}
                     setBeneficiary={setBeneficiary}
+                    readOnly={readOnly}
                     t={t}
                 />
             </div>

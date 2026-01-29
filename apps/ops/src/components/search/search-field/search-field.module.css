@@ -37,7 +37,7 @@
 .input {
     --iconSize: 24px;
     border: var(--measure-dimension-stroke-sm) solid
-        var(--color-base-border-border-subtle);
+        var(--color-base-border-subtle);
     border-top-width: 0;
     border-radius: 0 0 var(--measure-dimension-radius-md)
         var(--measure-dimension-radius-md);
@@ -65,7 +65,7 @@
     &:active,
     &:focus,
     &:focus-visible {
-        border-color: var(--color-base-border-border-subtle);
+        border-color: var(--color-base-border-subtle);
         outline-color: var(--color-semantics-color-semantic-focus);
         outline-offset: 2px;
         position: relative;

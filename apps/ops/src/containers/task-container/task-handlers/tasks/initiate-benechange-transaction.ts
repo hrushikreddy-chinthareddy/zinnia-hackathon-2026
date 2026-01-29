@@ -13,6 +13,7 @@ import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { LoggingContext } from '@deps/utils/server-logging';
 
+import { getCheckBoxesSelectWidgetUiSchema } from '../../task.helpers';
 import {
     TaskHandler,
     Reason,
@@ -475,14 +476,10 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
             }
         }
 
-        metadata[0].uiSchema.declineReason = {
-            'ui:options': {
-                label: true,
-                widget: 'CheckBoxesSelectWidget',
-                enumOptions: declineReasonOptions,
-            },
-            'ui:dataPath': ['declineReason'],
-        };
+        metadata[0].uiSchema.declineReason = getCheckBoxesSelectWidgetUiSchema({
+            enumOptions: declineReasonOptions,
+            dataPath: ['declineReason'],
+        });
 
         if (task) {
             Object.assign(task, {

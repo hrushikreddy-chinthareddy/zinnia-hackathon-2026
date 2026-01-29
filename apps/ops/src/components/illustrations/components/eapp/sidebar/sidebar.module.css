@@ -23,7 +23,7 @@
 .dataPoint {
     margin-bottom: var(--measure-dimension-margin-sm);
     .dataPointTitle {
-        color: var(--color-base-text-text-secondary);
+        color: var(--color-base-text-secondary);
     }
 }
 

@@ -1,5 +1,5 @@
 import {
-    Party,
+    Parties,
     PolicyCoverage,
     SystematicProgram,
 } from '@zinnia/api-types/types/sor';
@@ -7,7 +7,7 @@ import {
 // This returns the bank details for the party related to the current systematic program payment.
 // TODO: right now we assume the first index of the party array in the systematic program object is the only one (100% payment to one party) as that's all the UI supports.  This will probably change later!
 export const getBankDetails = (
-    party: Party | undefined,
+    party: Parties | undefined,
     systematicProgram: SystematicProgram | undefined
 ) =>
     party?.bankDetails?.find(
@@ -20,7 +20,7 @@ export const getFlatExtra = (coverage: PolicyCoverage | undefined) =>
 // This returns the party details for the party related to the current systematic program payment.
 // TODO: right now we assume the first index of the party array in the systematic program object is the only one (100% payment to one party) as that's all the UI supports.  This will probably change later!
 export const getParty = (
-    parties: Party[] | undefined,
+    parties: Parties[] | undefined,
     systematicProgram: SystematicProgram | undefined
 ) =>
     parties?.find(

@@ -1,4 +1,5 @@
 export enum ConfiguredSettingId {
+    BonusRate = 'rBonusPct',
     BorrowingInterestRate = 'pBorrIntRate',
     CurrentInterestRate = 'pCurrIntRate',
     LoanInterestRate = 'pLoanIntRateArr',

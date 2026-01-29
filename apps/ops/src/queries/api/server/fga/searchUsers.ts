@@ -1,12 +1,14 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { User } from '@zinnia/api-types/types/fga';
 import { AxiosResponse } from 'axios';
 import { GetServerSidePropsContext } from 'next';
 
 import { apiServerBaseUrl, baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
+import { SearchUsersQuery } from '@deps/queries/tanstack/usersQueries/usersQueries';
 import { ApiResponse } from '@deps/types/api-response';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import {
     LoggingContext,
     logWarn,
@@ -15,16 +17,28 @@ import {
 
 const searchUsersUrlSsr = `${apiServerBaseUrl}/fga/v1/search-users`;
 
-export const searchUsersInGroupCSR = async (payload: any): Promise<any> => {
+export const searchUsersInGroupCSR = async (
+    payload: SearchUsersQuery
+): Promise<User[] | null> => {
+    const url = `${baseAppUrl}/api/fga/v1/search-users`;
     try {
-        const response = await client.post<void, AxiosResponse>(
-            `${baseAppUrl}/api/fga/v1/search-users`,
-            payload
-        );
-        return response?.data;
-    } catch (error: any) {
-        browserLogError('searchUsersInGroupCSR::an error occurred', error);
-        return error;
+        browserLogInfo('searchUsersInGroupCSR::fetching users', {
+            payload,
+            url,
+        });
+        const { data } = await client.post<
+            SearchUsersQuery,
+            AxiosResponse<User[]>
+        >(url, payload);
+
+        return data;
+    } catch (error) {
+        browserLogError('searchUsersInGroupCSR::an error occurred', {
+            error,
+            payload,
+            url,
+        });
+        return null;
     }
 };
 

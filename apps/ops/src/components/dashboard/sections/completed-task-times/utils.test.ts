@@ -26,20 +26,15 @@ describe('Completed Task Time Utils', () => {
 
     describe('getCarrierName', () => {
         it('should return "All Carriers" when no carriers selected', () => {
-            expect(getCarrierName({}, t)).toBe('All Carriers');
+            expect(getCarrierName([], t)).toBe('All Carriers');
         });
 
         it('should return carrier name when one carrier selected', () => {
-            expect(getCarrierName({ carrier1: 'Pacific Life' }, t)).toBe(
-                'Pacific Life'
-            );
+            expect(getCarrierName(['Pacific Life'], t)).toBe('Pacific Life');
         });
 
         it('should return "All Carriers" when multiple carriers selected', () => {
-            const carriers = {
-                carrier1: 'Pacific Life',
-                carrier2: 'MetLife',
-            };
+            const carriers = ['Pacific Life', 'MetLife'];
             expect(getCarrierName(carriers, t)).toBe('All Carriers');
         });
     });

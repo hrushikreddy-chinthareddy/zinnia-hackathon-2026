@@ -9,14 +9,14 @@ import {
     Address,
     Email,
     EmailType,
-    IdentificationType,
-    Party,
+    Identification,
+    Parties,
     Phone,
 } from '@zinnia/api-types/types/sor';
 
 export interface PolicyOwnerDto {
     fullName: string;
-    ssn?: string;
+    ssn?: string | null;
     birthDate: string;
     primaryPhone?: Phone;
     email?: Email;
@@ -34,11 +34,12 @@ export const toPolicyOwnerDto = ({
     phones,
     addresses,
     emails,
-}: Party): PolicyOwnerDto => {
+}: Parties): PolicyOwnerDto => {
     return {
         fullName: buildFullName(firstName, middleName, lastName, suffix),
         ssn: identifications?.find(
-            (ids) => ids.identificationType === IdentificationType.SSN
+            (ids) =>
+                ids.identificationType === Identification.identificationType.SSN
         )?.identificationValue,
         birthDate: convertKebabedDateString(dateOfBirth),
         primaryPhone: phones?.find((phone) => !isEndDated(phone.endDate)),

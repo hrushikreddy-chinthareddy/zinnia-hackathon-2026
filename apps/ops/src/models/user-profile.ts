@@ -8,6 +8,7 @@ export enum UserPermission {
     AllowWriteClientCase = 'write_client_case',
     AllowOpsCaseReviewRequest = 'write_operations_case_review_request',
     AllowWriteCasePriority = 'write_case_priority',
+    AllowReadDocument = 'read_document',
 }
 
 export interface PermissionsModel {

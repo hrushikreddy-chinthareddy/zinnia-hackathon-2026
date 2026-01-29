@@ -130,7 +130,7 @@ const mapDataToPeopleCard = ({
             }}
             shouldFocus={index === 0 && chipEntered}
             partyStatus={party.partyStatus}
-            isIrrevocable={isIrrevocable}
+            isIrrevocable={!!isIrrevocable}
         />
     );
 };

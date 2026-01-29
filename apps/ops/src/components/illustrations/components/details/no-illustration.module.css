@@ -6,6 +6,6 @@
     justify-content: center;
 
     .icon {
-        color: var(--color-base-icon-icon-default);
+        color: var(--color-base-icon-default);
     }
 }

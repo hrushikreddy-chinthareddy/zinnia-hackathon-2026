@@ -44,7 +44,7 @@
 }
 
 .prefix {
-    background-color: var(--color-base-surface-surface-secondary);
+    background-color: var(--color-base-surface-secondary);
     display: flex;
     align-items: center;
     padding: var(--measure-dimension-padding-xl);

@@ -44,7 +44,6 @@ export const TransactionTrendsFilters: FC = () => {
             <div className={sharedStyles.filterGroup}>
                 <Select
                     className={sharedStyles.filterItem}
-                    maxContentWidth
                     label="Group by"
                     options={groupByOptions}
                     value={groupBy}

@@ -38,6 +38,7 @@ dayjs.extend(utc);
 
 function TaskQueueDrawer({
     taskId,
+    caseId,
     taskStatus,
     getTasks,
     taskDescription,
@@ -93,6 +94,7 @@ function TaskQueueDrawer({
         const content = (
             <GlobalTaskSideSheet
                 taskId={taskId}
+                caseId={caseId || ''}
                 taskDescription={taskDescription as TaskType}
             />
         );
@@ -181,8 +183,10 @@ function TaskQueueDrawer({
                     }
                 );
                 removeFromCache('getTaskInstance', { taskId: taskData.id });
+                if (getTasks) {
+                    await getTasks();
+                }
                 handleClose();
-                getTasks && getTasks();
             } else {
                 throw new Error('Failed to update task status to Pending');
             }

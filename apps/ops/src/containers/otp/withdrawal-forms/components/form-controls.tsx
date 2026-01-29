@@ -21,7 +21,10 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { isLocalStorageEnabled } from '@deps/helpers/local-storage.hepler';
 import { DocumentData } from '@deps/models/case/document';
 import { TaskStatus } from '@deps/models/case/task-instance';
-import { CaseStatus } from '@deps/models/case/withdrawal/case';
+import {
+    CaseStatus,
+    FormDisbursement,
+} from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { FormSuccessMessageKey } from '@deps/types/localStorage';
@@ -110,11 +113,10 @@ export function FormControls({
             formAdditionalWaivers,
             formESignatureData,
             formComment,
-            // bankDetails,
         } = formState;
         const errors = formValidator({
             formData,
-            formDisbursement,
+            formDisbursement: formDisbursement as FormDisbursement,
             formDistribution,
             formFullSurrenderAck,
             formIrsData,

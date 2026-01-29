@@ -78,6 +78,7 @@ export const getSelfServeTransactionData = async (
                     effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
                     taskType: TaskType.Initiate_AssigneeChange_Transaction,
                     issueResolved: true,
+                    carrier: policy.carrierId,
                 },
                 initialFormData: buildInitialAssigneeChangeFormData(policy),
                 transactionType: SelfServeTransaction.ASSIGNEE_CHANGE,

@@ -1,3 +1,4 @@
+import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -5,6 +6,7 @@ import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesh
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { useTaskIdFromUrl } from '@deps/hooks/useTaskIdFromUrl';
 import { Statuses } from '@deps/models/case/case';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
@@ -17,10 +19,18 @@ type StatusConfigItem = {
     dateField: keyof TaskView;
 };
 
-export function Task({ task }: { task: TaskView }) {
+export function Task({
+    task,
+    isAccordionOpen = true,
+}: {
+    task: TaskView;
+    isAccordionOpen?: boolean;
+}) {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContext();
     const { featureFlags } = useOptimizely();
+    const router = useRouter();
+    const clientCaseId = router.query.id as string;
 
     const handleClick = (task: TaskView) => {
         sideSheet.changeSideSheetContent(
@@ -33,11 +43,18 @@ export function Task({ task }: { task: TaskView }) {
             <GlobalTaskSideSheet
                 featureFlagDecisions={featureFlags}
                 taskId={task.id}
+                caseId={clientCaseId || ''}
                 taskDescription={task.description}
             />
         );
         sideSheet.handleOpen(true);
     };
+
+    useTaskIdFromUrl({
+        taskId: task.id,
+        onTaskIdMatch: () => handleClick(task),
+        isReady: isAccordionOpen,
+    });
 
     const statusConfig: StatusConfigItem[] = [
         {
@@ -124,14 +141,24 @@ export function Task({ task }: { task: TaskView }) {
     );
 }
 
-export default function Tasks({ tasks }: { tasks: TaskView[] }) {
+export default function Tasks({
+    tasks,
+    isAccordionOpen = true,
+}: {
+    tasks: TaskView[];
+    isAccordionOpen?: boolean;
+}) {
     if (!tasks.length) {
         return null;
     }
     return (
         <ul className="mt-2 flex w-full flex-col gap-1">
             {tasks.map((task) => (
-                <Task task={task} key={task.id} />
+                <Task
+                    task={task}
+                    key={task.id}
+                    isAccordionOpen={isAccordionOpen}
+                />
             ))}
         </ul>
     );

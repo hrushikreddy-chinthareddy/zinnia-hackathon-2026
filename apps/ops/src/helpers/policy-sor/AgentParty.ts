@@ -6,12 +6,11 @@ import {
     Email,
     EmailType,
     Gender,
-    IdentificationType,
-    Party,
+    Identification,
+    Parties,
     Phone,
     Prefix,
     State,
-    Suffix,
 } from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from './Parties';
@@ -21,16 +20,17 @@ import { PolicyParty } from './Parties';
 
 export const transformAgentDataToParty = (
     agentData: AgentData | undefined,
-    partyData: Party
-): Party => {
+    partyData: Parties
+): Parties => {
     // BPB - taking the first agent in the individuals array for now
     const firstAgent = agentData?.individuals?.[0];
 
     const taxIds =
         partyData?.identifications?.filter(
             (id) =>
-                id.identificationType === IdentificationType.SSN ||
-                id.identificationType === IdentificationType.TIN
+                id.identificationType ===
+                    Identification.identificationType.SSN ||
+                id.identificationType === Identification.identificationType.TIN
         ) ?? [];
 
     const alreadyHasTheSameTaxId = taxIds.find(
@@ -38,7 +38,7 @@ export const transformAgentDataToParty = (
             id.identificationValue === (agentData?.taxId || firstAgent?.taxId)
     );
 
-    const party: Party = {
+    const party: Parties = {
         ...partyData,
         addresses: (agentData?.addresses ?? []).map(
             (address: AgentData['addresses'][number]): Address => {
@@ -62,7 +62,8 @@ export const transformAgentDataToParty = (
                 ? []
                 : [
                       {
-                          identificationType: IdentificationType.SSN,
+                          identificationType:
+                              Identification.identificationType.SSN,
                           identificationValue:
                               agentData?.taxId ||
                               firstAgent?.taxId ||
@@ -102,7 +103,7 @@ export const transformAgentDataToParty = (
         lastName: firstAgent?.lastName || undefined,
         gender: (firstAgent?.gender as Gender) || undefined,
         prefix: (firstAgent?.prefix as Prefix) || undefined,
-        suffix: (firstAgent?.suffix as Suffix) || undefined,
+        suffix: (firstAgent?.suffix as Parties.suffix) || undefined,
     };
     return party;
 };
@@ -114,7 +115,7 @@ export default class AgentParty extends PolicyParty {
     public businessName: string | undefined;
     public channel: string | undefined;
 
-    constructor(agent: AgentData | undefined, party: Party = {}) {
+    constructor(agent: AgentData | undefined, party: Parties = {}) {
         super(transformAgentDataToParty(agent, party));
 
         this.channel = agent?.hierarchy?.[0]?.channel;

@@ -342,7 +342,19 @@ export const withPageAuthAndLogging: WithPageAuthAndLogging = (
                 func
             );
             logTrace('next-server page view', loggingContext);
-            return getServerSideProps(context, loggingContext);
+
+            // Trigger user roles cookie to populate if expired
+
+            // A.S. This was disabled because it requires the read_tuples permission,
+            // which most users don't have
+            // await readAndStoreUserRolesCookie(context, loggingContext);
+
+            const pageSpecificProps = await getServerSideProps(
+                context,
+                loggingContext
+            );
+
+            return pageSpecificProps;
         },
     });
 };

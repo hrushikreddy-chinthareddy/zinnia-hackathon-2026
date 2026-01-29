@@ -36,7 +36,7 @@
         "@types/uuid": "^9.0.2",
         "@types/xml2js": "^0.4.14",
         "@typescript-eslint/eslint-plugin": "^6.18.1",
-        "@zinnia/bloom": "^6.6.0",
+        "@zinnia/bloom": "^7.0.3",
         "@zinnia/form-engine-sdk": "3.1.0",
         "@zinnia/xd-contact-management": "^1.23.0",
         "ag-grid-community": "29.2.0",
@@ -68,7 +68,7 @@
         "mime": "^3.0.0",
         "mime-types": "^2.1.35",
         "mitt": "^3.0.1",
-        "next": "^14.2.5",
+        "next": "^14.2.35",
         "next-i18next": "^13.1.5",
         "nookies": "^2.5.2",
         "oidc-client-ts": "^2.2.1",
@@ -93,7 +93,7 @@
         "zustand": "^4.5.4"
     },
     "devDependencies": {
-        "@datadog/datadog-ci": "^2.19.1",
+        "@datadog/datadog-ci": "^3.22.2",
         "@faker-js/faker": "^8.0.2",
         "@next/eslint-plugin-next": "^13.3.0",
         "@storybook/addon-a11y": "^7.6.4",

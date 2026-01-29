@@ -4,7 +4,7 @@ import utc from 'dayjs/plugin/utc';
 
 dayjs.extend(utc);
 
-import { PartyType } from '@deps/models/policy/sor-policy';
+import { PartyType } from '@zinnia/api-types/types/sor';
 
 import AgentTransactionAccordion from './agent-transaction-accordion';
 import { Action } from './agent-transaction-accordion.types';

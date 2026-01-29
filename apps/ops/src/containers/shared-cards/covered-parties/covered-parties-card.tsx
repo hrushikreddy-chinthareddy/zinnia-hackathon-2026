@@ -25,7 +25,6 @@ import {
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     FlatExtra,
-    FlatExtraType,
     SubStandardRating,
     PartyRole,
     PartyType,
@@ -101,8 +100,7 @@ const FlatExtras = ({ flatExtras }: { flatExtras?: FlatExtra[] }) => {
                     }
                     variant={ContentVariant.BodySm}
                 />
-                {(flatExtraType === FlatExtraType.TEMP ||
-                    flatExtraType === ('TEMPORARY' as FlatExtraType)) && (
+                {flatExtraType === FlatExtra.flatExtraType.TEMPORARY && (
                     <Content
                         className="text-gray-600"
                         details={

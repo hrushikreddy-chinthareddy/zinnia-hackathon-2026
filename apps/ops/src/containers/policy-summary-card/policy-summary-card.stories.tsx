@@ -4,23 +4,22 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 import {
     AllocationOption,
-    ArrangementType,
-    LineOfBusiness,
-    ProductType,
-    DistributionType,
-    Policy,
-    Reason,
-    HoldingForm,
-    QualificationType,
-    PolicyStatus,
-    IssueType,
-    Currency,
-    State,
-    FeatureType,
-    Status,
-    PaymentForm,
-    Frequency,
     AmountType,
+    ArrangementType,
+    Currency,
+    DistributionType,
+    FeatureType,
+    Frequency,
+    HoldingForm,
+    IssueType,
+    PaymentForm,
+    Policy,
+    PolicyStatus,
+    Product,
+    ProductType,
+    Reason,
+    State,
+    Status,
 } from '@zinnia/api-types/types/sor';
 
 import { PolicyQuickView } from './policy-summary-card';
@@ -32,7 +31,7 @@ export default {
 
 const mockPendingLapsePolicy: Policy = {
     product: {
-        lineOfBusiness: LineOfBusiness.LIFE,
+        lineOfBusiness: Product.lineOfBusiness.LIFE,
         planName: 'SB UL Premium Match',
         productType: ProductType.UNIVERSALLIFE,
         marketingName: 'Everly Life',
@@ -42,7 +41,7 @@ const mockPendingLapsePolicy: Policy = {
         generalLedgerPlanCode: 'V2201',
         holdingForm: HoldingForm.INDIVIDUAL,
     },
-    qualificationType: QualificationType.QUALIFIED,
+    qualificationType: Policy.qualificationType.QUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'AU29035902',
@@ -54,6 +53,7 @@ const mockPendingLapsePolicy: Policy = {
         coverageLayers: [
             {
                 originalCoverageAmount: 500000,
+                coverageTerm: 1,
             },
         ],
     },
@@ -71,6 +71,7 @@ const mockPendingLapsePolicy: Policy = {
         {
             arrangementType: ArrangementType.PAYMENT,
             arrangementId: 'Arr_1',
+            externalArrangementId: 'ext_1',
             allocationOptionType: AllocationOption.DOLLAR,
             reason: Reason.PREMIUM,
             status: Status.ACTIVE,

@@ -4,7 +4,7 @@
     gap: var(--measure-dimension-gap-xl, 24px);
     grid-template-columns: repeat(2, minmax(200px, 1fr));
     & > :first-child {
-        border-right: 2px solid var(--color-base-border-border-light, #ededed);
+        border-right: 2px solid var(--color-base-border-light, #ededed);
     }
 }
 
@@ -28,13 +28,13 @@
 }
 
 .totalPercent {
-    color: var(--color-base-text-text-secondary);
+    color: var(--color-base-text-secondary);
 }
 
 .divider {
     width: 2px;
     align-self: stretch;
-    background-color: var(--color-base-border-border-light, #ededed);
+    background-color: var(--color-base-border-light, #ededed);
 }
 
 .title {

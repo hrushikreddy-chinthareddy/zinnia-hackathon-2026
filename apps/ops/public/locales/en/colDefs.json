@@ -3,6 +3,7 @@
         "fullName": "Full name",
         "ssn": "Social security number",
         "ssnAbbreviated": "SSN",
+        "tin": "Taxpayer identification number",
         "birthDate": "Birth date",
         "primaryPhone": "Primary phone",
         "email": "Email",

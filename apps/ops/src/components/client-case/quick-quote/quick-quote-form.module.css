@@ -56,7 +56,7 @@
     display: flex;
     flex-direction: column;
     gap: var(--measure-dimension-gap-lg, 16px);
-    background-color: var(--color-base-surface-surface-secondary);
+    background-color: var(--color-base-surface-secondary);
     padding: var(--measure-dimension-padding-2xl, 16px);
 
     .row {

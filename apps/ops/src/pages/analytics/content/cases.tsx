@@ -1,6 +1,6 @@
 import { ButtonGroup, TabContent, TabGroup } from '@zinnia/bloom/components';
 import { useRouter } from 'next/router';
-import { forwardRef, useState } from 'react';
+import { forwardRef, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { AnalyticsTabs, TabTitles } from '@deps/components/dashboard/types';
@@ -17,8 +17,19 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     const { t } = useTranslation();
     const router = useRouter();
     const [selectedTab, setSelectedTab] = useState<string>(
-        tab ?? AnalyticsTabs.ACTIVE_APPLICATIONS
+        AnalyticsTabs.ACTIVE_APPLICATIONS
     );
+
+    const casesTabSet = useMemo(
+        () => new Set<string>(Object.values(AnalyticsTabs)),
+        []
+    );
+
+    useEffect(() => {
+        if (tab && casesTabSet.has(tab)) {
+            setSelectedTab(tab);
+        }
+    }, [tab, casesTabSet]);
 
     const { featureFlags } = useOptimizely();
     const buttonNavItems = [
@@ -45,7 +56,7 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     ];
 
     const handleClick = (value: unknown) => {
-        if (value) {
+        if (typeof value === 'string' && casesTabSet.has(value)) {
             router.replace(`/analytics/cases/?tab=${value}`, undefined, {
                 shallow: true,
             });
@@ -61,6 +72,7 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
                 items={buttonNavItems}
                 onClick={handleClick}
                 defaultValue={selectedTab}
+                value={selectedTab}
             />
             <TabGroup
                 defaultValue={AnalyticsTabs.ACTIVE_APPLICATIONS}

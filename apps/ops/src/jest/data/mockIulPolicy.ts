@@ -3,27 +3,26 @@ import {
     AccountType,
     AddressType,
     Country,
-    CoverageBand,
     Currency,
     DistributionType,
     EmailType,
     FundAccountType,
     Gender,
     HoldingForm,
-    IdentificationType,
+    Identification,
     InvestmentType,
     IssueType,
-    LineOfBusiness,
     LoanType,
     PartyRole,
     PartyType,
     PhoneType,
     Policy,
+    PolicyCoverage,
     PolicyPartyRoles,
     PolicyStatus,
     PreferredCommunicationType,
+    Product,
     ProductType,
-    QualificationType,
     RiderType,
     RiskClass,
     State,
@@ -40,10 +39,10 @@ const partyRoles: PolicyPartyRoles[] = [
     { partyId: 'Party_PI_1', partyRole: PartyRole.INSURED },
 ];
 
-export const mockIulPolicy: Policy = {
+export const mockIulPolicy = {
     partyRoles: partyRoles,
     product: {
-        lineOfBusiness: LineOfBusiness.LIFE,
+        lineOfBusiness: Product.lineOfBusiness.LIFE,
         planName: 'Everly IUL TermVest+',
         productType: ProductType.INDEXEDUNIVERSALLIFE,
         marketingName: 'Everly Life',
@@ -53,7 +52,7 @@ export const mockIulPolicy: Policy = {
         generalLedgerPlanCode: 'V2201',
         holdingForm: HoldingForm.INDIVIDUAL,
     },
-    qualificationType: QualificationType.NONQUALIFIED,
+    qualificationType: Policy.qualificationType.NONQUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'ZNQA19182448',
@@ -94,7 +93,7 @@ export const mockIulPolicy: Policy = {
         minimumCoverageAmount: 10000,
         maximumCoverageAmount: 10000000,
         coverageChangeEffectiveDate: '2024-03-28',
-        coverageBand: CoverageBand.BAND1,
+        coverageBand: PolicyCoverage.coverageBand.BAND1,
         maximumAnnualCoverageChangeAllowedPerPolicy: 1,
         minimumCoverageDecreaseAmount: 10000,
         maximumCoverageDecreaseAmount: 239999,
@@ -164,13 +163,14 @@ export const mockIulPolicy: Policy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: IdentificationType.SSN,
+                    identificationType: Identification.identificationType.SSN,
                     identificationValue: '650-21-4576',
                     issueState: 'CA' as State,
                     issueCountry: 'US' as Country,
                 },
                 {
-                    identificationType: IdentificationType.DRIVERLICENSENUMBER,
+                    identificationType:
+                        Identification.identificationType.DRIVERLICENSENUMBER,
                     identificationValue: '',
                     issueState: 'NJ' as State,
                     issueCountry: 'US' as Country,
@@ -275,13 +275,14 @@ export const mockIulPolicy: Policy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: IdentificationType.SSN,
+                    identificationType: Identification.identificationType.SSN,
                     identificationValue: '650-21-4576',
                     issueState: 'CA' as State,
                     issueCountry: 'US' as Country,
                 },
                 {
-                    identificationType: IdentificationType.DRIVERLICENSENUMBER,
+                    identificationType:
+                        Identification.identificationType.DRIVERLICENSENUMBER,
                     identificationValue: '',
                     issueState: 'NJ' as State,
                     issueCountry: 'US' as Country,
@@ -358,13 +359,14 @@ export const mockIulPolicy: Policy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: IdentificationType.SSN,
+                    identificationType: Identification.identificationType.SSN,
                     identificationValue: '650-21-4576',
                     issueState: 'CA' as State,
                     issueCountry: 'US' as Country,
                 },
                 {
-                    identificationType: IdentificationType.DRIVERLICENSENUMBER,
+                    identificationType:
+                        Identification.identificationType.DRIVERLICENSENUMBER,
                     identificationValue: '',
                     issueState: 'NJ' as State,
                     issueCountry: 'US' as Country,

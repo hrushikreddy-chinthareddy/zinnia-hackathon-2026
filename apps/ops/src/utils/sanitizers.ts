@@ -29,12 +29,11 @@ import {
     BankAccount,
     Email,
     Identification,
-    IdentificationType,
+    PartyTaxWithholding,
     Phone,
     Policy,
     PolicyCoverage,
     State,
-    TaxWithholding,
 } from '@zinnia/api-types/types/sor';
 
 import { getErrorMessage } from './error-utils';
@@ -111,7 +110,10 @@ export const sanitizeIdentifications = (
     identifications: Identification[] | undefined
 ): Identification[] | undefined => {
     return identifications?.map((identification) => {
-        if (identification.identificationType === IdentificationType.SSN) {
+        if (
+            identification.identificationType ===
+            Identification.identificationType.SSN
+        ) {
             return {
                 ...identification,
                 identificationValue: formatSSN(
@@ -315,7 +317,10 @@ const fullyMaskIdentifications = (
     identifications: Identification[] | undefined
 ): Identification[] | undefined => {
     return identifications?.map((identification) => {
-        if (identification.identificationType === IdentificationType.SSN) {
+        if (
+            identification.identificationType ===
+            Identification.identificationType.SSN
+        ) {
             return {
                 ...identification,
                 identificationValue: formatSSN(
@@ -371,8 +376,8 @@ const fullyMaskPhones = (phones: Phone[] | undefined): Phone[] | undefined => {
 };
 
 const fullyMaskTaxWithholdings = (
-    taxWithholdings: TaxWithholding[] | undefined
-): TaxWithholding[] | undefined => {
+    taxWithholdings: PartyTaxWithholding[] | undefined
+): PartyTaxWithholding[] | undefined => {
     return taxWithholdings;
 };
 
@@ -472,35 +477,6 @@ export const fullyMaskPolicyResponse = (
         throw new ApiError(
             500,
             `fullyMaskPolicyResponse::error masking policy response: ${getErrorMessage(
-                e
-            )}`
-        );
-    }
-};
-
-export const fullyMaskPolicySearchResponse = (
-    policySearchResponse: PolicyReferenceSearchResponse
-): PolicyReferenceSearchResponse => {
-    try {
-        const results = policySearchResponse.results.map((policy) => {
-            return {
-                ...policy,
-                firstName: toMaskedStringOrNull(policy.firstName) ?? '',
-                lastName: toMaskedStringOrNull(policy.lastName) ?? '',
-                ssn: toMaskedStringOrNull(policy.ssn) ?? '',
-            };
-        });
-        return { ...policySearchResponse, results };
-    } catch (e) {
-        logErrorWithoutContext(
-            'sanitizers::fullyMaskPolicySearchResponse::error',
-            {
-                ...parseErrorInformation(e),
-            }
-        );
-        throw new ApiError(
-            500,
-            `fullyMaskPolicySearchResponse::error masking policySearchResponse: ${getErrorMessage(
                 e
             )}`
         );

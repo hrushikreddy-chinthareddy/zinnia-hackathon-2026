@@ -1,0 +1,89 @@
+/* layout */
+.flex {
+    display: flex;
+}
+
+.itemsCenter {
+    align-items: center;
+}
+
+.minWidth0 {
+    min-width: 0;
+}
+
+.fullWidth {
+    width: 100%;
+}
+
+.flexAuto {
+    flex: 1 1 auto;
+}
+
+/* truncation */
+.truncate {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* task column */
+.taskContent {
+    width: 100%;
+    min-width: 0;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+/* carrier icon */
+.iconBox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px;
+    width: 24px;
+    margin-right: 8px;
+    background: #fff;
+    border: 1px solid var(--color-base-border-subtle);
+    border-radius: 4px;
+}
+
+/* link */
+.caseLink {
+    margin-left: 4px;
+    color: #00628b !important;
+}
+
+.caseLink:hover {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 2px;
+}
+
+.z10 {
+    position: relative;
+    z-index: 10;
+}
+
+/* misc */
+.secondaryText {
+    color: var(--color-base-text-secondary);
+}
+
+.ml2 {
+    margin-left: 8px;
+}
+
+.assigneeLoader {
+    width: 100%;
+    height: 32px;
+    padding-top: 16px;
+    text-align: center;
+}
+
+.badgeContainer {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    min-width: max-content;
+}

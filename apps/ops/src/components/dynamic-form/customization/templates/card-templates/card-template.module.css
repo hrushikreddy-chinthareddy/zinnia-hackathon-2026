@@ -12,11 +12,11 @@
 }
 
 .secondary {
-    color: var(--color-base-text-text-secondary, #676767);
+    color: var(--color-base-text-secondary, #676767);
 }
 
 .primary {
-    color: var(--color-base-text-text-primary, #212121);
+    color: var(--color-base-text-primary, #212121);
 }
 
 .success {

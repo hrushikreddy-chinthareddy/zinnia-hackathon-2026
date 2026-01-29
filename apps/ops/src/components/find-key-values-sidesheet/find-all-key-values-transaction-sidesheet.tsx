@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import {
     AssistiveText,
     AssistiveTextVariant,
@@ -11,7 +12,11 @@ import { ViewStateProvider } from '@deps/contexts/ViewStateContext';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { useTransactionByIdQuery } from '@deps/hooks/useTransactionByIdQuery';
 import { Collapse, TreeStateProvider } from '@deps/hooks/useTreeState';
-import { TransactionType } from '@zinnia/api-types/types/sor';
+import {
+    getAccountingEntries,
+    getAccountingEntriesQueryKey,
+} from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { Transaction } from '@zinnia/api-types/types/sor';
 
 import { TransactionSidesheetContent } from './content/transaction-sidesheet-content';
 
@@ -38,7 +43,7 @@ export const FindAllKeyValuesTransactionSidesheet = ({
     planCode: string | undefined;
     onOpenChange: Dispatch<SetStateAction<boolean>>;
     transactionId: string | undefined;
-    transactionType: TransactionType | undefined;
+    transactionType: Transaction.transactionType | undefined;
     onTransactionSubmit?: () => void;
 }) => {
     const { t } = useTranslation();
@@ -51,6 +56,25 @@ export const FindAllKeyValuesTransactionSidesheet = ({
         policyNumber,
         planCode,
     });
+    const { data: accountingEntries, isLoading: isLoadingAccountingEntries } =
+        useQuery({
+            queryKey: [
+                getAccountingEntriesQueryKey,
+                planCode,
+                policyNumber,
+                transactionId,
+            ],
+            queryFn: () =>
+                getAccountingEntries({
+                    limit: 50, // API will 500 without a limit or offset.  Per Maureen, there should never be more than ~8 entries per transaction
+                    offset: 0,
+                    planCode: planCode,
+                    policyNumber: policyNumber,
+                    transactionId: transactionId,
+                }),
+            select: (data) => data?.data,
+            enabled: !!planCode && !!policyNumber && !!transactionId,
+        });
 
     if (!transaction) {
         return null;
@@ -74,7 +98,7 @@ export const FindAllKeyValuesTransactionSidesheet = ({
             preventCloseOnOutsideClick={false}
         >
             <ViewStateProvider>
-                {isLoading && (
+                {(isLoading || isLoadingAccountingEntries) && (
                     <EventsLoader
                         message={t('allFields.loadingTransactionDetails')}
                     />
@@ -85,14 +109,18 @@ export const FindAllKeyValuesTransactionSidesheet = ({
                         variant={AssistiveTextVariant.Error}
                     />
                 )}
-                {!isError && !isLoading && !!transaction && (
-                    <TreeStateProvider initialTreeState={Collapse}>
-                        <TransactionSidesheetContent
-                            onTransactionSubmit={onTransactionSubmit}
-                            transaction={transaction}
-                        />
-                    </TreeStateProvider>
-                )}
+                {!isError &&
+                    !isLoading &&
+                    !isLoadingAccountingEntries &&
+                    !!transaction && (
+                        <TreeStateProvider initialTreeState={Collapse}>
+                            <TransactionSidesheetContent
+                                accountingEntries={accountingEntries}
+                                onTransactionSubmit={onTransactionSubmit}
+                                transaction={transaction}
+                            />
+                        </TreeStateProvider>
+                    )}
             </ViewStateProvider>
         </SideSheet>
     );

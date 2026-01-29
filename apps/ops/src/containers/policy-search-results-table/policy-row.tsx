@@ -181,7 +181,7 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                         <PiiWrapper className={styles.ownerCell}>
                             {policyOwner}
                         </PiiWrapper>
-                        <PiiWrapper className="typography-content-body-sm text-[--color-base-text-text-secondary] block">
+                        <PiiWrapper className="typography-content-body-sm text-[--color-base-text-secondary] block">
                             {formatSSN(item.ssn)}
                         </PiiWrapper>
                     </>

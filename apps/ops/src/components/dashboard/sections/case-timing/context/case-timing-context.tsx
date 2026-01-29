@@ -77,8 +77,8 @@ export const CaseTimingProvider: FC<PropsWithChildren> = ({ children }) => {
     const filter = {
         updatedDateStart: timerange.from,
         updatedDateEnd: startOfTomorrowLocalIso(timerange.to),
-        carrier: Object.keys(selectedCarriers),
-        brokerDealerName: Object.keys(selectedBrokerDealers),
+        carrier: selectedCarriers,
+        brokerDealerName: selectedBrokerDealers,
         process: formatProcessFilter(selectedProcess),
     };
 

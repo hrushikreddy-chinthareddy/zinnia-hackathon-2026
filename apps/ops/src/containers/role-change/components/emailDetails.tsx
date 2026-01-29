@@ -118,7 +118,7 @@ const EmailDetails = ({
                     {showPreferredCheckbox && (
                         <CheckboxText
                             id={preferredEmailId}
-                            checked={email.isPreferred}
+                            checked={!!email.isPreferred}
                             label={t('labels.preferredEmail')}
                             onChange={(checked) =>
                                 onPreferredEmailChange?.(

@@ -23,7 +23,7 @@ import {
     TransactionSuccessfulEvent,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
-import { Policy, TransactionType } from '@zinnia/api-types/types/sor';
+import { Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import { buildLoanPaymentRequestBody } from '../loan-payment.helpers';
 
@@ -64,7 +64,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: TransactionType.LOAN_REPAYMENT_ONE_TIME,
+                type: Transaction.transactionType.LOAN_REPAYMENT_ONE_TIME,
                 correlationId: paymentBody.correlationId,
             }
         );
