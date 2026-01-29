@@ -2,7 +2,7 @@ import { render, act } from '@testing-library/react';
 import { axe, toHaveNoViolations } from 'jest-axe';
 import React from 'react';
 
-import { useFocusOnError } from './useFocusOnError';
+import { hasErrorsAndFocus, useFocusOnError } from './useFocusOnError';
 
 expect.extend(toHaveNoViolations);
 
@@ -13,12 +13,23 @@ const mockRaf = jest.fn((callback: FrameRequestCallback) => {
     return 1;
 });
 
+const mockScrollIntoView = jest.fn();
+
 beforeAll(() => {
     jest.spyOn(window, 'requestAnimationFrame').mockImplementation(mockRaf);
+    Element.prototype.scrollIntoView = mockScrollIntoView;
+
+    // Mock offsetParent as JSDOM doesn't implement CSS layout
+    Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
+        get() {
+            return this.parentNode;
+        },
+    });
 });
 
 afterEach(() => {
     jest.clearAllMocks();
+    mockScrollIntoView.mockClear();
     rafCallback = null;
 });
 
@@ -455,5 +466,52 @@ describe('useFocusOnError', () => {
             const results = await axe(container);
             expect(results).toHaveNoViolations();
         });
+    });
+});
+
+describe('hasErrorsAndFocus', () => {
+    it('should return true and call triggerErrorFocus when errors exist', () => {
+        const triggerErrorFocus = jest.fn();
+        const errors = { email: 'Email is required' };
+
+        const result = hasErrorsAndFocus(errors, triggerErrorFocus);
+
+        expect(result).toBe(true);
+        expect(triggerErrorFocus).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return true and call triggerErrorFocus when multiple errors exist', () => {
+        const triggerErrorFocus = jest.fn();
+        const errors = {
+            email: 'Email is required',
+            password: 'Password is required',
+        };
+
+        const result = hasErrorsAndFocus(errors, triggerErrorFocus);
+
+        expect(result).toBe(true);
+        expect(triggerErrorFocus).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return false and not call triggerErrorFocus when errors object is empty', () => {
+        const triggerErrorFocus = jest.fn();
+        const errors = {};
+
+        const result = hasErrorsAndFocus(errors, triggerErrorFocus);
+
+        expect(result).toBe(false);
+        expect(triggerErrorFocus).not.toHaveBeenCalled();
+    });
+
+    it('should work with different error object shapes', () => {
+        const triggerErrorFocus = jest.fn();
+
+        // Test with nested object values
+        const errors = { field1: 'error1', field2: 'error2', field3: 'error3' };
+
+        const result = hasErrorsAndFocus(errors, triggerErrorFocus);
+
+        expect(result).toBe(true);
+        expect(triggerErrorFocus).toHaveBeenCalledTimes(1);
     });
 });
