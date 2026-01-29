@@ -67,7 +67,6 @@ export interface PermissionsContextProps {
     isAllowOpsCaseReviewRequest: boolean;
     hasPermissionToPrioritizeCases: boolean;
     hasDocumentAccess: boolean;
-    hasMarketConnectContacts: boolean;
     isSuperIllustrator: boolean;
 }
 
@@ -84,9 +83,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { featureFlags } = useOptimizely();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
-
-    const hasMarketConnectContacts =
-        !!featureFlags[FEATURE_FLAGS.MARKET_CONNECT_ENABLED];
 
     const { data: homeCheck, isLoading: homeCheckLoading } = useQuery({
         queryKey: ['isAllowHomeExperience', partyId],
@@ -479,7 +475,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                     !!fgaRoleData?.showZinniaLiveCaseActions,
                 showRequestCorrection: !!fgaRoleData?.showRequestCorrection,
                 isAllowOpsCaseReviewRequest: !!isAllowOpsCaseReviewRequest,
-                hasMarketConnectContacts,
                 isSuperIllustrator,
             }}
         >

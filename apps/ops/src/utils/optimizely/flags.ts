@@ -154,6 +154,7 @@ export enum FEATURE_FLAGS {
     MARKET_CONNECT_USER_PROFILE = 'market_connect_user_profile',
     MARKET_CONNECT_DELETE_CUSTOMER = 'market_connect_delete_customer',
     MARKET_CONNECT_ADD_CUSTOMER = 'market_connect_add_customer',
+    MARKET_CONNECT_ORDER_ENTRY = 'market_connect_order_entry',
     PARTY_NAME_CHANGE_TRANSACTION = 'party_name_change_transaction',
     SEND_CORRESPONDENCE = 'send_correspondence',
     POLICY_INDEX_TABLE_VIEW = 'policy_index_table_view',
@@ -195,5 +196,6 @@ export enum FEATURE_FLAGS {
     USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
     ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN = 'enable_bene_change_paper_form_summary_screen',
     FKV_REVISED_FUND_SIDESHEETS = 'fkv_revised_fund_sidesheets',
+    DELAWARE_BANK_SEC_FEATS = 'delaware_bank_sec_feats',
     ENABLE_ISSUE_COUNT_VIEW_CASES = 'enable_issue_count_view_cases',
 }

@@ -30,6 +30,14 @@ jest.mock('next/navigation', () => ({
 
 jest.mock('@deps/utils/server-logging');
 
+jest.mock('@deps/contexts/OptimizelyContext', () => ({
+    useOptimizely: () => ({
+        featureFlags: {
+            delaware_bank_sec_feats: true,
+        },
+    }),
+}));
+
 afterEach(() => {
     jest.clearAllMocks();
 });

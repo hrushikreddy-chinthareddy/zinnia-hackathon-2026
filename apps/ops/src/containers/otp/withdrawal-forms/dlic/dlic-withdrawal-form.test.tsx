@@ -17,70 +17,72 @@ jest.mock('next-i18next', () => ({
 // Mock the helper hook
 jest.mock('./dlic-withdrawal-form-helpers', () => ({
     __esModule: true,
-    default: jest.fn((_t: TFunction) => ({
-        formPartyConfigs: [
-            {
-                partyRoleType: 'Primary',
-                title: 'Primary Owner',
-                fields: [
-                    { fieldName: 'firstName', fieldLabel: 'First Name' },
-                    { fieldName: 'lastName', fieldLabel: 'Last Name' },
-                ],
+    default: jest.fn(
+        (_t: TFunction, _isDelawareBankSecFeatsEnabled: boolean) => ({
+            formPartyConfigs: [
+                {
+                    partyRoleType: 'Primary',
+                    title: 'Primary Owner',
+                    fields: [
+                        { fieldName: 'firstName', fieldLabel: 'First Name' },
+                        { fieldName: 'lastName', fieldLabel: 'Last Name' },
+                    ],
+                },
+            ],
+            signaturesConfig: [
+                {
+                    signatureType: 'Primary',
+                    fields: [
+                        { fieldName: 'signatureType', fieldLabel: 'Type' },
+                        { fieldName: 'name', fieldLabel: 'Name' },
+                    ],
+                },
+            ],
+            signaturesNotaryConfig: [
+                {
+                    signatureType: 'Notary',
+                    fields: [
+                        { fieldName: 'signatureType', fieldLabel: 'Type' },
+                        { fieldName: 'name', fieldLabel: 'Name' },
+                    ],
+                },
+            ],
+            formValidation: jest.fn(() => ({})),
+            identifySelectedFormProgramOption: jest.fn(() => ({
+                selectedOption: 'partial',
+                amount: '1000',
+            })),
+            additionalWithholdingAmountConfig: {},
+            partialWithdrawalOptions: [
+                { label: 'Partial Withdrawal', value: 'partial' },
+            ],
+            disbursementOptions: [
+                { label: 'Check', value: 'check' },
+                { label: 'EFT', value: 'eft' },
+            ],
+            fundWithdrawnMethodOptions: [
+                { label: 'Pro-rata', value: 'prorata' },
+                { label: 'Specify Funds', value: 'specifyFunds' },
+            ],
+            selectOneOptions: [
+                { label: 'Immediately', value: 'immediately' },
+                { label: 'As of Date', value: 'asOfDate' },
+            ],
+            w4pSignaturesConfig: [
+                { component: 'SignatureType', key: 'w4p-owner-type' },
+            ],
+            eSignatureFieldConfig: {
+                type: true,
+                signPresent: true,
+                date: true,
+                auditTrial: true,
             },
-        ],
-        signaturesConfig: [
-            {
-                signatureType: 'Primary',
-                fields: [
-                    { fieldName: 'signatureType', fieldLabel: 'Type' },
-                    { fieldName: 'name', fieldLabel: 'Name' },
-                ],
-            },
-        ],
-        signaturesNotaryConfig: [
-            {
-                signatureType: 'Notary',
-                fields: [
-                    { fieldName: 'signatureType', fieldLabel: 'Type' },
-                    { fieldName: 'name', fieldLabel: 'Name' },
-                ],
-            },
-        ],
-        formValidation: jest.fn(() => ({})),
-        identifySelectedFormProgramOption: jest.fn(() => ({
-            selectedOption: 'partial',
-            amount: '1000',
-        })),
-        additionalWithholdingAmountConfig: {},
-        partialWithdrawalOptions: [
-            { label: 'Partial Withdrawal', value: 'partial' },
-        ],
-        disbursementOptions: [
-            { label: 'Check', value: 'check' },
-            { label: 'EFT', value: 'eft' },
-        ],
-        fundWithdrawnMethodOptions: [
-            { label: 'Pro-rata', value: 'prorata' },
-            { label: 'Specify Funds', value: 'specifyFunds' },
-        ],
-        selectOneOptions: [
-            { label: 'Immediately', value: 'immediately' },
-            { label: 'As of Date', value: 'asOfDate' },
-        ],
-        w4pSignaturesConfig: [
-            { component: 'SignatureType', key: 'w4p-owner-type' },
-        ],
-        eSignatureFieldConfig: {
-            type: true,
-            signPresent: true,
-            date: true,
-            auditTrial: true,
-        },
-        reasonOptions: [
-            { label: 'Death Inherited IRA', value: 'deathInheritedIRA' },
-        ],
-        hasPreviousNigoPlanCodes: ['674', '722'],
-    })),
+            reasonOptions: [
+                { label: 'Death Inherited IRA', value: 'deathInheritedIRA' },
+            ],
+            hasPreviousNigoPlanCodes: ['674', '722'],
+        })
+    ),
 }));
 
 // Mock child components
@@ -146,13 +148,12 @@ jest.mock('@deps/components/otp-withdrawal-form/state-w4-form', () => {
 
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2',
-    () => {
-        const MockFormDisbursementV2 = () => (
+    () => ({
+        __esModule: true,
+        default: () => (
             <div data-testid="form-disbursement-v2">Form Disbursement V2</div>
-        );
-        MockFormDisbursementV2.displayName = 'MockFormDisbursementV2';
-        return MockFormDisbursementV2;
-    }
+        ),
+    })
 );
 
 jest.mock(
@@ -201,6 +202,15 @@ jest.mock(
 // Mock isAllowedState utility
 jest.mock('@deps/utils/renderStateW4', () => ({
     isAllowedState: jest.fn((state: string) => state === 'CA'),
+}));
+
+// Mock OptimizelyContext
+jest.mock('@deps/contexts/OptimizelyContext', () => ({
+    useOptimizely: () => ({
+        featureFlags: {
+            delaware_bank_sec_feats: true,
+        },
+    }),
 }));
 
 describe('DlicWithdrawalForm', () => {

@@ -6,6 +6,7 @@ import {
     getPurchaseDocumentPayload,
     getStandardDocumentPayload,
     getAssigneeChangePayload,
+    getBeneficiaryChangePayload,
 } from './task-payload-formatter';
 
 export const buildTaskPayload = (
@@ -21,6 +22,8 @@ export const buildTaskPayload = (
             return getThirdPartyDetailPayload(task);
         case TaskType.Initiate_AssigneeChange_Transaction:
             return getAssigneeChangePayload(task);
+        case TaskType.Initiate_BeneChange_Transaction:
+            return getBeneficiaryChangePayload(task);
         default:
             return task;
     }

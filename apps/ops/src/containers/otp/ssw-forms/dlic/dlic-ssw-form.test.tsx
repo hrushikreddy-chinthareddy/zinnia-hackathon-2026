@@ -32,6 +32,14 @@ afterEach(() => {
 
 jest.mock('@deps/utils/server-logging');
 
+jest.mock('@deps/contexts/OptimizelyContext', () => ({
+    useOptimizely: () => ({
+        featureFlags: {
+            delaware_bank_sec_feats: true,
+        },
+    }),
+}));
+
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2',
     () => ({
