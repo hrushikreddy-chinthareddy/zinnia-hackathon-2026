@@ -84,6 +84,7 @@ export const currencyFields = new Set([
     'minimumPaymentsForMatch',
     'minimumRequiredAccountValue',
     'minimumRiderBenefitAmount',
+    'minimumTransferAmount',
     'minimumWithdrawalAmount',
     'modalPremium',
     'modalTargetPremium',

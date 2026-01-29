@@ -13,6 +13,8 @@ export const percentageFields = new Set([
     'guaranteedMinimumRate',
     'indexChangeRate',
     'initialGuaranteedRate',
+    'interestRate',
+    'maximumIllustrativeInterestRate',
     'percentage',
     'percentageOfAccountValue',
 ]);

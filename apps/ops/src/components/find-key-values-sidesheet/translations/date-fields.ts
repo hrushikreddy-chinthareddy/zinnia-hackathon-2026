@@ -50,6 +50,7 @@ export const dateFields = new Set([
     'previousPolicyMonthiversaryDate',
     'previousProgramDate',
     'processDate',
+    'rateEffectiveDate',
     'renewalDate',
     'requestDate',
     'requestedDate',

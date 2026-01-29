@@ -20,6 +20,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { percentFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import {
     isNullEmptyOrUndefined,
@@ -382,10 +383,10 @@ const FundsTable = ({
                                         className={styles.interestRateCell}
                                     >
                                         <Content
-                                            details={
-                                                fund.interestRate ??
-                                                DEFAULT_ERROR_STRING
-                                            }
+                                            details={percentFormatify(
+                                                fund.interestRate,
+                                                { isInteger: true }
+                                            )}
                                             variant={ContentVariant.BodySm}
                                         />
                                     </TableCell>

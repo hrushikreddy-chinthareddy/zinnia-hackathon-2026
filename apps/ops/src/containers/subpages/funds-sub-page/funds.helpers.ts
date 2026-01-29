@@ -204,7 +204,7 @@ export const getSegmentsViewModel = async (
 
 const getRate = async (policy?: PolicyDetails) => {
     if (!policy || !policy.policy?.policyDates) {
-        return DEFAULT_ERROR_STRING;
+        return undefined;
     }
 
     return await getCurrentInterestRate(
@@ -216,7 +216,7 @@ const getRate = async (policy?: PolicyDetails) => {
 const getFundInterestRate = async (
     fundInfo?: FundInformationByFundId,
     policy?: PolicyDetails
-): Promise<string | undefined> => {
+): Promise<number | undefined> => {
     if (fundInfo?.fundAccountType === FundAccountType.INDEXED) {
         return undefined;
     }
@@ -235,9 +235,7 @@ const getFundInterestRate = async (
             ?.fundSegments?.find(
                 (segment) => segment.segmentId === '1'
             )?.startingPrice;
-        return rate != null
-            ? percentFormatify(rate, { isInteger: true })
-            : undefined;
+        return rate;
     }
 
     const fund = fundInfo?.fixedFund || fundInfo?.indexedFund;
@@ -245,14 +243,10 @@ const getFundInterestRate = async (
     if (!fund) {
         const rate = await getRate(policy);
 
-        return rate != null
-            ? percentFormatify(rate, { isInteger: true })
-            : undefined;
+        return rate ?? undefined;
     }
 
-    return fund.interestRate != null
-        ? percentFormatify(fund.interestRate, { isInteger: true })
-        : undefined;
+    return fund.interestRate;
 };
 
 const getFundType = (
