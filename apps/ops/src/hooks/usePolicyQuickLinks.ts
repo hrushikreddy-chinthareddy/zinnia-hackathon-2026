@@ -7,23 +7,10 @@ import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 export const usePolicyQuickLinks = (
     t: TFunction,
     policy: PolicyDetails,
-    hasCallLogsAccess?: boolean,
-    hasDocumentAccess?: boolean
+    hasCallLogsAccess?: boolean
 ) => {
     return useQuery({
-        queryKey: [
-            'quickLinks',
-            policy,
-            t,
-            hasCallLogsAccess,
-            hasDocumentAccess,
-        ],
-        queryFn: () =>
-            getPolicyQuickLinks(
-                t,
-                policy,
-                hasCallLogsAccess,
-                hasDocumentAccess
-            ),
+        queryKey: ['quickLinks', policy, t, hasCallLogsAccess],
+        queryFn: () => getPolicyQuickLinks(t, policy, hasCallLogsAccess),
     });
 };

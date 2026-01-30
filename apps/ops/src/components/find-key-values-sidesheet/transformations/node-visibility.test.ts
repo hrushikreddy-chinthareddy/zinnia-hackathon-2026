@@ -3,13 +3,23 @@ import { Product, ProductType } from '@zinnia/api-types/types/sor';
 import { DataGroup, DataNode, DataSection, FieldType } from '../types';
 import {
     excludeNodeByCarrierRules,
-    excludeNodesByLabel,
+    excludeNodeByLabel,
     searchNodes,
 } from './node-visibility';
 import { buildSearchTree, makeField, makeGroup, makeSection } from '../utils';
 
 jest.mock('../translations/exclude-fields', () => ({
-    excludeFields: new Set(['hiddenField', 'hiddenSection']),
+    excludeFieldsConfig: {
+        default: new Set(['hiddenField', 'hiddenSection']),
+        funds: new Set(['investmentType', 'modelName', 'modelId']),
+    },
+    getExcludeFields: (useCase: string = 'default') => {
+        const config: Record<string, Set<string>> = {
+            default: new Set(['hiddenField', 'hiddenSection']),
+            funds: new Set(['investmentType', 'modelName', 'modelId']),
+        };
+        return config[useCase] ?? config.default;
+    },
 }));
 
 jest.mock('../translations/carrier-rules', () => ({
@@ -25,26 +35,67 @@ describe('excludeNodesByLabel', () => {
         const visibleField = makeField('visibleField', '1');
         const hiddenField = makeField('hiddenField', '2');
 
-        expect(excludeNodesByLabel({ node: visibleField })).toEqual(
+        expect(excludeNodeByLabel({ node: visibleField })).toEqual(
             visibleField
         );
-        expect(excludeNodesByLabel({ node: hiddenField })).toBeUndefined();
+        expect(excludeNodeByLabel({ node: hiddenField })).toBeUndefined();
     });
 
     it('excludes sections whose label is in excludeFields set', () => {
         const visibleSection = makeSection('visibleSection', []);
         const hiddenSection = makeSection('hiddenSection', []);
 
-        expect(excludeNodesByLabel({ node: visibleSection })).toEqual(
+        expect(excludeNodeByLabel({ node: visibleSection })).toEqual(
             visibleSection
         );
-        expect(excludeNodesByLabel({ node: hiddenSection })).toBeUndefined();
+        expect(excludeNodeByLabel({ node: hiddenSection })).toBeUndefined();
     });
 
     it('does not exclude group nodes', () => {
         const group = makeGroup([[makeField('hiddenField', '1')]]);
 
-        expect(excludeNodesByLabel({ node: group })).toEqual(group);
+        expect(excludeNodeByLabel({ node: group })).toEqual(group);
+    });
+
+    it('uses default useCase when not specified', () => {
+        const hiddenField = makeField('hiddenField', '1');
+        const visibleField = makeField('visibleField', '2');
+
+        expect(excludeNodeByLabel({ node: hiddenField })).toBeUndefined();
+        expect(excludeNodeByLabel({ node: visibleField })).toEqual(
+            visibleField
+        );
+    });
+
+    it('excludes fields based on funds useCase, but not default useCase', () => {
+        const investmentTypeField = makeField('investmentType', 'FIXED');
+        const modelNameField = makeField('modelName', 'Test Model');
+        const fundNameField = makeField('fundName', 'Test Fund');
+        const notHiddenSection = makeSection('hiddenSection', []);
+
+        expect(
+            excludeNodeByLabel({ node: investmentTypeField, useCase: 'funds' })
+        ).toBeUndefined();
+        expect(
+            excludeNodeByLabel({ node: modelNameField, useCase: 'funds' })
+        ).toBeUndefined();
+        expect(
+            excludeNodeByLabel({ node: fundNameField, useCase: 'funds' })
+        ).toEqual(fundNameField);
+        expect(
+            excludeNodeByLabel({ node: notHiddenSection, useCase: 'funds' })
+        ).toEqual(notHiddenSection);
+    });
+
+    it('does not exclude funds-specific fields when using default useCase', () => {
+        const investmentTypeField = makeField('investmentType', 'FIXED');
+
+        expect(
+            excludeNodeByLabel({
+                node: investmentTypeField,
+                useCase: 'default',
+            })
+        ).toEqual(investmentTypeField);
     });
 });
 
