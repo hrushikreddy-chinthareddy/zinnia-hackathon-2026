@@ -195,6 +195,7 @@ export enum FEATURE_FLAGS {
     DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
     USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
     ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN = 'enable_bene_change_paper_form_summary_screen',
+    FKV_REVISED_FUND_SIDESHEETS = 'fkv_revised_fund_sidesheets',
     DELAWARE_BANK_SEC_FEATS = 'delaware_bank_sec_feats',
     ENABLE_ISSUE_COUNT_VIEW_CASES = 'enable_issue_count_view_cases',
 }

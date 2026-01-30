@@ -54,7 +54,7 @@ export interface FundViewModel {
 
     // Interest rate for FIXED funds only
     // funds[0].fixedFund.interestRate
-    interestRate?: string;
+    interestRate?: number;
 
     // Date sweep transaction occurs
     // productFund?.sweepDay
@@ -65,6 +65,13 @@ export interface FundViewModel {
     // Fixed, Index, Variable etc
     // funds[0].fundType
     type?: string;
+
+    glCode?: string;
+    minimumTransferAmount?: number;
+    rateEffectiveDate?: string;
+    sweepToFundId?: string;
+    bonusPeriodFrequency?: number;
+    maximumIllustrativeInterestRate?: number;
 }
 
 export interface MatchViewModel {

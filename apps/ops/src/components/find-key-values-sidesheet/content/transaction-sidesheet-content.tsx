@@ -35,7 +35,7 @@ import {
     formatNode,
 } from '../transformations/formatters';
 import {
-    excludeNodesByLabel,
+    excludeNodeByLabel,
     searchNodes,
 } from '../transformations/node-visibility';
 import {
@@ -112,7 +112,7 @@ export const TransactionSidesheetContent = ({
                     transforms: [
                         (node) =>
                             // Excludes sections and fields that are required to be hidden
-                            excludeNodesByLabel({
+                            excludeNodeByLabel({
                                 node,
                             }),
                         (node) =>

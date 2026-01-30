@@ -204,7 +204,7 @@ export const getSegmentsViewModel = async (
 
 const getRate = async (policy?: PolicyDetails) => {
     if (!policy || !policy.policy?.policyDates) {
-        return DEFAULT_ERROR_STRING;
+        return undefined;
     }
 
     return await getCurrentInterestRate(
@@ -216,9 +216,9 @@ const getRate = async (policy?: PolicyDetails) => {
 const getFundInterestRate = async (
     fundInfo?: FundInformationByFundId,
     policy?: PolicyDetails
-): Promise<string> => {
+): Promise<number | undefined> => {
     if (fundInfo?.fundAccountType === FundAccountType.INDEXED) {
-        return DEFAULT_ERROR_STRING;
+        return undefined;
     }
 
     /* DEPU-4944 - Fixed/Holding funds should use the rate from the policy details
@@ -235,7 +235,7 @@ const getFundInterestRate = async (
             ?.fundSegments?.find(
                 (segment) => segment.segmentId === '1'
             )?.startingPrice;
-        return percentFormatify(rate, { isInteger: true });
+        return rate;
     }
 
     const fund = fundInfo?.fixedFund || fundInfo?.indexedFund;
@@ -243,10 +243,10 @@ const getFundInterestRate = async (
     if (!fund) {
         const rate = await getRate(policy);
 
-        return percentFormatify(rate, { isInteger: true });
+        return rate ?? undefined;
     }
 
-    return percentFormatify(fund.interestRate, { isInteger: true });
+    return fund.interestRate;
 };
 
 const getFundType = (
@@ -461,6 +461,13 @@ const getFundViewModel = async (
         type: getFundType(
             fundInfo?.fundAccountType || allocationFund?.fundAccountType
         ),
+        glCode: fundInfo?.glCode,
+        minimumTransferAmount: fundInfo?.minimumTransferAmount,
+        rateEffectiveDate: fundInfo?.rateEffectiveDate,
+        sweepToFundId: fundInfo?.sweepToFundId,
+        bonusPeriodFrequency: fundInfo?.bonusPeriodFrequency,
+        maximumIllustrativeInterestRate:
+            fundInfo?.maximumIllustrativeInterestRate,
     };
 };
 

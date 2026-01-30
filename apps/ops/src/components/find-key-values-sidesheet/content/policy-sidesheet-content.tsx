@@ -37,7 +37,7 @@ import styles from '../find-all-key-values-sidesheet.module.css';
 import { addToolTip, formatNode } from '../transformations/formatters';
 import {
     excludeNodeByCarrierRules,
-    excludeNodesByLabel,
+    excludeNodeByLabel,
     searchNodes,
 } from '../transformations/node-visibility';
 import { FindAllKeyValuesSidebarProps } from '../types';
@@ -129,7 +129,7 @@ export const PolicySidesheetContent = ({
                                 }),
                             (node) =>
                                 // Excludes sections and fields that are required to be hidden across all data
-                                excludeNodesByLabel({
+                                excludeNodeByLabel({
                                     node,
                                 }),
                             (node) =>
