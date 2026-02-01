@@ -276,7 +276,9 @@ export default function GlobalTaskSideSheet({
         ],
         queryFn: async () => {
             const finalQueue =
-                carrier && queue ? `gilli_${queue.toLowerCase()}` : '';
+                carrier && queue
+                    ? `${carrier.toLowerCase()}_${queue.toLowerCase()}`
+                    : '';
             const queueaccess = await checkQueuePermissions(
                 user?.partyId || '',
                 finalQueue
