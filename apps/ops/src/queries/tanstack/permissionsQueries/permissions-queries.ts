@@ -180,17 +180,17 @@ export const checkQueueAccess = async (
         return response?.data?.allowed;
     } catch (error) {
         console.error('Error in checkQueueAccess:', error);
-        return false;
+        throw error;
     }
 };
 
 export const checkQueuePermissions = async (
     partyId: string,
     queue?: string
-): Promise<{ canRead: boolean; canWrite: boolean }> => {
+): Promise<{ canRead: boolean | string; canWrite: boolean | string }> => {
     console.log('partyId', partyId, queue);
     if (!partyId || !queue) {
-        return { canRead: false, canWrite: false };
+        return { canRead: 'false', canWrite: 'false' };
     }
 
     const [canRead, canWrite] = await Promise.all([

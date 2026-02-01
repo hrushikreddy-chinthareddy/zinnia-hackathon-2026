@@ -62,7 +62,7 @@ const ViewTaskButton = ({
     btnSize,
     disabled,
     ciamcheck,
-}: ViewTaskButtonProps & { ciamcheck?: boolean }) => {
+}: ViewTaskButtonProps & { ciamcheck?: boolean | undefined }) => {
     const { t } = useTranslation();
 
     const onClick = async () => {
@@ -81,6 +81,7 @@ const ViewTaskButton = ({
             setIsLoading(false);
         }
     };
+    console.log('checkCiam', ciamcheck);
     const isViewTaskDisabled = disabled || isLoading || isStartTaskLoading;
     const viewTaskText =
         ciamcheck === false
