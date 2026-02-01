@@ -5841,6 +5841,7 @@
             "goToCase": "Ir al caso",
             "claimTask": "Reclamar tarea",
             "claimTaskError": "No tienes los permisos necesarios para acceder a esta función. Comunícate con el administrador para obtener ayuda.",
+            "noAccessToTask": "No tienes acceso a esta tarea.",
             "taskHeading": "Tarea"
         },
         "suitability": {

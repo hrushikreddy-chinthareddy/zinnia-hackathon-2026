@@ -250,7 +250,6 @@ export default function GlobalTaskSideSheet({
     const { user } = useUser();
     const sideSheet = useSideSheetContext();
     const isOpsManagerView = type === OPS_MANAGER_VIEW_TASK;
-    console.log('finalqueue', carrier, queue);
 
     const getFinalAssignee = async (
         task: ManagementTask,
@@ -277,14 +276,11 @@ export default function GlobalTaskSideSheet({
         ],
         queryFn: async () => {
             const finalQueue =
-                carrier && queue
-                    ? `${carrier.toLowerCase()}_${queue.toLowerCase()}`
-                    : '';
+                carrier && queue ? `gilli_${queue.toLowerCase()}` : '';
             const queueaccess = await checkQueuePermissions(
                 user?.partyId || '',
                 finalQueue
             );
-            console.log('queueaccess', queueaccess);
             if (
                 queueaccess?.canRead !== false ||
                 queueaccess?.canWrite !== false
@@ -1081,14 +1077,15 @@ export default function GlobalTaskSideSheet({
                 handleViewTask={handleViewTask}
                 handleStart={handleStart}
                 isGoToCaseButtonVisible={isOpsManagerView}
-                isViewTaskButtonVisible={
-                    (isViewTaskButtonVisible && ciamcheck) || ciamcheck
+                isViewTaskButtonVisible={isViewTaskButtonVisible || true}
+                isViewTaskButtonDisabled={
+                    (!task.data && ciamcheck === false) || ciamcheck === false
                 }
-                isViewTaskButtonDisabled={!task.data}
                 isStartButtonDisabled={isStartButtonDisabled}
                 isStartButtonVisible={
                     shouldRenderStartButton ? isStartButtonVisible : false
                 }
+                ciamcheck={ciamcheck}
                 goToCaseLoader={goToCaseLoader}
             />
         </div>
