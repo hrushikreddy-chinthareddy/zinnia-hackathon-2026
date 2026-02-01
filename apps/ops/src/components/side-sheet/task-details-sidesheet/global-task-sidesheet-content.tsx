@@ -236,7 +236,7 @@ export default function GlobalTaskSideSheet({
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
-
+    const [ciamcheck, setCiamcheck] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [assignLoader, setAssignLoader] = useState(false);
     const [isAssigneePopoverOpen, setIsAssigneePopoverOpen] = useState(false);
@@ -284,8 +284,12 @@ export default function GlobalTaskSideSheet({
                 user?.partyId || '',
                 finalQueue
             );
-
-            if (queueaccess.canWrite !== false) {
+            console.log('queueaccess', queueaccess);
+            if (
+                queueaccess?.canRead !== false ||
+                queueaccess?.canWrite !== false
+            ) {
+                setCiamcheck(true);
                 const data = await getTaskInstance({ taskId });
                 if (!data) {
                     return;
@@ -300,6 +304,7 @@ export default function GlobalTaskSideSheet({
                 );
                 return { ...data, assignee: finalAssignee };
             } else {
+                setCiamcheck(false);
                 const data = await getTaskSummaryById({ taskId });
                 if (!data) {
                     return;
@@ -1076,7 +1081,9 @@ export default function GlobalTaskSideSheet({
                 handleViewTask={handleViewTask}
                 handleStart={handleStart}
                 isGoToCaseButtonVisible={isOpsManagerView}
-                isViewTaskButtonVisible={isViewTaskButtonVisible || false}
+                isViewTaskButtonVisible={
+                    (isViewTaskButtonVisible && ciamcheck) || ciamcheck
+                }
                 isViewTaskButtonDisabled={!task.data}
                 isStartButtonDisabled={isStartButtonDisabled}
                 isStartButtonVisible={
