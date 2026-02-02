@@ -21,7 +21,10 @@ import {
     SignatureWithdrawal,
 } from '@deps/models/case/withdrawal/case';
 import { SorSystem } from '@deps/models/policy/enums';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    PROCESS_WITHOUT_DOCUMENT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 import {
     Policy,
     EmailType,
@@ -46,6 +49,11 @@ import {
     EnterprisePhone,
     getPhones,
 } from '../../beneficiary-details/phone-details/phone-details.helpers';
+
+export enum REQUEST_SOURCE {
+    DATA_ENTRY = 'DATA_ENTRY',
+    SELF_SERVE = 'SELF_SERVE',
+}
 
 const DEFAULT_PAYLOAD = {
     businessKey: null,
@@ -445,6 +453,10 @@ export const buildReRegRequestBody = ({
     const records = beneData.map((item: any) =>
         formatActionRecord(policy, item, parties)
     );
+    const requestSource =
+        formData.businessKey === PROCESS_WITHOUT_DOCUMENT
+            ? REQUEST_SOURCE.SELF_SERVE
+            : REQUEST_SOURCE.DATA_ENTRY;
 
     let data;
     if (selectedDocument) {
@@ -472,6 +484,7 @@ export const buildReRegRequestBody = ({
             isPrimaryBeneInfoOnFile: formData.isPrimaryBeneInfoOnFile,
             isContingentBeneInfoOnFile: formData.isContingentBeneInfoOnFile,
             sorSystem: sorSystem,
+            requestSource: requestSource,
         };
     } else {
         data = {
@@ -496,6 +509,7 @@ export const buildReRegRequestBody = ({
             isPrimaryBeneInfoOnFile: formData.isPrimaryBeneInfoOnFile,
             isContingentBeneInfoOnFile: formData.isContingentBeneInfoOnFile,
             sorSystem: sorSystem,
+            requestSource: requestSource,
         };
     }
 

@@ -6,6 +6,7 @@ import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
+import { REQUEST_SOURCE } from '@deps/containers/bene-change/components/steps/confirm/confirm-step.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
     isNullEmptyOrUndefined,
@@ -193,6 +194,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             transactionType: 'Bene Change',
             isPrimaryBeneInfoOnFile: false,
             isContingentBeneInfoOnFile: false,
+            requestSource: REQUEST_SOURCE.DATA_ENTRY,
         };
     },
     INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
