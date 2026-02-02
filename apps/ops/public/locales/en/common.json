@@ -9197,6 +9197,7 @@
             "productTypes": "Product types",
             "illustrations": "Illustrations",
             "lastModified": "Last modified",
+            "loadingMessage": "Loading client cases...",
             "emptyState": "There are no client cases yet",
             "viewClientCaseDetails": "View client case details",
             "viewClientCaseNumber": "View client case {{clientCaseNumber}} details"

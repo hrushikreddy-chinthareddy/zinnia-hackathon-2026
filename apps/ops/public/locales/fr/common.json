@@ -9015,6 +9015,7 @@
             "illustrations": "Illustrations",
             "lastModified": "Dernière modification",
             "emptyState": "Il n'y a pas encore de cas clients",
+            "loadingMessage": "Chargement des dossiers clients…",
             "viewClientCaseDetails": "Afficher les détails du dossier client",
             "viewClientCaseNumber": "Voir les détails du cas client {{clientCaseNumber}}"
         },

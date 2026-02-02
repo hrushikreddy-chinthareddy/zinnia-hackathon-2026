@@ -1,3 +1,4 @@
+import { useIsFetching } from '@tanstack/react-query';
 import { BannerAlert, BannerVariant, Button } from '@zinnia/bloom/components';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
@@ -74,6 +75,9 @@ export default function Illustrations({
 
     const { featureFlags } = useOptimizely();
     const searchParams = useSearchParams();
+    const isClientCaseFetching = useIsFetching({
+        queryKey: ['clientCaseSearch'],
+    });
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const {
         isAllowWriteClientCase,
@@ -256,7 +260,7 @@ export default function Illustrations({
                     <div className="mb-8">
                         <ClientCaseTable />
                     </div>
-                    <ClientCasePaginator />
+                    {!isClientCaseFetching && <ClientCasePaginator />}
                 </div>
             </IllustrationsClientCaseProvider>
         </>

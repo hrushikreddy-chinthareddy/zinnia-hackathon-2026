@@ -31,12 +31,26 @@ import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 
 import styles from './client-case-table.module.css';
 import TableHeaderSortWrapper from './table-header-sort-wrapper.tsx/table-header-sort-wrapper';
+import { SpinnerMessage } from '../../../spinner-message/spinner-message';
 
 const generateTableContent = (
     clientCases: IllustrationsClientCase[],
     t: TFunction,
-    onRowClick: (url: string, clientCaseId: string) => void
+    onRowClick: (url: string, clientCaseId: string) => void,
+    isLoading = true
 ) => {
+    if (isLoading) {
+        return (
+            <TableRow className={styles.tableLoadingState}>
+                <TableCell colSpan={8} align="center">
+                    <SpinnerMessage
+                        message={t('clientCase.clientCaseTable.loadingMessage')}
+                    />
+                </TableCell>
+            </TableRow>
+        );
+    }
+
     if (clientCases.length > 0) {
         return clientCases.map((caseData) => {
             const {
@@ -154,22 +168,22 @@ const generateTableContent = (
                 </TableRow>
             );
         });
-    } else {
-        return (
-            <TableRow className={styles.tableEmptyStateRow}>
-                <TableCell colSpan={6} align="center">
-                    <Typography variant={TypographyVariant.BodySm}>
-                        {t('clientCase.clientCaseTable.emptyState')}
-                    </Typography>
-                </TableCell>
-            </TableRow>
-        );
     }
+
+    return (
+        <TableRow className={styles.tableEmptyStateRow}>
+            <TableCell colSpan={8} align="center">
+                <Typography variant={TypographyVariant.BodySm}>
+                    {t('clientCase.clientCaseTable.emptyState')}
+                </Typography>
+            </TableCell>
+        </TableRow>
+    );
 };
 
 export const ClientCaseTable = () => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { results } = useIllustrationsClientCase();
+    const { results, isLoading } = useIllustrationsClientCase();
     const router = useRouter();
     const { sendClientCaseClicked } = useIllustrationAnalytics();
 
@@ -250,7 +264,8 @@ export const ClientCaseTable = () => {
                 {generateTableContent(
                     results?.results || [],
                     t,
-                    goToClientCase
+                    goToClientCase,
+                    isLoading
                 )}
             </TableBody>
         </Table>

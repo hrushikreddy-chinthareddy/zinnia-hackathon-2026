@@ -9101,6 +9101,7 @@
             "productTypes": "Tipo de productos",
             "illustrations": "Ilustraciones",
             "lastModified": "Última modificación",
+            "loadingMessage": "Cargando casos de clientes...",
             "emptyState": "Aún no hay casos de clientes",
             "viewClientCaseDetails": "Ver detalles del client case",
             "viewClientCaseNumber": "Ver detalles del client case {{clientCaseNumber}}"
