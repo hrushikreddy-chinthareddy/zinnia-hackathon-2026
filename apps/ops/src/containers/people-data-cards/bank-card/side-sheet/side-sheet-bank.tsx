@@ -43,6 +43,10 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { buildFullNameFromParty } from '@deps/helpers/string.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -133,6 +137,8 @@ const SideSheetBank = ({
     const [newCaseId, setNewCaseId] = useState<string>();
     const purposeOptions = getPurposeOptions({ t: defaultT });
 
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
     const { caseId } = body;
     const { partyId } = party ?? {};
 
@@ -202,7 +208,7 @@ const SideSheetBank = ({
     const handleValidation = async () => {
         const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
         let response;
         if (isAdd) {
             response = await validateNonFinancialTransaction({
@@ -264,7 +270,7 @@ const SideSheetBank = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         let response;
         if (isAdd) {
@@ -374,7 +380,7 @@ const SideSheetBank = ({
     }
 
     return (
-        <div className="flex flex-col p-8">
+        <div ref={errorRef} className="flex flex-col p-8">
             <div className="flex flex-col gap-4">
                 <CaseDocumentSelect
                     caseId={caseId}
@@ -404,6 +410,7 @@ const SideSheetBank = ({
                     disabled={isDelete}
                 />
                 <Field
+                    errorId="routingNumber"
                     formatOptions={{ format: '#########' }}
                     label={t('labels.routingNumber') as string}
                     message={currentErrors?.routingNumber}
@@ -430,6 +437,7 @@ const SideSheetBank = ({
                     }
                 />
                 <Field
+                    errorId="branchName"
                     label={t('labels.bankName') as string}
                     message={currentErrors?.branchName}
                     onChange={(event) => {
@@ -454,6 +462,7 @@ const SideSheetBank = ({
                     }
                 />
                 <Field
+                    errorId="accountNumber"
                     formatOptions={{ format: '#################' }}
                     label={t('labels.accountNumber') as string}
                     message={currentErrors?.accountNumber}

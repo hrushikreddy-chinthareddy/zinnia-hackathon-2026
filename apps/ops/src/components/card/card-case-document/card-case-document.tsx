@@ -14,12 +14,16 @@ import Typography, {
 export interface CardCaseDocumentProps {
     caseDocumentOption: CaseDocumentOption;
     isSelected: boolean;
+    index: number;
+    hasError?: boolean;
     onChange: (value: string) => void;
 }
 
 const CardCaseDocument = ({
     caseDocumentOption,
     isSelected,
+    index,
+    hasError = false,
     onChange,
 }: CardCaseDocumentProps) => {
     const { t } = useTranslation();
@@ -29,6 +33,9 @@ const CardCaseDocument = ({
     const { documentNumber, caseId, tag, value } = caseDocumentOption;
 
     const isCaseDocument = value !== PROCESS_WITHOUT_CASE_DOCUMENT;
+
+    // Mark first option as focusable for error focus
+    const isErrorFocusTarget = index === 0 && hasError;
 
     // this removes focus state on mouse click, but allows it on arrow key navigation
     const handleClick = (e: React.MouseEvent<HTMLLabelElement, MouseEvent>) => {
@@ -43,6 +50,7 @@ const CardCaseDocument = ({
                 'default-focus-within flex cursor-pointer flex-col gap-2 rounded border-2 border-gray-100 bg-white p-4 hover:border-accent1',
                 {
                     'border-primary': isSelected,
+                    'border-semantic-error': isErrorFocusTarget,
                 }
             )}
             data-testid={documentNumber}
@@ -51,7 +59,9 @@ const CardCaseDocument = ({
             <input
                 id={value}
                 checked={isSelected}
-                className="sr-only"
+                className={clsx('sr-only', {
+                    'case-document-error-input': isErrorFocusTarget,
+                })}
                 name="case-documents"
                 type="radio"
                 onChange={(e) => {
@@ -59,6 +69,7 @@ const CardCaseDocument = ({
                 }}
                 value={value}
                 ref={inputRef}
+                data-error-focus={isErrorFocusTarget ? 'true' : undefined}
             />
 
             {tag && <Tag text={tag} />}

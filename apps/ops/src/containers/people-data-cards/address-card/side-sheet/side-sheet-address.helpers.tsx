@@ -16,6 +16,8 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { Address, AddressType } from '@zinnia/api-types/types/sor';
 
+import styles from './side-sheet-address.helpers.module.css';
+
 interface AdditionalAddressLineProps {
     disabled: boolean;
     label: string;
@@ -84,13 +86,14 @@ export const AdditionalAddressLine = ({
                 }
             />
             <IconButton
-                aria-label={`${t(
-                    'people.sideSheet.address.general.remove'
-                )} ${label}`}
+                aria-label={`${t('allFields.remove')} ${label}`}
                 disabled={disabled}
                 onClick={removeAddressLine}
             >
-                <TrashIcon height={20} width={20} />
+                <div className={styles.removeButtonContainer}>
+                    <TrashIcon height={20} width={20} />
+                    <span>{t('allFields.remove')}</span>
+                </div>
             </IconButton>
         </Transition>
     );
@@ -174,7 +177,7 @@ export const getFormErrors = ({
     const { addressLine1, city, state, zipCode } = address;
 
     if (caseId == null) {
-        errors = { ...errors, caseId: `${t('errors.missingCaseDocument')}` };
+        errors = { ...errors, caseId: `${t('allFields.missingCaseDocument')}` };
     }
 
     if (isDelete) {
@@ -184,22 +187,27 @@ export const getFormErrors = ({
     if (!addressLine1) {
         errors = {
             ...errors,
-            addressLine1: t('errors.streetAddress') as string,
+            addressLine1: t('allFields.streetAddressMissing') as string,
+        };
+    }
+    if (!zipCode) {
+        errors = {
+            ...errors,
+            zipCode: t('allFields.zipCodeMissing') as string,
+        };
+    } else if (zipCode.length < 5) {
+        errors = {
+            ...errors,
+            zipCode: t('allFields.invalidZipCode') as string,
         };
     }
 
     if (!city) {
-        errors = { ...errors, city: t('errors.city') as string };
+        errors = { ...errors, city: t('allFields.cityMissing') as string };
     }
 
     if (!state) {
-        errors = { ...errors, state: t('errors.state') as string };
-    }
-
-    if (!zipCode) {
-        errors = { ...errors, zipCode: t('errors.zipCode') as string };
-    } else if (zipCode.length < 5) {
-        errors = { ...errors, zipCode: t('errors.invalidZip') as string };
+        errors = { ...errors, state: t('allFields.stateMissing') as string };
     }
 
     return errors;

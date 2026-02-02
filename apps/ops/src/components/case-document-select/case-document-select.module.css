@@ -1,0 +1,11 @@
+.fieldset {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}

@@ -36,6 +36,7 @@ import {
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
+import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -104,6 +105,8 @@ export const SidesheetCommunicationsPreference = ({
         ValidationResult[]
     >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
+
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
     const [selectedOption, setSelectedOption] = useState<
         CommunicationPreferenceOption | undefined
     >({
@@ -171,6 +174,7 @@ export const SidesheetCommunicationsPreference = ({
         });
         if (Object.keys(errors).length > 0) {
             setCurrentErrors(errors);
+            triggerErrorFocus();
             return;
         }
 
@@ -385,6 +389,7 @@ export const SidesheetCommunicationsPreference = ({
         default:
             return (
                 <div
+                    ref={errorRef}
                     role="group"
                     id="comm-pref-form"
                     className="flex flex-col gap-8 p-8"
@@ -406,6 +411,7 @@ export const SidesheetCommunicationsPreference = ({
                         body={body as NonFinancialTransactionBody}
                     />
                     <div
+                        data-error-id="communicationPreference"
                         role="group"
                         className="flex flex-col gap-4"
                         id="comm-pref-radios"

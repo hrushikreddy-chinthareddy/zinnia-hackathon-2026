@@ -154,6 +154,7 @@ const SelectComponent = ({
     maxContentWidth,
     readOnly,
     id,
+    errorId,
 }: SelectProps) => {
     const [isOpen, setIsOpen] = useState(false);
     const MainComponent = isMultiselect ? DropdownMenu : Select;
@@ -239,7 +240,11 @@ const SelectComponent = ({
         selectedLabel = selectedOption.label as string;
 
     return (
-        <div className={clsx(className, 'flex w-full flex-col')} id={id}>
+        <div
+            className={clsx(className, 'flex w-full flex-col')}
+            id={id}
+            data-error-id={errorId}
+        >
             <FieldLabel
                 required={required}
                 labelClassNames={labelClassNames}

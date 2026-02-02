@@ -33,6 +33,7 @@ describe('CardCaseDocument', () => {
             <CardCaseDocument
                 caseDocumentOption={caseDocumentOption}
                 isSelected={false}
+                index={0}
                 onChange={NOOP}
             />
         );
@@ -55,6 +56,7 @@ describe('CardCaseDocument', () => {
             <CardCaseDocument
                 caseDocumentOption={caseDocumentOption}
                 isSelected={false}
+                index={0}
                 onChange={NOOP}
             />
         );

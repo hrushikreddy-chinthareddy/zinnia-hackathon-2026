@@ -37,6 +37,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -142,6 +143,8 @@ export const SidesheetNameCard = ({
     const [currentErrors, setCurrentErrors] = useState<Errors>();
 
     const [newCaseId, setNewCaseId] = useState<string | undefined>(undefined);
+
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
     >([]);
@@ -368,6 +371,7 @@ export const SidesheetNameCard = ({
         setCurrentErrors(errors);
         if (Object.keys(errors).length > 0) {
             setCurrentErrors(errors);
+            triggerErrorFocus();
             return;
         }
 
@@ -435,6 +439,7 @@ export const SidesheetNameCard = ({
                     <>
                         <div className="max-w-[250px]">
                             <Field
+                                errorId="fullName"
                                 aria-label={t('organizationName') as string}
                                 label={t('organizationName') as string}
                                 message={currentErrors?.fullName}
@@ -464,6 +469,7 @@ export const SidesheetNameCard = ({
                     <>
                         <div className="basis-1/2 max-w-[250px]">
                             <Field
+                                errorId="fullName"
                                 aria-label={t('trustName') as string}
                                 label={t('trustName') as string}
                                 message={currentErrors?.fullName}
@@ -513,6 +519,7 @@ export const SidesheetNameCard = ({
                                 </div>
                                 <div className="basis-1/2">
                                     <Field
+                                        errorId="firstName"
                                         aria-label={t('firstName') as string}
                                         label={t('firstName') as string}
                                         message={currentErrors?.firstName}
@@ -559,6 +566,7 @@ export const SidesheetNameCard = ({
                             <div className="flex gap-4">
                                 <div className="basis-1/2">
                                     <Field
+                                        errorId="lastName"
                                         aria-label={t('lastName') as string}
                                         label={t('lastName') as string}
                                         message={currentErrors?.lastName}
@@ -643,6 +651,7 @@ export const SidesheetNameCard = ({
         default:
             return (
                 <div
+                    ref={errorRef}
                     role="group"
                     id="comm-pref-form"
                     className="flex flex-col gap-8 p-8"
@@ -665,58 +674,68 @@ export const SidesheetNameCard = ({
 
                     {getContent()}
 
-                    <FileUpload
-                        value={uploadedFiles}
-                        onChange={handleFilesChange}
-                        error={uploadError}
-                        required={true}
-                    />
-                    <AssistiveText
-                        variant={AssistiveTextVariant.Error}
-                        text={currentErrors?.supportingDocumentRequired ?? ''}
-                    />
-
-                    <Radio
-                        items={documentMatchesOptions}
-                        orientation={RadioOrientation.Vertical}
-                        onChange={handleSupportingDocumentMatchesWithNewName}
-                        value={supportingDocumentMatchesWithNewName}
-                        required={true}
-                        disabled={false}
-                        label={t('supportingDocMatches') as string}
-                        name={'supportingDocumentMatchesWithNewName'}
-                        variant={RadioVariant.Default}
-                    />
-                    <AssistiveText
-                        variant={AssistiveTextVariant.Error}
-                        text={
-                            currentErrors?.supportingDocumentMatchesWithNewName ??
-                            ''
-                        }
-                    />
-                    <Radio
-                        items={documentAttachedOptions}
-                        orientation={RadioOrientation.Vertical}
-                        onChange={handleSignPresentChange}
-                        value={signaturePresentOnDocumentForAllOwners}
-                        required={true}
-                        label={t('signPresent') as string}
-                        name={'signaturePresentOnDocumentForAllOwners'}
-                        variant={RadioVariant.Default}
-                    />
-                    {signaturePresentOnDocumentForAllOwners === 'Yes' && (
+                    <div data-error-id="supportingDocumentRequired">
+                        <FileUpload
+                            value={uploadedFiles}
+                            onChange={handleFilesChange}
+                            error={uploadError}
+                            required={true}
+                        />
                         <AssistiveText
                             variant={AssistiveTextVariant.Error}
-                            text={currentErrors?.dateOfSignature ?? ''}
+                            text={
+                                currentErrors?.supportingDocumentRequired ?? ''
+                            }
                         />
-                    )}
-                    <AssistiveText
-                        variant={AssistiveTextVariant.Error}
-                        text={
-                            currentErrors?.signaturePresentOnDocumentForAllOwners ??
-                            ''
-                        }
-                    />
+                    </div>
+
+                    <div data-error-id="supportingDocumentMatchesWithNewName">
+                        <Radio
+                            items={documentMatchesOptions}
+                            orientation={RadioOrientation.Vertical}
+                            onChange={
+                                handleSupportingDocumentMatchesWithNewName
+                            }
+                            value={supportingDocumentMatchesWithNewName}
+                            required={true}
+                            disabled={false}
+                            label={t('supportingDocMatches') as string}
+                            name={'supportingDocumentMatchesWithNewName'}
+                            variant={RadioVariant.Default}
+                        />
+                        <AssistiveText
+                            variant={AssistiveTextVariant.Error}
+                            text={
+                                currentErrors?.supportingDocumentMatchesWithNewName ??
+                                ''
+                            }
+                        />
+                    </div>
+                    <div data-error-id="signaturePresentOnDocumentForAllOwners">
+                        <Radio
+                            items={documentAttachedOptions}
+                            orientation={RadioOrientation.Vertical}
+                            onChange={handleSignPresentChange}
+                            value={signaturePresentOnDocumentForAllOwners}
+                            required={true}
+                            label={t('signPresent') as string}
+                            name={'signaturePresentOnDocumentForAllOwners'}
+                            variant={RadioVariant.Default}
+                        />
+                        {signaturePresentOnDocumentForAllOwners === 'Yes' && (
+                            <AssistiveText
+                                variant={AssistiveTextVariant.Error}
+                                text={currentErrors?.dateOfSignature ?? ''}
+                            />
+                        )}
+                        <AssistiveText
+                            variant={AssistiveTextVariant.Error}
+                            text={
+                                currentErrors?.signaturePresentOnDocumentForAllOwners ??
+                                ''
+                            }
+                        />
+                    </div>
 
                     <TransactionCta
                         className="mt-4"

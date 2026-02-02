@@ -52,6 +52,10 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -139,6 +143,8 @@ export const SideSheetPhone = ({
     const [viewState, setViewState] = useState(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
 
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
     const { caseId } = body;
     const { partyId } = party ?? {};
     const { phoneType = PhoneType.MOBILE } = phone;
@@ -206,7 +212,7 @@ export const SideSheetPhone = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ caseId, isDelete, phone, t: defaultT });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         if (isDelete) {
             setViewState(ViewState.Warn);
@@ -329,7 +335,7 @@ export const SideSheetPhone = ({
     }
 
     return (
-        <div className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={caseId}
@@ -365,6 +371,7 @@ export const SideSheetPhone = ({
 
                     <div className="flex gap-4">
                         <FieldSelect
+                            errorId="phoneNumber"
                             aria-label={t('fieldLabels.number') as string}
                             className="w-[300px]"
                             dropdownValue={countries[country].phone}
