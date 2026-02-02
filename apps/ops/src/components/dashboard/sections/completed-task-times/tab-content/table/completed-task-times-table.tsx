@@ -1,6 +1,4 @@
 import {
-    Icon,
-    IconType,
     Pagination,
     Table,
     TableBody,
@@ -9,6 +7,8 @@ import {
     TableHeaderCell,
     TableRow,
     Button,
+    Icon,
+    IconType,
 } from '@zinnia/bloom/components';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -17,6 +17,7 @@ import {
     ErrorMessage,
     NoDataMessage,
 } from '@deps/components/dashboard/components/errors';
+import { SortableHeaderCell } from '@deps/components/dashboard/components/sortable-header-cell';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { downloadCSV } from '@deps/components/dashboard/download-csv';
 import { useCompletedTaskTimes } from '@deps/components/dashboard/sections/completed-task-times/context/completed-task-times-context';
@@ -45,8 +46,6 @@ enum SortByOptions {
     MAX_TIME = 'secondHigh',
     MIN_TIME = 'secondLow',
 }
-
-const ICON_COLOR = 'var(--color-secondary-color-secondary)';
 
 export const CompletedTaskTimesTable = () => {
     const [offset, setOffset] = useState(0);
@@ -83,10 +82,22 @@ export const CompletedTaskTimesTable = () => {
         [carrierName, timerange, t]
     );
 
-    const { handleSort, sortedData } = useTableOptions({
+    const { handleSort, sortedData, sortOrder } = useTableOptions({
         sortByDefault: SortByOptions.TOTAL_TASKS,
         dataToSort: completedTaskTimeData || [],
     });
+
+    const [activeSortKey, setActiveSortKey] = useState<SortByOptions | null>(
+        SortByOptions.TOTAL_TASKS
+    );
+
+    const onSort = useCallback(
+        (sortKey: SortByOptions) => {
+            setActiveSortKey(sortKey);
+            handleSort(sortKey as any);
+        },
+        [handleSort]
+    );
 
     const paginatedData = useMemo(() => {
         return sortedData.slice(offset, offset + limit);
@@ -170,58 +181,32 @@ export const CompletedTaskTimesTable = () => {
                             </caption>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.CASE_TYPE)
-                                        }
-                                        sortable
-                                    >
-                                        {t('allFields.caseType')}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color={ICON_COLOR}
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(
-                                                SortByOptions.MEDIAN_TIME
-                                            )
-                                        }
-                                        sortable
-                                    >
-                                        {t('allFields.medianProcessingTime')}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color={ICON_COLOR}
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
+                                    <SortableHeaderCell
+                                        label={t('allFields.caseType')}
+                                        sortKey={SortByOptions.CASE_TYPE}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t(
+                                            'allFields.medianProcessingTime'
+                                        )}
+                                        sortKey={SortByOptions.MEDIAN_TIME}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
                                     <TableHeaderCell>
                                         {t('allFields.task')}
                                     </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(
-                                                SortByOptions.TOTAL_TASKS
-                                            )
-                                        }
-                                        sortable
-                                    >
-                                        {t('allFields.totalTasks')}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color={ICON_COLOR}
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
+                                    <SortableHeaderCell
+                                        label={t('allFields.totalTasks')}
+                                        sortKey={SortByOptions.TOTAL_TASKS}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
                                 </TableRow>
                             </TableHeader>
                             <TableBody>

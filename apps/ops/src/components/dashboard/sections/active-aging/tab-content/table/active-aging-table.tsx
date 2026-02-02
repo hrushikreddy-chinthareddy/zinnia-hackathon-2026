@@ -1,8 +1,6 @@
 import {
     FieldData,
     FieldSize,
-    Icon,
-    IconType,
     Pagination,
     Table,
     TableBody,
@@ -13,11 +11,13 @@ import {
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
     ErrorMessage,
     NoDataMessage,
 } from '@deps/components/dashboard/components/errors';
+import { SortableHeaderCell } from '@deps/components/dashboard/components/sortable-header-cell';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import {
     friendlyGroupByName,
@@ -42,6 +42,7 @@ enum SortByOptions {
 }
 
 export const ActiveAgingTable = () => {
+    const { t } = useTranslation();
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
@@ -68,10 +69,22 @@ export const ActiveAgingTable = () => {
         );
     }, [dataByTimeframe, searchText]);
 
-    const { handleSort, sortedData } = useTableOptions({
+    const { handleSort, sortedData, sortOrder } = useTableOptions({
         sortByDefault: SortByOptions.TOTAL,
         dataToSort: searchedData,
     });
+
+    const [activeSortKey, setActiveSortKey] = useState<SortByOptions | null>(
+        SortByOptions.TOTAL
+    );
+
+    const onSort = useCallback(
+        (sortKey: SortByOptions) => {
+            setActiveSortKey(sortKey);
+            handleSort(sortKey);
+        },
+        [handleSort]
+    );
 
     // Create paginatedData from transformed data
     const paginatedData = useMemo(() => {
@@ -161,42 +174,28 @@ export const ActiveAgingTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.NAME)
-                                        }
-                                        sortable
-                                    >
-                                        {toSentenceCase(
+                                    <SortableHeaderCell
+                                        label={toSentenceCase(
                                             friendlyGroupByName[groupBy]
                                         )}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.TOTAL)
-                                        }
-                                        sortable
-                                    >
-                                        Total submissions
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
+                                        sortKey={SortByOptions.NAME}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.totalSubmissions')}
+                                        sortKey={SortByOptions.TOTAL}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <TableHeaderCell>
+                                        {t('allFields.daysActive')}
                                     </TableHeaderCell>
                                     <TableHeaderCell>
-                                        Days active
+                                        {t('allFields.actions')}
                                     </TableHeaderCell>
-                                    <TableHeaderCell>Actions</TableHeaderCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>

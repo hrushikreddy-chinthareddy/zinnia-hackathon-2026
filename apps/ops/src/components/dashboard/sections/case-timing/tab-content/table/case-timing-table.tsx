@@ -1,8 +1,6 @@
 import {
     FieldData,
     FieldSize,
-    Icon,
-    IconType,
     Pagination,
     Table,
     TableBody,
@@ -12,11 +10,13 @@ import {
     TableRow,
 } from '@zinnia/bloom/components';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
     ErrorMessage,
     NoDataMessage,
 } from '@deps/components/dashboard/components/errors';
+import { SortableHeaderCell } from '@deps/components/dashboard/components/sortable-header-cell';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { CaseTimingContext } from '@deps/components/dashboard/sections/case-timing/context/case-timing-context';
 import { CaseTimingFilters } from '@deps/components/dashboard/sections/case-timing/tab-content/shared/case-timing-filters';
@@ -44,6 +44,7 @@ enum SortByOptions {
 }
 
 export const CaseTimingTable = () => {
+    const { t } = useTranslation();
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
@@ -66,11 +67,23 @@ export const CaseTimingTable = () => {
         );
     }, [caseTimingData, searchText]);
 
-    const { handleSort, sortedData } = useTableOptions({
+    const { handleSort, sortedData, sortOrder } = useTableOptions({
         sortByDefault: SortByOptions.SECOND_MEDIAN,
         defaultSortOrder: SortOrder.ASC,
         dataToSort: searchedData,
     });
+
+    const [activeSortKey, setActiveSortKey] = useState<SortByOptions | null>(
+        SortByOptions.SECOND_MEDIAN
+    );
+
+    const onSort = useCallback(
+        (sortKey: SortByOptions) => {
+            setActiveSortKey(sortKey);
+            handleSort(sortKey);
+        },
+        [handleSort]
+    );
 
     // Create paginatedData from transformed data
     const paginatedData = useMemo(() => {
@@ -112,86 +125,46 @@ export const CaseTimingTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.NAME)
-                                        }
-                                        sortable
-                                    >
-                                        Case subtype
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
+                                    <SortableHeaderCell
+                                        label={t('allFields.caseSubtype')}
+                                        sortKey={SortByOptions.NAME}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t(
+                                            'allFields.medianProcessingTime'
+                                        )}
+                                        sortKey={SortByOptions.SECOND_MEDIAN}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.maxProcessingTime')}
+                                        sortKey={SortByOptions.SECOND_HIGH}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.minProcessingTime')}
+                                        sortKey={SortByOptions.SECOND_LOW}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.totalCases')}
+                                        sortKey={SortByOptions.COUNT}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <TableHeaderCell>
+                                        {t('allFields.actions')}
                                     </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(
-                                                SortByOptions.SECOND_MEDIAN
-                                            )
-                                        }
-                                        sortable
-                                    >
-                                        Median processing time
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(
-                                                SortByOptions.SECOND_HIGH
-                                            )
-                                        }
-                                        sortable
-                                    >
-                                        Max processing time
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.SECOND_LOW)
-                                        }
-                                        sortable
-                                    >
-                                        Min processing time
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.COUNT)
-                                        }
-                                        sortable
-                                    >
-                                        Total cases
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell>Actions</TableHeaderCell>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>

@@ -17,6 +17,7 @@ import {
     ErrorMessage,
     NoDataMessage,
 } from '@deps/components/dashboard/components/errors';
+import { SortableHeaderCell } from '@deps/components/dashboard/components/sortable-header-cell';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { downloadCSV } from '@deps/components/dashboard/download-csv';
 import { useTasksVolume } from '@deps/components/dashboard/sections/tasks-volume/context/tasks-volume-context';
@@ -75,10 +76,22 @@ export const TasksVolumeTable = () => {
         [carrierName, statusText, timerange]
     );
 
-    const { handleSort, sortedData } = useTableOptions({
+    const { handleSort, sortedData, sortOrder } = useTableOptions({
         sortByDefault: SortByOptions.TOTAL_TASKS,
         dataToSort: taskVolumeData || [],
     });
+
+    const [activeSortKey, setActiveSortKey] = useState<SortByOptions | null>(
+        SortByOptions.TOTAL_TASKS
+    );
+
+    const onSort = useCallback(
+        (sortKey: SortByOptions) => {
+            setActiveSortKey(sortKey);
+            handleSort(sortKey);
+        },
+        [handleSort]
+    );
 
     const paginatedData = useMemo(() => {
         return sortedData.slice(offset, offset + limit);
@@ -147,47 +160,29 @@ export const TasksVolumeTable = () => {
                             </colgroup>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.CASE_TYPE)
-                                        }
-                                        sortable
-                                    >
-                                        {t(
+                                    <SortableHeaderCell
+                                        label={t(
                                             'caseStats.tasks.table.headers.caseType'
                                         )}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
+                                        sortKey={SortByOptions.CASE_TYPE}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
                                     <TableHeaderCell>
                                         {t(
                                             'caseStats.tasks.table.headers.task'
                                         )}
                                     </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(
-                                                SortByOptions.TOTAL_TASKS
-                                            )
-                                        }
-                                        sortable
-                                    >
-                                        {t(
+                                    <SortableHeaderCell
+                                        label={t(
                                             'caseStats.tasks.table.headers.totalTasks'
                                         )}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
+                                        sortKey={SortByOptions.TOTAL_TASKS}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
                                 </TableRow>
                             </TableHeader>
                             <TableBody>

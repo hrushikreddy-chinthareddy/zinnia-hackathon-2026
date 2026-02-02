@@ -508,7 +508,8 @@ export const CaseResultTable = ({
                                         ? IconType.ARROW_UP
                                         : IconType.ARROW_DOWN
                                 }
-                                color="#00628B"
+                                color="var(--color-toast-toast-text)"
+                                width={16}
                             />
                         </Typography>
                     </TableHeaderCell>

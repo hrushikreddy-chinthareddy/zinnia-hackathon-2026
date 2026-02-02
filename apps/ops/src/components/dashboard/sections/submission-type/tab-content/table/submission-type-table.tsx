@@ -1,22 +1,21 @@
 import {
     FieldData,
     FieldSize,
-    Icon,
-    IconType,
     Pagination,
     Table,
     TableBody,
     TableCell,
     TableHeader,
-    TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
     ErrorMessage,
     NoDataMessage,
 } from '@deps/components/dashboard/components/errors';
+import { SortableHeaderCell } from '@deps/components/dashboard/components/sortable-header-cell';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { ChartHeader } from '@deps/components/dashboard/header-components/chart-header';
 import { SubmissionTypeContext } from '@deps/components/dashboard/sections/submission-type/context/submission-type-context';
@@ -37,10 +36,6 @@ interface FlattenedDashboardStatsElement {
     count: number;
 }
 
-// We render out the table view of these stats a bit differently than the chart.
-// Since we're returning arrays of carriers with nested data for the submission method,
-// we need to flatten the list of submission methods out and associate them with the carrier
-// Carrier | Method | Count
 const flattenDashboardStats = (
     data: CaseCountOutputLevel1[],
     parentName: string
@@ -67,6 +62,7 @@ enum SortByOptions {
 }
 
 export const SubmissionTypeTable = () => {
+    const { t } = useTranslation();
     const [offset, setOffset] = useState(0);
     const [searchText, setSearchText] = useState('');
     const limit = 10;
@@ -92,10 +88,22 @@ export const SubmissionTypeTable = () => {
         );
     }, [flattenedData, searchText]);
 
-    const { handleSort, sortedData } = useTableOptions({
+    const { handleSort, sortedData, sortOrder } = useTableOptions({
         sortByDefault: SortByOptions.COUNT,
         dataToSort: searchedData,
     });
+
+    const [activeSortKey, setActiveSortKey] = useState<SortByOptions | null>(
+        SortByOptions.COUNT
+    );
+
+    const onSort = useCallback(
+        (sortKey: SortByOptions) => {
+            setActiveSortKey(sortKey);
+            handleSort(sortKey);
+        },
+        [handleSort]
+    );
 
     // Create paginatedData from transformed data
     const paginatedData = useMemo(() => {
@@ -161,55 +169,31 @@ export const SubmissionTypeTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.NAME)
-                                        }
-                                        sortable
-                                    >
-                                        {toSentenceCase(
+                                    <SortableHeaderCell
+                                        label={toSentenceCase(
                                             friendlyGroupByName[submissionVs]
                                         )}
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(
-                                                SortByOptions.SUBMISSION_METHOD
-                                            )
+                                        sortKey={SortByOptions.NAME}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.submissionMethod')}
+                                        sortKey={
+                                            SortByOptions.SUBMISSION_METHOD
                                         }
-                                        sortable
-                                    >
-                                        Submission method
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.COUNT)
-                                        }
-                                        sortable
-                                    >
-                                        Total submissions
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.totalSubmissions')}
+                                        sortKey={SortByOptions.COUNT}
+                                        activeSortKey={activeSortKey}
+                                        onSort={onSort}
+                                        sortOrder={sortOrder}
+                                    />
                                     {/* <TableHeaderCell>Actions</TableHeaderCell> */}
                                 </TableRow>
                             </TableHeader>
