@@ -499,7 +499,7 @@ const CaseManagementDashboard = ({
         return (
             <>
                 <CaseResultTable
-                    cases={[]}
+                    cases={caseSearchData?.data ?? []}
                     searchValues={caseManagementFilters.searchValue}
                     handleSort={handleCreatedBySort}
                     sortDirection={caseManagementFilters.sortDirection}
