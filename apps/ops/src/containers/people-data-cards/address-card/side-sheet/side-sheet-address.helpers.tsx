@@ -177,7 +177,7 @@ export const getFormErrors = ({
     const { addressLine1, city, state, zipCode } = address;
 
     if (caseId == null) {
-        errors = { ...errors, caseId: `${t('errors.missingCaseDocument')}` };
+        errors = { ...errors, caseId: `${t('allFields.missingCaseDocument')}` };
     }
 
     if (isDelete) {
@@ -187,21 +187,27 @@ export const getFormErrors = ({
     if (!addressLine1) {
         errors = {
             ...errors,
-            addressLine1: t('errors.streetAddress') as string,
+            addressLine1: t('allFields.streetAddressMissing') as string,
         };
     }
     if (!zipCode) {
-        errors = { ...errors, zipCode: t('errors.zipCode') as string };
+        errors = {
+            ...errors,
+            zipCode: t('allFields.zipCodeMissing') as string,
+        };
     } else if (zipCode.length < 5) {
-        errors = { ...errors, zipCode: t('errors.invalidZip') as string };
+        errors = {
+            ...errors,
+            zipCode: t('allFields.invalidZipCode') as string,
+        };
     }
 
     if (!city) {
-        errors = { ...errors, city: t('errors.city') as string };
+        errors = { ...errors, city: t('allFields.cityMissing') as string };
     }
 
     if (!state) {
-        errors = { ...errors, state: t('errors.state') as string };
+        errors = { ...errors, state: t('allFields.stateMissing') as string };
     }
 
     return errors;
