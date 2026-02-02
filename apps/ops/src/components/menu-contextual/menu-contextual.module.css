@@ -1,0 +1,4 @@
+.trigger {
+    border-radius: var(--measure-dimension-radius-sm);
+    display: block;
+}

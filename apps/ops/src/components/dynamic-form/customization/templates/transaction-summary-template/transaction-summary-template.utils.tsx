@@ -212,6 +212,11 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             ? {
                   ...uiParty,
                   fullName: getFullName(uiParty),
+                  entityType:
+                      uiParty.partyType === PartyType.ORGANIZATION &&
+                      !uiParty.entityType
+                          ? 'UNKNOWN'
+                          : uiParty.entityType,
                   addresses: cleanAddresses(uiParty.addresses),
                   emails: cleanEmails(uiParty.emails),
                   phones: cleanPhones(uiParty.phones),

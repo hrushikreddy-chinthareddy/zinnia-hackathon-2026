@@ -157,6 +157,7 @@ export default function SideSheet({
                     >
                         <div
                             onClick={handleCloseOnOutsideClick}
+                            aria-hidden="true"
                             className="fixed inset-0 overflow-hidden bg-gray-500 bg-opacity-75"
                         />
                     </Transition.Child>
@@ -174,7 +175,7 @@ export default function SideSheet({
                                                 onClick={handleClose}
                                                 aria-label={
                                                     t(
-                                                        'ariaLabel.closeSideSheet'
+                                                        'allFields.closeDialog'
                                                     ) as string
                                                 }
                                                 data-testid="close-button"
