@@ -150,18 +150,6 @@ export default function SidesheetButtons({
                 </Button>
             )}
 
-            {isViewTaskButtonVisible && (
-                <ViewTaskButton
-                    isLoading={isViewTaskLoading}
-                    setIsLoading={setIsViewTaskLoading}
-                    task={task}
-                    handleViewTask={handleViewTask}
-                    btnSize={btnSize}
-                    isStartTaskLoading={startLoader}
-                    disabled={isViewTaskButtonDisabled}
-                />
-            )}
-
             {isStartButtonVisible && (
                 <Button
                     mode="primary"
@@ -177,6 +165,18 @@ export default function SidesheetButtons({
                         text={startTaskText}
                     />
                 </Button>
+            )}
+
+            {isViewTaskButtonVisible && (
+                <ViewTaskButton
+                    isLoading={isViewTaskLoading}
+                    setIsLoading={setIsViewTaskLoading}
+                    task={task}
+                    handleViewTask={handleViewTask}
+                    btnSize={btnSize}
+                    isStartTaskLoading={startLoader}
+                    disabled={isViewTaskButtonDisabled}
+                />
             )}
         </div>
     );

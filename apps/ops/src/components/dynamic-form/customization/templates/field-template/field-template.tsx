@@ -225,7 +225,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
                         !isDataTypeInReadOnly
                             ? formData
                             : children}
-                        {!hideError && errors}
+                        {!hideError && !readonly && errors}
                         {assistiveColor && assistiveText && (
                             <AssistiveText
                                 text={assistiveText as string}
