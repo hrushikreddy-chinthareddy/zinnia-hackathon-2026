@@ -38,6 +38,9 @@ export default function FieldSelectItem({
         <div
             className={classes}
             tabIndex={0}
+            role="option"
+            aria-selected={selected}
+            aria-disabled={disabled}
             onClick={() => {
                 if (onClick && !disabled) {
                     onClick();

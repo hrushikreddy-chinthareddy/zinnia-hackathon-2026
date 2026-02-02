@@ -7,6 +7,7 @@ import { useOutsideClick } from '@deps/hooks/useOutsideClick';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 
 import FieldSelectItem from './field-select-item';
+import styles from './field-select.module.css';
 
 export type FieldSelectOptions = {
     value: string;
@@ -18,6 +19,7 @@ export type FieldSelectProps = {
     frequentOptions?: FieldSelectOptions[];
     dropdownValue?: string;
     onDropdownChange: (value: string) => void;
+    dropdownAriaLabel?: string;
 } & FieldProps;
 
 export default function FieldSelect({
@@ -25,16 +27,27 @@ export default function FieldSelect({
     frequentOptions,
     dropdownValue,
     onDropdownChange,
+    dropdownAriaLabel,
     leading,
     trailing,
     ...rest
 }: FieldSelectProps) {
     const [open, setOpen] = useState(false);
 
+    const handleEscapeKey = (e: KeyboardEvent) => {
+        if (e.key === 'Escape' && open) {
+            e.preventDefault();
+            e.stopPropagation();
+            setOpen(false);
+        }
+    };
+
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
             setOpen(!open);
         }
+        handleEscapeKey(e);
     };
 
     function getFrequentClasses(index: number) {
@@ -87,9 +100,17 @@ export default function FieldSelect({
                 leading={
                     leading ? (
                         <div
-                            className="flex h-full flex-row items-center gap-1"
+                            className={clsx(
+                                styles.leadingWrapper,
+                                'default-focus'
+                            )}
                             onClick={handleClick}
                             onKeyDown={(e) => handleKeyDown(e)}
+                            tabIndex={0}
+                            role="button"
+                            aria-haspopup="listbox"
+                            aria-expanded={open}
+                            aria-label={dropdownAriaLabel}
                         >
                             {leading}
                             <ChevronDownIcon
@@ -107,7 +128,15 @@ export default function FieldSelect({
                         <div
                             onClick={handleClick}
                             onKeyDown={(e) => handleKeyDown(e)}
-                            className="h-full"
+                            className={clsx(
+                                styles.trailingWrapper,
+                                'default-focus'
+                            )}
+                            tabIndex={0}
+                            role="button"
+                            aria-haspopup="listbox"
+                            aria-expanded={open}
+                            aria-label={dropdownAriaLabel}
                         >
                             {trailing}
                         </div>
@@ -125,7 +154,13 @@ export default function FieldSelect({
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
             >
-                <div className={classes} ref={containerRef}>
+                <div
+                    className={classes}
+                    ref={containerRef}
+                    role="listbox"
+                    aria-label={dropdownAriaLabel}
+                    onKeyDown={handleEscapeKey}
+                >
                     <div className="max-h-[266px]">
                         {frequentOptions &&
                             frequentOptions.map((option, index) => (

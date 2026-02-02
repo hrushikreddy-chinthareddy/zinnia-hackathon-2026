@@ -74,7 +74,9 @@ export const Emails = ({
                             {isPending && <PendingTag />}
                             {editable && !isPending && (
                                 <IconButton
-                                    aria-describedby={`people-email-card-${emailIdKey}`}
+                                    aria-label={`${t('allFields.edit')} ${t(
+                                        `allFields.${emailTypeKey}`
+                                    )} ${t('allFields.email')}`}
                                     onClick={() =>
                                         onEditClick({
                                             email,
@@ -90,9 +92,6 @@ export const Emails = ({
                                     }
                                 >
                                     <EditIcon height={16} width={16} />
-                                    <span className="sr-only">
-                                        {t('people.card.general.edit')}
-                                    </span>
                                 </IconButton>
                             )}
                         </div>

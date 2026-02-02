@@ -150,7 +150,9 @@ export const Phones = ({
                             {isPending && <PendingTag />}
                             {editable && !isPending && (
                                 <IconButton
-                                    aria-describedby={`${labelId}-people-phone-card`}
+                                    aria-label={`${t('allFields.edit')} ${t(
+                                        `allFields.${phoneTypeKey}`
+                                    )} ${t('allFields.phone')}`}
                                     onClick={() =>
                                         onEditClick({
                                             phone,
@@ -166,9 +168,6 @@ export const Phones = ({
                                     }
                                 >
                                     <EditIcon height={16} width={16} />
-                                    <span className="sr-only">
-                                        {t('people.card.general.edit')}
-                                    </span>
                                 </IconButton>
                             )}
                         </div>

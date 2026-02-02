@@ -1,0 +1,13 @@
+.leadingWrapper {
+    align-items: center;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: row;
+    gap: 4px;
+    height: 100%;
+}
+
+.trailingWrapper {
+    border-radius: 4px;
+    height: 100%;
+}
