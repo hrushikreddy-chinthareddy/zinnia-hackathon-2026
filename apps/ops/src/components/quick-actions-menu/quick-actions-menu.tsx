@@ -953,6 +953,7 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'quickActions',
     });
+    const { t: tAllFields } = useTranslation();
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
 
@@ -968,7 +969,14 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
     return (
         <>
             <div className="hidden md:block">
-                <MenuContextual trigger={<TextButton label={t('label')} />}>
+                <MenuContextual
+                    trigger={
+                        <TextButton
+                            label={tAllFields('allFields.quickActions')}
+                        />
+                    }
+                    triggerAsChild={true}
+                >
                     {props.type === QuickActionsType.Policy ? (
                         <PolicyMenuContextualContent
                             policy={props.policy}
