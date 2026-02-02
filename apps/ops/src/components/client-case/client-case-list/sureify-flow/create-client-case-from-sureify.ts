@@ -5,6 +5,7 @@ import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import {
     CLIENT_CASE_MANAGER_API_ORIGIN,
     createClientCase,
+    patchClientCase,
     searchClientCaseByEappId,
 } from '@deps/queries/api/server/v1/client-cases';
 import {
@@ -88,12 +89,56 @@ export const createClientCaseFromSureify = async (
         // In a real scenario it should only exist one client case with the eAppId assigned
         const defaultClientCaseId = first(clientCases)?.id;
 
-        // Step 2: if a client case already exists, redirect to the client case
+        // Step 2: if a client case already exists, update if needed then redirect to the client case
         if (defaultClientCaseId) {
             logInfo(`${logPrefix} Found existing client case`, {
                 ...logCtx,
                 clientCaseId: defaultClientCaseId,
             });
+
+            const newBusinessResponseObject = await getNewBusinessById(
+                eAppId,
+                logCtx
+            );
+
+            if (isEmptyObject(newBusinessResponseObject)) {
+                // New Business was not found
+                throwTypedError(
+                    'New Business not found',
+                    NEW_BUSINESS_API_ORIGIN
+                );
+            }
+            if (isNewBusinessResponse(newBusinessResponseObject)) {
+                // The API returned an error
+                throwTypedError(
+                    newBusinessResponseObject.message,
+                    NEW_BUSINESS_API_ORIGIN
+                );
+            }
+
+            const updatedClientCasePayload =
+                await buildClientCaseFromNewBusiness(
+                    newBusinessResponseObject,
+                    eAppId,
+                    logCtx
+                );
+
+            const patchedCase = await patchClientCase(
+                {
+                    ...updatedClientCasePayload,
+                    id: defaultClientCaseId,
+                },
+                accessToken,
+                logCtx
+            );
+
+            if (!patchedCase) {
+                return throwTypedError(
+                    'Client case was not updated',
+                    CLIENT_CASE_MANAGER_API_ORIGIN
+                );
+            }
+
             return {
                 redirect: {
                     destination: `/illustrations/client-cases/${defaultClientCaseId}/illustrate`,
