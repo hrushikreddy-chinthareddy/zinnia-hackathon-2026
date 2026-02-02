@@ -101,6 +101,10 @@ export const getAssigneeChangePayload = (task: ManagementTask) => {
         phones: cleanPhones(src.phones),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
+        entityType:
+            src.partyType === PartyType.ORGANIZATION && !src.entityType
+                ? 'UNKNOWN'
+                : src.entityType,
         preferredCommunicationType:
             src.preferredCommunicationType === 'null'
                 ? null
