@@ -11,6 +11,7 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { first, isEqual, omit } from 'lodash';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import DateTextInput from '@deps/components/date-text-input/date-text-input';
@@ -110,6 +111,16 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         sendNewClientCaseCreated,
         sendClientCaseEdited,
     } = useIllustrationAnalytics();
+
+    const {
+        register,
+        control,
+        handleSubmit,
+        formState: { errors, isSubmitting, isValid },
+    } = useForm<IllustrationsClientCase>({
+        mode: 'onChange',
+        defaultValues: clientCaseInitialState,
+    });
 
     const canEditInsuredDetails =
         clientCase?.transactionType !== TransactionType.CONVERSION;
@@ -265,7 +276,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             agentDetails?.sellingCode &&
             agencyId &&
             (!isEdit || somethingChanged) &&
-            title &&
+            // title &&
             insuredDetails?.sexAtBirth &&
             insuredDetails?.dateOfBirth &&
             validDate &&
@@ -445,9 +456,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     return (
         <form
             className={styles.formContainer}
-            onSubmit={(e) => {
-                e.preventDefault();
-            }}
+            onSubmit={handleSubmit((data) => {
+                console.log(data);
+            })}
         >
             <section className={styles.formSection}>
                 <Typography
@@ -456,18 +467,30 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 >
                     {t('clientCase.createClientCaseForm.clientCaseSection')}
                 </Typography>
-                <FieldData
-                    fieldSize={FieldSize.Small}
+                <Controller
+                    control={control}
                     name="title"
-                    onChange={updateClientCaseField}
-                    id="client-case-title"
-                    label={
-                        <Label>
-                            {t('clientCase.createClientCaseForm.titleLabel')}
-                        </Label>
-                    }
-                    maxLength={60}
-                    value={clientCaseData.title}
+                    rules={{
+                        required: 'Title is required',
+                        maxLength: 60,
+                    }}
+                    render={({ field }) => (
+                        <FieldData
+                            fieldSize={FieldSize.Small}
+                            name="title"
+                            id="client-case-title"
+                            label={
+                                <Label>
+                                    {t(
+                                        'clientCase.createClientCaseForm.titleLabel'
+                                    )}
+                                </Label>
+                            }
+                            maxLength={60}
+                            value={field.value ?? ''}
+                            onChange={(e) => field.onChange(e.target.value)}
+                        />
+                    )}
                 />
 
                 <AgentField
@@ -536,79 +559,110 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 >
                     {t('clientCase.createClientCaseForm.insuredDetailsSection')}
                 </Typography>
-                <FieldData
-                    className={styles.inputItem}
-                    fieldSize={FieldSize.Small}
-                    name="firstName"
-                    onChange={updateClientCaseField}
-                    label={
-                        <Label>
-                            {t(
-                                'clientCase.createClientCaseForm.firstNameLabel'
-                            )}
-                        </Label>
-                    }
-                    defaultValue={clientCaseData.insuredDetails?.firstName}
-                    disabled={!canEditInsuredDetails}
-                />
-                <FieldData
-                    className={styles.inputItem}
-                    fieldSize={FieldSize.Small}
-                    name="lastName"
-                    onChange={updateClientCaseField}
-                    label={
-                        <Label>
-                            {t('clientCase.createClientCaseForm.lastNameLabel')}
-                        </Label>
-                    }
-                    defaultValue={clientCaseData.insuredDetails?.lastName}
-                    disabled={!canEditInsuredDetails}
-                />
-                <ButtonGroup
-                    id="sexAtBirth"
-                    className={styles.buttonGroup}
-                    items={[
-                        {
-                            children: (
-                                <span>
+                <Controller
+                    control={control}
+                    name="insuredDetails.firstName"
+                    render={({ field }) => (
+                        <FieldData
+                            className={styles.inputItem}
+                            fieldSize={FieldSize.Small}
+                            name="firstName"
+                            label={
+                                <Label>
                                     {t(
-                                        'clientCase.createClientCaseForm.maleButton'
+                                        'clientCase.createClientCaseForm.firstNameLabel'
                                     )}
-                                </span>
-                            ),
-                            id: 'male',
-                            value: 'MALE',
-                        },
-                        {
-                            children: (
-                                <span>
+                                </Label>
+                            }
+                            defaultValue={field.value ?? ''}
+                            disabled={!canEditInsuredDetails}
+                            onChange={(e) => field.onChange(e.target.value)}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="insuredDetails.lastName"
+                    render={({ field }) => (
+                        <FieldData
+                            className={styles.inputItem}
+                            fieldSize={FieldSize.Small}
+                            name="lastName"
+                            label={
+                                <Label>
                                     {t(
-                                        'clientCase.createClientCaseForm.femaleButton'
+                                        'clientCase.createClientCaseForm.lastNameLabel'
                                     )}
-                                </span>
-                            ),
-                            id: 'female',
-                            value: 'FEMALE',
-                        },
-                    ]}
-                    onClick={(v) => {
-                        updateClientCaseData({ sexAtBirth: v as string });
+                                </Label>
+                            }
+                            defaultValue={
+                                clientCaseData.insuredDetails?.lastName
+                            }
+                            disabled={!canEditInsuredDetails}
+                            onChange={(e) => field.onChange(e.target.value)}
+                        />
+                    )}
+                />
+
+                <Controller
+                    control={control}
+                    name="insuredDetails.sexAtBirth"
+                    rules={{
+                        required: t(
+                            'clientCase.quickQuoteForm.selectAnOption'
+                        ) as string,
                     }}
-                    label={
-                        <Label labelFor="sexAtBirth">
-                            {t(
-                                'clientCase.createClientCaseForm.sexAssignedLabel'
-                            )}
-                        </Label>
-                    }
-                    defaultValue={clientCaseData.insuredDetails?.sexAtBirth}
-                    inactive={!canEditInsuredDetails}
+                    render={({ field }) => (
+                        <ButtonGroup
+                            id="sexAtBirth"
+                            className={styles.buttonGroup}
+                            items={[
+                                {
+                                    children: (
+                                        <span>
+                                            {t(
+                                                'clientCase.createClientCaseForm.maleButton'
+                                            )}
+                                        </span>
+                                    ),
+                                    id: 'male',
+                                    value: 'MALE',
+                                },
+                                {
+                                    children: (
+                                        <span>
+                                            {t(
+                                                'clientCase.createClientCaseForm.femaleButton'
+                                            )}
+                                        </span>
+                                    ),
+                                    id: 'female',
+                                    value: 'FEMALE',
+                                },
+                            ]}
+                            label={
+                                <Label labelFor="sexAtBirth">
+                                    {t(
+                                        'clientCase.createClientCaseForm.sexAssignedLabel'
+                                    )}
+                                </Label>
+                            }
+                            defaultValue={field.value ?? 'M'}
+                            onClick={(v) => {
+                                field.onChange(v);
+                            }}
+                            inactive={!canEditInsuredDetails}
+                        />
+                    )}
                 />
+
                 <div className={styles.datePickerContainer}>
                     <div className={styles.datePicker}>
                         <Typography variant={TypographyVariant.FieldLabel}>
                             {t('clientCase.createClientCaseForm.dateLabel')}
                         </Typography>
+                        {/* TODO: Refactor to handle logic at this level instead
+                        of in the same component */}
                         <DateTextInput
                             onChange={(newDate) => {
                                 handleDateChange(newDate);
@@ -635,76 +689,86 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     )}
                 </div>
                 {currentAge >= 18 && (
-                    <ButtonGroup
-                        id="nicotine-user"
-                        className={styles.buttonGroup}
-                        items={[
-                            {
-                                children: (
-                                    <span>
+                    <Controller
+                        control={control}
+                        name="insuredDetails.nicotineUser"
+                        render={({ field }) => (
+                            <ButtonGroup
+                                id="nicotine-user"
+                                className={styles.buttonGroup}
+                                items={[
+                                    {
+                                        children: (
+                                            <span>
+                                                {t(
+                                                    'clientCase.createClientCaseForm.nonNicotine'
+                                                )}
+                                            </span>
+                                        ),
+                                        id: 'Non-Nicotine',
+                                        value: 'Non-Nicotine',
+                                    },
+                                    {
+                                        children: (
+                                            <span>
+                                                {t(
+                                                    'clientCase.createClientCaseForm.nicotine'
+                                                )}
+                                            </span>
+                                        ),
+                                        id: 'Nicotine',
+                                        value: 'Nicotine',
+                                    },
+                                ]}
+                                label={
+                                    <Label labelFor="nicotine-user">
                                         {t(
-                                            'clientCase.createClientCaseForm.nonNicotine'
+                                            'clientCase.createClientCaseForm.nicotineUserLabel'
                                         )}
-                                    </span>
-                                ),
-                                id: 'Non-Nicotine',
-                                value: 'Non-Nicotine',
-                            },
-                            {
-                                children: (
-                                    <span>
-                                        {t(
-                                            'clientCase.createClientCaseForm.nicotine'
-                                        )}
-                                    </span>
-                                ),
-                                id: 'Nicotine',
-                                value: 'Nicotine',
-                            },
-                        ]}
-                        onClick={(v) => {
-                            updateClientCaseData({
-                                nicotineUser: v === 'Nicotine',
-                            });
-                        }}
-                        label={
-                            <Label labelFor="nicotine-user">
-                                {t(
-                                    'clientCase.createClientCaseForm.nicotineUserLabel'
-                                )}
-                            </Label>
-                        }
-                        defaultValue={
-                            clientCaseData.insuredDetails?.nicotineUser
-                                ? 'Nicotine'
-                                : 'Non-Nicotine'
-                        }
-                        inactive={!canEditInsuredDetails}
+                                    </Label>
+                                }
+                                defaultValue={
+                                    field.value ? 'Nicotine' : 'Non-Nicotine'
+                                }
+                                inactive={!canEditInsuredDetails}
+                                onClick={(v) => {
+                                    field.onChange(v === 'Nicotine');
+                                }}
+                            />
+                        )}
                     />
                 )}
                 <div className={styles.clientState}>
-                    <Select
-                        contentClassName={styles.clientStateOptions}
-                        options={usStatesSelectList}
-                        label={
-                            <Label>
-                                {t(
-                                    'clientCase.createClientCaseForm.stateLabel'
-                                )}
-                            </Label>
-                        }
-                        onValueChange={(v) => {
-                            updateClientCaseData({ state: v });
-                        }}
-                        value={clientCaseData.insuredDetails?.state}
-                        defaultValue={clientCaseData.insuredDetails?.state}
-                        disabled={!canEditInsuredDetails}
+                    <Controller
+                        control={control}
+                        name="insuredDetails.state"
+                        rules={{ required: 'State is required' }}
+                        render={({ field }) => (
+                            <Select
+                                contentClassName={styles.clientStateOptions}
+                                options={usStatesSelectList}
+                                label={
+                                    <Label>
+                                        {t(
+                                            'clientCase.createClientCaseForm.stateLabel'
+                                        )}
+                                    </Label>
+                                }
+                                value={field.value}
+                                defaultValue={field.value}
+                                disabled={!canEditInsuredDetails}
+                                onValueChange={(v) => {
+                                    field.onChange(v);
+                                }}
+                            />
+                        )}
                     />
                 </div>
             </section>
             <div className={styles.actionButtons}>
                 <Button
-                    onClick={onSubmitForm}
+                    type="submit"
+                    // onClick={onSubmitForm}
                     size="small"
                     disabled={!canSubmitForm()}
                 >
