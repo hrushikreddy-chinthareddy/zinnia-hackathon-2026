@@ -66,7 +66,7 @@ const getPrefix = (prefix: string | null) => {
     }
 };
 
-const formatParties = (policyResponse: PolicyResponse) => {
+export const formatParties = (policyResponse: PolicyResponse) => {
     const partyRoleMap = policyResponse.partyRoles.reduce(
         (acc: Record<string, string>, role: PartyRole) => {
             acc[role.partyRole] = role.partyId;
@@ -201,7 +201,7 @@ const formatParties = (policyResponse: PolicyResponse) => {
     return parties;
 };
 
-const formatBeneficiaries = (policyResponse: PolicyResponse) => {
+export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
     const getBeneficiariesByRole = (roleType: string) => {
         const partyIds = policyResponse.partyRoles
             .filter(

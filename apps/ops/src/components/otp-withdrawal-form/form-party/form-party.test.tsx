@@ -566,7 +566,7 @@ describe('Formparty component', () => {
         it('should render empty party formControls if parties object is empty', () => {
             const {
                 result: { current },
-            } = renderHook(() => useDlicConfig(t));
+            } = renderHook(() => useDlicConfig(t, false));
             render(
                 <FormDataContext.Provider value={{ ...defaultFormDataContext }}>
                     <FormParties configs={current.formPartyConfigs} />
@@ -675,7 +675,7 @@ describe('Formparty component', () => {
 
             const {
                 result: { current },
-            } = renderHook(() => useDlicConfig(t));
+            } = renderHook(() => useDlicConfig(t, false));
 
             // CaseDetails.data.formRequest.formParty.parties = parties;
             render(

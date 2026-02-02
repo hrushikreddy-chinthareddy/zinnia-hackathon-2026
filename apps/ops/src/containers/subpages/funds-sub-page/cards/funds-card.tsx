@@ -35,6 +35,10 @@ interface FundsCardProps {
      * Optional accessible caption passed through to the underlying table.
      */
     caption?: string;
+    /**
+     * Whether the funds are elected or not.
+     */
+    isElected?: boolean;
 }
 
 const getAllocationColors = (funds?: FundViewModel[]): AllocationColor[] => {
@@ -62,6 +66,7 @@ const FundsCard = ({
     policy,
     notElectedfunds,
     caption,
+    isElected = false,
 }: FundsCardProps) => {
     const { featureFlags } = useOptimizely();
     const { t } = useTranslation();
@@ -170,6 +175,7 @@ const FundsCard = ({
                 loading={loading}
                 policy={policy}
                 caption={caption}
+                isElected={isElected}
             />
         </div>
     );

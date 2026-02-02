@@ -30,6 +30,7 @@ import {
     detectRoleChangeRequestType,
     resolveRoleChangePartyId,
     toFullName,
+    mergeIdentifications,
 } from '@deps/utils/tasks/role-change-data-entry.utils';
 import { PartyType } from '@zinnia/api-types/types/sor';
 
@@ -143,16 +144,47 @@ type RequestBodyBuilder = (customData: any) => any;
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
         const { task } = customData;
+
+        const actionData = Array.isArray(customData?.actionData)
+            ? customData.actionData.map((item: any) => {
+                  const uiParty = item?.party;
+                  return {
+                      ...item,
+                      party: uiParty
+                          ? {
+                                ...uiParty,
+                                firstName: uiParty.firstName ?? null,
+                                middleName: uiParty.middleName ?? null,
+                                lastName:
+                                    uiParty.lastName ??
+                                    (uiParty.partyType !== PartyType.INDIVIDUAL
+                                        ? uiParty.fullName ?? null
+                                        : null) ??
+                                    null,
+                                fullName: toFullName(uiParty),
+                                addresses: cleanAddresses(uiParty.addresses),
+                                emails: cleanEmails(uiParty.emails),
+                                phones: cleanPhones(uiParty.phones),
+                                identifications: mergeIdentifications(
+                                    uiParty.identifications
+                                ),
+                            }
+                          : uiParty,
+                  };
+              })
+            : customData?.actionData;
         return {
-            correlationid: uuidv4(),
-            carrierId: task.carrier,
-            planCode: task.data?.planCode,
-            policyNumber: task.data?.policyNumber,
+            correlationid: customData?.correlationId ?? uuidv4(),
+            carrierId: task ? task.carrier : customData?.carrier,
+            planCode: task ? task.data?.planCode : customData?.planCode,
+            policyNumber: task
+                ? task.data?.policyNumber
+                : customData?.policyNumber,
             contractInfo: customData?.contractInfo,
-            actionData: customData?.actionData,
+            actionData,
             signatureData: customData?.signatureData,
             policyStatus: customData?.policyStatus,
-            caseId: '',
+            caseId: customData?.caseId ?? '',
             sorSystem: SorSystem.Zahara,
             sourceSystem: 'ONBASE',
             channel: 'Phone',

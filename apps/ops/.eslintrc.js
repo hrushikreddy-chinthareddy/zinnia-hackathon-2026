@@ -110,6 +110,12 @@ module.exports = {
                 },
             },
         ],
+        'import/no-unresolved': [
+            'error',
+            {
+                ignore: ['^https?://'],
+            },
+        ],
     },
     ignorePatterns: [
         // From shared config

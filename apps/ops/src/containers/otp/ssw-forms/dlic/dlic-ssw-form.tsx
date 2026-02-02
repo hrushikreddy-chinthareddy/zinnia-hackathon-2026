@@ -5,6 +5,7 @@ import AmountDetails from '@deps/components/otp-withdrawal-form/amount-details';
 import FormDistribution from '@deps/components/otp-withdrawal-form/distribution-instructions/form-distribution';
 import ESignatureValidation from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation';
 import { FormEsignatureData } from '@deps/components/otp-withdrawal-form/e-signature-validation/e-signature-validation.helpers';
+import FormDisbursement from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement';
 import FormDisbursementV2 from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2';
 import FormParties from '@deps/components/otp-withdrawal-form/form-party/form-party';
 import IrsWithholding from '@deps/components/otp-withdrawal-form/irs-withholdings';
@@ -15,6 +16,7 @@ import SystematicWithdrawalProgram, {
 import StateW4Form from '@deps/components/otp-withdrawal-form/state-w4-form';
 import TaxWithholdings from '@deps/components/otp-withdrawal-form/tax-withholdings';
 import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-notes-alert';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getOwnerStateOfResidence } from '@deps/helpers/otp-withdrawal.helpers';
 import {
@@ -23,6 +25,7 @@ import {
     PartyRoles,
     PaymentMethod,
 } from '@deps/models/case/withdrawal/case';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
 import SswEditSelection from '../ssw-edit-selection';
@@ -33,9 +36,13 @@ interface DlicSSWFormProps {
 }
 
 export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
+    const { featureFlags } = useOptimizely();
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
+
+    const isDelawareBankSecFeatsEnabled =
+        featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
     const [_, setSswProgramFrequency] = useState('' as Frequency);
 
     const {
@@ -62,13 +69,14 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         fundWithdrawnMethodOptions,
         systematicWithdrawalOptions,
         disbursementOptions,
+        disbursementOptionsV2,
         signaturesConfig,
         signaturesNotaryConfig,
         additionalWithholdingAmountConfig,
         irsSignatureConfig,
         eSignatureFieldConfig,
         sswUpdateFastOptions,
-    } = getDlicConfig(t, isLC ?? false);
+    } = getDlicConfig(t, isDelawareBankSecFeatsEnabled, isLC ?? false);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -165,10 +173,17 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 isFormStateReadOnly={isFormStateReadOnly}
             />
 
-            <FormDisbursementV2
-                isFormStateReadOnly={isFormStateReadOnly}
-                options={disbursementOptions}
-            />
+            {isDelawareBankSecFeatsEnabled ? (
+                <FormDisbursementV2
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={disbursementOptionsV2}
+                />
+            ) : (
+                <FormDisbursement
+                    isFormStateReadOnly={isFormStateReadOnly}
+                    options={disbursementOptions}
+                />
+            )}
 
             <SignatureValidations
                 isFormStateReadOnly={isFormStateReadOnly}

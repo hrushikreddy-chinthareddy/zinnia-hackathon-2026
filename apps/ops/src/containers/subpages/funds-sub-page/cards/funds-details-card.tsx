@@ -53,6 +53,7 @@ const FundsDetailsCard = ({ policy }: FundsDetailsCardProps) => {
                                     ) ?? ''
                                 }
                                 policy={policy}
+                                isElected={true}
                             />
                         )}
                     <FundsCard
@@ -66,6 +67,7 @@ const FundsDetailsCard = ({ policy }: FundsDetailsCardProps) => {
                         policy={policy}
                         notElectedfunds={viewModel?.notElectedFunds}
                         caption={t('allFields.tableCaptionsElectedFunds') ?? ''}
+                        isElected={true}
                     />
                     {viewModel?.notElectedFunds &&
                         viewModel?.notElectedFunds.length > 0 && (

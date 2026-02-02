@@ -7,6 +7,7 @@ import {
     getAllParties,
     groupBasicsForPolicy,
     groupBasicsForTransaction,
+    groupSingleFundDetails,
     groupTaxesSection,
 } from './section-grouping';
 
@@ -204,5 +205,159 @@ describe('getAllParties', () => {
         expect(party.tags).toEqual(['role:OWNER']);
 
         expect(allPartiesById['P1']).toBe(party);
+    });
+});
+
+describe('groupSingleFundDetails', () => {
+    it('returns empty array when no fundName or fundId is present', () => {
+        const nodes: DataNode[] = [makeField('someField', 'value')];
+
+        const result = groupSingleFundDetails({ nodes, t });
+
+        expect(result).toEqual([]);
+    });
+
+    it('groups fund fields under fundName label', () => {
+        const nodes: DataNode[] = [
+            makeField('fundName', 'Growth Fund'),
+            makeField('fundId', 'FUND123'),
+            makeField('totalFundValue', '10000'),
+        ];
+
+        const result = groupSingleFundDetails({ nodes, t });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].type).toBe(FieldType.section);
+        expect(result[0].label).toBe('Growth Fund');
+        expect(result[0].children).toHaveLength(3);
+    });
+
+    it('falls back to fundId when fundName is not present', () => {
+        const nodes: DataNode[] = [
+            makeField('fundId', 'FUND123'),
+            makeField('totalFundValue', '10000'),
+        ];
+
+        const result = groupSingleFundDetails({ nodes, t });
+
+        expect(result).toHaveLength(1);
+        expect(result[0].label).toBe('FUND123');
+    });
+
+    it('processes fundSegments into relabeled segment sections', () => {
+        const segmentNode = makeSection('SEG001', [
+            makeField('segmentId', 'SEG001'),
+            makeField('currentAmount', '5000'),
+        ]);
+
+        const fundSegmentsSection = makeSection('fundSegments', [segmentNode]);
+
+        const nodes: DataNode[] = [
+            makeField('fundName', 'Growth Fund'),
+            fundSegmentsSection,
+        ];
+
+        const result = groupSingleFundDetails({ nodes, t });
+
+        expect(result).toHaveLength(1);
+        const fundSection = result[0];
+        expect(fundSection.children).toHaveLength(2);
+
+        // First child is the fundName field
+        expect(fundSection.children[0].type).toBe(FieldType.field);
+
+        // Second child is the relabeled segment section
+        const segmentSection = fundSection.children[1] as DataSection;
+        expect(segmentSection.type).toBe(FieldType.section);
+        expect(segmentSection.label).toBe('allFields.segment SEG001');
+        expect(segmentSection.children).toHaveLength(2);
+    });
+
+    it('processes nested rates within segments', () => {
+        const rateNode = makeSection('RATE001', [
+            makeField('rateType', 'CAP'),
+            makeField('currentRate', '0.05'),
+        ]);
+
+        const ratesSection = makeSection('rates', [rateNode]);
+
+        const segmentNode = makeSection('SEG001', [
+            makeField('segmentId', 'SEG001'),
+            ratesSection,
+        ]);
+
+        const fundSegmentsSection = makeSection('fundSegments', [segmentNode]);
+
+        const nodes: DataNode[] = [
+            makeField('fundName', 'Growth Fund'),
+            fundSegmentsSection,
+        ];
+
+        const result = groupSingleFundDetails({ nodes, t });
+
+        const fundSection = result[0];
+        const segmentSection = fundSection.children[1] as DataSection;
+
+        // Segment should have segmentId field + rates section
+        expect(segmentSection.children).toHaveLength(2);
+
+        // First child is segmentId field
+        expect(segmentSection.children[0].type).toBe(FieldType.field);
+
+        // Second child is the rates section with translated label
+        const rateSectionResult = segmentSection.children[1] as DataSection;
+        expect(rateSectionResult.type).toBe(FieldType.section);
+        expect(rateSectionResult.label).toBe(
+            'allFields.segment SEG001 RATE001 allFields.rates'
+        );
+        expect(rateSectionResult.children).toHaveLength(2);
+    });
+
+    it('handles multiple segments with multiple rates', () => {
+        const rate1 = makeSection('RATE1', [
+            makeField('rateType', 'CAP'),
+            makeField('currentRate', '0.05'),
+        ]);
+        const rate2 = makeSection('RATE2', [
+            makeField('rateType', 'FLOOR'),
+            makeField('currentRate', '0.01'),
+        ]);
+
+        const segment1 = makeSection('SEG001', [
+            makeField('segmentId', 'SEG001'),
+            makeSection('rates', [rate1, rate2]),
+        ]);
+
+        const segment2 = makeSection('SEG002', [
+            makeField('segmentId', 'SEG002'),
+            makeField('currentAmount', '3000'),
+        ]);
+
+        const fundSegmentsSection = makeSection('fundSegments', [
+            segment1,
+            segment2,
+        ]);
+
+        const nodes: DataNode[] = [
+            makeField('fundName', 'Growth Fund'),
+            makeField('totalFundValue', '10000'),
+            fundSegmentsSection,
+        ];
+
+        const result = groupSingleFundDetails({ nodes, t });
+
+        const fundSection = result[0];
+        // 2 fund-level fields + 2 segment sections
+        expect(fundSection.children).toHaveLength(4);
+
+        const seg1Section = fundSection.children[2] as DataSection;
+        expect(seg1Section.label).toBe('allFields.segment SEG001');
+        // segmentId field + 2 rate sections
+        expect(seg1Section.children).toHaveLength(3);
+
+        const seg2Section = fundSection.children[3] as DataSection;
+        expect(seg2Section.label).toBe('allFields.segment SEG002');
+        // segmentId field + currentAmount field (no rates)
+        expect(seg2Section.children).toHaveLength(2);
     });
 });

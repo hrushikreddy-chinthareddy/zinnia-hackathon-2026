@@ -27,7 +27,6 @@ export const useMainNavItems = (): NavGroup[] => {
         isAllowReadIllustrations,
         hasAiAssistantPermissions,
         hasTestHarnessAccess,
-        hasMarketConnectContacts,
     } = usePermissionsContext();
 
     const { user } = useUser();
@@ -223,19 +222,6 @@ export const useMainNavItems = (): NavGroup[] => {
         ),
     };
 
-    const customersLink = {
-        id: '/customers',
-        display: 'Customers',
-        icon: IconType.USER_GROUP,
-        renderComponent: (
-            <NavLink
-                type={NavElementType.Link}
-                href={'/customers'}
-                onClick={() => handleClick('Customers')}
-            />
-        ),
-    };
-
     const userContextMenu = {
         id: 'userContextMenu',
         display: user?.name || '',
@@ -247,7 +233,6 @@ export const useMainNavItems = (): NavGroup[] => {
         {
             items: [
                 ...(hasHomeExperience && showHomeNavBtn ? [homeLink] : []),
-                ...(hasMarketConnectContacts ? [customersLink] : []),
                 ...(isAllowReadCaseManagement ? [caseLink] : []),
                 ...(isAdvisorsExcel || isAllowReadPolicyAdmin
                     ? [policyLink]
