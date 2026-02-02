@@ -15,22 +15,14 @@ export const transformPomAgentDataToParty = (
     agentData: PomAgentData | undefined,
     partyData: Parties
 ): Parties => {
-    // Filter out SSN and NPN from partyData if agent has them (agent data takes precedence)
-    // This prevents duplicate identifications when both sources have the same type
+    // Filter out SSN from partyData if agent has one (agent data takes precedence)
+    // This prevents duplicate SSN when both policy and agent data have SSN
     const filteredPartyIdentifications =
         partyData?.identifications?.filter((id) => {
             // If agent has SSN, filter out any existing SSNs from partyData
             if (
                 agentData?.socialSecurityNumber &&
                 id.identificationType === Identification.identificationType.SSN
-            ) {
-                return false;
-            }
-            // If agent has NPN, filter out any existing NPNs from partyData
-            if (
-                agentData?.nationalProducerNumber &&
-                id.identificationType ===
-                    ('NPN' as Identification.identificationType)
             ) {
                 return false;
             }
