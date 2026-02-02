@@ -2152,6 +2152,13 @@
                                     "expandable": false,
                                     "nobackground": true
                                 },
+                                "ui:order": [
+                                    "signDate",
+                                    "signType",
+                                    "signTypeForUI",
+                                    "isSignedPresent",
+                                    "signDesignation"
+                                ],
                                 "signType": {
                                     "ui:options": {
                                         "disabled": true
