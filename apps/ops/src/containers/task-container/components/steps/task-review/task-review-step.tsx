@@ -83,7 +83,6 @@ export const TaskReviewStep = ({
         task,
         correlationId,
     ]);
-
     return (
         <WorkflowCard
             title={task.taskName || t('title')}
@@ -92,12 +91,23 @@ export const TaskReviewStep = ({
                 <TransactionNavigationButtons
                     readonly={readOnly}
                     isSubmit={!readOnly}
+                    submitLabel={
+                        isReadyForDataEntry
+                            ? (t('continue') as string)
+                            : (t('submit') as string)
+                    }
                     className="mt-4"
                     handleContinue={handleStepContinue}
                     parentPage={ParentPage.CreateCase}
                     leaveTransactionLink={taskInfoLink}
                     cancelLabel={t('cancel') as string}
-                    disableContinue={!readOnly}
+                    disableContinue={
+                        readOnly
+                            ? false
+                            : isReadyForDataEntry
+                            ? false
+                            : selectedExceptionDetails.length === 0
+                    }
                 />
             }
         >
