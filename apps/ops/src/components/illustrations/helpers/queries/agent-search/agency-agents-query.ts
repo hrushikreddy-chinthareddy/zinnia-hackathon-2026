@@ -2,9 +2,9 @@ import { QueryClient, queryOptions, skipToken } from '@tanstack/react-query';
 
 import { PRODUCER_ROLES } from '@deps/types/producers';
 
+import { fetchAgentsForNearestRoleDownline } from './agents-for-nearest-role-downline-query';
 import { AGENT_SEARCH_QUERY_PREFIXES } from './constants';
-import { buildAgentsFromDownline } from './helpers';
-import { buildGetDownlineForNearestRoleQueryOptions } from '../../hooks/pom';
+import { fetchSelfAgentForNearestRole } from './self-agent-for-nearest-role-query';
 
 export const buildAgencyAgentsQuery = ({
     sellingCode,
@@ -25,22 +25,31 @@ export const buildAgencyAgentsQuery = ({
         queryFn: !(sellingCode && carrierShortName)
             ? skipToken
             : async ({ client }) => {
-                  const agencyDownline = await client.fetchQuery(
-                      buildGetDownlineForNearestRoleQueryOptions({
+                  const agencyOwnerAgentP = fetchSelfAgentForNearestRole(
+                      client,
+                      {
                           sellingCode,
                           role: PRODUCER_ROLES.GENERAL_AGENCY,
                           carrierShortName,
                           partialFullName,
-                      })
+                      }
+                  );
+                  const agencyAgentsP = fetchAgentsForNearestRoleDownline(
+                      client,
+                      {
+                          sellingCode,
+                          role: PRODUCER_ROLES.GENERAL_AGENCY,
+                          carrierShortName,
+                          partialFullName,
+                      }
                   );
 
-                  if (!agencyDownline) {
-                      return [];
-                  }
+                  const [agencyOwnerAgent, agencyAgents] = await Promise.all([
+                      agencyOwnerAgentP,
+                      agencyAgentsP,
+                  ]);
 
-                  return buildAgentsFromDownline(agencyDownline, {
-                      carrierShortName,
-                  });
+                  return [agencyOwnerAgent, ...agencyAgents];
               },
     });
 

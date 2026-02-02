@@ -28,7 +28,8 @@ export const buildQueryForAgent = ({
                       carrierShortName,
                       partialFullName,
                   });
-                  const agencyAgentsP = await fetchAgencyAgents(client, {
+
+                  const agencyAgentsP = fetchAgencyAgents(client, {
                       sellingCode,
                       carrierShortName,
                       partialFullName,

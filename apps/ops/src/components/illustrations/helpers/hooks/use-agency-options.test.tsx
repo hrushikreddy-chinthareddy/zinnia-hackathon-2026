@@ -29,10 +29,11 @@ type MockSellingCode =
     | 'agent-other-district'
     | 'agency-owner'
     | 'agency-owner-other-district'
+    | 'agency-without-district'
     | 'district-manager'
     | 'other-district-manager';
 
-mockedGetUserHierarchyBySellingCode.mockImplementation(async (sellingCode) => {
+const mockedGetUserHierarchyBySellingCodeImpl = async (sellingCode: string) => {
     const agency1 = {
         firstName: 'Some',
         lastName: 'Agency',
@@ -145,6 +146,12 @@ mockedGetUserHierarchyBySellingCode.mockImplementation(async (sellingCode) => {
                 upline: [brokerDealer],
                 role: 'GeneralAgency',
             } as GetHierarchyResponse;
+        case 'agency-without-district':
+            return {
+                ...common,
+                upline: [],
+                role: 'GeneralAgency',
+            };
         case 'district-manager':
             return {
                 ...common,
@@ -166,7 +173,7 @@ mockedGetUserHierarchyBySellingCode.mockImplementation(async (sellingCode) => {
         default:
             throw new Error(`Invalid selling code: "${sellingCode}"`);
     }
-});
+};
 
 const queryClient = new QueryClient();
 
@@ -198,6 +205,12 @@ const mockNonsuperIllustrator = () =>
     );
 
 describe('useAgencyOptions', () => {
+    beforeAll(() => {
+        mockedGetUserHierarchyBySellingCode.mockImplementation(
+            mockedGetUserHierarchyBySellingCodeImpl
+        );
+    });
+
     const agentCommon = {
         firstName: 'John',
         lastName: 'Doe',
@@ -295,5 +308,37 @@ describe('useAgencyOptions', () => {
                 agentSellingCode: 'single-agency',
             },
         ]);
+    });
+
+    it('does not filter, agencies without a BrokerDealer', async () => {
+        mockNonsuperIllustrator();
+
+        const agentOption = {
+            ...agentCommon,
+            sellingCodes: ['agency-without-district'],
+        };
+        const aliases = [
+            {
+                firstName: 'John',
+                lastName: 'Doe',
+                fullName: 'John Doe',
+                carrier: 'FNWL',
+                externalPartyIds: [
+                    {
+                        key: 'SELLING_CODE',
+                        value: 'agency-without-district',
+                    },
+                ],
+            },
+        ] as AliasModel[] as AliasWithSellingCode[];
+
+        const { result } = renderHook(
+            () => useAgencyOptions(agentOption, aliases),
+            {
+                wrapper,
+            }
+        );
+
+        await waitFor(() => expect(result.current).toHaveLength(1));
     });
 });
