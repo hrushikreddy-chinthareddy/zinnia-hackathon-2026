@@ -11,7 +11,7 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { first, isEqual, omit } from 'lodash';
 import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import DateTextInput from '@deps/components/date-text-input/date-text-input';
@@ -66,7 +66,7 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
         sexAtBirth: 'MALE',
         dateOfBirth: undefined,
         nicotineUser: false,
-        state: '',
+        state: undefined,
     },
 };
 
@@ -113,8 +113,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     } = useIllustrationAnalytics();
 
     const {
-        register,
         control,
+        setValue,
+        getValues,
         handleSubmit,
         formState: { errors, isSubmitting, isValid },
     } = useForm<IllustrationsClientCase>({
@@ -135,11 +136,17 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const [clientCaseData, setClientCaseData] =
         useState<Partial<IllustrationsClientCase>>(mergedCase);
 
-    const { dateOfBirth } = clientCaseData?.insuredDetails ?? {};
+    // const { dateOfBirth } = clientCaseData?.insuredDetails ?? {};
+    const dateOfBirth = useWatch({
+        control,
+        name: 'insuredDetails.dateOfBirth',
+    });
     const currentAge = useMemo(
         () => calculateIssueAge(dateOfBirth ?? null) ?? 0,
         [dateOfBirth]
     );
+
+    const displayNicotineSection = currentAge >= 18;
 
     const isFetchingAgencies =
         useIsFetching({
@@ -256,11 +263,14 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const handleDateChange = (birthDate: Date) => {
         updateClientCaseData({ dateOfBirth: birthDate });
+        setValue('insuredDetails.dateOfBirth', birthDate);
     };
 
     const canSubmitForm = () => {
-        const { title, insuredDetails, agentDetails, agencyId } =
-            clientCaseData;
+        // const { title, insuredDetails, agentDetails, agencyId } =
+        //     clientCaseData;
+
+        const { title, insuredDetails, agentDetails, agencyId } = getValues();
 
         const parsedDate = dayjs(insuredDetails?.dateOfBirth);
 
@@ -270,17 +280,21 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
         const validDate = isValidDate(formattedDate);
 
+        const hasErrors = Object.keys(errors).length > 0;
+        console.log(errors);
+
         return !!(
             !isSubmiting &&
             !isFetchingAgencies &&
             agentDetails?.sellingCode &&
             agencyId &&
-            (!isEdit || somethingChanged) &&
-            // title &&
+            // (!isEdit || somethingChanged) &&
+            title &&
             insuredDetails?.sexAtBirth &&
             insuredDetails?.dateOfBirth &&
             validDate &&
-            insuredDetails?.state
+            insuredDetails?.state &&
+            !hasErrors
         );
     };
 
@@ -335,7 +349,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 ...omit(agentOption, ['sellingCodes', 'lookupId']),
                 sellingCode: agentOption?.sellingCodes[0],
             };
-
             const isCurrentAgencyIdValid =
                 selectedAgencyOption &&
                 agentOption?.sellingCodes?.includes(
@@ -347,6 +360,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     agentDetails: newAgentDetails,
                     ...(!isCurrentAgencyIdValid ? { agencyId: undefined } : {}),
                 });
+
+                setValue('agentDetails', newAgentDetails);
+                // setValue('agencyId', !isCurrentAgencyIdValid ? { agencyId: undefined } : {})
             }
         },
         [
@@ -381,6 +397,12 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 },
             });
 
+            setValue('agencyId', agencyId);
+            setValue('agentDetails', {
+                ...omit(selectedAgentOption, ['sellingCodes', 'lookupId']),
+                sellingCode: agentSellingCode,
+            });
+
             return;
         }
 
@@ -391,6 +413,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 selectedAgencyAgentSellingCode &&
                 selectedAgencyAgentSellingCode != agentSellingCode
             ) {
+                setValue('agentDetails', {
+                    ...omit(selectedAgentOption, ['sellingCodes', 'lookupId']),
+                    sellingCode: selectedAgencyOption.agentSellingCode,
+                });
+
                 return updateClientCaseData({
                     agentDetails: {
                         ...omit(selectedAgentOption, [
@@ -595,9 +622,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     )}
                                 </Label>
                             }
-                            defaultValue={
-                                clientCaseData.insuredDetails?.lastName
-                            }
+                            defaultValue={field.value ?? ''}
                             disabled={!canEditInsuredDetails}
                             onChange={(e) => field.onChange(e.target.value)}
                         />
@@ -688,7 +713,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         </div>
                     )}
                 </div>
-                {currentAge >= 18 && (
+                {displayNicotineSection && (
                     <Controller
                         control={control}
                         name="insuredDetails.nicotineUser"
@@ -742,7 +767,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     <Controller
                         control={control}
                         name="insuredDetails.state"
-                        rules={{ required: 'State is required' }}
+                        rules={{
+                            required: 'State is required',
+                            validate: (v) =>
+                                (v && v.length > 0) || 'State is required',
+                        }}
                         render={({ field }) => (
                             <Select
                                 contentClassName={styles.clientStateOptions}
@@ -755,7 +784,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     </Label>
                                 }
                                 value={field.value}
-                                defaultValue={field.value}
+                                defaultValue={field.value ?? undefined}
                                 disabled={!canEditInsuredDetails}
                                 onValueChange={(v) => {
                                     field.onChange(v);
