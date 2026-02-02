@@ -3,6 +3,7 @@
         "fullName": "Nom complet",
         "ssn": "Numéro de sécurité sociale",
         "ssnAbbreviated": "SSN",
+        "tin": "Numéro d'identification fiscale",
         "birthDate": "Date de naissance",
         "primaryPhone": "Téléphone principal",
         "email": "E-mail",

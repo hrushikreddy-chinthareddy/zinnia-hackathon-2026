@@ -66,8 +66,6 @@ export interface PermissionsContextProps {
     showRequestCorrection: boolean;
     isAllowOpsCaseReviewRequest: boolean;
     hasPermissionToPrioritizeCases: boolean;
-    hasDocumentAccess: boolean;
-    hasMarketConnectContacts: boolean;
     isSuperIllustrator: boolean;
 }
 
@@ -84,9 +82,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
     const { featureFlags } = useOptimizely();
     const partyId = user?.partyId as string;
     const sessionId = user?.sid as string;
-
-    const hasMarketConnectContacts =
-        !!featureFlags[FEATURE_FLAGS.MARKET_CONNECT_ENABLED];
 
     const { data: homeCheck, isLoading: homeCheckLoading } = useQuery({
         queryKey: ['isAllowHomeExperience', partyId],
@@ -249,17 +244,6 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
         queryFn: () =>
             doesUserHavePagePermissionQuery(
                 UserPermission.AllowWriteCasePriority,
-                partyId
-            ),
-        enabled: !!partyId,
-        staleTime: FIFTEEN_MINUTES_IN_MS,
-    });
-
-    const { data: readDocument } = useQuery({
-        queryKey: ['readDocument', partyId],
-        queryFn: () =>
-            doesUserHavePagePermissionQuery(
-                UserPermission.AllowReadDocument,
                 partyId
             ),
         enabled: !!partyId,
@@ -474,12 +458,10 @@ export const PermissionsProvider = ({ children }: { children: ReactNode }) => {
                 isZinniaInternalProcessor:
                     !!fgaRoleData?.isZinniaInternalProcessor,
                 isAllowWriteClientCase: !!writeClientCaseCarriers.length, //TODO: update this to check the ui access permission when CIAM implements
-                hasDocumentAccess: !!readDocument,
                 showZinniaLiveCaseActions:
                     !!fgaRoleData?.showZinniaLiveCaseActions,
                 showRequestCorrection: !!fgaRoleData?.showRequestCorrection,
                 isAllowOpsCaseReviewRequest: !!isAllowOpsCaseReviewRequest,
-                hasMarketConnectContacts,
                 isSuperIllustrator,
             }}
         >

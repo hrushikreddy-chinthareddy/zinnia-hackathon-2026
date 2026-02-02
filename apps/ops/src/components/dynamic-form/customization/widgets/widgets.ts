@@ -5,7 +5,6 @@ import SummaryWidget from './agent-summary-widget/agent-summary-widget';
 import AgentTransactionAccordion from './agent-transaction-accordian/agent-transaction-accordion';
 import AllocationPercentageWidget from './allocation-percentage/allocation-percentage';
 import ArithmeticOperationWidget from './arithmetic-operation-widget/arithmetic-operation-widget';
-import BeneTransactionAccordion from './bene-transaction-accordion/bene-transaction-accordion';
 import CheckboxWidget from './checkbox-widget/checkbox-widget';
 import CheckBoxesSelectWidget from './checkboxes-select-widget/checkboxes-select-widget';
 import CheckboxesWidget from './checkboxes-widget/checkboxes-widget';
@@ -48,7 +47,6 @@ export function generateWidgets(): RegistryWidgetsType {
         NumbersWidget,
         DateWidgetV2,
         TitleWidget,
-        BeneTransactionAccordion,
     };
 }
 

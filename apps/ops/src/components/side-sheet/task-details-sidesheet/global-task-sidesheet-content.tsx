@@ -673,13 +673,13 @@ export default function GlobalTaskSideSheet({
 
     const isCaseAndStartAble = type === 'case' && showStartButton && !readOnly;
 
-    const isReadOnlyWithFeatureFlag =
-        readOnly &&
-        featureFlagDecisions?.[FEATURE_FLAGS.READ_ONLY_VIEW_TASK_MANAGEMENT] &&
-        showStartButton;
+    //required for debugging the issue
+    // const isReadOnlyWithFeatureFlag =
+    //     readOnly &&
+    //     featureFlagDecisions?.[FEATURE_FLAGS.READ_ONLY_VIEW_TASK_MANAGEMENT] &&
+    //     showStartButton;
 
-    const shouldRenderStartButton =
-        isCaseAndStartAble || isReadOnlyWithFeatureFlag;
+    const shouldRenderStartButton = isCaseAndStartAble;
 
     const isTaskUnclaimed =
         !task.assigneePartyId || task.assigneePartyId === '';
@@ -699,7 +699,10 @@ export default function GlobalTaskSideSheet({
         task?.taskType as EarlyTaskType
     );
 
-    const isViewTaskButtonVisible = !isOpsManagerView && !openNigoEntry;
+    const isViewTaskButtonVisible =
+        !isOpsManagerView &&
+        !openNigoEntry &&
+        featureFlagDecisions?.[FEATURE_FLAGS.READ_ONLY_VIEW_TASK_MANAGEMENT];
     const carrierName =
         getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
 
@@ -1006,6 +1009,7 @@ export default function GlobalTaskSideSheet({
             {!isOpsManagerView &&
                 type == 'case' &&
                 !isUserAssociatedWithTask &&
+                isStartButtonVisible &&
                 showStartButton &&
                 !readOnly && (
                     <div className="bg-black text-white text-sm font-normal rounded-lg shadow p-2  whitespace-nowrap z-10  mt-8 max-w-[240px]">
@@ -1025,13 +1029,11 @@ export default function GlobalTaskSideSheet({
                 handleViewTask={handleViewTask}
                 handleStart={handleStart}
                 isGoToCaseButtonVisible={isOpsManagerView}
-                isViewTaskButtonVisible={isViewTaskButtonVisible}
+                isViewTaskButtonVisible={isViewTaskButtonVisible || false}
                 isViewTaskButtonDisabled={!task.data}
                 isStartButtonDisabled={isStartButtonDisabled}
                 isStartButtonVisible={
-                    shouldRenderStartButton && task.data
-                        ? isStartButtonVisible
-                        : false
+                    shouldRenderStartButton ? isStartButtonVisible : false
                 }
                 goToCaseLoader={goToCaseLoader}
             />

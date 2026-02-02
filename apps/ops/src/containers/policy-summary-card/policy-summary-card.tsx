@@ -114,6 +114,7 @@ import {
     Policy,
     FeatureType,
     PolicyStatus,
+    PartyType,
 } from '@zinnia/api-types/types/sor';
 
 import { ActiveQuickView } from './active-quick-view/active-quick-view';
@@ -183,7 +184,6 @@ const QuickViewHeader = ({
         partyId: userPartyId,
         sessionId,
         hasCallLogsAccess,
-        hasDocumentAccess,
     } = usePermissionsContext();
 
     const {
@@ -255,7 +255,7 @@ const QuickViewHeader = ({
     };
 
     const { data: quickLinks, isLoading: loadingQuickLinks } =
-        usePolicyQuickLinks(t, policy, hasCallLogsAccess, hasDocumentAccess);
+        usePolicyQuickLinks(t, policy, hasCallLogsAccess);
 
     return (
         <header data-testid={CardDetailsTest.HEADER}>
@@ -702,6 +702,10 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     );
     const bestAvailAddress = currentAddresses[0] as AddressWithPending;
 
+    const isOrgOrTrust =
+        owner?.partyType === PartyType.ORGANIZATION ||
+        owner?.partyType === PartyType.TRUST;
+
     const sideSheetContent = (type: SideSheetViews) => {
         const action = NonFinancialTransactionActions.Edit;
         let content;
@@ -863,17 +867,19 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     pii={true}
                 />
             </div>
-            <div>
-                <Label
-                    variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:owner.birthDate')}
-                />
-                <Content
-                    details={owner?.formattedBirthDate}
-                    variant={ContentVariant.BodySm}
-                    pii={true}
-                />
-            </div>
+            {!isOrgOrTrust && (
+                <div>
+                    <Label
+                        variant={LabelVariant.FieldLabel}
+                        label={t('colDefs:owner.birthDate')}
+                    />
+                    <Content
+                        details={owner?.formattedBirthDate}
+                        variant={ContentVariant.BodySm}
+                        pii={true}
+                    />
+                </div>
+            )}
             <div>
                 <div className="flex gap-1">
                     <Label
@@ -918,18 +924,33 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                     pii={true}
                 />
             </div>
-            <div>
-                <Label
-                    variant={LabelVariant.FieldLabel}
-                    label={t('colDefs:owner.ssn')}
-                />
-                <Content
-                    details={formatSSN(owner?.ssn)}
-                    variant={ContentVariant.BodySm}
-                    highlights={getPolicyHighlighter(searchValue)}
-                    pii={true}
-                />
-            </div>
+            {isOrgOrTrust || (!owner?.ssn && !!owner?.taxId) ? (
+                <div>
+                    <Label
+                        variant={LabelVariant.FieldLabel}
+                        label={t('colDefs:owner.tin')}
+                    />
+                    <Content
+                        details={formatSSN(owner?.taxId)}
+                        variant={ContentVariant.BodySm}
+                        highlights={getPolicyHighlighter(searchValue)}
+                        pii={true}
+                    />
+                </div>
+            ) : (
+                <div>
+                    <Label
+                        variant={LabelVariant.FieldLabel}
+                        label={t('colDefs:owner.ssn')}
+                    />
+                    <Content
+                        details={formatSSN(owner?.ssn)}
+                        variant={ContentVariant.BodySm}
+                        highlights={getPolicyHighlighter(searchValue)}
+                        pii={true}
+                    />
+                </div>
+            )}
             <div>
                 <div className="flex gap-1">
                     <Label

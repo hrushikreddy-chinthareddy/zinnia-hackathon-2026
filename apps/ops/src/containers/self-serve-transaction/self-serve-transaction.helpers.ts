@@ -14,6 +14,10 @@ import {
     assigneeChangeSubmitHandler,
     buildInitialAssigneeChangeFormData,
 } from './transactions/assignee-change-transaction';
+import {
+    beneChangeSubmitHandler,
+    buildInitialBeneChangeFormData,
+} from './transactions/bene-change-transaction';
 import { SelfServeTransaction } from './types';
 
 const removeFirstTabSchema = (metadata: any) => ({
@@ -24,6 +28,32 @@ const removeFirstTabSchema = (metadata: any) => ({
     },
 });
 
+const getTransactionMetadata = async (
+    taskType: TaskType,
+    policy: Policy,
+    planCode: string,
+    dynamicImport: () => Promise<any>
+) => {
+    const clientId = policy?.carrierId || '';
+    const isProdEnv = !isNonProductionEnvironment();
+    browserLogInfo('getSelfServeTransactionData environment', {
+        isProdEnv,
+        taskType,
+        clientId,
+        processType: ProcessType.PolicyUpdate,
+        planCode,
+        policyNumber: policy?.policyNumber,
+    });
+    const metaData = isProdEnv
+        ? await getTaskFormMetadata(
+              clientId,
+              taskType,
+              ProcessType.PolicyUpdate
+          )
+        : (await dynamicImport()).default;
+    return removeFirstTabSchema(metaData);
+};
+
 export const getSelfServeTransactionData = async (
     transactionType: SelfServeTransaction,
     policy: Policy,
@@ -31,30 +61,15 @@ export const getSelfServeTransactionData = async (
 ) => {
     switch (transactionType) {
         case SelfServeTransaction.ASSIGNEE_CHANGE: {
-            const taskType = TaskType.Initiate_AssigneeChange_Transaction;
-            const clientId = policy?.carrierId || '';
-            const isProdEnv = !isNonProductionEnvironment();
-
-            browserLogInfo('getSelfServeTransactionData environment', {
-                isProdEnv,
-                taskType,
-                clientId,
-                processType: ProcessType.PolicyUpdate,
+            const metadata = await getTransactionMetadata(
+                TaskType.Initiate_AssigneeChange_Transaction,
+                policy,
                 planCode,
-                policyNumber: policy?.policyNumber,
-            });
-
-            const assigneeChangeMetadataNew = isProdEnv
-                ? await getTaskFormMetadata(
-                      clientId,
-                      taskType,
-                      ProcessType.PolicyUpdate
-                  )
-                : await import(
-                      `@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json`
-                  );
-
-            const metadata = removeFirstTabSchema(assigneeChangeMetadataNew);
+                () =>
+                    import(
+                        '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json'
+                    )
+            );
             return {
                 metaData: JSON.parse(JSON.stringify(metadata)),
                 initialCustomData: {
@@ -75,6 +90,42 @@ export const getSelfServeTransactionData = async (
                 startStepSubtitle: 'assigneeChange.start.subTitle',
                 confirmStepSubtitle: 'assigneeChange.confirm.subTitle',
                 submitResponseHandler: assigneeChangeSubmitHandler,
+            };
+        }
+        case SelfServeTransaction.BENE_CHANGE: {
+            const metadata = await getTransactionMetadata(
+                TaskType.Initiate_BeneChange_Transaction,
+                policy,
+                planCode,
+                () =>
+                    import(
+                        '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json'
+                    )
+            );
+            return {
+                metaData: JSON.parse(JSON.stringify(metadata)),
+                initialCustomData: {
+                    policyNumber: policy.policyNumber,
+                    planCode,
+                    effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
+                    taskType: TaskType.Initiate_BeneChange_Transaction,
+                    carrier: policy?.carrierId,
+                    policyStatus: policy?.policyStatus,
+                    issueResolved: true,
+                },
+                initialFormData: buildInitialBeneChangeFormData(policy),
+                transactionType: SelfServeTransaction.BENE_CHANGE,
+                processType: Processes.PolicyUpdate,
+                processSubType: [
+                    Processes.BeneficiaryChange,
+                    Processes.BeneficiaryUpdate,
+                ],
+                parentPage: ParentPage.CreateCase,
+                leaveTransactionLink: '/',
+                startStepTitle: 'beneChange.title',
+                startStepSubtitle: 'beneChange.subTitle',
+                confirmStepSubtitle: 'beneChange.confirmSubTitle',
+                submitResponseHandler: beneChangeSubmitHandler,
             };
         }
     }

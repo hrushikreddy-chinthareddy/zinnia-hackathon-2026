@@ -20,10 +20,12 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-export default function CustomersPage({
+export default function OrderEntryPage({
     accessToken,
+    transactionId,
 }: {
     accessToken: string;
+    transactionId: string;
 }) {
     const getAccessToken = useCallback(async () => {
         return accessToken;
@@ -31,7 +33,7 @@ export default function CustomersPage({
 
     const zembedConfig = useMemo(
         () => ({
-            modules: ['contact-management'],
+            modules: ['order-entry'],
             debug: process.env.NODE_ENV === 'development',
             accessToken: getAccessToken,
         }),
@@ -46,7 +48,10 @@ export default function CustomersPage({
 
     return (
         <div>
-            <zen-contact-management id="contact-management"></zen-contact-management>
+            <zen-order-entry
+                id="order-entry"
+                data-transaction-id={transactionId}
+            ></zen-order-entry>
         </div>
     );
 }
@@ -54,14 +59,28 @@ export default function CustomersPage({
 export const getServerSideProps = withPageAuthAndLogging(
     {
         getServerSideProps: async (context, _loggingContext) => {
-            const { locale = DEFAULT_LOCALE, req, res } = context;
+            const { locale = DEFAULT_LOCALE, params, req, res } = context;
+            const { transactionId } = params ?? {};
+
+            if (!transactionId) {
+                logInfo(
+                    'orderEntryPage::Missing orderId or customerId in params',
+                    _loggingContext
+                );
+                return {
+                    redirect: {
+                        destination: '/404',
+                        permanent: false,
+                    },
+                };
+            }
 
             let accessToken;
             try {
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
                 logWarn(
-                    'getServerSidePropsCustomersPage::Access token expired',
+                    'getServerSidePropsOrderEntryPage::Access token expired',
                     {
                         ...parseErrorInformation(e),
                         ..._loggingContext,
@@ -77,7 +96,9 @@ export const getServerSideProps = withPageAuthAndLogging(
                     _loggingContext
                 );
 
-            if (!featureFlagDecisions[FEATURE_FLAGS.MARKET_CONNECT_ENABLED]) {
+            if (
+                !featureFlagDecisions[FEATURE_FLAGS.MARKET_CONNECT_ORDER_ENTRY]
+            ) {
                 logInfo(
                     'customersPage::Feature flag not enabled',
                     _loggingContext
@@ -101,13 +122,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                     ...translations,
                     user,
                     accessToken,
+                    transactionId,
                 },
             };
         },
     },
     {
-        file: 'customers/index',
+        file: 'customers/[customerId]/order-entry/[transactionId]/index',
         function: 'getServerSideProps',
-        page: 'customers/index',
+        page: 'customers/[customerId]/order-entry/[transactionId]/index',
     }
 );

@@ -176,6 +176,9 @@ export const IssueCountsByStatusTable = () => {
         { label: 'Details', key: 'details' },
         { label: 'Total', key: 'count' },
     ];
+    const isViewCasesEnabled =
+        !featureFlags[FEATURE_FLAGS.ENABLE_ISSUE_COUNT_VIEW_CASES] &&
+        featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE];
 
     return (
         <CardContainer>
@@ -274,9 +277,7 @@ export const IssueCountsByStatusTable = () => {
                                             width={16}
                                         />
                                     </TableHeaderCell>
-                                    {featureFlags[
-                                        FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE
-                                    ] && (
+                                    {isViewCasesEnabled && (
                                         <TableHeaderCell>
                                             Actions
                                         </TableHeaderCell>
@@ -382,10 +383,7 @@ export const IssueCountsByStatusTable = () => {
                                                     {item.count?.toLocaleString()}
                                                 </Tooltip>
                                             </TableCell>
-                                            {featureFlags[
-                                                FEATURE_FLAGS
-                                                    .ENTERPRISE_SEARCH_CASE
-                                            ] && (
+                                            {isViewCasesEnabled && (
                                                 <TableCell>
                                                     <NavElement
                                                         type={

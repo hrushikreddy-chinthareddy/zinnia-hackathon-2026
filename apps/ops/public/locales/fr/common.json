@@ -46,7 +46,6 @@
             "C": "Soldé signifie que le paiement a été traité avec succès. Le paiement est terminé."
         }
     },
-
     "allFields": {
         "account": "Cpt",
         "accountValue": "Valeur du compte",
@@ -55,7 +54,6 @@
         "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire. La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
         "accountType": "Type de compte",
         "accountNumber": "Numéro de compte",
-        "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire.  La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
         "activityTooltipDescription": "Cliquez sur un type de transaction pour plus de détails sur les décomptes.  Utilisez le fil d'Ariane au-dessus du graphique pour revenir à tous les types de transaction.",
         "actions": "Actions",
         "actuarialPresentValue": "Valeur actuelle actuarielle",
@@ -100,6 +98,7 @@
         "baseDeathBenefitTooltip": "C'est le montant du capital décès lié à la couverture de base du propriétaire. Il reflète la valeur actuelle, donc il tient compte de toutes les modifications apportées au capital décès dues aux retraits ou aux prêts.  (Note :  Cette valeur peut différer du capital décès brut total s'il y a des lignes de couverture supplémentaires ou des avenants qui ajoutent au capital décès)",
         "beginningAccountValue": "Valeur initiale du compte",
         "bonusRate": "Taux de bonus",
+        "bonusPeriodFrequency": "Fréquence de la période de bonus",
         "business": "Entreprise",
         "businessPhone": "Téléphone professionnel",
         "calculatedAmount": "Monto calculado",
@@ -276,6 +275,7 @@
         "fundName": "Nom du fonds",
         "genderIdentity": "Identité de genre",
         "generalLedgerFundCode": "Code du fonds du grand livre",
+        "glCode": "Code GL du fonds",
         "generalLedgerPlanCode": "Code du plan du grand livre",
         "goToCase": "Accéder au cas",
         "gracePeriod": "Délai de grâce avant déchéance",
@@ -316,6 +316,7 @@
         "initialPremiumRequestAmount": "Montant de la prime initiale demandée",
         "interestEarned": "Intérêts gagnés",
         "interestGuaranteedPeriod": "Période garantie des intérêts",
+        "interestRate": "Taux d'intérêt",
         "invalidDateFormat": "Format de date invalide.  Veuillez utiliser:  ##/##/####",
         "invalidDomain": "Seuls les e-mails de Zinnia sont autorisés.",
         "invalidEmail": "Veuillez saisir une adresse e-mail valide.",
@@ -402,6 +403,7 @@
         "maximumCoverageIncreaseAmount": "Montant maximal d'augmentation de couverture",
         "maximumCriticalIllnessBenefitPercentage": "Pourcentage maximal de prestation maladie grave",
         "maximumLifeTimeVestingAmount": "Montant maximal d'acquisition à vie",
+        "maximumIllustrativeInterestRate": "Taux d'intérêt illustratif maximal",
         "maximumLoanAmount": "Montant maximal du prêt",
         "maximumPeriodicPaymentPeriod": "Période maximale de paiement périodique",
         "maximumWithdrawalAmount": "Montant maximum de retrait",
@@ -419,6 +421,7 @@
         "minimumPaymentsForMatch": "Paiements minimum pour l'appariement",
         "minimumRequiredAccountValue": "Valeur minimale requise du compte",
         "minimumRiderBenefitAmount": "Montant minimal de la prestation de l'avenant",
+        "minimumTransferAmount": "Montant minimal de transfert",
         "minimumWithdrawalAmount": "Montant minimum de retrait",
         "minProcessingTime": "Temps de traitement minimal",
         "minute": "minute",
@@ -599,10 +602,13 @@
         "riderStoredIncomeBalance": "Solde de revenu stocké de l'avenant",
         "roles": "Rôles",
         "role": "Rôle",
+        "rates": "taux",
+        "rateEffectiveDate": "Date d'entrée en vigueur du taux",
         "routingNumber": "Numéro de routage",
         "scheduledDate": "Date prévue",
         "scheduledDateEnd": "Date prévue (fin de la plage)",
-        "segmentActivity": "Actividad del segmento",
+        "segment": "Segment",
+        "segmentActivity": "Activité du segment",
         "segmentId": "ID du segment",
         "selectAddressToContinue": "Sélectionnez une adresse pour continuer.",
         "selectCorrectionReason": "Sélectionner la raison de la correction",
@@ -642,6 +648,7 @@
         "surrenderValue": "Valeur de rachat",
         "surrenderValueTooltip": "C'est le montant auquel le propriétaire ou ses bénéficiaires peuvent s'attendre en cas de rachat de la police. Il s'agit de la valeur actuelle du compte moins les frais de rachat, les prêts en cours et autres frais",
         "surrenderValueWithoutMarketValueAdjustment": "Valeur de rachat sans ajustement de la valeur de marché",
+        "sweepToFundId": "Transférer vers le fonds",
         "systematicOrBillingChangeIndicator": "Indicador de cambio sistemático o de facturación",
         "systematicProgramPendingBannerText": "Une mise à jour des détails du programme systématique de cette police est en attente.  Pour plus d'informations, ",
         "systematicPrograms": "Programmes systématiques",
@@ -2528,6 +2535,11 @@
             "confirm": {
                 "subTitle": "Les mises à jour du changement d’assigné ont été envoyées."
             }
+        },
+        "beneChange": {
+            "title": "Gérer les bénéficiaires",
+            "subTitle": "Vous pouvez gérer vos bénéficiaires ici",
+            "confirmSubTitle": "Les bénéficiaires ont été mis à jour"
         }
     },
     "welcome": {
@@ -9102,6 +9114,7 @@
             "maleButton": "Homme",
             "femaleButton": "Femme",
             "dateLabel": "Date de naissance",
+            "dateErrorMessage": "Le format est mm/jj/aaaa",
             "ageLabel": "Âge actuel",
             "riskLabel": "Classe de risque",
             "nicotineUserLabel": "Utilisateur de nicotine",
