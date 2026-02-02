@@ -81,6 +81,8 @@ export type Case = {
     caseResult?: string;
     caseResultDetail?: string;
     caseProcessingDetails?: caseProcessingDetails[];
+    techExceptionCount?: number;
+    techExceptionStatus?: string;
 };
 
 // Case Type and a Case's Process are the same

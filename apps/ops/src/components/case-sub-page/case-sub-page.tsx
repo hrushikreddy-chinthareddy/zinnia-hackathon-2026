@@ -53,9 +53,21 @@ export default function CaseSubPage({
     } = usePermissionsContext();
     const { policy } = usePolicyDataContext();
     const { featureFlags } = useOptimizely();
+
     const canViewRawData =
         isZinniaInternalViewer && featureFlags[FEATURE_FLAGS.SHOW_RAW_DATA];
     const canViewCaseEvents = featureFlags[FEATURE_FLAGS.SHOW_CASE_EVENTS];
+
+    const canViewTechnicalExceptions = String(
+        featureFlags[FEATURE_FLAGS.CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS]
+    );
+
+    if (!caseDetails?.additionalData?.canViewTechnicalExceptions) {
+        caseDetails.additionalData = {
+            ...caseDetails.additionalData,
+            canViewTechnicalExceptions,
+        };
+    }
 
     const trackTabClick = (tab: string) => () => {
         segmentAnalyticsTrackEvent<CaseTabClickedEvent>(

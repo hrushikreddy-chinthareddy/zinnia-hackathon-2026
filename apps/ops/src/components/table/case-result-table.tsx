@@ -243,6 +243,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         singleCase.escalated ?? false,
         singleCase.caseStatus
     );
+
     return (
         <TableRow className={styles.row}>
             <TableCell className={styles.caseLinkContainer}>

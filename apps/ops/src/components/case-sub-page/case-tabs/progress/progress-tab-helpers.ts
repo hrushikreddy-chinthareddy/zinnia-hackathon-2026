@@ -658,6 +658,7 @@ export class TransformedCase {
             description,
             id: exception.id,
             exceptionRefId: exception.exceptionRefId || undefined,
+            exceptionType: exception.exceptionType,
             status: exception.status,
             tasks: tasks,
             updatedAt: exception.updatedAt,

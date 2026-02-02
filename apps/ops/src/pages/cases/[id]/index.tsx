@@ -182,7 +182,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                     id,
                     tab,
                     user,
-                    userTuplesData,
+                    userTuplesData: userTuplesData || {},
                 },
             };
         },
