@@ -18,7 +18,10 @@ import {
     AddressFields,
     convertAddressFields,
 } from '@deps/helpers/address.helpers';
-import { isStringWithBrackets } from '@deps/helpers/string.helpers';
+import {
+    isNullEmptyOrUndefined,
+    isStringWithBrackets,
+} from '@deps/helpers/string.helpers';
 import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 import { browserLogInfo } from '@deps/utils/browser-logging';
@@ -104,7 +107,7 @@ export function FieldTemplate(props: FieldTemplateProps) {
             rowFormData as Record<string, any>
         );
     }
-    if (formData === undefined && schema.type === 'string') {
+    if (isNullEmptyOrUndefined(formData) && schema.type === 'string') {
         formData = '-';
     }
     if (templateType === FieldTemplateType.SummaryCard) {
