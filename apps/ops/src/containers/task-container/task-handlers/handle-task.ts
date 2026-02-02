@@ -15,7 +15,11 @@ export async function applyDynamicOptions(
         return;
     }
 
-    const validatedTaskType = taskType as TaskType;
+    const validatedTaskType: TaskType =
+        taskType === TaskType.Initiate_Postissue_Transaction &&
+        task?.data?.processSubType === 'Bank Info Change'
+            ? TaskType.Bankchange_Data_Entry
+            : taskType;
 
     if (!allowedTaskTypes.has(validatedTaskType)) {
         return;

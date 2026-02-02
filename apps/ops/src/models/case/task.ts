@@ -78,6 +78,7 @@ export enum TaskType {
     Carrier_Approval = 'FRAUD_SCREENING_REVIEW',
     Giact_Call_Out = 'BANKING_VALIDATION_CALLOUT',
     Initiate_AssigneeChange_Transaction = 'INITIATE_ASSIGNEECHANGE_TRANSACTION',
+    Bankchange_Data_Entry = 'BANKCHANGE_DATA_ENTRY',
 }
 
 export enum EarlyTaskType {

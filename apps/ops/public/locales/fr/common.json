@@ -9530,5 +9530,14 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
+    },
+    "bankchangeDataEntry": {
+        "confirmStep": {
+            "title": "Compris!",
+            "subTitle": "La tâche : Entrée de données de changement de banque a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     }
 }

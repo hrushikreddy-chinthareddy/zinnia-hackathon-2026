@@ -9662,5 +9662,14 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "bankchangeDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Bank Change Data Entry was submitted.",
+            "cta": "Go to case ",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     }
 }
