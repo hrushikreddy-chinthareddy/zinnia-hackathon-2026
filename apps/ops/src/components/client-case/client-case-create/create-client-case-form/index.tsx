@@ -116,12 +116,19 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         control,
         setValue,
         getValues,
+        reset,
         handleSubmit,
         formState: { errors, isSubmitting, isValid },
     } = useForm<IllustrationsClientCase>({
         mode: 'onChange',
         defaultValues: clientCaseInitialState,
     });
+    useEffect(() => console.log({ ...getValues() }), [getValues]);
+    useEffect(() => {
+        if (clientCase) {
+            reset(clientCase);
+        }
+    }, [clientCase, reset]);
 
     const canEditInsuredDetails =
         clientCase?.transactionType !== TransactionType.CONVERSION;
@@ -673,7 +680,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     )}
                                 </Label>
                             }
-                            defaultValue={field.value ?? 'M'}
+                            defaultValue={
+                                field.value === 'MALE' ? 'MALE' : 'FEMALE'
+                            }
                             onClick={(v) => {
                                 field.onChange(v);
                             }}
