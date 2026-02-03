@@ -25,6 +25,7 @@ import {
     PartyRoles,
     PaymentMethod,
 } from '@deps/models/case/withdrawal/case';
+import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedStateSSW } from '@deps/utils/renderStateW4';
 
@@ -43,6 +44,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
 
     const isDelawareBankSecFeatsEnabled =
         featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
+    const isDlic3pDisbursementChangesEnabled =
+        featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES];
     const [_, setSswProgramFrequency] = useState('' as Frequency);
 
     const {
@@ -76,7 +79,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         irsSignatureConfig,
         eSignatureFieldConfig,
         sswUpdateFastOptions,
-    } = getDlicConfig(t, isDelawareBankSecFeatsEnabled, isLC ?? false);
+    } = getDlicConfig(t, !isDlic3pDisbursementChangesEnabled, isLC ?? false);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -181,7 +184,9 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
             ) : (
                 <FormDisbursement
                     isFormStateReadOnly={isFormStateReadOnly}
-                    options={disbursementOptions}
+                    options={
+                        disbursementOptions(formParty) as PaymentMethodOption[]
+                    }
                 />
             )}
 

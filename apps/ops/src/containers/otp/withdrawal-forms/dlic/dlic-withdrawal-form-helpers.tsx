@@ -7,6 +7,8 @@ import {
     getDefaultFormDisbursementValues,
     updateBankingDetails,
     DisbursementFields,
+    shouldDisplayPayeeName,
+    shouldDisplayAddress,
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import {
     BankingDetails,
@@ -41,6 +43,7 @@ import {
     WithdrawalType,
     AccountType,
     FormDisbursement,
+    FormParty,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_DISBURSEMENT_UPDATE,
@@ -48,7 +51,7 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
     DisbursementToggleType,
-    PaymentMethodOption,
+    SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
 import { createValidator } from '../../utils/helper-utils';
@@ -56,7 +59,7 @@ import { validateSignESign } from '../utils/form-validator.helpers';
 
 export default function useDlicConfig(
     t: TFunction,
-    isDelawareBankSecFeatsEnabled: boolean
+    isDlic3pDisbursementChangesEnabled: boolean
 ) {
     const formValidation = useCallback(
         ({
@@ -274,352 +277,64 @@ export default function useDlicConfig(
         },
     ];
 
-    const disbursementOptionsV2: DisbursementOptions =
-        isDelawareBankSecFeatsEnabled
-            ? [
-                  {
-                      label: t('distributionMethod.eft'),
-                      value: FormDisbursementSelections.EFT,
-                      fields: [
-                          {
-                              fieldLabel: t(
-                                  'distributionMethod.chooseTheBank'
-                              ) as string,
-                              fieldName: BankingFields.Bank,
-                              fieldType: 'choose-the-bank',
-                          },
-                          {
-                              fieldName: BankingFields.ChooseBankingType,
-                              fieldLabel: t(
-                                  'distributionMethod.chooseTheBank'
-                              ) as string,
-                              fieldType: 'choose-the-banking-type',
-                              classNames: 'col-start-1 col-span-2 mt-2',
-                          },
-                          {
-                              fieldName: BankingFields.AccountType,
-                              fieldLabel: t(
-                                  'distributionMethod.accountType'
-                              ) as string,
-                              fieldType: 'account-type',
-                              classNames: 'col-start-1 col-span-2 mt-2',
-                              isBankingField: true,
-                          },
-                          {
-                              fieldName: BankingFields.AccountNumber,
-                              fieldLabel: t(
-                                  'distributionMethod.accountNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              classNames: 'col-start-1',
-                              isBankingField: true,
-                              maskOnBlur: true,
-                              disableCopyPaste: true,
-                          },
-                          {
-                              fieldName: BankingFields.ReEnterAccountNumber,
-                              fieldLabel: t(
-                                  'distributionMethod.reEnterAccountNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              classNames: 'col-start-2',
-                              isBankingField: true,
-                              disableCopyPaste: true,
-                              validator: createValidator(
-                                  'accountNumber',
-                                  t('formValidation.accountNumberDoesNotMatch')
-                              ),
-                          },
-                          {
-                              fieldName: 'routingNumber',
-                              fieldLabel: t(
-                                  'distributionMethod.bankRoutingNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              isBankingField: true,
-                              classNames: 'col-start-1',
-                              maskOnBlur: true,
-                              disableCopyPaste: true,
-                          },
-                          {
-                              fieldName: BankingFields.ReEnterBankRoutingNumber,
-                              fieldLabel: t(
-                                  'distributionMethod.reEnterBankRoutingNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              isBankingField: true,
-                              disableCopyPaste: true,
-                              validator: createValidator(
-                                  'routingNumber' as any,
-                                  t('formValidation.routingNumberDoesNotMatch')
-                              ),
-                          },
-                          {
-                              fieldName: BankingFields.BankName,
-                              fieldLabel: t(
-                                  'distributionMethod.bankName'
-                              ) as string,
-                              fieldType: 'text',
-                              isBankingField: true,
-                              classNames: 'col-start-1 w-full',
-                          },
-                      ],
-                      generatePayloadFromSelection: (
-                          defaultDisbursementInfo: any,
-                          bankingInFile?: BankingDetails[] | null | []
-                      ) => {
-                          let bank = [];
-                          if (bankingInFile && bankingInFile?.length > 0) {
-                              bank = updateBankingDetails(
-                                  bankingInFile[0],
-                                  defaultDisbursementInfo
-                              );
-                          } else {
-                              bank = defaultDisbursementInfo?.bank?.[0];
-                          }
+    const sendCheckOptions = [
+        {
+            label: t('distributionMethod.select'),
+            value: 'select',
+        },
+        {
+            label: t('distributionMethod.disburseToOwnerAddress'),
+            value: SendCheckOption.OwnerAddress,
+        },
+        {
+            label: t('distributionMethod.disburseToFinancialInstitution'),
+            value: SendCheckOption.FinancialInstitution,
+        },
+        {
+            label: t('distributionMethod.disburseToCharity'),
+            value: SendCheckOption.Charity,
+        },
+        {
+            label: t('distributionMethod.disburseToAnnuitant'),
+            value: SendCheckOption.Annuitant,
+        },
+        {
+            label: t('distributionMethod.disburseToDifferentAddress'),
+            value: SendCheckOption.DifferentAddress,
+        },
+        {
+            label: t('distributionMethod.disburseToThirdParty'),
+            value: SendCheckOption.ThirdPartyNotFinancialIns,
+        },
+    ];
 
-                          return {
-                              ...getDefaultFormDisbursementValues(),
-                              paymentMethod: { text: PaymentMethod.EFT },
-                              paymentMailType: { text: null },
-                              bank: [
-                                  {
-                                      ...DEFAULT_BANK_DETAILS,
-                                      accountNumber: bank?.accountNumber ?? '',
-                                      accountType: {
-                                          text: bank?.accountType?.text,
-                                      },
-                                      bankName: bank?.bankName ?? '',
-                                      routingNumber:
-                                          bank?.bankRoutingNumber ?? '',
-                                      reEnterAccountNumber:
-                                          bank?.reEnterAccountNumber,
-                                      reEnterBankRoutingNumber:
-                                          bank?.reEnterBankRoutingNumber,
-                                  },
-                              ],
-                              bankVerification:
-                                  defaultDisbursementInfo?.bankVerification,
-                          };
-                      },
-                  },
-                  {
-                      label: t('distributionMethod.wire'),
-                      value: FormDisbursementSelections.Wire,
-                      fields: [
-                          {
-                              fieldLabel: t(
-                                  'distributionMethod.chooseTheBank'
-                              ) as string,
-                              fieldName: BankingFields.Bank,
-                              fieldType: 'choose-the-bank',
-                          },
-                          {
-                              fieldName: BankingFields.ChooseBankingType,
-                              fieldLabel: t(
-                                  'distributionMethod.chooseTheBank'
-                              ) as string,
-                              fieldType: 'choose-the-banking-type',
-                              classNames: 'col-start-1 col-span-2 mt-2',
-                          },
-                          {
-                              fieldName: BankingFields.AccountType,
-                              fieldLabel: t(
-                                  'distributionMethod.accountType'
-                              ) as string,
-                              fieldType: 'account-type',
-                              classNames: 'col-start-1 col-span-2 mt-2',
-                              isBankingField: true,
-                          },
-                          {
-                              fieldName: BankingFields.AccountNumber,
-                              fieldLabel: t(
-                                  'distributionMethod.accountNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              classNames: 'col-start-1',
-                              isBankingField: true,
-                              maskOnBlur: true,
-                              disableCopyPaste: true,
-                          },
-                          {
-                              fieldName: BankingFields.ReEnterAccountNumber,
-                              fieldLabel: t(
-                                  'distributionMethod.reEnterAccountNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              classNames: 'col-start-2',
-                              isBankingField: true,
-                              disableCopyPaste: true,
-                              validator: createValidator(
-                                  'accountNumber',
-                                  t('formValidation.accountNumberDoesNotMatch')
-                              ),
-                          },
-                          {
-                              fieldName: 'routingNumber',
-                              fieldLabel: t(
-                                  'distributionMethod.bankRoutingNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              isBankingField: true,
-                              classNames: 'col-start-1',
-                              maskOnBlur: true,
-                              disableCopyPaste: true,
-                          },
-                          {
-                              fieldName: BankingFields.ReEnterBankRoutingNumber,
-                              fieldLabel: t(
-                                  'distributionMethod.reEnterBankRoutingNumber'
-                              ) as string,
-                              fieldType: 'text',
-                              isBankingField: true,
-                              disableCopyPaste: true,
-                              validator: createValidator(
-                                  'routingNumber' as any,
-                                  t('formValidation.routingNumberDoesNotMatch')
-                              ),
-                          },
-                          {
-                              fieldName: BankingFields.BankName,
-                              fieldLabel: t(
-                                  'distributionMethod.bankName'
-                              ) as string,
-                              fieldType: 'text',
-                              isBankingField: true,
-                              classNames: 'col-start-1 w-full',
-                          },
-                      ],
-                      generatePayloadFromSelection: (
-                          defaultDisbursementInfo: any
-                      ) => {
-                          const bank = defaultDisbursementInfo?.bank?.[0];
-
-                          return {
-                              ...getDefaultFormDisbursementValues(),
-                              paymentMethod: { text: PaymentMethod.Wire || '' },
-                              paymentMailType: { text: null },
-                              bank: [
-                                  {
-                                      ...DEFAULT_BANK_DETAILS,
-                                      accountNumber: bank?.accountNumber ?? '',
-                                      accountType: {
-                                          text: bank?.accountType,
-                                      },
-                                      bankName: bank?.bankName ?? '',
-                                      routingNumber: bank?.bankRoutingNumber,
-                                      reEnterAccountNumber:
-                                          bank?.reEnterAccountNumber,
-                                      reEnterBankRoutingNumber:
-                                          bank?.reEnterBankRoutingNumber,
-                                  },
-                              ],
-                              bankVerification:
-                                  defaultDisbursementInfo?.bankVerification ??
-                                  null,
-                          };
-                      },
-                  },
-                  {
-                      label: t('distributionMethod.sendCheck'),
-                      value: FormDisbursementSelections.Check,
-                      fields: [
-                          {
-                              fieldName: BankingFields.SelectIfPayeeIsDifferent,
-                              fieldLabel: t(
-                                  'distributionMethod.selectIfDifferentPayee'
-                              ) as string,
-                              classNames: 'col-start-1 col-span-3',
-                              fieldType: 'checkbox',
-                          },
-                          {
-                              fieldName: BankingFields.PayeeName,
-                              fieldLabel: t(
-                                  'distributionMethod.payeeName'
-                              ) as string,
-                              classNames: 'col-start-1 col-span-2 max-w-lg',
-                              fieldType: 'text',
-                          },
-                          {
-                              fieldName: BankingFields.Address,
-                              classNames: 'col-span-3',
-                              fieldType: 'address',
-                              isAddressLine2Required: true,
-                          },
-                      ],
-                      generatePayloadFromSelection: ({
-                          payeeName,
-                          address,
-                          selectIfPayeeIsDifferent,
-                      }: DisbursementParts) => {
-                          return {
-                              ...getDefaultFormDisbursementValues(),
-                              paymentMethod: { text: PaymentMailType.Check },
-                              paymentMailType: { text: null },
-                              isDifferentPayeeOrAddress: {
-                                  text: selectIfPayeeIsDifferent || false,
-                              },
-                              payee: {
-                                  name: { text: payeeName || null },
-                                  addresses: [address || DEFAULT_ADDRESS],
-                                  contractNumber: { text: null },
-                              },
-                          };
-                      },
-                  },
-                  {
-                      label: t('distributionMethod.overnightCheck'),
-                      value: FormDisbursementSelections.ExpressCheck,
-                      fields: null,
-                      getDefaultPayload: () => {
-                          return DEFAULT_DISBURSEMENT_UPDATE;
-                      },
-                      generatePayloadFromSelection: () => {
-                          return {
-                              ...getDefaultFormDisbursementValues(),
-                              paymentMethod: { text: PaymentMailType.Check },
-                              paymentMailType: {
-                                  text: PaymentMailType.ExpressCheck,
-                              },
-                          };
-                      },
-                  },
-              ]
-            : [];
-
-    const disbursementOptions: PaymentMethodOption[] = [
+    const disbursementOptionsV2: DisbursementOptions = [
         {
             label: t('distributionMethod.eft'),
             value: FormDisbursementSelections.EFT,
-            additionalOptions: {
-                disbursementToggleType: DisbursementToggleType.MaskedInfoToggle,
-            },
             fields: [
                 {
+                    fieldLabel: t('distributionMethod.chooseTheBank') as string,
                     fieldName: BankingFields.Bank,
-                    fieldLabel: t('distributionMethod.chooseTheBank'),
-                    component: DisbursementFields.SelectBank,
+                    fieldType: 'choose-the-bank',
                 },
                 {
-                    fieldName: BankingFields.IsDirectDepositValid,
-                    fieldLabel: t(
-                        'distributionMethod.isDirectDepositFormValid'
-                    ),
-                    classNames: 'col-start-1',
-                    component: DisbursementFields.BankBooleanButtonGroup,
+                    fieldName: BankingFields.ChooseBankingType,
+                    fieldLabel: t('distributionMethod.chooseTheBank') as string,
+                    fieldType: 'choose-the-banking-type',
+                    classNames: 'col-start-1 col-span-2 mt-2',
                 },
                 {
                     fieldName: BankingFields.AccountType,
-                    fieldLabel: t('distributionMethod.accountType'),
-                    component: DisbursementFields.AccountTypes,
-
-                    classNames: 'col-start-1 col-span-2 w-full',
+                    fieldLabel: t('distributionMethod.accountType') as string,
+                    fieldType: 'account-type',
+                    classNames: 'col-start-1 col-span-2 mt-2',
                     isBankingField: true,
                 },
                 {
                     fieldName: BankingFields.AccountNumber,
-                    fieldLabel: t('distributionMethod.accountNumber'),
-                    component: DisbursementFields.BankTextField,
+                    fieldLabel: t('distributionMethod.accountNumber') as string,
+                    fieldType: 'text',
                     classNames: 'col-start-1',
                     isBankingField: true,
                     maskOnBlur: true,
@@ -627,8 +342,10 @@ export default function useDlicConfig(
                 },
                 {
                     fieldName: BankingFields.ReEnterAccountNumber,
-                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
-                    component: DisbursementFields.BankTextField,
+                    fieldLabel: t(
+                        'distributionMethod.reEnterAccountNumber'
+                    ) as string,
+                    fieldType: 'text',
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
@@ -638,11 +355,13 @@ export default function useDlicConfig(
                     ),
                 },
                 {
-                    fieldName: BankingFields.BankRoutingNumber,
-                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
+                    fieldName: 'routingNumber',
+                    fieldLabel: t(
+                        'distributionMethod.bankRoutingNumber'
+                    ) as string,
+                    fieldType: 'text',
                     isBankingField: true,
+                    classNames: 'col-start-1',
                     maskOnBlur: true,
                     disableCopyPaste: true,
                 },
@@ -650,142 +369,96 @@ export default function useDlicConfig(
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
                     fieldLabel: t(
                         'distributionMethod.reEnterBankRoutingNumber'
-                    ),
-                    component: DisbursementFields.BankTextField,
+                    ) as string,
+                    fieldType: 'text',
                     isBankingField: true,
                     disableCopyPaste: true,
                     validator: createValidator(
-                        'bankRoutingNumber',
+                        'routingNumber' as any,
                         t('formValidation.routingNumberDoesNotMatch')
                     ),
                 },
                 {
-                    fieldName: BankingFields.AccountHolder,
-                    fieldLabel: t('distributionMethod.accountName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                },
-                {
                     fieldName: BankingFields.BankName,
-                    fieldLabel: t('distributionMethod.bankName'),
-                    component: DisbursementFields.BankTextField,
+                    fieldLabel: t('distributionMethod.bankName') as string,
+                    fieldType: 'text',
                     isBankingField: true,
-                },
-
-                {
-                    fieldName: BankingFields.BankFurtherCreditName,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditName'),
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t(
-                        'distributionMethod.bankFurtherCreditAccount'
-                    ),
-                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1 w-full',
                 },
             ],
-            getDefaultPayload({ paymentMethod, bank }: FormDisbursement) {
-                if (paymentMethod.text !== PaymentMethod.EFT) {
-                    return DEFAULT_DISBURSEMENT_UPDATE;
+            generatePayloadFromSelection: (
+                defaultDisbursementInfo: any,
+                bankingInFile?: BankingDetails[] | null | []
+            ) => {
+                let bank = [];
+                if (bankingInFile && bankingInFile?.length > 0) {
+                    bank = updateBankingDetails(
+                        bankingInFile[0],
+                        defaultDisbursementInfo
+                    );
+                } else {
+                    bank = defaultDisbursementInfo?.bank?.[0];
                 }
-                const selectedBank = bank[0];
 
-                return {
-                    ...DEFAULT_DISBURSEMENT_UPDATE,
-                    isDirectDepositValid:
-                        selectedBank?.isDirectDepositValid?.text ?? true,
-                    accountHolder: selectedBank?.nameOnBankAccount ?? '',
-                    accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType:
-                        selectedBank?.accountType?.text ?? AccountType.Checking,
-                    bankName: selectedBank?.bankName ?? '',
-                    bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditAccount:
-                        selectedBank?.bankFurtherCreditAccount ?? '',
-                    bankFurtherCreditName:
-                        selectedBank?.bankFurtherCreditName ?? '',
-                    isDirectDeposit:
-                        selectedBank?.isDirectDeposit?.text ?? true,
-                    maskedAccountNumber:
-                        selectedBank?.maskedAccountNumber ?? '',
-                };
-            },
-            generatePayloadFromSelection: ({
-                accountNumber,
-                accountType,
-                bankName,
-                accountHolder,
-                bankFurtherCreditAccount,
-                bankFurtherCreditName,
-                bankRoutingNumber,
-                isDirectDepositValid,
-                maskedAccountNumber,
-                isDirectDeposit,
-                reEnterAccountNumber,
-                reEnterBankRoutingNumber,
-            }: DisbursementParts) => {
-                const bank = isDirectDeposit
-                    ? [
-                          {
-                              ...DEFAULT_BANK_DETAILS,
-                              maskedAccountNumber: null,
-                              accountNumber,
-                              accountType: {
-                                  text: accountType,
-                              },
-                              bankName,
-                              nameOnBankAccount: accountHolder ?? '',
-                              routingNumber: bankRoutingNumber,
-                              bankFurtherCreditAccount,
-                              bankFurtherCreditName,
-                              isDirectDeposit: { text: true },
-                              isDirectDepositValid: {
-                                  text: isDirectDepositValid,
-                              },
-                              reEnterAccountNumber,
-                              reEnterBankRoutingNumber,
-                          },
-                      ]
-                    : [
-                          {
-                              ...DEFAULT_BANK_DETAILS,
-                              isDirectDeposit: { text: false },
-                              maskedAccountNumber: maskedAccountNumber ?? null,
-                          },
-                      ];
                 return {
                     ...getDefaultFormDisbursementValues(),
                     paymentMethod: { text: PaymentMethod.EFT },
                     paymentMailType: { text: null },
-                    bank: bank,
+                    bank: [
+                        {
+                            ...DEFAULT_BANK_DETAILS,
+                            accountNumber: bank?.accountNumber ?? '',
+                            accountType: {
+                                text: bank?.accountType?.text,
+                            },
+                            bankName: bank?.bankName ?? '',
+                            routingNumber: bank?.bankRoutingNumber ?? '',
+                            reEnterAccountNumber: bank?.reEnterAccountNumber,
+                            reEnterBankRoutingNumber:
+                                bank?.reEnterBankRoutingNumber,
+                        },
+                    ],
+                    bankVerification: defaultDisbursementInfo?.bankVerification,
                 };
             },
         },
-
         {
             label: t('distributionMethod.wire'),
             value: FormDisbursementSelections.Wire,
             fields: [
                 {
-                    fieldName: BankingFields.AccountType,
-                    fieldLabel: t('distributionMethod.accountType'),
-                    component: DisbursementFields.AccountTypes,
-                    classNames: 'col-span-2 w-full',
+                    fieldLabel: t('distributionMethod.chooseTheBank') as string,
+                    fieldName: BankingFields.Bank,
+                    fieldType: 'choose-the-bank',
                 },
                 {
-                    fieldName: BankingFields.AccountNumber,
-                    fieldLabel: t('distributionMethod.accountNumber'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                    maskOnBlur: true,
-                    disableCopyPaste: true,
+                    fieldName: BankingFields.ChooseBankingType,
+                    fieldLabel: t('distributionMethod.chooseTheBank') as string,
+                    fieldType: 'choose-the-banking-type',
+                    classNames: 'col-start-1 col-span-2 mt-2',
+                },
+                {
+                    fieldName: BankingFields.AccountType,
+                    fieldLabel: t('distributionMethod.accountType') as string,
+                    fieldType: 'account-type',
+                    classNames: 'col-start-1 col-span-2 mt-2',
                     isBankingField: true,
                 },
                 {
+                    fieldName: BankingFields.AccountNumber,
+                    fieldLabel: t('distributionMethod.accountNumber') as string,
+                    fieldType: 'text',
+                    classNames: 'col-start-1',
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                },
+                {
                     fieldName: BankingFields.ReEnterAccountNumber,
-                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
-                    component: DisbursementFields.BankTextField,
+                    fieldLabel: t(
+                        'distributionMethod.reEnterAccountNumber'
+                    ) as string,
+                    fieldType: 'text',
                     classNames: 'col-start-2',
                     isBankingField: true,
                     disableCopyPaste: true,
@@ -795,115 +468,60 @@ export default function useDlicConfig(
                     ),
                 },
                 {
-                    fieldName: BankingFields.BankRoutingNumber,
-                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
-                    component: DisbursementFields.BankTextField,
+                    fieldName: 'routingNumber',
+                    fieldLabel: t(
+                        'distributionMethod.bankRoutingNumber'
+                    ) as string,
+                    fieldType: 'text',
+                    isBankingField: true,
                     classNames: 'col-start-1',
                     maskOnBlur: true,
                     disableCopyPaste: true,
-                    isBankingField: true,
                 },
                 {
                     fieldName: BankingFields.ReEnterBankRoutingNumber,
                     fieldLabel: t(
                         'distributionMethod.reEnterBankRoutingNumber'
-                    ),
-                    component: DisbursementFields.BankTextField,
+                    ) as string,
+                    fieldType: 'text',
                     isBankingField: true,
                     disableCopyPaste: true,
                     validator: createValidator(
-                        'bankRoutingNumber',
+                        'routingNumber' as any,
                         t('formValidation.routingNumberDoesNotMatch')
                     ),
                 },
                 {
-                    fieldName: BankingFields.AccountHolder,
-                    fieldLabel: t('distributionMethod.accountName'),
-                    component: DisbursementFields.BankTextField,
-                    classNames: 'col-start-1',
-                },
-                {
                     fieldName: BankingFields.BankName,
-                    fieldLabel: t('distributionMethod.bankName'),
-                    component: DisbursementFields.BankTextField,
-                },
-
-                {
-                    fieldName: BankingFields.BankFurtherCreditName,
-                    fieldLabel: t('distributionMethod.bankFurtherCreditName'),
-                    component: DisbursementFields.BankTextField,
-                },
-                {
-                    fieldName: BankingFields.BankFurtherCreditAccount,
-                    fieldLabel: t(
-                        'distributionMethod.bankFurtherCreditAccount'
-                    ),
-                    component: DisbursementFields.BankTextField,
+                    fieldLabel: t('distributionMethod.bankName') as string,
+                    fieldType: 'text',
+                    isBankingField: true,
+                    classNames: 'col-start-1 w-full',
                 },
             ],
-            getDefaultPayload({
-                paymentMethod,
-                doesCheckMeetSecRequiremnt,
-                voidCheck,
-                bank,
-            }: FormDisbursement) {
-                if (paymentMethod.text !== PaymentMethod.Wire) {
-                    return DEFAULT_DISBURSEMENT_UPDATE;
-                }
-                const selectedBank = bank[0];
-                return {
-                    ...DEFAULT_DISBURSEMENT_UPDATE,
-                    doesCheckMeetSecurityRequirements:
-                        doesCheckMeetSecRequiremnt,
-                    isVoidCheckAttached: voidCheck,
-                    accountNumber: selectedBank?.accountNumber ?? '',
-                    accountType:
-                        selectedBank?.accountType?.text ?? AccountType.Checking,
-                    bankName: selectedBank?.bankName ?? '',
-                    bankRoutingNumber: selectedBank?.routingNumber ?? '',
-                    bankFurtherCreditName:
-                        selectedBank?.bankFurtherCreditName ?? '',
-                    bankFurtherCreditAccount:
-                        selectedBank?.bankFurtherCreditAccount ?? '',
-                    accountHolder: selectedBank?.nameOnBankAccount ?? '',
-                };
-            },
-            generatePayloadFromSelection: ({
-                accountNumber,
-                accountType,
-                bankName,
-                accountHolder,
-                bankFurtherCreditAccount,
-                bankFurtherCreditName,
-                bankRoutingNumber,
-                isVoidCheckAttached,
-                doesCheckMeetSecurityRequirements,
-                reEnterAccountNumber,
-                reEnterBankRoutingNumber,
-            }: DisbursementParts) => {
+            generatePayloadFromSelection: (defaultDisbursementInfo: any) => {
+                const bank = defaultDisbursementInfo?.bank?.[0];
+
                 return {
                     ...getDefaultFormDisbursementValues(),
-                    paymentMethod: { text: PaymentMethod.Wire },
+                    paymentMethod: { text: PaymentMethod.Wire || '' },
                     paymentMailType: { text: null },
                     bank: [
                         {
                             ...DEFAULT_BANK_DETAILS,
-                            accountNumber,
+                            accountNumber: bank?.accountNumber ?? '',
                             accountType: {
-                                text: accountType,
+                                text: bank?.accountType,
                             },
-                            bankName,
-                            nameOnBankAccount: accountHolder ?? '',
-                            routingNumber: bankRoutingNumber,
-                            bankFurtherCreditAccount,
-                            bankFurtherCreditName,
-                            reEnterAccountNumber,
-                            reEnterBankRoutingNumber,
+                            bankName: bank?.bankName ?? '',
+                            routingNumber: bank?.bankRoutingNumber,
+                            reEnterAccountNumber: bank?.reEnterAccountNumber,
+                            reEnterBankRoutingNumber:
+                                bank?.reEnterBankRoutingNumber,
                         },
                     ],
-                    voidCheck: isVoidCheckAttached || null,
-                    doesCheckMeetSecRequiremnt:
-                        doesCheckMeetSecurityRequirements || null,
+                    bankVerification:
+                        defaultDisbursementInfo?.bankVerification ?? null,
                 };
             },
         },
@@ -913,44 +531,25 @@ export default function useDlicConfig(
             fields: [
                 {
                     fieldName: BankingFields.SelectIfPayeeIsDifferent,
-                    fieldLabel: t('distributionMethod.selectIfDifferentPayee'),
-                    component: DisbursementFields.BankCheckboxField,
+                    fieldLabel: t(
+                        'distributionMethod.selectIfDifferentPayee'
+                    ) as string,
                     classNames: 'col-start-1 col-span-3',
+                    fieldType: 'checkbox',
                 },
                 {
                     fieldName: BankingFields.PayeeName,
-                    fieldLabel: t('distributionMethod.payeeName'),
+                    fieldLabel: t('distributionMethod.payeeName') as string,
                     classNames: 'col-start-1 col-span-2 max-w-lg',
-                    component: DisbursementFields.BankTextField,
+                    fieldType: 'text',
                 },
                 {
                     fieldName: BankingFields.Address,
-                    fieldLabel: '',
                     classNames: 'col-span-3',
-                    component: DisbursementFields.BankAddress,
+                    fieldType: 'address',
                     isAddressLine2Required: true,
                 },
             ],
-            getDefaultPayload: ({
-                paymentMethod,
-                paymentMailType,
-                isDifferentPayeeOrAddress,
-                payee,
-            }: FormDisbursement) => {
-                if (
-                    paymentMethod.text === PaymentMailType.Check &&
-                    paymentMailType.text === null
-                ) {
-                    return {
-                        ...DEFAULT_DISBURSEMENT_UPDATE,
-                        selectIfPayeeIsDifferent:
-                            isDifferentPayeeOrAddress.text ?? '',
-                        address: payee?.addresses?.[0] || DEFAULT_ADDRESS,
-                        payeeName: payee?.name?.text ?? '',
-                    };
-                }
-                return DEFAULT_DISBURSEMENT_UPDATE;
-            },
             generatePayloadFromSelection: ({
                 payeeName,
                 address,
@@ -989,6 +588,538 @@ export default function useDlicConfig(
             },
         },
     ];
+
+    const disbursementOptions = (formParty: FormParty) => {
+        const annuitantAddress = formParty?.parties?.find(
+            (party) => party.partyRoleType === PartyRoles.ANNUITANT
+        )?.addresses?.[0];
+        return [
+            {
+                label: t('distributionMethod.eft'),
+                value: FormDisbursementSelections.EFT,
+                additionalOptions: {
+                    disbursementToggleType:
+                        DisbursementToggleType.MaskedInfoToggle,
+                },
+                fields: [
+                    {
+                        fieldName: BankingFields.isAnnuitant,
+                        fieldLabel: t('distributionMethod.disburseToAnnuitant'),
+                        component: DisbursementFields.BankCheckboxField,
+                        classNames: 'col-start-1 col-span-3',
+                        shouldDisplay: () =>
+                            !!isDlic3pDisbursementChangesEnabled,
+                    },
+                    {
+                        fieldName: BankingFields.Bank,
+                        fieldLabel: t('distributionMethod.chooseTheBank'),
+                        component: DisbursementFields.SelectBank,
+                    },
+                    {
+                        fieldName: BankingFields.IsDirectDepositValid,
+                        fieldLabel: t(
+                            'distributionMethod.isDirectDepositFormValid'
+                        ),
+                        classNames: 'col-start-1',
+                        component: DisbursementFields.BankBooleanButtonGroup,
+                    },
+                    {
+                        fieldName: BankingFields.AccountType,
+                        fieldLabel: t('distributionMethod.accountType'),
+                        component: DisbursementFields.AccountTypes,
+
+                        classNames: 'col-start-1 col-span-2 w-full',
+                        isBankingField: true,
+                    },
+                    {
+                        fieldName: BankingFields.AccountNumber,
+                        fieldLabel: t('distributionMethod.accountNumber'),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-1',
+                        isBankingField: true,
+                        maskOnBlur: true,
+                        disableCopyPaste: true,
+                    },
+                    {
+                        fieldName: BankingFields.ReEnterAccountNumber,
+                        fieldLabel: t(
+                            'distributionMethod.reEnterAccountNumber'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-2',
+                        isBankingField: true,
+                        disableCopyPaste: true,
+                        validator: createValidator(
+                            'accountNumber',
+                            t('formValidation.accountNumberDoesNotMatch')
+                        ),
+                    },
+                    {
+                        fieldName: BankingFields.BankRoutingNumber,
+                        fieldLabel: t('distributionMethod.bankRoutingNumber'),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-1',
+                        isBankingField: true,
+                        maskOnBlur: true,
+                        disableCopyPaste: true,
+                    },
+                    {
+                        fieldName: BankingFields.ReEnterBankRoutingNumber,
+                        fieldLabel: t(
+                            'distributionMethod.reEnterBankRoutingNumber'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                        isBankingField: true,
+                        disableCopyPaste: true,
+                        validator: createValidator(
+                            'bankRoutingNumber',
+                            t('formValidation.routingNumberDoesNotMatch')
+                        ),
+                    },
+                    {
+                        fieldName: BankingFields.AccountHolder,
+                        fieldLabel: t('distributionMethod.accountName'),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-1',
+                    },
+                    {
+                        fieldName: BankingFields.BankName,
+                        fieldLabel: t('distributionMethod.bankName'),
+                        component: DisbursementFields.BankTextField,
+                        isBankingField: true,
+                    },
+
+                    {
+                        fieldName: BankingFields.BankFurtherCreditName,
+                        fieldLabel: t(
+                            'distributionMethod.bankFurtherCreditName'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                    },
+                    {
+                        fieldName: BankingFields.BankFurtherCreditAccount,
+                        fieldLabel: t(
+                            'distributionMethod.bankFurtherCreditAccount'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                    },
+                ].filter(Boolean),
+                getDefaultPayload({
+                    paymentMethod,
+                    bank,
+                    isAnnuitant,
+                }: FormDisbursement) {
+                    if (paymentMethod.text !== PaymentMethod.EFT) {
+                        return DEFAULT_DISBURSEMENT_UPDATE;
+                    }
+                    const selectedBank = bank[0];
+
+                    return {
+                        ...DEFAULT_DISBURSEMENT_UPDATE,
+                        isDirectDepositValid:
+                            selectedBank?.isDirectDepositValid?.text ?? true,
+                        accountHolder: selectedBank?.nameOnBankAccount ?? '',
+                        accountNumber: selectedBank?.accountNumber ?? '',
+                        accountType:
+                            selectedBank?.accountType?.text ??
+                            AccountType.Checking,
+                        bankName: selectedBank?.bankName ?? '',
+                        bankRoutingNumber: selectedBank?.routingNumber ?? '',
+                        bankFurtherCreditAccount:
+                            selectedBank?.bankFurtherCreditAccount ?? '',
+                        bankFurtherCreditName:
+                            selectedBank?.bankFurtherCreditName ?? '',
+                        isDirectDeposit:
+                            selectedBank?.isDirectDeposit?.text ?? true,
+                        maskedAccountNumber:
+                            selectedBank?.maskedAccountNumber ?? '',
+                        isAnnuitant: isAnnuitant,
+                    };
+                },
+                generatePayloadFromSelection: ({
+                    accountNumber,
+                    accountType,
+                    bankName,
+                    accountHolder,
+                    bankFurtherCreditAccount,
+                    bankFurtherCreditName,
+                    bankRoutingNumber,
+                    isDirectDepositValid,
+                    maskedAccountNumber,
+                    isDirectDeposit,
+                    reEnterAccountNumber,
+                    reEnterBankRoutingNumber,
+                    isAnnuitant,
+                }: DisbursementParts) => {
+                    const bank = isDirectDeposit
+                        ? [
+                              {
+                                  ...DEFAULT_BANK_DETAILS,
+                                  maskedAccountNumber: null,
+                                  accountNumber,
+                                  accountType: {
+                                      text: accountType,
+                                  },
+                                  bankName,
+                                  nameOnBankAccount: accountHolder ?? '',
+                                  routingNumber: bankRoutingNumber,
+                                  bankFurtherCreditAccount,
+                                  bankFurtherCreditName,
+                                  isDirectDeposit: { text: true },
+                                  isDirectDepositValid: {
+                                      text: isDirectDepositValid,
+                                  },
+                                  reEnterAccountNumber,
+                                  reEnterBankRoutingNumber,
+                              },
+                          ]
+                        : [
+                              {
+                                  ...DEFAULT_BANK_DETAILS,
+                                  isDirectDeposit: { text: false },
+                                  maskedAccountNumber:
+                                      maskedAccountNumber ?? null,
+                              },
+                          ];
+                    return {
+                        ...getDefaultFormDisbursementValues(),
+                        paymentMethod: { text: PaymentMethod.EFT },
+                        paymentMailType: { text: null },
+                        bank: bank,
+                        isAnnuitant: isAnnuitant,
+                    };
+                },
+            },
+            {
+                label: t('distributionMethod.wire'),
+                value: FormDisbursementSelections.Wire,
+                fields: [
+                    {
+                        fieldName: BankingFields.AccountType,
+                        fieldLabel: t('distributionMethod.accountType'),
+                        component: DisbursementFields.AccountTypes,
+                        classNames: 'col-span-2 w-full',
+                    },
+                    {
+                        fieldName: BankingFields.AccountNumber,
+                        fieldLabel: t('distributionMethod.accountNumber'),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-1',
+                        maskOnBlur: true,
+                        disableCopyPaste: true,
+                        isBankingField: true,
+                    },
+                    {
+                        fieldName: BankingFields.ReEnterAccountNumber,
+                        fieldLabel: t(
+                            'distributionMethod.reEnterAccountNumber'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-2',
+                        isBankingField: true,
+                        disableCopyPaste: true,
+                        validator: createValidator(
+                            'accountNumber',
+                            t('formValidation.accountNumberDoesNotMatch')
+                        ),
+                    },
+                    {
+                        fieldName: BankingFields.BankRoutingNumber,
+                        fieldLabel: t('distributionMethod.bankRoutingNumber'),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-1',
+                        maskOnBlur: true,
+                        disableCopyPaste: true,
+                        isBankingField: true,
+                    },
+                    {
+                        fieldName: BankingFields.ReEnterBankRoutingNumber,
+                        fieldLabel: t(
+                            'distributionMethod.reEnterBankRoutingNumber'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                        isBankingField: true,
+                        disableCopyPaste: true,
+                        validator: createValidator(
+                            'bankRoutingNumber',
+                            t('formValidation.routingNumberDoesNotMatch')
+                        ),
+                    },
+                    {
+                        fieldName: BankingFields.AccountHolder,
+                        fieldLabel: t('distributionMethod.accountName'),
+                        component: DisbursementFields.BankTextField,
+                        classNames: 'col-start-1',
+                    },
+                    {
+                        fieldName: BankingFields.BankName,
+                        fieldLabel: t('distributionMethod.bankName'),
+                        component: DisbursementFields.BankTextField,
+                    },
+
+                    {
+                        fieldName: BankingFields.BankFurtherCreditName,
+                        fieldLabel: t(
+                            'distributionMethod.bankFurtherCreditName'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                    },
+                    {
+                        fieldName: BankingFields.BankFurtherCreditAccount,
+                        fieldLabel: t(
+                            'distributionMethod.bankFurtherCreditAccount'
+                        ),
+                        component: DisbursementFields.BankTextField,
+                    },
+                ],
+                getDefaultPayload({
+                    paymentMethod,
+                    doesCheckMeetSecRequiremnt,
+                    voidCheck,
+                    bank,
+                }: FormDisbursement) {
+                    if (paymentMethod.text !== PaymentMethod.Wire) {
+                        return DEFAULT_DISBURSEMENT_UPDATE;
+                    }
+                    const selectedBank = bank[0];
+                    return {
+                        ...DEFAULT_DISBURSEMENT_UPDATE,
+                        doesCheckMeetSecurityRequirements:
+                            doesCheckMeetSecRequiremnt,
+                        isVoidCheckAttached: voidCheck,
+                        accountNumber: selectedBank?.accountNumber ?? '',
+                        accountType:
+                            selectedBank?.accountType?.text ??
+                            AccountType.Checking,
+                        bankName: selectedBank?.bankName ?? '',
+                        bankRoutingNumber: selectedBank?.routingNumber ?? '',
+                        bankFurtherCreditName:
+                            selectedBank?.bankFurtherCreditName ?? '',
+                        bankFurtherCreditAccount:
+                            selectedBank?.bankFurtherCreditAccount ?? '',
+                        accountHolder: selectedBank?.nameOnBankAccount ?? '',
+                    };
+                },
+                generatePayloadFromSelection: ({
+                    accountNumber,
+                    accountType,
+                    bankName,
+                    accountHolder,
+                    bankFurtherCreditAccount,
+                    bankFurtherCreditName,
+                    bankRoutingNumber,
+                    isVoidCheckAttached,
+                    doesCheckMeetSecurityRequirements,
+                    reEnterAccountNumber,
+                    reEnterBankRoutingNumber,
+                }: DisbursementParts) => {
+                    return {
+                        ...getDefaultFormDisbursementValues(),
+                        paymentMethod: { text: PaymentMethod.Wire },
+                        paymentMailType: { text: null },
+                        bank: [
+                            {
+                                ...DEFAULT_BANK_DETAILS,
+                                accountNumber,
+                                accountType: {
+                                    text: accountType,
+                                },
+                                bankName,
+                                nameOnBankAccount: accountHolder ?? '',
+                                routingNumber: bankRoutingNumber,
+                                bankFurtherCreditAccount,
+                                bankFurtherCreditName,
+                                reEnterAccountNumber,
+                                reEnterBankRoutingNumber,
+                            },
+                        ],
+                        voidCheck: isVoidCheckAttached || null,
+                        doesCheckMeetSecRequiremnt:
+                            doesCheckMeetSecurityRequirements || null,
+                    };
+                },
+            },
+            isDlic3pDisbursementChangesEnabled
+                ? {
+                      label: t('distributionMethod.sendCheck'),
+                      value: FormDisbursementSelections.Check,
+                      fields: [
+                          {
+                              fieldName: 'SendCheckSelect' as BankingFields,
+                              component: DisbursementFields.SendCheckSelect,
+                              classNames: 'col-start-1 col-span-2',
+                              selectOptions: sendCheckOptions,
+                          },
+                          {
+                              fieldName: BankingFields.PayeeName,
+                              fieldLabel: t('distributionMethod.payeeName'),
+                              classNames: 'col-start-1 col-span-2 max-w-lg',
+                              component: DisbursementFields.BankTextField,
+                              shouldDisplay: ({
+                                  formDisbursement,
+                              }: OtpWithdrawalFormState): boolean => {
+                                  return shouldDisplayPayeeName(
+                                      formDisbursement
+                                  );
+                              },
+                          },
+                          {
+                              fieldName: BankingFields.Address,
+                              fieldLabel: '',
+                              classNames: 'col-span-3',
+                              component: DisbursementFields.BankAddress,
+                              isAddressLine2Required: true,
+                              annuitantAddress: annuitantAddress,
+                              shouldDisplay: ({
+                                  formDisbursement,
+                              }: OtpWithdrawalFormState): boolean => {
+                                  return shouldDisplayAddress(formDisbursement);
+                              },
+                          },
+                      ].filter(Boolean),
+                      getDefaultPayload: ({
+                          paymentMethod,
+                          paymentMailType,
+                          payee,
+                          isPayeeFinancialIns,
+                          isAnnuitant,
+                          isPayeeCharity,
+                          isAddressDifferent,
+                          isThirdPartyDisbursement,
+                      }: FormDisbursement) => {
+                          if (
+                              paymentMethod.text === PaymentMailType.Check &&
+                              paymentMailType.text === null
+                          ) {
+                              return {
+                                  ...DEFAULT_DISBURSEMENT_UPDATE,
+                                  isAddressDifferent:
+                                      isAddressDifferent ?? false,
+                                  isPayeeFinancialIns: isPayeeFinancialIns,
+                                  isAnnuitant: isAnnuitant ?? false,
+                                  isPayeeCharity: isPayeeCharity ?? false,
+                                  isThirdPartyDisbursement:
+                                      isThirdPartyDisbursement,
+                                  address:
+                                      payee?.addresses?.[0] || DEFAULT_ADDRESS,
+                                  payeeName: payee?.name?.text ?? '',
+                              };
+                          }
+                          return DEFAULT_DISBURSEMENT_UPDATE;
+                      },
+                      generatePayloadFromSelection: ({
+                          payeeName,
+                          address,
+                          isPayeeFinancialIns,
+                          isAnnuitant,
+                          isPayeeCharity,
+                          isAddressDifferent,
+                          isThirdPartyDisbursement,
+                      }: DisbursementParts) => {
+                          return {
+                              ...getDefaultFormDisbursementValues(),
+                              paymentMethod: { text: PaymentMailType.Check },
+                              paymentMailType: { text: null },
+                              isAddressDifferent: isAddressDifferent ?? false,
+                              isPayeeFinancialIns: isPayeeFinancialIns,
+                              isAnnuitant: isAnnuitant ?? false,
+                              isPayeeCharity: isPayeeCharity ?? false,
+                              isThirdPartyDisbursement:
+                                  isThirdPartyDisbursement,
+                              payee: {
+                                  name: { text: payeeName || null },
+                                  addresses: [address || DEFAULT_ADDRESS],
+                                  contractNumber: { text: null },
+                              },
+                          };
+                      },
+                  }
+                : {
+                      label: t('distributionMethod.sendCheck'),
+                      value: FormDisbursementSelections.Check,
+                      fields: [
+                          {
+                              fieldName: BankingFields.SelectIfPayeeIsDifferent,
+                              fieldLabel: t(
+                                  'distributionMethod.selectIfDifferentPayee'
+                              ),
+                              component: DisbursementFields.BankCheckboxField,
+                              classNames: 'col-start-1 col-span-3',
+                          },
+                          {
+                              fieldName: BankingFields.PayeeName,
+                              fieldLabel: t('distributionMethod.payeeName'),
+                              classNames: 'col-start-1 col-span-2 max-w-lg',
+                              component: DisbursementFields.BankTextField,
+                          },
+                          {
+                              fieldName: BankingFields.Address,
+                              fieldLabel: '',
+                              classNames: 'col-span-3',
+                              component: DisbursementFields.BankAddress,
+                              isAddressLine2Required: true,
+                          },
+                      ],
+                      getDefaultPayload: ({
+                          paymentMethod,
+                          paymentMailType,
+                          isDifferentPayeeOrAddress,
+                          payee,
+                      }: FormDisbursement) => {
+                          if (
+                              paymentMethod.text === PaymentMailType.Check &&
+                              paymentMailType.text === null
+                          ) {
+                              return {
+                                  ...DEFAULT_DISBURSEMENT_UPDATE,
+                                  selectIfPayeeIsDifferent:
+                                      isDifferentPayeeOrAddress.text ?? '',
+                                  address:
+                                      payee?.addresses?.[0] || DEFAULT_ADDRESS,
+                                  payeeName: payee?.name?.text ?? '',
+                              };
+                          }
+                          return DEFAULT_DISBURSEMENT_UPDATE;
+                      },
+                      generatePayloadFromSelection: ({
+                          payeeName,
+                          address,
+                          selectIfPayeeIsDifferent,
+                      }: DisbursementParts) => {
+                          return {
+                              ...getDefaultFormDisbursementValues(),
+                              paymentMethod: { text: PaymentMailType.Check },
+                              paymentMailType: { text: null },
+                              isDifferentPayeeOrAddress: {
+                                  text: selectIfPayeeIsDifferent || false,
+                              },
+                              payee: {
+                                  name: { text: payeeName || null },
+                                  addresses: [address || DEFAULT_ADDRESS],
+                                  contractNumber: { text: null },
+                              },
+                          };
+                      },
+                  },
+            {
+                label: t('distributionMethod.overnightCheck'),
+                value: FormDisbursementSelections.ExpressCheck,
+                fields: null,
+                getDefaultPayload: () => {
+                    return DEFAULT_DISBURSEMENT_UPDATE;
+                },
+                generatePayloadFromSelection: () => {
+                    return {
+                        ...getDefaultFormDisbursementValues(),
+                        paymentMethod: { text: PaymentMailType.Check },
+                        paymentMailType: {
+                            text: PaymentMailType.ExpressCheck,
+                        },
+                    };
+                },
+            },
+        ];
+    };
 
     const formPartyConfigs: PartyConfig[] = [
         {
@@ -1122,6 +1253,7 @@ export default function useDlicConfig(
         date: true,
         auditTrial: true,
     };
+
     const reasonOptions = [
         {
             label: t('distributionReason.reasonOptions.deathinheritedira'),

@@ -17,6 +17,7 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
+import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
@@ -29,6 +30,9 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
     });
     const isDelawareBankSecFeatsEnabled =
         featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
+
+    const isDlic3pDisbursementChangesEnabled =
+        featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES];
 
     const {
         formValidation,
@@ -46,7 +50,7 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
         eSignatureFieldConfig,
         reasonOptions,
         hasPreviousNigoPlanCodes,
-    } = useDlicConfig(t, isDelawareBankSecFeatsEnabled);
+    } = useDlicConfig(t, isDlic3pDisbursementChangesEnabled);
     const {
         formProgram,
         setFormProgram,
@@ -84,6 +88,7 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
         formParty?.parties?.[0]?.addresses?.[0]?.state;
     const shouldStateW4pRender = isAllowedState(ownerStateOfResidence ?? '');
     const showHasPreviousNigo = hasPreviousNigoPlanCodes.includes(planCode);
+
     return (
         <>
             {!isFormStateReadOnly && <DiaryNotesWarning />}
@@ -95,7 +100,6 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
                 reasonOptions={reasonOptions}
                 isFormStateReadOnly={isFormStateReadOnly}
             />
-
             <FormProgramPartialWithdrawal
                 isFormStateReadOnly={isFormStateReadOnly}
                 options={partialWithdrawalOptions}
@@ -124,7 +128,6 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
                     ) as string
                 }
             />
-
             <TaxWithholdings
                 isFormStateReadOnly={isFormStateReadOnly}
                 ownerStateOfResidence={ownerStateOfResidence}
@@ -144,7 +147,9 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
             ) : (
                 <FormDisbursement
                     isFormStateReadOnly={isFormStateReadOnly}
-                    options={disbursementOptions}
+                    options={
+                        disbursementOptions(formParty) as PaymentMethodOption[]
+                    }
                 />
             )}
 
