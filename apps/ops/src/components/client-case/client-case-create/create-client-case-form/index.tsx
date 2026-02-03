@@ -327,7 +327,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         sendAnalytics();
 
         try {
-            await onSubmit?.(clientCaseData);
+            console.log(getValues());
+            await onSubmit?.(getValues());
         } finally {
             setIsSubmiting(false);
         }
@@ -797,7 +798,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             <div className={styles.actionButtons}>
                 <Button
                     type="submit"
-                    // onClick={onSubmitForm}
+                    onClick={onSubmitForm}
                     size="small"
                     disabled={!canSubmitForm()}
                 >
