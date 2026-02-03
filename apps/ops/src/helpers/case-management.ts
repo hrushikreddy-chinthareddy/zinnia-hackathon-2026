@@ -476,3 +476,41 @@ export const getValidFullName = (owner: PartyInstance | FullName) => {
 
     return fullName;
 };
+
+const isFilterActive = (value: any): boolean => {
+    if (value === undefined || value === null) {
+        return false;
+    }
+    if (typeof value === 'boolean') {
+        // Booleans are active if they're not null/undefined (even if false)
+        return true;
+    }
+    if (typeof value === 'string') {
+        return value !== '';
+    }
+    if (value instanceof Set) {
+        return value.size > 0;
+    }
+    if (Array.isArray(value)) {
+        return value.length > 0;
+    }
+    if (typeof value === 'object') {
+        return Object.keys(value).length > 0;
+    }
+    return false;
+};
+
+export const hasActiveAdvancedFilters = (
+    additionalFilters: CaseSearchAdditionalFilters,
+    searchValue?: SearchViewQuery
+): boolean => {
+    const hasAdvancedFilters = Object.values(additionalFilters).some((value) =>
+        isFilterActive(value)
+    );
+
+    const hasSearchValue = !!(
+        searchValue && Object.values(searchValue).some((value) => value)
+    );
+
+    return hasAdvancedFilters || hasSearchValue;
+};

@@ -245,7 +245,7 @@
         "emailRequired": "Email is required.",
         "emailTooltip": "Please enter a valid email address.  Only one email address is allowed in this field.",
         "emptySearch": "No matches found",
-        "emptySystematicProgramsTable": "There are currently no {{type}} systematic programs.",
+        "emptySystematicProgramsTable": "There are currently no {{type}} systematic programs set up.",
         "endDate": "End date",
         "endingAccountValue": "Ending account value",
         "endingIn": "{{accountType}} ending in {{accountNumber}}",
@@ -2686,6 +2686,9 @@
                         "permissionDeniedTooltip": "You don't have access to this transaction for {{carrier}}."
                     }
                 },
+                "noResultsYet": "You don’t have any policies or contracts yet.",
+                "resultsSoon": "You’ll soon see policies and contracts here. If you think something is missing, check with your administrator.",
+                "noResultsForSearch": "We couldn't find a contract or policy that matches your search.",
                 "notFound": "We couldn't find a contract or policy that matches your search.",
                 "tryAgain": "Check your input and try again.",
                 "issues": "Still having issues?",
@@ -2967,6 +2970,10 @@
                 }
             },
             "empty": {
+                "noResultsUnfilteredTitle": "No cases to show right now.",
+                "noResultsUnfilteredParagraph": "You’ll soon see cases here.  If you think something is missing, check with your administrator.",
+                "noResultsFilteredTitle": "We couldn't find a case that matches your search.",
+                "noResultsFilteredParagraph": "Check your input and try again.",
                 "title": "Nothing to show.",
                 "paragraph": "Don't worry, it's probably just a typo. Check your input and try again.",
                 "action": {
@@ -5146,7 +5153,7 @@
             "linkedTo": "This document is linked to this {{type}}.",
             "loadingDocuments": "Loading documents...",
             "name": "Name",
-            "noResults": "Looks like there aren't any documents to display.",
+            "noResults": "No documents available.",
             "received": "Received",
             "receivedDate": "Date received",
             "results": "Results: {{total}}",
@@ -5198,7 +5205,7 @@
                 "interestRateTooltip": "This is the rate of growth being earned on the amount invested within a fixed fund.",
                 "nextSweepDate": "Next sweep date",
                 "nextSweepDateTooltip": "On this date, all money in the holding fund will be \"swept\" or moved into the policy's various funds, according to the owner's selected fund allocations. In most cases, the sweep date happens on the same date every month.",
-                "noFunds": "Nothing to show.",
+                "noFunds": "No funds available.",
                 "type": "Type",
                 "years": "$t(temporal.years, {{count}})",
                 "sheetDetail": "Details",
@@ -5833,7 +5840,7 @@
         "notes": "Notes ({{count}})",
         "notesEmptyTitle": "No notes yet.",
         "notesEmptyText": "Looks like there aren't any notes attached to this case.",
-        "callLogsEmptyTitle": "No related calls yet.",
+        "callLogsEmptyTitle": "No related calls available.",
         "callLogsEmptyText": "Looks like there are no related calls assigned to this case.",
         "callID": "Call ID",
         "backToCallList": "Back to call listing",
@@ -9208,6 +9215,10 @@
             "lastModified": "Last modified",
             "loadingMessage": "Loading client cases...",
             "emptyState": "There are no client cases yet",
+            "noResultsUnfilteredTitle": "No client cases to show right now.",
+            "noResultsUnfilteredParagraph": "You’ll soon see client cases here. If you think something is missing, check with your administrator.",
+            "noResultsFilteredTitle": "We couldn't find a client case that matches your search.",
+            "noResultsFilteredParagraph": "Check your input and try again.",
             "viewClientCaseDetails": "View client case details",
             "viewClientCaseNumber": "View client case {{clientCaseNumber}} details"
         },
