@@ -19,7 +19,6 @@ export const transformPomAgentDataToParty = (
     // This prevents duplicate SSN when both policy and agent data have SSN
     const filteredPartyIdentifications =
         partyData?.identifications?.filter((id) => {
-            // If agent has SSN, filter out any existing SSNs from partyData
             if (
                 agentData?.socialSecurityNumber &&
                 id.identificationType === Identification.identificationType.SSN
@@ -66,7 +65,6 @@ export const transformPomAgentDataToParty = (
         ],
         partyId: agentData?.partyId || undefined,
         identifications: [
-            // Add agent's SSN if available
             ...(agentData?.socialSecurityNumber
                 ? [
                       {
@@ -76,18 +74,6 @@ export const transformPomAgentDataToParty = (
                       },
                   ]
                 : []),
-            // Add agent's NPN if available
-            ...(agentData?.nationalProducerNumber
-                ? [
-                      {
-                          // identificationType: IdentificationType.NPN, TODO: update to this instead of string when kong updates
-                          identificationType:
-                              'NPN' as Identification.identificationType,
-                          identificationValue: agentData.nationalProducerNumber,
-                      },
-                  ]
-                : []),
-            // Add remaining identifications from partyData (SSN/NPN already filtered out if agent has them)
             ...filteredPartyIdentifications,
         ],
     };
