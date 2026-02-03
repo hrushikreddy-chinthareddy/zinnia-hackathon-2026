@@ -68,7 +68,8 @@ describe('createClientCaseFromSureify', () => {
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            expect.anything()
+            expect.anything(),
+            true
         );
 
         expect(patchClientCaseMock).toHaveBeenCalledWith(
@@ -116,7 +117,8 @@ describe('createClientCaseFromSureify', () => {
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            expect.anything()
+            expect.anything(),
+            false
         );
 
         expect(redirect).toBeUndefined();
@@ -215,7 +217,8 @@ describe('createClientCaseFromSureify', () => {
             expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
                 newBusinessObject,
                 'eappid',
-                expect.anything()
+                expect.anything(),
+                false
             );
 
             expect(redirect).toBeUndefined();
@@ -254,7 +257,8 @@ describe('createClientCaseFromSureify', () => {
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            expect.anything()
+            expect.anything(),
+            false
         );
 
         expect(redirect).toBeUndefined();
