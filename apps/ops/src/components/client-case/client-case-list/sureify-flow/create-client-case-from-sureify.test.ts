@@ -117,8 +117,7 @@ describe('createClientCaseFromSureify', () => {
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            expect.anything(),
-            false
+            expect.anything()
         );
 
         expect(redirect).toBeUndefined();
@@ -217,8 +216,7 @@ describe('createClientCaseFromSureify', () => {
             expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
                 newBusinessObject,
                 'eappid',
-                expect.anything(),
-                false
+                expect.anything()
             );
 
             expect(redirect).toBeUndefined();
@@ -257,8 +255,7 @@ describe('createClientCaseFromSureify', () => {
         expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
             newBusinessObject,
             'eappid',
-            expect.anything(),
-            false
+            expect.anything()
         );
 
         expect(redirect).toBeUndefined();
