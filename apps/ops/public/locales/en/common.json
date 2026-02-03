@@ -205,6 +205,8 @@
         "currentTaxYear": "Current tax year",
         "dashboardProductDetails": "Product Details",
         "date": "Date",
+        "dateAdded": "Date added",
+        "dateRemoved": "Date removed",
         "dateOfDeathReportedNotification": "Date of death reported notification",
         "day": "day",
         "deathBenefit": "Death benefit",

@@ -206,6 +206,8 @@
         "currentTaxYear": "Año fiscal actual",
         "dashboardProductDetails": "Détails du produit",
         "date": "Date",
+        "dateAdded": "Date ajoutée",
+        "dateRemoved": "Date supprimée",
         "dateOfDeathReportedNotification": "Date de notification du décès signalé",
         "day": "jour",
         "deathBenefit": "Prestation décès",
