@@ -203,7 +203,6 @@ const generateTableContent = (
             </TableRow>
         );
     }
-
 };
 
 const isResultsFiltered = (filters: ClientCaseSearchInputs): boolean => {
