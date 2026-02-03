@@ -92,10 +92,10 @@ describe('getFormErrors', () => {
             uploadedFiles: [],
         });
         expect(errors.supportingDocumentMatchesWithNewName).toBe(
-            'people.sideSheet.name.errors.supportingDocumentNotMatchesError'
+            'allFields.supportingDocumentMatchesWithNewNameRequired'
         );
         expect(errors.supportingDocumentRequired).toBe(
-            'people.sideSheet.name.errors.supportingDocumentRequired'
+            'allFields.supportingDocumentRequired'
         );
     });
 
@@ -113,7 +113,7 @@ describe('getFormErrors', () => {
             uploadedFiles: [],
         });
         expect(errors.signaturePresentOnDocumentForAllOwners).toBe(
-            'people.sideSheet.name.errors.signatureNotPresentOnDocument'
+            'allFields.signaturePresentOnDocumentRequired'
         );
     });
 
@@ -166,7 +166,7 @@ describe('getFormErrors', () => {
             uploadedFiles: [],
         });
         expect(errors.supportingDocumentRequired).toBe(
-            'people.sideSheet.name.errors.supportingDocumentRequired'
+            'allFields.supportingDocumentRequired'
         );
         expect(errors.supportingDocumentMatchesWithNewName).toBeUndefined();
     });

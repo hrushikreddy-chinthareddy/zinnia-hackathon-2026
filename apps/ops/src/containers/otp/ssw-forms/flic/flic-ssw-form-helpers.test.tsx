@@ -29,39 +29,47 @@ import {
     DEFAULT_BANK_DETAILS,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import useFlicConfig from './flic-ssw-form-helpers';
-
+// Mock the helper modules before importing
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
-    () => {
-        const originalModule = jest.requireActual(
-            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
-        );
-        return {
-            ...originalModule,
-            getDefaultFormDisbursementValues: () => {
-                return { thisIsMocked: true };
-            },
-        };
-    }
+    () => ({
+        getDefaultFormDisbursementValues: () => {
+            return { thisIsMocked: true };
+        },
+        BankingFields: {
+            Bank: 'bank',
+            AccountNumber: 'accountNumber',
+            PayeeName: 'payeeName',
+            Address: 'address',
+            SelectIfPayeeIsDifferent: 'selectIfPayeeIsDifferent',
+        },
+        DisbursementFields: {
+            SelectBank: 'SelectBank',
+            BankTextField: 'BankTextField',
+            BankCheckboxField: 'BankCheckboxField',
+            BankAddress: 'BankAddress',
+            AccountTypes: 'AccountTypes',
+            BankBooleanButtonGroup: 'BankBooleanButtonGroup',
+            SendCheckSelect: 'SendCheckSelect',
+        },
+        updateBankingDetails: jest.fn(),
+        shouldDisplayPayeeName: jest.fn(),
+        shouldDisplayAddress: jest.fn(),
+    })
 );
 
 jest.mock(
     '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers',
-    () => {
-        const originalModule = jest.requireActual(
-            '@deps/components/otp-withdrawal-form/ssw-program/ssw-form-program.helpers'
-        );
-        return {
-            ...originalModule,
-            getDefaultSSWFormProgramValues: () => {
-                return {
-                    thisIsMocked: true,
-                };
-            },
-        };
-    }
+    () => ({
+        getDefaultSSWFormProgramValues: () => {
+            return {
+                thisIsMocked: true,
+            };
+        },
+    })
 );
+
+import useFlicConfig from './flic-ssw-form-helpers';
 
 describe('#Flic SSW form config', () => {
     const t: TFunction = (key: string | string[]) =>

@@ -76,6 +76,10 @@ export interface FundInformationByFundId {
     glCode?: string;
     indexedFund?: IndexedFund;
     minimumTransferAmount?: number;
+    rateEffectiveDate?: string;
+    sweepToFundId?: string;
+    bonusPeriodFrequency?: number;
+    maximumIllustrativeInterestRate?: number;
 }
 
 export interface FundInformationByPlanCode {

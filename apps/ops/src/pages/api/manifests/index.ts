@@ -21,6 +21,20 @@ interface Config {
 const manifests: Config[] = [
     {
         manifest: {
+            module: 'contact-management',
+            version: '1.0.0',
+            assets: {
+                css: [
+                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/ContactManagement/v1/ContactManagementModule.css`,
+                ],
+                js: [
+                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/ContactManagement/v1/ContactManagementModule.js`,
+                ],
+            },
+        },
+    },
+    {
+        manifest: {
             module: 'order-entry',
             version: '1.0.0',
             assets: {

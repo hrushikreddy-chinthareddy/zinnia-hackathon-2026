@@ -13,6 +13,7 @@ export enum FEATURE_FLAGS {
     SHOW_HOME_NAV_BTN = 'show-home-nav-btn',
     ILLUSTRATIONS_EXPERIENCE = 'illustration-experience',
     READ_ONLY_VIEW_TASK_MANAGEMENT = 'read-only-view-task-management',
+    CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS = 'can-view-case-technical-exceptions',
     // CMW-14579 - Regulation 60
     REG_60 = 'case-management-otp_feature_regulation-60',
     SSW_MASS = 'case-management-otp_feature_mass_ssw',
@@ -195,6 +196,8 @@ export enum FEATURE_FLAGS {
     DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
     USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
     ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN = 'enable_bene_change_paper_form_summary_screen',
+    FKV_REVISED_FUND_SIDESHEETS = 'fkv_revised_fund_sidesheets',
     DELAWARE_BANK_SEC_FEATS = 'delaware_bank_sec_feats',
     ENABLE_ISSUE_COUNT_VIEW_CASES = 'enable_issue_count_view_cases',
+    DLIC_3P_DISBURSEMENT_CHANGES = 'dlic_3p_disbursement_changes_zlfeb3',
 }

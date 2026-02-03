@@ -65,6 +65,21 @@ export const getFormErrors = ({
             caseId: t('errors.missingCaseDocument') as string,
         };
     }
+    if (!bankAccount.routingNumber) {
+        errors = {
+            ...errors,
+            routingNumber: t('errors.routingNumber') as string,
+        };
+    } else if (!isRoutingNumberValid(bankAccount.routingNumber)) {
+        errors = {
+            ...errors,
+            routingNumber: t('errors.routingIsInvalid') as string,
+        };
+    }
+
+    if (!bankAccount.branchName) {
+        errors = { ...errors, branchName: t('errors.bankName') as string };
+    }
 
     if (!bankAccount.accountNumber && !isDelete) {
         errors = {
@@ -78,22 +93,6 @@ export const getFormErrors = ({
         errors = {
             ...errors,
             accountNumber: t('errors.accountIsInvalid') as string,
-        };
-    }
-
-    if (!bankAccount.branchName) {
-        errors = { ...errors, branchName: t('errors.bankName') as string };
-    }
-
-    if (!bankAccount.routingNumber) {
-        errors = {
-            ...errors,
-            routingNumber: t('errors.routingNumber') as string,
-        };
-    } else if (!isRoutingNumberValid(bankAccount.routingNumber)) {
-        errors = {
-            ...errors,
-            routingNumber: t('errors.routingIsInvalid') as string,
         };
     }
 

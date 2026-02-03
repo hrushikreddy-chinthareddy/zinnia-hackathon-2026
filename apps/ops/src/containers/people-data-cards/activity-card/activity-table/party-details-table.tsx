@@ -55,8 +55,8 @@ interface Column {
 }
 
 const COMMON_DATES: Column[] = [
-    { key: 'effectiveDate', label: 'allFields.effectiveDate' },
-    { key: 'endDate', label: 'allFields.endDate' },
+    { key: 'effectiveDate', label: 'allFields.dateAdded' },
+    { key: 'endDate', label: 'allFields.dateRemoved' },
 ];
 
 const COMMON_ID: Column[] = [{ key: 'id', label: 'allFields.id' }];
@@ -109,21 +109,16 @@ interface PartyDetailsTableProps {
     selectedPolicyPartyRoles?: PolicyPartyRoles[];
     newSelectedPolicyParty?: PolicyParty | AgentParty;
     selectedPolicyParty?: Party;
-    showInactive: boolean;
+    onlyShowInactive: boolean;
 }
 
 const filterByInactive = <T extends { endDate?: string | null }>(
-    items: T[] | undefined,
-    showInactive: boolean
+    items: T[] | undefined = [],
+    onlyShowInactive: boolean
 ): T[] => {
-    if (!items) return [];
-
+    if (!onlyShowInactive) return items;
     return items.filter((item) => {
-        if (!item.endDate) {
-            return !showInactive;
-        }
-        const endDated = isEndDated(item.endDate);
-        return showInactive ? endDated : !endDated;
+        return isEndDated(item.endDate);
     });
 };
 
@@ -142,14 +137,14 @@ const renderTableRows = (
         newSelectedPolicyParty,
         selectedPolicyParty,
         isBeneficiary,
-        showInactive,
+        onlyShowInactive,
         t,
     }: {
         selectedPolicyPartyRoles?: PolicyPartyRoles[];
         newSelectedPolicyParty?: PolicyParty | AgentParty;
         selectedPolicyParty?: Party;
         isBeneficiary?: boolean;
-        showInactive: boolean;
+        onlyShowInactive: boolean;
         t: any;
     }
 ) => {
@@ -163,7 +158,7 @@ const renderTableRows = (
         case PeopleActivityTabValues.roles: {
             const filteredRoles = filterByInactive(
                 selectedPolicyPartyRoles,
-                showInactive
+                onlyShowInactive
             );
 
             return filteredRoles.length
@@ -196,7 +191,7 @@ const renderTableRows = (
         case PeopleActivityTabValues.identification: {
             const filteredIdentifications = filterByInactive(
                 identifications,
-                showInactive
+                onlyShowInactive
             );
 
             return filteredIdentifications.length
@@ -232,7 +227,10 @@ const renderTableRows = (
         }
 
         case PeopleActivityTabValues.phone: {
-            const filteredPhones = filterByInactive(validPhones, showInactive);
+            const filteredPhones = filterByInactive(
+                validPhones,
+                onlyShowInactive
+            );
 
             return filteredPhones.length
                 ? filteredPhones.map((phone, idx) => (
@@ -263,7 +261,7 @@ const renderTableRows = (
         }
 
         case PeopleActivityTabValues.email: {
-            const filteredEmails = filterByInactive(emails, showInactive);
+            const filteredEmails = filterByInactive(emails, onlyShowInactive);
 
             return filteredEmails.length
                 ? filteredEmails.map((email, idx) => (
@@ -291,7 +289,10 @@ const renderTableRows = (
         }
 
         case PeopleActivityTabValues.address: {
-            const filteredAddresses = filterByInactive(addresses, showInactive);
+            const filteredAddresses = filterByInactive(
+                addresses,
+                onlyShowInactive
+            );
 
             return filteredAddresses.length
                 ? filteredAddresses.map((address, idx) => {
@@ -328,7 +329,7 @@ const renderTableRows = (
         case PeopleActivityTabValues.bankAccounts: {
             const filteredBankDetails = filterByInactive(
                 bankDetails,
-                showInactive
+                onlyShowInactive
             );
 
             return filteredBankDetails.length
@@ -418,7 +419,7 @@ const PartyDetailsTable = ({
     selectedPolicyPartyRoles,
     newSelectedPolicyParty,
     selectedPolicyParty,
-    showInactive,
+    onlyShowInactive,
 }: PartyDetailsTableProps) => {
     const { t } = useTranslation();
     const [activeTab] = useState(tabVal);
@@ -478,7 +479,7 @@ const PartyDetailsTable = ({
                     newSelectedPolicyParty,
                     selectedPolicyParty,
                     isBeneficiary,
-                    showInactive,
+                    onlyShowInactive,
                     t,
                 })}
             </TableBody>

@@ -95,9 +95,7 @@ describe('FormDisbursementSectionV2', () => {
         bank: [
             {
                 accountNumber: '123456789',
-                accountType: {
-                    text: AccountType.Checking,
-                },
+                accountType: AccountType.Checking,
                 bankContactPerson: '',
                 bankFurtherCreditAccount: '',
                 bankFurtherCreditName: '',

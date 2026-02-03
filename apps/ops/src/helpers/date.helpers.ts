@@ -32,7 +32,7 @@ export function isCurrentStartDate(
     return dayjs(startDate).isAfter(dayjs());
 }
 
-export function isEndDated(endDate: string | undefined): boolean {
+export function isEndDated(endDate: string | null | undefined): boolean {
     if (!endDate || dayjs(endDate).isAfter(dayjs())) return false;
     return true;
 }

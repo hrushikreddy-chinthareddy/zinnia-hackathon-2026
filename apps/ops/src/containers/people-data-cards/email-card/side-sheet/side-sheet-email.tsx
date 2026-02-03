@@ -41,6 +41,10 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -129,6 +133,8 @@ const SideSheetEmail = ({
     >([]);
     const [viewState, setViewState] = useState(ViewState.Default);
 
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
     const { emailAddress, emailType = EmailType.PERSONAL } = email;
     const { partyId } = party ?? {};
 
@@ -194,7 +200,7 @@ const SideSheetEmail = ({
         const caseId = body.caseId;
         const errors = getFormErrors({ email, caseId, isDelete, t: defaultT });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         if (isDelete) {
             if (
@@ -330,7 +336,7 @@ const SideSheetEmail = ({
     }
 
     return (
-        <div className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={body.caseId}
@@ -363,6 +369,7 @@ const SideSheetEmail = ({
                 )}
 
                 <Field
+                    errorId="emailAddress"
                     aria-label={t('labels.email') as string}
                     label={t('labels.email') as string}
                     message={currentErrors?.emailAddress}

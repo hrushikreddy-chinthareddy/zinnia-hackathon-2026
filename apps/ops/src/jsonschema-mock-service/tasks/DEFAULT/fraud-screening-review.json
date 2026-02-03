@@ -76,10 +76,6 @@
                                     "type": "string",
                                     "title": "Threat Details"
                                 },
-                                "bankDetailTitle": {
-                                    "type": "string",
-                                    "title": "Bank Details"
-                                },
                                 "giactThreatDetails": {
                                     "type": "array",
                                     "items": {
@@ -104,9 +100,7 @@
                                         }
                                     }
                                 },
-                                "piiTitle": {
-                                    "type": "string"
-                                },
+
                                 "fraudShareThreatDetails": {
                                     "type": "array",
                                     "items": {
@@ -137,6 +131,45 @@
                                     ]
                                 }
                             },
+                            "allOf": [
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "fraudShareThreatDetails": {
+                                                "type": "array",
+                                                "minItems": 1
+                                            }
+                                        },
+                                        "required": ["fraudShareThreatDetails"]
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "piiTitle": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "if": {
+                                        "properties": {
+                                            "giactThreatDetails": {
+                                                "type": "array",
+                                                "minItems": 1
+                                            }
+                                        },
+                                        "required": ["giactThreatDetails"]
+                                    },
+                                    "then": {
+                                        "properties": {
+                                            "bankDetailTitle": {
+                                                "type": "string",
+                                                "title": "Bank Details"
+                                            }
+                                        }
+                                    }
+                                }
+                            ],
                             "required": ["result"]
                         }
                     }
@@ -148,6 +181,7 @@
                         "orderable": false,
                         "copyable": false
                     },
+                    "ui:order": ["sectionHeader", "details"],
                     "ui:submitButtonOptions": {
                         "norender": true
                     },
@@ -169,6 +203,17 @@
                         "ui:options": {
                             "label": false
                         },
+                        "ui:order": [
+                            "transactionDetailsTitle",
+                            "documents",
+                            "transactionDetails",
+                            "threatDetailsTitle",
+                            "bankDetailTitle",
+                            "giactThreatDetails",
+                            "piiTitle",
+                            "fraudShareThreatDetails",
+                            "result"
+                        ],
                         "transactionDetailsTitle": {
                             "ui:options": {
                                 "FieldTemplate": "TitleFieldTemplate",

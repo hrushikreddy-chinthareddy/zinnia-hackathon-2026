@@ -1,4 +1,5 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import { useId } from 'react';
 
 export interface MenuContextualLabelProps {
     children: React.ReactNode;
@@ -12,17 +13,23 @@ const MenuContextualLabel = ({
     children,
     hideLabel = false,
 }: MenuContextualLabelProps) => {
+    const labelId = useId();
+
     return (
-        <DropdownMenu.Label className="flex w-full flex-col gap-4">
-            <p
+        <DropdownMenu.Group
+            className="flex w-full flex-col gap-4"
+            aria-labelledby={labelId}
+        >
+            <DropdownMenu.Label
+                id={labelId}
                 className={`flex items-start gap-2 self-stretch px-4 font-primary text-base font-medium text-white ${
                     hideLabel ? 'sr-only' : ''
                 }`}
             >
                 {label}
-            </p>
-            <ul className="flex flex-col gap-4">{children}</ul>
-        </DropdownMenu.Label>
+            </DropdownMenu.Label>
+            <div className="flex flex-col gap-4">{children}</div>
+        </DropdownMenu.Group>
     );
 };
 

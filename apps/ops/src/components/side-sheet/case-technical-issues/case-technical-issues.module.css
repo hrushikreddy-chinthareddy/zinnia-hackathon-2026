@@ -1,0 +1,118 @@
+.container {
+    padding: 16px 32px;
+}
+
+.header {
+    width: 100%;
+    display: flex;
+    column-gap: 0.5rem;
+    align-items: baseline;
+}
+
+.headerLabel {
+    width: 50%;
+    min-width: 0;
+    overflow: hidden;
+    text-align: left;
+}
+
+.headerLabel > div {
+    min-width: 0;
+}
+
+.headerLabel .typography-labels-label-lg {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.headerStatus {
+    width: 50%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.statusText {
+    margin-right: 8px;
+    color: var(--color-base-text-text-secondary);
+}
+
+.detailRow {
+    display: flex;
+    width: 100%;
+    margin-bottom: var(--measure-dimension-gap-md);
+}
+
+.label {
+    width: 40%;
+    color: var(--color-base-text-text-secondary);
+}
+
+.value {
+    width: 60%;
+    color: var(--color-900-gray);
+    word-break: break-word;
+}
+
+.accordionWrapper {
+    width: 100%;
+    padding: 16px;
+    border: 2px solid var(--color-grayscale-color-100-gray);
+    border-radius: 4px;
+}
+
+.accordionWrapper:not(:last-child) {
+    margin-bottom: 16px;
+}
+
+.inProgressIcon {
+    color: var(--case-technical-issues-in-progress-icon-color, #005fed);
+}
+
+.accordionWrapper button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.accordionWrapper button h3 {
+    flex: 1;
+    min-width: 0;
+}
+
+.accordionWrapper button svg:first-child {
+    height: 16px;
+    width: 16px;
+    flex-shrink: 0;
+}
+
+.accordionWrapper button:has(.multiline) {
+    align-items: flex-start;
+}
+
+.resolvedIcon {
+    color: #007b5a;
+}
+
+.loaderWrapper {
+    width: 100%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.singleline {
+    align-self: center;
+}
+
+.multiline {
+    align-self: flex-start;
+}
+
+.multiline + svg,
+.multiline ~ svg {
+    align-self: flex-start;
+}

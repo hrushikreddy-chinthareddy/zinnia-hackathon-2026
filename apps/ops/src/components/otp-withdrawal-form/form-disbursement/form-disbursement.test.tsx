@@ -115,9 +115,7 @@ describe('Form Disbursment Updated Component', () => {
                 bank: [
                     {
                         accountNumber: '',
-                        accountType: {
-                            text: AccountType.Checking,
-                        },
+                        accountType: AccountType.Checking,
                         bankContactPerson: '',
                         bankFurtherCreditAccount: '',
                         bankFurtherCreditName: '',
@@ -324,9 +322,7 @@ describe('Form Disbursment Updated Component', () => {
                 bank: [
                     {
                         accountNumber: '',
-                        accountType: {
-                            text: AccountType.Checking,
-                        },
+                        accountType: AccountType.Checking,
                         bankContactPerson: '',
                         bankFurtherCreditAccount: '',
                         bankFurtherCreditName: '',
@@ -582,9 +578,7 @@ describe('Form Disbursment Updated Component', () => {
                 bank: [
                     {
                         accountNumber: '',
-                        accountType: {
-                            text: AccountType.Checking,
-                        },
+                        accountType: AccountType.Checking,
                         bankContactPerson: '',
                         bankFurtherCreditAccount: '',
                         bankFurtherCreditName: '',
@@ -687,9 +681,7 @@ describe('Form Disbursment Updated Component', () => {
                 bank: [
                     {
                         accountNumber: '',
-                        accountType: {
-                            text: AccountType.Checking,
-                        },
+                        accountType: AccountType.Checking,
                         bankContactPerson: '',
                         bankFurtherCreditAccount: '',
                         bankFurtherCreditName: '',
@@ -791,9 +783,7 @@ describe('Form Disbursment Updated Component', () => {
                 bank: [
                     {
                         accountNumber: '',
-                        accountType: {
-                            text: AccountType.Checking,
-                        },
+                        accountType: AccountType.Checking,
                         bankContactPerson: '',
                         bankFurtherCreditAccount: '',
                         bankFurtherCreditName: '',

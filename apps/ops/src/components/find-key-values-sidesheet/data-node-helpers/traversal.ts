@@ -215,3 +215,14 @@ export function findValueInNode({
     const foundNode = findFieldInNode({ node, key });
     return foundNode?.value;
 }
+
+export function findValueInNodes({
+    nodes,
+    key,
+}: {
+    nodes: DataNode[];
+    key: string;
+}): string | undefined {
+    const foundNode = findFieldInNodes({ nodes, key });
+    return foundNode?.value;
+}

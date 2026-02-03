@@ -1,5 +1,5 @@
 import { TFunction, useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useEffect } from 'react';
+import { Dispatch, SetStateAction, useEffect, useId } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import AssistiveText, {
@@ -15,6 +15,8 @@ import { NonFinancialTransactionBody } from '@deps/queries/api/bpm-non-financial
 import { getCases } from '@deps/queries/api/cases';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
+
+import styles from './case-document-select.module.css';
 
 export const PROCESS_WITHOUT_CASE_DOCUMENT = '';
 
@@ -188,6 +190,8 @@ const CaseDocumentSelect = ({
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
     const assistiveText = getAssistiveText({ caseId, currentErrors, t });
+    const errorMessageId = useId();
+    const hasError = !!currentErrors?.caseId;
 
     useEffect(() => {
         if (caseDocumentOptions?.length) {
@@ -217,8 +221,17 @@ const CaseDocumentSelect = ({
     ]);
 
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex items-center gap-1">
+        <fieldset
+            className={`${styles.fieldset} ${
+                hasError ? 'case-document-error' : ''
+            }`}
+            data-error-id="caseId"
+            role="radiogroup"
+            aria-invalid={hasError ? true : undefined}
+            aria-describedby={hasError ? errorMessageId : undefined}
+            tabIndex={hasError ? -1 : undefined}
+        >
+            <legend className={styles.legend}>
                 <Label
                     label={t('transactions.caseDocumentSelect.label')}
                     sentenceCase={false}
@@ -227,7 +240,7 @@ const CaseDocumentSelect = ({
                 {required && (
                     <span className="text-semantic-error">&nbsp;*</span>
                 )}
-            </div>
+            </legend>
 
             <div
                 className={`flex flex-col gap-2 ${
@@ -236,11 +249,13 @@ const CaseDocumentSelect = ({
                         : ''
                 }`}
             >
-                {caseDocumentOptions.map((caseDocumentOption) => (
+                {caseDocumentOptions.map((caseDocumentOption, index) => (
                     <CardCaseDocument
                         caseDocumentOption={caseDocumentOption}
                         key={caseDocumentOption.value}
                         isSelected={caseId === caseDocumentOption.value}
+                        index={index}
+                        hasError={hasError}
                         onChange={(value: string) => {
                             setCurrentErrors((prevState) => {
                                 const { caseId, ...errors } = prevState ?? {};
@@ -259,12 +274,13 @@ const CaseDocumentSelect = ({
 
                 {assistiveText && (
                     <AssistiveText
+                        id={hasError ? errorMessageId : undefined}
                         text={assistiveText.text}
                         variant={assistiveText.variant}
                     />
                 )}
             </div>
-        </div>
+        </fieldset>
     );
 };
 

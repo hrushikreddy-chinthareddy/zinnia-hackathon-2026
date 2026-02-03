@@ -50,6 +50,10 @@ import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { getStateCodes } from '@deps/helpers/states.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
+import {
+    hasErrorsAndFocus,
+    useFocusOnError,
+} from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
 import {
@@ -147,6 +151,8 @@ const SideSheetAddress = ({
     const [viewState, setViewState] = useState<ViewState>(ViewState.Default);
     const [newCaseId, setNewCaseId] = useState<string>();
 
+    const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
     const { addressType } = address;
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -237,7 +243,7 @@ const SideSheetAddress = ({
     const handleSubmit = async () => {
         const errors = getFormErrors({ address, caseId, isDelete, t });
         setCurrentErrors(errors);
-        if (Object.keys(errors).length > 0) return;
+        if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
         if (isDelete) {
             setViewState(ViewState.Warn);
@@ -360,7 +366,7 @@ const SideSheetAddress = ({
     }
 
     return (
-        <div className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6 p-10">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={caseId}
@@ -394,6 +400,7 @@ const SideSheetAddress = ({
                 <div className="flex w-full flex-col items-start">
                     <div className="flex w-full flex-col gap-6">
                         <Field
+                            errorId="addressLine1"
                             aria-label={t('labels.addressLine1') as string}
                             label={t('labels.address') as string}
                             message={currentErrors?.addressLine1}
@@ -487,6 +494,7 @@ const SideSheetAddress = ({
                 <div className="flex gap-4">
                     <div className="basis-1/4">
                         <Field
+                            errorId="zipCode"
                             aria-label={t('labels.zip') as string}
                             disabled={isDelete}
                             label={t('labels.zip') as string}
@@ -514,6 +522,7 @@ const SideSheetAddress = ({
                     </div>
                     <div className="flex-grow">
                         <Field
+                            errorId="city"
                             aria-label={t('labels.city') as string}
                             label={t('labels.city') as string}
                             message={currentErrors?.city}
@@ -541,6 +550,7 @@ const SideSheetAddress = ({
                     </div>
                     <div className="basis-1/4">
                         <SelectSimple
+                            errorId="state"
                             aria-label={t('labels.state') as string}
                             disabled={isDelete}
                             label={t('labels.state') as string}

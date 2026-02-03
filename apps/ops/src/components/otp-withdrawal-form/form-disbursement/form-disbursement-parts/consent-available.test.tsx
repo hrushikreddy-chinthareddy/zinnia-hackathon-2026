@@ -27,9 +27,7 @@ describe('consent Component', () => {
         bank: [
             {
                 accountNumber: '',
-                accountType: {
-                    text: AccountType.Checking,
-                },
+                accountType: AccountType.Checking,
                 bankContactPerson: '',
                 bankFurtherCreditAccount: '',
                 bankFurtherCreditName: '',
@@ -245,9 +243,7 @@ describe('consent Component', () => {
             bank: [
                 {
                     accountNumber: '',
-                    accountType: {
-                        text: 'Checking',
-                    },
+                    accountType: 'Checking',
                     bankContactPerson: '',
                     bankFurtherCreditAccount: '',
                     bankFurtherCreditName: '',

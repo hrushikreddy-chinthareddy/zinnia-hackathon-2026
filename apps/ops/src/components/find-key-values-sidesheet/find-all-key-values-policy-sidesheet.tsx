@@ -43,6 +43,8 @@ export const FindAllKeyValuesPolicySidesheet: FC<
                 <Button
                     mode="secondary"
                     size="small"
+                    aria-haspopup="dialog"
+                    aria-expanded={undefined}
                     onClick={() =>
                         buttonClickedTrackEvent({
                             buttonText: 'Find key values',

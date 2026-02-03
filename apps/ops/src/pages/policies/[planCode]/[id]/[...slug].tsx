@@ -48,7 +48,6 @@ import { UserPermission } from '@deps/models/user-profile';
 import Custom404Page from '@deps/pages/404s';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { checkTuplePage } from '@deps/queries/api/server/fga/checkTuple';
-import { baseAppUrl } from '@deps/queries/api-config';
 import { checkBeneficiaryEligibilityQuery } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { hasPermissionQuery } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import {
@@ -61,7 +60,6 @@ import {
     SegmentTrackedPageProps,
 } from '@deps/types/segment-analytics';
 import { FgaRelation, FgaRoles } from '@deps/utils/auth';
-import { browserLogInfo } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -123,7 +121,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     const router = useRouter();
     const { query } = router;
     const { id, slug, planCode } = query;
-    const { partyId, sessionId, hasDocumentAccess } = usePermissionsContext();
+    const { partyId, sessionId } = usePermissionsContext();
     const { featureFlags } = useOptimizely();
     const [transactionData, setTransactionData] = useState<any | null>(null);
     const [beneficiaryEligibility, setBeneficiaryEligibility] =
@@ -172,6 +170,15 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     });
 
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
+
+    const policyDataValue = useMemo(
+        () => ({
+            policy: policy as Policy,
+            policyDetails,
+            refreshPolicy: refetchPolicy,
+        }),
+        [policy, policyDetails, refetchPolicy]
+    );
 
     const getTransactionData = useCallback(async () => {
         let transactionType;
@@ -342,17 +349,6 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                 }
                 break;
             case 'documents':
-                if (!hasDocumentAccess) {
-                    browserLogInfo('Documents_Permission_Check', {
-                        pathname: router.pathname,
-                        hasDocumentAccess,
-                        policyNumber: policy?.policyNumber,
-                    });
-                    router.push(
-                        `${baseAppUrl}/policies/${policy.product?.planCode}/${policy.policyNumber}/policy/policy-details`
-                    );
-                    return null;
-                }
                 subPageContent = <DocumentsSubPage policy={policy} />;
                 break;
             default:
@@ -364,13 +360,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     return (
         <BlurOverlayLoader loading={isFetching}>
             <PolicyLayout policyDetails={policy}>
-                <PolicyData.Provider
-                    value={{
-                        policy,
-                        policyDetails: new PolicyDetails(policy),
-                        refreshPolicy: refetchPolicy,
-                    }}
-                >
+                <PolicyData.Provider value={policyDataValue}>
                     {/* Only the sub pages re-render on filter changes */}
                     <PeopleRolesFilterProvider>
                         <PageHead titleKey={subPageTitleKey} />

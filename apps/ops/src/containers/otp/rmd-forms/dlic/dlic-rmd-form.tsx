@@ -18,6 +18,7 @@ import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Processes } from '@deps/models/case/case';
 import { RmdFormType } from '@deps/models/case/enums';
 import { Carrier, RMDType } from '@deps/models/case/withdrawal/case';
+import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedStateRMD } from '@deps/utils/renderStateW4';
 
@@ -34,6 +35,9 @@ const DlicRmdWithdrawalForm = () => {
     const isDelawareBankSecFeatsEnabled =
         featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
 
+    const isDlic3pDisbursementChangesEnabled =
+        featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES];
+
     const {
         formValidation,
         formPartyConfigs,
@@ -46,7 +50,7 @@ const DlicRmdWithdrawalForm = () => {
         signaturesNotaryConfig,
         eSignatureFieldConfig,
         w4pSignaturesConfig,
-    } = getDlicWithdrawalConfig(t, isDelawareBankSecFeatsEnabled);
+    } = getDlicWithdrawalConfig(t, isDlic3pDisbursementChangesEnabled);
     const {
         formParty,
         setFormValidator,
@@ -153,7 +157,12 @@ const DlicRmdWithdrawalForm = () => {
             ) : (
                 <FormDisbursement
                     isFormStateReadOnly={isFormStateReadOnly}
-                    options={disbursementOptions}
+                    options={
+                        disbursementOptions(
+                            formParty,
+                            formProgram
+                        ) as PaymentMethodOption[]
+                    }
                 />
             )}
         </>

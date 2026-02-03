@@ -1,0 +1,10 @@
+.menuTriggerButton {
+    cursor: pointer;
+    display: block;
+    letter-spacing: normal;
+    text-decoration: none;
+
+    &:focus-visible {
+        border-radius: var(--measure-dimension-radius-sm);
+    }
+}

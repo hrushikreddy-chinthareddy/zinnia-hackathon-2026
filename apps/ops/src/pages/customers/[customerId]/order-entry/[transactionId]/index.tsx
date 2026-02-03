@@ -80,7 +80,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 accessToken = (await getAccessToken(req, res)).accessToken;
             } catch (e) {
                 logWarn(
-                    'getServerSidePropsNigoEntryPage::Access token expired',
+                    'getServerSidePropsOrderEntryPage::Access token expired',
                     {
                         ...parseErrorInformation(e),
                         ..._loggingContext,

@@ -205,16 +205,7 @@ export default function CallLogsTab({
               callLogsData?.status !== StatusCode.Forbidden ? (
                 <div className="flex justify-center">
                     <CardInfo
-                        icon={
-                            <Icon
-                                type={IconType.PHONE}
-                                width={50}
-                                height={50}
-                                className="text-gray-300"
-                            />
-                        }
                         title={t('sideSheet.callLogsEmptyTitle')}
-                        subtitle={t('sideSheet.callLogsEmptyText')}
                         className="mt-8"
                     />
                 </div>

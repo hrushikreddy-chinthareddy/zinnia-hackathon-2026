@@ -184,7 +184,6 @@ const QuickViewHeader = ({
         partyId: userPartyId,
         sessionId,
         hasCallLogsAccess,
-        hasDocumentAccess,
     } = usePermissionsContext();
 
     const {
@@ -256,7 +255,7 @@ const QuickViewHeader = ({
     };
 
     const { data: quickLinks, isLoading: loadingQuickLinks } =
-        usePolicyQuickLinks(t, policy, hasCallLogsAccess, hasDocumentAccess);
+        usePolicyQuickLinks(t, policy, hasCallLogsAccess);
 
     return (
         <header data-testid={CardDetailsTest.HEADER}>

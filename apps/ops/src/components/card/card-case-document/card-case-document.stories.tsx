@@ -19,6 +19,7 @@ export const Default = (args: any) => {
         <div className="flex max-w-[500px] flex-col">
             <CardCaseDocument
                 caseDocumentOption={caseDocumentOption}
+                index={0}
                 {...args}
             />
         </div>

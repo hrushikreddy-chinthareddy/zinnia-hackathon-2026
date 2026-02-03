@@ -195,23 +195,22 @@ If you don't have access to upload modules to AWS or want to test modules locall
 
 ```
 public/
+  modules/
+    YourModule/
+      v1/
+        YourModule.js
+        YourModule.css
   zembed/
     v1/
       zembed-bootstraper.mjs
-    modules/
-      YourModule/
-        v1/
-          YourModule.js
-          YourModule.css
 ```
-
-2. Obtain the module files from your module development environment or from another developer
-
-3. Update your `.env.development.local` to point to the local server:
+2. Obtain the zembed-bootstraper.mjs file from another developer
+3. Obtain the module files from your module development environment or from another developer
+4. Update your `.env.development.local` to point to the local server:
 
 ```bash
-NEXT_PUBLIC_ZEMBED_CDN_URL=http://localhost:3000/zembed
-NEXT_PUBLIC_ZEMBED_API_URL=<your-api-url>
+NEXT_PUBLIC_ZEMBED_CDN_URL=http://localhost:3000
+NEXT_PUBLIC_ZEMBED_API_URL=http://localhost:3000/api
 ```
 
 #### Selective Local Module Testing

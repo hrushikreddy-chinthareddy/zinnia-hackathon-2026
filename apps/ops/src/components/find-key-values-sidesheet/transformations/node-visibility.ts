@@ -9,20 +9,27 @@ import {
     isNotNullish,
 } from '../data-node-helpers/predicates';
 import { sectionVisibility } from '../translations/carrier-rules';
-import { excludeFields } from '../translations/exclude-fields';
+import {
+    ExcludeFieldsUseCase,
+    getExcludeFields,
+} from '../translations/exclude-fields';
 import { DataNode, FieldType } from '../types';
 
 /**
- * Filters nodes based on exclude fields from exclude-fields
+ * Filters nodes based on exclude fields from exclude-fields config.
  *
  * @param node - node to filter
- * @returns filtered node
+ * @param useCase - the use case for field visibility (defaults to 'default')
+ * @returns filtered node or undefined if excluded
  */
-export const excludeNodesByLabel = ({
+export const excludeNodeByLabel = ({
     node,
+    useCase = 'default',
 }: {
     node: DataNode;
+    useCase?: ExcludeFieldsUseCase;
 }): DataNode | undefined => {
+    const excludeFields = getExcludeFields(useCase);
     if (isDataSectionOrField(node) && excludeFields.has(node.label)) {
         return undefined;
     }

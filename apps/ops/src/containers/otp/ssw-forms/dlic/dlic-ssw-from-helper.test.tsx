@@ -16,7 +16,13 @@ jest.mock(
     '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
     () => ({
         getDefaultFormDisbursementValues: () => ({ mockedDisbursement: true }),
-        BankingFields: { Bank: 'Bank', AccountNumber: 'AccountNumber' },
+        BankingFields: {
+            Bank: 'bank',
+            AccountNumber: 'accountNumber',
+            PayeeName: 'payeeName',
+            Address: 'address',
+            SelectIfPayeeIsDifferent: 'selectIfPayeeIsDifferent',
+        },
         DisbursementFields: {
             SelectBank: 'SelectBank',
             BankTextField: 'BankTextField',
@@ -24,7 +30,10 @@ jest.mock(
             BankAddress: 'BankAddress',
             AccountTypes: 'AccountTypes',
             BankBooleanButtonGroup: 'BankBooleanButtonGroup',
+            SendCheckSelect: 'SendCheckSelect',
         },
+        shouldDisplayPayeeName: jest.fn(() => true),
+        shouldDisplayAddress: jest.fn(() => true),
     })
 );
 
@@ -48,6 +57,12 @@ jest.mock('@deps/models/case/withdrawal/disbursement-types', () => ({
     DEFAULT_BANK_DETAILS: { defaultBank: true },
     PaymentMethodOption: {},
     FormDisbursementSelections: 'EFT',
+    SendCheckOption: {
+        Annuitant: 'Annuitant',
+        FinancialInstitution: 'FinancialInstitution',
+        DifferentAddress: 'DifferentAddress',
+        ThirdPartyNotFinancialIns: 'ThirdPartyNotFinancialIns',
+    },
 }));
 jest.mock('@deps/models/case/enums', () => ({
     SswUpdateOption: { NEW: 'NEW', BANK_UPDATE: 'BANK_UPDATE' },
@@ -62,9 +77,9 @@ jest.mock('@deps/types/constants', () => ({
 describe('getDlicConfig', () => {
     const t: TFunction = ((key: string) => key) as unknown as TFunction;
 
-    const config = getDlicConfig(t, false);
-
     it('should return all expected config keys', () => {
+        const config = getDlicConfig(t, false);
+
         expect(config.formValidation).toBeDefined();
         expect(config.formPartyConfigs).toBeDefined();
         expect(config.systematicWithdrawalOptions).toBeDefined();
@@ -79,8 +94,12 @@ describe('getDlicConfig', () => {
         expect(config.sswUpdateFastOptions).toBeDefined();
     });
 
-    describe('disbursementOptions', () => {
-        const [eftOption, checkOption] = config.disbursementOptions;
+    describe('disbursementOptions with isDlic3pDisbursementChangesEnabled = false', () => {
+        const config = getDlicConfig(t, false);
+        // Call the function to get the array, provide all required arguments
+        const [eftOption, checkOption] = config.disbursementOptions({
+            parties: [],
+        } as any);
 
         it('should generate EFT payload', () => {
             const payload = eftOption.generatePayloadFromSelection({
@@ -188,10 +207,124 @@ describe('getDlicConfig', () => {
                     contractNumber: { text: null },
                 },
             });
+            // Legacy version does NOT include isAnnuitant or isPayeeFinancialIns
+            expect(payload?.isAnnuitant).toBeUndefined();
+            expect(payload?.isPayeeFinancialIns).toBeUndefined();
+        });
+
+        it('should return 2 disbursement options when flag is false', () => {
+            const options = config.disbursementOptions({ parties: [] } as any);
+            expect(options).toHaveLength(2);
+            expect(options[0]).toBeDefined(); // EFT
+            expect(options[1]).toBeDefined(); // Check
+        });
+
+        it('should render Send Check option with legacy structure when flag is false', () => {
+            expect(checkOption).toBeDefined();
+            expect(checkOption?.label).toBe('distributionMethod.sendCheck');
+            // Legacy version has 3 fields
+            expect(checkOption?.fields).toHaveLength(3);
+        });
+    });
+
+    describe('disbursementOptions with isDlic3pDisbursementChangesEnabled = true', () => {
+        const config = getDlicConfig(t, true);
+        const [_eftOption, checkOption] = config.disbursementOptions({
+            parties: [],
+        } as any);
+
+        it('should return 2 disbursement options when flag is true', () => {
+            const options = config.disbursementOptions({ parties: [] } as any);
+            expect(options).toHaveLength(2);
+            expect(options[0]).toBeDefined(); // EFT
+            expect(options[1]).toBeDefined(); // Check
+        });
+
+        it('should render Send Check option with new structure when flag is true', () => {
+            expect(checkOption).toBeDefined();
+            expect(checkOption?.label).toBe('distributionMethod.sendCheck');
+            // New version has 3 fields
+            expect(checkOption?.fields).toHaveLength(3);
+
+            // Check for SendCheckSelect field (new version)
+            const sendCheckSelectField = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'SendCheckSelect'
+            );
+            expect(sendCheckSelectField).toBeDefined();
+
+            // Check for PayeeName field with shouldDisplay (new version)
+            const payeeNameField: any = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'payeeName'
+            );
+            expect(payeeNameField).toBeDefined();
+            expect(payeeNameField?.shouldDisplay).toBeDefined();
+            expect(typeof payeeNameField?.shouldDisplay).toBe('function');
+
+            // Check for Address field with shouldDisplay (new version)
+            const addressField: any = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'address'
+            );
+            expect(addressField).toBeDefined();
+            expect(addressField?.shouldDisplay).toBeDefined();
+            expect(typeof addressField?.shouldDisplay).toBe('function');
+            // annuitantAddress will be undefined when parties array is empty
+            expect(addressField?.annuitantAddress).toBeUndefined();
+        });
+
+        it('should NOT have SelectIfPayeeIsDifferent field when flag is true', () => {
+            const selectIfPayeeField = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'selectIfPayeeIsDifferent'
+            );
+            expect(selectIfPayeeField).toBeUndefined();
+        });
+
+        it('should have SendCheckSelect field when flag is true', () => {
+            const sendCheckSelectField = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'SendCheckSelect'
+            );
+            expect(sendCheckSelectField).toBeDefined();
+        });
+
+        it('should generate Check payload with new structure', () => {
+            const payload = checkOption.generatePayloadFromSelection({
+                payeeName: 'Payee',
+                address: {
+                    addressLine1: 'addr',
+                    addressType: AddressTypes.DEFAULT,
+                    city: null,
+                    state: '',
+                    zip: '',
+                },
+                isAnnuitant: true,
+                isPayeeFinancialIns: false,
+                isPayeeCharity: false,
+                isAddressDifferent: true,
+                isThirdPartyDisbursement: false,
+            } as any);
+            expect(payload).toMatchObject({
+                mockedDisbursement: true,
+                paymentMethod: { text: 'Check' },
+                paymentMailType: { text: null },
+                isAnnuitant: true,
+                isPayeeFinancialIns: false,
+                isPayeeCharity: false,
+                isAddressDifferent: true,
+                isThirdPartyDisbursement: false,
+                payee: {
+                    name: { text: 'Payee' },
+                    addresses: [
+                        { addressLine1: 'addr', addressType: 'DEFAULT' },
+                    ],
+                    contractNumber: { text: null },
+                },
+            });
+            // Should NOT have isDifferentPayeeOrAddress in new version
+            expect(payload?.isDifferentPayeeOrAddress).toBeUndefined();
         });
     });
 
     describe('signaturesConfig', () => {
+        const config = getDlicConfig(t, false);
         it('should have owner config with correct fields', () => {
             const ownerConfig = config.signaturesConfig.find(
                 (c) =>
@@ -222,6 +355,7 @@ describe('getDlicConfig', () => {
     });
 
     describe('systematicWithdrawalOptions', () => {
+        const config = getDlicConfig(t, false);
         const options = config.systematicWithdrawalOptions('674', true);
 
         it('should generate FixDollar payload', () => {
@@ -327,6 +461,7 @@ describe('getDlicConfig', () => {
     });
 
     describe('formValidation', () => {
+        const config = getDlicConfig(t, false);
         it('should return no errors for valid signature', () => {
             const errors = config.formValidation({
                 formSignature: {
@@ -426,6 +561,7 @@ describe('getDlicConfig', () => {
     });
 
     it('should have eSignatureFieldConfig with correct keys', () => {
+        const config = getDlicConfig(t, false);
         expect(config.eSignatureFieldConfig).toMatchObject({
             type: true,
             signPresent: true,
@@ -435,6 +571,7 @@ describe('getDlicConfig', () => {
     });
 
     it('should have sswUpdateFastOptions with correct values', () => {
+        const config = getDlicConfig(t, false);
         expect(config.sswUpdateFastOptions).toEqual([
             { label: 'sswProgram.sswUpdateOptions.new', value: 'NEW' },
             {

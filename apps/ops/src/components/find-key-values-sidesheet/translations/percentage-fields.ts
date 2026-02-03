@@ -3,8 +3,18 @@
  */
 export const percentageFields = new Set([
     'allocationPercentage',
+    'appliedInterestRate',
     'appliedRate',
     'appliedTaxRate',
     'chargeAppliedRate',
+    'currentRate',
+    'guaranteedMaximumRate',
+    'guaranteedMinimumInterestRate',
+    'guaranteedMinimumRate',
+    'indexChangeRate',
+    'initialGuaranteedRate',
+    'interestRate',
+    'maximumIllustrativeInterestRate',
     'percentage',
+    'percentageOfAccountValue',
 ]);

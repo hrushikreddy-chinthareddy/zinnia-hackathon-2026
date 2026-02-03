@@ -49,3 +49,4 @@ next-env.d.ts
 
 # local zembed modules for testing
 /public/zembed/
+/public/modules/

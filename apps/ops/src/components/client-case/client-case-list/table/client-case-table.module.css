@@ -54,3 +54,8 @@
         margin-left: var(--measure-dimension-gap-sm, 4px);
     }
 }
+
+.tableLoadingState {
+    height: 506px;
+    padding: var(--measure-dimension-padding-4xl, 32px);
+}

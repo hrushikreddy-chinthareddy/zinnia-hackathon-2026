@@ -37,6 +37,7 @@ import {
     getAdditionalFilters,
     getSearchValueObject,
     toggleLabels,
+    hasActiveAdvancedFilters,
 } from '@deps/helpers/case-management';
 import {
     doesUserHavePagePermissions,
@@ -491,6 +492,10 @@ const CaseManagementDashboard = ({
         const total = `${caseSearchData?.total?.toLocaleString() ?? '0'}${
             caseSearchData?.total === 10000 ? '+' : ''
         }`;
+        const isFiltered = hasActiveAdvancedFilters(
+            caseManagementFilters.additionalFilters,
+            caseManagementFilters.searchValue
+        );
         return (
             <>
                 <CaseResultTable
@@ -501,6 +506,7 @@ const CaseManagementDashboard = ({
                     sortBy={caseManagementFilters.sortBy}
                     caseSearchLoading={caseSearchLoading}
                     loadingMessage={loadingMessage}
+                    isFiltered={isFiltered}
                 />
                 <div className="flex flex-col items-center lg:grid lg:grid-cols-3 mt-3">
                     <Typography

@@ -14,13 +14,17 @@ import {
     getIllustratorRoleFromHierarchy,
     useHierarchyListQuery,
 } from './pom';
-import { AliasWithSellingCode, IllustratorRole } from './user-identity';
+import {
+    AliasWithSellingCode,
+    getSellingCodeFromAliasWithSellingCode,
+    IllustratorRole,
+} from './user-identity';
 
 type SelectableAgency = {
     agentSellingCode: string;
     agentFullName: string | undefined;
     agency: GetHierarchyResponse | UplineItem;
-    brokerDealer: GetHierarchyResponse | UplineItem;
+    brokerDealer: GetHierarchyResponse | UplineItem | null;
 };
 
 type HierarchySummary = {
@@ -51,7 +55,7 @@ const isAgencyValidForHierarchy = (
         ].includes(role)
     ) {
         return (
-            brokerDealer.sellingCode ===
+            brokerDealer?.sellingCode ===
             authUserHierarchy.brokerDealer?.sellingCode
         );
     }
@@ -82,10 +86,8 @@ const buildSelectedAgentAgencies = (
 ): SelectableAgency[] =>
     selectedAgentHierarchies
         .filter(
-            (
-                item
-            ): item is SetNonNullable<typeof item, 'agency' | 'brokerDealer'> =>
-                !!item.agency && !!item.brokerDealer
+            (item): item is SetNonNullable<typeof item, 'agency'> =>
+                !!item.agency
         )
         .map(({ alias, agency, brokerDealer }) => ({
             agentSellingCode: alias.sellingCode,
@@ -154,16 +156,19 @@ export const useAgencyOptions = (
 ) => {
     const { isSuperIllustrator } = usePermissionsContext();
 
-    const authUserAliases = aliasesWithSellingCodes?.map((alias) => ({
-        sellingCode: alias.externalPartyIds?.find(
-            (id) => id.key === 'SELLING_CODE'
-        )?.value as string,
-        carrierShortName: alias.carrier,
-        fullName:
-            alias?.fullName || (alias?.firstName && alias?.lastName)
-                ? `${alias?.firstName} ${alias?.lastName}`
-                : undefined,
-    }));
+    const authUserAliases = aliasesWithSellingCodes?.map((alias) => {
+        const { sellingCode, carrierShortName } =
+            getSellingCodeFromAliasWithSellingCode(alias);
+
+        return {
+            sellingCode,
+            carrierShortName,
+            fullName:
+                alias?.fullName || (alias?.firstName && alias?.lastName)
+                    ? `${alias?.firstName} ${alias?.lastName}`
+                    : undefined,
+        };
+    });
 
     const clientCaseAgentAliases = useMemo(() => {
         if (!agentOption?.sellingCodes?.length) {

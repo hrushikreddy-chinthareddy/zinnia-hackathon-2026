@@ -132,7 +132,10 @@ export const Label = ({
                 </Popover>
             )}
             {editable && isUserPermissionedToEditCards ? (
-                <IconButton onClick={handleEditClick}>
+                <IconButton
+                    onClick={handleEditClick}
+                    aria-label={`${t('allFields.edit')} ${newLabel}`}
+                >
                     <EditIcon height={16} width={16} />
                 </IconButton>
             ) : (

@@ -99,9 +99,12 @@ export const Addresses = ({
                             {isPending && <PendingTag />}
                             {editable && !isPending && (
                                 <IconButton
-                                    aria-describedby={`people-address-card-${
-                                        addressId ?? defaultKey
-                                    }`}
+                                    aria-label={`${t('allFields.edit')} ${t(
+                                        mapAddressTypeToTranslation({
+                                            addressType,
+                                            t,
+                                        })
+                                    )} ${t('allFields.address')}`}
                                     onClick={() =>
                                         onEditClick({
                                             address,
@@ -119,9 +122,6 @@ export const Addresses = ({
                                     }
                                 >
                                     <EditIcon height={16} width={16} />
-                                    <span className="sr-only">
-                                        {t('people.card.general.edit')}
-                                    </span>
                                 </IconButton>
                             )}
                         </div>

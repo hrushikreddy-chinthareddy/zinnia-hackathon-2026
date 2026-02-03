@@ -8,6 +8,9 @@
     &:hover {
         color: var(--color-states-hover-text-hover-text-link);
     }
+    &:focus-visible {
+        border-radius: var(--measure-dimension-radius-sm);
+    }
 }
 .toastContainer {
     position: fixed;
