@@ -20,7 +20,6 @@ import { TranslationFiles } from '@deps/config/translations';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
-import { percentFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import {
     isNullEmptyOrUndefined,
@@ -230,28 +229,6 @@ const FundsTable = ({
                                 />
                             </TableHeaderCell>
                         )}
-                        <TableHeaderCell className={styles.interestRateCell}>
-                            <div className={styles.tableHeaderContainer}>
-                                <Content
-                                    details={t('interestRate') as string}
-                                    variant={ContentVariant.BodySmBold}
-                                />
-                                <Popover
-                                    title={toSentenceCase(
-                                        t('interestRate') as string
-                                    )}
-                                    body={t('interestRateTooltip') as string}
-                                    placement={PopoverPlacement.TopRight}
-                                >
-                                    <Icon
-                                        type={IconType.CIRCLE_INFO}
-                                        color="var(--color-base-icon-action-text-link)"
-                                        height={16}
-                                        width={16}
-                                    />
-                                </Popover>
-                            </div>
-                        </TableHeaderCell>
                         <TableHeaderCell className={styles.valueCell}>
                             <Content
                                 details={t('fundValue') as string}
@@ -379,17 +356,6 @@ const FundsTable = ({
                                     </TableCell>
                                     {hasGuaranteePeriod &&
                                         renderGuaranteePeriod(fund)}
-                                    <TableCell
-                                        className={styles.interestRateCell}
-                                    >
-                                        <Content
-                                            details={percentFormatify(
-                                                fund.interestRate,
-                                                { isInteger: true }
-                                            )}
-                                            variant={ContentVariant.BodySm}
-                                        />
-                                    </TableCell>
                                     <TableCell className={styles.valueCell}>
                                         <Content
                                             details={fund.fundValue}
