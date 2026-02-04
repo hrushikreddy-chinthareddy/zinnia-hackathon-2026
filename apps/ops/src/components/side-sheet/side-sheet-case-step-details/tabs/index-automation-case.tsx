@@ -78,7 +78,7 @@ const IndexAutomationCase = ({
                         variant={TypographyVariant.BodySmBold}
                         className="text-gray-600"
                     >
-                        {t('indexAutomation.errorGettingTransactions')}
+                        {t('indexAutomation.errorGetting')}
                     </Typography>
                 </div>
             </div>
