@@ -161,7 +161,7 @@ const IndexAutomationCase = ({
                             )}
                         </div>
                         <Typography
-                            variant={TypographyVariant.BodySm}
+                            variant={TypographyVariant.BodySmBold}
                             className="col-span-3"
                         >
                             {transactionEntity?.entity?.docTypeGroup ||

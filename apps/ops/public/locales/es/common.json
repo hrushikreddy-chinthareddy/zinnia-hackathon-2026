@@ -9600,6 +9600,6 @@
             "transactionType": "Tipo de transacción"
         },
         "loading": "Cargando...",
-        "errorGettingTransactions": "Error al obtener transacciones"
+        "errorGetting": "Error al obtener"
     }
 }
