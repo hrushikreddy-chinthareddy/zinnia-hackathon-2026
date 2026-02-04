@@ -48,7 +48,7 @@ const Usage = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     return (
         <>
             <ButtonGroup
-                className={`${styles.buttonGroup} pt-5`}
+                className={`${styles.buttonGroup} ${styles.paddingTop}`}
                 items={buttonNavItems}
                 onClick={handleClick}
                 defaultValue={selectedTab}

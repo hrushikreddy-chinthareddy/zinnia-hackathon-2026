@@ -58,3 +58,7 @@
     border-top-width: 2px;
     position: relative;
 }
+
+.paddingTop {
+    padding-top: 5px;
+}
