@@ -191,6 +191,10 @@ export const policyResponseSanitizer = (
     policyResponse: GetPolicyResponse
 ): GetPolicyResponse => {
     try {
+        // Don't try to sanitize policyResponse if there is no data
+        if (!policyResponse.data) {
+            return policyResponse;
+        }
         const policy = policySanitizer(policyResponse.data);
         return { ...policyResponse, data: policy };
     } catch (e) {
@@ -468,6 +472,10 @@ export const fullyMaskPolicyResponse = (
     policyResponse: GetPolicyResponse
 ): GetPolicyResponse => {
     try {
+        // Don't try to sanitize policyResponse if there is no data
+        if (!policyResponse.data) {
+            return policyResponse;
+        }
         const policy = policyMasker(policyResponse.data);
         return { ...policyResponse, data: policy };
     } catch (e) {
@@ -579,7 +587,7 @@ export const mcsResponseSanitizer = (
             items: mcsResponse?.items?.map(agentSanitizer),
         };
     } catch (e) {
-        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', {
+        logErrorWithoutContext('sanitizers::mcsReponseSanitizer::error', {
             ...parseErrorInformation(e),
         });
         throw e;
@@ -674,7 +682,7 @@ export const fullyMaskMcsResponse = (
         });
         return { ...mcsResponse, items: sanitizedItems };
     } catch (e) {
-        logErrorWithoutContext('sanitizers::policyResponseSanitizer::error', {
+        logErrorWithoutContext('sanitizers::fullyMaskMcsResponse::error', {
             ...parseErrorInformation(e),
         });
         throw e;
