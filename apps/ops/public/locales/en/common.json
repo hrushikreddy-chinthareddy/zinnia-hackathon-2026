@@ -9679,5 +9679,27 @@
             "secondaryCta": "Back to home",
             "submitTask": "Submit"
         }
+    },
+    "indexAutomation": {
+        "requestReceived": {
+            "receivedOn": "Received on",
+            "source": "Source"
+        },
+        "documentIdentification": {
+            "docTypeGroup": "Doc Type Group",
+            "docType": "Doc Type"
+        },
+        "documentExtraction": {
+            "contractNumber": "Contract Number",
+            "ssn": "SSN",
+            "ownerName": "Owner Name",
+            "requestType": "Request Type"
+        },
+        "documentIndexed": {
+            "documentNumber": "Document Number",
+            "transactionType": "Transaction Type"
+        },
+        "loading": "Loading...",
+        "errorGettingTransactions": "Error getting transactions"
     }
 }

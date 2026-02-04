@@ -10,6 +10,7 @@ import {
 } from './death-audit-files/death-audit-files.types';
 import DeathAuditQualification from './death-audit-qualification/detah-audit-qualification';
 import DeathNotificationSidesheet from './death-notification';
+import IndexAutomationCase from './index-automation-case';
 import ReceiveNewDocument from './receive-new-document/receive-new-document';
 import {
     StepProgramTypes,
@@ -108,6 +109,34 @@ export const TransactionsStepAdditionalData = ({
                 return (
                     <ComplianceDbUpdate
                         stepAdditionalData={stepAdditionalData}
+                    />
+                );
+            case TransactionsAdditionalDataStepIds.receiveRequest:
+                return (
+                    <IndexAutomationCase
+                        stepAdditionalData={stepAdditionalData}
+                        dataType={stepAdditionalData.dataType}
+                    />
+                );
+            case TransactionsAdditionalDataStepIds.docIndentification:
+                return (
+                    <IndexAutomationCase
+                        stepAdditionalData={stepAdditionalData}
+                        dataType={stepAdditionalData.dataType}
+                    />
+                );
+            case TransactionsAdditionalDataStepIds.docFieldExtraction:
+                return (
+                    <IndexAutomationCase
+                        stepAdditionalData={stepAdditionalData}
+                        dataType={stepAdditionalData.dataType}
+                    />
+                );
+            case TransactionsAdditionalDataStepIds.docIndexedAndCaseCreated:
+                return (
+                    <IndexAutomationCase
+                        stepAdditionalData={stepAdditionalData}
+                        dataType={stepAdditionalData.dataType}
                     />
                 );
             default:

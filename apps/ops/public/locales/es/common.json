@@ -9579,5 +9579,27 @@
             "secondaryCta": "Volver al inicio",
             "submitTask": "Enviar"
         }
+    },
+    "indexAutomation": {
+        "requestReceived": {
+            "receivedOn": "Recibido el",
+            "source": "Fuente"
+        },
+        "documentIdentification": {
+            "docTypeGroup": "Tipo de documento",
+            "docType": "Tipo de documento"
+        },
+        "documentExtraction": {
+            "contractNumber": "Número de contrato",
+            "ssn": "SSN",
+            "ownerName": "Nombre del propietario",
+            "requestType": "Tipo de solicitud"
+        },
+        "documentIndexed": {
+            "documentNumber": "Número de documento",
+            "transactionType": "Tipo de transacción"
+        },
+        "loading": "Cargando...",
+        "errorGettingTransactions": "Error al obtener transacciones"
     }
 }

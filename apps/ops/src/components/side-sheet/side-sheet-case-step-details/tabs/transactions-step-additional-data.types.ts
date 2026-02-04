@@ -16,6 +16,11 @@ export enum TransactionsAdditionalDataStepIds {
     receiveNewDocument = 'requestAck.createQualificationCase',
     receiveNewDocument2 = 'requestAck.createMatchingCase',
     complianceDbUpdate = 'requestAck.complianceDbUpdate',
+    receiveRequest = 'receiveRequest',
+    docIndentification = 'docIndentification',
+    docFieldExtraction = 'docFieldExtraction',
+    docSend = 'docSend',
+    docIndexedAndCaseCreated = 'docIndexedAndCaseCreated',
 }
 
 export enum BeneNotification {
