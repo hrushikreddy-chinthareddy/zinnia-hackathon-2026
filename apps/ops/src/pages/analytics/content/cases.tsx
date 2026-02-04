@@ -68,7 +68,7 @@ const Cases = forwardRef<HTMLDivElement, { tab?: string }>(({ tab }, ref) => {
     return (
         <>
             <ButtonGroup
-                className={`${styles.buttonGroup} ${styles.paddingTop}`}
+                className={styles.buttonGroup}
                 items={buttonNavItems}
                 onClick={handleClick}
                 defaultValue={selectedTab}

@@ -51,14 +51,11 @@
 
 .buttonGroup {
     margin-bottom: var(--measure-dimension-gap-lg);
+    padding-top: 5px;
 }
 
 .tabContent {
     border-color: var(--color-base-border-light);
     border-top-width: 2px;
     position: relative;
-}
-
-.paddingTop {
-    padding-top: 5px;
 }
