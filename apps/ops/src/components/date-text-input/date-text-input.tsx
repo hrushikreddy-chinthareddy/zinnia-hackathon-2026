@@ -84,7 +84,6 @@ const DateTextInput = ({
                     value={value}
                     onChange={handleChange}
                     maxLength={10}
-                    // pattern={REGEXP_PATTERN_DATE}
                     placeholder="mm/dd/yyyy"
                     disabled={disabled}
                     onBlur={() => validateDate(value)}

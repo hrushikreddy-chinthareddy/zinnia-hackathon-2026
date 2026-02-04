@@ -393,9 +393,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     return (
         <form
             className={styles.formContainer}
-            onSubmit={handleSubmit((data) => {
-                console.log(data);
-            })}
+            onSubmit={handleSubmit(onSubmitForm)}
         >
             <section className={styles.formSection}>
                 <Typography
@@ -408,7 +406,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     control={control}
                     name="title"
                     rules={{
-                        required: 'Title is required',
+                        required: true,
                         maxLength: 60,
                     }}
                     render={({ field }) => (
@@ -543,9 +541,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     control={control}
                     name="insuredDetails.sexAtBirth"
                     rules={{
-                        required: t(
-                            'clientCase.quickQuoteForm.selectAnOption'
-                        ) as string,
+                        required: true,
                     }}
                     render={({ field }) => (
                         <ButtonGroup
@@ -597,8 +593,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         <Typography variant={TypographyVariant.FieldLabel}>
                             {t('clientCase.createClientCaseForm.dateLabel')}
                         </Typography>
-                        {/* TODO: Refactor to handle logic at this level instead
-                        of in the same component */}
                         <DateTextInput
                             onChange={(newDate) => {
                                 handleDateChange(newDate);
@@ -677,9 +671,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         control={control}
                         name="insuredDetails.state"
                         rules={{
-                            required: 'State is required',
-                            validate: (v) =>
-                                (v && v.length > 0) || 'State is required',
+                            required: true,
+                            validate: (v) => v && v.length > 0,
                         }}
                         render={({ field }) => (
                             <Select
@@ -704,12 +697,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 </div>
             </section>
             <div className={styles.actionButtons}>
-                <Button
-                    type="submit"
-                    onClick={onSubmitForm}
-                    size="small"
-                    disabled={!canSubmitForm()}
-                >
+                <Button type="submit" size="small" disabled={!canSubmitForm()}>
                     {t('clientCase.createClientCaseForm.continueButton')}
                 </Button>
                 <Button onClick={onCancelForm} mode="link" size="small">
