@@ -117,7 +117,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         getValues,
         reset,
         handleSubmit,
-        formState: { errors, isValid },
+        formState: { errors },
     } = useForm<IllustrationsClientCase>({
         mode: 'onChange',
         defaultValues: clientCaseInitialState,
