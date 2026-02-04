@@ -10,7 +10,7 @@ import {
 import clsx from 'clsx';
 import dayjs from 'dayjs';
 import { first, isEqual, omit } from 'lodash';
-import { ChangeEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -123,7 +123,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         mode: 'onChange',
         defaultValues: clientCaseInitialState,
     });
-    useEffect(() => console.log({ ...getValues() }), [getValues]);
+
     useEffect(() => {
         if (clientCase) {
             reset(clientCase);
@@ -148,6 +148,15 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         control,
         name: 'insuredDetails.dateOfBirth',
     });
+    const sexAtBirth = useWatch({
+        control,
+        name: 'insuredDetails.sexAtBirth',
+    });
+    useEffect(
+        () =>
+            console.log(String(sexAtBirth), dateOfBirth, canEditInsuredDetails),
+        [sexAtBirth, dateOfBirth, canEditInsuredDetails]
+    );
     const currentAge = useMemo(
         () => calculateIssueAge(dateOfBirth ?? null) ?? 0,
         [dateOfBirth]
@@ -263,13 +272,13 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         });
     };
 
-    const updateClientCaseField = (event: ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        updateClientCaseData({ [name]: value });
-    };
+    // const updateClientCaseField = (event: ChangeEvent<HTMLInputElement>) => {
+    //     const { name, value } = event.target;
+    //     updateClientCaseData({ [name]: value });
+    // };
 
     const handleDateChange = (birthDate: Date) => {
-        updateClientCaseData({ dateOfBirth: birthDate });
+        // updateClientCaseData({ dateOfBirth: birthDate });
         setValue('insuredDetails.dateOfBirth', birthDate);
     };
 
@@ -288,7 +297,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         const validDate = isValidDate(formattedDate);
 
         const hasErrors = Object.keys(errors).length > 0;
-        console.log(errors);
 
         return !!(
             !isSubmiting &&
@@ -364,19 +372,20 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 );
 
             if (!isEqual(newAgentDetails, clientCaseData?.agentDetails)) {
-                updateClientCaseData({
-                    agentDetails: newAgentDetails,
-                    ...(!isCurrentAgencyIdValid ? { agencyId: undefined } : {}),
-                });
+                // updateClientCaseData({
+                //     agentDetails: newAgentDetails,
+                //     ...(!isCurrentAgencyIdValid ? { agencyId: undefined } : {}),
+                // });
 
                 setValue('agentDetails', newAgentDetails);
-                // setValue('agencyId', !isCurrentAgencyIdValid ? { agencyId: undefined } : {})
+                if (!isCurrentAgencyIdValid) setValue('agencyId', '');
             }
         },
         [
             selectedAgencyOption,
             clientCaseData?.agentDetails,
             selectedAgentOption,
+            setValue,
         ]
     );
 
@@ -397,13 +406,13 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             const agencyOption = first(agencyOptions)!;
             const { value: agencyId, agentSellingCode } = agencyOption;
 
-            updateClientCaseData({
-                agencyId,
-                agentDetails: {
-                    ...omit(selectedAgentOption, ['sellingCodes', 'lookupId']),
-                    sellingCode: agentSellingCode,
-                },
-            });
+            // updateClientCaseData({
+            //     agencyId,
+            //     agentDetails: {
+            //         ...omit(selectedAgentOption, ['sellingCodes', 'lookupId']),
+            //         sellingCode: agentSellingCode,
+            //     },
+            // });
 
             setValue('agencyId', agencyId);
             setValue('agentDetails', {
@@ -426,15 +435,15 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     sellingCode: selectedAgencyOption.agentSellingCode,
                 });
 
-                return updateClientCaseData({
-                    agentDetails: {
-                        ...omit(selectedAgentOption, [
-                            'sellingCodes',
-                            'lookupId',
-                        ]),
-                        sellingCode: selectedAgencyOption.agentSellingCode,
-                    },
-                });
+                // return updateClientCaseData({
+                //     agentDetails: {
+                //         ...omit(selectedAgentOption, [
+                //             'sellingCodes',
+                //             'lookupId',
+                //         ]),
+                //         sellingCode: selectedAgencyOption.agentSellingCode,
+                //     },
+                // });
             }
 
             // Do nothing if AgencyId is valid
@@ -447,6 +456,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         clientCaseData.agencyId,
         clientCaseData.agentDetails?.sellingCode,
         isEdit,
+        setValue,
     ]);
 
     // Handle default value of the selected agent
@@ -560,7 +570,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 </Label>
                             }
                             onValueChange={(agencyId: string) => {
-                                updateClientCaseData({ agencyId });
+                                // updateClientCaseData({ agencyId });
+                                setValue('agencyId', agencyId);
 
                                 const newSelectedAgencyOption =
                                     agencyOptions.find(
@@ -573,9 +584,13 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     newSelectedAgencyOption?.agentSellingCode;
 
                                 if (newAgentSellingcode) {
-                                    updateClientCaseData({
-                                        sellingCode: newAgentSellingcode,
-                                    });
+                                    // updateClientCaseData({
+                                    //     sellingCode: newAgentSellingcode,
+                                    // });
+                                    setValue(
+                                        'agentDetails.sellingCode',
+                                        newAgentSellingcode
+                                    );
                                 }
                             }}
                             defaultValue={
@@ -647,7 +662,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     }}
                     render={({ field }) => (
                         <ButtonGroup
-                            id="sexAtBirth"
+                            id="sex-at-birth"
                             className={styles.buttonGroup}
                             items={[
                                 {
@@ -680,9 +695,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     )}
                                 </Label>
                             }
-                            defaultValue={
-                                field.value === 'MALE' ? 'MALE' : 'FEMALE'
-                            }
+                            defaultValue={String(field.value)}
+                            value={field.value} // Added to force selection on edit
                             onClick={(v) => {
                                 field.onChange(v);
                             }}
