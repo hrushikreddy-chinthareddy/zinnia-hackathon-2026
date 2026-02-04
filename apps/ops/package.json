@@ -198,5 +198,5 @@
         "clean-api-types": "node ./scripts/clean-api-types.mjs",
         "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs"
     },
-    "version": "2.26.0"
+    "version": "2.30.0"
 }
