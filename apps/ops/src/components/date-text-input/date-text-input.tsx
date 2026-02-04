@@ -1,6 +1,6 @@
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { isValidDate } from '@deps/utils/dates';
 
@@ -13,8 +13,6 @@ interface DateTextInputProps {
     errorMessage?: string | null;
 }
 
-const REGEXP_PATTERN_DATE = 'd{2}/d{2}/d{4}';
-
 const DateTextInput = ({
     onChange,
     defaultDate = '',
@@ -24,6 +22,10 @@ const DateTextInput = ({
     const inputRef = useRef<HTMLInputElement>(null);
     const [value, setValue] = useState(defaultDate);
     const [isValidDateFormat, setIsValidDateFormat] = useState(true);
+
+    useEffect(() => {
+        if (!value) setValue(defaultDate);
+    }, [value, defaultDate]);
 
     const handleContainerClick = () => {
         inputRef?.current?.focus();

@@ -26,7 +26,6 @@ import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
 import { formatUTCDate } from '@deps/helpers/string.helpers';
 import {
     IllustrationAgentDetails,
-    IllustrationInsuredDetails,
     IllustrationsClientCase,
     TransactionType,
 } from '@deps/types/illustrations';
@@ -140,23 +139,19 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         ...clientCase,
     };
 
-    const [clientCaseData, setClientCaseData] =
-        useState<Partial<IllustrationsClientCase>>(mergedCase);
-
-    // const { dateOfBirth } = clientCaseData?.insuredDetails ?? {};
+    const agencyId = useWatch({
+        control,
+        name: 'agencyId',
+    });
+    const agentDetails = useWatch({
+        control,
+        name: 'agentDetails',
+    });
     const dateOfBirth = useWatch({
         control,
         name: 'insuredDetails.dateOfBirth',
     });
-    const sexAtBirth = useWatch({
-        control,
-        name: 'insuredDetails.sexAtBirth',
-    });
-    useEffect(
-        () =>
-            console.log(String(sexAtBirth), dateOfBirth, canEditInsuredDetails),
-        [sexAtBirth, dateOfBirth, canEditInsuredDetails]
-    );
+
     const currentAge = useMemo(
         () => calculateIssueAge(dateOfBirth ?? null) ?? 0,
         [dateOfBirth]
@@ -172,7 +167,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             queryKey: POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID,
         });
 
-    const [somethingChanged, setSomethingChanged] = useState(false);
     const [isSubmiting, setIsSubmiting] = useState(false);
 
     const defaultAuthenticatedAgentOption =
@@ -209,83 +203,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         styles.insuredDetails
     );
 
-    //This could be in a hook
-    const updateClientCaseData = (
-        dataToUpdate:
-            | Partial<IllustrationInsuredDetails>
-            | Partial<IllustrationsClientCase>
-            | Partial<IllustrationAgentDetails>
-    ) => {
-        setSomethingChanged(true);
-
-        setClientCaseData((prev) => {
-            const insuredFields = [
-                'firstName',
-                'lastName',
-                'sexAtBirth',
-                'dateOfBirth',
-                'nicotineUser',
-                'state',
-                'illustrateAtOlderAge',
-                'issueAge',
-            ] satisfies (keyof IllustrationInsuredDetails)[];
-
-            const agentFields = [
-                'firstName',
-                'lastName',
-                'sellingCode',
-                'email',
-            ] satisfies (keyof IllustrationAgentDetails)[];
-
-            const updateKeys = Object.keys(dataToUpdate);
-            const isInsuredUpdate = updateKeys.every((key) =>
-                (insuredFields as string[]).includes(key)
-            );
-            const isAgentUpdate = updateKeys.every((key) =>
-                (agentFields as string[]).includes(key)
-            );
-
-            if (isInsuredUpdate) {
-                return {
-                    ...prev,
-                    insuredDetails: {
-                        ...prev.insuredDetails,
-                        ...dataToUpdate,
-                    },
-                };
-            }
-
-            if (isAgentUpdate) {
-                return {
-                    ...prev,
-                    agentDetails: {
-                        ...prev.agentDetails,
-                        ...dataToUpdate,
-                    },
-                };
-            }
-
-            return {
-                ...prev,
-                ...dataToUpdate,
-            };
-        });
-    };
-
-    // const updateClientCaseField = (event: ChangeEvent<HTMLInputElement>) => {
-    //     const { name, value } = event.target;
-    //     updateClientCaseData({ [name]: value });
-    // };
-
     const handleDateChange = (birthDate: Date) => {
-        // updateClientCaseData({ dateOfBirth: birthDate });
         setValue('insuredDetails.dateOfBirth', birthDate);
     };
 
     const canSubmitForm = () => {
-        // const { title, insuredDetails, agentDetails, agencyId } =
-        //     clientCaseData;
-
         const { title, insuredDetails, agentDetails, agencyId } = getValues();
 
         const parsedDate = dayjs(insuredDetails?.dateOfBirth);
@@ -303,7 +225,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             !isFetchingAgencies &&
             agentDetails?.sellingCode &&
             agencyId &&
-            // (!isEdit || somethingChanged) &&
             title &&
             insuredDetails?.sexAtBirth &&
             insuredDetails?.dateOfBirth &&
@@ -316,9 +237,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const selectedAgencyOption = useMemo(
         () =>
             agencyOptions?.find(
-                (agencyOption) => agencyOption.value === clientCaseData.agencyId
+                (agencyOption) => agencyOption.value === agencyId
             ),
-        [agencyOptions, clientCaseData.agencyId]
+        [agencyOptions, agencyId]
     );
 
     // Show the dropdown only after a default value for the agencyId was selected
@@ -326,7 +247,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         agencyOptions && selectedAgencyOption && agencyOptions.length > 1;
 
     const sendAnalytics = () => {
-        const { title } = clientCaseData;
+        const title = getValues('title');
         const { title: initialTitle } = mergedCase;
         sendAgencySelection(agencyOptions ?? []);
         sendClientCaseTitleInput(title !== initialTitle);
@@ -342,7 +263,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         sendAnalytics();
 
         try {
-            console.log(getValues());
             await onSubmit?.(getValues());
         } finally {
             setIsSubmiting(false);
@@ -371,29 +291,19 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     selectedAgencyOption.agentSellingCode
                 );
 
-            if (!isEqual(newAgentDetails, clientCaseData?.agentDetails)) {
-                // updateClientCaseData({
-                //     agentDetails: newAgentDetails,
-                //     ...(!isCurrentAgencyIdValid ? { agencyId: undefined } : {}),
-                // });
-
+            if (!isEqual(newAgentDetails, agentDetails)) {
                 setValue('agentDetails', newAgentDetails);
                 if (!isCurrentAgencyIdValid) setValue('agencyId', '');
             }
         },
-        [
-            selectedAgencyOption,
-            clientCaseData?.agentDetails,
-            selectedAgentOption,
-            setValue,
-        ]
+        [selectedAgencyOption, agentDetails, selectedAgentOption, setValue]
     );
 
     //
     //  Sync agentDetails after an agency is selected
     //
     useEffect(() => {
-        const agentSellingCode = clientCaseData.agentDetails?.sellingCode;
+        const agentSellingCode = agentDetails?.sellingCode;
         const hasAgencyOptions = !!agencyOptions?.length;
 
         if (!hasAgencyOptions) {
@@ -405,14 +315,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
             // Select any of available agencies by default
             const agencyOption = first(agencyOptions)!;
             const { value: agencyId, agentSellingCode } = agencyOption;
-
-            // updateClientCaseData({
-            //     agencyId,
-            //     agentDetails: {
-            //         ...omit(selectedAgentOption, ['sellingCodes', 'lookupId']),
-            //         sellingCode: agentSellingCode,
-            //     },
-            // });
 
             setValue('agencyId', agencyId);
             setValue('agentDetails', {
@@ -434,16 +336,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                     ...omit(selectedAgentOption, ['sellingCodes', 'lookupId']),
                     sellingCode: selectedAgencyOption.agentSellingCode,
                 });
-
-                // return updateClientCaseData({
-                //     agentDetails: {
-                //         ...omit(selectedAgentOption, [
-                //             'sellingCodes',
-                //             'lookupId',
-                //         ]),
-                //         sellingCode: selectedAgencyOption.agentSellingCode,
-                //     },
-                // });
             }
 
             // Do nothing if AgencyId is valid
@@ -453,8 +345,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         agencyOptions,
         selectedAgencyOption,
         selectedAgentOption,
-        clientCaseData.agencyId,
-        clientCaseData.agentDetails?.sellingCode,
+        agencyId,
+        agentDetails?.sellingCode,
         isEdit,
         setValue,
     ]);
@@ -546,7 +438,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
                 {selectedAgentOption &&
                     !agencyOptions?.length &&
-                    !clientCaseData?.agencyId &&
+                    !agencyId &&
                     !isFetchingAgencies && (
                         <Typography
                             variant={TypographyVariant.BodySm}
@@ -570,23 +462,18 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 </Label>
                             }
                             onValueChange={(agencyId: string) => {
-                                // updateClientCaseData({ agencyId });
                                 setValue('agencyId', agencyId);
 
                                 const newSelectedAgencyOption =
                                     agencyOptions.find(
                                         (agencyOption) =>
-                                            agencyOption.value ===
-                                            clientCaseData.agencyId
+                                            agencyOption.value === agencyId
                                     );
 
                                 const newAgentSellingcode =
                                     newSelectedAgencyOption?.agentSellingCode;
 
                                 if (newAgentSellingcode) {
-                                    // updateClientCaseData({
-                                    //     sellingCode: newAgentSellingcode,
-                                    // });
                                     setValue(
                                         'agentDetails.sellingCode',
                                         newAgentSellingcode
@@ -595,7 +482,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             }}
                             defaultValue={
                                 isEdit
-                                    ? clientCaseData.agencyId
+                                    ? agencyId
                                     : agencyOptions[firstAgencyKey].value
                             }
                         />
@@ -716,11 +603,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             onChange={(newDate) => {
                                 handleDateChange(newDate);
                             }}
-                            {...(clientCaseData.insuredDetails?.dateOfBirth && {
+                            {...(dateOfBirth && {
                                 defaultDate: formatUTCDate(
-                                    new Date(
-                                        clientCaseData.insuredDetails.dateOfBirth
-                                    )
+                                    new Date(dateOfBirth)
                                 ),
                             })}
                             errorMessage={t(
@@ -729,7 +614,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             disabled={!canEditInsuredDetails}
                         />
                     </div>
-                    {clientCaseData.insuredDetails?.dateOfBirth !== null && (
+                    {dateOfBirth !== null && (
                         <div className={styles.ageLabel}>
                             <Typography variant={TypographyVariant.BodySm}>
                                 Current age: {currentAge}
