@@ -57,6 +57,7 @@
         "technicalIssuesResolved": "Nous avons résolu tous les problèmes techniques liés à cette affaire.",
         "errorCode": "Code d'erreur",
         "summary": "Résumé",
+        "exceptionReason": "Raison de l'exception",
         "errorDescription": "Description",
         "sourceSystem": "Système source",
         "inProgress": "En cours",

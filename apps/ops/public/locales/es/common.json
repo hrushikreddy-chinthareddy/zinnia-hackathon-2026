@@ -51,6 +51,7 @@
         "account": "Cuenta",
         "createdOn": "Creado el",
         "viewDetailsException": "Ver detalles de excepciones",
+        "exceptionReason": "Razón de excepción",
         "resolvedOn": "Resuelto el",
         "accountValue": "Valor de la cuenta",
         "technicalExceptions": "Excepciones técnicas",
