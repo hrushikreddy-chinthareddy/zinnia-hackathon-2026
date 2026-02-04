@@ -53,6 +53,7 @@
         "resolvedOn": "Resolved on",
         "accountValue": "Account value",
         "technicalExceptions": "Technical Exceptions",
+        "exceptionReason": "Exception reason",
         "errorCode": "Error code",
         "summary": "Summary",
         "viewDetailsException": "View details exceptions",

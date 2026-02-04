@@ -31,7 +31,8 @@ type CaseTechnicalIssuesProps = {
     caseId: string;
 };
 
-enum ExceptionDateIds {
+enum NonAdditionalExceptionFields {
+    exceptionReason = 'exception_reason',
     createdOn = 'created_on',
     resolvedOn = 'resolved_on',
 }
@@ -41,6 +42,7 @@ const ORDERED_EXCEPTION_FIELDS = [
     'source',
     'error_code',
     'processing_resolution',
+    'exception_reason',
     'created_on',
     'resolved_on',
 ];
@@ -60,6 +62,7 @@ const CaseTechnicalIssues = ({
         source: t('allFields.sourceSystem'),
         processing_reason: t('allFields.summary'),
         processing_resolution: t('allFields.errorDescription'),
+        exception_reason: t('allFields.exceptionReason'),
         created_on: t('allFields.createdOn'),
         resolved_on: t('allFields.resolvedOn'),
     };
@@ -78,34 +81,43 @@ const CaseTechnicalIssues = ({
                             caseId,
                             exception.id
                         );
+
+                        const nonAdditionalDataFields = [
+                            {
+                                id: NonAdditionalExceptionFields.exceptionReason,
+                                value: data.detailReason,
+                            },
+                            {
+                                id: NonAdditionalExceptionFields.createdOn,
+                                value: formatTimestamp(
+                                    data.createdAt,
+                                    'tooltip'
+                                ),
+                            },
+                            ...(data.exceptionStatus ===
+                            ExceptionStatuses.Resolved
+                                ? [
+                                      {
+                                          id: NonAdditionalExceptionFields.resolvedOn,
+                                          value: formatTimestamp(
+                                              data.updatedAt,
+                                              'tooltip'
+                                          ),
+                                      },
+                                  ]
+                                : []),
+                        ];
+
                         return {
                             exceptionId: exception.id,
                             additionalData: Array.isArray(
                                 data?.exceptionAdditionalData
                             )
                                 ? [
+                                      ...nonAdditionalDataFields,
                                       ...data.exceptionAdditionalData,
-                                      {
-                                          id: ExceptionDateIds.createdOn,
-                                          value: formatTimestamp(
-                                              data.createdAt,
-                                              'tooltip'
-                                          ),
-                                      },
-                                      ...(data.exceptionStatus ===
-                                      ExceptionStatuses.Resolved
-                                          ? [
-                                                {
-                                                    id: ExceptionDateIds.resolvedOn,
-                                                    value: formatTimestamp(
-                                                        data.updatedAt,
-                                                        'tooltip'
-                                                    ),
-                                                },
-                                            ]
-                                          : []),
                                   ]
-                                : [],
+                                : [...nonAdditionalDataFields],
                         };
                     })
                 );
