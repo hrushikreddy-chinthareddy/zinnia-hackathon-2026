@@ -53,6 +53,68 @@ describe('helpers/objects.helpers', () => {
         });
     });
 
+    describe('stripNullishValues', () => {
+        it('removes null and undefined values from flat object', () => {
+            const input = { a: 1, b: null, c: undefined, d: 'hello' };
+            expect(stripNullishValues(input)).toEqual({ a: 1, d: 'hello' });
+        });
+
+        it('recursively removes nullish values from nested objects', () => {
+            const input = {
+                name: 'John',
+                details: {
+                    age: 30,
+                    email: null,
+                    address: {
+                        city: 'NYC',
+                        zip: undefined,
+                    },
+                },
+            };
+            expect(stripNullishValues(input)).toEqual({
+                name: 'John',
+                details: {
+                    age: 30,
+                    address: {
+                        city: 'NYC',
+                    },
+                },
+            });
+        });
+
+        it('preserves arrays and Date objects', () => {
+            const date = new Date('2024-01-01');
+            const input = {
+                items: [1, 2, 3],
+                createdAt: date,
+                empty: null,
+            };
+            const result = stripNullishValues(input);
+            expect(result).toEqual({ items: [1, 2, 3], createdAt: date });
+            expect(result.createdAt).toBe(date);
+        });
+
+        it('removes nested objects that become empty after stripping', () => {
+            const input = {
+                a: 1,
+                nested: {
+                    b: null,
+                    c: undefined,
+                },
+            };
+            expect(stripNullishValues(input)).toEqual({ a: 1 });
+        });
+
+        it('preserves falsy but non-nullish values', () => {
+            const input = { a: 0, b: '', c: false, d: null };
+            expect(stripNullishValues(input)).toEqual({
+                a: 0,
+                b: '',
+                c: false,
+            });
+        });
+    });
+
     describe('areObjectsDifferent', () => {
         it('treats both nullish as not different, one nullish as different', () => {
             expect(areObjectsDifferent(undefined as any, null as any)).toBe(

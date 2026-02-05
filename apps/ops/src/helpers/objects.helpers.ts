@@ -18,6 +18,37 @@ export function hasSameProperties(
     return true;
 }
 
+/**
+ * Recursively removes null and undefined values from an object.
+ * Useful for PATCH payloads where we don't want to overwrite existing data with nullish values.
+ */
+export const stripNullishValues = <T extends Record<string, any>>(
+    obj: T
+): Partial<T> => {
+    const result: Record<string, any> = {};
+
+    for (const [key, value] of Object.entries(obj)) {
+        if (value === null || value === undefined) {
+            continue;
+        }
+
+        if (
+            typeof value === 'object' &&
+            !Array.isArray(value) &&
+            !(value instanceof Date)
+        ) {
+            const cleaned = stripNullishValues(value);
+            if (Object.keys(cleaned).length > 0) {
+                result[key] = cleaned;
+            }
+        } else {
+            result[key] = value;
+        }
+    }
+
+    return result as Partial<T>;
+};
+
 export const areObjectsDifferent = (obj1: any, obj2: any): boolean => {
     if (!obj1 && !obj2) return false;
     if (!obj1 || !obj2) return true;

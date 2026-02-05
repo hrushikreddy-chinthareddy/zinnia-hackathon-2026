@@ -1,7 +1,10 @@
 import first from 'lodash/head';
 import merge from 'lodash/merge';
 
-import { isEmptyObject } from '@deps/helpers/objects.helpers';
+import {
+    isEmptyObject,
+    stripNullishValues,
+} from '@deps/helpers/objects.helpers';
 import {
     CLIENT_CASE_MANAGER_API_ORIGIN,
     createClientCase,
@@ -123,9 +126,14 @@ export const createClientCaseFromSureify = async (
                     logCtx
                 );
 
+            // Strip null/undefined values to avoid overwriting existing data
+            const sanitizedPayload = stripNullishValues(
+                updatedClientCasePayload
+            );
+
             const patchedCase = await patchClientCase(
                 {
-                    ...updatedClientCasePayload,
+                    ...sanitizedPayload,
                     id: defaultClientCaseId,
                 },
                 accessToken,
