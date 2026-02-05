@@ -192,8 +192,11 @@ const AllocationCard = ({
                         />
                     </div>
                     <div className="flex flex-row">
-                        {activePolicyPartyRoles?.map((role) => (
-                            <div className="flex flex-col font-primary mr-8">
+                        {activePolicyPartyRoles?.map((role, index) => (
+                            <div
+                                key={`agent-role-${index}`}
+                                className="flex flex-col font-primary mr-8"
+                            >
                                 <Typography variant={TypographyVariant.Value}>
                                     {percentFormatify(role.partyPercentage, {
                                         isInteger: true,
