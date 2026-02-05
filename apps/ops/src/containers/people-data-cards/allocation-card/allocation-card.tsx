@@ -15,6 +15,7 @@ import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     numberFormatify,
     percentFormatify,
@@ -151,6 +152,10 @@ const AllocationCard = ({
         return convertToChipText(partyRole, t);
     };
 
+    const activePolicyPartyRoles = selectedPolicyPartyRoles?.filter(
+        (role) => !isEndDated(role.endDate)
+    );
+
     let estimatedValue;
     const isIndividual = selectedPartyType === PartyType.INDIVIDUAL;
 
@@ -177,7 +182,7 @@ const AllocationCard = ({
             </div>
         );
     } else {
-        if (selectedPolicyPartyRoles?.length) {
+        if (activePolicyPartyRoles?.length) {
             estimatedValue = (
                 <>
                     <div className="flex">
@@ -187,7 +192,7 @@ const AllocationCard = ({
                         />
                     </div>
                     <div className="flex flex-row">
-                        {selectedPolicyPartyRoles?.map((role) => (
+                        {activePolicyPartyRoles?.map((role) => (
                             <div className="flex flex-col font-primary mr-8">
                                 <Typography variant={TypographyVariant.Value}>
                                     {percentFormatify(role.partyPercentage, {
