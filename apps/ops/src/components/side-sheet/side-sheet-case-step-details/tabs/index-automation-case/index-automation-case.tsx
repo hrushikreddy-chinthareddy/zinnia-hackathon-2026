@@ -125,7 +125,7 @@ const IndexAutomationCase = ({
         <div className={styles.flexFullCol}>
             {dataType === DataType.REQUEST_RECEIVED_DATA && (
                 <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
+                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t('indexAutomation.requestReceived.receivedOn')}
                         </div>
@@ -152,7 +152,7 @@ const IndexAutomationCase = ({
 
             {dataType === DataType.DOCUMENT_IDENTIFICATION_DATA && (
                 <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
+                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
                                 'indexAutomation.documentIdentification.docTypeGroup'
@@ -183,7 +183,7 @@ const IndexAutomationCase = ({
 
             {dataType === DataType.DOCUMENT_EXTRACTION_DATA && (
                 <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
+                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
                                 'indexAutomation.documentExtraction.contractNumber'
@@ -222,7 +222,7 @@ const IndexAutomationCase = ({
 
             {dataType === DataType.DOCUMENT_INDEXED_DATA && (
                 <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
+                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
                                 'indexAutomation.documentExtraction.documentNumber'
