@@ -222,8 +222,7 @@ export const buildAgentDetailsFromNewBusiness = async (
 export const buildClientCaseFromNewBusiness = async (
     newBusinessObject: NewBusiness,
     eAppId: string,
-    loggingContext: LoggingContext,
-    excludeAgentUpdate = false
+    loggingContext: LoggingContext
 ): Promise<Partial<IllustrationsClientCase>> => {
     const logPrefix = `ClientCases:New:Sureify`;
     const logCtx = {
@@ -252,38 +251,26 @@ export const buildClientCaseFromNewBusiness = async (
         newBusinessObject.policy
     );
 
-    // Only fetch agent details and agency if not excluded (first build)
-    // For subsequent updates, agent details should not change
-    let agentDetails:
-        | Awaited<ReturnType<typeof buildAgentDetailsFromNewBusiness>>
-        | undefined;
-    let agencyId: string | null | undefined;
+    const agentDetails = await buildAgentDetailsFromNewBusiness(
+        parties,
+        loggingContext
+    );
 
-    if (!excludeAgentUpdate) {
-        agentDetails = await buildAgentDetailsFromNewBusiness(
-            parties,
-            loggingContext
+    // Once selling code is known, derive agency for routing & permissions
+    // (hierarchy must exist for this agent in distribution system)
+    const agencyId = await getAgencyIdFromHierarchy(
+        agentDetails.sellingCode,
+        loggingContext
+    );
+
+    if (!agencyId) {
+        return throwTypedError(
+            'Agency ID was not able to be retrieved',
+            NEW_BUSINESS_API_ORIGIN
         );
-
-        // Once selling code is known, derive agency for routing & permissions
-        // (hierarchy must exist for this agent in distribution system)
-        agencyId = await getAgencyIdFromHierarchy(
-            agentDetails.sellingCode,
-            loggingContext
-        );
-
-        if (!agencyId) {
-            return throwTypedError(
-                'Agency ID was not able to be retrieved',
-                NEW_BUSINESS_API_ORIGIN
-            );
-        }
-
-        logTrace(`${logPrefix} Found agencyId for eApp`, {
-            ...logCtx,
-            agencyId,
-        });
     }
+
+    logTrace(`${logPrefix} Found agencyId for eApp`, { ...logCtx, agencyId });
 
     // Extract conversion data (if available)
     const conversionData = buildConversionData(newBusinessObject);
@@ -294,7 +281,8 @@ export const buildClientCaseFromNewBusiness = async (
             caseManagementCaseId: caseId,
             title: 'Untitled Client Case',
             insuredDetails,
-            ...(excludeAgentUpdate ? {} : { agentDetails, agencyId }),
+            agentDetails,
+            agencyId,
         },
         conversionData
     );

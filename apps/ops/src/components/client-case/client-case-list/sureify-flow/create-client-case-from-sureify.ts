@@ -116,13 +116,11 @@ export const createClientCaseFromSureify = async (
                 );
             }
 
-            const excludeAgentUpdate = true;
             const updatedClientCasePayload =
                 await buildClientCaseFromNewBusiness(
                     newBusinessResponseObject,
                     eAppId,
-                    logCtx,
-                    excludeAgentUpdate
+                    logCtx
                 );
 
             const patchedCase = await patchClientCase(
