@@ -5,6 +5,7 @@ import {
     getObjDeepValue,
     hasSameProperties,
     isEmptyObject,
+    stripNullishValues,
 } from './objects.helpers';
 
 describe('helpers/objects.helpers', () => {
