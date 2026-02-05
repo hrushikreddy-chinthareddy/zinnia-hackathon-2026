@@ -10,7 +10,7 @@ import {
 } from './death-audit-files/death-audit-files.types';
 import DeathAuditQualification from './death-audit-qualification/detah-audit-qualification';
 import DeathNotificationSidesheet from './death-notification';
-import IndexAutomationCase from './index-automation-case';
+import IndexAutomationCase from './index-automation-case/index-automation-case';
 import ReceiveNewDocument from './receive-new-document/receive-new-document';
 import {
     StepProgramTypes,
@@ -22,6 +22,13 @@ type TransactionalStepAdditionalDataProps = {
     stepAdditionalData: CaseAdditionalStepData;
     stepKey: TransactionsAdditionalDataStepIds;
 };
+
+const stepsWithIndexAutomationCase = [
+    TransactionsAdditionalDataStepIds.receiveRequest,
+    TransactionsAdditionalDataStepIds.docIndentification,
+    TransactionsAdditionalDataStepIds.docFieldExtraction,
+    TransactionsAdditionalDataStepIds.docIndexedAndCaseCreated,
+];
 
 export const TransactionsStepAdditionalData = ({
     stepAdditionalData,
@@ -111,35 +118,15 @@ export const TransactionsStepAdditionalData = ({
                         stepAdditionalData={stepAdditionalData}
                     />
                 );
-            case TransactionsAdditionalDataStepIds.receiveRequest:
-                return (
-                    <IndexAutomationCase
-                        stepAdditionalData={stepAdditionalData}
-                        dataType={stepAdditionalData.dataType}
-                    />
-                );
-            case TransactionsAdditionalDataStepIds.docIndentification:
-                return (
-                    <IndexAutomationCase
-                        stepAdditionalData={stepAdditionalData}
-                        dataType={stepAdditionalData.dataType}
-                    />
-                );
-            case TransactionsAdditionalDataStepIds.docFieldExtraction:
-                return (
-                    <IndexAutomationCase
-                        stepAdditionalData={stepAdditionalData}
-                        dataType={stepAdditionalData.dataType}
-                    />
-                );
-            case TransactionsAdditionalDataStepIds.docIndexedAndCaseCreated:
-                return (
-                    <IndexAutomationCase
-                        stepAdditionalData={stepAdditionalData}
-                        dataType={stepAdditionalData.dataType}
-                    />
-                );
             default:
+                if (stepsWithIndexAutomationCase.includes(id)) {
+                    return (
+                        <IndexAutomationCase
+                            stepAdditionalData={stepAdditionalData}
+                            dataType={stepAdditionalData.dataType}
+                        />
+                    );
+                }
                 return null;
         }
     };

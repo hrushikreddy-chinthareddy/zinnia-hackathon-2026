@@ -12,9 +12,11 @@ import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/t
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
+import styles from './index-automation-case.module.css';
 import {
-    IndexAutomationCaseData,
+    DataType,
     IndexAutomationCaseProps,
+    // eslint-disable-next-line import/no-unresolved
 } from './index-automation-case.types';
 
 const IndexAutomationCase = ({
@@ -33,13 +35,9 @@ const IndexAutomationCase = ({
         queryFn: () => getTransactionEntityQuery(entityId),
     });
 
-    const data: IndexAutomationCaseData | null = transactionEntity
-        ? transactionEntity
-        : null;
-
     const displayIsLoading = () => {
         return (
-            <div className="flex w-full flex-col">
+            <div className={styles.flexFullCol}>
                 <div className="mt-0.5">
                     <InProgressIcon
                         height={18}
@@ -63,7 +61,7 @@ const IndexAutomationCase = ({
 
     const displayError = () => {
         return (
-            <div className="flex w-full flex-col">
+            <div className={styles.flexFullCol}>
                 <div className="mt-0.5">
                     <InProgressIcon
                         height={18}
@@ -119,15 +117,15 @@ const IndexAutomationCase = ({
         return displayError();
     }
 
-    if (!data) {
+    if (!transactionEntity) {
         return displayNoData();
     }
 
     return (
-        <div className="flex w-full flex-col">
-            {dataType === 'REQUEST_RECEIVED_DATA' && (
-                <div className="flex flex-col w-full">
-                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+        <div className={styles.flexFullCol}>
+            {dataType === DataType.REQUEST_RECEIVED_DATA && (
+                <div className={styles.flexFullCol}>
+                    <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t('indexAutomation.requestReceived.receivedOn')}
                         </div>
@@ -152,9 +150,9 @@ const IndexAutomationCase = ({
                 </div>
             )}
 
-            {dataType === 'DOCUMENT_IDENTIFICATION_DATA' && (
-                <div className="flex flex-col w-full">
-                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+            {dataType === DataType.DOCUMENT_IDENTIFICATION_DATA && (
+                <div className={styles.flexFullCol}>
+                    <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
                                 'indexAutomation.documentIdentification.docTypeGroup'
@@ -183,9 +181,9 @@ const IndexAutomationCase = ({
                 </div>
             )}
 
-            {dataType === 'DOCUMENT_EXTRACTION_DATA' && (
-                <div className="flex flex-col w-full">
-                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+            {dataType === DataType.DOCUMENT_EXTRACTION_DATA && (
+                <div className={styles.flexFullCol}>
+                    <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
                                 'indexAutomation.documentExtraction.contractNumber'
@@ -222,9 +220,9 @@ const IndexAutomationCase = ({
                 </div>
             )}
 
-            {dataType === 'DOCUMENT_INDEXED_DATA' && (
-                <div className="flex flex-col w-full">
-                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+            {dataType === DataType.DOCUMENT_INDEXED_DATA && (
+                <div className={styles.flexFullCol}>
+                    <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
                                 'indexAutomation.documentExtraction.documentNumber'

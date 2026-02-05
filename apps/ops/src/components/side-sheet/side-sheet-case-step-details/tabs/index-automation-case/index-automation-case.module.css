@@ -1,0 +1,12 @@
+.flexFullCol {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0.5rem; /* Adjust gap as needed */
+    text-align: center;
+    margin-bottom: 1rem;
+}
