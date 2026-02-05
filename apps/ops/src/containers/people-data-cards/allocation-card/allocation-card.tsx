@@ -148,7 +148,7 @@ const AllocationCard = ({
         sideSheet.handleOpen(true);
     };
 
-    const getPartRoleText = (partyRole: string) => {
+    const getPartyRoleText = (partyRole: string) => {
         return convertToChipText(partyRole, t);
     };
 
