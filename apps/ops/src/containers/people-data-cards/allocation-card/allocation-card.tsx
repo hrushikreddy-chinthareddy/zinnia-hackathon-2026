@@ -203,7 +203,7 @@ const AllocationCard = ({
                                     variant={TypographyVariant.BodySm}
                                     className="text-gray-300"
                                 >
-                                    {getPartRoleText(role.partyRole as string)}
+                                    {getPartyRoleText(role.partyRole as string)}
                                 </Typography>
                                 {isIndividual && (
                                     <RelationshipToInsuredInfo
