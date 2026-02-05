@@ -442,16 +442,16 @@ export default function getDlicConfig(
 
     const sendCheckOptions = [
         {
-            label: t('distributionMethod.select'),
-            value: 'select',
-        },
-        {
-            label: t('distributionMethod.disburseToAnnuitant'),
-            value: SendCheckOption.Annuitant,
+            label: t('distributionMethod.disburseToOwnerAddress'),
+            value: SendCheckOption.OwnerAddress,
         },
         {
             label: t('distributionMethod.disburseToFinancialInstitution'),
             value: SendCheckOption.FinancialInstitution,
+        },
+        {
+            label: t('distributionMethod.disburseToAnnuitant'),
+            value: SendCheckOption.Annuitant,
         },
         {
             label: t('distributionMethod.disburseToDifferentAddress'),
@@ -461,7 +461,6 @@ export default function getDlicConfig(
             label: t('distributionMethod.disburseToThirdPartyNoCharity'),
             value: SendCheckOption.ThirdPartyNotFinancialIns,
         },
-        {},
     ];
 
     const disbursementOptions = (formParty: FormParty) => {

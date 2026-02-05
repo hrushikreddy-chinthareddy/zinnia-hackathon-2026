@@ -317,7 +317,7 @@ export const getBankUpdatePayload = (
         }),
         // Non-SBGC fields
         ...(!isSBGC && {
-            doesCheckMeetSecRequirement: isSecurityRequirementsFieldApplicable(
+            doesCheckMeetSecRequiremnt: isSecurityRequirementsFieldApplicable(
                 initialForm.carrier
             )
                 ? bankUpdateDetails.doesCheckMeetSecurityRequirements

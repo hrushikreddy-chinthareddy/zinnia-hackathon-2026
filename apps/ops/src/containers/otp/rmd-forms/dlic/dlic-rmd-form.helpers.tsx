@@ -241,13 +241,8 @@ export default function getDlicRmdWithdrawalConfig(
             rmdMethod === RMDType.AutoRMD || rmdMethod === RMDType.CalculateRMD;
         const isOneTimeRmd = rmdMethod === RMDType.OneTimeRMD;
 
-        if (isAutoRmd) {
-            // Auto RMD Options: 5 options with separate Charity
+        if (isOneTimeRmd) {
             return [
-                {
-                    label: t('distributionMethod.select'),
-                    value: 'select',
-                },
                 {
                     label: t('distributionMethod.disburseToOwnerAddress'),
                     value: SendCheckOption.OwnerAddress,
@@ -263,29 +258,21 @@ export default function getDlicRmdWithdrawalConfig(
                     value: SendCheckOption.Charity,
                 },
                 {
-                    label: t('distributionMethod.disburseToThirdParty'),
-                    value: SendCheckOption.ThirdPartyNotFinancialIns,
-                },
-
-                {
                     label: t('distributionMethod.disburseToDifferentAddress'),
                     value: SendCheckOption.DifferentAddress,
+                },
+                {
+                    label: t('distributionMethod.disburseToThirdParty'),
+                    value: SendCheckOption.ThirdPartyNotFinancialIns,
                 },
             ];
         }
 
-        if (isOneTimeRmd) {
-            // One Time RMD Options: 4 options with combined third party/charity
+        if (isAutoRmd) {
             return [
                 {
-                    label: t('distributionMethod.select'),
-                    value: 'select',
-                },
-                {
-                    label: t(
-                        'distributionMethod.disburseToThirdPartyNoCharity'
-                    ),
-                    value: SendCheckOption.ThirdPartyNotFinancialIns,
+                    label: t('distributionMethod.disburseToOwnerAddress'),
+                    value: SendCheckOption.OwnerAddress,
                 },
                 {
                     label: t(
@@ -294,17 +281,17 @@ export default function getDlicRmdWithdrawalConfig(
                     value: SendCheckOption.FinancialInstitution,
                 },
                 {
-                    label: t('distributionMethod.disburseToOwnerAddress'),
-                    value: SendCheckOption.OwnerAddress,
-                },
-                {
                     label: t('distributionMethod.disburseToDifferentAddress'),
                     value: SendCheckOption.DifferentAddress,
                 },
+                {
+                    label: t(
+                        'distributionMethod.disburseToThirdPartyNoCharity'
+                    ),
+                    value: SendCheckOption.ThirdPartyNotFinancialIns,
+                },
             ];
         }
-
-        // Default fallback
         return null;
     };
 
@@ -316,7 +303,6 @@ export default function getDlicRmdWithdrawalConfig(
             (party: any) => party.partyRoleType === PartyRoles.ANNUITANT
         )?.addresses?.[0];
 
-        // Check for Auto Rmd or Calculate Rmd
         const rmdMethod = formProgram?.rmd?.rmdMethod ?? '';
 
         return [

@@ -18,7 +18,9 @@ const SendCheckSelect = ({
     onDataChange,
     selectOptions,
 }: DisbursementInformation) => {
-    const [selectedValue, setSelectedValue] = useState<string>('select');
+    const [selectedValue, setSelectedValue] = useState<SendCheckOption>(
+        SendCheckOption.OwnerAddress
+    );
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.distributionMethod',
     });
@@ -26,7 +28,7 @@ const SendCheckSelect = ({
     const sendCheckOptions = selectOptions ?? defaultSendCheckOptions(t);
 
     const handleChange = (val: string) => {
-        setSelectedValue(val);
+        setSelectedValue(val as SendCheckOption);
     };
 
     useEffect(() => {
@@ -104,17 +106,19 @@ const SendCheckSelect = ({
     }, [selectedValue]);
 
     return (
-        <SelectSimple
-            disabled={isFormStateReadOnly}
-            className={classNames}
-            label={'Please Choose One'}
-            options={sendCheckOptions}
-            onChange={handleChange}
-            size={FieldSize.Small}
-            value={selectedValue}
-            data-testid="send-check-select"
-            key={fieldName}
-        />
+        <div>
+            <SelectSimple
+                disabled={isFormStateReadOnly}
+                className={classNames}
+                label={'Please Choose One'}
+                options={sendCheckOptions}
+                onChange={handleChange}
+                size={FieldSize.Small}
+                value={selectedValue}
+                data-testid="send-check-select"
+                key={fieldName}
+            />
+        </div>
     );
 };
 
