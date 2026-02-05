@@ -13,7 +13,7 @@ import {
 } from '@deps/queries/api/server/v1/client-cases';
 import {
     getNewBusinessById,
-    isNewBusinessResponse,
+    isNewBusinessErrorResponse,
     NEW_BUSINESS_API_ORIGIN,
 } from '@deps/queries/api/server/v2/new-business';
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
@@ -111,7 +111,7 @@ export const createClientCaseFromSureify = async (
                     NEW_BUSINESS_API_ORIGIN
                 );
             }
-            if (isNewBusinessResponse(newBusinessResponseObject)) {
+            if (isNewBusinessErrorResponse(newBusinessResponseObject)) {
                 // The API returned an error
                 throwTypedError(
                     newBusinessResponseObject.message,
@@ -167,7 +167,7 @@ export const createClientCaseFromSureify = async (
             // New Business was not found
             throwTypedError('New Business not found', NEW_BUSINESS_API_ORIGIN);
         }
-        if (isNewBusinessResponse(newBusinessResponseObject)) {
+        if (isNewBusinessErrorResponse(newBusinessResponseObject)) {
             // The API returned an error
             throwTypedError(
                 newBusinessResponseObject.message,

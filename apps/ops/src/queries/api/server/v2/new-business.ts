@@ -6,8 +6,7 @@ import { LoggingContext } from '@deps/utils/server-logging';
 
 export const NEW_BUSINESS_API_ORIGIN = 'new-business-api';
 
-// Todo: validate the below checks for errors only, and rename if so (isNewBusinessErrorResponse) for clarity
-export const isNewBusinessResponse = (
+export const isNewBusinessErrorResponse = (
     obj: NewBusiness | NewBusinessResponse
 ): obj is NewBusinessResponse => 'message' in obj && obj.message != null;
 
