@@ -22,7 +22,11 @@ import {
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-medium.svg';
 import { TransactionClickProps } from '@deps/types/segment-analytics';
 import { FilingStatus } from '@zinnia/api-types/types/bpm';
-import { PartyRole, Policy } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    Policy,
+    TaxWithholdingType,
+} from '@zinnia/api-types/types/sor';
 
 import WorkflowCard from '../workflow-card/workflow-card';
 
@@ -103,7 +107,9 @@ const PayeesStep = ({
                 selectedPayee?.taxWithholdings?.[0]?.filingStatus ||
                 FilingStatus.DEFAULT,
             payeeTaxJurisdiction:
-                selectedPayee?.taxWithholdings?.[0]?.taxJurisdiction || '',
+                selectedPayee?.taxWithholdings?.find(
+                    (tw) => tw.taxWithholdingType === TaxWithholdingType.STATE
+                )?.taxJurisdiction || '',
         }));
     }, [currentPayeePartyId, eligiblePayees, setState]);
 
