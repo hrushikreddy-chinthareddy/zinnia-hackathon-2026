@@ -13,25 +13,24 @@ export const ExpandedLogo = ({
     isExpanded: boolean;
     expandText: string;
 }) => {
-    switch (activeCarrier) {
-        case 'farmers':
-            return (
-                <div style={{ minWidth: '127px' }}>
-                    <CarrierLogo
-                        carrier={CarrierName.FARMERS}
-                        alt="Farmers Insurance Logo"
-                        height={24}
-                        width={127}
-                    />
-                </div>
-            );
-        default:
-            return (
-                <ZinniaLogo
-                    handleLogoClick={handleLogoClick}
-                    isExpanded={isExpanded}
-                    expandText={expandText}
+    if (activeCarrier && activeCarrier !== CarrierName.ZINNIA) {
+        return (
+            <div style={{ minWidth: '127px' }}>
+                <CarrierLogo
+                    carrier={activeCarrier}
+                    alt={`${activeCarrier} Logo`}
+                    height={24}
+                    width={127}
                 />
-            );
+            </div>
+        );
     }
+
+    return (
+        <ZinniaLogo
+            handleLogoClick={handleLogoClick}
+            isExpanded={isExpanded}
+            expandText={expandText}
+        />
+    );
 };

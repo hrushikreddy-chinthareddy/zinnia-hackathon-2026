@@ -1,16 +1,16 @@
 import {
-    CarrierName,
     FieldData,
     FieldSize,
     Tooltip,
     TooltipPlacement,
     Icon,
     IconType,
+    CarrierName,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { getCookie } from 'cookies-next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
+import { useTheme } from '@deps/hooks/useTheme';
 import { useWindowResize } from '@deps/hooks/useWindowResize';
 
 import { CollapsedLogo } from './CollapsedLogo';
@@ -70,9 +70,7 @@ export const Nav = ({
     onNavigationToggle,
 }: NavProps) => {
     const [isExpanded, setExpanded] = useState(true);
-    const [activeCarrier, setActiveCarrier] = useState<CarrierName>(
-        CarrierName.ZINNIA
-    );
+    const { carrierName } = useTheme();
     const windowWidth = useWindowResize();
     const isLargeScreen = windowWidth >= NAV_CHANGE_WIDTH;
 
@@ -80,14 +78,6 @@ export const Nav = ({
     const expandText = 'Expand navigation';
     const collapseText = 'Collapse navigation';
     const searchText = 'Search...';
-
-    useEffect(() => {
-        const role = getCookie('role') as string | undefined;
-
-        if (role && (Object.values(CarrierName) as string[]).includes(role)) {
-            setActiveCarrier(role as CarrierName);
-        }
-    }, []);
 
     const handleNavToggle = () => {
         if (!isLargeScreen && !!toggleMethod) {
@@ -127,7 +117,7 @@ export const Nav = ({
                 <div className={styles.logoRow}>
                     <div className={styles.logo}>
                         {/* If the theme is Zinnia - just load in the logo component */}
-                        {activeCarrier === 'zinnia' ? (
+                        {carrierName === CarrierName.ZINNIA ? (
                             <ZinniaLogo
                                 handleLogoClick={handleLogoClick}
                                 isExpanded={false}
@@ -136,7 +126,7 @@ export const Nav = ({
                         ) : // Otherwise check for expanded state to toggle between the two types of logos
                         isExpanded ? (
                             <ExpandedLogo
-                                activeCarrier={activeCarrier}
+                                activeCarrier={carrierName}
                                 handleLogoClick={handleLogoClick}
                                 isExpanded={isExpanded}
                                 expandText={expandText}
@@ -147,7 +137,7 @@ export const Nav = ({
                                 aria-label={expandText}
                             >
                                 <CollapsedLogo
-                                    activeCarrier={activeCarrier}
+                                    activeCarrier={carrierName}
                                     handleLogoClick={handleLogoClick}
                                     isExpanded={isExpanded}
                                     expandText={expandText}

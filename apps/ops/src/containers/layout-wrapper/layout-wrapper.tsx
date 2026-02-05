@@ -6,6 +6,7 @@ import React, { PropsWithChildren } from 'react';
 import { Layout } from '@deps/components/layout/Layout';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { useMainNavItems } from '@deps/hooks/useMainNavItems';
+import { useTheme } from '@deps/hooks/useTheme';
 
 import styles from './layout-wrapper.module.css';
 
@@ -16,7 +17,8 @@ export const LayoutWrapper: React.FC<PropsWithChildren> = ({ children }) => {
     const { pathname } = useRouter();
     const path = usePathname();
     const { user } = useUser();
-    const theme = process.env.NEXT_PUBLIC_THEME;
+
+    const { theme } = useTheme();
 
     if (noNavRoutes.includes(pathname)) {
         return <>{children}</>;

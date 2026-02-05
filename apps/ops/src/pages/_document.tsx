@@ -12,6 +12,7 @@ import { parseCookies } from 'nookies';
 
 import { PendoAnalyticsScript as PendoAnalyticsSnippet } from '@deps/components/analytics/PendoAnalyticsSnippet';
 import { getInitialData } from '@deps/helpers/query-data.helpers';
+import { getThemeFromRole } from '@deps/utils/theme';
 
 import i18nextConfig from '../../next-i18next.config';
 
@@ -53,8 +54,7 @@ Document.getInitialProps = async (ctx: DocumentContext) => {
     const { company } = await getInitialData(ctx);
     const cookies = parseCookies(ctx);
     const role = cookies.role as string | undefined;
-    const theme: CarrierName =
-        role === 'farmers' ? CarrierName.FARMERS : CarrierName.ZINNIA;
+    const theme = getThemeFromRole(role);
 
     return {
         ...initialProps,
