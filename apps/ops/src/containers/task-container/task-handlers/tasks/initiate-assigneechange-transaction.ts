@@ -17,7 +17,7 @@ import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
-import { Identification as ApiIdentification } from '@zinnia/api-types/types/sor';
+import { IdentificationTypeEnum } from '@zinnia/api-types/types/sor';
 
 import {
     TaskHandler,
@@ -103,8 +103,7 @@ const getIdentifications = (
 ): Identification[] => {
     const ids = ensureArray(identifications);
     const ssn = ids.find(
-        (id) =>
-            id.identificationType === ApiIdentification.identificationType.SSN
+        (id) => id.identificationType === IdentificationTypeEnum.SSN
     );
     if (ssn) {
         return [
@@ -117,7 +116,7 @@ const getIdentifications = (
     }
     return [
         {
-            identificationType: ApiIdentification.identificationType.SSN,
+            identificationType: IdentificationTypeEnum.SSN,
             identificationValue: null,
             endDate: null,
         },

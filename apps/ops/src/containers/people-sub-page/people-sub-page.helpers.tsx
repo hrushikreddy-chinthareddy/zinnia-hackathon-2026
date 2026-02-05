@@ -8,7 +8,7 @@ import {
 } from '@deps/helpers/sort.helpers';
 import { TagKey } from '@deps/types/components';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
+import { PomModelsProducerType } from '@zinnia/api-types/types/pom';
 import {
     Parties,
     PartyRole,
@@ -246,7 +246,7 @@ export const combineNameAndRoles = (
             switch (partyType) {
                 case PartyType.INDIVIDUAL:
                     if (
-                        producerType === POM_Models_ProducerType.CORPORATION &&
+                        producerType === PomModelsProducerType.CORPORATION &&
                         producerName
                     ) {
                         nameTag.fullName = producerName;

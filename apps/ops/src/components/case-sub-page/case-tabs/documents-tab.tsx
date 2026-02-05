@@ -22,7 +22,10 @@ import {
 } from '@deps/models/case/document';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import {
+    DocumentClassificationEnum,
+    SearchRequest,
+} from '@zinnia/api-types/types/documents-v3';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 // try to get any documentIds associated with this case.
@@ -64,8 +67,8 @@ export default function DocumentsTab({
         }
         const documentClassification =
             docSource === (DocumentTypeView.Policy as string)
-                ? SearchRequest.documentClassification.INBOUND
-                : SearchRequest.documentClassification.OUTBOUND;
+                ? DocumentClassificationEnum.INBOUND
+                : DocumentClassificationEnum.OUTBOUND;
 
         const searchBody: SearchRequest = {
             parentCarrierCode: caseDetails.carrier,
@@ -76,8 +79,7 @@ export default function DocumentsTab({
         };
 
         if (
-            documentClassification ===
-                SearchRequest.documentClassification.INBOUND &&
+            documentClassification === DocumentClassificationEnum.INBOUND &&
             includeDocumentTypeForInboundSearch(caseDetails?.carrier) &&
             !isZinniaInternalProcessor // IMH-85894
         ) {
@@ -94,8 +96,8 @@ export default function DocumentsTab({
         const documentClassification =
             // TODO MG: This is duped above - add to more shareable util function
             docSource === (DocumentTypeView.Policy as string)
-                ? SearchRequest.documentClassification.INBOUND
-                : SearchRequest.documentClassification.OUTBOUND;
+                ? DocumentClassificationEnum.INBOUND
+                : DocumentClassificationEnum.OUTBOUND;
 
         const body: SearchRequest = {
             parentCarrierCode: caseDetails.carrier,
@@ -111,8 +113,7 @@ export default function DocumentsTab({
         };
 
         if (
-            documentClassification ===
-                SearchRequest.documentClassification.INBOUND &&
+            documentClassification === DocumentClassificationEnum.INBOUND &&
             includeDocumentTypeForInboundSearch(caseDetails?.carrier) &&
             !isZinniaInternalProcessor // IMH-85894
         ) {

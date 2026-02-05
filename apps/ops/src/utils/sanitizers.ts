@@ -23,12 +23,13 @@ import {
     CaseSearchResponse,
     PolicyReferenceSearchResponse,
 } from '@deps/types/search';
-import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/types/pom';
+import { PomProducerModelsSearchProducersResult } from '@zinnia/api-types/types/pom';
 import {
     Address,
     BankAccount,
     Email,
     Identification,
+    IdentificationTypeEnum,
     PartyTaxWithholding,
     Phone,
     Policy,
@@ -110,10 +111,7 @@ export const sanitizeIdentifications = (
     identifications: Identification[] | undefined
 ): Identification[] | undefined => {
     return identifications?.map((identification) => {
-        if (
-            identification.identificationType ===
-            Identification.identificationType.SSN
-        ) {
+        if (identification.identificationType === IdentificationTypeEnum.SSN) {
             return {
                 ...identification,
                 identificationValue: formatSSN(
@@ -321,10 +319,7 @@ const fullyMaskIdentifications = (
     identifications: Identification[] | undefined
 ): Identification[] | undefined => {
     return identifications?.map((identification) => {
-        if (
-            identification.identificationType ===
-            Identification.identificationType.SSN
-        ) {
+        if (identification.identificationType === IdentificationTypeEnum.SSN) {
             return {
                 ...identification,
                 identificationValue: formatSSN(
@@ -595,7 +590,7 @@ export const mcsResponseSanitizer = (
 };
 
 export const agentPartySanitizer = (
-    agent: POM_Producer_Models_SearchProducersResult
+    agent: PomProducerModelsSearchProducersResult
 ) => {
     try {
         const { socialSecurityNumber } = agent;

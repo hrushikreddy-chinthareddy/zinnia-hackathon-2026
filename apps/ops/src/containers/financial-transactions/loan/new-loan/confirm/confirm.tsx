@@ -24,7 +24,7 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
 
 import { buildNewLoanRequestBody } from '../new-loan.helpers';
 
@@ -73,7 +73,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: Transaction.transactionType.NEW_LOAN,
+                type: SchemaEnum.NEW_LOAN,
                 correlationId: requestBody.correlationId,
             }
         );

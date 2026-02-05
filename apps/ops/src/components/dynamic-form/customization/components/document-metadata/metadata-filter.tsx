@@ -16,7 +16,7 @@ import {
 } from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 
 export type DocumentMetadataFilterProps = {
     carrier: string;
@@ -52,7 +52,7 @@ const DocumentMetadataFilter = memo(
 
         const [docClassification, setDocClassification] = useState(
             currentMetaData.docClassification ||
-                SearchRequest.documentClassification.INBOUND
+                DocumentClassificationEnum.INBOUND
         );
 
         const [restricted, setRestricted] = useState<boolean>(false);
@@ -63,11 +63,11 @@ const DocumentMetadataFilter = memo(
         const documentClassificationOptions = [
             {
                 label: t('sent') as string,
-                value: SearchRequest.documentClassification.OUTBOUND,
+                value: DocumentClassificationEnum.OUTBOUND,
             },
             {
                 label: t('received') as string,
-                value: SearchRequest.documentClassification.INBOUND,
+                value: DocumentClassificationEnum.INBOUND,
             },
         ];
 
@@ -185,8 +185,7 @@ const DocumentMetadataFilter = memo(
             if (!currentMetaData.docClassification) {
                 setCurrentMetaData({
                     ...currentMetaData,
-                    docClassification:
-                        SearchRequest.documentClassification.INBOUND,
+                    docClassification: DocumentClassificationEnum.INBOUND,
                 });
             }
         }, []);

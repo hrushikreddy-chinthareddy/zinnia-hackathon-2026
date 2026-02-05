@@ -3,7 +3,7 @@ import {
     AddressType,
     Country,
     EmailType,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     State,
 } from '@zinnia/api-types/types/sor';
@@ -61,13 +61,13 @@ export const transformPomAgentDataToParty = (
         partyId: agentData?.partyId || undefined,
         identifications: [
             {
-                identificationType: Identification.identificationType.SSN,
+                identificationType: IdentificationTypeEnum.SSN,
                 identificationValue:
                     agentData?.socialSecurityNumber || undefined,
             },
             {
                 // identificationType: IdentificationType.NPN, TODO: update to this instead of string when kong updates
-                identificationType: 'NPN' as Identification.identificationType,
+                identificationType: 'NPN' as IdentificationTypeEnum,
                 identificationValue:
                     agentData?.nationalProducerNumber || undefined,
             },

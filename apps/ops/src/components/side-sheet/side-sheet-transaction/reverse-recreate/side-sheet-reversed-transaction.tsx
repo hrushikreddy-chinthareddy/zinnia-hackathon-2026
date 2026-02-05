@@ -9,7 +9,7 @@ import { useEffect, useState } from 'react';
 
 import { Content, ContentVariant } from '@deps/components/content/content';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { SchemaEnum } from '@zinnia/api-types/types/sor';
 
 import SideSheetReversedTransactionContent from './side-sheet-reversed-transaction-content';
 import { SideSheetTransactionProps } from '../types';
@@ -78,14 +78,11 @@ export const SideSheetReversedTransaction = ({
                             }
                         ></Tag>
                     )}
-                    {transactionType !==
-                        Transaction.transactionType.FULL_SURRENDER &&
+                    {transactionType !== SchemaEnum.FULL_SURRENDER &&
                         transactionType !==
-                            Transaction.transactionType
-                                .PARTIAL_WITHDRAWAL_ONE_TIME &&
+                            SchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME &&
                         transactionType !==
-                            Transaction.transactionType
-                                .FREE_LOOK_CANCELLATION && (
+                            SchemaEnum.FREE_LOOK_CANCELLATION && (
                             <div>
                                 <Content
                                     details={numberFormatify(

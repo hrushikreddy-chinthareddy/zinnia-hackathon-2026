@@ -33,7 +33,7 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;
@@ -103,7 +103,7 @@ const Summary = ({ policy, title }: SummaryProps) => {
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Funds}
                     trackEventProps={{
-                        type: Transaction.transactionType.FUND_TRANSFER,
+                        type: SchemaEnum.FUND_TRANSFER,
                         step: TransactionStep.Summary,
                     }}
                 />

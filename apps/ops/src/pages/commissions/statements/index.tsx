@@ -45,7 +45,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 import nextI18nextConfig from 'next-i18next.config';
 
 import styles from './index.module.css';
@@ -101,7 +101,7 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
             .add(1, 'day')
             .format(ZAHARA_DATE_FORMAT), //Add an extra day because the API doesn't support adding times to the end date correctly
         documentType: 'COMM',
-        documentClassification: SearchRequest.documentClassification.OUTBOUND,
+        documentClassification: DocumentClassificationEnum.OUTBOUND,
     };
 
     const {

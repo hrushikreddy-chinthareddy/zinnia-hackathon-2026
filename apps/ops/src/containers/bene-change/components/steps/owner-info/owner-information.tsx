@@ -31,7 +31,7 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import {
-    Identification,
+    IdentificationTypeEnum,
     PartyType,
     PhoneBase,
     Policy,
@@ -219,8 +219,7 @@ const getPartyInfo = (policy: Policy, role: PartyRoles) => {
 
     const taxId = identifications.find(
         (identification) =>
-            identification.identificationType ===
-            Identification.identificationType.SSN
+            identification.identificationType === IdentificationTypeEnum.SSN
     )?.identificationValue;
 
     return {

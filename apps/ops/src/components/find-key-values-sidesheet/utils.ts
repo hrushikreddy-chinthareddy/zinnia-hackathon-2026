@@ -16,8 +16,9 @@ import {
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { DataDefinition } from '@deps/types/data';
 import {
+    LineOfBusiness,
     Policy,
-    Product,
+    SchemaEnum,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
@@ -40,17 +41,17 @@ export const TransactionSidesheetViews = {
 };
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_REVERSAL = [
-    Transaction.transactionType.ONE_TIME_PREMIUM,
-    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
-    Transaction.transactionType.SUBSEQUENT_PAYMENT,
-    Transaction.transactionType.SUBSEQUENT_PREMIUM,
+    SchemaEnum.ONE_TIME_PREMIUM,
+    SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+    SchemaEnum.SUBSEQUENT_PAYMENT,
+    SchemaEnum.SUBSEQUENT_PREMIUM,
 ];
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_CANCEL = [
-    Transaction.transactionType.FULL_SURRENDER,
-    Transaction.transactionType.NEW_LOAN,
-    Transaction.transactionType.ONE_TIME_PREMIUM,
-    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
+    SchemaEnum.FULL_SURRENDER,
+    SchemaEnum.NEW_LOAN,
+    SchemaEnum.ONE_TIME_PREMIUM,
+    SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
 ];
 
 /**
@@ -68,11 +69,11 @@ export const getReversalTransactionId = (
     }
 
     switch (transaction.transactionType) {
-        case Transaction.transactionType.ONE_TIME_PREMIUM:
-        case Transaction.transactionType.SUBSEQUENT_PREMIUM:
+        case SchemaEnum.ONE_TIME_PREMIUM:
+        case SchemaEnum.SUBSEQUENT_PREMIUM:
             return transaction.parentId;
-        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
-        case Transaction.transactionType.SUBSEQUENT_PAYMENT:
+        case SchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
+        case SchemaEnum.SUBSEQUENT_PAYMENT:
         default:
             return transaction.transactionId;
     }
@@ -93,18 +94,18 @@ export const getTransactionAmount = (
     const { appliedAmount, paymentAmount, requestedAmount } =
         transaction?.transactionAmounts ?? {};
     switch (transaction?.transactionType) {
-        case Transaction.transactionType.NEW_LOAN:
+        case SchemaEnum.NEW_LOAN:
             return transaction?.transactionAmounts?.requestedAmount;
-        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case SchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
             return paymentAmount || requestedAmount;
-        case Transaction.transactionType.ONE_TIME_PREMIUM:
+        case SchemaEnum.ONE_TIME_PREMIUM:
             return appliedAmount || requestedAmount;
-        case Transaction.transactionType.SUBSEQUENT_PAYMENT:
-        case Transaction.transactionType.SUBSEQUENT_PREMIUM:
+        case SchemaEnum.SUBSEQUENT_PAYMENT:
+        case SchemaEnum.SUBSEQUENT_PREMIUM:
             return transaction?.status === TransactionStatus.PENDING
                 ? paymentAmount
                 : appliedAmount;
-        case Transaction.transactionType.FULL_SURRENDER:
+        case SchemaEnum.FULL_SURRENDER:
             return undefined;
         default:
             return appliedAmount || requestedAmount;
@@ -116,8 +117,7 @@ export const getTransactionAmount = (
  */
 export const prepareSearchableData = (policy: Policy, t: TFunction) => {
     const dto = generatePolicyAnnuityDetailsDto(policy);
-    const isLifePolicy =
-        policy.product?.lineOfBusiness === Product.lineOfBusiness.LIFE;
+    const isLifePolicy = policy.product?.lineOfBusiness === LineOfBusiness.LIFE;
     const isTermLife = isLifePolicy && isTermLifeProduct(policy);
     const colDefs = isLifePolicy
         ? isTermLife

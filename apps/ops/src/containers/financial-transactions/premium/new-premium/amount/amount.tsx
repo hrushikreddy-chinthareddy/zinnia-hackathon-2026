@@ -21,7 +21,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { FeatureType, Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { FeatureType, Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
 
 import {
     isDateAllowed,
@@ -198,8 +198,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Premiums}
                     trackEventProps={{
-                        type: Transaction.transactionType
-                            .PAYMENT_ONE_TIME_PREMIUM,
+                        type: SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Amount,
                     }}
                 />

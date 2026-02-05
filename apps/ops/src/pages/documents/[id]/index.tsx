@@ -41,7 +41,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 import nextI18nextConfig from 'next-i18next.config';
 
 const DocumentViewerPage = ({
@@ -236,12 +236,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                 let docClass;
                 switch (documentType) {
                     case DocumentTypeView.Correspondence:
-                        docClass =
-                            SearchRequest.documentClassification.OUTBOUND;
+                        docClass = DocumentClassificationEnum.OUTBOUND;
                         break;
                     case DocumentTypeView.Policy:
                     default:
-                        docClass = SearchRequest.documentClassification.INBOUND;
+                        docClass = DocumentClassificationEnum.INBOUND;
                         break;
                 }
                 docDownload = await documentDownload({

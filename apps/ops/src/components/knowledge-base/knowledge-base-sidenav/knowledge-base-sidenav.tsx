@@ -24,7 +24,7 @@ import {
     DocumentsDisplayType,
     KnowledgeBasePages,
 } from '@deps/types/knowledge-base';
-import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
+import { MeResponse, RoleEnum } from '@zinnia/api-types/types/knowledgebase';
 
 import styles from './knowledge-base-sidenav.module.css';
 import RecentChat from '../chat/recent-chat/recent-chat';
@@ -82,7 +82,7 @@ const KnowledgeBaseSidenav = ({
     };
 
     const handleShowAdminPage = () => {
-        if (opsUserData?.role === MeResponse.role.ADMIN) {
+        if (opsUserData?.role === RoleEnum.ADMIN) {
             router.push(KnowledgeBasePaths.admin);
         }
     };
@@ -381,7 +381,7 @@ const KnowledgeBaseSidenav = ({
                 )}
             </div>
             <div>
-                {opsUserData.role === MeResponse.role.ADMIN &&
+                {opsUserData.role === RoleEnum.ADMIN &&
                     renderNavButton(
                         handleShowAdminPage,
                         IconType.COG,

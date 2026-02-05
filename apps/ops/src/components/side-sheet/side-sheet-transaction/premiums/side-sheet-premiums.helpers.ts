@@ -12,6 +12,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import {
     Policy,
+    SchemaEnum,
     Transaction,
     TransactionPayor,
     TransactionStatus,
@@ -46,8 +47,7 @@ export const getAutopayPremiumSideSheetValues = (
             payors as TransactionPayor[],
             t
         );
-        const isPayment =
-            transactionType === Transaction.transactionType.SUBSEQUENT_PAYMENT;
+        const isPayment = transactionType === SchemaEnum.SUBSEQUENT_PAYMENT;
         const reverseRecreateEnabled =
             featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
 
@@ -110,8 +110,7 @@ export const getInitialPremiumSideSheetValues = (
     const isCanceled = status === TransactionStatus.CANCELED;
 
     const amount =
-        isCanceled ||
-        transactionType === Transaction.transactionType.PAYMENT_INITIAL_PREMIUM
+        isCanceled || transactionType === SchemaEnum.PAYMENT_INITIAL_PREMIUM
             ? paymentAmount
             : appliedAmount;
 
@@ -157,8 +156,7 @@ export const getOneTimePremiumSideSheetValues = (
         const isPending = status === ('Pending' as TransactionStatus);
         const isCanceled = status === ('Canceled' as TransactionStatus);
         const isPayment =
-            transactionType ===
-            Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM;
+            transactionType === SchemaEnum.PAYMENT_ONE_TIME_PREMIUM;
 
         const amount = isCanceled || isPayment ? paymentAmount : appliedAmount;
 
@@ -193,8 +191,8 @@ export const getOneTimePremiumSideSheetValues = (
                 isCanceled || isPending ? paymentAmount : requestedAmount,
             transactionId,
             transactionType: isPending
-                ? Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
-                : Transaction.transactionType.ONE_TIME_PREMIUM,
+                ? SchemaEnum.PAYMENT_ONE_TIME_PREMIUM
+                : SchemaEnum.ONE_TIME_PREMIUM,
             transactionValue: amount || requestedAmount,
         };
     } catch (error) {

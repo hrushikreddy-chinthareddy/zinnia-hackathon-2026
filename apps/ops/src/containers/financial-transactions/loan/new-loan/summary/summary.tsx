@@ -29,7 +29,7 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Address, Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Address, Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;
@@ -212,7 +212,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     submitLabel={t('submitLoan') as string}
                     // TODO MG: pass up correlationId
                     trackEventProps={{
-                        type: Transaction.transactionType.NEW_LOAN,
+                        type: SchemaEnum.NEW_LOAN,
                         step: TransactionStep.Summary,
                     }}
                 />

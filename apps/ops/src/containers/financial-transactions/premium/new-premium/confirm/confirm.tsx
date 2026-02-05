@@ -23,7 +23,7 @@ import {
     TransactionSuccessfulEvent,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
 
 import { buildNewPremiumRequestBody } from '../new-premium.helpers';
 
@@ -73,7 +73,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: Transaction.transactionType.ONE_TIME_PREMIUM,
+                type: SchemaEnum.ONE_TIME_PREMIUM,
                 correlationId: query.correlationId,
             }
         );

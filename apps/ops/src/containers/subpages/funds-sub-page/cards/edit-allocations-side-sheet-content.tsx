@@ -54,7 +54,7 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
 
 import { FundViewModel } from '../types';
 import { AllocationSuccessFlow } from './allocation-success-flow';
@@ -294,7 +294,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: Transaction.transactionType.FUND_ALLOCATIONS_CHANGE,
+                type: SchemaEnum.FUND_ALLOCATIONS_CHANGE,
                 correlationId: payload.correlationId,
             }
         );

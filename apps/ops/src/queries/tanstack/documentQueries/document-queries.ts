@@ -5,7 +5,7 @@ import { searchDocumentsV3 } from '@deps/queries/api/client/documents/v3/search'
 import { SearchRequest, V3DocumentWithSource } from '@deps/types/documents-v3';
 import { b64ToBlob } from '@deps/utils/blob';
 import { browserLogInfo } from '@deps/utils/browser-logging';
-import { SearchRequest as DocsSearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum as DocsDocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 
 export const getDocumentDownloadQuery = async (
     documentId: string,
@@ -19,11 +19,11 @@ export const getDocumentDownloadQuery = async (
         let docClass;
         switch (documentType) {
             case DocumentTypeView.Correspondence:
-                docClass = DocsSearchRequest.documentClassification.OUTBOUND;
+                docClass = DocsDocumentClassificationEnum.OUTBOUND;
                 break;
             case DocumentTypeView.Policy:
             default:
-                docClass = DocsSearchRequest.documentClassification.INBOUND;
+                docClass = DocsDocumentClassificationEnum.INBOUND;
         }
         doc = await downloadDocumentV3(documentId, docClass, carrierCode);
     } else {

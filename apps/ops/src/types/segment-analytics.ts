@@ -1,5 +1,5 @@
 import { UserProfile } from '@deps/models/user-profile';
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { SchemaEnum } from '@zinnia/api-types/types/sor';
 
 export interface SegmentTrackedPageProps {
     user: UserProfile;
@@ -194,10 +194,7 @@ export enum ExtendedTransactionType {
 // TODO MG: this is the same as TransactionTrackEventProps
 type BaseTransactionClickedEvent = BaseSegmentEventProps & {
     step?: TransactionStep;
-    type?:
-        | Transaction.transactionType
-        | ContactCenterTransactionType
-        | ExtendedTransactionType;
+    type?: SchemaEnum | ContactCenterTransactionType | ExtendedTransactionType;
 };
 
 export type TransactionContinueClickedEvent = BaseTransactionClickedEvent & {
@@ -232,7 +229,7 @@ export enum ContactCenterTransactionType {
 
 type TransactionTrackEventProps = {
     correlationId?: string;
-    type?: Transaction.transactionType | ContactCenterTransactionType;
+    type?: SchemaEnum | ContactCenterTransactionType;
     step?: TransactionStep;
 };
 

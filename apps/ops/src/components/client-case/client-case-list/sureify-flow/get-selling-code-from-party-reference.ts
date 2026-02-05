@@ -8,7 +8,7 @@ export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
 export const getSellingcodeFromPartyReference = async (
     partyId: string,
     loggingContext: LoggingContext
-) => {
+): Promise<string | null> => {
     const partyReferenceResponse = await getPartyReferenceByPartyId(
         partyId,
         loggingContext
@@ -36,7 +36,7 @@ export const getSellingcodeFromPartyReference = async (
     );
 
     if (agentSellingCodeExternalParty) {
-        return agentSellingCodeExternalParty.value;
+        return String(agentSellingCodeExternalParty.value);
     }
 
     const agentAORExternalParty = externalPartyIds.find(
@@ -49,7 +49,10 @@ export const getSellingcodeFromPartyReference = async (
 
     if (agentAORExternalParty?.value && agentUPNExternalParty?.value) {
         // For Farmers: AOR + UPN = SELLING_CODE
-        return agentAORExternalParty.value + agentUPNExternalParty.value;
+        return (
+            String(agentAORExternalParty.value) +
+            String(agentUPNExternalParty.value)
+        );
     }
 
     return null;

@@ -57,14 +57,19 @@ import {
 } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
 import {
-    TransactionSuccessfulEvent,
     SegmentTrackedEventName,
     TransactionSubmittedEventType,
+    TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
-import { Parties, PartyType, Prefix } from '@zinnia/api-types/types/sor';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
+import {
+    Parties,
+    PartyType,
+    Prefix,
+    SuffixEnum,
+} from '@zinnia/api-types/types/sor';
 
 import {
     convertToBase64,
@@ -123,7 +128,7 @@ export const SidesheetNameCard = ({
     const [middleName, setMiddleName] = useState(
         selectedPolicyParty?.middleName ?? ''
     );
-    const [suffix, setSuffix] = useState<Parties.suffix | undefined>(
+    const [suffix, setSuffix] = useState<SuffixEnum | undefined>(
         selectedPolicyParty?.suffix
     );
     const [prefix, setPrefix] = useState<Prefix | undefined>(
@@ -167,11 +172,11 @@ export const SidesheetNameCard = ({
     const [dateOfSignature, setDateOfSignature] = useState('');
     const [dateOfSignatureError, setDateOfSignatureError] = useState(false);
     const suffixOptions = [
-        Parties.suffix.I,
-        Parties.suffix.II,
-        Parties.suffix.III,
-        Parties.suffix.JR,
-        Parties.suffix.SN,
+        SuffixEnum.I,
+        SuffixEnum.II,
+        SuffixEnum.III,
+        SuffixEnum.JR,
+        SuffixEnum.SN,
     ].map((option) => ({ label: option, value: option }));
     const [selectedOption, setSelectedOption] = useState('');
     const documentMatchesOptions = ['Yes', 'No'].map((option) => ({
@@ -264,8 +269,7 @@ export const SidesheetNameCard = ({
                     documentTypeDescription: file.name,
                     documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                     fileType: getFileSubtype(blob),
-                    docClassification:
-                        SearchRequest.documentClassification.INBOUND,
+                    docClassification: DocumentClassificationEnum.INBOUND,
                     sourceSystem: SourceSystem.ZL,
                     zinniaLiveCaseId: '',
                     parentCarrierCode: policyDetails.carrierId ?? '',
@@ -594,7 +598,7 @@ export const SidesheetNameCard = ({
                                         aria-label={t('suffix') as string}
                                         label={t('suffix') as string}
                                         onChange={(value) => {
-                                            setSuffix(value as Parties.suffix);
+                                            setSuffix(value as SuffixEnum);
                                         }}
                                         options={suffixOptions}
                                         size={FieldSize.Small}
