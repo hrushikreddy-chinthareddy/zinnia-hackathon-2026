@@ -1209,7 +1209,7 @@
         "PaymentExpiration": "Payment expiration",
         "PaymentInitialPremium": "Initial premium payment",
         "PaymentLoanRepaymentOneTime": "One-time loan repayment",
-        "PaymentOneTimePremium": "One-time premium",
+        "PaymentOneTimePremium": "One-time premium payment",
         "PaymentSystematicLoanRepayment": "Systematic loan repayment",
         "PAYOR": "Payor",
         "PayorChange": "Payor change",
