@@ -93,12 +93,6 @@ const mapDataToPeopleCard = ({
     let allocationValue: string = '';
     if (isBeneficiarySelected) {
         allocationValue = beneficiaryPercentage?.toString() ?? '0';
-    } else if (isAgentSelected) {
-        if (type === AgentType.PRIMARY) {
-            allocationValue = agentPercentage?.toString() ?? '0';
-        } else if (type === AgentType.AGENT) {
-            allocationValue = '';
-        }
     }
 
     const convertedTags = tags.map((tag) => ({
