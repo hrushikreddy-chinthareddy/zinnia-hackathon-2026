@@ -115,29 +115,24 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         control,
         setValue,
         getValues,
-        reset,
+        register,
         handleSubmit,
-        formState: { errors },
+        formState: { isValid, isDirty, isSubmitting },
     } = useForm<IllustrationsClientCase>({
         mode: 'onChange',
-        defaultValues: clientCaseInitialState,
+        defaultValues: clientCase ?? clientCaseInitialState,
     });
 
     useEffect(() => {
-        if (clientCase) {
-            reset(clientCase);
-        }
-    }, [clientCase, reset]);
+        // Add validations to these fields as they're not part of the form but required to submit
+        register('agentDetails.sellingCode', { required: true });
+        register('agencyId', { required: true });
+    }, [register]);
 
     const canEditInsuredDetails =
         clientCase?.transactionType !== TransactionType.CONVERSION;
 
     const firstAgencyKey = 0;
-
-    const mergedCase = {
-        ...clientCaseInitialState,
-        ...clientCase,
-    };
 
     const agencyId = useWatch({
         control,
@@ -166,8 +161,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         useIsFetching({
             queryKey: POM_QUERY_PREFIXES.GET_PRODUCER_BY_ID,
         });
-
-    const [isSubmiting, setIsSubmiting] = useState(false);
 
     const defaultAuthenticatedAgentOption =
         useDefaultAuthenticatedAgentOption();
@@ -203,37 +196,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         styles.insuredDetails
     );
 
-    const handleDateChange = (birthDate: Date) => {
-        setValue('insuredDetails.dateOfBirth', birthDate);
-    };
-
-    const canSubmitForm = () => {
-        const { title, insuredDetails, agentDetails, agencyId } = getValues();
-
-        const parsedDate = dayjs(insuredDetails?.dateOfBirth);
-
-        const formattedDate = parsedDate.isValid()
-            ? parsedDate.format('MM/DD/YYYY')
-            : null;
-
-        const validDate = isValidDate(formattedDate);
-
-        const hasErrors = Object.keys(errors).length > 0;
-
-        return !!(
-            !isSubmiting &&
-            !isFetchingAgencies &&
-            agentDetails?.sellingCode &&
-            agencyId &&
-            title &&
-            insuredDetails?.sexAtBirth &&
-            insuredDetails?.dateOfBirth &&
-            validDate &&
-            insuredDetails?.state &&
-            !hasErrors
-        );
-    };
-
     const selectedAgencyOption = useMemo(
         () =>
             agencyOptions?.find(
@@ -248,7 +210,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const sendAnalytics = () => {
         const title = getValues('title');
-        const { title: initialTitle } = mergedCase;
+        const { title: initialTitle } = clientCase!;
         sendAgencySelection(agencyOptions ?? []);
         sendClientCaseTitleInput(title !== initialTitle);
         if (isEdit) {
@@ -259,14 +221,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     };
 
     const onSubmitForm = async () => {
-        setIsSubmiting(true);
         sendAnalytics();
 
-        try {
-            await onSubmit?.(getValues());
-        } finally {
-            setIsSubmiting(false);
-        }
+        await onSubmit?.(getValues());
     };
 
     const onCancelForm = useCallback(() => {
@@ -292,8 +249,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 );
 
             if (!isEqual(newAgentDetails, agentDetails)) {
-                setValue('agentDetails', newAgentDetails);
-                if (!isCurrentAgencyIdValid) setValue('agencyId', '');
+                setValue('agentDetails', newAgentDetails, {
+                    shouldDirty: true,
+                });
+                if (!isCurrentAgencyIdValid)
+                    setValue('agencyId', '', { shouldDirty: true });
             }
         },
         [selectedAgencyOption, agentDetails, selectedAgentOption, setValue]
@@ -460,7 +420,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 </Label>
                             }
                             onValueChange={(agencyId: string) => {
-                                setValue('agencyId', agencyId);
+                                setValue('agencyId', agencyId, {
+                                    shouldDirty: true,
+                                });
 
                                 const newSelectedAgencyOption =
                                     agencyOptions.find(
@@ -474,7 +436,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 if (newAgentSellingcode) {
                                     setValue(
                                         'agentDetails.sellingCode',
-                                        newAgentSellingcode
+                                        newAgentSellingcode,
+                                        { shouldDirty: true }
                                     );
                                 }
                             }}
@@ -593,19 +556,36 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                         <Typography variant={TypographyVariant.FieldLabel}>
                             {t('clientCase.createClientCaseForm.dateLabel')}
                         </Typography>
-                        <DateTextInput
-                            onChange={(newDate) => {
-                                handleDateChange(newDate);
+                        <Controller
+                            control={control}
+                            name="insuredDetails.dateOfBirth"
+                            rules={{
+                                validate: (v) => {
+                                    const parsedDate = dayjs(v);
+
+                                    const formattedDate = parsedDate.isValid()
+                                        ? parsedDate.format('MM/DD/YYYY')
+                                        : null;
+
+                                    return isValidDate(formattedDate);
+                                },
                             }}
-                            {...(dateOfBirth && {
-                                defaultDate: formatUTCDate(
-                                    new Date(dateOfBirth)
-                                ),
-                            })}
-                            errorMessage={t(
-                                'clientCase.createClientCaseForm.dateErrorMessage'
+                            render={({ field }) => (
+                                <DateTextInput
+                                    {...(dateOfBirth && {
+                                        defaultDate: formatUTCDate(
+                                            new Date(String(dateOfBirth))
+                                        ),
+                                    })}
+                                    errorMessage={t(
+                                        'clientCase.createClientCaseForm.dateErrorMessage'
+                                    )}
+                                    onChange={(v) => {
+                                        field.onChange(v);
+                                    }}
+                                    disabled={!canEditInsuredDetails}
+                                />
                             )}
-                            disabled={!canEditInsuredDetails}
                         />
                     </div>
                     {dateOfBirth !== null && (
@@ -697,7 +677,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                 </div>
             </section>
             <div className={styles.actionButtons}>
-                <Button type="submit" size="small" disabled={!canSubmitForm()}>
+                <Button
+                    type="submit"
+                    size="small"
+                    disabled={!isValid || (isEdit && !isDirty) || isSubmitting}
+                >
                     {t('clientCase.createClientCaseForm.continueButton')}
                 </Button>
                 <Button onClick={onCancelForm} mode="link" size="small">
