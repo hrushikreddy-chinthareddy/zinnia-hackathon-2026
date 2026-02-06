@@ -277,7 +277,10 @@ export default function GlobalTaskSideSheet({
         queryFn: async () => {
             const finalQueue =
                 carrier && queue
-                    ? `${carrier.toLowerCase()}_${queue.toLowerCase()}`
+                    ? `${carrier
+                          .toLowerCase()
+                          .trim()
+                          .replace(/\s+/g, '_')}_${queue.toLowerCase()}`
                     : '';
             const queueaccess = await checkQueuePermissions(
                 user?.partyId || '',
@@ -308,7 +311,6 @@ export default function GlobalTaskSideSheet({
                     queueaccess?.canRead === false &&
                     queueaccess?.canWrite === false
                 ) {
-                    console.log('else', queueaccess);
                     setCiamcheck(false);
                     const data = await getTaskSummaryById({ taskId });
                     if (!data) {
@@ -649,6 +651,8 @@ export default function GlobalTaskSideSheet({
                 taskStatus={task.status}
                 taskDescription={taskDescription}
                 taskName={taskName ?? task.taskName}
+                carrier={carrier}
+                queue={queue}
             />
         );
         sideSheet.changeSideSheetContent(

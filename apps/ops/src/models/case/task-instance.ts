@@ -168,6 +168,8 @@ export interface TaskQueueDrawerProps {
     caseId?: string;
     taskDescription?: string;
     taskName?: string;
+    carrier?: string;
+    queue?: string;
 }
 
 export type UnassignedTask<T = TaskStatus> = {

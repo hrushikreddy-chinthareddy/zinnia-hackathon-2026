@@ -28,7 +28,6 @@ export const TaskWorkflowContent = ({
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const { task, mappedDocuments } = useContext(TaskDataContext);
     const sideSheet = useSideSheetContext();
-
     const handleProgressBarClick = (step: Step) => {
         if (
             step.isDisabled ||
@@ -46,6 +45,8 @@ export const TaskWorkflowContent = ({
                 caseId={caseId}
                 type={'task'}
                 mappedDocuments={mappedDocuments}
+                queue={task.queue ?? ''}
+                carrier={carrierId}
             />
         );
         sideSheet.changeSideSheetContent(
