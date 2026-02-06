@@ -58,7 +58,7 @@ import {
     Address,
     Email,
     PreferredCommunicationType,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { sortEmailsByType } from '../../email-card/email-card.helpers';
@@ -500,7 +500,7 @@ export const SidesheetCommunicationsPreference = ({
                         }}
                         stopLoading={!loading}
                         trackEventProps={{
-                            type: SchemaEnum.COMMUNICATION_PREFERENCE_CHANGE,
+                            type: TransactionTypeSchemaEnum.COMMUNICATION_PREFERENCE_CHANGE,
                             correlationId: body.correlationId,
                         }}
                         newSpinner={true}

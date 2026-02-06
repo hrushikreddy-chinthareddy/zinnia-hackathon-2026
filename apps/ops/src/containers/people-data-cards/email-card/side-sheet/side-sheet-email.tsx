@@ -66,7 +66,7 @@ import {
     Parties,
     Policy,
     PreferredCommunicationType,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
 } from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
@@ -422,7 +422,7 @@ const SideSheetEmail = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: SchemaEnum.EMAIL_CHANGE,
+                    type: TransactionTypeSchemaEnum.EMAIL_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

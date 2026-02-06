@@ -28,7 +28,7 @@ import {
     DisbursementType,
     FullSurrenderOrSystematicProgramQuoteResponse,
     Policy,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
     TaxWithholdingType,
     Transaction,
     TransactionStatus,
@@ -159,7 +159,7 @@ const getWithdrawalDetails = (
         reversalDate,
     } = values;
 
-    if (transactionType === SchemaEnum.FULL_SURRENDER) {
+    if (transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER) {
         return [
             {
                 label: t(
@@ -226,7 +226,7 @@ const getWithdrawalDetails = (
             },
         ];
     } else if (
-        withdrawalDetailsTransactions.includes(transactionType as SchemaEnum) &&
+        withdrawalDetailsTransactions.includes(transactionType as TransactionTypeSchemaEnum) &&
         (disbursementType === DisbursementType.GROSS ||
             disbursementType === DisbursementType.NET)
     ) {
@@ -347,7 +347,7 @@ const getRequestedWithdrawalAmount = (
     if (status === TransactionStatus.PENDING && quote?.transactionAmounts) {
         // TODO: This was very likely a bug, but run by MG to confirm
         requestedAmount =
-            transaction.transactionType === SchemaEnum.FULL_SURRENDER
+            transaction.transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER
                 ? quote?.transactionAmounts?.requestedAmount
                 : quote?.transactionAmounts?.appliedAmount;
     } else {
@@ -365,7 +365,7 @@ const getActualWithdrawalAmount = (
 ): number => {
     let withdrawalAmount = 0;
 
-    if (transaction.transactionType === SchemaEnum.FULL_SURRENDER) {
+    if (transaction.transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER) {
         if (quote?.transactionAmounts?.requestedAmount) {
             withdrawalAmount = quote?.transactionAmounts?.requestedAmount;
         } else {
@@ -373,7 +373,7 @@ const getActualWithdrawalAmount = (
         }
     } else if (
         withdrawalDetailsTransactions.includes(
-            transaction.transactionType as SchemaEnum
+            transaction.transactionType as TransactionTypeSchemaEnum
         )
     ) {
         if (quote?.transactionAmounts?.appliedAmount) {
@@ -597,7 +597,7 @@ export const getWithdrawalSideSheetValues = (
         actualWithdrawalAmount: detailsValues.actualWithdrawalAmount,
         cancelCta:
             transaction?.status === TransactionStatus.PENDING &&
-            transactionType === SchemaEnum.FULL_SURRENDER
+            transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER
                 ? (t('policy.history.sidesheet.cancelSurrender') as string)
                 : undefined,
         disbursementType: detailsValues.disbursementType,

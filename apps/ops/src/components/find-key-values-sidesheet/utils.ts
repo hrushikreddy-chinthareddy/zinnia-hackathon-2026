@@ -18,7 +18,7 @@ import { DataDefinition } from '@deps/types/data';
 import {
     LineOfBusiness,
     Policy,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
@@ -41,17 +41,17 @@ export const TransactionSidesheetViews = {
 };
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_REVERSAL = [
-    SchemaEnum.ONE_TIME_PREMIUM,
-    SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
-    SchemaEnum.SUBSEQUENT_PAYMENT,
-    SchemaEnum.SUBSEQUENT_PREMIUM,
+    TransactionTypeSchemaEnum.ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT,
+    TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM,
 ];
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_CANCEL = [
-    SchemaEnum.FULL_SURRENDER,
-    SchemaEnum.NEW_LOAN,
-    SchemaEnum.ONE_TIME_PREMIUM,
-    SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.FULL_SURRENDER,
+    TransactionTypeSchemaEnum.NEW_LOAN,
+    TransactionTypeSchemaEnum.ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
 ];
 
 /**
@@ -69,11 +69,11 @@ export const getReversalTransactionId = (
     }
 
     switch (transaction.transactionType) {
-        case SchemaEnum.ONE_TIME_PREMIUM:
-        case SchemaEnum.SUBSEQUENT_PREMIUM:
+        case TransactionTypeSchemaEnum.ONE_TIME_PREMIUM:
+        case TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM:
             return transaction.parentId;
-        case SchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
-        case SchemaEnum.SUBSEQUENT_PAYMENT:
+        case TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT:
         default:
             return transaction.transactionId;
     }
@@ -94,18 +94,18 @@ export const getTransactionAmount = (
     const { appliedAmount, paymentAmount, requestedAmount } =
         transaction?.transactionAmounts ?? {};
     switch (transaction?.transactionType) {
-        case SchemaEnum.NEW_LOAN:
+        case TransactionTypeSchemaEnum.NEW_LOAN:
             return transaction?.transactionAmounts?.requestedAmount;
-        case SchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
             return paymentAmount || requestedAmount;
-        case SchemaEnum.ONE_TIME_PREMIUM:
+        case TransactionTypeSchemaEnum.ONE_TIME_PREMIUM:
             return appliedAmount || requestedAmount;
-        case SchemaEnum.SUBSEQUENT_PAYMENT:
-        case SchemaEnum.SUBSEQUENT_PREMIUM:
+        case TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT:
+        case TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM:
             return transaction?.status === TransactionStatus.PENDING
                 ? paymentAmount
                 : appliedAmount;
-        case SchemaEnum.FULL_SURRENDER:
+        case TransactionTypeSchemaEnum.FULL_SURRENDER:
             return undefined;
         default:
             return appliedAmount || requestedAmount;

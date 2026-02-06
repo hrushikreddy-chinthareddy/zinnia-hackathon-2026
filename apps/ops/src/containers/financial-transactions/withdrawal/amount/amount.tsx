@@ -28,7 +28,7 @@ import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { DisbursementType } from '@zinnia/api-types/types/bpm';
-import { SchemaEnum } from '@zinnia/api-types/types/sor';
+import { SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalContainerProps } from '../types';
 import PartialViewContainer from './partial-view-container/partial-view-container';
@@ -197,8 +197,8 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
     // TODO MG: pass in trackEventProps so we dont have to do this in every step
     const transactionType = useMemo(() => {
         return withdrawal.type === WithdrawalType.Surrender
-            ? SchemaEnum.FULL_SURRENDER
-            : SchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME;
+            ? TransactionTypeSchemaEnum.FULL_SURRENDER
+            : TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     return (

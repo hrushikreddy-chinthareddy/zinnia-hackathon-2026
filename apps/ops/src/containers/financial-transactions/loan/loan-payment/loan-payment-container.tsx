@@ -16,7 +16,7 @@ import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { Processes } from '@deps/models/case/case';
 import { validateLoanPayment } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
@@ -63,7 +63,7 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     title={t('start.title') as string}
                     subtitle={t('start.subtitle') as string}
                     trackEventProps={{
-                        type: SchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+                        type: TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
                         step: TransactionStep.Start,
                     }}
                     processSubType={getProcessSubTypes(ParentPage.Loans)}
@@ -87,7 +87,7 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     setState={setLoanPayment as PayorStepSetState}
                     state={loanPayment}
                     trackEventProps={{
-                        type: SchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+                        type: TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
                         step: TransactionStep.Payor,
                     }}
                 />
@@ -105,7 +105,7 @@ const LoanPaymentContainer = ({ policy }: LoanPaymentContainerProps) => {
                     state={loanPayment}
                     validateTransaction={validateCall}
                     trackEventProps={{
-                        type: SchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+                        type: TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
                         step: TransactionStep.Payment,
                     }}
                 />

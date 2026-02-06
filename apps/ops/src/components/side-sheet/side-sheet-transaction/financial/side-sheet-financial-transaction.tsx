@@ -17,7 +17,7 @@ import { getPolicyTransactions } from '@deps/queries/api/policies';
 import { TransactionPermission } from '@deps/utils/auth';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { SchemaEnum, TransactionStatus } from '@zinnia/api-types/types/sor';
+import { SchemaEnum as TransactionTypeSchemaEnum, TransactionStatus } from '@zinnia/api-types/types/sor';
 
 import SideSheetFinancialTransactionContent from './side-sheet-financial-content';
 import SidesheetCancelPending from '../cancel-pending/side-sheet-cancel-pending';
@@ -160,7 +160,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     let SidesheetContent;
 
     switch (true) {
-        case transactionType === SchemaEnum.NEW_LOAN:
+        case transactionType === TransactionTypeSchemaEnum.NEW_LOAN:
             SidesheetContent = (
                 <SideSheetNewLoanTransactionContent
                     t={t}
@@ -172,7 +172,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
             );
             break;
         case withdrawalFinancialTransactions.includes(
-            transactionType as SchemaEnum
+            transactionType as TransactionTypeSchemaEnum
         ):
             SidesheetContent = (
                 <SideSheetWithdrawalContent
@@ -248,8 +248,8 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                         <div className="flex flex-col">
                             {![
                                 ...withdrawalFinancialTransactions,
-                                SchemaEnum.NEW_LOAN,
-                            ].includes(transactionType as SchemaEnum) && (
+                                TransactionTypeSchemaEnum.NEW_LOAN,
+                            ].includes(transactionType as TransactionTypeSchemaEnum) && (
                                 <div className={cancelCta ? 'mb-4' : ''}>
                                     <Content
                                         details={numberFormatify(
@@ -328,7 +328,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                             className={clsx(
                                                 '!justify-start !p-0',
                                                 transactionType ===
-                                                    SchemaEnum.FULL_SURRENDER
+                                                    TransactionTypeSchemaEnum.FULL_SURRENDER
                                                     ? 'mb-6'
                                                     : ''
                                             )}

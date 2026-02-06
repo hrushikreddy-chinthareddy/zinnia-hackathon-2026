@@ -33,7 +33,7 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Address, Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
+import { Address, Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;
@@ -212,7 +212,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     trackEventProps={{
-                        type: SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                        type: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Summary,
                     }}
                 />

@@ -8,7 +8,7 @@ import {
 } from '@deps/jest/data/mockPolicy';
 import { toTitleCase } from '@deps/utils/strings';
 import {
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
@@ -104,7 +104,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: SchemaEnum.PAYMENT_INITIAL_PREMIUM,
+                transactionType: TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM,
             });
 
             expect(amount).toBe(86753.09);
@@ -126,7 +126,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                transactionType: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
             });
 
             expect(amount).toBe(86753.09);
@@ -148,7 +148,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: SchemaEnum.SUBSEQUENT_PAYMENT,
+                transactionType: TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT,
             });
 
             expect(amount).toBe(86753.09);
@@ -174,7 +174,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: SchemaEnum.INITIAL_PREMIUM,
+                transactionType: TransactionTypeSchemaEnum.INITIAL_PREMIUM,
             });
 
             expect(amount).toBe(100000.0);
@@ -196,7 +196,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: SchemaEnum.ONE_TIME_PREMIUM,
+                transactionType: TransactionTypeSchemaEnum.ONE_TIME_PREMIUM,
             });
 
             expect(amount).toBe(100000.0);
@@ -218,7 +218,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: SchemaEnum.SUBSEQUENT_PREMIUM,
+                transactionType: TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM,
             });
 
             expect(amount).toBe(100000);
@@ -244,7 +244,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Completed' as TransactionStatus,
-                transactionType: SchemaEnum.ANNIVERSARY,
+                transactionType: TransactionTypeSchemaEnum.ANNIVERSARY,
             });
 
             expect(amount).toBeUndefined();
@@ -266,7 +266,7 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: SchemaEnum.ACTIVATION,
+                transactionType: TransactionTypeSchemaEnum.ACTIVATION,
             });
 
             expect(amount).toBeUndefined();

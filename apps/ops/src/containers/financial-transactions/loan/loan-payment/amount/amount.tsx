@@ -23,7 +23,7 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
     policy: Policy;
@@ -122,7 +122,7 @@ const Amount = ({ policy }: AmountProps) => {
                     parentPage={ParentPage.Loans}
                     // TODO MG: PAYMENT_LOAN_REPAYMENT_ONE_TIME or LOAN_REPAYMENT_ONE_TIME
                     trackEventProps={{
-                        type: SchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+                        type: TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
                         step: TransactionStep.Amount,
                     }}
                 />

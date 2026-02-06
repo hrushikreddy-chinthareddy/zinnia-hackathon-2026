@@ -42,7 +42,7 @@ import {
     ArrangementType,
     AmountType as AutopayAmountType,
     Status,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
 } from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
@@ -143,8 +143,8 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
 
     const transactionType = useMemo(() => {
         return parentPage === ParentPage.Premiums
-            ? SchemaEnum.SUBSEQUENT_PREMIUM
-            : SchemaEnum.SYSTEMATIC_LOAN_REPAYMENT;
+            ? TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM
+            : TransactionTypeSchemaEnum.SYSTEMATIC_LOAN_REPAYMENT;
     }, [parentPage]);
 
     const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {

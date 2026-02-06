@@ -77,7 +77,7 @@ import {
     Country,
     Party,
     Policy,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
     State,
 } from '@zinnia/api-types/types/sor';
 
@@ -628,7 +628,7 @@ const SideSheetAddress = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: SchemaEnum.ADDRESS_CHANGE,
+                    type: TransactionTypeSchemaEnum.ADDRESS_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

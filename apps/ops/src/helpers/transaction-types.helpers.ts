@@ -4,7 +4,7 @@ import {
     PolicyFilters,
     TransactionFilters,
 } from '@deps/contexts/HistoryFiltersContext';
-import { SchemaEnum } from '@zinnia/api-types/types/sor';
+import { SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 enum MissingTransactionTypes {
     CalendarProcessing = 'CalendarProcessing',
@@ -13,42 +13,42 @@ enum MissingTransactionTypes {
 }
 
 export const PeopleChangeTransactionTypes = [
-    SchemaEnum.ADDRESS_CHANGE as SchemaEnum,
-    SchemaEnum.EMAIL_CHANGE as SchemaEnum,
-    SchemaEnum.PHONE_NUMBER_CHANGE as SchemaEnum,
-    SchemaEnum.BANK_ACCOUNT_CHANGE as SchemaEnum,
+    TransactionTypeSchemaEnum.ADDRESS_CHANGE as TransactionTypeSchemaEnum,
+    TransactionTypeSchemaEnum.EMAIL_CHANGE as TransactionTypeSchemaEnum,
+    TransactionTypeSchemaEnum.PHONE_NUMBER_CHANGE as TransactionTypeSchemaEnum,
+    TransactionTypeSchemaEnum.BANK_ACCOUNT_CHANGE as TransactionTypeSchemaEnum,
 ];
 
 // BPB - ToDo: Remove these once the Sor spec has been updated to include them.
 export const TransactionTypesNotInTheSpecYet = [
-    MissingTransactionTypes.CalendarProcessing as unknown as SchemaEnum,
-    MissingTransactionTypes.FundAllocationsChange as unknown as SchemaEnum,
-    MissingTransactionTypes.FundTransfer as unknown as SchemaEnum,
+    MissingTransactionTypes.CalendarProcessing as unknown as TransactionTypeSchemaEnum,
+    MissingTransactionTypes.FundAllocationsChange as unknown as TransactionTypeSchemaEnum,
+    MissingTransactionTypes.FundTransfer as unknown as TransactionTypeSchemaEnum,
 ];
 
 export const allTransactionTypes = [
-    ...Object.values(SchemaEnum),
+    ...Object.values(TransactionTypeSchemaEnum),
     ...TransactionTypesNotInTheSpecYet,
 ];
 
 const addressTransactions = [
-    SchemaEnum.ADDRESS_CHANGE,
-    SchemaEnum.PREFERRED_MAILING_ADDRESS_CHANGE,
+    TransactionTypeSchemaEnum.ADDRESS_CHANGE,
+    TransactionTypeSchemaEnum.PREFERRED_MAILING_ADDRESS_CHANGE,
 ];
-const bankAccountTransactions = [SchemaEnum.BANK_ACCOUNT_CHANGE];
-const beneficiaryTransactions = [SchemaEnum.BENEFICIARY_CHANGE];
+const bankAccountTransactions = [TransactionTypeSchemaEnum.BANK_ACCOUNT_CHANGE];
+const beneficiaryTransactions = [TransactionTypeSchemaEnum.BENEFICIARY_CHANGE];
 const communicationPreferenceTransactions = [
-    SchemaEnum.COMMUNICATION_PREFERENCE_CHANGE,
+    TransactionTypeSchemaEnum.COMMUNICATION_PREFERENCE_CHANGE,
 ];
-const emailTransactions = [SchemaEnum.EMAIL_CHANGE];
-const nameTransactions = [SchemaEnum.EXISTING_PARTY_NAME_CHANGE];
-const phoneNumberTransactions = [SchemaEnum.PHONE_NUMBER_CHANGE];
+const emailTransactions = [TransactionTypeSchemaEnum.EMAIL_CHANGE];
+const nameTransactions = [TransactionTypeSchemaEnum.EXISTING_PARTY_NAME_CHANGE];
+const phoneNumberTransactions = [TransactionTypeSchemaEnum.PHONE_NUMBER_CHANGE];
 const roleTransactions = [
-    SchemaEnum.OWNER_CHANGE,
-    SchemaEnum.PAYEE_CHANGE,
-    SchemaEnum.PAYOR_CHANGE,
+    TransactionTypeSchemaEnum.OWNER_CHANGE,
+    TransactionTypeSchemaEnum.PAYEE_CHANGE,
+    TransactionTypeSchemaEnum.PAYOR_CHANGE,
 ];
-const tpdTransactions = [SchemaEnum.TPD_CHANGE];
+const tpdTransactions = [TransactionTypeSchemaEnum.TPD_CHANGE];
 
 export const peopleTransactions = {
     [PeopleFilters.Address]: addressTransactions,
@@ -75,38 +75,38 @@ export const peopleTransactions = {
 };
 
 const anniversaryTransactions = [
-    SchemaEnum.ANNIVERSARY,
-    SchemaEnum.LAPSE_ASSESSMENT,
-    SchemaEnum.MATCH_BONUS_VESTING,
+    TransactionTypeSchemaEnum.ANNIVERSARY,
+    TransactionTypeSchemaEnum.LAPSE_ASSESSMENT,
+    TransactionTypeSchemaEnum.MATCH_BONUS_VESTING,
 ];
 const coverageTransactions = [
-    SchemaEnum.CANCEL_NO_PREMIUM,
-    SchemaEnum.DEATH_CLAIM,
+    TransactionTypeSchemaEnum.CANCEL_NO_PREMIUM,
+    TransactionTypeSchemaEnum.DEATH_CLAIM,
 ];
 const feesTransactions = [
-    SchemaEnum.COST_OF_INSURANCE,
-    SchemaEnum.EXPENSE_CHARGE,
-    SchemaEnum.INTEREST_CREDIT,
-    SchemaEnum.INTEREST_CREDIT_LOAN,
-    SchemaEnum.INTEREST_CREDIT_MATCH,
-    SchemaEnum.INTEREST_LOAN,
-    SchemaEnum.UNIT_EXPENSE_CHARGE,
+    TransactionTypeSchemaEnum.COST_OF_INSURANCE,
+    TransactionTypeSchemaEnum.EXPENSE_CHARGE,
+    TransactionTypeSchemaEnum.INTEREST_CREDIT,
+    TransactionTypeSchemaEnum.INTEREST_CREDIT_LOAN,
+    TransactionTypeSchemaEnum.INTEREST_CREDIT_MATCH,
+    TransactionTypeSchemaEnum.INTEREST_LOAN,
+    TransactionTypeSchemaEnum.UNIT_EXPENSE_CHARGE,
 ];
 const keyDateTransaction = [
-    SchemaEnum.ACTIVATION,
-    SchemaEnum.CONVERSION_ACTIVATION,
-    SchemaEnum.DELIVERY_DATE_SETUP,
-    SchemaEnum.FACE_AMOUNT_CHANGE,
-    SchemaEnum.FACE_AMOUNT_DECREASE,
-    SchemaEnum.FACE_AMOUNT_INCREASE,
-    SchemaEnum.FORCE_OUT,
-    SchemaEnum.FREE_LOOK_EXPIRATION,
-    SchemaEnum.ISSUANCE,
-    SchemaEnum.LAPSE,
-    SchemaEnum.NOTIFICATION_OF_DEATH_CLAIM,
-    SchemaEnum.REINSTATEMENT,
-    SchemaEnum.REINSTATEMENT_APPROVED,
-    SchemaEnum.VALUE_ADJUSTMENT,
+    TransactionTypeSchemaEnum.ACTIVATION,
+    TransactionTypeSchemaEnum.CONVERSION_ACTIVATION,
+    TransactionTypeSchemaEnum.DELIVERY_DATE_SETUP,
+    TransactionTypeSchemaEnum.FACE_AMOUNT_CHANGE,
+    TransactionTypeSchemaEnum.FACE_AMOUNT_DECREASE,
+    TransactionTypeSchemaEnum.FACE_AMOUNT_INCREASE,
+    TransactionTypeSchemaEnum.FORCE_OUT,
+    TransactionTypeSchemaEnum.FREE_LOOK_EXPIRATION,
+    TransactionTypeSchemaEnum.ISSUANCE,
+    TransactionTypeSchemaEnum.LAPSE,
+    TransactionTypeSchemaEnum.NOTIFICATION_OF_DEATH_CLAIM,
+    TransactionTypeSchemaEnum.REINSTATEMENT,
+    TransactionTypeSchemaEnum.REINSTATEMENT_APPROVED,
+    TransactionTypeSchemaEnum.VALUE_ADJUSTMENT,
 ];
 
 export const policyTransactions = {
@@ -123,56 +123,56 @@ export const policyTransactions = {
 };
 
 export const withdrawalDetailsTransactions = [
-    SchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
-    SchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+    TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionTypeSchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];
 
 export const withdrawalFinancialTransactions = [
     ...withdrawalDetailsTransactions,
-    SchemaEnum.FULL_SURRENDER,
-    SchemaEnum.FREE_LOOK_CANCELLATION,
+    TransactionTypeSchemaEnum.FULL_SURRENDER,
+    TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION,
 ];
 
 const loanTransactions = [
-    SchemaEnum.LOAN_REPAYMENT_ONE_TIME,
-    SchemaEnum.NEW_LOAN,
-    SchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
-    SchemaEnum.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT,
-    SchemaEnum.SYSTEMATIC_LOAN_REPAYMENT,
+    TransactionTypeSchemaEnum.LOAN_REPAYMENT_ONE_TIME,
+    TransactionTypeSchemaEnum.NEW_LOAN,
+    TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+    TransactionTypeSchemaEnum.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT,
+    TransactionTypeSchemaEnum.SYSTEMATIC_LOAN_REPAYMENT,
 ];
 
 const premiumTransactions = [
-    SchemaEnum.INITIAL_PREMIUM,
-    SchemaEnum.ONE_TIME_PREMIUM,
-    SchemaEnum.PAYMENT_INITIAL_PREMIUM,
-    SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
-    SchemaEnum.SUBSEQUENT_PAYMENT,
-    SchemaEnum.SUBSEQUENT_PREMIUM,
+    TransactionTypeSchemaEnum.INITIAL_PREMIUM,
+    TransactionTypeSchemaEnum.ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM,
+    TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT,
+    TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM,
 ];
 const systematicProgramTransactions = [
-    SchemaEnum.SYSTEMATIC_PROGRAM_UPDATE,
-    SchemaEnum.SYSTEMATIC_LOAN_REPAYMENT_SETUP,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PROGRAM_UPDATE,
+    TransactionTypeSchemaEnum.SYSTEMATIC_LOAN_REPAYMENT_SETUP,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
 ];
 
 const withdrawalTransactions = [
-    SchemaEnum.CLAIM_PAYOUT,
-    SchemaEnum.DISBURSEMENT,
-    SchemaEnum.FREE_LOOK_CANCELLATION,
-    SchemaEnum.FULL_SURRENDER,
-    SchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    SchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+    TransactionTypeSchemaEnum.CLAIM_PAYOUT,
+    TransactionTypeSchemaEnum.DISBURSEMENT,
+    TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION,
+    TransactionTypeSchemaEnum.FULL_SURRENDER,
+    TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionTypeSchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];
 
 export const financialTransactions = {

@@ -21,7 +21,7 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 import { buildfundTransferRequestBody } from '../fund-transfer.helpers';
 
@@ -63,7 +63,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: SchemaEnum.FUND_TRANSFER,
+                type: TransactionTypeSchemaEnum.FUND_TRANSFER,
                 correlationId: body.correlationId,
             }
         );

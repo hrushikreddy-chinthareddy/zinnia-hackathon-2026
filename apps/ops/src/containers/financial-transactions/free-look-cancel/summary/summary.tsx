@@ -34,7 +34,7 @@ import {
     Address,
     DisbursementPaymentForm,
     Policy,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
 } from '@zinnia/api-types/types/sor';
 
 import styles from './summary.module.css';
@@ -178,7 +178,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     policyNumber={policyNumber}
                     submitLabel={t('submitCancellation') as string}
                     trackEventProps={{
-                        type: SchemaEnum.FREE_LOOK_CANCELLATION,
+                        type: TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Summary,
                     }}
                 />

@@ -23,7 +23,7 @@ import {
     TransactionSuccessfulEvent,
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum } from '@zinnia/api-types/types/sor';
+import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 import { buildLoanPaymentRequestBody } from '../loan-payment.helpers';
 
@@ -64,7 +64,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: SchemaEnum.LOAN_REPAYMENT_ONE_TIME,
+                type: TransactionTypeSchemaEnum.LOAN_REPAYMENT_ONE_TIME,
                 correlationId: paymentBody.correlationId,
             }
         );

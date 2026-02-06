@@ -1,4 +1,4 @@
-import { SchemaEnum } from '@zinnia/api-types/types/sor';
+import { SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 export interface BaseFinancialTransactionSideSheetModel {
     content?: string;
@@ -6,20 +6,20 @@ export interface BaseFinancialTransactionSideSheetModel {
     title?: string;
 }
 
-export const FinancialTransactionTypes: SchemaEnum[] = [
-    SchemaEnum.PAYMENT_INITIAL_PREMIUM,
-    SchemaEnum.INITIAL_PREMIUM,
-    SchemaEnum.ONE_TIME_PREMIUM,
-    SchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
-    SchemaEnum.SUBSEQUENT_PAYMENT,
-    SchemaEnum.SUBSEQUENT_PREMIUM,
-    SchemaEnum.FULL_SURRENDER,
-    SchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
-    SchemaEnum.FREE_LOOK_CANCELLATION,
-    SchemaEnum.NEW_LOAN,
-    SchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
-    SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+export const FinancialTransactionTypes: TransactionTypeSchemaEnum[] = [
+    TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM,
+    TransactionTypeSchemaEnum.INITIAL_PREMIUM,
+    TransactionTypeSchemaEnum.ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT,
+    TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM,
+    TransactionTypeSchemaEnum.FULL_SURRENDER,
+    TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION,
+    TransactionTypeSchemaEnum.NEW_LOAN,
+    TransactionTypeSchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];

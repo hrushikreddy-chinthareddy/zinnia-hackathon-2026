@@ -29,7 +29,7 @@ import {
     TransactionContinueClickedEvent,
     SegmentTrackedEventName,
 } from '@deps/types/segment-analytics';
-import { SchemaEnum } from '@zinnia/api-types/types/sor';
+import { SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
 
 import { HELP_DESK_LINK } from '../non-financial-transactions/states/api-error-state';
 import LoadingState from '../non-financial-transactions/states/loading-state';
@@ -92,7 +92,7 @@ export default function SidesheetReverseRecreate({
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: 'ReverseRecreate' as SchemaEnum,
+                type: 'ReverseRecreate' as TransactionTypeSchemaEnum,
                 transactionId: reversalTransactionId,
                 correlationId: correlationId,
             }

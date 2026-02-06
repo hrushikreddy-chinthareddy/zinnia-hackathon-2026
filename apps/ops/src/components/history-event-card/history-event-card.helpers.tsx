@@ -19,7 +19,7 @@ import {
     Parties,
     Policy,
     Reason,
-    SchemaEnum,
+    SchemaEnum as TransactionTypeSchemaEnum,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
@@ -27,11 +27,11 @@ import {
 import { GetBankAccount, PeopleChangeType } from './types';
 
 const typeByTransactionType = {
-    [SchemaEnum.ADDRESS_CHANGE]: 'address',
-    [SchemaEnum.EMAIL_CHANGE]: 'email',
-    [SchemaEnum.PHONE_NUMBER_CHANGE]: 'phoneNumber',
-    [SchemaEnum.BANK_ACCOUNT_CHANGE]: 'bankAccount',
-    [SchemaEnum.COMMUNICATION_PREFERENCE_CHANGE]: 'correspondencePreference',
+    [TransactionTypeSchemaEnum.ADDRESS_CHANGE]: 'address',
+    [TransactionTypeSchemaEnum.EMAIL_CHANGE]: 'email',
+    [TransactionTypeSchemaEnum.PHONE_NUMBER_CHANGE]: 'phoneNumber',
+    [TransactionTypeSchemaEnum.BANK_ACCOUNT_CHANGE]: 'bankAccount',
+    [TransactionTypeSchemaEnum.COMMUNICATION_PREFERENCE_CHANGE]: 'correspondencePreference',
 };
 
 const changeTypeKey = {
@@ -136,7 +136,7 @@ export const getEventTitle = (
 ): string => {
     const { transactionType } = transaction;
 
-    if (PeopleChangeTransactionTypes.includes(transactionType as SchemaEnum)) {
+    if (PeopleChangeTransactionTypes.includes(transactionType as TransactionTypeSchemaEnum)) {
         return toSentenceCase(getPeopleChangeEventTitle(transaction, t));
     }
 
@@ -206,27 +206,27 @@ export const getHistoryEventCardValues = (
     const eventTitle = getEventTitle(transaction, t);
 
     switch (transactionType) {
-        case SchemaEnum.PAYMENT_INITIAL_PREMIUM:
-        case SchemaEnum.INITIAL_PREMIUM:
+        case TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM:
+        case TransactionTypeSchemaEnum.INITIAL_PREMIUM:
             amount =
-                transactionType === SchemaEnum.PAYMENT_INITIAL_PREMIUM
+                transactionType === TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? '';
             isClickable = true;
             break;
 
-        case SchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
-        case SchemaEnum.ONE_TIME_PREMIUM:
+        case TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionTypeSchemaEnum.ONE_TIME_PREMIUM:
             amount =
-                transactionType === SchemaEnum.PAYMENT_ONE_TIME_PREMIUM
+                transactionType === TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? '';
             isClickable = true;
             break;
 
-        case SchemaEnum.SUBSEQUENT_PREMIUM: {
+        case TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM: {
             const systematicProgram = systematicPrograms?.find(
                 (sp) => sp.reason === Reason.PREMIUM
             );
@@ -239,7 +239,7 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case SchemaEnum.SUBSEQUENT_PAYMENT: {
+        case TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT: {
             const systematicProgram = systematicPrograms?.find(
                 (sp) => sp.reason === Reason.PREMIUM
             );
@@ -252,7 +252,7 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case SchemaEnum.FULL_SURRENDER: {
+        case TransactionTypeSchemaEnum.FULL_SURRENDER: {
             // try to cache this so isnt being called so many times
             const bankAccount = getBankAccount({
                 policy,
@@ -276,12 +276,12 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case SchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME:
-        case SchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
-        case SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL:
-        case SchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
-        case SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
-        case SchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP: {
+        case TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME:
+        case TransactionTypeSchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
+        case TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL:
+        case TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
+        case TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
+        case TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP: {
             const bankAccount = getBankAccount({
                 policy,
                 payorsOrPayees: payeeOrBeneficiaries,
@@ -307,25 +307,25 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case SchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME:
-        case SchemaEnum.LOAN_REPAYMENT_ONE_TIME: {
+        case TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME:
+        case TransactionTypeSchemaEnum.LOAN_REPAYMENT_ONE_TIME: {
             amount =
                 isPending ||
-                transactionType === SchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME
+                transactionType === TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? t('historyEventCard.oneTimePayment');
             break;
         }
 
-        case SchemaEnum.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT:
-        case SchemaEnum.SYSTEMATIC_LOAN_REPAYMENT: {
+        case TransactionTypeSchemaEnum.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT:
+        case TransactionTypeSchemaEnum.SYSTEMATIC_LOAN_REPAYMENT: {
             amount = appliedAmount || requestedAmount;
             eventBody = bankingBody ?? '';
             break;
         }
 
-        case SchemaEnum.NEW_LOAN: {
+        case TransactionTypeSchemaEnum.NEW_LOAN: {
             amount = isPending
                 ? requestedAmount
                     ? -requestedAmount
@@ -335,30 +335,30 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case SchemaEnum.ACTIVATION:
+        case TransactionTypeSchemaEnum.ACTIVATION:
             break;
 
-        case SchemaEnum.ANNIVERSARY:
+        case TransactionTypeSchemaEnum.ANNIVERSARY:
             break;
 
-        case SchemaEnum.DEATH_CLAIM:
+        case TransactionTypeSchemaEnum.DEATH_CLAIM:
             break;
 
-        case SchemaEnum.LAPSE:
+        case TransactionTypeSchemaEnum.LAPSE:
             isClickable = true;
             break;
 
-        case SchemaEnum.ADDRESS_CHANGE:
-        case SchemaEnum.EMAIL_CHANGE:
-        case SchemaEnum.PHONE_NUMBER_CHANGE:
-        case SchemaEnum.BANK_ACCOUNT_CHANGE:
+        case TransactionTypeSchemaEnum.ADDRESS_CHANGE:
+        case TransactionTypeSchemaEnum.EMAIL_CHANGE:
+        case TransactionTypeSchemaEnum.PHONE_NUMBER_CHANGE:
+        case TransactionTypeSchemaEnum.BANK_ACCOUNT_CHANGE:
             eventBody = getFullName(
                 getChangedParty(policy, transaction as Transaction) ?? undefined
             );
 
             isClickable = true;
             break;
-        case SchemaEnum.FREE_LOOK_CANCELLATION: {
+        case TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION: {
             const bankAccount = getBankAccount({
                 policy,
                 payorsOrPayees: payeeOrBeneficiaries,
@@ -381,7 +381,7 @@ export const getHistoryEventCardValues = (
             break;
         }
 
-        case SchemaEnum.DISBURSEMENT: {
+        case TransactionTypeSchemaEnum.DISBURSEMENT: {
             // The applied amount for disbursements is tied to each beneficiary, so we have to loop through.
             // this is almost always only 1 (it may always only be 1, but let's be careful).
             const totalAppliedAmount = payeeOrBeneficiaries?.reduce(
