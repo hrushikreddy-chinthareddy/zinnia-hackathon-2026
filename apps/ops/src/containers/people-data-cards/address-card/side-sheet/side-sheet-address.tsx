@@ -597,7 +597,9 @@ const SideSheetAddress = ({
                             preferredAddressIndicator: e
                                 ? PreferredAddressIndicator.Yes
                                 : PreferredAddressIndicator.No,
-                            preferredAddressId: address.addressId,
+                            preferredAddressId: e
+                                ? address.addressId
+                                : undefined,
                         }));
                         setAddress((prevState) => ({
                             ...prevState,
