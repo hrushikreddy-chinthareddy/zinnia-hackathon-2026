@@ -210,7 +210,9 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
 
     const sendAnalytics = () => {
         const title = getValues('title');
-        const { title: initialTitle } = clientCase!;
+        const { title: initialTitle } = clientCase ?? {
+            title: clientCaseInitialState.title,
+        };
         sendAgencySelection(agencyOptions ?? []);
         sendClientCaseTitleInput(title !== initialTitle);
         if (isEdit) {
