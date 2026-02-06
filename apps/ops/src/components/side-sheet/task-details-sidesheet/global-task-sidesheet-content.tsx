@@ -1090,7 +1090,7 @@ export default function GlobalTaskSideSheet({
                 handleViewTask={handleViewTask}
                 handleStart={handleStart}
                 isGoToCaseButtonVisible={isOpsManagerView}
-                isViewTaskButtonVisible={isViewTaskButtonVisible || true}
+                isViewTaskButtonVisible={isViewTaskButtonVisible || false}
                 isViewTaskButtonDisabled={
                     !task.data || task.ciamaccess === false
                 }

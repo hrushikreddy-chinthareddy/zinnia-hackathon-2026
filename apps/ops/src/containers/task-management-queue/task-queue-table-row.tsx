@@ -176,7 +176,7 @@ const TaskQueueTableRow = ({
                 getTasks={() => {
                     getTasks(true);
                 }}
-                carrier={carrierName ?? ''}
+                carrier={carrier}
                 queue={task.queue}
             />
         );
@@ -291,7 +291,7 @@ const TaskQueueTableRow = ({
                     taskDescription={task?.taskDetails}
                     onTaskClaimSuccess={handleTaskClaimSuccess}
                     onTaskUpdated={updateRow}
-                    carrier={carrierName}
+                    carrier={carrier}
                     queue={task.queue}
                 />,
                 true
@@ -306,7 +306,7 @@ const TaskQueueTableRow = ({
         featureFlagDecisions,
         handleTaskClaimSuccess,
         updateRow,
-        carrierName,
+        carrier,
     ]);
 
     useTaskIdFromUrl({
