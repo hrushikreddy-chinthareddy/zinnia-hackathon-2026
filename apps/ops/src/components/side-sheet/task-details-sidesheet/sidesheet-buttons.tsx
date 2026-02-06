@@ -128,7 +128,6 @@ export default function SidesheetButtons({
     isStartButtonVisible,
     handleStart,
     handleViewTask,
-    ciamcheck,
 }: SidesheetButtonsProps) {
     const { t } = useTranslation();
     const [isViewTaskLoading, setIsViewTaskLoading] = useState(false);
