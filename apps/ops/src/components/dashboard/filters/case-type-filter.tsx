@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { t } from 'i18next';
-import { FC, useState } from 'react';
+import { FC, useCallback, useEffect, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import Select from '@deps/components/select/select';
@@ -58,10 +58,31 @@ export const CaseTypeFilter: FC<CaseTypeFilterProps> = ({
         enabled: Object.keys(processFilter).length > 0,
     });
 
-    const handleChange = (value: string) => {
-        setSelectedProcess(value as Processes | ExtendedProcesses);
-        onValueChange(value as Processes | ExtendedProcesses);
+    const isProcesses = (value: string): value is Processes => {
+        return Object.values(Processes).map(String).includes(value);
     };
+
+    const handleChange = useCallback(
+        (value: string) => {
+            const process = isProcesses(value) ? value : ExtendedProcesses.ALL;
+            setSelectedProcess(process);
+            onValueChange(process);
+        },
+        [setSelectedProcess, onValueChange]
+    );
+
+    useEffect(() => {
+        if (!value || value === ExtendedProcesses.ALL || !processListOptions)
+            return;
+
+        const isPrevOptionValid = processListOptions?.some(
+            (o) => o.value === value
+        );
+
+        if (!isPrevOptionValid) {
+            handleChange(ExtendedProcesses.ALL);
+        }
+    }, [handleChange, value, processListOptions]);
 
     return (
         <Select

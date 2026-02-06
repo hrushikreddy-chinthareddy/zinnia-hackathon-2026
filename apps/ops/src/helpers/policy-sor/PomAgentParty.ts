@@ -14,20 +14,25 @@ export const transformPomAgentDataToParty = (
     // TODO: replace PomAgentData type with POM_Producer_Models_SearchProducersResult
     agentData: PomAgentData | undefined,
     partyData: Parties
-): Parties & {
-    producerType: string | undefined;
-    producerName: string | undefined;
-} => {
-    const party: Parties & {
-        producerType: string | undefined;
-        producerName: string | undefined;
-    } = {
+): Parties => {
+    // Filter out SSN from partyData if agent has one (agent data takes precedence)
+    // This prevents duplicate SSN when both policy and agent data have SSN
+    const filteredPartyIdentifications =
+        partyData?.identifications?.filter((id) => {
+            if (
+                agentData?.socialSecurityNumber &&
+                id.identificationType === IdentificationTypeEnum.SSN
+            ) {
+                return false;
+            }
+            return true;
+        }) ?? [];
+
+    const party: Parties = {
         ...partyData,
         firstName: agentData?.firstName,
         lastName: agentData?.lastName,
         middleName: agentData?.middleName,
-        producerType: agentData?.producerType,
-        producerName: agentData?.producerName,
         addresses: [
             {
                 addressLine1: agentData?.businessAddress.line || undefined,
@@ -60,18 +65,15 @@ export const transformPomAgentDataToParty = (
         ],
         partyId: agentData?.partyId || undefined,
         identifications: [
-            {
-                identificationType: IdentificationTypeEnum.SSN,
-                identificationValue:
-                    agentData?.socialSecurityNumber || undefined,
-            },
-            {
-                // identificationType: IdentificationType.NPN, TODO: update to this instead of string when kong updates
-                identificationType: 'NPN' as IdentificationTypeEnum,
-                identificationValue:
-                    agentData?.nationalProducerNumber || undefined,
-            },
-            ...(partyData.identifications ?? []),
+            ...(agentData?.socialSecurityNumber
+                ? [
+                      {
+                          identificationType: IdentificationTypeEnum.SSN,
+                          identificationValue: agentData.socialSecurityNumber,
+                      },
+                  ]
+                : []),
+            ...filteredPartyIdentifications,
         ],
     };
     return party;
