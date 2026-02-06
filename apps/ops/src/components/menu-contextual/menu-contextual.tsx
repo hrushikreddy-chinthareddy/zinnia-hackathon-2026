@@ -2,6 +2,7 @@ import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import clsx from 'clsx';
 import { ReactNode, useCallback, useRef, useState } from 'react';
 
+import styles from './menu-contextual.module.css';
 import { calculateMenuPlacement } from './menu-placement';
 
 export interface MenuContextualProps {
@@ -62,6 +63,14 @@ export const MenuContextual = ({
         [calculateAndSetPlacement]
     );
 
+    const handleOpenChange = useCallback(
+        (isOpen: boolean) => {
+            setOpen(isOpen);
+            onOpenChange(isOpen);
+        },
+        [onOpenChange]
+    );
+
     const placementClasses = clsx({
         'right-full': align === 'end' && (side === 'top' || side === 'bottom'),
         'left-full': align === 'start' && (side === 'top' || side === 'bottom'),
@@ -73,17 +82,13 @@ export const MenuContextual = ({
     return (
         <DropdownMenu.Root
             modal={false}
-            onOpenChange={(open: boolean) => {
-                onOpenChange(open);
-            }}
+            onOpenChange={handleOpenChange}
             open={open}
         >
             <DropdownMenu.Trigger
                 asChild={triggerAsChild}
-                className="group block rounded"
+                className={triggerAsChild ? '' : styles.trigger}
                 ref={triggerRef}
-                onClick={() => setOpen(true)}
-                onKeyUp={(e) => (e.key === 'Enter' ? setOpen(true) : undefined)}
             >
                 {trigger}
             </DropdownMenu.Trigger>
@@ -99,9 +104,9 @@ export const MenuContextual = ({
                     onEscapeKeyDown={() => setOpen(false)}
                     onInteractOutside={() => setOpen(false)}
                 >
-                    <ul className="flex flex-col items-start gap-4 rounded-md py-4">
+                    <div className="flex flex-col items-start gap-4 rounded-md py-4">
                         {children}
-                    </ul>
+                    </div>
                 </DropdownMenu.Content>
             </DropdownMenu.Portal>
         </DropdownMenu.Root>

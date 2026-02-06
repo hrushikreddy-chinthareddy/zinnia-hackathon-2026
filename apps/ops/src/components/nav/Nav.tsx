@@ -1,16 +1,16 @@
 import {
-    CarrierName,
     FieldData,
     FieldSize,
     Tooltip,
     TooltipPlacement,
     Icon,
     IconType,
+    CarrierName,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { getCookie } from 'cookies-next';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
+import { useTheme } from '@deps/hooks/useTheme';
 import { useWindowResize } from '@deps/hooks/useWindowResize';
 
 import { CollapsedLogo } from './CollapsedLogo';
@@ -70,9 +70,7 @@ export const Nav = ({
     onNavigationToggle,
 }: NavProps) => {
     const [isExpanded, setExpanded] = useState(true);
-    const [activeCarrier, setActiveCarrier] = useState<CarrierName>(
-        CarrierName.ZINNIA
-    );
+    const { carrierName } = useTheme();
     const windowWidth = useWindowResize();
     const isLargeScreen = windowWidth >= NAV_CHANGE_WIDTH;
 
@@ -80,14 +78,6 @@ export const Nav = ({
     const expandText = 'Expand navigation';
     const collapseText = 'Collapse navigation';
     const searchText = 'Search...';
-
-    useEffect(() => {
-        const role = getCookie('role') as string | undefined;
-
-        if (role && (Object.values(CarrierName) as string[]).includes(role)) {
-            setActiveCarrier(role as CarrierName);
-        }
-    }, []);
 
     const handleNavToggle = () => {
         if (!isLargeScreen && !!toggleMethod) {
@@ -127,7 +117,7 @@ export const Nav = ({
                 <div className={styles.logoRow}>
                     <div className={styles.logo}>
                         {/* If the theme is Zinnia - just load in the logo component */}
-                        {activeCarrier === 'zinnia' ? (
+                        {carrierName === CarrierName.ZINNIA ? (
                             <ZinniaLogo
                                 handleLogoClick={handleLogoClick}
                                 isExpanded={false}
@@ -136,7 +126,7 @@ export const Nav = ({
                         ) : // Otherwise check for expanded state to toggle between the two types of logos
                         isExpanded ? (
                             <ExpandedLogo
-                                activeCarrier={activeCarrier}
+                                activeCarrier={carrierName}
                                 handleLogoClick={handleLogoClick}
                                 isExpanded={isExpanded}
                                 expandText={expandText}
@@ -147,7 +137,7 @@ export const Nav = ({
                                 aria-label={expandText}
                             >
                                 <CollapsedLogo
-                                    activeCarrier={activeCarrier}
+                                    activeCarrier={carrierName}
                                     handleLogoClick={handleLogoClick}
                                     isExpanded={isExpanded}
                                     expandText={expandText}
@@ -196,128 +186,124 @@ export const Nav = ({
                     ))}
 
                 <nav className={styles.nav}>
-                    <ul className={styles.navList}>
+                    <div className={styles.navList}>
                         {navGroups?.map((group, index) => {
                             if (group.items.length === 0) return null;
 
                             return (
-                                <li
+                                <div
                                     className={clsx(
                                         styles.navSection,
                                         group.alignEnd && styles.alignEnd
                                     )}
                                     key={`navSection-${index}`}
                                 >
-                                    <section>
-                                        {group.heading && (
-                                            <h3
-                                                className={clsx(
-                                                    styles.navSection__heading,
-                                                    'typography-labels-label-sm',
-                                                    !isExpanded && styles.hidden
-                                                )}
-                                            >
-                                                {group.heading}
-                                            </h3>
-                                        )}
-                                        <ul>
-                                            {group.items.map((navItem) => {
-                                                // Normalizes the root nav route to be a string so it can be compared
-                                                const activeNavItemString =
-                                                    activeNavItem?.split(
-                                                        '/'
-                                                    )[1];
-                                                return (
-                                                    <Tooltip
-                                                        key={navItem.id}
-                                                        placement={
-                                                            TooltipPlacement.CenterRight
-                                                        }
-                                                        delayDuration={0}
-                                                        tooltipClassName={clsx(
-                                                            styles.tooltip,
-                                                            !isExpanded &&
-                                                                styles.visible
-                                                        )}
-                                                        replaceElement
-                                                        triggerClassName={
-                                                            styles.tooltipTrigger
-                                                        }
-                                                        trigger={
-                                                            // NavLink is not an actual element so we have to wrap it in this li
-                                                            // so that the tooltip will have an element to attach to for proper location.
-                                                            // Yes, this not the best solution but it works until all the circular excessive
-                                                            // navlink stuff is fixed between here and ops.
-                                                            <li
+                                    {group.heading && (
+                                        <h3
+                                            className={clsx(
+                                                styles.navSection__heading,
+                                                'typography-labels-label-sm',
+                                                !isExpanded && styles.hidden
+                                            )}
+                                        >
+                                            {group.heading}
+                                        </h3>
+                                    )}
+                                    <ul>
+                                        {group.items.map((navItem) => {
+                                            // Normalizes the root nav route to be a string so it can be compared
+                                            const activeNavItemString =
+                                                activeNavItem?.split('/')[1];
+                                            return (
+                                                <Tooltip
+                                                    key={navItem.id}
+                                                    placement={
+                                                        TooltipPlacement.CenterRight
+                                                    }
+                                                    delayDuration={0}
+                                                    tooltipClassName={clsx(
+                                                        styles.tooltip,
+                                                        !isExpanded &&
+                                                            styles.visible
+                                                    )}
+                                                    replaceElement
+                                                    triggerClassName={
+                                                        styles.tooltipTrigger
+                                                    }
+                                                    trigger={
+                                                        // NavLink is not an actual element so we have to wrap it in this li
+                                                        // so that the tooltip will have an element to attach to for proper location.
+                                                        // Yes, this not the best solution but it works until all the circular excessive
+                                                        // navlink stuff is fixed between here and ops.
+                                                        <li
+                                                            className={clsx(
+                                                                styles.listItem
+                                                            )}
+                                                            key={navItem.id}
+                                                        >
+                                                            <NavLink
+                                                                renderComponent={
+                                                                    navItem.renderComponent
+                                                                        ? navItem.renderComponent
+                                                                        : undefined
+                                                                }
+                                                                href={
+                                                                    navItem.href
+                                                                        ? navItem.href
+                                                                        : undefined
+                                                                }
+                                                                aria-current={
+                                                                    activeNavItem ===
+                                                                        navItem.id ||
+                                                                    navItem.id ===
+                                                                        activeNavItemString
+                                                                        ? 'page'
+                                                                        : undefined
+                                                                }
                                                                 className={clsx(
-                                                                    styles.listItem
+                                                                    styles.listItem__link,
+                                                                    'typography-content-body color-base-text-secondary'
                                                                 )}
-                                                                key={navItem.id}
                                                             >
-                                                                <NavLink
-                                                                    renderComponent={
-                                                                        navItem.renderComponent
-                                                                            ? navItem.renderComponent
-                                                                            : undefined
-                                                                    }
-                                                                    href={
-                                                                        navItem.href
-                                                                            ? navItem.href
-                                                                            : undefined
-                                                                    }
-                                                                    aria-current={
-                                                                        activeNavItem ===
-                                                                            navItem.id ||
-                                                                        navItem.id ===
-                                                                            activeNavItemString
-                                                                            ? 'page'
-                                                                            : undefined
-                                                                    }
-                                                                    className={clsx(
-                                                                        styles.listItem__link,
-                                                                        'typography-content-body color-base-text-secondary'
-                                                                    )}
-                                                                >
-                                                                    <>
-                                                                        {navItem?.icon && (
-                                                                            <div
-                                                                                className={
-                                                                                    styles.listItem__iconContainer
-                                                                                }
-                                                                            >
-                                                                                <Icon
-                                                                                    type={
-                                                                                        navItem.icon
-                                                                                    }
-                                                                                    height={
-                                                                                        20
-                                                                                    }
-                                                                                    width={
-                                                                                        20
-                                                                                    }
-                                                                                />
-                                                                            </div>
-                                                                        )}
-                                                                        <span>
-                                                                            {
-                                                                                navItem.display
+                                                                <>
+                                                                    {navItem?.icon && (
+                                                                        <div
+                                                                            className={
+                                                                                styles.listItem__iconContainer
                                                                             }
-                                                                        </span>
-                                                                    </>
-                                                                </NavLink>
-                                                            </li>
-                                                        }
-                                                    >
-                                                        {navItem.display}
-                                                    </Tooltip>
-                                                );
-                                            })}
-                                        </ul>
-                                    </section>
-                                </li>
+                                                                        >
+                                                                            <Icon
+                                                                                type={
+                                                                                    navItem.icon
+                                                                                }
+                                                                                height={
+                                                                                    20
+                                                                                }
+                                                                                width={
+                                                                                    20
+                                                                                }
+                                                                            />
+                                                                        </div>
+                                                                    )}
+                                                                    <span>
+                                                                        {
+                                                                            navItem.display
+                                                                        }
+                                                                    </span>
+                                                                </>
+                                                            </NavLink>
+                                                        </li>
+                                                    }
+                                                >
+                                                    {navItem.display}
+                                                </Tooltip>
+                                            );
+                                        })}
+                                    </ul>
+                                </div>
                             );
                         })}
-                    </ul>
+                    </div>
                 </nav>
             </div>
         </section>

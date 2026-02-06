@@ -22,21 +22,59 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useIllustrationsClientCase } from '@deps/contexts/illustrations/IllustrationsClientCaseContext';
-import { calculateAge } from '@deps/helpers/string.helpers';
+import {
+    calculateAge,
+    isNullEmptyOrUndefined,
+} from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
-import { IllustrationsClientCase } from '@deps/types/illustrations';
+import {
+    IllustrationsClientCase,
+    ClientCaseSearchInputs,
+} from '@deps/types/illustrations';
 import { ProductType, ProductTypeLabel } from '@deps/types/product';
 import { formatRelativeTime } from '@deps/utils/dates';
 import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 
 import styles from './client-case-table.module.css';
 import TableHeaderSortWrapper from './table-header-sort-wrapper.tsx/table-header-sort-wrapper';
+import { SpinnerMessage } from '../../../spinner-message/spinner-message';
 
 const generateTableContent = (
     clientCases: IllustrationsClientCase[],
     t: TFunction,
-    onRowClick: (url: string, clientCaseId: string) => void
+    onRowClick: (url: string, clientCaseId: string) => void,
+    isLoading = true,
+    isFiltered: boolean = false
 ) => {
+    if (isLoading) {
+        return (
+            <TableRow className={styles.tableLoadingState}>
+                <TableCell colSpan={8} align="center">
+                    <SpinnerMessage
+                        message={t('clientCase.clientCaseTable.loadingMessage')}
+                    />
+                </TableCell>
+            </TableRow>
+        );
+    }
+    const noResultsMessage = () => {
+        const dynamicValue = isFiltered ? 'Filtered' : 'Unfiltered';
+
+        return (
+            <>
+                <b>
+                    {t(
+                        `clientCase.clientCaseTable.noResults${dynamicValue}Title`
+                    )}
+                </b>
+                <br />
+                {t(
+                    `clientCase.clientCaseTable.noResults${dynamicValue}Paragraph`
+                )}
+            </>
+        );
+    };
+
     if (clientCases.length > 0) {
         return clientCases.map((caseData) => {
             const {
@@ -158,8 +196,8 @@ const generateTableContent = (
         return (
             <TableRow className={styles.tableEmptyStateRow}>
                 <TableCell colSpan={6} align="center">
-                    <Typography variant={TypographyVariant.BodySm}>
-                        {t('clientCase.clientCaseTable.emptyState')}
+                    <Typography variant={TypographyVariant.BodyBold}>
+                        {noResultsMessage()}
                     </Typography>
                 </TableCell>
             </TableRow>
@@ -167,9 +205,18 @@ const generateTableContent = (
     }
 };
 
+const isResultsFiltered = (filters: ClientCaseSearchInputs): boolean => {
+    return Object.entries(filters).some(
+        ([key, value]) =>
+            // Check search filters, excluding pagination and sorting fields
+            !['limit', 'offset', 'sortBy', 'sortDir'].includes(key) &&
+            !isNullEmptyOrUndefined(value)
+    );
+};
+
 export const ClientCaseTable = () => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { results } = useIllustrationsClientCase();
+    const { results, isLoading, filters } = useIllustrationsClientCase();
     const router = useRouter();
     const { sendClientCaseClicked } = useIllustrationAnalytics();
 
@@ -178,6 +225,7 @@ export const ClientCaseTable = () => {
         router.push(href);
     };
 
+    const filteredResults = isResultsFiltered(filters);
     return (
         <Table>
             <TableHeader>
@@ -250,7 +298,9 @@ export const ClientCaseTable = () => {
                 {generateTableContent(
                     results?.results || [],
                     t,
-                    goToClientCase
+                    goToClientCase,
+                    isLoading,
+                    filteredResults
                 )}
             </TableBody>
         </Table>

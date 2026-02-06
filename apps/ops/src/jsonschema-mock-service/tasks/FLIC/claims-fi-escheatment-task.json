@@ -105,10 +105,6 @@
                                                                         "type": "string",
                                                                         "title": "Owner SSN"
                                                                     },
-                                                                    "prefix": {
-                                                                        "type": "string",
-                                                                        "title": "Owner Suffix"
-                                                                    },
                                                                     "firstName": {
                                                                         "type": "string",
                                                                         "title": "Owner First Name"
@@ -120,6 +116,10 @@
                                                                     "lastName": {
                                                                         "type": "string",
                                                                         "title": "Owner Last Name"
+                                                                    },
+                                                                    "prefix": {
+                                                                        "type": "string",
+                                                                        "title": "Owner Suffix"
                                                                     },
                                                                     "dateOfBirth": {
                                                                         "type": "string",
@@ -221,10 +221,6 @@
                                                                     "type": "string",
                                                                     "title": "Beneficiary SSN"
                                                                 },
-                                                                "prefix": {
-                                                                    "type": "string",
-                                                                    "title": "Beneficiary Suffix"
-                                                                },
                                                                 "firstName": {
                                                                     "type": "string",
                                                                     "title": "Beneficiary First Name"
@@ -236,6 +232,10 @@
                                                                 "lastName": {
                                                                     "type": "string",
                                                                     "title": "Beneficiary Last Name"
+                                                                },
+                                                                "prefix": {
+                                                                    "type": "string",
+                                                                    "title": "Beneficiary Suffix"
                                                                 },
                                                                 "dateOfBirth": {
                                                                     "type": "string",
@@ -482,13 +482,6 @@
                                                     "dataType": "string"
                                                 }
                                             },
-                                            "prefix": {
-                                                "ui:options": {
-                                                    "inline": true,
-                                                    "label": false,
-                                                    "dataType": "string"
-                                                }
-                                            },
                                             "firstName": {
                                                 "ui:options": {
                                                     "inline": true,
@@ -504,6 +497,13 @@
                                                 }
                                             },
                                             "lastName": {
+                                                "ui:options": {
+                                                    "inline": true,
+                                                    "label": false,
+                                                    "dataType": "string"
+                                                }
+                                            },
+                                            "prefix": {
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
@@ -667,13 +667,6 @@
                                                 "dataType": "string"
                                             }
                                         },
-                                        "prefix": {
-                                            "ui:options": {
-                                                "inline": true,
-                                                "label": false,
-                                                "dataType": "string"
-                                            }
-                                        },
                                         "firstName": {
                                             "ui:options": {
                                                 "inline": true,
@@ -689,6 +682,13 @@
                                             }
                                         },
                                         "lastName": {
+                                            "ui:options": {
+                                                "inline": true,
+                                                "label": false,
+                                                "dataType": "string"
+                                            }
+                                        },
+                                        "prefix": {
                                             "ui:options": {
                                                 "inline": true,
                                                 "label": false,

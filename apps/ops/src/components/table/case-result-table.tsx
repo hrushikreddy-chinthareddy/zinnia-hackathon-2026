@@ -243,6 +243,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
         singleCase.escalated ?? false,
         singleCase.caseStatus
     );
+
     return (
         <TableRow className={styles.row}>
             <TableCell className={styles.caseLinkContainer}>
@@ -398,25 +399,44 @@ interface CaseResultTableProps {
     sortBy: string | null;
     caseSearchLoading: boolean;
     loadingMessage: string;
+    isFiltered?: boolean;
 }
 
 const NoResultsRow = ({
     loadingMessage,
     caseSearchLoading,
+    isFiltered,
 }: {
     searchValues: SearchViewQuery | undefined;
     loadingMessage: string;
     caseSearchLoading: boolean;
+    isFiltered?: boolean;
 }) => {
     const { t } = useTranslation();
+
+    const noResultsMessage = () => {
+        const dynamicValue = isFiltered ? 'Filtered' : 'Unfiltered';
+
+        return (
+            <>
+                <b>
+                    {t(
+                        `caseManagementDashboard.search.empty.noResults${dynamicValue}Title`
+                    )}
+                </b>
+                <br />
+                {t(
+                    `caseManagementDashboard.search.empty.noResults${dynamicValue}Paragraph`
+                )}
+            </>
+        );
+    };
 
     return (
         <TableRow>
             <TableCell colSpan={7} className="text-center">
                 <Typography variant={TypographyVariant.BodySm} className="my-4">
-                    {caseSearchLoading
-                        ? loadingMessage
-                        : t('caseManagementDashboard.search.empty.title')}
+                    {caseSearchLoading ? loadingMessage : noResultsMessage()}
                 </Typography>
             </TableCell>
         </TableRow>
@@ -430,6 +450,7 @@ export const CaseResultTable = ({
     sortBy,
     caseSearchLoading,
     loadingMessage,
+    isFiltered,
 }: CaseResultTableProps) => {
     const { t } = useTranslation();
 
@@ -508,7 +529,8 @@ export const CaseResultTable = ({
                                         ? IconType.ARROW_UP
                                         : IconType.ARROW_DOWN
                                 }
-                                color="#00628B"
+                                color="var(--color-toast-toast-text)"
+                                width={16}
                             />
                         </Typography>
                     </TableHeaderCell>
@@ -528,6 +550,7 @@ export const CaseResultTable = ({
                         searchValues={searchValues}
                         caseSearchLoading={caseSearchLoading}
                         loadingMessage={loadingMessage}
+                        isFiltered={isFiltered}
                     />
                 )}
             </TableBody>

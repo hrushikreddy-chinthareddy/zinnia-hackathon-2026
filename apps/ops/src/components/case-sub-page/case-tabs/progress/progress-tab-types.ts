@@ -19,6 +19,7 @@ export type ExceptionView = {
     tasks: TaskView[];
     status: string;
     updatedAt: string;
+    exceptionType?: string;
 };
 
 export type CaseAdditionalData = {

@@ -13,6 +13,7 @@ export enum FEATURE_FLAGS {
     SHOW_HOME_NAV_BTN = 'show-home-nav-btn',
     ILLUSTRATIONS_EXPERIENCE = 'illustration-experience',
     READ_ONLY_VIEW_TASK_MANAGEMENT = 'read-only-view-task-management',
+    CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS = 'can-view-case-technical-exceptions',
     // CMW-14579 - Regulation 60
     REG_60 = 'case-management-otp_feature_regulation-60',
     SSW_MASS = 'case-management-otp_feature_mass_ssw',
@@ -198,4 +199,5 @@ export enum FEATURE_FLAGS {
     FKV_REVISED_FUND_SIDESHEETS = 'fkv_revised_fund_sidesheets',
     DELAWARE_BANK_SEC_FEATS = 'delaware_bank_sec_feats',
     ENABLE_ISSUE_COUNT_VIEW_CASES = 'enable_issue_count_view_cases',
+    DLIC_3P_DISBURSEMENT_CHANGES = 'dlic_3p_disbursement_changes_zlfeb3',
 }

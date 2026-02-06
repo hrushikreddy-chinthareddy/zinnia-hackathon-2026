@@ -1,4 +1,4 @@
-import { useDefaultSelfAssignAgentSellingCode } from '@deps/components/illustrations/helpers/hooks/use-default-self-assign-agent';
+import { useSelfAssignAgentSellingCodes } from '@deps/components/illustrations/helpers/hooks/use-self-assign-agent-selling-codes';
 import {
     getMainIdentyfiers,
     useAllAliasesWithSellingCode,
@@ -14,13 +14,13 @@ export const useDefaultAuthenticatedAgentOption = () => {
         aliasesWithSellingCodes
     );
 
-    const agentSellingCode = useDefaultSelfAssignAgentSellingCode();
+    const agentSellingCodes = useSelfAssignAgentSellingCodes();
 
-    if (!agentSellingCode) {
-        return agentSellingCode;
+    if (!agentSellingCodes.length) {
+        return null;
     }
 
-    const { sellingCode, carrierShortName, lookupId } = agentSellingCode;
+    const { carrierShortName, lookupId } = agentSellingCodes[0];
 
     const agentOption = {
         firstName:
@@ -29,7 +29,12 @@ export const useDefaultAuthenticatedAgentOption = () => {
             loggedInUserMainAlias?.lastName || partyReferenceData?.lastName,
         email: loggedInUserMainAlias?.email || partyReferenceData?.email,
         lookupId,
-        sellingCodes: [sellingCode],
+        sellingCodes: agentSellingCodes
+            .filter(
+                (agentSellingCode) =>
+                    agentSellingCode.carrierShortName === carrierShortName
+            )
+            .map(({ sellingCode }) => sellingCode),
         carrierShortName,
     } satisfies AgentOption;
 

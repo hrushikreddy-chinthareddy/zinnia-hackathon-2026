@@ -1,6 +1,4 @@
 import {
-    Icon,
-    IconType,
     Pagination,
     Table,
     TableHeader,
@@ -14,11 +12,13 @@ import {
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import {
     ErrorMessage,
     NoDataMessage,
 } from '@deps/components/dashboard/components/errors';
+import { SortableHeaderCell } from '@deps/components/dashboard/components/sortable-header-cell';
 import sharedStyles from '@deps/components/dashboard/dashboard-shared.module.css';
 import { Columns, DownloadCSV } from '@deps/components/dashboard/download-csv';
 import {
@@ -51,7 +51,9 @@ export interface FlattenedDashboardStatsElement {
     details: string;
     count: number;
 }
+
 export const IssueCountsByStatusTable = () => {
+    const { t } = useTranslation();
     const {
         issueCountsByStatusData,
         issueCountsByStatusDataError,
@@ -118,13 +120,11 @@ export const IssueCountsByStatusTable = () => {
         COUNT = 'count',
     }
 
-    // Transform the data by flattening it
     const flattenedData = useMemo(() => {
         if (!issueCountsByStatusData?.data) return [];
         return flattenDashboardStats(issueCountsByStatusData?.data);
     }, [issueCountsByStatusData?.data, flattenDashboardStats]);
 
-    // Filter by search
     const searchedData = useMemo(() => {
         return flattenedData.filter(
             (item) =>
@@ -136,10 +136,24 @@ export const IssueCountsByStatusTable = () => {
         );
     }, [flattenedData, searchText]);
 
-    const { handleSort, sortedData } = useTableOptions({
+    const { handleSort, sortedData, sortOrder } = useTableOptions({
         sortByDefault: SortByOptions.COUNT,
         dataToSort: searchedData,
     });
+
+    const sortDirection = sortOrder; // 'asc' | 'desc'
+
+    const [activeSort, setActiveSort] = useState<SortByOptions | null>(
+        SortByOptions.COUNT
+    );
+
+    const onSort = useCallback(
+        (sortBy: SortByOptions) => {
+            setActiveSort(sortBy);
+            handleSort(sortBy);
+        },
+        [handleSort]
+    );
 
     // Create paginatedData from transformed data
     const paginatedData = useMemo(() => {
@@ -154,7 +168,6 @@ export const IssueCountsByStatusTable = () => {
         [setOffset]
     );
 
-    // If sorted data updates, go back to page 1
     useEffect(() => {
         goToPage(1);
     }, [goToPage, sortedData]);
@@ -177,7 +190,7 @@ export const IssueCountsByStatusTable = () => {
         { label: 'Total', key: 'count' },
     ];
     const isViewCasesEnabled =
-        !featureFlags[FEATURE_FLAGS.ENABLE_ISSUE_COUNT_VIEW_CASES] &&
+        featureFlags[FEATURE_FLAGS.ENABLE_ISSUE_COUNT_VIEW_CASES] &&
         featureFlags[FEATURE_FLAGS.ENTERPRISE_SEARCH_CASE];
 
     return (
@@ -217,69 +230,37 @@ export const IssueCountsByStatusTable = () => {
                         <Table>
                             <TableHeader>
                                 <TableRow>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.CATEGORY)
-                                        }
-                                        sortable
-                                    >
-                                        Category
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.REASON)
-                                        }
-                                        sortable
-                                    >
-                                        Reason
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.DETAILS)
-                                        }
-                                        sortable
-                                    >
-                                        Details
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
-                                    <TableHeaderCell
-                                        onClick={() =>
-                                            handleSort(SortByOptions.COUNT)
-                                        }
-                                        sortable
-                                    >
-                                        Total
-                                        <Icon
-                                            className={sharedStyles.sortIcon}
-                                            type={IconType.SORT}
-                                            color="#00628B"
-                                            height={16}
-                                            width={16}
-                                        />
-                                    </TableHeaderCell>
+                                    <SortableHeaderCell
+                                        label={t('allFields.category')}
+                                        sortKey={SortByOptions.CATEGORY}
+                                        activeSortKey={activeSort}
+                                        onSort={onSort}
+                                        sortOrder={sortDirection}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.reason')}
+                                        sortKey={SortByOptions.REASON}
+                                        activeSortKey={activeSort}
+                                        onSort={onSort}
+                                        sortOrder={sortDirection}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.details')}
+                                        sortKey={SortByOptions.DETAILS}
+                                        activeSortKey={activeSort}
+                                        onSort={onSort}
+                                        sortOrder={sortDirection}
+                                    />
+                                    <SortableHeaderCell
+                                        label={t('allFields.total')}
+                                        sortKey={SortByOptions.COUNT}
+                                        activeSortKey={activeSort}
+                                        onSort={onSort}
+                                        sortOrder={sortDirection}
+                                    />
                                     {isViewCasesEnabled && (
                                         <TableHeaderCell>
-                                            Actions
+                                            {t('allFields.actions')}
                                         </TableHeaderCell>
                                     )}
                                 </TableRow>
@@ -312,39 +293,29 @@ export const IssueCountsByStatusTable = () => {
                                                         PopoverPlacement.TopRight
                                                     }
                                                 >
-                                                    {
-                                                        <div className="text-left">
-                                                            {toSentenceCase(
-                                                                item.category
-                                                            ) || 'Issue'}
-                                                        </div>
-                                                    }
+                                                    <div className="text-left">
+                                                        {toSentenceCase(
+                                                            item.category
+                                                        ) || 'Issue'}
+                                                    </div>
                                                 </Tooltip>
                                             </TableCell>
                                             <TableCell>
                                                 <Tooltip
-                                                    body={
-                                                        toSentenceCase(
-                                                            item.reason
-                                                        ) ||
-                                                        toSentenceCase(
+                                                    body={toSentenceCase(
+                                                        item.reason ||
                                                             item.category
-                                                        )
-                                                    }
+                                                    )}
                                                     placement={
                                                         PopoverPlacement.TopRight
                                                     }
                                                 >
-                                                    {
-                                                        <div className="text-left">
-                                                            {toSentenceCase(
-                                                                item.reason
-                                                            ) ||
-                                                                toSentenceCase(
-                                                                    item.category
-                                                                )}
-                                                        </div>
-                                                    }
+                                                    <div className="text-left">
+                                                        {toSentenceCase(
+                                                            item.reason ||
+                                                                item.category
+                                                        )}
+                                                    </div>
                                                 </Tooltip>
                                             </TableCell>
                                             <TableCell>
@@ -361,16 +332,14 @@ export const IssueCountsByStatusTable = () => {
                                                         PopoverPlacement.TopRight
                                                     }
                                                 >
-                                                    {
-                                                        <div className="text-left">
-                                                            {capitalizeAfterPeriod(
-                                                                item.details
-                                                            ) ||
-                                                                capitalizeAfterPeriod(
-                                                                    item.reason
-                                                                )}
-                                                        </div>
-                                                    }
+                                                    <div className="text-left">
+                                                        {capitalizeAfterPeriod(
+                                                            item.details
+                                                        ) ||
+                                                            capitalizeAfterPeriod(
+                                                                item.reason
+                                                            )}
+                                                    </div>
                                                 </Tooltip>
                                             </TableCell>
                                             <TableCell>

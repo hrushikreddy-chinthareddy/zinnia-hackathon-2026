@@ -51,6 +51,11 @@ interface MultiStepInstanceWithSteps extends MultiStepInstance {
 
 type ConvertedStepInstance = SingleStepInstance | MultiStepInstanceWithSteps;
 
+export enum ExceptionTypes {
+    Technical = 'Technical',
+    Business = 'Business',
+}
+
 // creates a whole-number x% Complete string based on 2 numbers (complete and total)
 export const completionPercentageString = (
     complete: number,
@@ -660,6 +665,7 @@ export class TransformedCase {
             description,
             id: exception.id,
             exceptionRefId: exception.exceptionRefId || undefined,
+            exceptionType: exception.exceptionType,
             status: exception.status,
             tasks: tasks,
             updatedAt: exception.updatedAt,
@@ -680,7 +686,11 @@ export class TransformedCase {
                 const exception = this.exceptionMap[
                     exceptionId
                 ] as ExceptionInstance & { usedInStep: boolean };
-                if (exception && !exception.usedInStep) {
+                if (
+                    exception &&
+                    !exception.usedInStep &&
+                    exception.exceptionType !== ExceptionTypes.Technical
+                ) {
                     acc.push(this.buildException(exception, true));
                 }
                 return acc;

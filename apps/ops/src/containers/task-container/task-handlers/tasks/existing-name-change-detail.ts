@@ -1,7 +1,6 @@
 import { NigoExceptionResponse } from '@deps/containers/nigo-entry-container/components/steps/nigo-details/nigo-details.types';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 
-import { getCheckBoxesSelectWidgetUiSchema } from '../../task.helpers';
 import { TaskHandler, ReviewPayload } from '../types';
 
 const existingNameChangeDetailHandler: TaskHandler<
@@ -61,10 +60,14 @@ const existingNameChangeDetailHandler: TaskHandler<
             }
         }
 
-        metadata[0].uiSchema.declineReason = getCheckBoxesSelectWidgetUiSchema({
-            enumOptions: declineReasonOptions,
-            dataPath: ['declineReason'],
-        });
+        metadata[0].uiSchema.declineReason = {
+            'ui:options': {
+                label: true,
+                widget: 'CheckBoxesSelectWidget',
+                enumOptions: declineReasonOptions,
+            },
+            'ui:dataPath': ['declineReason'],
+        };
     },
 };
 

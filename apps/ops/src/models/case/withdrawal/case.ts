@@ -274,6 +274,11 @@ export interface FormDisbursement {
             } | null;
         };
     } | null;
+    isPayeeFinancialIns: false;
+    isPayeeCharity: false;
+    isAddressDifferent: false;
+    isAnnuitant: false;
+    isThirdPartyDisbursement: false;
 }
 export interface FormDistribution {
     moneyType: {
@@ -566,6 +571,7 @@ export interface BankDetails {
     isDirectDepositValid?: {
         text: boolean | null;
     };
+    isAnnuitant?: boolean;
 }
 
 export type Brokerage = {

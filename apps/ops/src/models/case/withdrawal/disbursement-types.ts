@@ -57,6 +57,8 @@ export type BankFieldConfig = {
     error?: string;
     disableCopyPaste?: boolean;
     isAddressLine2Required?: boolean;
+    annuitantAddress?: Address;
+    selectOptions?: Array<{ label: string; value: string }>;
 };
 
 export type Tooltip = {
@@ -159,6 +161,11 @@ export const DEFAULT_DISBURSEMENT_UPDATE: DisbursementParts = {
     consentAvailable: null,
     firstTimeExpressCheck: null,
     ChooseBankingType: '',
+    isPayeeFinancialIns: false,
+    isAnnuitant: false,
+    isPayeeCharity: false,
+    isThirdPartyDisbursement: false,
+    isAddressDifferent: false,
 };
 
 export const DEFAULT_BANK_DETAILS: BankDetails = {
@@ -214,7 +221,6 @@ export interface DisbursementParts {
     accountHolder: string | null;
     accountName: string | null;
     emailNotification: boolean | null;
-    selectIfPayeeIsDifferent: boolean;
     isDirectDepositValid: boolean | null;
     bank?: BankDetails;
     bankType?: string;
@@ -225,4 +231,19 @@ export interface DisbursementParts {
     isAddressLine2Required?: boolean;
     bankVerification?: any;
     name?: string | null;
+    selectIfPayeeIsDifferent: boolean;
+    isPayeeFinancialIns: boolean;
+    isAnnuitant: boolean;
+    isPayeeCharity: boolean;
+    isThirdPartyDisbursement: boolean;
+    isAddressDifferent: boolean;
+}
+
+export enum SendCheckOption {
+    OwnerAddress = 'Disburse to owner address',
+    FinancialInstitution = 'Disburse to Financial Institution',
+    Charity = 'Disburse to Charity',
+    Annuitant = 'Disburse to Annuitant',
+    DifferentAddress = 'Disburse to different Address',
+    ThirdPartyNotFinancialIns = 'Disburse to Third Party(Not a Financial Institution / Charity)',
 }

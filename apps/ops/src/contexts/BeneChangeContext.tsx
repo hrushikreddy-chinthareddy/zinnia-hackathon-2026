@@ -147,4 +147,5 @@ export interface BeneChangePayload {
     isPrimaryBeneInfoOnFile?: boolean;
     isContingentBeneInfoOnFile?: boolean;
     signatureData: SignatureInfo;
+    requestSource?: string;
 }

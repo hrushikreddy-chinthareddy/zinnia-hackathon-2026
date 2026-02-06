@@ -55,6 +55,11 @@ describe('getRslnRmdConfig', () => {
                 upsAccount: null,
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
+                isPayeeFinancialIns: false,
+                isPayeeCharity: false,
+                isAddressDifferent: false,
+                isAnnuitant: false,
+                isThirdPartyDisbursement: false,
                 bankVerification: {
                     selectedBankingType: '',
                     validationsMap: {
@@ -95,6 +100,11 @@ describe('getRslnRmdConfig', () => {
                 upsAccount: null,
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
+                isPayeeFinancialIns: false,
+                isPayeeCharity: false,
+                isAddressDifferent: false,
+                isAnnuitant: false,
+                isThirdPartyDisbursement: false,
                 bankVerification: {
                     selectedBankingType: '',
                     validationsMap: {

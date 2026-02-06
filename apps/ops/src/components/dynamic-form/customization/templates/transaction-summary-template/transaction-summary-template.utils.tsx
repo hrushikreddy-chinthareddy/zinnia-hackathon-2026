@@ -6,6 +6,7 @@ import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
+import { REQUEST_SOURCE } from '@deps/containers/bene-change/components/steps/confirm/confirm-step.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
     isNullEmptyOrUndefined,
@@ -20,7 +21,10 @@ import {
     validateAgentTransaction,
     validateThirdPartyDesigneeChange,
 } from '@deps/queries/api/web-non-financial';
-import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    PROCESS_WITHOUT_DOCUMENT,
+    ZAHARA_API_DATE_FORMAT,
+} from '@deps/types/constants';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
@@ -144,6 +148,10 @@ type RequestBodyBuilder = (customData: any) => any;
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
         const { task } = customData;
+        const requestSource =
+            customData.businessKey === PROCESS_WITHOUT_DOCUMENT
+                ? REQUEST_SOURCE.SELF_SERVE
+                : REQUEST_SOURCE.DATA_ENTRY;
 
         const actionData = Array.isArray(customData?.actionData)
             ? customData.actionData.map((item: any) => {
@@ -193,6 +201,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             transactionType: 'Bene Change',
             isPrimaryBeneInfoOnFile: false,
             isContingentBeneInfoOnFile: false,
+            requestSource: requestSource,
         };
     },
     INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
@@ -212,6 +221,11 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             ? {
                   ...uiParty,
                   fullName: getFullName(uiParty),
+                  entityType:
+                      uiParty.partyType === PartyType.ORGANIZATION &&
+                      !uiParty.entityType
+                          ? 'UNKNOWN'
+                          : uiParty.entityType,
                   addresses: cleanAddresses(uiParty.addresses),
                   emails: cleanEmails(uiParty.emails),
                   phones: cleanPhones(uiParty.phones),

@@ -5,6 +5,12 @@ import {
     Accordion as AccordionRoot,
     AccordionTrigger,
 } from '@radix-ui/react-accordion';
+import {
+    BannerAlert,
+    BannerVariant,
+    Button,
+    IconType,
+} from '@zinnia/bloom/components';
 import { useSearchParams } from 'next/navigation';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, {
@@ -18,12 +24,14 @@ import React, {
 
 import Content, { ContentVariant } from '@deps/components/content/content';
 import { PopoverPlacement } from '@deps/components/popover/popover';
+import CaseTechnicalIssues from '@deps/components/side-sheet/case-technical-issues/case-technical-issues';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { useTaskIdFromUrl } from '@deps/hooks/useTaskIdFromUrl';
 import { Case, Statuses } from '@deps/models/case/case';
@@ -42,6 +50,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import Exceptions from './exceptions';
 import {
     completionPercentageString,
+    ExceptionTypes,
     TransformedCase,
     TransformedStage,
     TransformedStep,
@@ -392,10 +401,65 @@ const StepProgressBar = ({
 //#region Progress Bar
 export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
     const { t } = useTranslation();
+    const sideSheet = useSideSheetContext();
+
+    const EXCEPTION_IN_PROGRESS = 'In Progress';
+
+    const { additionalData } = caseDetails;
+    const showTechnicalExceptions =
+        Boolean(additionalData?.canViewTechnicalExceptions === 'true') &&
+        caseDetails?.techExceptionCount;
+
+    const isTechnicalExceptionStatusResolved = Boolean(
+        caseDetails?.techExceptionStatus !== EXCEPTION_IN_PROGRESS
+    );
 
     const transformedCase = useMemo(() => {
         return new TransformedCase(caseDetails, t);
     }, [caseDetails, t]);
+
+    const renderTechnicalExcpetionsSideSheet = () => {
+        const filteredTechnicalExceptions = caseDetails?.exceptions.filter(
+            (exception) => exception?.exceptionType === ExceptionTypes.Technical
+        );
+        sideSheet.changeSideSheetContent(
+            `${t('allFields.technicalExceptions')}`,
+            <CaseTechnicalIssues
+                caseId={caseDetails.id}
+                exceptions={filteredTechnicalExceptions}
+            />,
+            true
+        );
+        sideSheet.handleOpen(true);
+    };
+
+    const renderViewDetails = (
+        showTechnicalExceptions: boolean,
+        isTechnicalExceptionStatusResolved: boolean
+    ) => {
+        return (
+            <>
+                <Typography variant={TypographyVariant.BodySm}>
+                    {!isTechnicalExceptionStatusResolved
+                        ? t('allFields.technicalIssuesWarning')
+                        : t('allFields.technicalIssuesResolved')}
+                </Typography>
+                {showTechnicalExceptions && (
+                    <Button
+                        aria-label={
+                            t('allFields.viewDetailsException') as string
+                        }
+                        mode="link"
+                        size="small"
+                        className="!border-none"
+                        onClick={renderTechnicalExcpetionsSideSheet}
+                    >
+                        {t('allFields.viewDetails')}
+                    </Button>
+                )}
+            </>
+        );
+    };
 
     return (
         <>
@@ -413,6 +477,26 @@ export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
                         }
                     />
                 </div>
+                {!showTechnicalExceptions &&
+                isTechnicalExceptionStatusResolved ? null : (
+                    <BannerAlert
+                        icon={
+                            isTechnicalExceptionStatusResolved
+                                ? IconType.CIRCLE_CHECKMARK
+                                : undefined
+                        }
+                        className="mt-4 mb-8"
+                        bodyText={renderViewDetails(
+                            Boolean(showTechnicalExceptions),
+                            isTechnicalExceptionStatusResolved
+                        )}
+                        variant={
+                            isTechnicalExceptionStatusResolved
+                                ? BannerVariant.Success
+                                : BannerVariant.Warning
+                        }
+                    />
+                )}
                 <div className="mt-6 flex flex-col gap-2">
                     <Stages stages={transformedCase.stages} />
                 </div>

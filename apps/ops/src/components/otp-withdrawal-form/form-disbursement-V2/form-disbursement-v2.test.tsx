@@ -109,9 +109,7 @@ describe('FormDisbursementV2 Component', () => {
         bank: [
             {
                 accountNumber: '',
-                accountType: {
-                    text: AccountType.Checking,
-                },
+                accountType: AccountType.Checking,
                 bankContactPerson: '',
                 bankFurtherCreditAccount: '',
                 bankFurtherCreditName: '',

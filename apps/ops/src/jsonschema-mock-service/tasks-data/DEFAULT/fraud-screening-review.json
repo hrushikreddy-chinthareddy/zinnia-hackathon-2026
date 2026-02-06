@@ -29,16 +29,7 @@
                     "documentSource": "EDS"
                 }
             ],
-            "fraudShareThreatDetails": [
-                {
-                    "detectedFailure": "Email Address",
-                    "failureValue": "denism@yahoo.com",
-                    "ownerType": "INDIVIDUAL_OWNER_EMAIL",
-                    "failureType": null,
-                    "errorCode": null,
-                    "errorDescription": null
-                }
-            ],
+
             "giactThreatDetails": [
                 {
                     "ownerType": "INDIVIDUAL",

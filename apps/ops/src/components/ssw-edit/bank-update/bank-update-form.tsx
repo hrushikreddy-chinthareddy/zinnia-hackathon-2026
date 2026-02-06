@@ -2,6 +2,7 @@ import router from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { useContext, useState } from 'react';
 
+import FormDisbursementSection from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement-section';
 import { getDefaultFormDisbursementValues } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
 import FormDisbursementV2 from '@deps/components/otp-withdrawal-form/form-disbursement-V2/form-disbursement-v2';
 import NoteSection from '@deps/components/otp-withdrawal-form/note-section';
@@ -15,12 +16,14 @@ import {
     ContributionType,
 } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
+import { Carrier } from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
 import {
     BankUpdateFieldConfigs,
+    BankUpdateFieldConfigsV2,
     bankUpdateFormData,
     signaturesConfig,
     typeOptions,
@@ -43,8 +46,9 @@ import { getDocumentSource, sswEditFormValidator } from '../ssw-edit-helpers';
 
 type BankUpdateFormProps = {
     document: DocumentData;
+    carrierId: string;
 };
-const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
+const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
     });
@@ -136,7 +140,8 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
         );
     }
 
-    const bankingFieldsConfig = BankUpdateFieldConfigs(t) as any;
+    const bankingFieldsConfigV2 = BankUpdateFieldConfigsV2(t) as any;
+    const bankingFieldsConfig = BankUpdateFieldConfigs(t, carrierId) as any;
 
     return (
         <>
@@ -197,14 +202,26 @@ const BankUpdateForm = ({ document }: BankUpdateFormProps) => {
                                 name="sswType"
                             />
                         </div>
-                        <div>
-                            <FormDisbursementV2
-                                isFormStateReadOnly={false}
-                                options={bankingFieldsConfig}
-                                isBankUpdateForm={true}
-                            />
-                        </div>
+                        {carrierId === Carrier.SBGC ? (
+                            <div>
+                                <FormDisbursementV2
+                                    isFormStateReadOnly={false}
+                                    options={bankingFieldsConfigV2}
+                                    isBankUpdateForm={true}
+                                />
+                            </div>
+                        ) : (
+                            <div>
+                                <FormDisbursementSection
+                                    isFormStateReadOnly={false}
+                                    fields={bankingFieldsConfig}
+                                    disbursementInformation={bankUpdateDetails}
+                                    onDataChange={setBankUpdateDetails}
+                                />
+                            </div>
+                        )}
                     </div>
+
                     <div>
                         {source !== ChannelType.Phone && formSignature && (
                             <SignatureValidations

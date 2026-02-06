@@ -107,10 +107,6 @@
                                                                         "type": "string",
                                                                         "title": "Owner SSN"
                                                                     },
-                                                                    "prefix": {
-                                                                        "type": "string",
-                                                                        "title": "Owner Suffix"
-                                                                    },
                                                                     "firstName": {
                                                                         "type": "string",
                                                                         "title": "Owner First Name"
@@ -122,6 +118,10 @@
                                                                     "lastName": {
                                                                         "type": "string",
                                                                         "title": "Owner Last Name"
+                                                                    },
+                                                                    "prefix": {
+                                                                        "type": "string",
+                                                                        "title": "Owner Suffix"
                                                                     },
                                                                     "dateOfBirth": {
                                                                         "type": "string",
@@ -232,11 +232,6 @@
                                                                     "title": "Beneficiary SSN",
                                                                     "pattern": "^(|[0-9]{9})$"
                                                                 },
-                                                                "prefix": {
-                                                                    "type": "string",
-                                                                    "title": "Beneficiary Suffix",
-                                                                    "minLength": 1
-                                                                },
                                                                 "firstName": {
                                                                     "type": "string",
                                                                     "title": "Beneficiary First Name",
@@ -251,6 +246,10 @@
                                                                     "title": "Beneficiary Last Name",
                                                                     "minLength": 1
                                                                 },
+                                                                "prefix": {
+                                                                    "type": "string",
+                                                                    "title": "Beneficiary Suffix"
+                                                                },
                                                                 "dateOfBirth": {
                                                                     "type": "string",
                                                                     "title": "Beneficiary Date of Birth",
@@ -260,7 +259,6 @@
                                                             "required": [
                                                                 "lastName",
                                                                 "firstName",
-                                                                "prefix",
                                                                 "dateOfBirth"
                                                             ]
                                                         },
@@ -274,8 +272,7 @@
                                                                 },
                                                                 "addressLine2": {
                                                                     "type": "string",
-                                                                    "title": "Beneficiary Address Line 2",
-                                                                    "minLength": 1
+                                                                    "title": "Beneficiary Address Line 2"
                                                                 },
                                                                 "city": {
                                                                     "type": "string",
@@ -492,7 +489,7 @@
                                                     "dataType": "string"
                                                 }
                                             },
-                                            "lastName": {
+                                            "firstName": {
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
@@ -506,7 +503,7 @@
                                                     "dataType": "string"
                                                 }
                                             },
-                                            "firstName": {
+                                            "lastName": {
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,

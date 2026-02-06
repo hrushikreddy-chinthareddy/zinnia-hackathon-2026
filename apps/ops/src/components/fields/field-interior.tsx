@@ -89,6 +89,8 @@ export default forwardRef(function FieldInterior(
                     value={inputValue}
                     aria-label={label ? label : t('ariaLabel.genericInput')}
                     aria-labelledby={rest['aria-labelledby']}
+                    aria-invalid={rest['aria-invalid']}
+                    aria-describedby={rest['aria-describedby']}
                     autoFocus={rest.autoFocus}
                     placeholder={rest.placeholder}
                     className={numericClasses}
@@ -140,6 +142,8 @@ export default forwardRef(function FieldInterior(
                     value={inputValue}
                     aria-label={label ? label : t('ariaLabel.genericInput')}
                     aria-labelledby={rest['aria-labelledby']}
+                    aria-invalid={rest['aria-invalid']}
+                    aria-describedby={rest['aria-describedby']}
                     autoFocus={rest.autoFocus}
                     placeholder={rest.placeholder}
                     className={classes}

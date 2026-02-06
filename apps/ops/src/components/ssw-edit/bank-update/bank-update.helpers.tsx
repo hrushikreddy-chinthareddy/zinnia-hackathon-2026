@@ -3,6 +3,7 @@ import { TFunction } from 'next-i18next';
 
 import {
     BankingFields,
+    DisbursementFields,
     getDefaultFormDisbursementValues,
     updateBankingDetails,
 } from '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers';
@@ -35,6 +36,7 @@ import {
     PaymentMethod,
     FormDisbursement,
     FormComment,
+    Carrier,
 } from '@deps/models/case/withdrawal/case';
 import {
     DEFAULT_BANK_DETAILS,
@@ -82,7 +84,7 @@ export const accountTypeOptions = (t: TFunction) => [
     },
 ];
 
-export const BankUpdateFieldConfigs = (t: TFunction) => ({
+export const BankUpdateFieldConfigsV2 = (t: TFunction) => ({
     fields: [
         {
             fieldName: BankingFields.ChooseBankingType,
@@ -277,24 +279,53 @@ export const getBankUpdatePayload = (
         ? formDisbursement!.bank[0]
         : (formDisbursement?.bank as any);
 
-    const formUpdateData = {
+    // Determine bank data source based on carrier
+    const isSBGC = initialForm.carrier === Carrier.SBGC;
+    const bankData = isSBGC
+        ? {
+              accountNumber: bankAtZero?.accountNumber,
+              accountType: {
+                  text: bankAtZero?.accountType?.text,
+              },
+              bankName: bankAtZero?.bankName,
+              nameOnBankAccount: bankAtZero?.nameOnBankAccount,
+              routingNumber: bankAtZero?.routingNumber,
+              bankType:
+                  bankUpdateDetails.bankType ?? ContributionType.Disbursement,
+          }
+        : {
+              accountNumber: bankUpdateDetails.accountNumber,
+              accountType: {
+                  text: bankUpdateDetails.accountType,
+              },
+              bankName: bankUpdateDetails.bankName,
+              nameOnBankAccount: bankUpdateDetails.accountHolder,
+              routingNumber: bankUpdateDetails.bankRoutingNumber,
+              bankType:
+                  bankUpdateDetails.bankType ?? ContributionType.Disbursement,
+          };
+
+    // Build form update data with common and carrier-specific fields
+    const formUpdateData: any = {
         updateType: bankUpdateType,
         contractNumber: initialForm.data.contractNum,
-        bank: [
-            {
-                accountNumber: bankAtZero?.accountNumber,
-                accountType: {
-                    text: bankAtZero?.accountType?.text,
-                },
-                bankName: bankAtZero?.bankName,
-                nameOnBankAccount: bankAtZero?.nameOnBankAccount,
-                routingNumber: bankAtZero?.routingNumber,
-                bankType:
-                    bankUpdateDetails.bankType ?? ContributionType.Disbursement,
-            },
-        ],
-        bankVerification: formDisbursement?.bankVerification,
+        bank: [bankData],
         programs: null,
+        // SBGC-specific fields
+        ...(isSBGC && {
+            bankVerification: formDisbursement?.bankVerification,
+        }),
+        // Non-SBGC fields
+        ...(!isSBGC && {
+            doesCheckMeetSecRequirement: isSecurityRequirementsFieldApplicable(
+                initialForm.carrier
+            )
+                ? bankUpdateDetails.doesCheckMeetSecurityRequirements
+                : null,
+            voidCheck: isVoidCheckFieldApplicable(initialForm.carrier)
+                ? bankUpdateDetails.isVoidCheckAttached
+                : null,
+        }),
     };
 
     const source = {
@@ -429,4 +460,123 @@ export const defaultBankUpdateValues = {
     firstTimeExpressCheck: {
         text: false,
     },
+};
+
+const isVoidCheckFieldApplicable = (clientCode: string) => {
+    switch (clientCode) {
+        case Carrier.USAA:
+            return false;
+        case Carrier.GLCO:
+            return false;
+        case Carrier.ULPC:
+            return false;
+        default:
+            return true;
+    }
+};
+
+const isSecurityRequirementsFieldApplicable = (clientCode: string) => {
+    switch (clientCode) {
+        case Carrier.USAA:
+            return false;
+        case Carrier.GLCO:
+            return false;
+        case Carrier.ULPC:
+            return false;
+        default:
+            return true;
+    }
+};
+
+export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
+    const formFields = [
+        {
+            fields: [
+                isVoidCheckFieldApplicable(clientCode)
+                    ? {
+                          fieldName: BankingFields.IsVoidCheckAttached,
+                          fieldLabel: t(
+                              'distributionMethod.isVoidCheckAttached'
+                          ),
+                          component: DisbursementFields.BankBooleanButtonGroup,
+                          classNames: 'col-start-1',
+                      }
+                    : null,
+                isSecurityRequirementsFieldApplicable(clientCode)
+                    ? {
+                          fieldName:
+                              BankingFields.DoesCheckMeetSecurityRequirements,
+                          fieldLabel: t(
+                              'distributionMethod.doesCheckMeetSecurityRequirements'
+                          ),
+                          component: DisbursementFields.BankBooleanButtonGroup,
+                      }
+                    : null,
+                {
+                    fieldName: BankingFields.AccountType,
+                    fieldLabel: t('distributionMethod.accountType'),
+                    component: DisbursementFields.AccountTypes,
+                    classNames: 'col-start-1 col-span-2 w-full',
+                    isBankingField: true,
+                },
+                {
+                    fieldName: BankingFields.AccountNumber,
+                    fieldLabel: t('distributionMethod.accountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-1',
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                },
+                {
+                    fieldName: BankingFields.ReEnterAccountNumber,
+                    fieldLabel: t('distributionMethod.reEnterAccountNumber'),
+                    component: DisbursementFields.BankTextField,
+                    classNames: 'col-start-2',
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator(
+                        'accountNumber',
+                        t('formValidation.accountNumberDoesNotMatch')
+                    ),
+                },
+                {
+                    fieldName: BankingFields.BankRoutingNumber,
+                    fieldLabel: t('distributionMethod.bankRoutingNumber'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    maskOnBlur: true,
+                    disableCopyPaste: true,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.ReEnterBankRoutingNumber,
+                    fieldLabel: t(
+                        'distributionMethod.reEnterBankRoutingNumber'
+                    ),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    disableCopyPaste: true,
+                    validator: createValidator(
+                        'bankRoutingNumber',
+                        t('formValidation.routingNumberDoesNotMatch')
+                    ),
+                },
+                {
+                    fieldName: BankingFields.BankName,
+                    fieldLabel: t('distributionMethod.bankName'),
+                    component: DisbursementFields.BankTextField,
+                    isBankingField: true,
+                    classNames: 'col-start-1',
+                },
+                {
+                    fieldName: BankingFields.AccountHolder,
+                    fieldLabel: t('distributionMethod.accountHolder'),
+                    component: DisbursementFields.BankTextField,
+                },
+            ],
+        },
+    ];
+
+    return formFields[0].fields.filter((item) => item);
 };

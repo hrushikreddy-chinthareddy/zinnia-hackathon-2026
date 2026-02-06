@@ -284,6 +284,7 @@ const StartStep = ({
                             {caseOptions.map((option) => (
                                 <CardCaseDocument
                                     caseDocumentOption={option}
+                                    index={0}
                                     isSelected={state.caseId === option.value}
                                     key={option.value}
                                     onChange={() =>

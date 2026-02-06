@@ -17,7 +17,6 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 import { toFullName } from '@deps/utils/tasks/role-change-data-entry.utils';
 
-import { getCheckBoxesSelectWidgetUiSchema } from '../../task.helpers';
 import {
     TaskHandler,
     Reason,
@@ -308,11 +307,14 @@ const thirdPartyDetailHandler: TaskHandler<ReviewPayload, ApiResponse> = {
 
         if (metadata && metadata.length > 0) {
             metadata[0].uiSchema = metadata[0].uiSchema || {};
-            (metadata[0].uiSchema as any).declineReason =
-                getCheckBoxesSelectWidgetUiSchema({
+            (metadata[0].uiSchema as any).declineReason = {
+                'ui:dataPath': ['declineReason'],
+                'ui:options': {
+                    label: true,
+                    widget: 'CheckBoxesSelectWidget',
                     enumOptions: declineReasonOptions,
-                    dataPath: ['declineReason'],
-                });
+                },
+            };
         }
 
         if (task) {

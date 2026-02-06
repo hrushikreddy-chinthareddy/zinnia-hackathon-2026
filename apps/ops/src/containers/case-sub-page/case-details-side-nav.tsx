@@ -159,6 +159,20 @@ const CaseDetailsSideNav = ({
                             />
                         </>
                     )}
+                    {transactionId && (
+                        <>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className="text-[--color-base-text-text-secondary]"
+                            >
+                                {t('sidenav.transactionId')}
+                            </Typography>
+                            <Content
+                                details={toSentenceCase(transactionId)}
+                                variant={ContentVariant.BodySm}
+                            />
+                        </>
+                    )}
 
                     {transactionId && (
                         <>

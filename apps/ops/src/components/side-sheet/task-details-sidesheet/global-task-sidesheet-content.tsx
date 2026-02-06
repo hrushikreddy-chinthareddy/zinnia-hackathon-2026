@@ -334,8 +334,6 @@ export default function GlobalTaskSideSheet({
         task: task ?? ({} as ManagementTask),
     });
 
-    const readOnly = task?.status === TaskStatus.Completed || false;
-
     const caseDocumentSearchBody = useMemo<SearchRequest | null>(() => {
         if (!task?.caseId || !task?.carrier) {
             return null;
@@ -732,13 +730,11 @@ export default function GlobalTaskSideSheet({
         window.open(`/cases/${task.caseId}`, '_blank', 'noopener,noreferrer');
     };
 
-    const isCaseAndStartAble = type === 'case' && showStartButton && !readOnly;
+    const isCaseAndStartAble = type === 'case' && showStartButton;
 
     //required for debugging the issue
-    // const isReadOnlyWithFeatureFlag =
-    //     readOnly &&
-    //     featureFlagDecisions?.[FEATURE_FLAGS.READ_ONLY_VIEW_TASK_MANAGEMENT] &&
-    //     showStartButton;
+    const isReadOnlyWithFeatureFlag =
+        featureFlagDecisions?.[FEATURE_FLAGS.READ_ONLY_VIEW_TASK_MANAGEMENT];
 
     const shouldRenderStartButton = isCaseAndStartAble;
 
@@ -761,9 +757,8 @@ export default function GlobalTaskSideSheet({
     );
 
     const isViewTaskButtonVisible =
-        !isOpsManagerView &&
-        !openNigoEntry &&
-        featureFlagDecisions?.[FEATURE_FLAGS.READ_ONLY_VIEW_TASK_MANAGEMENT];
+        !isOpsManagerView && !openNigoEntry && isReadOnlyWithFeatureFlag;
+
     const carrierName =
         getCarrierNameByClientId(task?.carrier) || task?.carrier?.toUpperCase();
 
@@ -1071,8 +1066,7 @@ export default function GlobalTaskSideSheet({
                 type == 'case' &&
                 !isUserAssociatedWithTask &&
                 isStartButtonVisible &&
-                showStartButton &&
-                !readOnly && (
+                showStartButton && (
                     <div className="bg-black text-white text-sm font-normal rounded-lg shadow p-2  whitespace-nowrap z-10  mt-8 max-w-[240px]">
                         {t('sideSheet.task.noAssignee')}
                     </div>
