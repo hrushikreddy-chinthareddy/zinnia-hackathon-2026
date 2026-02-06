@@ -30,7 +30,7 @@ import {
     Email,
     Identification,
     IdentificationTypeEnum,
-    PartyTaxWithholding,
+    TaxWithholding,
     Phone,
     Policy,
     PolicyCoverage,
@@ -375,8 +375,8 @@ const fullyMaskPhones = (phones: Phone[] | undefined): Phone[] | undefined => {
 };
 
 const fullyMaskTaxWithholdings = (
-    taxWithholdings: PartyTaxWithholding[] | undefined
-): PartyTaxWithholding[] | undefined => {
+    taxWithholdings: TaxWithholding[] | undefined
+): TaxWithholding[] | undefined => {
     return taxWithholdings;
 };
 
