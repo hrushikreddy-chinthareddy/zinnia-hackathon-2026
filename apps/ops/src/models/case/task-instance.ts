@@ -74,6 +74,7 @@ export type ManagementTask<T = TaskStatus> = {
     cancellationReason?: string;
     taskDetails?: string;
     createdByPartyId?: string;
+    ciamaccess?: boolean;
 };
 
 export type TaskDocument = {

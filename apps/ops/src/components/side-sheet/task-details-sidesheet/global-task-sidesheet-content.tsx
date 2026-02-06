@@ -236,7 +236,6 @@ export default function GlobalTaskSideSheet({
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
-    const [ciamcheck, setCiamcheck] = useState<boolean | undefined>(undefined);
     const [searchValue, setSearchValue] = useState('');
     const [assignLoader, setAssignLoader] = useState(false);
     const [isAssigneePopoverOpen, setIsAssigneePopoverOpen] = useState(false);
@@ -292,39 +291,46 @@ export default function GlobalTaskSideSheet({
                 (queueaccess?.canWrite !== false &&
                     queueaccess?.canWrite !== 'false')
             ) {
-                setCiamcheck(true);
                 const data = await getTaskInstance({ taskId });
+
                 if (!data) {
                     return;
                 }
                 if (!data.caseId) {
                     data.caseId = caseId;
                 }
+                const taskData = {
+                    ...data,
+                    ciamaccess: true,
+                };
 
                 const finalAssignee = await getFinalAssignee(
                     data,
                     isOpsManagerView
                 );
-                return { ...data, assignee: finalAssignee };
+                return { ...taskData, assignee: finalAssignee };
             } else {
                 if (
                     queueaccess?.canRead === false &&
                     queueaccess?.canWrite === false
                 ) {
-                    setCiamcheck(false);
                     const data = await getTaskSummaryById({ taskId });
+
                     if (!data) {
                         return;
                     }
                     if (!data.caseId) {
                         data.caseId = caseId;
                     }
-
+                    const taskData = {
+                        ...data,
+                        ciamaccess: false,
+                    };
                     const finalAssignee = await getFinalAssignee(
                         data,
                         isOpsManagerView
                     );
-                    return { ...data, assignee: finalAssignee };
+                    return { ...taskData, assignee: finalAssignee };
                 }
             }
         },
@@ -1085,12 +1091,13 @@ export default function GlobalTaskSideSheet({
                 handleStart={handleStart}
                 isGoToCaseButtonVisible={isOpsManagerView}
                 isViewTaskButtonVisible={isViewTaskButtonVisible || true}
-                isViewTaskButtonDisabled={!task.data || ciamcheck === false}
+                isViewTaskButtonDisabled={
+                    !task.data || task.ciamaccess === false
+                }
                 isStartButtonDisabled={isStartButtonDisabled}
                 isStartButtonVisible={
                     shouldRenderStartButton ? isStartButtonVisible : false
                 }
-                ciamcheck={ciamcheck}
                 goToCaseLoader={goToCaseLoader}
             />
         </div>

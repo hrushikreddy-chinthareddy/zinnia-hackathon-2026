@@ -39,7 +39,6 @@ interface SidesheetButtonsProps {
     handleGoToCase: (caseId: string) => void;
     handleStart: (taskId: string, taskStatus: TaskStatus) => void;
     handleViewTask: (taskId: string) => void;
-    ciamcheck?: boolean;
 }
 
 const ButtonContent = ({ isLoading, text }: ButtonContentProps) => {
@@ -61,8 +60,7 @@ const ViewTaskButton = ({
     handleViewTask,
     btnSize,
     disabled,
-    ciamcheck,
-}: ViewTaskButtonProps & { ciamcheck?: boolean | undefined }) => {
+}: ViewTaskButtonProps) => {
     const { t } = useTranslation();
 
     const onClick = async () => {
@@ -81,10 +79,10 @@ const ViewTaskButton = ({
             setIsLoading(false);
         }
     };
-    console.log('checkCiam', ciamcheck);
+
     const isViewTaskDisabled = disabled || isLoading || isStartTaskLoading;
     const viewTaskText =
-        ciamcheck === false
+        task.ciamaccess === false
             ? (t('sideSheet.task.noAccessToTask') as string)
             : (t('sideSheet.task.viewTask') as string);
 
