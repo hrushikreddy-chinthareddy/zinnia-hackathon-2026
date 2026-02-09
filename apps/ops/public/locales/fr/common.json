@@ -7369,7 +7369,8 @@
             "fundDisbursementType": "Type de remboursement de fonds",
             "fundDisbursementTypeLabel": "Comment vais-je prendre ce montant des fonds ?",
             "fundDisbursementTypeTooltip": "La valeur de compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous prélevons de l'argent, nous devons savoir comment prendre ce montant de chaque fonds d'investissement. Pro rata signifie prendre une quantité égale de chaque fonds d'investissement. Custom permet au propriétaire de choisir un montant spécifique de chaque fonds d'investissement.",
-            "missingDistributionError": "Le type de distribution est manquant."
+            "missingDistributionError": "Le type de distribution est manquant.",
+            "paymentAmount": "Montant du paiement"
         },
         "payor": {
             "label": "Bénéficiaire"
