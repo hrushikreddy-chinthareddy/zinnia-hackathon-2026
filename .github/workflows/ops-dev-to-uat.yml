@@ -1,12 +1,20 @@
-name: 'Portal Frontend Dev to UAT'
+name: Portal Frontend Dev to UAT
 
 on:
   workflow_dispatch:
+    inputs:
+      ref:
+        description: "Branch or tag to deploy to the UAT environment"
+        required: true
+        default: "dev"
+        type: string
 
 jobs:
   dev-deploy-east:
-    if: github.ref_name == 'dev'
+    # Deploy whatever ref the user selected (defaults to dev)
     uses: ./.github/workflows/deploy-ops-east.yml
     with:
       environment-level: uat
+      # Pass the selected branch/tag to the reusable workflow
+      ref: ${{ inputs.ref }}
     secrets: inherit
