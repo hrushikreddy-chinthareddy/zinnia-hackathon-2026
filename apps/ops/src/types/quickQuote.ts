@@ -80,6 +80,11 @@ export const quickQuoteParamsSchema = t.intersection(
     quickQuoteParamsRidersSchema
 );
 
+export enum QuickQuoteResultTableFieldName {
+    BASE_PREMIUM_RANGE = 'BASE_PREMIUM_RANGE',
+    TOTAL_PREMIUM_RANGE = 'TOTAL_PREMIUM_RANGE',
+}
+
 /**
  * Type for the QuickQuote inputs
  */
@@ -144,11 +149,6 @@ export type QuickQuoteFormState = Simplify<
     }
 >;
 
-interface QuickQuoteNotAvailableBaseItem {
-    range: undefined;
-    notAvailabilityReasonField?: nonEligibleReasonByClass[] | undefined;
-}
-
 export interface QuickQuoteResultBase {
     productType: ProductTypes;
     planCode: string;
@@ -166,20 +166,31 @@ interface TermQuickQuoteBaseDataItem {
 
 interface TermQuickQuoteAvailableDataItem extends TermQuickQuoteBaseDataItem {
     range: NumberOrRange;
+    notAvailabilityReasonField: undefined;
+    error: undefined;
 }
 
-interface TermQuickQuoteNotAvailableItem
-    extends TermQuickQuoteBaseDataItem,
-        QuickQuoteNotAvailableBaseItem {}
+interface TermQuickQuoteNotAvailableItem extends TermQuickQuoteBaseDataItem {
+    range: undefined;
+    notAvailabilityReasonField: nonEligibleReasonByClass[] | undefined;
+    error: undefined;
+}
+
+interface TermQuickQuoteErrorItem extends TermQuickQuoteBaseDataItem {
+    range: undefined;
+    notAvailabilityReasonField: undefined;
+    error: Error;
+}
+
+type TermQuickQuoteDataItem =
+    | TermQuickQuoteAvailableDataItem
+    | TermQuickQuoteNotAvailableItem
+    | TermQuickQuoteErrorItem;
 
 export type TermQuickQuoteRiderNotAvailableItem = {
     termLengths: number[];
     reasons?: IneligibilityReason[] | undefined;
 };
-
-type TermQuickQuoteDataItem =
-    | TermQuickQuoteAvailableDataItem
-    | TermQuickQuoteNotAvailableItem;
 
 export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;

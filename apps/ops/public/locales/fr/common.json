@@ -813,7 +813,11 @@
         "zinniaLiveTransactionActivityTitle": "Activité des Transactions en Libre-Service",
         "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live.)",
         "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez continuer avec des erreurs et créer une tâche NIGO.",
-        "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande"
+        "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande",
+        "illustrationsTermLengthYear": "Durée de {{ ans }} année",
+        "illustrationsQuickQuoteGenericError": "Impossible de récupérer la valeur de $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteTotalPremiumRangeError": "Impossible de récupérer la fourchette de primes totale pour $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteBasePremiumRangeError": "Impossible de récupérer la plage premium de base pour $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Gains accumulés",

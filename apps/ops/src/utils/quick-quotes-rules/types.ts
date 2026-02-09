@@ -1,6 +1,9 @@
 import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 import { TermFixedCostPeriod } from '@deps/queries/api/v3/illustrations';
-import { NumberOrRange } from '@deps/types/quickQuote';
+import {
+    NumberOrRange,
+    QuickQuoteResultTableFieldName,
+} from '@deps/types/quickQuote';
 
 export type ProductName =
     | 'Term Life 10 Yr'
@@ -157,8 +160,11 @@ export interface RiderInputNormalized {
 }
 
 export type DataItem = {
+    fieldName: QuickQuoteResultTableFieldName;
+    termLength: number;
     period?: string;
     value: NumberOrRange | undefined;
+    hasApiError: boolean;
     hasRiderErrors?: boolean;
     notAvailabilityReasons?: IneligibilityReason[];
 };
@@ -168,6 +174,9 @@ export type RiderInegilibilityReason = {
     reasons?: IneligibilityReason[] | undefined;
 };
 
-export type RiderDataItem = Omit<DataItem, 'notAvailabilityReasons'> & {
+export type RiderDataItem = Omit<
+    DataItem,
+    'notAvailabilityReasons' | 'termLength' | 'fieldName' | 'hasApiError'
+> & {
     notAvailabilityReasons?: RiderInegilibilityReason[];
 };

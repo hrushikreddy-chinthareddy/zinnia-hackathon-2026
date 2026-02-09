@@ -339,6 +339,7 @@
         "illustrationsActivityDescription": "Compares illustrations created with those selected for application over time.",
         "illustrationsActivityTitle": "Illustrations Activity",
         "illustrationsActivityTooltip": "This chart compares illustrations created with those selected for application.  'Selected' may be higher than 'Created' because an illustration was created earlier but selected in the displayed timeframe.",
+        "illustrationsTermLengthYear": "{{ years }} year term",
         "impactedParty": "Impacted party",
         "initialPaymentAmountReceivedDate": "Initial premium received date",
         "initialPaymentExpiryDate": "Initial payment expiry date",
@@ -816,7 +817,10 @@
         "zinniaLiveTransactionActivityTitle": "Self-Serve Transaction Activity",
         "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
         "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
-        "bpm500Error": "An error occurred while validating your request"
+        "bpm500Error": "An error occurred while validating your request",
+        "illustrationsQuickQuoteBasePremiumRangeError": "Could not retrieve base premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteTotalPremiumRangeError": "Could not retrieve total premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteGenericError": "Could not retrieve value for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Accumulated earnings",
@@ -4577,9 +4581,9 @@
                 "actions": "Actions",
                 "noTaxForms": "No tax forms found for this period",
                 "popover": {
+                    "5498": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year.",
                     "1099R": "Reports distributions from policy/contracts.",
-                    "1099Int": "Reports interest income earned.",
-                    "5498": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year."
+                    "1099Int": "Reports interest income earned."
                 },
                 "warning": {
                     "0": "Please review tax forms before continuing.",

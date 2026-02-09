@@ -811,7 +811,10 @@
         "zinniaLiveTransactionActivityTitle": "Actividad de Transacciones de Autoservicio",
         "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en Zinnia Live.)",
         "missingCheckToConfirm": "Para enviar, confirme que desea proceder con errores y crear una tarea NIGO.",
-        "bpm500Error": "Ocurrió un error al validar su solicitud"
+        "bpm500Error": "Ocurrió un error al validar su solicitud",
+        "illustrationsQuickQuoteBasePremiumRangeError": "No se pudo recuperar el rango de prima base para $t(allFields.IllustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsTermLengthYear": "plazo de {{ años }} años",
+        "illustrationsQuickQuoteGenericError": "No se pudo recuperar el valor para el $t(allFields.IllustrationsTermLengthYear, {\"years\": {{years}} })."
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Ganancias acumuladas",

@@ -19,18 +19,20 @@ import {
     SingleTermProductQuickQuoteParams,
 } from './helpers';
 
-interface VariantNotAvailableErrorOption extends ErrorOptions {
+interface QuickQuoteVariantErrorOptions extends ErrorOptions {
     variant: SingleTermProductQuickQuoteParams;
 }
 
-export class VariantNotAvailableError extends Error {
+export class QuickQuoteVariantError extends Error {
     variant: SingleTermProductQuickQuoteParams;
 
-    constructor(message: string, opts: VariantNotAvailableErrorOption) {
+    constructor(message: string, opts: QuickQuoteVariantErrorOptions) {
         super(message, opts);
         this.variant = opts.variant;
     }
 }
+
+export class QuickQuoteVariantNotAvailableError extends QuickQuoteVariantError {}
 
 export const buildNewTermQuickQuoteOptions = (
     quickQuoteParams: QuickQuoteParams,
@@ -48,7 +50,7 @@ export const buildNewTermQuickQuoteOptions = (
                 'illustrations::QuickQuote::buildNewTermQuickQuoteOptions::queryFn';
 
             if (!variantParams.available) {
-                throw new VariantNotAvailableError(
+                throw new QuickQuoteVariantNotAvailableError(
                     'QuickQuote is not available for these values',
                     {
                         variant: variantParams,
@@ -65,16 +67,20 @@ export const buildNewTermQuickQuoteOptions = (
 
             try {
                 response = await createNewTermLifeIllustration(payload);
-            } catch (e) {
+            } catch (error) {
                 browserLogError(`${logPrefix} Error fetching quick quote`, {
-                    ...parseErrorInformation(e),
+                    ...parseErrorInformation(error),
                     params: {
                         variant: variantParams,
                         insuredDetails: quickQuoteParams,
                     },
                     payload,
                 });
-                throw e;
+
+                throw new QuickQuoteVariantError('QuickQuote got error', {
+                    variant: variantParams,
+                    cause: error,
+                });
             }
 
             browserLogDebug(`${logPrefix} Quick quote created successfully`, {
