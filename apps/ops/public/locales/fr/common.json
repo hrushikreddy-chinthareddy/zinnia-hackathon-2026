@@ -4362,6 +4362,7 @@
                 "attachmentsViewWarning": "La soumission du formulaire est restreinte en raison de la présence de nouvelles pièces jointes. Veuillez vérifier avant de continuer.",
                 "fboDetails": "Les détail du FBO sont obligatoires",
                 "accountTypeMustBeSelected": "Veuillez choisir un type de compte pour procéder à votre demande.",
+                "withdrawTypeMustBeSelected": "Veuillez sélectionner Brut ou Net pour procéder à votre demande.",
                 "participantIdCannotBeSubmitted": "L'identifiant du participant 0000 ne peut pas être soumis",
                 "contractNumberRequired": "Le numéro de contrat est requis/BIN numéro",
                 "charityNameRequired": "Le nom de l'association caritative est requis"

@@ -4410,6 +4410,7 @@
                 "attachmentsViewWarning": "El envío del formulario está restringido debido a la presencia de nuevos archivos adjuntos. Por favor, revise antes de continuar.",
                 "fboDetails": "Se requieren detalles del FBO",
                 "accountTypeMustBeSelected": "Por favor, elija un tipo de cuenta para proceder con su solicitud.",
+                "withdrawTypeMustBeSelected": "Por favor, seleccione Bruto o Neto para proceder con su solicitud.",
                 "participantIdCannotBeSubmitted": "El ID de participante 0000 no se puede enviar",
                 "contractNumberRequired": "Se requiere el número de contrato//BIN número",
                 "charityNameRequired": "Se requiere el nombre de la organización benéfica"

@@ -4432,6 +4432,7 @@
                 "attachmentsViewWarning": "Form submission is restricted due to presence of new attachments. Please review before proceeding.",
                 "fboDetails": "FBO detail is required",
                 "accountTypeMustBeSelected": "Please choose an account type to proceed with your request.",
+                "withdrawTypeMustBeSelected": "Please select Gross or Net to proceed with your request.",
                 "participantIdCannotBeSubmitted": "Participant ID 0000 cannot be submitted",
                 "contractNumberRequired": "Contract number/BIN number is required",
                 "charityNameRequired": "Charity name is required"
