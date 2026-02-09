@@ -237,9 +237,8 @@ export default function getDlicRmdWithdrawalConfig(
     ];
 
     const sendCheckOptions = (rmdMethod: RMDType) => {
-        const isAutoRmd =
-            rmdMethod === RMDType.AutoRMD || rmdMethod === RMDType.CalculateRMD;
-        const isOneTimeRmd = rmdMethod === RMDType.OneTimeRMD;
+        const isAutoRmd = rmdMethod === RMDType.AutoRMD;
+        const isOneTimeRmd = rmdMethod === RMDType.CalculateRMD;
 
         if (isOneTimeRmd) {
             return [

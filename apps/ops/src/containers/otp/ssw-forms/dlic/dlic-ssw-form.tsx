@@ -79,7 +79,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         irsSignatureConfig,
         eSignatureFieldConfig,
         sswUpdateFastOptions,
-    } = getDlicConfig(t, !isDlic3pDisbursementChangesEnabled, isLC ?? false);
+    } = getDlicConfig(t, isDlic3pDisbursementChangesEnabled, isLC ?? false);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
