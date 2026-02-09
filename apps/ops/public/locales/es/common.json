@@ -811,7 +811,10 @@
         "zinniaLiveTransactionActivityTitle": "Actividad de Transacciones de Autoservicio",
         "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en Zinnia Live.)",
         "missingCheckToConfirm": "Para enviar, confirme que desea proceder con errores y crear una tarea NIGO.",
-        "bpm500Error": "Ocurrió un error al validar su solicitud"
+        "bpm500Error": "Ocurrió un error al validar su solicitud",
+        "illustrationsQuickQuoteBasePremiumRangeError": "No se pudo recuperar el rango de prima base para $t(allFields.IllustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsTermLengthYear": "plazo de {{ años }} años",
+        "illustrationsQuickQuoteGenericError": "No se pudo recuperar el valor para el $t(allFields.IllustrationsTermLengthYear, {\"years\": {{years}} })."
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Ganancias acumuladas",
@@ -7400,7 +7403,8 @@
             "fundDisbursementType": "Tipo de desembolso de fondos",
             "fundDisbursementTypeLabel": "¿Cómo se tomará este monto de los fondos?",
             "fundDisbursementTypeTooltip": "El valor de la cuenta está invertido en uno o más fondos de inversión. Cuando retiramos el dinero, necesitamos saber cómo tomar el monto de cada fondo de inversión. Prorrateo significa tomar una cantidad igual de cada fondo de inversión. Personalizado permite al propietario elegir una cantidad específica de cada fondo de inversión.",
-            "missingDistributionError": "Falta el tipo de distribución."
+            "missingDistributionError": "Falta el tipo de distribución.",
+            "paymentAmount": "Monto del pago"
         },
         "payor": {
             "label": "Beneficiario"
@@ -9297,6 +9301,7 @@
             "waiverOfPremium": "Exención de prima",
             "premiumfreeRiders": "Cláusulas adicionales sin prima",
             "acceleratedDeathBenefit": "Cláusula adicional de beneficio por muerte acelerada en caso de enfermedad terminal",
+            "acceleratedDeathBenefitForChronicIllness": "Beneficio de muerte acelerado por enfermedades crónicas",
             "charitableGiving": "Cláusula adicional de donaciones benéficas",
             "ageRequired": "Por favor ingrese una edad",
             "mustBePositive": "Debe ser un numero positivo",
@@ -9333,7 +9338,9 @@
                 "maxFaceAm": "Monto nominal máximo: {{amount}}",
                 "minFaceAm": "Monto nominal mínimo: {{amount}}",
                 "state": "No disponible para este estado",
-                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
+                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza.",
+                "minimumPolicyFaceAmount": "Monto mínimo de la póliza principal: {{amount}}",
+                "requiredRiderNotSelected": "No disponible sin {{riders}}"
             },
             "riders": {
                 "title": "Adicionales",

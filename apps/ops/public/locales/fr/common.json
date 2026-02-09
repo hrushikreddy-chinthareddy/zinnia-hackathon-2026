@@ -813,7 +813,11 @@
         "zinniaLiveTransactionActivityTitle": "Activité des Transactions en Libre-Service",
         "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live.)",
         "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez continuer avec des erreurs et créer une tâche NIGO.",
-        "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande"
+        "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande",
+        "illustrationsTermLengthYear": "Durée de {{ ans }} année",
+        "illustrationsQuickQuoteGenericError": "Impossible de récupérer la valeur de $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteTotalPremiumRangeError": "Impossible de récupérer la fourchette de primes totale pour $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteBasePremiumRangeError": "Impossible de récupérer la plage premium de base pour $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Gains accumulés",
@@ -7369,7 +7373,8 @@
             "fundDisbursementType": "Type de remboursement de fonds",
             "fundDisbursementTypeLabel": "Comment vais-je prendre ce montant des fonds ?",
             "fundDisbursementTypeTooltip": "La valeur de compte est investie dans un ou plusieurs fonds d'investissement. Lorsque nous prélevons de l'argent, nous devons savoir comment prendre ce montant de chaque fonds d'investissement. Pro rata signifie prendre une quantité égale de chaque fonds d'investissement. Custom permet au propriétaire de choisir un montant spécifique de chaque fonds d'investissement.",
-            "missingDistributionError": "Le type de distribution est manquant."
+            "missingDistributionError": "Le type de distribution est manquant.",
+            "paymentAmount": "Montant du paiement"
         },
         "payor": {
             "label": "Bénéficiaire"
@@ -9212,6 +9217,7 @@
             "waiverOfPremium": "Exonération de prime",
             "premiumfreeRiders": "Avenants sans prime",
             "acceleratedDeathBenefit": "Avenant en cas de décès accéléré pour Maladie terminale",
+            "acceleratedDeathBenefitForChronicIllness": "Avenant en cas de décès accéléré pour Maladie Chronique",
             "charitableGiving": "Avenant aux dons de bienfaisance",
             "ageRequired": "Veuillez saisir un âge",
             "mustBePositive": "Doit être un nombre positif",
@@ -9244,10 +9250,12 @@
             "notAvailableReason": {
                 "maxAge": "Âge maximal d'émission: {{age}}",
                 "minAge": "Âge minimum d'émission: {{age}}",
-                "maxFaceAm": "Montant maximal du visage: {{amount}}",
-                "minFaceAm": "Montant minimum du visage: {{amount}}",
-                "state": "Non disponible pour cet état",
-                "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police."
+                "maxFaceAm": "Montant maximum de la police: {{amount}}",
+                "minFaceAm": "Montant minimum de le police: {{amount}}",
+                "state": "Non disponible dans cet état",
+                "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police.",
+                "minimumPolicyFaceAmount": "Montant minimum de la police de base : {{amount}}",
+                "requiredRiderNotSelected": "Non disponible sans {{riders}}"
             },
             "riders": {
                 "title": "Avenants de politique",
