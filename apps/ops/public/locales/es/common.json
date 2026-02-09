@@ -9301,6 +9301,7 @@
             "waiverOfPremium": "Exención de prima",
             "premiumfreeRiders": "Cláusulas adicionales sin prima",
             "acceleratedDeathBenefit": "Cláusula adicional de beneficio por muerte acelerada en caso de enfermedad terminal",
+            "acceleratedDeathBenefitForChronicIllness": "Beneficio de muerte acelerado por enfermedades crónicas",
             "charitableGiving": "Cláusula adicional de donaciones benéficas",
             "ageRequired": "Por favor ingrese una edad",
             "mustBePositive": "Debe ser un numero positivo",
@@ -9337,7 +9338,9 @@
                 "maxFaceAm": "Monto nominal máximo: {{amount}}",
                 "minFaceAm": "Monto nominal mínimo: {{amount}}",
                 "state": "No disponible para este estado",
-                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza."
+                "riderFaceAmount": "El monto nominal del seguro adicional no puede exceder el monto nominal de la póliza.",
+                "minimumPolicyFaceAmount": "Monto mínimo de la póliza principal: {{amount}}",
+                "requiredRiderNotSelected": "No disponible sin {{riders}}"
             },
             "riders": {
                 "title": "Adicionales",

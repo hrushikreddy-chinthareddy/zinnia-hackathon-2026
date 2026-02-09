@@ -9370,10 +9370,12 @@
             "notAvailableReason": {
                 "maxAge": "Max issue age: {{age}}",
                 "minAge": "Min issue age: {{age}}",
-                "state": "Not available for this state",
+                "state": "Not available in this state",
                 "maxFaceAm": "Max face amount: {{amount}}",
                 "minFaceAm": "Min face amount: {{amount}}",
-                "riderFaceAmount": "Rider face amount cannot exceed policy face amount."
+                "riderFaceAmount": "Rider face amount cannot exceed policy face amount.",
+                "minimumPolicyFaceAmount": "Min face amount of base policy: {{amount}}",
+                "requiredRiderNotSelected": "Not available without {{riders}}"
             },
             "riders": {
                 "title": "Riders",
@@ -9433,6 +9435,7 @@
             "waiverOfPremium": "Waiver of Premium",
             "premiumfreeRiders": "Premium-free Riders",
             "acceleratedDeathBenefit": "Accelerated Death Benefit Rider for Terminal Illness",
+            "acceleratedDeathBenefitForChronicIllness": "Chronic Illness Accelerated Death Benefit Rider",
             "charitableGiving": "Charitable Giving Rider",
             "ageRequired": "Please enter an age",
             "mustBePositive": "Must be a positive number",

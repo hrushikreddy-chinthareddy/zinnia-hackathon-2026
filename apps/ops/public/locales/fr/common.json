@@ -9217,6 +9217,7 @@
             "waiverOfPremium": "Exonération de prime",
             "premiumfreeRiders": "Avenants sans prime",
             "acceleratedDeathBenefit": "Avenant en cas de décès accéléré pour Maladie terminale",
+            "acceleratedDeathBenefitForChronicIllness": "Avenant en cas de décès accéléré pour Maladie Chronique",
             "charitableGiving": "Avenant aux dons de bienfaisance",
             "ageRequired": "Veuillez saisir un âge",
             "mustBePositive": "Doit être un nombre positif",
@@ -9249,10 +9250,12 @@
             "notAvailableReason": {
                 "maxAge": "Âge maximal d'émission: {{age}}",
                 "minAge": "Âge minimum d'émission: {{age}}",
-                "maxFaceAm": "Montant maximal du visage: {{amount}}",
-                "minFaceAm": "Montant minimum du visage: {{amount}}",
-                "state": "Non disponible pour cet état",
-                "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police."
+                "maxFaceAm": "Montant maximum de la police: {{amount}}",
+                "minFaceAm": "Montant minimum de le police: {{amount}}",
+                "state": "Non disponible dans cet état",
+                "riderFaceAmount": "Le montant nominal de la garantie complémentaire ne peut excéder le montant nominal de la police.",
+                "minimumPolicyFaceAmount": "Montant minimum de la police de base : {{amount}}",
+                "requiredRiderNotSelected": "Non disponible sans {{riders}}"
             },
             "riders": {
                 "title": "Avenants de politique",

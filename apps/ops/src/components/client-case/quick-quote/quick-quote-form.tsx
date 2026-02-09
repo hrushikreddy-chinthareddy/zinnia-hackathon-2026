@@ -34,12 +34,12 @@ const toNumber = (v: unknown) => {
     return NaN;
 };
 
-interface CreateQuickQuoteFormProps {
+interface QuickQuoteFormProps {
     onCancel: () => void;
-    onSubmit?: (quickQuote: QuickQuoteParams) => Promise<unknown> | void;
+    onSubmit: (quickQuote: QuickQuoteParams) => Promise<unknown> | void;
 }
 
-const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
+export const QuickQuoteForm: React.FC<QuickQuoteFormProps> = ({
     onCancel,
     onSubmit,
 }) => {
@@ -75,6 +75,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
             },
             premiumFreeRiders: {
                 acceleratedDeathBenefitForTerminalIllness: false,
+                acceleratedDeathBenefitForChronicIllness: false,
                 charitableGiving: false,
             },
         },
@@ -110,7 +111,7 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
     const submit = async (data: QuickQuoteFormState) => {
         const params = buildQuickQuoteParams(data);
 
-        await onSubmit?.(params);
+        await onSubmit(params);
     };
 
     return (
@@ -561,6 +562,28 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
                     <div className={styles.leftCol}>
                         <Controller
                             control={control}
+                            name="premiumFreeRiders.acceleratedDeathBenefitForChronicIllness"
+                            render={({ field }) => (
+                                <Checkbox
+                                    id="acceleratedDeathBenefitForChronicIllness"
+                                    name={field.name}
+                                    isCheckedByDefault={!!field.value}
+                                    onClick={(value?: boolean) =>
+                                        field.onChange(!!value)
+                                    }
+                                >
+                                    {t(
+                                        'clientCase.quickQuoteForm.acceleratedDeathBenefitForChronicIllness'
+                                    )}
+                                </Checkbox>
+                            )}
+                        />
+                    </div>
+                </div>
+                <div className={styles.row}>
+                    <div className={styles.leftCol}>
+                        <Controller
+                            control={control}
                             name="premiumFreeRiders.charitableGiving"
                             render={({ field }) => (
                                 <Checkbox
@@ -600,5 +623,3 @@ const CreateQuickQuoteForm: React.FC<CreateQuickQuoteFormProps> = ({
         </form>
     );
 };
-
-export default CreateQuickQuoteForm;

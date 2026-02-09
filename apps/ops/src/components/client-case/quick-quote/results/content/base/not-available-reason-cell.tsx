@@ -6,9 +6,9 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
+import { getRiderNameFromRiderCode } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
-    NotAvailabilityReasonField,
     RiderInegilibilityReason,
 } from '@deps/utils/quick-quotes-rules/types';
 
@@ -45,6 +45,14 @@ const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
     );
 };
 
+const formatToCurrency = (value: number) =>
+    numberFormatify(value, {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
+    });
+
 const NotAvailabilityReasonLabel = ({
     reason,
 }: {
@@ -52,80 +60,79 @@ const NotAvailabilityReasonLabel = ({
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
-    const formatToCurrency = (value: number) =>
-        numberFormatify(value, {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 0,
-            maximumFractionDigits: 0,
-        });
-
-    let ageMessage = '';
-    if (reason.field === 'age') {
+    let message = '';
+    if (reason.reason === 'ageOutsideOfRange') {
         const maxAge = reason.expected[1];
         const minAge = reason.expected[0];
         if (reason.actual > maxAge) {
-            ageMessage = t(
+            message = t(
                 'clientCase.quickQuoteResults.notAvailableReason.maxAge',
                 {
                     age: maxAge,
                 }
             );
         } else {
-            ageMessage = t(
+            message = t(
                 'clientCase.quickQuoteResults.notAvailableReason.minAge',
                 {
                     age: minAge,
                 }
             );
         }
-    }
-
-    let faceAmountMessage = '';
-    if (reason.field === 'face') {
+    } else if (reason.reason === 'faceAmountOutsideOfRange') {
         const maxFaceAmount = reason.expected[1];
         const minFaceAmount = reason.expected[0];
         if (reason.actual > maxFaceAmount) {
-            faceAmountMessage = t(
+            message = t(
                 'clientCase.quickQuoteResults.notAvailableReason.maxFaceAm',
                 {
                     amount: formatToCurrency(maxFaceAmount),
                 }
             );
         } else {
-            faceAmountMessage = t(
+            message = t(
                 'clientCase.quickQuoteResults.notAvailableReason.minFaceAm',
                 {
                     amount: formatToCurrency(minFaceAmount),
                 }
             );
         }
-    }
-
-    let adrMaxFaceMessage = '';
-    if (reason.field === 'adrMaxFace') {
-        adrMaxFaceMessage = t(
+    } else if (reason.reason === 'stateNotEligible') {
+        message = t('clientCase.quickQuoteResults.notAvailableReason.state');
+    } else if (reason.reason === 'underMinimumPolicyFaceAmount') {
+        message = t(
+            'clientCase.quickQuoteResults.notAvailableReason.minimumPolicyFaceAmount',
+            {
+                amount: formatToCurrency(reason.expected),
+            }
+        );
+    } else if (reason.reason === 'requiredRiderNotSelected') {
+        message = t(
+            'clientCase.quickQuoteResults.notAvailableReason.requiredRiderNotSelected',
+            {
+                riders: reason.notSelectedRider
+                    .map((e) =>
+                        t(
+                            `clientCase.illustrationDetails.riders.${getRiderNameFromRiderCode(
+                                e
+                            )}`
+                        )
+                    )
+                    .join(','),
+            }
+        );
+    } else if (reason.reason === 'riderIsGreaterThanPolicyFaceAmount') {
+        message = t(
             'clientCase.quickQuoteResults.notAvailableReason.riderFaceAmount'
         );
     }
-
-    const reasonMessageMap = {
-        age: ageMessage,
-        face: faceAmountMessage,
-        adrMaxFace: adrMaxFaceMessage,
-        state: t('clientCase.quickQuoteResults.notAvailableReason.state'),
-        termLength: t('clientCase.quickQuoteResults.notAvailable'),
-    } satisfies Record<
-        NonNullable<NotAvailabilityReasonField>,
-        string
-    > as Record<string, string>;
 
     return (
         <Typography
             className={styles.notAvailableText}
             variant={TypographyVariant.BodySm}
         >
-            {reasonMessageMap[reason.field]}
+            {message}
         </Typography>
     );
 };
