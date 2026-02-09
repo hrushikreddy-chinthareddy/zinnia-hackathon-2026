@@ -13,7 +13,10 @@ import { PhoneFields } from '@deps/components/otp-withdrawal-form/form-party/par
 import AsOfDateComponent from '@deps/components/otp-withdrawal-form/form-program/as-of-date';
 import { PartialWithdrawalOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-partial-withdrawal';
 import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-program/form-program-process-date';
-import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
+import {
+    EditableFormProgramFields,
+    getDefaultFormProgramValues,
+} from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
 import {
     SignatureBonusFields,
     SignatureFields,
@@ -84,6 +87,7 @@ export default function getUsaaConfig(
         formSignature,
         formDisbursement,
         formESignatureData,
+        formProgram,
     }: Partial<FormParts> = {}): FormValidationErrors => {
         const errors = {} as FormValidationErrors;
         if (
@@ -119,6 +123,18 @@ export default function getUsaaConfig(
         ) {
             errors[BankingFields.AccountType] = t(
                 'formValidation.accountTypeMustBeSelected'
+            );
+        }
+
+        // Validate that GROSS or NET is selected for partial withdrawals
+        const WITHDRAW_TYPE_FIELD: keyof EditableFormProgramFields =
+            'withdrawType';
+        if (
+            formProgram?.programType?.text === ProgramType.WITHDRAWAL &&
+            !formProgram?.withdrawType?.text
+        ) {
+            errors[WITHDRAW_TYPE_FIELD] = t(
+                'formValidation.withdrawTypeMustBeSelected'
             );
         }
 
@@ -374,21 +390,34 @@ export default function getUsaaConfig(
             label: `${t('amountDetails.programTypes.partial')} $`,
             value: ProgramType.PartialDollar,
             amountFieldType: AmountType.Dollar,
-            generatePayloadFromSelection: (val = null) => {
+            generatePayloadFromSelection: (val = null, withdrawType) => {
+                const { withdrawType: _excludeWithdrawType, ...defaultValues } =
+                    getDefaultFormProgramValues();
+
+                const isGross = withdrawType?.text === WithdrawalType.Gross;
+
                 return {
-                    ...getDefaultFormProgramValues(),
-                    withdrawType: { text: WithdrawalType.Gross },
+                    ...defaultValues,
                     program: {
                         text: Program.WITHDRAWAL,
                     },
                     programType: { text: ProgramType.WITHDRAWAL },
                     programSubType: { text: ProgramSubType.Dollar },
                     partialAmount: { text: val, amountType: AmountType.Dollar },
-                    partialGrossAmount: {
-                        text: val,
-                        amountType: AmountType.Dollar,
-                    },
-                };
+                    ...(isGross
+                        ? {
+                              partialGrossAmount: {
+                                  text: val,
+                                  amountType: AmountType.Dollar,
+                              },
+                          }
+                        : {
+                              partialNetAmount: {
+                                  text: val,
+                                  amountType: AmountType.Dollar,
+                              },
+                          }),
+                } as ReturnType<typeof getDefaultFormProgramValues>;
             },
         },
         {
