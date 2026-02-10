@@ -50,3 +50,11 @@ next-env.d.ts
 # local zembed modules for testing
 /public/zembed/
 /public/modules/
+
+# Playwright
+node_modules/
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
