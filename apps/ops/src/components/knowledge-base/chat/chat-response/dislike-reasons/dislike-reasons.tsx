@@ -9,7 +9,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     DislikeReasonsPayload,
     OpsIntakeFormPayload,
@@ -43,7 +43,7 @@ const DislikeReasons = ({
         {} as OpsIntakeFormPayload
     );
 
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
 
     const documentLinks = linksString && linksString.split(',');
 

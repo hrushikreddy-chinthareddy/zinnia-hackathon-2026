@@ -27,7 +27,7 @@ import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import {
     NonFinancialTransactionActions,
@@ -56,7 +56,7 @@ const PhoneCard = ({
     const { t: tAllFields } = useTranslation();
 
     const { policyDetails } = useContext(PolicyData);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const [showAdditional, setShowAdditional] = useState(false);
 

@@ -22,7 +22,7 @@ import {
 } from '@deps/components/side-sheet/task-details-sidesheet/components/assignee-field';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { getTimeAgoUnitValue } from '@deps/hooks/useStatusInfo';
 import { useTaskAssignee } from '@deps/hooks/useTaskAssignee';
@@ -165,7 +165,7 @@ const TaskQueueTableRow = ({
         }
     };
 
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSideSheet = () => {
         const content = (
             <TaskQueueDrawer

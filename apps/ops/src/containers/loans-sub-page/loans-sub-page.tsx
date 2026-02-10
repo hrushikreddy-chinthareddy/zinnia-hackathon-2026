@@ -11,7 +11,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import {
     getBankDetails,
@@ -46,7 +46,7 @@ interface LoansContainerProps {
 export const LoansSubPage = ({ policy }: LoansContainerProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const { policyDetails } = useContext(PolicyData);
 

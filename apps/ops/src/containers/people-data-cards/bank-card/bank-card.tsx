@@ -20,7 +20,7 @@ import SideSheetPeopleHeader, {
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -58,7 +58,7 @@ export const BankCard = ({
     });
     const { t: tAllFields } = useTranslation();
 
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const { policyDetails } = useContext(PolicyData);
 
     const [currentBankAccounts, setCurrentBankAccounts] = useState(

@@ -15,7 +15,7 @@ import { OptimizelyProvider } from './OptimizelyContext';
 import { PermissionsProvider } from './PermissionsContext';
 import { PolicySearchFiltersProvider } from './PolicySearchFilters';
 import { SearchBarProvider } from './SearchBarContext';
-import { SideSheetProvider } from './SideSheetContext';
+import { SideSheetProviderLegacy } from './SideSheetContext';
 
 interface ApplicationData {
     pageProps: any;
@@ -125,7 +125,7 @@ export const ApplicationDataProvider: React.FC<
             <OptimizelyProvider>
                 <PermissionsProvider>
                     <ErrorBoundary>
-                        <SideSheetProvider>
+                        <SideSheetProviderLegacy>
                             <SearchBarProvider>
                                 <PolicySearchFiltersProvider>
                                     <ApplicationComponentWrapper>
@@ -135,7 +135,7 @@ export const ApplicationDataProvider: React.FC<
                                     </ApplicationComponentWrapper>
                                 </PolicySearchFiltersProvider>
                             </SearchBarProvider>
-                        </SideSheetProvider>
+                        </SideSheetProviderLegacy>
                     </ErrorBoundary>
                 </PermissionsProvider>
             </OptimizelyProvider>

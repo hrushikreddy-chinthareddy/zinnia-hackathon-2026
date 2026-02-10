@@ -8,7 +8,7 @@ import NavElement, {
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { Party } from '@zinnia/api-types/types/sor';
@@ -30,7 +30,7 @@ export const NameCard: FC<INameCardProps> = ({
     editable,
     isUserPermissionedToEditCards,
 }) => {
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
     const { policyDetails } = useContext(PolicyData);
     const { featureFlags } = useOptimizely();
     const partyNameChangeEnabled =

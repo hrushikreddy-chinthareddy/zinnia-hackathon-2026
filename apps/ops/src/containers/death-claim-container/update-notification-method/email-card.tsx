@@ -19,7 +19,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
 import { validateEmail } from '../steps/notification-method/notification-method.helpers';
@@ -34,7 +34,7 @@ const EmailCard = ({ email, setEmail }: EmailCardProps) => {
         keyPrefix:
             'updateNotificationMethodForBeneficiary.updateNotificationMethodStep.notificationMethods',
     });
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
 
     const handleClose = (email: string) => {
         setEmail(email);

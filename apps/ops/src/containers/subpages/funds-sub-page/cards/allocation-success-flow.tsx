@@ -10,7 +10,7 @@ import NavElement, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
+import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as CircleCheckMark } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 import { FundViewModel } from '../types';
@@ -19,7 +19,7 @@ import { EditAllocationsSummary } from './edit-allocations-summary';
 interface IAllocationSuccessFlow {
     allFunds: FundViewModel[];
     total: number;
-    sideSheet: SideSheetContextProps;
+    sideSheet: SideSheetContextLegacyProps;
     submitHandler: (location: string) => Promise<void>;
     setIsSuccessFlow: Dispatch<SetStateAction<boolean>>;
 }

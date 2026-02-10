@@ -20,7 +20,7 @@ export type MittEvents = {
     closeSecondary: undefined;
 };
 
-export interface SideSheetContextProps {
+export interface SideSheetContextLegacyProps {
     events: Emitter<MittEvents>;
     changeSideSheetContent: (
         header: string | React.ReactNode,
@@ -36,19 +36,22 @@ export interface SideSheetContextProps {
     onClose: () => void;
 }
 
-export const SideSheetContext = createContext<SideSheetContextProps>(
-    {} as SideSheetContextProps
-);
+export const SideSheetContextLegacy =
+    createContext<SideSheetContextLegacyProps>(
+        {} as SideSheetContextLegacyProps
+    );
 
-export const useSideSheetContext = () => {
-    return useContext(SideSheetContext);
+export const useSideSheetContextLegacy = () => {
+    return useContext(SideSheetContextLegacy);
 };
 
-interface SideSheetProviderProps {
+interface SideSheetProviderLegacyProps {
     children: React.ReactNode;
 }
 
-export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
+export const SideSheetProviderLegacy = ({
+    children,
+}: SideSheetProviderLegacyProps) => {
     const emitter = useEmitter<MittEvents>();
     const [header, setHeader] = useState<string | undefined>('');
     const [headerComponent, setHeaderComponent] = useState<React.ReactNode>(
@@ -158,7 +161,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     const ComponentToRender = contentComponent;
 
     return (
-        <SideSheetContext.Provider
+        <SideSheetContextLegacy.Provider
             value={{
                 events: emitter,
                 handleOpen,
@@ -190,6 +193,6 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
             >
                 {secondarySideSheetContent}
             </SideSheet>
-        </SideSheetContext.Provider>
+        </SideSheetContextLegacy.Provider>
     );
 };

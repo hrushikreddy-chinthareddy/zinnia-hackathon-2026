@@ -4,7 +4,7 @@ import { FC, useContext, useMemo, useState } from 'react';
 import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import useOnEditClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import {
     NonFinancialTransactionActions,
@@ -56,7 +56,7 @@ const CommunicationPreferenceField = ({
     editable = true,
     isUserPermissionedToEditCards = true,
 }: CommunicationPreferenceFieldProps): JSX.Element | null => {
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
     const { policyDetails } = useContext(PolicyData);
     const currentParty = policyDetails.parties?.getPartyById(
         partyInfo?.partyId ?? ''

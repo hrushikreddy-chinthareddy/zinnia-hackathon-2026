@@ -33,7 +33,7 @@ jest.mock('next-i18next', () => ({
 const mockChangeContent = jest.fn();
 
 jest.mock('@deps/contexts/SideSheetContext', () => ({
-    useSideSheetContext: () => ({
+    useSideSheetContextLegacy: () => ({
         changeSideSheetContent: mockChangeContent,
         handleOpen: jest.fn(),
     }),

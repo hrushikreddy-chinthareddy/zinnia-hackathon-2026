@@ -10,8 +10,8 @@ import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/glob
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import {
-    SideSheetProvider,
-    useSideSheetContext,
+    SideSheetProviderLegacy,
+    useSideSheetContextLegacy,
 } from '@deps/contexts/SideSheetContext';
 import { PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
@@ -43,16 +43,16 @@ export default {
     decorators: [
         (Story) => (
             <div className="bg-background p-10">
-                <SideSheetProvider>
+                <SideSheetProviderLegacy>
                     <Story />
-                </SideSheetProvider>
+                </SideSheetProviderLegacy>
             </div>
         ),
     ],
 } as Meta<typeof SideSheetProductDetails>;
 
 export const SideSheetProductDetailsDefault = (args: any) => {
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(

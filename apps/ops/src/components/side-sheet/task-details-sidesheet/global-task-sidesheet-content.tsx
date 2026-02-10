@@ -37,7 +37,7 @@ import { AssigneePopoverPositionMode } from '@deps/containers/task-management-qu
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime, toTitleCase } from '@deps/helpers/string.helpers';
 import { useTaskAssignee } from '@deps/hooks/useTaskAssignee';
@@ -241,7 +241,7 @@ export default function GlobalTaskSideSheet({
     const offset = 0;
 
     const { user } = useUser();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const isOpsManagerView = type === OPS_MANAGER_VIEW_TASK;
 
     const {

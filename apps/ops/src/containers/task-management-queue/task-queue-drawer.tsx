@@ -18,7 +18,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PendingReasonOptions } from '@deps/models/case/enums';
 import { TaskSource, TaskType } from '@deps/models/case/task';
 import {
@@ -52,7 +52,7 @@ function TaskQueueDrawer({
     const [notes, setNotes] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDate(e.target.value);
     };

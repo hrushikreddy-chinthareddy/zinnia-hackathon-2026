@@ -18,7 +18,7 @@ import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PeopleRolesFilterContext } from '@deps/contexts/PeopleRolesFilter';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -115,7 +115,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
     const { peopleRolesFilter, setPeopleRolesFilter, clearPeopleRolesFilter } =
         useContext(PeopleRolesFilterContext);
     const [chipEntered, setChipEntered] = useState(false);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const globalValuesData = useMemo(
         () => policyDataToGlobalValues(policyDetails, t),
         [policyDetails, t]

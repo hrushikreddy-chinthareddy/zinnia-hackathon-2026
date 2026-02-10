@@ -8,7 +8,7 @@ import DifferentAddress from '@deps/components/otp-send-document/components/diff
 import { PartyAddressCard } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-types';
 import { isEqualObjects } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { Address, AddressType, Policy } from '@zinnia/api-types/types/sor';
 
@@ -34,7 +34,7 @@ const ContactAddress = ({
     const [prevAddress, setPrevAddress] = useState<Address>({});
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
     const [selectedNewAddress, setSelectedNewAddress] = useState(false);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     useEffect(() => {
         const currentParty = policy?.parties?.find(

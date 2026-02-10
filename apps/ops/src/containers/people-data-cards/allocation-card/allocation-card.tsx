@@ -13,7 +13,7 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     numberFormatify,
     percentFormatify,
@@ -127,7 +127,7 @@ const AllocationCard = ({
 }: AllocationCardProps) => {
     const { t } = useTranslation();
     const { policy, refreshPolicy } = useContext(PolicyData);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(
             <SideSheetPeopleHeader

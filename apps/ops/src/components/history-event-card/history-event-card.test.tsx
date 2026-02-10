@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
 
-import { MittEvents, SideSheetContext } from '@deps/contexts/SideSheetContext';
+import { MittEvents, SideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import useEmitter from '@deps/hooks/useEmitter';
 import {
     mockPolicy,
@@ -60,7 +60,7 @@ describe.skip('HistoryEventCard Component', () => {
     it('should render all props properly', () => {
         const emitter = useEmitter<MittEvents>();
         render(
-            <SideSheetContext.Provider
+            <SideSheetContextLegacy.Provider
                 value={{
                     changeSideSheetContent: () => {},
                     handleLocation: () => {},
@@ -75,7 +75,7 @@ describe.skip('HistoryEventCard Component', () => {
                     refreshTransactions={() => {}}
                     transaction={sample}
                 />
-            </SideSheetContext.Provider>
+            </SideSheetContextLegacy.Provider>
         );
 
         expect(screen.getByText('11/20/2023')).toBeInTheDocument();

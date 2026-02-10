@@ -29,7 +29,7 @@ import {
 } from '@deps/contexts/CaseManagementFilters';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSearchBarcontext } from '@deps/contexts/SearchBarContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import {
@@ -542,7 +542,7 @@ const CaseManagementDashboard = ({
     ]);
 
     // Sidesheet Support
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openRefineResultsSidesheet = () => {
         sideSheet.changeSideSheetContent(
             t('caseManagementDashboard.addFilters') as string,

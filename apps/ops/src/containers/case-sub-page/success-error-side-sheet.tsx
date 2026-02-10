@@ -10,7 +10,7 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
-interface SideSheetContext {
+interface SideSheetContextLegacy {
     handleOpen: (open: boolean) => void;
     changeSideSheetContent: (title: string, content: React.ReactNode) => void;
 }
@@ -25,7 +25,7 @@ interface ApiResponse {
 
 interface SuccessErrorSideSheetProps {
     response: ApiResponse;
-    sideSheet: SideSheetContext;
+    sideSheet: SideSheetContextLegacy;
     successMessage: string;
     errorMessage: string;
 }
