@@ -5,10 +5,7 @@ import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import { Action, Roles } from '@deps/constants/policy';
-import {
-    Party,
-    Signatures,
-} from '@deps/containers/task-container/task-handlers/types';
+import { Party } from '@deps/containers/task-container/task-handlers/types';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 
@@ -27,11 +24,11 @@ export const TransactionAccordionTemplate = (
         uiSchema,
         formContext,
         formData,
+        schema,
     } = props;
     const ui = getUiOptions(uiSchema);
     const { setCustomData } = formContext;
     const { t } = useTranslation();
-
     const {
         templateId = 'default',
         tabTitle,
@@ -61,6 +58,11 @@ export const TransactionAccordionTemplate = (
         items.length
     );
 
+    const defaultSignatureData = Array.isArray(schema?.default)
+        ? (schema.default as any[])
+        : [];
+    const signatureData = formContext?.customData?.signatureData;
+
     const toggle = (i: number) =>
         setActiveIndex((prev) => (prev === i ? null : i));
 
@@ -68,26 +70,32 @@ export const TransactionAccordionTemplate = (
         formContext?.customData?.contractInfo?.parties?.some(
             (party: Party) => party.partyRole === Roles.JOINTOWNER
         );
-    if (formContext?.customData?.signatureData) {
-        formContext.customData.signatureData.signatures = isJointOwnerPresent
-            ? formContext.customData.signatureData.signatures
-            : formContext.customData.signatureData.signatures?.filter(
-                  (signature: Signatures) =>
-                      signature.signType !== Roles.JOINT_OWNER
-              );
-    }
-
     const isIrrevocable = formContext?.customData?.contractInfo?.parties?.some(
         (party: any) => party.isIrrevocable === true
     );
-    if (formContext?.customData?.signatureData) {
-        formContext.customData.signatureData.signatures = isIrrevocable
-            ? formContext.customData.signatureData.signatures
-            : formContext.customData.signatureData.signatures?.filter(
-                  (signature: any) =>
-                      signature.signType !== Roles.IRREVOCABLE_BENEFICIARY &&
-                      signature.signType !== Roles.IRREVOCABLE
-              );
+    const isIrrevocableBene =
+        formContext?.customData?.signatureData?.isIrrevocableBene ?? false;
+    const shouldShowIrrevocableSignature = isIrrevocable || isIrrevocableBene;
+
+    const filterSignatures = () => {
+        let newSignatures = [...defaultSignatureData];
+        if (!isJointOwnerPresent) {
+            newSignatures = newSignatures.filter(
+                (signature) => signature.signType !== Roles.JOINT_OWNER
+            );
+        }
+        if (!shouldShowIrrevocableSignature) {
+            newSignatures = newSignatures.filter(
+                (signature) =>
+                    signature.signType !== Roles.IRREVOCABLE &&
+                    signature.signType !== Roles.IRREVOCABLE_BENEFICIARY
+            );
+        }
+        return newSignatures;
+    };
+
+    if (signatureData && defaultSignatureData.length) {
+        signatureData.signatures = filterSignatures();
     }
 
     formContext.parentActionData = formData;

@@ -53,6 +53,7 @@
         "resolvedOn": "Resolved on",
         "accountValue": "Account value",
         "technicalExceptions": "Technical Exceptions",
+        "exceptionReason": "Exception reason",
         "errorCode": "Error code",
         "summary": "Summary",
         "viewDetailsException": "View details exceptions",
@@ -332,12 +333,17 @@
         "idData": "ID data",
         "idType": "ID type",
         "id": "ID",
-        "illustrationCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements.",
-        "illustrationCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
-        "illustrationCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
         "illustrationsActivityDescription": "Compares illustrations created with those selected for application over time.",
         "illustrationsActivityTitle": "Illustrations Activity",
         "illustrationsActivityTooltip": "This chart compares illustrations created with those selected for application.  'Selected' may be higher than 'Created' because an illustration was created earlier but selected in the displayed timeframe.",
+        "illustrationsCalcRiderNotIncludedUnmetFaceAmount": "The requested rider was not included as it does not meet the face amount requirements.",
+        "illustrationsCalcUnreachableSolveFailed": "The illustration cannot reach the desired solution, and the selected solve type failed.",
+        "illustrationsCalcUnsatisfiedSolveUsingBestAvailable": "The illustration cannot satisfy the requested solves; it is using the best available results.",
+        "illustrationsClientCasesNoResultsUnfilteredTitle": "No client cases to show right now.",
+        "illustrationsClientCasesNoResultsUnfilteredParagraph": "You’ll soon see client cases here. If you think something is missing, check with your administrator.",
+        "illustrationsClientCasesNoResultsFilteredTitle": "We couldn't find a client case that matches your search.",
+        "illustrationsClientCasesNoResultsFilteredParagraph": "Check your input and try again.",
+        "illustrationsTermLengthYear": "{{ years }} year term",
         "impactedParty": "Impacted party",
         "initialPaymentAmountReceivedDate": "Initial premium received date",
         "initialPaymentExpiryDate": "Initial payment expiry date",
@@ -815,7 +821,10 @@
         "zinniaLiveTransactionActivityTitle": "Self-Serve Transaction Activity",
         "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
         "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
-        "bpm500Error": "An error occurred while validating your request"
+        "bpm500Error": "An error occurred while validating your request",
+        "illustrationsQuickQuoteBasePremiumRangeError": "Could not retrieve base premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteTotalPremiumRangeError": "Could not retrieve total premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "illustrationsQuickQuoteGenericError": "Could not retrieve value for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Accumulated earnings",
@@ -1208,7 +1217,7 @@
         "PaymentExpiration": "Payment expiration",
         "PaymentInitialPremium": "Initial premium payment",
         "PaymentLoanRepaymentOneTime": "One-time loan repayment",
-        "PaymentOneTimePremium": "One-time premium",
+        "PaymentOneTimePremium": "One-time premium payment",
         "PaymentSystematicLoanRepayment": "Systematic loan repayment",
         "PAYOR": "Payor",
         "PayorChange": "Payor change",
@@ -4423,6 +4432,7 @@
                 "attachmentsViewWarning": "Form submission is restricted due to presence of new attachments. Please review before proceeding.",
                 "fboDetails": "FBO detail is required",
                 "accountTypeMustBeSelected": "Please choose an account type to proceed with your request.",
+                "withdrawTypeMustBeSelected": "Please select Gross or Net to proceed with your request.",
                 "participantIdCannotBeSubmitted": "Participant ID 0000 cannot be submitted",
                 "contractNumberRequired": "Contract number/BIN number is required",
                 "charityNameRequired": "Charity name is required"
@@ -4576,9 +4586,9 @@
                 "actions": "Actions",
                 "noTaxForms": "No tax forms found for this period",
                 "popover": {
+                    "5498": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year.",
                     "1099R": "Reports distributions from policy/contracts.",
-                    "1099Int": "Reports interest income earned.",
-                    "5498": "Reports contributions made to IRAs, including rollovers and fair market values for the tax year."
+                    "1099Int": "Reports interest income earned."
                 },
                 "warning": {
                     "0": "Please review tax forms before continuing.",
@@ -7483,7 +7493,8 @@
             "fundDisbursementType": "Fund disbursement type",
             "fundDisbursementTypeLabel": "How will this amount be taken from funds?",
             "fundDisbursementTypeTooltip": "The account value is invested in one or more investment funds. When we withdraw the money, we need to know how to take the amount from each investment fund. Pro rata means take an equal amount from each investment fund. Custom allows the owner to choose a certain amount from each investment fund.",
-            "missingDistributionError": "Distribution Type is missing."
+            "missingDistributionError": "Distribution Type is missing.",
+            "paymentAmount": "Payment amount"
         },
         "payor": {
             "label": "Payee"
@@ -9215,10 +9226,6 @@
             "lastModified": "Last modified",
             "loadingMessage": "Loading client cases...",
             "emptyState": "There are no client cases yet",
-            "noResultsUnfilteredTitle": "No client cases to show right now.",
-            "noResultsUnfilteredParagraph": "You’ll soon see client cases here. If you think something is missing, check with your administrator.",
-            "noResultsFilteredTitle": "We couldn't find a client case that matches your search.",
-            "noResultsFilteredParagraph": "Check your input and try again.",
             "viewClientCaseDetails": "View client case details",
             "viewClientCaseNumber": "View client case {{clientCaseNumber}} details"
         },
@@ -9364,10 +9371,12 @@
             "notAvailableReason": {
                 "maxAge": "Max issue age: {{age}}",
                 "minAge": "Min issue age: {{age}}",
-                "state": "Not available for this state",
+                "state": "Not available in this state",
                 "maxFaceAm": "Max face amount: {{amount}}",
                 "minFaceAm": "Min face amount: {{amount}}",
-                "riderFaceAmount": "Rider face amount cannot exceed policy face amount."
+                "riderFaceAmount": "Rider face amount cannot exceed policy face amount.",
+                "minimumPolicyFaceAmount": "Min face amount of base policy: {{amount}}",
+                "requiredRiderNotSelected": "Not available without {{riders}}"
             },
             "riders": {
                 "title": "Riders",
@@ -9427,6 +9436,7 @@
             "waiverOfPremium": "Waiver of Premium",
             "premiumfreeRiders": "Premium-free Riders",
             "acceleratedDeathBenefit": "Accelerated Death Benefit Rider for Terminal Illness",
+            "acceleratedDeathBenefitForChronicIllness": "Chronic Illness Accelerated Death Benefit Rider",
             "charitableGiving": "Charitable Giving Rider",
             "ageRequired": "Please enter an age",
             "mustBePositive": "Must be a positive number",

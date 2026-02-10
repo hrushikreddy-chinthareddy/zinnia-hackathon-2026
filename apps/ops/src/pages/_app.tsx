@@ -2,6 +2,7 @@ import '@deps/styles/styles.css';
 import '@zinnia/bloom/css';
 import '@zinnia/bloom/themes/bloom';
 import '@zinnia/bloom/themes/farmers';
+import '@zinnia/bloom/themes/security-benefit';
 import '@radix-ui/themes/styles.css';
 
 import { UserProvider, useUser } from '@auth0/nextjs-auth0/client';
@@ -21,6 +22,7 @@ import SegmentAnalyticsScript from '@deps/components/analytics/SegmentAnalyticsS
 import { TranslationFiles } from '@deps/config/translations';
 import { DEFAULT_PAGE_TITLE } from '@deps/constants/page-title';
 import { ApplicationDataProvider } from '@deps/contexts/ApplicationContext';
+import { useTheme } from '@deps/hooks/useTheme';
 import { NODE_ENV_PRODUCTION } from '@deps/types/constants';
 import { initializeBrowserLogging } from '@deps/utils/browser-logs';
 import { isProd } from '@deps/utils/environment.helpers';
@@ -57,6 +59,9 @@ const AppHead = ({ pageProps }: AppProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'site.pageTitles',
     });
+
+    const { faviconPath } = useTheme();
+
     useEffect(() => {
         const rumId = user && user.sub ? user.sub : null;
         const rumEmail = user?.email ? user?.email : null;
@@ -89,10 +94,7 @@ const AppHead = ({ pageProps }: AppProps) => {
                 content="width=device-width, initial-scale=1"
             />
             ({!isProd() && <meta name="robots" content="noindex, nofollow" />})
-            <link
-                rel="icon"
-                href={process.env.NEXT_PUBLIC_FAVICON_PATH || '/favicon.ico'}
-            />
+            <link rel="icon" href={faviconPath} />
             <link rel="alternate" hrefLang="x-default" href="/" />
             <link rel="alternate" hrefLang="en" href="/en/" />
             <link rel="alternate" hrefLang="fr" href="/fr/" />

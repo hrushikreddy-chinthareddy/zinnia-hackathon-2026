@@ -3,7 +3,7 @@ import { get } from 'lodash';
 import { QuickQuoteParams } from '@deps/types/quickQuote';
 
 import {
-    PREMIUM_RIDER_ELIGIBILITY_LIST,
+    PREMIUM_FREE_RIDER_ELIGIBILITY_LIST,
     RIDER_ELIGIBILITY_LIST,
 } from './rules';
 import {
@@ -15,7 +15,6 @@ import {
     type getEligibleClassProps,
     type RiderInputNormalized,
     type RiderEligibilityResult,
-    type RiderAlternatives,
     type ProductClassResultRiders,
     type RiderCode,
     isRiderADR,
@@ -175,6 +174,7 @@ export class QuickQuoteProducts {
                 reasons: [
                     {
                         field: 'age',
+                        reason: 'ageOutsideOfRange',
                         expected: [ageMin, ageMax],
                         actual: age ?? -1,
                     },
@@ -189,6 +189,7 @@ export class QuickQuoteProducts {
         if (!isAgeInRange) {
             reasons.push({
                 field: 'age',
+                reason: 'ageOutsideOfRange',
                 expected: [ageMin, ageMax],
                 actual: age,
             });
@@ -197,6 +198,7 @@ export class QuickQuoteProducts {
         if (!isFaceInRange) {
             reasons.push({
                 field: 'face',
+                reason: 'faceAmountOutsideOfRange',
                 expected: [faceMin, faceMax],
                 actual: face,
             });
@@ -205,6 +207,7 @@ export class QuickQuoteProducts {
         if (!isNicotineUserMatch) {
             reasons.push({
                 field: 'nicotine',
+                reason: 'nicotine',
                 expected: nicotine,
                 actual: isNicotineUser ? 'Y' : 'N',
             });
@@ -289,12 +292,15 @@ export class QuickQuoteProducts {
 
         const requestedPremiumRiders = input.premiumFreeRiders;
 
-        const premiumFreeRiders = PREMIUM_RIDER_ELIGIBILITY_LIST.map(
+        const premiumFreeRiders = PREMIUM_FREE_RIDER_ELIGIBILITY_LIST.map(
             ({ riderName, riderCode, riderNameCamelCase }) => {
                 // Determine whether the premium-free rider was selected
                 // by checking its presence in the premiumFreeRiders input
                 const riderRequested = Object.keys(requestedPremiumRiders).find(
                     (riderKey) => riderKey === riderNameCamelCase
+                );
+                const riderRule = productRiderRules.find(
+                    (rider) => rider.riderCode === riderCode
                 );
                 return {
                     riderNameCamelCase,
@@ -302,7 +308,7 @@ export class QuickQuoteProducts {
                     riderCode,
                     riderRequested: !!riderRequested,
                     faceAmount: -1,
-                    riderRuleAlternatives: {} as RiderAlternatives,
+                    riderRuleAlternatives: riderRule?.alternatives,
                 };
             }
         );
@@ -353,7 +359,15 @@ export class QuickQuoteProducts {
 
         const nonEligibleReasons: IneligibilityReason[] = [];
         const { insuredAge, faceAmount: productFaceAmount } = input;
-        const { ageMin, ageMax, faceMin, faceMax } = riderRuleAlternatives;
+        const {
+            ageMin,
+            ageMax,
+            faceMin,
+            faceMax,
+            policyFaceAmountMin,
+            notAvailableInStateCodes,
+            requiredRiderCodes,
+        } = riderRuleAlternatives;
         let isAgeInRange = true;
         let isFaceInRange = true;
         let isADRAmountLessThanProduct = true;
@@ -363,6 +377,7 @@ export class QuickQuoteProducts {
             if (!isAgeInRange) {
                 nonEligibleReasons.push({
                     field: 'age',
+                    reason: 'ageOutsideOfRange',
                     expected: [ageMin, ageMax],
                     actual: insuredAge,
                 });
@@ -373,6 +388,7 @@ export class QuickQuoteProducts {
             isFaceInRange = this.isWithin(riderFaceAmount, faceMin, faceMax);
             if (!isFaceInRange) {
                 nonEligibleReasons.push({
+                    reason: 'faceAmountOutsideOfRange',
                     field: 'face',
                     expected: [faceMin, faceMax],
                     actual: riderFaceAmount,
@@ -384,6 +400,7 @@ export class QuickQuoteProducts {
             isADRAmountLessThanProduct = riderFaceAmount <= productFaceAmount;
             if (!isADRAmountLessThanProduct) {
                 nonEligibleReasons.push({
+                    reason: 'riderIsGreaterThanPolicyFaceAmount',
                     field: 'adrMaxFace',
                     expected: [0, productFaceAmount],
                     actual: riderFaceAmount,
@@ -391,12 +408,58 @@ export class QuickQuoteProducts {
             }
         }
 
+        if (policyFaceAmountMin && input.faceAmount < policyFaceAmountMin) {
+            nonEligibleReasons.push({
+                field: 'face',
+                reason: 'underMinimumPolicyFaceAmount',
+                expected: policyFaceAmountMin,
+                actual: input.faceAmount,
+            });
+        }
+
+        if (
+            notAvailableInStateCodes &&
+            notAvailableInStateCodes.includes(input.state)
+        ) {
+            nonEligibleReasons.push({
+                field: 'state',
+                reason: 'stateNotEligible',
+                actual: input.state,
+            });
+        }
+
+        if (requiredRiderCodes) {
+            for (const requiredRiderCode of requiredRiderCodes) {
+                const rider = [
+                    ...PREMIUM_FREE_RIDER_ELIGIBILITY_LIST,
+                    ...RIDER_ELIGIBILITY_LIST,
+                ].find((rider) => rider.riderCode === requiredRiderCode);
+
+                if (!rider) {
+                    throw new Error(
+                        `Unknown rider "${requiredRiderCode}" not found in rider eligibility list`
+                    );
+                }
+
+                const riderRequested =
+                    input.riders[rider.riderNameCamelCase] === true ||
+                    input.premiumFreeRiders[rider.riderNameCamelCase] === true;
+
+                if (!riderRequested) {
+                    nonEligibleReasons.push({
+                        field: 'rider',
+                        reason: 'requiredRiderNotSelected',
+                        notSelectedRider: [requiredRiderCode],
+                    });
+                }
+            }
+        }
+
         return {
             riderName,
             riderCode,
             evaluated: true,
-            eligible:
-                isAgeInRange && isFaceInRange && isADRAmountLessThanProduct,
+            eligible: nonEligibleReasons.length === 0,
             reasons: nonEligibleReasons,
         };
     }

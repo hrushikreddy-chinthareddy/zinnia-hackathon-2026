@@ -10,7 +10,7 @@ export const AGENT_SEARCH_QUERY_PREFIXES = {
     FOR_AGENT: [...AGENT_SEARCH_PREFIX, 'forAgent'],
     FOR_AGENCY_OWNER: [...AGENT_SEARCH_PREFIX, 'forAgencyOwner'],
     FOR_DISTRICT_MANAGER: [...AGENT_SEARCH_PREFIX, 'forDistrictManager'],
-    FOR_DISTRICT_STAFF: [...AGENT_SEARCH_PREFIX, 'forAgentStaff'],
+    FOR_DISTRICT_STAFF: [...AGENT_SEARCH_PREFIX, 'forDistrictStaff'],
 
     BY_SELLING_CODE: [...AGENT_SEARCH_PREFIX, 'bySellingCode'],
     SELF_ASSIGN: [...AGENT_SEARCH_PREFIX, 'selfAssign'],

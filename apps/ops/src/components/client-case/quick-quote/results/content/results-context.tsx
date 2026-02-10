@@ -6,9 +6,9 @@ import {
     useContext,
     useMemo,
 } from 'react';
-import { ArrayValues } from 'type-fest';
 
 import { getQuickQuoteProductMapping } from '@deps/queries/api/v1/quick-quote';
+import { CreateNewTermLifeIllustrationResponse } from '@deps/queries/api/v3/illustrations';
 import { useQueryProductsByCarrier } from '@deps/queries/tanstack/clientCaseQueries/clientCaseQueries';
 import { RiderName } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
@@ -33,8 +33,13 @@ import {
     asNumberOrRange,
     expandQuickQuoteVariants,
     placeholderData,
+    SingleTermProductQuickQuoteParams,
 } from '../../helpers';
-import { useQuickQuoteQueries, VariantNotAvailableError } from '../../hooks';
+import {
+    useQuickQuoteQueries,
+    QuickQuoteVariantError,
+    QuickQuoteVariantNotAvailableError,
+} from '../../hooks';
 
 type QuickQuoteResultsContextState = {
     isLoading: boolean;
@@ -43,7 +48,7 @@ type QuickQuoteResultsContextState = {
     results: QuickQuoteResult[] | undefined;
     filterIneligibilityReasons: (
         reasons: nonEligibleReasonByClass[] | undefined
-    ) => IneligibilityReason[] | undefined;
+    ) => IneligibilityReason[];
     hasRiderErrorsByTermLength: (
         riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
         termLength: number
@@ -65,6 +70,33 @@ export const useQuickQuoteResults = () => {
     return context;
 };
 
+interface WrappedIllustrationResultBase {
+    planCode: string;
+    variant: SingleTermProductQuickQuoteParams;
+}
+
+interface WrappedSuccessIllustrationResult
+    extends CreateNewTermLifeIllustrationResponse,
+        WrappedIllustrationResultBase {
+    error: undefined;
+}
+
+interface WrappedErrorIllustrationResult extends WrappedIllustrationResultBase {
+    response: undefined;
+    error: QuickQuoteVariantError;
+}
+
+interface WrappedPendingIllustrationResult
+    extends WrappedIllustrationResultBase {
+    response: undefined;
+    error: undefined;
+}
+
+type WrappedIllustrationResult =
+    | WrappedSuccessIllustrationResult
+    | WrappedPendingIllustrationResult
+    | WrappedErrorIllustrationResult;
+
 type QuickQuoteResultsProviderProps = {
     quickQuoteParams: QuickQuoteParams;
     children: ReactNode;
@@ -77,7 +109,7 @@ export const QuickQuoteResultsProvider = ({
     const filterIneligibilityReasons = useCallback(
         (
             reasons: nonEligibleReasonByClass[] | undefined
-        ): IneligibilityReason[] | undefined => {
+        ): IneligibilityReason[] => {
             if (!reasons || reasons.length === 0) return [];
 
             const filteredReasons = reasons
@@ -94,8 +126,7 @@ export const QuickQuoteResultsProvider = ({
                 });
             });
 
-            if (!filteredReasons || filteredReasons.length === 0)
-                return undefined;
+            if (!filteredReasons || filteredReasons.length === 0) return [];
 
             return filteredReasons;
         },
@@ -217,35 +248,53 @@ export const QuickQuoteResultsProvider = ({
         { quickQuoteParams, variants },
         useCallback(
             (results) => {
-                const items = zip(results, variants)
-                    .map(([result, variant]) => {
+                const items = zip(results, variants).map(
+                    ([result, variant]): WrappedIllustrationResult => {
                         if (!result || !variant) {
-                            return;
+                            // Only for type narrowing
+                            // `results` and `variants` should always have
+                            // the same length
+                            throw new Error('Array length mismatch');
                         }
 
                         if (result.data) {
                             return {
                                 ...result.data,
                                 variant,
+                                error: undefined,
                             };
                         }
+
+                        if (result.isPending)
+                            return {
+                                planCode: variant.planCode,
+                                response: undefined,
+                                variant,
+                                error: undefined,
+                            };
 
                         const { error } = result;
 
-                        if (error instanceof VariantNotAvailableError) {
+                        if (error instanceof QuickQuoteVariantError) {
                             const { variant } = error;
+
+                            const isNotAvailableVariant =
+                                error instanceof
+                                QuickQuoteVariantNotAvailableError;
 
                             return {
                                 planCode: variant.planCode,
-                                variant,
                                 response: undefined,
+                                variant,
+                                error: isNotAvailableVariant
+                                    ? undefined
+                                    : error,
                             };
                         }
-                    })
-                    .filter(
-                        (item): item is Exclude<typeof item, undefined> =>
-                            item != null
-                    );
+
+                        throw new Error('Got unknown error', { cause: error });
+                    }
+                );
 
                 const result = Object.entries(groupBy(items, 'planCode'))
                     .map(
@@ -273,22 +322,17 @@ export const QuickQuoteResultsProvider = ({
                             );
 
                             const extractNotAvailabilityReason = (
-                                data: typeof sameProductData
+                                data: WrappedIllustrationResult[]
                             ) =>
                                 data.find(
                                     (
                                         item
-                                    ): item is Extract<
-                                        typeof item,
-                                        { response: undefined }
-                                    > =>
-                                        item.response == null &&
-                                        !!item.variant
-                                            .notAvailabilityReasonField
+                                    ): item is WrappedErrorIllustrationResult =>
+                                        item.error != null
                                 )?.variant?.notAvailabilityReasonField;
 
                             const extractRiderNotAvailabilityReason = (
-                                data: typeof sameProductData,
+                                data: WrappedIllustrationResult[],
                                 riderCode: RiderCode
                             ) =>
                                 data.find(
@@ -299,12 +343,10 @@ export const QuickQuoteResultsProvider = ({
 
                             const isAvailableResponse = (
                                 item:
-                                    | ArrayValues<
-                                          typeof sameProductData
-                                      >['response']
+                                    | CreateNewTermLifeIllustrationResponse['response']
                                     | undefined
                             ): item is Extract<
-                                NonNullable<typeof item>,
+                                CreateNewTermLifeIllustrationResponse['response'],
                                 { assumed: any }
                             > =>
                                 item != null &&
@@ -318,7 +360,9 @@ export const QuickQuoteResultsProvider = ({
                                 data: {
                                     totalPremiumRange: Object.entries(
                                         groupedByTermLength
-                                    ).map(([termLength, data]) => {
+                                    ).map(([rawTermLength, data]) => {
+                                        const termLength =
+                                            parseInt(rawTermLength);
                                         const range = asNumberOrRange(
                                             data
                                                 .map((item) => item.response)
@@ -333,24 +377,40 @@ export const QuickQuoteResultsProvider = ({
                                         const notAvailabilityReasonField =
                                             extractNotAvailabilityReason(data);
 
-                                        if (range != null) {
+                                        const error = data.find(
+                                            ({ error }) => error
+                                        )?.error;
+
+                                        if (error) {
                                             return {
-                                                termLength:
-                                                    parseInt(termLength),
-                                                range,
+                                                termLength,
+                                                range: undefined,
                                                 available: true,
+                                                error,
+                                            };
+                                        }
+
+                                        if (notAvailabilityReasonField) {
+                                            return {
+                                                termLength,
+                                                available: false,
+                                                notAvailabilityReasonField,
+                                                error: undefined,
                                             };
                                         }
 
                                         return {
-                                            termLength: parseInt(termLength),
-                                            available: false,
-                                            notAvailabilityReasonField,
+                                            termLength,
+                                            range,
+                                            available: true,
+                                            error: undefined,
                                         };
                                     }),
                                     basePremiumRange: Object.entries(
                                         groupedByTermLength
-                                    ).map(([termLength, data]) => {
+                                    ).map(([rawTermLength, data]) => {
+                                        const termLength =
+                                            parseInt(rawTermLength);
                                         const range = asNumberOrRange(
                                             data
                                                 .map((item) => item.response)
@@ -365,19 +425,33 @@ export const QuickQuoteResultsProvider = ({
                                         const notAvailabilityReasonField =
                                             extractNotAvailabilityReason(data);
 
-                                        if (range != null) {
+                                        const error = data.find(
+                                            ({ error }) => error
+                                        )?.error;
+
+                                        if (error) {
                                             return {
-                                                termLength:
-                                                    parseInt(termLength),
-                                                range,
+                                                termLength,
+                                                range: undefined,
                                                 available: true,
+                                                error,
+                                            };
+                                        }
+
+                                        if (notAvailabilityReasonField) {
+                                            return {
+                                                termLength,
+                                                available: false,
+                                                notAvailabilityReasonField,
+                                                error: undefined,
                                             };
                                         }
 
                                         return {
-                                            termLength: parseInt(termLength),
-                                            available: false,
-                                            notAvailabilityReasonField,
+                                            termLength,
+                                            range,
+                                            available: true,
+                                            error: undefined,
                                         };
                                     }),
                                     riders: Object.fromEntries(

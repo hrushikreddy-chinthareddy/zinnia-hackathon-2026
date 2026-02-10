@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { getCookie } from 'cookies-next';
-import { omit } from 'lodash';
+import { castArray, omit } from 'lodash';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
@@ -13,6 +13,8 @@ import {
     parseErrorInformation,
     parseFailedNetworkRequest,
 } from '@deps/utils/server-logging';
+
+import { AnonCheckRequest, buildFgaChecker } from './api-fga-check';
 
 export type ApiErrorResponse = {
     err: string;
@@ -137,6 +139,11 @@ export type CreateRequestHandlerOptions<T = any> = {
         res: NextApiResponse
     ) => Promise<string | null>;
     /**
+     * Single or multiple permission that will be checked with FGA before
+     * granting access
+     */
+    fgaGuard?: AnonCheckRequest | AnonCheckRequest[];
+    /**
      * Array of HTTP methods that will be allowed
      */
     allowedMethods?: readonly (typeof allAllowedHttpMethods)[number][];
@@ -148,7 +155,8 @@ export type CreateRequestHandlerOptions<T = any> = {
     sanitizer?: SanitizerFn<any>;
     /**
      *
-     * Returns additional header values to be sent with the request tot he upstream server
+     * Returns additional header values to be sent with the request to the
+     * upstream server
      *
      */
     getAdditionalHeaders?: (
@@ -176,6 +184,7 @@ export const createProxyRequestHandler = <T = any>({
     matchedURLPath,
     omittedParams,
     allowedMethods = allAllowedHttpMethods,
+    fgaGuard = [],
     sanitizer,
     getAuthToken,
     getAdditionalHeaders,
@@ -189,6 +198,8 @@ export const createProxyRequestHandler = <T = any>({
     }
 
     validateMatchedPath(matchedURLPath);
+
+    const checkFgaPermissions = buildFgaChecker(castArray(fgaGuard));
 
     return async (
         req: NextApiRequest,
@@ -212,13 +223,6 @@ export const createProxyRequestHandler = <T = any>({
             });
         }
 
-        const forwardURL = buildForwardURL(
-            upstreamBaseURL,
-            matchedURLPath,
-            req,
-            res
-        );
-
         let authToken: string | null;
 
         try {
@@ -231,8 +235,24 @@ export const createProxyRequestHandler = <T = any>({
                 ...parseErrorInformation(e),
                 ...loggingContext,
             });
-            res.status(401).json({ err: e.code });
+            return res.status(401).json({ err: e.code });
         }
+
+        const isAllowed = await checkFgaPermissions(authToken, logCtx);
+
+        if (!isAllowed) {
+            logWarn('Access Forbidden to api proxy', {
+                ...loggingContext,
+            });
+            return res.status(403).json({ err: 'Forbidden' });
+        }
+
+        const forwardURL = buildForwardURL(
+            upstreamBaseURL,
+            matchedURLPath,
+            req,
+            res
+        );
 
         let result: AxiosResponse<T>;
 
