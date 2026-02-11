@@ -14,7 +14,7 @@ const BankAddress = ({
 }: DisbursementInformation) => {
     const isAnnuitant = disbursementInformation?.isAnnuitant;
     const address =
-        isAnnuitant && annuitantAddress
+        !isFormStateReadOnly && isAnnuitant && annuitantAddress
             ? annuitantAddress
             : disbursementInformation?.address;
 

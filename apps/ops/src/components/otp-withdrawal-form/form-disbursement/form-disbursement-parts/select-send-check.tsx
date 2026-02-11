@@ -1,8 +1,10 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
+import { FormDisbursement } from '@deps/models/case/withdrawal/case';
 import {
     DisbursementInformation,
     SendCheckOption,
@@ -11,6 +13,28 @@ import {
 import { DEFAULT_ADDRESS } from '../../address-entry';
 import { defaultSendCheckOptions } from '../form-disbursement.helpers';
 
+const identifySelectedSendCheckOption = (
+    formDisbursement: FormDisbursement
+): SendCheckOption => {
+    if (formDisbursement?.isAnnuitant) {
+        return SendCheckOption.Annuitant;
+    }
+    if (formDisbursement?.isThirdPartyDisbursement) {
+        return SendCheckOption.ThirdPartyNotFinancialIns;
+    }
+    if (formDisbursement?.isPayeeFinancialIns) {
+        return SendCheckOption.FinancialInstitution;
+    }
+    if (formDisbursement?.isAddressDifferent) {
+        return SendCheckOption.DifferentAddress;
+    }
+    if (formDisbursement?.isPayeeCharity) {
+        return SendCheckOption.Charity;
+    }
+    // Default to OwnerAddress if all flags are false
+    return SendCheckOption.OwnerAddress;
+};
+
 const SendCheckSelect = ({
     fieldName,
     classNames,
@@ -18,8 +42,9 @@ const SendCheckSelect = ({
     onDataChange,
     selectOptions,
 }: DisbursementInformation) => {
+    const { formDisbursement } = useContext(FormDataContext);
     const [selectedValue, setSelectedValue] = useState<SendCheckOption>(
-        SendCheckOption.OwnerAddress
+        identifySelectedSendCheckOption(formDisbursement as FormDisbursement)
     );
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.distributionMethod',
