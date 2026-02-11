@@ -57,36 +57,30 @@ export default function PartyInfoListTemplate(
         const id = idSchema?.$id ?? '';
         const match = id.match(/actionData_(\d+)/);
         const partyIndex = match ? Number(match[1]) : 0;
-        const updatedList = contacts.map((item: any, idx: number) => ({
-            ...item,
-            isPreferred: idx === index,
-        }));
-
         const updatedActionData = [...updatedActionDataRef.current];
-
         const entry = updatedActionData[partyIndex] ?? {};
         const party = entry.party ?? {};
 
-        let updatedParty = { ...party };
-        let hasChanged = false;
         const suffix = Object.keys(suffixToKey).find((s) => id.endsWith(s));
-        if (suffix) {
-            const key = suffixToKey[suffix];
-            if (safeStringify(party[key]) !== safeStringify(updatedList)) {
-                updatedParty = { ...party, [key]: updatedList };
-                hasChanged = true;
-            }
-        }
+        if (!suffix) return;
 
-        if (!hasChanged) return;
+        const key = suffixToKey[suffix];
+        const existingList = Array.isArray(party[key]) ? party[key] : [];
+        const updatedList = existingList.map((item: any, idx: number) => ({
+            ...item,
+            isPreferred: idx === index,
+        }));
+        if (safeStringify(existingList) === safeStringify(updatedList)) return;
 
         updatedActionData[partyIndex] = {
             ...entry,
-            party: updatedParty,
+            party: {
+                ...party,
+                [key]: updatedList,
+            },
         };
 
         updatedActionDataRef.current = updatedActionData;
-
         setCustomData({ actionData: updatedActionData });
     };
 

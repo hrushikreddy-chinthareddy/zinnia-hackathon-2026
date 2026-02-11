@@ -913,7 +913,7 @@ export const getPolicyTransactionsSummary = async ({
     ...rest
 }: PolicyTransactionsSummaryQuery): Promise<TransactionSummary[]> => {
     try {
-        const params = new URLSearchParams();
+        const requestBody: { [key: string]: any } = {};
 
         for (const [key, value] of Object.entries({
             sortField,
@@ -921,13 +921,15 @@ export const getPolicyTransactionsSummary = async ({
             ...rest,
             viewDetails: false, // Only Zahara supports viewDetails, so this should remain false for compatibility with other SORs
         })) {
-            if (!isNullEmptyOrUndefined(value)) params.append(key, `${value}`);
+            if (!isNullEmptyOrUndefined(value)) {
+                requestBody[key] = value;
+            }
         }
 
-        const query = params.toString();
-        const url = `${baseUrl}/${planCode}/${policyNumber}/transactions?${query}`;
-
-        const response = await client.get<{ data: TransactionSummary[] }>(url);
+        const response = await client.post<{ data: TransactionSummary[] }>(
+            `${baseAppUrl}/api/policies/${planCode}/${policyNumber}/transactions`,
+            requestBody as any
+        );
 
         return response.data.data;
     } catch (error: any) {

@@ -1,6 +1,9 @@
 import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 import { TermFixedCostPeriod } from '@deps/queries/api/v3/illustrations';
-import { NumberOrRange } from '@deps/types/quickQuote';
+import {
+    NumberOrRange,
+    QuickQuoteResultTableFieldName,
+} from '@deps/types/quickQuote';
 
 export type ProductName =
     | 'Term Life 10 Yr'
@@ -23,24 +26,44 @@ export type NotAvailabilityReasonField =
 
 export type IneligibilityReason =
     | {
+          reason: 'ageOutsideOfRange';
           field: 'age';
           expected: [number, number];
           actual: number;
       }
     | {
+          reason: 'riderIsGreaterThanPolicyFaceAmount';
           field: 'adrMaxFace'; // New error type to consider ADR Riders when amount is greater than product face amount
           expected: [number, number];
           actual: number;
       }
     | {
+          reason: 'faceAmountOutsideOfRange';
           field: 'face';
           expected: [number, number];
           actual: number;
       }
     | {
+          reason: 'nicotine';
           field: 'nicotine';
           expected: 'Y' | 'N';
           actual: 'Y' | 'N';
+      }
+    | {
+          reason: 'underMinimumPolicyFaceAmount';
+          field: 'face';
+          expected: number;
+          actual: number;
+      }
+    | {
+          reason: 'stateNotEligible';
+          field: 'state';
+          actual: string;
+      }
+    | {
+          reason: 'requiredRiderNotSelected';
+          field: 'rider';
+          notSelectedRider: RiderCode[];
       };
 
 export interface BaseEligibilityResult {
@@ -71,6 +94,9 @@ export type RiderAlternatives = {
     ageMax?: number;
     faceMin?: number;
     faceMax?: number;
+    policyFaceAmountMin?: number;
+    notAvailableInStateCodes?: string[];
+    requiredRiderCodes?: RiderCode[];
 };
 
 export type ClassRule = {
@@ -81,7 +107,7 @@ export type ClassRule = {
 
 export type RiderRule = {
     riderName: string; // for debugging
-    riderCode: string;
+    riderCode: RiderCode;
     alternatives: RiderAlternatives;
 };
 
@@ -127,14 +153,16 @@ type RiderName =
     | "Children's Term Insurance Rider"
     | 'Waiver of Premium Rider'
     | 'Accelerated Death Benefit Rider for Terminal Illness'
-    | 'Charitable Giving Rider';
+    | 'Charitable Giving Rider'
+    | 'Accelerated Death Benefit Rider for Chronic Illness';
 
 export type RiderCode =
     | 'Rider_ADR'
     | 'Rider_CTR'
     | 'Rider_WPR'
     | 'Rider_ABRTRM'
-    | 'Rider_CGR';
+    | 'Rider_CGR'
+    | 'Rider_ABRCHR';
 
 export const isRiderADR = (riderCode: RiderCode) => riderCode === 'Rider_ADR';
 
@@ -157,8 +185,11 @@ export interface RiderInputNormalized {
 }
 
 export type DataItem = {
+    fieldName: QuickQuoteResultTableFieldName;
+    termLength: number;
     period?: string;
     value: NumberOrRange | undefined;
+    hasApiError: boolean;
     hasRiderErrors?: boolean;
     notAvailabilityReasons?: IneligibilityReason[];
 };
@@ -168,6 +199,9 @@ export type RiderInegilibilityReason = {
     reasons?: IneligibilityReason[] | undefined;
 };
 
-export type RiderDataItem = Omit<DataItem, 'notAvailabilityReasons'> & {
+export type RiderDataItem = Omit<
+    DataItem,
+    'notAvailabilityReasons' | 'termLength' | 'fieldName' | 'hasApiError'
+> & {
     notAvailabilityReasons?: RiderInegilibilityReason[];
 };

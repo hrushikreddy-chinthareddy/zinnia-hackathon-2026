@@ -241,7 +241,12 @@ const SideSheetAddress = ({
     };
 
     const handleSubmit = async () => {
-        const errors = getFormErrors({ address, caseId, isDelete, t });
+        const errors = getFormErrors({
+            address,
+            caseId,
+            isDelete,
+            t: defaultT,
+        });
         setCurrentErrors(errors);
         if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 

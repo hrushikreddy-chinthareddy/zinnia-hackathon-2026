@@ -23,7 +23,8 @@
       "dependsOn": ["^build", "^lint"]
     },
     "check-types": {
-      "dependsOn": ["^build", "^check-types"]
+      "dependsOn": ["^build", "^check-types"],
+      "cache": false
     },
     "prettier": {
       "dependsOn": []

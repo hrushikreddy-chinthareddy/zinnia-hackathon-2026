@@ -420,8 +420,8 @@ describe('case-management.ts helper functions', () => {
                 (l) => l.value === 'ownerFirstName'
             ) as any;
             expect(owner.group.length).toBe(2);
-            expect(owner.group[0].value).toBe('firstName');
-            expect(owner.group[1].value).toBe('lastName');
+            expect(owner.group[0].value).toBe('ownerFirstName');
+            expect(owner.group[1].value).toBe('ownerLastName');
         });
     });
 

@@ -276,6 +276,8 @@ export const PolicyIndexTableView = ({
     };
 
     const showPagination = !!policyData?.total && !!policyData?.results?.length;
+    const hasSearchFilters =
+        Object.keys(policySearchFilters.searchValue).length > 0;
 
     return (
         <DashboardContext.Provider
@@ -302,6 +304,7 @@ export const PolicyIndexTableView = ({
                         isError={!!policyDataError}
                         handleSort={handleSort}
                         sortOrder={sortOrder}
+                        isFiltered={hasSearchFilters}
                     />
                 </BlurOverlayLoader>
 

@@ -3,9 +3,9 @@ import { ReactNode } from 'react';
 import { TypographyVariant } from '@deps/components/typography/typography';
 import { DataItem, RiderDataItem } from '@deps/utils/quick-quotes-rules/types';
 
-import { QuickQuoteRangeCell } from './range-cell';
 import styles from '../content.module.css';
 import { QuickQuoteNotAvailableReasonCell } from './not-available-reason-cell';
+import { QuickQuoteResultTableCell } from './result-table-cell';
 
 type QuickQuoteResultTableRowProps = {
     rowHeader?: ReactNode;
@@ -21,11 +21,16 @@ export const QuickQuoteResultTableRow = ({
     cellsVariant,
 }: QuickQuoteResultTableRowProps) => {
     const isAllDataUnAvailable = data?.every(({ value }) => value == null);
+    const hasNoApiErrors = data?.every(
+        (datum) => 'hasApiError' in datum && datum.hasApiError == null
+    );
     const notAvailabilityReasons = data?.map(({ notAvailabilityReasons }) => {
         return notAvailabilityReasons;
     });
     const hasSameNotAvailabilityReason =
-        isAllDataUnAvailable && new Set(notAvailabilityReasons).size === 1;
+        isAllDataUnAvailable &&
+        hasNoApiErrors &&
+        new Set(notAvailabilityReasons).size === 1;
 
     const cells =
         data == null ? null : isAllDataUnAvailable &&
@@ -35,33 +40,13 @@ export const QuickQuoteResultTableRow = ({
                 reasons={data[0]?.notAvailabilityReasons}
             />
         ) : (
-            data?.map(
-                (
-                    { value, period, hasRiderErrors, notAvailabilityReasons },
-                    idx
-                ) =>
-                    value != null ? (
-                        <div key={idx}>
-                            <QuickQuoteRangeCell
-                                value={value}
-                                period={period}
-                                variant={cellsVariant}
-                                hasRiderErrors={hasRiderErrors}
-                            />
-                            {notAvailabilityReasons && (
-                                <QuickQuoteNotAvailableReasonCell
-                                    key={idx}
-                                    reasons={notAvailabilityReasons}
-                                />
-                            )}
-                        </div>
-                    ) : (
-                        <QuickQuoteNotAvailableReasonCell
-                            key={idx}
-                            reasons={notAvailabilityReasons}
-                        />
-                    )
-            )
+            data?.map((datum, idx) => (
+                <QuickQuoteResultTableCell
+                    key={idx}
+                    data={datum}
+                    variant={cellsVariant}
+                />
+            ))
         );
     return (
         <div role="row" className={styles.contentTableRow}>

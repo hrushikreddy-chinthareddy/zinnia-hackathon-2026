@@ -5,7 +5,10 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { isTermResult } from '@deps/types/quickQuote';
+import {
+    isTermResult,
+    QuickQuoteResultTableFieldName,
+} from '@deps/types/quickQuote';
 
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { QuickQuoteResultTableSection } from '../base/result-table-section';
@@ -52,16 +55,23 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                         totalPremiumRange.termLength === termLength
                 );
 
-                let reasons = undefined;
-                if (item && item.range == null)
-                    reasons = filterIneligibilityReasons(
-                        item.notAvailabilityReasonField
-                    );
+                const notAvailabilityReasons = filterIneligibilityReasons(
+                    (item &&
+                        item.range == null &&
+                        item.notAvailabilityReasonField) ||
+                        []
+                );
 
                 return {
+                    fieldName:
+                        QuickQuoteResultTableFieldName.TOTAL_PREMIUM_RANGE,
+                    termLength,
                     value: item?.range,
                     period: 'mo.',
-                    notAvailabilityReasons: reasons,
+                    hasApiError: item?.error != null,
+                    notAvailabilityReasons: !notAvailabilityReasons.length
+                        ? undefined
+                        : notAvailabilityReasons,
                     hasRiderErrors: hasRiderErrorsByTermLength(
                         result.data.riders,
                         termLength
