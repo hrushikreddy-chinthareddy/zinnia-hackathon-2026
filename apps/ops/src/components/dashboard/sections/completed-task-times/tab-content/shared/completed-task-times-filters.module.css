@@ -3,3 +3,14 @@
     justify-content: end;
     margin: var(--measure-dimension-gap-lg) 0;
 }
+
+.groupByWidth {
+    width: calc(
+        var(--measure-dimension-z-space-38) +
+            var(--measure-dimension-z-space-10)
+    );
+    min-width: calc(
+        var(--measure-dimension-z-space-38) +
+            var(--measure-dimension-z-space-10)
+    );
+}
