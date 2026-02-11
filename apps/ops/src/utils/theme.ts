@@ -26,9 +26,8 @@ export function getRole(userConnection?: string): string {
     switch (userConnection) {
         case Connection.FNWL_OKTA:
             return CarrierName.FARMERS;
-        // BPB - Turn this on for DEPU-8631
-        // case Connection.SECURITY_BENEFIT_OKTA:
-        //     return CarrierName.SECURITY_BENEFIT;
+        case Connection.SECURITY_BENEFIT_OKTA:
+            return CarrierName.SECURITY_BENEFIT;
         default:
             return CarrierName.ZINNIA;
     }
