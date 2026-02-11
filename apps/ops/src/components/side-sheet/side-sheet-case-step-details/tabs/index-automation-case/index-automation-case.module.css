@@ -21,3 +21,21 @@
 .customColSpan3 {
     grid-column: span 3 / span 3;
 }
+
+.customIconStyle {
+    flex-shrink: 0;
+    color: #4b5563; /* Equivalent to text-gray-600 */
+    transform-origin: center;
+    animation-duration: 5000ms;
+    animation-timing-function: linear;
+    animation-name: spin;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

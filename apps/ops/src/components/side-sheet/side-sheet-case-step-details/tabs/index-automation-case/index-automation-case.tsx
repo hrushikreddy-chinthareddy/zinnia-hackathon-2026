@@ -43,7 +43,7 @@ const IndexAutomationCase = ({
                         height={18}
                         width={18}
                         role="presentation"
-                        className="shrink-0 text-gray-600 transform-origin-center duration-5000 animate-spin ease-linear"
+                        className={styles.customIconStyle}
                         aria-hidden={true}
                     />
                 </div>
@@ -68,7 +68,7 @@ const IndexAutomationCase = ({
                         width={18}
                         role="presentation"
                         aria-hidden={true}
-                        className="shrink-0 text-gray-600"
+                        className={styles.customIconStyle}
                     />
                 </div>
                 <div>
