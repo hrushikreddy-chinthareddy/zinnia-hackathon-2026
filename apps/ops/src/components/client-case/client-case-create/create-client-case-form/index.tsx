@@ -591,12 +591,14 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     return isValidDate(formattedDate);
                                 },
                             }}
-                            render={({ field }) => (
+                            render={() => (
                                 <DateTextInput
                                     {...(dateOfBirth && {
-                                        defaultDate: formatUTCDate(
-                                            new Date(String(dateOfBirth))
-                                        ),
+                                        defaultDate: isValidDate(dateOfBirth)
+                                            ? formatUTCDate(
+                                                  new Date(String(dateOfBirth))
+                                              )
+                                            : '',
                                     })}
                                     errorMessage={t(
                                         'clientCase.createClientCaseForm.dateErrorMessage'
