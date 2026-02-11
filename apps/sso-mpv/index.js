@@ -5,6 +5,11 @@ import { getConnectionConfig } from './utils.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import logger from './logging/logger.js';
+import {
+  initOptimizely,
+  isFeatureEnabled,
+  FEATURE_FLAGS,
+} from './optimizely.js';
 
 // Handles trailing slash
 const router = express.Router({ strict: false });
@@ -17,6 +22,8 @@ const htmlFiles = {
 };
 
 dotenv.config();
+
+initOptimizely();
 
 const app = express();
 const port = 3000;
@@ -47,31 +54,54 @@ const config = {
 
 app.use(auth(config), router);
 
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
   const redirectTo = req.query.redirectTo;
-
-  // TODO: need to figure out how to handle this because `isAuthenticated` depends
-  // on connection....
   try {
+    const useDirectRedirect = await isFeatureEnabled(
+      FEATURE_FLAGS.SSO_DIRECT_REDIRECT,
+    );
+
+    if (useDirectRedirect) {
+      const connectionConfig = getConnectionConfig(req.query.connection);
+
+      if (!connectionConfig) {
+        throw new Error(
+          `RouteError: '/', Unknown connection config when attempting to redirect through sso: ${req.query.connection}`,
+        );
+      }
+
+      const protocol = connectionConfig.loginSuccessUrl.includes('local')
+        ? 'http'
+        : 'https';
+      const baseUrl = `${protocol}://${connectionConfig.loginSuccessUrl}`;
+
+      if (redirectTo) {
+        return res.redirect(302, `${baseUrl}/${redirectTo}`);
+      }
+
+      return res.redirect(302, baseUrl);
+    }
+
+    // Existing auth flow (feature flag off)
     if (req.oidc.isAuthenticated()) {
       const connectionConfig = getConnectionConfig(req.query.connection);
 
       if (!connectionConfig) {
         throw new Error(
-          `RouteError: '/', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+          `RouteError: '/', Unknown connection config when attempting to login through sso: ${req.query.connection}`,
         );
       }
 
       if (redirectTo) {
-        res.redirect(
+        return res.redirect(
           302,
-          `${req.protocol}://${connectionConfig.loginSuccessUrl}/${redirectTo}`
+          `${req.protocol}://${connectionConfig.loginSuccessUrl}/${redirectTo}`,
         );
       }
 
-      res.redirect(
+      return res.redirect(
         302,
-        `${req.protocol}://${connectionConfig.loginSuccessUrl}`
+        `${req.protocol}://${connectionConfig.loginSuccessUrl}`,
       );
     } else {
       const prefix = '/login';
@@ -87,7 +117,7 @@ app.get('/', (req, res) => {
 
       const loginRedirectUrl = `${prefix}?${queryParams.toString()}`;
 
-      res.redirect(302, loginRedirectUrl);
+      return res.redirect(302, loginRedirectUrl);
     }
   } catch (error) {
     logger.error(error.message);
@@ -102,7 +132,7 @@ app.get('/login', (req, res) => {
 
     if (!connectionConfig) {
       throw new Error(
-        `Route Error: '/login', Unknown connection config when attempting to login through sso: ${req.query.connection}`
+        `Route Error: '/login', Unknown connection config when attempting to login through sso: ${req.query.connection}`,
       );
     }
 

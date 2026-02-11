@@ -1,7 +1,12 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { useRouter } from 'next/router';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 
+import {
+    PageLoader,
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { TranslationFiles } from '@deps/config/translations';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
@@ -20,14 +25,69 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
+import styles from './index.module.css';
+
 export default function CustomersPage({
     accessToken,
 }: {
     accessToken: string;
 }) {
+    const router = useRouter();
+
     const getAccessToken = useCallback(async () => {
         return accessToken;
     }, [accessToken]);
+
+    useEffect(() => {
+        const handleOrderEntryTransaction = (
+            event: CustomEvent<{ customerId: string; transactionId: string }>
+        ) => {
+            const { customerId, transactionId } = event.detail;
+            router.push(
+                `/customers/${customerId}/order-entry/${transactionId}`
+            );
+        };
+
+        const handleIllustrationsCreateCase = () => {
+            router.push(`/illustrations/client-cases/new`);
+        };
+
+        const handleIllustrationsQuickQuote = () => {
+            router.push(`/illustrations/client-cases/quick-quote`);
+        };
+
+        window.addEventListener(
+            'zembed:order-entry-transaction',
+            handleOrderEntryTransaction as EventListener
+        );
+
+        window.addEventListener(
+            'zembed:illustrations-create-case',
+            handleIllustrationsCreateCase as EventListener
+        );
+
+        window.addEventListener(
+            'zembed:illustrations-quick-quote',
+            handleIllustrationsQuickQuote as EventListener
+        );
+
+        return () => {
+            window.removeEventListener(
+                'zembed:order-entry-transaction',
+                handleOrderEntryTransaction as EventListener
+            );
+
+            window.removeEventListener(
+                'zembed:illustrations-create-case',
+                handleIllustrationsCreateCase as EventListener
+            );
+
+            window.removeEventListener(
+                'zembed:illustrations-quick-quote',
+                handleIllustrationsQuickQuote as EventListener
+            );
+        };
+    }, [router]);
 
     const zembedConfig = useMemo(
         () => ({
@@ -40,14 +100,20 @@ export default function CustomersPage({
 
     const { success, error } = useZEmbedInit(zembedConfig);
 
-    if (!success && error) {
-        return <div>Error: {error?.message}</div>;
+    if (error) {
+        return <div>Error embedding component: {error?.message}</div>;
+    }
+
+    if (!success) {
+        return (
+            <div className={styles.loaderContainer}>
+                <PageLoader variant={PageLoaderVariant.Center} />
+            </div>
+        );
     }
 
     return (
-        <div>
-            <zen-contact-management id="contact-management"></zen-contact-management>
-        </div>
+        <zen-contact-management id="contact-management"></zen-contact-management>
     );
 }
 

@@ -2,9 +2,8 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import { IconType, Icon, CarrierName } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import { getCookie } from 'cookies-next';
 import Link from 'next/link';
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
@@ -12,22 +11,16 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
 import { firstNameAndLastInitial } from '@deps/helpers/string.helpers';
+import { useTheme } from '@deps/hooks/useTheme';
 
 import styles from './user-context-menu.module.css';
 
 export const UserContextMenu: FC<{ name: string }> = (props) => {
     const { t } = useTranslation();
     const { user } = useUser();
-    const [role, setRole] = useState<CarrierName>(CarrierName.ZINNIA);
+    const { carrierName: role } = useTheme();
     const apexUrl = process.env.NEXT_PUBLIC_APEX_URL;
     const { showCommissions } = usePermissionsContext();
-
-    useEffect(() => {
-        const cookie = getCookie('role') as string | undefined;
-        if (cookie == 'farmers') {
-            setRole(CarrierName.FARMERS);
-        }
-    }, []);
 
     const handleAnalytics = () => {
         storage.clear();

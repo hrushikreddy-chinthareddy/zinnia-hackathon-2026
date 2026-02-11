@@ -1,5 +1,6 @@
 import { Case } from '@deps/models/case/case';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
+import { GetPolicyResponse } from '@deps/queries/api/policies';
 import { Party, Policy } from '@zinnia/api-types/types/sor';
 
 import {
@@ -170,6 +171,14 @@ describe('sanitizers', () => {
             expect(
                 policyResponseSanitizer({ data: mockPolicy, ...otherStuff })
             ).toEqual({ ...otherStuff, data: expectedPolicyOutput });
+        });
+        it('should not break if it is called without a data property', () => {
+            const otherStuff = {
+                message: 'This is the message',
+                status: 200,
+            } as GetPolicyResponse;
+            expect(() => policyResponseSanitizer(otherStuff)).not.toThrow();
+            expect(policyResponseSanitizer(otherStuff)).toEqual(otherStuff);
         });
     });
 

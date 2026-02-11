@@ -8,13 +8,11 @@ import {
     TableHeaderCell,
     TableRow,
 } from '@zinnia/bloom/components';
-import Link from 'next/link';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { PolicySortBy } from '@deps/components/policy-index/types';
 import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
-import useNavLink from '@deps/hooks/useNavLink';
 import { PolicyReferenceSearchResponse } from '@deps/types/search';
 
 import { PolicyRow } from './policy-row';
@@ -24,6 +22,7 @@ interface PolicySearchResultsTableProps {
     handleSort: (sortBy: PolicySortBy) => void;
     sortOrder: SortOrder;
     isError: boolean;
+    isFiltered?: boolean;
 }
 
 export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
@@ -31,12 +30,47 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
     handleSort,
     sortOrder,
     isError,
+    isFiltered,
 }) => {
     const noData =
         isError || !data || !data.results || data?.results?.length === 0;
 
     const { t } = useTranslation();
-    const { buildOpenInNewWindowLinkText } = useNavLink();
+
+    const getErrorMessage = () => {
+        // Generic error message for both error and no data states
+        if (isError || !data) {
+            return (
+                <>
+                    <b>{t('dashboard.search.results.notFound')}</b>{' '}
+                    {t('dashboard.search.results.tryAgain')}
+                </>
+            );
+        }
+
+        // No results from initial base query
+        if (!isFiltered && (!data.results || data.results.length === 0)) {
+            return (
+                <>
+                    <b>{t('dashboard.search.results.noResultsYet')}</b>{' '}
+                    {t('dashboard.search.results.resultsSoon')}
+                </>
+            );
+        }
+
+        // No results from filtered query
+        if (isFiltered && (!data.results || data.results.length === 0)) {
+            return (
+                <>
+                    <b>{t('dashboard.search.results.noResultsForSearch')}</b>{' '}
+                    {t('dashboard.search.results.tryAgain')}
+                </>
+            );
+        }
+    };
+
+    const errorMessage = getErrorMessage();
+
     return (
         <Table>
             <TableHeader>
@@ -81,25 +115,7 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
                 {noData ? (
                     <TableRow className="text-center">
                         <TableCell colSpan={7}>
-                            <p>
-                                <b>{t('dashboard.search.results.notFound')}</b>{' '}
-                                {t('dashboard.search.results.tryAgain')}
-                            </p>
-                            <br />
-                            <p>
-                                {t('dashboard.search.results.issues')}{' '}
-                                <Link
-                                    href="https://zinnia.atlassian.net/servicedesk/customer/portal/6/user/login?destination=portal%2F6"
-                                    target="_blank"
-                                    rel="noreferrer"
-                                    className="underline-offset-4 underline text-link"
-                                    aria-label={buildOpenInNewWindowLinkText(
-                                        t('dashboard.search.results.helpDesk')
-                                    )}
-                                >
-                                    {t('dashboard.search.results.helpDesk')}
-                                </Link>
-                            </p>
+                            <p>{errorMessage}</p>
                         </TableCell>
                     </TableRow>
                 ) : (
