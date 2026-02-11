@@ -26,10 +26,10 @@ export const useIllustrationWarnings = () => {
 
     return [
         hasUnsatisfiedSolveWarning
-            ? t('allFields.illustrationCalcUnsatisfiedSolveUsingBestAvailable')
+            ? t('allFields.illustrationsCalcUnsatisfiedSolveUsingBestAvailable')
             : hasUnreachDesiredSolutionWarning &&
-              t('allFields.illustrationCalcUnreachableSolveFailed'),
+              t('allFields.illustrationsCalcUnreachableSolveFailed'),
         hasRiderWarning &&
-            t('allFields.illustrationCalcRiderNotIncludedUnmetFaceAmount'),
+            t('allFields.illustrationsCalcRiderNotIncludedUnmetFaceAmount'),
     ].filter((warning): warning is string => !!warning);
 };

@@ -88,12 +88,6 @@ export default function NewClientCase(
     });
 
     const onSubmitForm = (clientCaseData: Partial<IllustrationsClientCase>) => {
-        // Discart this when date input is replaced with the final verstion of the date picker.
-        if (clientCaseData.insuredDetails) {
-            clientCaseData.insuredDetails.dateOfBirth = new Date(
-                clientCaseData.insuredDetails?.dateOfBirth ?? ''
-            );
-        }
         return mutateAsync(
             clientCaseData as unknown as IllustrationsClientCase
         );

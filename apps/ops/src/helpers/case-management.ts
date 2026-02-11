@@ -331,14 +331,14 @@ export const toggleLabels =
                                   label: t(
                                       'dashboard.search.buttons.firstName'
                                   ),
-                                  value: 'firstName',
+                                  value: 'ownerFirstName',
                                   placeholder: '',
                                   errorMessage:
                                       t('allFields.firstNameSearchError') ?? '',
                               },
                               {
                                   label: t('dashboard.search.buttons.lastName'),
-                                  value: 'lastName',
+                                  value: 'ownerLastName',
                                   placeholder: '',
                                   errorMessage:
                                       t('allFields.lastNameSearchError') ?? '',
