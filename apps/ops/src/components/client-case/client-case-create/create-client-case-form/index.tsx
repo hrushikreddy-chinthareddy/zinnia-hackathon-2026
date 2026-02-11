@@ -23,7 +23,10 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import { formatUTCDate } from '@deps/helpers/string.helpers';
+import {
+    formatUTCDate,
+    parseAndFormatDate,
+} from '@deps/helpers/string.helpers';
 import {
     IllustrationAgentDetails,
     IllustrationsClientCase,
@@ -231,6 +234,22 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const onCancelForm = useCallback(() => {
         onCancel?.();
     }, [onCancel]);
+
+    const handleDateChange = (birthDate: string) => {
+        // We manually build a custom ISO date string to ensure that the
+        // local timezone offset is ignored
+        const formatedDate = parseAndFormatDate(
+            'M/D/YYYY',
+            'YYYY-MM-DD',
+            birthDate
+        );
+
+        setValue(
+            'insuredDetails.dateOfBirth',
+            new Date(`${formatedDate}T00:00:00Z`),
+            { shouldDirty: true }
+        );
+    };
 
     const handleSelectAgentOption = useCallback(
         (agentOption: AgentOption) => {
@@ -582,9 +601,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     errorMessage={t(
                                         'clientCase.createClientCaseForm.dateErrorMessage'
                                     )}
-                                    onChange={(v) => {
-                                        field.onChange(v);
-                                    }}
+                                    onChange={handleDateChange}
                                     disabled={!canEditInsuredDetails}
                                 />
                             )}

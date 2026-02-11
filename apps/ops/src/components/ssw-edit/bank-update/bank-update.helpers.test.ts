@@ -85,6 +85,11 @@ describe('getBankUpdatePayload', () => {
         fboDetails: '',
         consentAvailable: null,
         ChooseBankingType: '',
+        isPayeeFinancialIns: false,
+        isAnnuitant: false,
+        isPayeeCharity: false,
+        isThirdPartyDisbursement: false,
+        isAddressDifferent: false,
     };
 
     const mockFormDisbursement: FormDisbursement = {

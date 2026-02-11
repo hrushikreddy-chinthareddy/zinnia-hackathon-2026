@@ -7,7 +7,7 @@ import { isValidDate } from '@deps/utils/dates';
 import styles from './date-text-input.module.css';
 
 interface DateTextInputProps {
-    onChange: (args0: any) => void;
+    onChange: (date: string) => void;
     defaultDate?: string | undefined;
     disabled?: boolean;
     errorMessage?: string | null;
