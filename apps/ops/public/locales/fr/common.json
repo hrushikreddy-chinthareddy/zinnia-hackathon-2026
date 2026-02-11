@@ -1351,7 +1351,29 @@
         "WITHDRAWALUNTILBASIS": "Retrait jusqu'à la base",
         "WithdrawnApplication": "Demande retirée",
         "YearBeginningRefreshAndRecalculation": "Actualisation et recalcul en début d'année",
-        "YearEndGain": "Gain de fin d'année"
+        "YearEndGain": "Gain de fin d'année",
+        "indexAutomation": {
+            "requestReceived": {
+                "receivedOn": "Reçu le",
+                "source": "Source"
+            },
+            "documentIdentification": {
+                "docTypeGroup": "Type de document",
+                "docType": "Type de document"
+            },
+            "documentExtraction": {
+                "contractNumber": "Numéro de contrat",
+                "ssn": "SSN",
+                "ownerName": "Nom du propriétaire",
+                "requestType": "Type de demande"
+            },
+            "documentIndexed": {
+                "documentNumber": "Numéro de document",
+                "transactionType": "Type de transaction"
+            },
+            "loading": "Chargement...",
+            "errorGetting": "Erreur lors de la récupération des"
+        }
     },
     "site": {
         "name": "Zinnia",
@@ -9549,27 +9571,5 @@
             "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
-    },
-    "indexAutomation": {
-        "requestReceived": {
-            "receivedOn": "Reçu le",
-            "source": "Source"
-        },
-        "documentIdentification": {
-            "docTypeGroup": "Type de document",
-            "docType": "Type de document"
-        },
-        "documentExtraction": {
-            "contractNumber": "Numéro de contrat",
-            "ssn": "SSN",
-            "ownerName": "Nom du propriétaire",
-            "requestType": "Type de demande"
-        },
-        "documentIndexed": {
-            "documentNumber": "Numéro de document",
-            "transactionType": "Type de transaction"
-        },
-        "loading": "Chargement...",
-        "errorGetting": "Erreur lors de la récupération des"
     }
 }

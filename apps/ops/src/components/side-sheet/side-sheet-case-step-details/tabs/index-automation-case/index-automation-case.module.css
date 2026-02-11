@@ -5,9 +5,10 @@
 }
 .gridContainer {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.5rem; /* Adjust gap as needed */
     font-size: 1rem;
-    text-align: center;
     margin-bottom: 1rem;
+    align-items: center;
+    justify-items: start;
 }

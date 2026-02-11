@@ -127,7 +127,9 @@ const IndexAutomationCase = ({
                 <div className={styles.flexFullCol}>
                     <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
-                            {t('indexAutomation.requestReceived.receivedOn')}
+                            {t(
+                                'allFields.indexAutomation.requestReceived.receivedOn'
+                            )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySm}
@@ -137,7 +139,9 @@ const IndexAutomationCase = ({
                                 DEFAULT_ERROR_STRING}
                         </Typography>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
-                            {t('indexAutomation.requestReceived.source')}
+                            {t(
+                                'allFields.indexAutomation.requestReceived.source'
+                            )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySm}
@@ -152,10 +156,10 @@ const IndexAutomationCase = ({
 
             {dataType === DataType.DOCUMENT_IDENTIFICATION_DATA && (
                 <div className={styles.flexFullCol}>
-                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+                    <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
-                                'indexAutomation.documentIdentification.docTypeGroup'
+                                'allFields.indexAutomation.documentIdentification.docTypeGroup'
                             )}
                         </div>
                         <Typography
@@ -167,7 +171,7 @@ const IndexAutomationCase = ({
                         </Typography>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
-                                'indexAutomation.documentIdentification.docType'
+                                'allFields.indexAutomation.documentIdentification.docType'
                             )}
                         </div>
                         <Typography
@@ -183,10 +187,10 @@ const IndexAutomationCase = ({
 
             {dataType === DataType.DOCUMENT_EXTRACTION_DATA && (
                 <div className={styles.flexFullCol}>
-                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+                    <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
-                                'indexAutomation.documentExtraction.contractNumber'
+                                'allFields.indexAutomation.documentExtraction.contractNumber'
                             )}
                         </div>
                         <Typography
@@ -197,7 +201,9 @@ const IndexAutomationCase = ({
                                 DEFAULT_ERROR_STRING}
                         </Typography>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
-                            {t('indexAutomation.documentExtraction.ownerName')}
+                            {t(
+                                'allFields.indexAutomation.documentExtraction.ownerName'
+                            )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
@@ -207,7 +213,9 @@ const IndexAutomationCase = ({
                                 DEFAULT_ERROR_STRING}
                         </Typography>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
-                            {t('indexAutomation.documentExtraction.ssn')}
+                            {t(
+                                'allFields.indexAutomation.documentExtraction.ssn'
+                            )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
@@ -222,10 +230,10 @@ const IndexAutomationCase = ({
 
             {dataType === DataType.DOCUMENT_INDEXED_DATA && (
                 <div className={styles.flexFullCol}>
-                    <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+                    <div className={styles.gridContainer}>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
-                                'indexAutomation.documentExtraction.documentNumber'
+                                'allFields.indexAutomation.documentIndexed.documentNumber'
                             )}
                         </div>
                         <Typography
@@ -237,7 +245,7 @@ const IndexAutomationCase = ({
                         </Typography>
                         <div className="col-span-2 text-[--color-base-text-text-secondary]">
                             {t(
-                                'indexAutomation.documentExtraction.transactionType'
+                                'allFields.indexAutomation.documentIndexed.transactionType'
                             )}
                         </div>
                         <Typography
