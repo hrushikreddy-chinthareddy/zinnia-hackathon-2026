@@ -6,7 +6,7 @@
 .gridContainer {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.5rem; /* Adjust gap as needed */
+    gap: 0.5rem;
     font-size: 1rem;
     margin-bottom: 1rem;
     align-items: center;
@@ -24,7 +24,7 @@
 
 .customIconStyle {
     flex-shrink: 0;
-    color: #4b5563; /* Equivalent to text-gray-600 */
+    color: #4b5563;
     transform-origin: center;
     animation-duration: 5000ms;
     animation-timing-function: linear;
