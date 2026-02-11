@@ -37,6 +37,7 @@ export const PolicyActionCell: FC<PolicyActionCellProps> = ({
 
     return (
         <MenuContextual
+            data-testid="policy-action-cell-menu"
             trigger={<Icon type={IconType.MENU_VERTICAL} />}
             onOpenChange={setMenuOpen}
         >

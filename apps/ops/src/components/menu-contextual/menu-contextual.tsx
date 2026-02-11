@@ -10,6 +10,7 @@ export interface MenuContextualProps {
     trigger: ReactNode;
     triggerAsChild?: boolean;
     onOpenChange?: (open: boolean) => void;
+    'data-testid'?: string;
 }
 
 export const MenuContextual = ({
@@ -17,6 +18,7 @@ export const MenuContextual = ({
     trigger,
     triggerAsChild = false,
     onOpenChange = () => {},
+    'data-testid': dataTestId,
 }: MenuContextualProps) => {
     const [align, setAlign] =
         useState<DropdownMenu.DropdownMenuContentProps['align']>('end');
@@ -88,6 +90,7 @@ export const MenuContextual = ({
             <DropdownMenu.Trigger
                 asChild={triggerAsChild}
                 className={triggerAsChild ? '' : styles.trigger}
+                data-testid={dataTestId}
                 ref={triggerRef}
             >
                 {trigger}
