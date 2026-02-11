@@ -822,28 +822,19 @@
         "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
         "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
         "bpm500Error": "An error occurred while validating your request",
-        "indexAutomation": {
-            "requestReceived": {
-                "receivedOn": "Received on",
-                "source": "Source"
-            },
-            "documentIdentification": {
-                "docTypeGroup": "Doc Type Group",
-                "docType": "Doc Type"
-            },
-            "documentExtraction": {
-                "contractNumber": "Contract Number",
-                "ssn": "SSN",
-                "ownerName": "Owner Name",
-                "requestType": "Request Type"
-            },
-            "documentIndexed": {
-                "documentNumber": "Document Number",
-                "transactionType": "Transaction Type"
-            },
-            "loading": "Loading...",
-            "errorGetting": "Error getting"
-        },
+        "indexAutomationRequestReceivedReceivedOn": "Received on",
+        "indexAutomationRequestReceivedSource": "Source",
+        "indexAutomationDocumentIdentificationDocTypeGroup": "Doc Type Group",
+        "indexAutomationDocumentIdentificationDocType": "Doc Type",
+        "indexAutomationDocumentExtractionContractNumber": "Contract Number",
+        "indexAutomationDocumentExtractionSsn": "SSN",
+        "indexAutomationDocumentExtractionOwnerName": "Owner Name",
+        "indexAutomationDocumentExtractionRequestType": "Request Type",
+        "indexAutomationDocumentIndexedDocumentNumber": "Document Number",
+        "indexAutomationDocumentIndexedTransactionType": "Transaction Type",
+        "indexAutomationLoading": "Loading...",
+        "indexAutomationErrorGetting": "Error getting",
+        "indexAutomationNoData": "No data",
         "illustrationsQuickQuoteBasePremiumRangeError": "Could not retrieve base premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteTotalPremiumRangeError": "Could not retrieve total premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteGenericError": "Could not retrieve value for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."

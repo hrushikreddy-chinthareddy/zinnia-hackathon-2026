@@ -1361,28 +1361,19 @@
         "WithdrawnApplication": "Demande retirée",
         "YearBeginningRefreshAndRecalculation": "Actualisation et recalcul en début d'année",
         "YearEndGain": "Gain de fin d'année",
-        "indexAutomation": {
-            "requestReceived": {
-                "receivedOn": "Reçu le",
-                "source": "Source"
-            },
-            "documentIdentification": {
-                "docTypeGroup": "Type de document",
-                "docType": "Type de document"
-            },
-            "documentExtraction": {
-                "contractNumber": "Numéro de contrat",
-                "ssn": "SSN",
-                "ownerName": "Nom du propriétaire",
-                "requestType": "Type de demande"
-            },
-            "documentIndexed": {
-                "documentNumber": "Numéro de document",
-                "transactionType": "Type de transaction"
-            },
-            "loading": "Chargement...",
-            "errorGetting": "Erreur lors de la récupération des"
-        }
+        "indexAutomationRequestReceivedReceivedOn": "Reçu le",
+        "indexAutomationRequestReceivedSource": "Source",
+        "indexAutomationDocumentIdentificationDocTypeGroup": "Type de document",
+        "indexAutomationDocumentIdentificationDocType": "Type de document",
+        "indexAutomationDocumentExtractionContractNumber": "Numéro de contrat",
+        "indexAutomationDocumentExtractionSsn": "SSN",
+        "indexAutomationDocumentExtractionOwnerName": "Nom du propriétaire",
+        "indexAutomationDocumentExtractionRequestType": "Type de demande",
+        "indexAutomationDocumentIndexedDocumentNumber": "Numéro de document",
+        "indexAutomationDocumentIndexedTransactionType": "Type de transaction",
+        "indexAutomationLoading": "Chargement...",
+        "indexAutomationErrorGetting": "Erreur lors de la récupération des",
+        "indexAutomationNoData": "Aucune donnée"
     },
     "site": {
         "name": "Zinnia",

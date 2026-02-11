@@ -52,7 +52,7 @@ const IndexAutomationCase = ({
                         variant={TypographyVariant.BodySmBold}
                         className="text-gray-600"
                     >
-                        {t('allFields.indexAutomation.loading')}
+                        {t('allFields.indexAutomationLoading')}
                     </Typography>
                 </div>
             </div>
@@ -76,7 +76,7 @@ const IndexAutomationCase = ({
                         variant={TypographyVariant.BodySmBold}
                         className="text-gray-600"
                     >
-                        {t('allFields.indexAutomation.errorGetting')}
+                        {t('allFields.indexAutomationErrorGetting')}
                     </Typography>
                 </div>
             </div>
@@ -90,11 +90,11 @@ const IndexAutomationCase = ({
                     variant={TypographyVariant.H3}
                     className="mb-4 border-b pb-2"
                 >
-                    {t('allFields.indexAutomation.title')}
+                    {t('allFields.indexAutomationTitle')}
                 </Typography>
                 <div className="text-sm font-bold">
                     <AssistiveText
-                        text={t('allFields.indexAutomation.noData')}
+                        text={t('allFields.indexAutomationNoData')}
                         variant={AssistiveTextVariant.Default}
                         iconOverride={
                             <Icon
@@ -126,26 +126,26 @@ const IndexAutomationCase = ({
             {dataType === DataType.REQUEST_RECEIVED_DATA && (
                 <div className={styles.flexFullCol}>
                     <div className={styles.gridContainer}>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.requestReceived.receivedOn'
+                                'allFields.indexAutomationRequestReceivedReceivedOn'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySm}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.receivedOn ||
                                 DEFAULT_ERROR_STRING}
                         </Typography>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.requestReceived.source'
+                                'allFields.indexAutomationRequestReceivedSource'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySm}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.source ||
                                 DEFAULT_ERROR_STRING}
@@ -157,26 +157,26 @@ const IndexAutomationCase = ({
             {dataType === DataType.DOCUMENT_IDENTIFICATION_DATA && (
                 <div className={styles.flexFullCol}>
                     <div className={styles.gridContainer}>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.documentIdentification.docTypeGroup'
+                                'allFields.indexAutomationDocumentIdentificationDocTypeGroup'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.docTypeGroup ||
                                 DEFAULT_ERROR_STRING}
                         </Typography>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.documentIdentification.docType'
+                                'allFields.indexAutomationDocumentIdentificationDocType'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.docType ||
                                 DEFAULT_ERROR_STRING}
@@ -188,38 +188,38 @@ const IndexAutomationCase = ({
             {dataType === DataType.DOCUMENT_EXTRACTION_DATA && (
                 <div className={styles.flexFullCol}>
                     <div className={styles.gridContainer}>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.documentExtraction.contractNumber'
+                                'allFields.indexAutomationDocumentExtractionContractNumber'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.contractNumber ||
                                 DEFAULT_ERROR_STRING}
                         </Typography>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.documentExtraction.ownerName'
+                                'allFields.indexAutomationDocumentExtractionOwnerName'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.ownerName ||
                                 DEFAULT_ERROR_STRING}
                         </Typography>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.documentExtraction.ssn'
+                                'allFields.indexAutomationDocumentExtractionSsn'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.ssn ||
                                 DEFAULT_ERROR_STRING}
@@ -231,26 +231,26 @@ const IndexAutomationCase = ({
             {dataType === DataType.DOCUMENT_INDEXED_DATA && (
                 <div className={styles.flexFullCol}>
                     <div className={styles.gridContainer}>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.documentIndexed.documentNumber'
+                                'allFields.indexAutomationDocumentIndexedDocumentNumber'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.documentNumber ||
                                 DEFAULT_ERROR_STRING}
                         </Typography>
-                        <div className="col-span-2 text-[--color-base-text-text-secondary]">
+                        <div className={styles.customColSpan2}>
                             {t(
-                                'allFields.indexAutomation.documentIndexed.transactionType'
+                                'allFields.indexAutomationDocumentIndexedTransactionType'
                             )}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
-                            className="col-span-3"
+                            className={styles.customColSpan3}
                         >
                             {transactionEntity?.entity?.transactionType ||
                                 DEFAULT_ERROR_STRING}

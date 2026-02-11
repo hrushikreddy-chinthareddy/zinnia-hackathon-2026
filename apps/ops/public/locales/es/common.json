@@ -1392,28 +1392,19 @@
         "WithdrawnApplication": "Solicitud retirada",
         "YearBeginningRefreshAndRecalculation": "Actualización y recálculo de inicio de año",
         "YearEndGain": "Ganancia de fin de año",
-        "indexAutomation": {
-            "requestReceived": {
-                "receivedOn": "Recibido el",
-                "source": "Fuente"
-            },
-            "documentIdentification": {
-                "docTypeGroup": "Tipo de documento",
-                "docType": "Tipo de documento"
-            },
-            "documentExtraction": {
-                "contractNumber": "Número de contrato",
-                "ssn": "SSN",
-                "ownerName": "Nombre del propietario",
-                "requestType": "Tipo de solicitud"
-            },
-            "documentIndexed": {
-                "documentNumber": "Número de documento",
-                "transactionType": "Tipo de transacción"
-            },
-            "loading": "Cargando...",
-            "errorGetting": "Error al obtener"
-        }
+        "indexAutomationRequestReceivedReceivedOn": "Recibido el",
+        "indexAutomationRequestReceivedSource": "Fuente",
+        "indexAutomationDocumentIdentificationDocTypeGroup": "Tipo de documento",
+        "indexAutomationDocumentIdentificationDocType": "Tipo de documento",
+        "indexAutomationDocumentExtractionContractNumber": "Número de contrato",
+        "indexAutomationDocumentExtractionSsn": "SSN",
+        "indexAutomationDocumentExtractionOwnerName": "Nombre del propietario",
+        "indexAutomationDocumentExtractionRequestType": "Tipo de solicitud",
+        "indexAutomationDocumentIndexedDocumentNumber": "Número de documento",
+        "indexAutomationDocumentIndexedTransactionType": "Tipo de transacción",
+        "indexAutomationLoading": "Cargando...",
+        "indexAutomationErrorGetting": "Error al obtener",
+        "indexAutomationNoData": "No hay datos"
     },
     "site": {
         "name": "Zinnia Live",
