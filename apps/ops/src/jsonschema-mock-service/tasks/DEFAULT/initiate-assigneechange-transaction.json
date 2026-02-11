@@ -1766,7 +1766,7 @@
                                             "isSignedPresent": false,
                                             "signDate": null,
                                             "signDesignation": null,
-                                            "signType": "IRREVOCABLE_BENEFICIARY",
+                                            "signType": "IRREVOCABLE",
                                             "signTypeForUI": "Irrevocable Beneficiary"
                                         }
                                     ]
@@ -1851,6 +1851,13 @@
                                     "expandable": false,
                                     "nobackground": true
                                 },
+                                "ui:order": [
+                                    "signDate",
+                                    "signType",
+                                    "signTypeForUI",
+                                    "isSignedPresent",
+                                    "signDesignation"
+                                ],
                                 "signType": {
                                     "ui:options": {
                                         "disabled": true
