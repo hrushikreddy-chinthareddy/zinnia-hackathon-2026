@@ -52,7 +52,7 @@ const IndexAutomationCase = ({
                         variant={TypographyVariant.BodySmBold}
                         className="text-gray-600"
                     >
-                        {t('indexAutomation.loading')}
+                        {t('allFields.indexAutomation.loading')}
                     </Typography>
                 </div>
             </div>
@@ -76,7 +76,7 @@ const IndexAutomationCase = ({
                         variant={TypographyVariant.BodySmBold}
                         className="text-gray-600"
                     >
-                        {t('indexAutomation.errorGetting')}
+                        {t('allFields.indexAutomation.errorGetting')}
                     </Typography>
                 </div>
             </div>
@@ -90,11 +90,11 @@ const IndexAutomationCase = ({
                     variant={TypographyVariant.H3}
                     className="mb-4 border-b pb-2"
                 >
-                    {t('indexAutomation.title')}
+                    {t('allFields.indexAutomation.title')}
                 </Typography>
                 <div className="text-sm font-bold">
                     <AssistiveText
-                        text={t('indexAutomation.noData')}
+                        text={t('allFields.indexAutomation.noData')}
                         variant={AssistiveTextVariant.Default}
                         iconOverride={
                             <Icon
