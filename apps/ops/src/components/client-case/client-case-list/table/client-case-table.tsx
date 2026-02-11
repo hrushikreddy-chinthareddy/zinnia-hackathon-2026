@@ -58,19 +58,25 @@ const generateTableContent = (
         );
     }
     const noResultsMessage = () => {
-        const dynamicValue = isFiltered ? 'Filtered' : 'Unfiltered';
-
         return (
             <>
                 <b>
-                    {t(
-                        `clientCase.clientCaseTable.noResults${dynamicValue}Title`
-                    )}
+                    {isFiltered
+                        ? t(
+                              `allFields.illustrationsClientCasesNoResultsFilteredTitle`
+                          )
+                        : t(
+                              `allFields.illustrationsClientCasesNoResultsUnfilteredTitle`
+                          )}
                 </b>
                 <br />
-                {t(
-                    `clientCase.clientCaseTable.noResults${dynamicValue}Paragraph`
-                )}
+                {isFiltered
+                    ? t(
+                          `allFields.illustrationsClientCasesNoResultsFilteredParagraph`
+                      )
+                    : t(
+                          `allFields.illustrationsClientCasesNoResultsUnfilteredParagraph`
+                      )}
             </>
         );
     };
@@ -195,7 +201,7 @@ const generateTableContent = (
     } else {
         return (
             <TableRow className={styles.tableEmptyStateRow}>
-                <TableCell colSpan={6} align="center">
+                <TableCell colSpan={8} align="center">
                     <Typography variant={TypographyVariant.BodyBold}>
                         {noResultsMessage()}
                     </Typography>

@@ -99,14 +99,19 @@
     border-right: unset;
 }
 
+.contentErrorCell,
 .contentDataCell,
 .notAvailableReasonCell {
     display: flex;
-    flex-direction: column;
-    align-items: start;
 
     padding: var(--measure-dimension-padding-lg, 8px)
         var(--measure-dimension-padding-3xl, 24px);
+}
+
+.contentDataCell,
+.notAvailableReasonCell {
+    flex-direction: column;
+    align-items: start;
 
     gap: var(--measure-dimension-gap-sm, 4px)
         var(--measure-dimension-gap-lg, 24px);

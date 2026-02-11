@@ -2,6 +2,9 @@ import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useState, useEffect, useContext } from 'react';
 
+import AssistiveText, {
+    AssistiveTextVariant,
+} from '@deps/components/assistive-text/assistive-text';
 import ButtonGrp from '@deps/components/button-group/button-group';
 import Field, {
     FieldSize,
@@ -69,7 +72,8 @@ export default function AmountDetails({
     isOnlyWithdrawalTypeControls,
     programTypes,
 }: AmountDetailsProps) {
-    const { formProgram, setFormProgram } = useContext(FormDataContext);
+    const { formProgram, setFormProgram, formErrors } =
+        useContext(FormDataContext);
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.amountDetails',
     });
@@ -187,6 +191,12 @@ export default function AmountDetails({
                     disabled={isFormStateReadOnly}
                 />
             </div>
+            {formErrors?.withdrawType && (
+                <AssistiveText
+                    text={formErrors.withdrawType}
+                    variant={AssistiveTextVariant.Error}
+                />
+            )}
             {!isOnlyWithdrawalTypeControls && (
                 <div className="my-4 flex flex-col gap-8 md:grid md:grid-cols-2 md:grid-rows-2 lg:grid-cols-3 lg:grid-rows-1">
                     <SelectSimple

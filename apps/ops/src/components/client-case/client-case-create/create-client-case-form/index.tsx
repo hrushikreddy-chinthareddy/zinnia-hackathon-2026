@@ -22,7 +22,10 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import { formatUTCDate } from '@deps/helpers/string.helpers';
+import {
+    formatUTCDate,
+    parseAndFormatDate,
+} from '@deps/helpers/string.helpers';
 import {
     IllustrationAgentDetails,
     IllustrationInsuredDetails,
@@ -243,8 +246,19 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         updateClientCaseData({ [name]: value });
     };
 
-    const handleDateChange = (birthDate: Date) => {
-        updateClientCaseData({ dateOfBirth: birthDate });
+    const handleDateChange = (birthDate: string) => {
+        // We manually build a custom ISO date string to ensure that the
+        // local timezone offset is ignored
+        const formatedDate = parseAndFormatDate(
+            'M/D/YYYY',
+            'YYYY-MM-DD',
+            birthDate
+        );
+
+        updateClientCaseData({
+            // Always in UTC at midnight
+            dateOfBirth: new Date(`${formatedDate}T00:00:00Z`),
+        });
     };
 
     const canSubmitForm = () => {
@@ -610,9 +624,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                             {t('clientCase.createClientCaseForm.dateLabel')}
                         </Typography>
                         <DateTextInput
-                            onChange={(newDate) => {
-                                handleDateChange(newDate);
-                            }}
+                            onChange={handleDateChange}
                             {...(clientCaseData.insuredDetails?.dateOfBirth && {
                                 defaultDate: formatUTCDate(
                                     new Date(
