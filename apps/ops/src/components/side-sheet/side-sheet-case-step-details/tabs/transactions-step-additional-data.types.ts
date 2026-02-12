@@ -21,7 +21,7 @@ export enum TransactionsAdditionalDataStepIds {
     docFieldExtraction = 'docFieldExtraction',
     docSend = 'docSend',
     docIndexedAndCaseCreated = 'docIndexedAndCaseCreated',
-    unableToIdentifyDocument = 'unableToIdentifyDocument',
+    unableToIdentifyDocument = 'Unable to Identify Document - Send for manual indexing',
 }
 
 export enum BeneNotification {
