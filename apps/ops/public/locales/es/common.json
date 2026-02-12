@@ -4079,7 +4079,7 @@
                 "disburseToAnnuitant": "Desembolsar al Rentista",
                 "disburseToDifferentAddress": "Desembolsar a una Dirección Diferente",
                 "disburseToThirdParty": "Desembolsar a Tercero (No una Institución Financiera / Organización Benéfica)",
-                "disburseToThirdPartyNoCharity": "Desembolsar a Tercero (No una Institución Financiera)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Desembolsar a Tercero (No una Institución Financiera)",
                 "acordFormReceived": "¿Se recibió el formulario ACORD?",
                 "bankName": "Nombre del banco",
                 "bankRoutingNumber": "Número de ruta bancaria",

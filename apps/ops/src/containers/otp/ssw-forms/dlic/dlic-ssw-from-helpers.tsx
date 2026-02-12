@@ -458,7 +458,9 @@ export default function getDlicConfig(
             value: SendCheckOption.DifferentAddress,
         },
         {
-            label: t('distributionMethod.disburseToThirdPartyNoCharity'),
+            label: t(
+                'distributionMethod.disburseToThirdPartyNotCharityNotFinancial'
+            ),
             value: SendCheckOption.ThirdPartyNotFinancialIns,
         },
     ];
@@ -478,7 +480,7 @@ export default function getDlicConfig(
                 fields: [
                     {
                         fieldName: BankingFields.isAnnuitant,
-                        fieldLabel: t('distributionMethod.isAnnuitant'),
+                        fieldLabel: t('distributionMethod.disburseToAnnuitant'),
                         component: DisbursementFields.BankCheckboxField,
                         classNames: 'col-start-1 col-span-3',
                         shouldDisplay: () =>

@@ -25,9 +25,15 @@ const BankAddress = ({
         }));
     };
 
+    // Create a unique key based on address values to force remount when address resets
+    const addressKey = `${address?.addressLine1 || ''}-${address?.city || ''}-${
+        address?.state || ''
+    }-${address?.zip || ''}`;
+
     return (
         <div key={fieldName} className={classNames || 'col-span-4'}>
             <AddressEntry
+                key={addressKey}
                 isFormStateReadOnly={isFormStateReadOnly}
                 onDataChange={setAddress}
                 initialAddress={address}

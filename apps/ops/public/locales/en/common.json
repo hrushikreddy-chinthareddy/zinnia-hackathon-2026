@@ -4099,7 +4099,7 @@
                 "disburseToAnnuitant": "Disburse to Annuitant",
                 "disburseToDifferentAddress": "Disburse to different Address",
                 "disburseToThirdParty": "Disburse to Third Party(Not a Financial Institution / Charity)",
-                "disburseToThirdPartyNoCharity": "Disburse to Third Party(Not a Financial Institution)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Disburse to Third Party or Charity (Not a Financial Institution)",
                 "acordFormReceived": "Is ACORD form received?",
                 "bankName": "Bank name",
                 "bankRoutingNumber": "Bank routing number",

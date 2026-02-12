@@ -285,7 +285,7 @@ export default function getDlicRmdWithdrawalConfig(
                 },
                 {
                     label: t(
-                        'distributionMethod.disburseToThirdPartyNoCharity'
+                        'distributionMethod.disburseToThirdPartyNotCharityNotFinancial'
                     ),
                     value: SendCheckOption.ThirdPartyNotFinancialIns,
                 },
@@ -315,7 +315,7 @@ export default function getDlicRmdWithdrawalConfig(
                 fields: [
                     {
                         fieldName: BankingFields.isAnnuitant,
-                        fieldLabel: t('distributionMethod.isAnnuitant'),
+                        fieldLabel: t('distributionMethod.disburseToAnnuitant'),
                         component: DisbursementFields.BankCheckboxField,
                         classNames: 'col-start-1 col-span-3',
                         shouldDisplay: () =>

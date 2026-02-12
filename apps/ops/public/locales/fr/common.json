@@ -4039,7 +4039,7 @@
                 "disburseToAnnuitant": "Verser au rentier",
                 "disburseToDifferentAddress": "Verser à une adresse différente",
                 "disburseToThirdParty": "Verser à un tiers (pas une institution financière / organisme de bienfaisance)",
-                "disburseToThirdPartyNoCharity": "Verser à un tiers (pas une institution financière)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Verser à un tiers (pas une institution financière)",
                 "acordFormReceived": "Le formulaire ACORD a-t-il été reçu ?",
                 "bankName": "Nom de la banque",
                 "bankRoutingNumber": "Numéro de routage de la banque",
