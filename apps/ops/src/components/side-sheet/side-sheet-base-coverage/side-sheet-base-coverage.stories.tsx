@@ -1,6 +1,9 @@
 import { Meta } from '@storybook/react';
 
 import Button from '@deps/components/button/button';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import {
     SideSheetProviderLegacy,
     useSideSheetContextLegacy,

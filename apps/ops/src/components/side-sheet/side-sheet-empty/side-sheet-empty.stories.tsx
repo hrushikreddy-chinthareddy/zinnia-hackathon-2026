@@ -1,8 +1,10 @@
 import { Meta } from '@storybook/react';
 import { useTranslation } from 'next-i18next';
-import React from 'react';
 
 import Button from '@deps/components/button/button';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import {
     SideSheetProviderLegacy,
     useSideSheetContextLegacy,
