@@ -1,5 +1,5 @@
 import { useTranslation } from 'next-i18next';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useMemo } from 'react';
 
 import { FieldSize } from '@deps/components/fields/field';
 import SelectSimple from '@deps/components/select/select';
@@ -43,9 +43,15 @@ const SendCheckSelect = ({
     selectOptions,
 }: DisbursementInformation) => {
     const { formDisbursement } = useContext(FormDataContext);
-    const [selectedValue, setSelectedValue] = useState<SendCheckOption>(
-        identifySelectedSendCheckOption(formDisbursement as FormDisbursement)
+
+    const selectedValue = useMemo(
+        () =>
+            identifySelectedSendCheckOption(
+                formDisbursement as FormDisbursement
+            ),
+        [formDisbursement]
     );
+
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.distributionMethod',
     });
@@ -53,11 +59,11 @@ const SendCheckSelect = ({
     const sendCheckOptions = selectOptions ?? defaultSendCheckOptions(t);
 
     const handleChange = (val: string) => {
-        setSelectedValue(val as SendCheckOption);
-    };
+        if (isFormStateReadOnly) return;
 
-    useEffect(() => {
-        switch (selectedValue) {
+        const newValue = val as SendCheckOption;
+
+        switch (newValue) {
             case SendCheckOption.OwnerAddress:
                 onDataChange((ogData: any) => ({
                     ...ogData,
@@ -127,8 +133,7 @@ const SendCheckSelect = ({
             default:
                 break;
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedValue]);
+    };
 
     return (
         <div>

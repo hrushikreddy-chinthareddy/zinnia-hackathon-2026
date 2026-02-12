@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react';
+
 import { Address } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
 
@@ -25,10 +27,38 @@ const BankAddress = ({
         }));
     };
 
-    // Create a unique key based on address values to force remount when address resets
-    const addressKey = `${address?.addressLine1 || ''}-${address?.city || ''}-${
-        address?.state || ''
-    }-${address?.zip || ''}`;
+    // Track when address is reset to empty to force remount
+    const resetCounterRef = useRef(0);
+    const prevAddressRef = useRef(address);
+
+    useEffect(() => {
+        const prevAddress = prevAddressRef.current;
+        const currentAddress = address;
+
+        // Check if previous address had data
+        const prevHadData =
+            prevAddress?.addressLine1 ||
+            prevAddress?.city ||
+            prevAddress?.state ||
+            prevAddress?.zip;
+
+        // Check if current address is empty
+        const currentIsEmpty =
+            !currentAddress?.addressLine1 &&
+            !currentAddress?.city &&
+            !currentAddress?.state &&
+            !currentAddress?.zip;
+
+        // If we're transitioning from filled to empty, increment counter
+        if (prevHadData && currentIsEmpty) {
+            resetCounterRef.current += 1;
+        }
+
+        prevAddressRef.current = currentAddress;
+    }, [address]);
+
+    // Use resetCounter in key to force remount only when reset happens
+    const addressKey = `${fieldName}-${resetCounterRef.current}`;
 
     return (
         <div key={fieldName} className={classNames || 'col-span-4'}>
