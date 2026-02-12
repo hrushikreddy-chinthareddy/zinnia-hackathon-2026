@@ -1,6 +1,9 @@
 import { render, screen } from '@testing-library/react';
 
-import { MittEvents, SideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
+import {
+    MittEvents,
+    SideSheetContextLegacy,
+} from '@deps/contexts/SideSheetContext';
 import useEmitter from '@deps/hooks/useEmitter';
 import {
     mockPolicy,

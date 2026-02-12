@@ -8,7 +8,10 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 
-import { SideSheetProviderLegacy, useSideSheetContextLegacy } from './SideSheetContext';
+import {
+    SideSheetProviderLegacy,
+    useSideSheetContextLegacy,
+} from './SideSheetContext';
 
 export default {
     title: 'Context/SideSheet',
