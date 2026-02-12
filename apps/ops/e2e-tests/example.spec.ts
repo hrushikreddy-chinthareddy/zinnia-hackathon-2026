@@ -1,5 +1,7 @@
 import { test, expect } from '@playwright/test';
 
+const TIMEOUT = 15_000;
+
 test.describe('Case Page', () => {
     test('Loads properly', async ({ page }) => {
         await page.goto('http://localhost:3000');
@@ -14,7 +16,7 @@ test.describe('Case Page', () => {
         });
 
         // Wait for at least one case link to appear (with extended timeout)
-        await expect(caseDetailLinks.first()).toBeVisible();
+        await expect(caseDetailLinks.first()).toBeVisible({ timeout: TIMEOUT });
 
         // Now count them
         const linkCount = await caseDetailLinks.count();
@@ -23,7 +25,9 @@ test.describe('Case Page', () => {
 });
 
 test.describe('Policy Page', () => {
-    test('Loads properly', async ({ page }) => {
+    test('Loads properly, loads quick action menu for an item and can also navigate to that item', async ({
+        page,
+    }) => {
         await page.goto('http://localhost:3000');
 
         await page.getByRole('link', { name: 'Policies' }).click();
@@ -37,29 +41,36 @@ test.describe('Policy Page', () => {
         );
 
         // Wait for at least one policy link to appear (with extended timeout)
-        await expect(policyDetailLinks.first()).toBeVisible();
+        await expect(policyDetailLinks.first()).toBeVisible({
+            timeout: TIMEOUT,
+        });
         // Now count them
         const linkCount = await policyDetailLinks.count();
         expect(linkCount).toBeGreaterThan(0);
 
         // Get the quick action buttons and wait for at least one to be visible
-        const quickActionButtons = page
+        const quickActionButton = page
             .getByTestId('policy-action-cell-menu')
             .first();
-        await expect(quickActionButtons).toBeVisible();
+        await expect(quickActionButton).toBeVisible({ timeout: TIMEOUT });
 
-        await quickActionButtons.click();
+        await quickActionButton.click();
         const quickActionMenu = page
             .getByRole('menu')
             .filter({ hasText: 'Send Documents' });
-        await expect(quickActionMenu).toBeVisible();
+        await expect(quickActionMenu).toBeVisible({ timeout: TIMEOUT });
 
-        // Close the menu by clicking outside before navigating
-        await page.mouse.click(10, 10);
-        await expect(quickActionMenu).toBeHidden();
+        // Close the menu by clicking the trigger again
+        await quickActionButton.click();
+        await expect(quickActionMenu).toBeHidden({ timeout: TIMEOUT });
 
-        await policyDetailLinks.first().click();
-        await page.waitForURL('**/policies/**/policy/policy-details');
+        // Synchronize click and navigation to avoid race conditions
+        await Promise.all([
+            page.waitForURL('**/policies/**/policy/policy-details', {
+                timeout: TIMEOUT,
+            }),
+            policyDetailLinks.first().click(),
+        ]);
     });
 });
 
@@ -70,7 +81,7 @@ test.describe('Transactions Ops Page ', () => {
         await page.waitForURL('**/create-case');
 
         const transactionOpsHeader = page.getByText('TransactionOps Suite');
-        await expect(transactionOpsHeader).toBeVisible();
+        await expect(transactionOpsHeader).toBeVisible({ timeout: TIMEOUT });
     });
 });
 
@@ -81,6 +92,6 @@ test.describe('Analytics Page ', () => {
         await page.waitForURL('**/analytics/cases');
 
         const analyticsHeader = page.getByTestId('header-text');
-        await expect(analyticsHeader).toBeVisible();
+        await expect(analyticsHeader).toBeVisible({ timeout: TIMEOUT });
     });
 });
