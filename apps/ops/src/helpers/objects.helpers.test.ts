@@ -66,6 +66,7 @@ describe('helpers/objects.helpers', () => {
                 details: {
                     age: 30,
                     email: null,
+                    sexAtBirth: '',
                     address: {
                         city: 'NYC',
                         zip: undefined,
@@ -110,7 +111,6 @@ describe('helpers/objects.helpers', () => {
             const input = { a: 0, b: '', c: false, d: null };
             expect(stripNullishValues(input)).toEqual({
                 a: 0,
-                b: '',
                 c: false,
             });
         });

@@ -28,7 +28,7 @@ export const stripNullishValues = <T extends Record<string, any>>(
     const result: Record<string, any> = {};
 
     for (const [key, value] of Object.entries(obj)) {
-        if (value === null || value === undefined) {
+        if (value === null || value === undefined || value === '') {
             continue;
         }
 

@@ -73,7 +73,7 @@ export default function ClientCaseIllustrations({
     });
 
     // TODO: Replace the [0] by a prompt for the user, to handle multiple carriers
-    const carrierShortName = clientCase?.carrierCode?.[0].toUpperCase() || '';
+    const carrierShortName = clientCase?.carrierCode?.[0]?.toUpperCase() || '';
 
     const {
         data: products = [],
