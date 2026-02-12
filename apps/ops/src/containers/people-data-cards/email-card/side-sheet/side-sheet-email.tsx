@@ -340,7 +340,7 @@ const SideSheetEmail = ({
     }
 
     return (
-        <div ref={errorRef} className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6">
             <CaseDocumentSelect
                 caseDocumentOptions={caseDocumentOptions}
                 caseId={body.caseId}

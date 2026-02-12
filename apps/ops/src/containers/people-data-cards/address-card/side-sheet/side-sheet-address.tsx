@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react';
+import { FieldStatus, Label, Select } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -22,7 +23,6 @@ import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
 import Radio from '@deps/components/radio/radio';
-import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
@@ -180,7 +180,7 @@ const SideSheetAddress = ({
 
     const addressTypeOptions = getAddressTypeOptions({ t: defaultT });
     const stateOptions = getStateCodes().map((state) => ({
-        label: state,
+        textValue: state,
         value: state,
     }));
 
@@ -558,13 +558,17 @@ const SideSheetAddress = ({
                         />
                     </div>
                     <div className="basis-1/4">
-                        <SelectSimple
-                            errorId="state"
-                            aria-label={t('labels.state') as string}
+                        <Select
+                            triggerLabel={t('labels.state') as string}
                             disabled={isDelete}
-                            label={t('labels.state') as string}
-                            message={currentErrors?.state}
-                            onChange={(value) => {
+                            label={<Label>{t('labels.state') as string}</Label>}
+                            fieldStatus={
+                                currentErrors?.state
+                                    ? FieldStatus.ERROR
+                                    : FieldStatus.DEFAULT
+                            }
+                            errorMessage={currentErrors?.state}
+                            onValueChange={(value) => {
                                 setCurrentErrors((prevState) => {
                                     const { state, ...errors } =
                                         prevState ?? {};
@@ -576,13 +580,8 @@ const SideSheetAddress = ({
                                 }));
                             }}
                             options={stateOptions}
-                            size={FieldSize.Small}
+                            fieldSize="small"
                             value={address.state}
-                            variant={
-                                currentErrors?.state
-                                    ? FieldVariant.Error
-                                    : FieldVariant.Default
-                            }
                         />
                     </div>
                 </div>
