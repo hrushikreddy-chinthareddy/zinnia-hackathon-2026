@@ -3,6 +3,7 @@ import { omit } from 'lodash';
 import { UnderwritingClass } from '@deps/components/illustrations/helpers/illustrationApiSchemas';
 import {
     createClientCase,
+    patchClientCase,
     searchClientCaseByEappId,
 } from '@deps/queries/api/server/v1/client-cases';
 import { getNewBusinessById } from '@deps/queries/api/server/v2/new-business';
@@ -27,14 +28,26 @@ const buildClientCaseFromNewBusinessMock = jest.mocked(
     buildClientCaseFromNewBusiness
 );
 const createClientCaseMock = jest.mocked(createClientCase);
+const patchClientCaseMock = jest.mocked(patchClientCase);
 
 const loggingContext = {} as LoggingContext;
 
 describe('createClientCaseFromSureify', () => {
-    it('redirects if a client case exists', async () => {
+    it('updates and redirects if a client case exists', async () => {
+        const newBusinessObject = {
+            caseId: 'caseId',
+        } as NewBusiness;
+
         searchClientCaseByEappIdMock.mockResolvedValue([
             { id: 'client-case-id' },
         ] as IllustrationsClientCase[]);
+        getNewBusinessByIdMock.mockResolvedValue(newBusinessObject);
+        buildClientCaseFromNewBusinessMock.mockResolvedValue({
+            title: 'Untitled Client Case',
+        });
+        patchClientCaseMock.mockResolvedValue({
+            id: 'client-case-id',
+        } as IllustrationsClientCase);
 
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
@@ -44,6 +57,22 @@ describe('createClientCaseFromSureify', () => {
 
         expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
             'eappid',
+            'accessToken',
+            expect.anything()
+        );
+
+        expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
+            'eappid',
+            expect.anything()
+        );
+        expect(buildClientCaseFromNewBusinessMock).toHaveBeenCalledWith(
+            newBusinessObject,
+            'eappid',
+            expect.anything()
+        );
+
+        expect(patchClientCaseMock).toHaveBeenCalledWith(
+            expect.objectContaining({ id: 'client-case-id' }),
             'accessToken',
             expect.anything()
         );
