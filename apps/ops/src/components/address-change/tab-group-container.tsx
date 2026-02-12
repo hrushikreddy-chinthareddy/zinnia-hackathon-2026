@@ -4,9 +4,6 @@ import { useMemo } from 'react';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     WorkflowProvider,

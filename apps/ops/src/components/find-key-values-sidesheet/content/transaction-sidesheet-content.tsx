@@ -15,9 +15,6 @@ import { useTranslation } from 'react-i18next';
 import SidesheetCancelPending from '@deps/components/side-sheet/side-sheet-transaction/cancel-pending/side-sheet-cancel-pending';
 import SidesheetReverseRecreate from '@deps/components/side-sheet/side-sheet-transaction/reverse-recreate/side-sheet-reverse-recreate';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { useViewState } from '@deps/contexts/ViewStateContext';
 import { useDebounce } from '@deps/hooks/useDebounce';

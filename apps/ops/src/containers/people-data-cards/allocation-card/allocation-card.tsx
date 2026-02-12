@@ -13,9 +13,6 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     numberFormatify,

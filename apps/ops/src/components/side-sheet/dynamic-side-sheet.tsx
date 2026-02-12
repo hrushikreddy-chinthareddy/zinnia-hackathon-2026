@@ -1,8 +1,5 @@
 import { useState } from 'react';
 
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { DynamicSideSheetDataType } from '@deps/utils/dynamicSideSheet';
 

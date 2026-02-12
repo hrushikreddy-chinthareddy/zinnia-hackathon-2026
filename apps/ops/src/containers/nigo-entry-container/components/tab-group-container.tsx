@@ -18,9 +18,6 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     WorkflowProvider,

@@ -13,9 +13,6 @@ import WithdrawalsPageHeaderContainer from '@deps/containers/page-header/withdra
 import WithdrawalRules from '@deps/containers/withdrawal-rules/withdrawal-rules';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import {

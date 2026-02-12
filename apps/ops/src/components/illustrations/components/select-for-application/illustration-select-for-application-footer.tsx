@@ -2,9 +2,6 @@ import { Button, Loader, LoaderVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 

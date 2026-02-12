@@ -6,9 +6,6 @@ import ClickContainer from '@deps/components/click-container/click-container';
 import { RoleAddressCard } from '@deps/containers/address-change-container/components/roles-contract/components/role-address-cards';
 import { groupPartiesByAddress } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-helpers';
 import { PartyAddressCard } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-types';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PaperMail } from '@deps/models/case/correspondence';
 import { AllowedRoleTypes } from '@deps/models/case/send-document';

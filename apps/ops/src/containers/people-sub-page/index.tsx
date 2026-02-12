@@ -18,9 +18,6 @@ import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PeopleRolesFilterContext } from '@deps/contexts/PeopleRolesFilter';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';

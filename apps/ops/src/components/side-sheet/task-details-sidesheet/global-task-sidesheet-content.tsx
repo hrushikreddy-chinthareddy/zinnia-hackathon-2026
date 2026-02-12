@@ -37,9 +37,6 @@ import { AssigneePopoverPositionMode } from '@deps/containers/task-management-qu
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime, toTitleCase } from '@deps/helpers/string.helpers';

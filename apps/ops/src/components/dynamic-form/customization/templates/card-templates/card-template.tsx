@@ -17,9 +17,6 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { convertToUserTimezone } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';

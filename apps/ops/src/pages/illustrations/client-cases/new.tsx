@@ -12,9 +12,6 @@ import CreateClientCaseForm from '@deps/components/client-case/client-case-creat
 import { createClientCaseFromSureify } from '@deps/components/client-case/client-case-list/sureify-flow/create-client-case-from-sureify';
 import { canUserCreateClientCase } from '@deps/components/client-case/client-case-list/sureify-flow/validate-user-permission';
 import { TranslationFiles } from '@deps/config/translations';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';

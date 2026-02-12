@@ -15,9 +15,6 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';

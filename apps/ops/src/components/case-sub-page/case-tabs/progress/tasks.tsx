@@ -4,9 +4,6 @@ import { useTranslation } from 'next-i18next';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { useTaskIdFromUrl } from '@deps/hooks/useTaskIdFromUrl';

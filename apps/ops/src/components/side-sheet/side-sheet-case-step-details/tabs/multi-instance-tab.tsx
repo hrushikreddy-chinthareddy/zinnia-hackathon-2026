@@ -13,9 +13,6 @@ import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesh
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';

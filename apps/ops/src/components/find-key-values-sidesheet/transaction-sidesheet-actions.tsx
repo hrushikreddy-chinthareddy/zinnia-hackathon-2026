@@ -5,9 +5,6 @@ import { useMemo } from 'react';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePolicyDataContext } from '@deps/contexts/PolicyDataContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { useViewState } from '@deps/contexts/ViewStateContext';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';

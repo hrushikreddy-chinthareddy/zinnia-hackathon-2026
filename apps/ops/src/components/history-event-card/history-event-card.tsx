@@ -8,9 +8,6 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import SideSheetFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/financial/side-sheet-financial-transaction';
 import SideSheetNonFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transaction';
 import { TranslationFiles } from '@deps/config/translations';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helpers';
 import { Statuses } from '@deps/models/case/case';

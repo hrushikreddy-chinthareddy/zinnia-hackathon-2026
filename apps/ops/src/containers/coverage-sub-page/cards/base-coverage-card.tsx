@@ -19,9 +19,6 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getTotalMinRequiredAmount } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';

@@ -8,9 +8,6 @@ import DifferentAddress from '@deps/components/otp-send-document/components/diff
 import { PartyAddressCard } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-types';
 import { isEqualObjects } from '@deps/containers/death-claim-container/steps/notification-method/notification-method.helpers';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { isEmptyObject } from '@deps/helpers/objects.helpers';
 import { Address, AddressType, Policy } from '@zinnia/api-types/types/sor';

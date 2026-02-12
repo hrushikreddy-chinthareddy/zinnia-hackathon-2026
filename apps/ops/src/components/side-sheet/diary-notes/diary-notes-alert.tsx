@@ -2,9 +2,6 @@ import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useDiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as BellIcon } from '@deps/styles/elements/icons/icons_outlined/bell.svg';
 
