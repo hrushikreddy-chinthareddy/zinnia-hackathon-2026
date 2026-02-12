@@ -228,6 +228,49 @@ const IndexAutomationCase = ({
                 </div>
             )}
 
+            {dataType === DataType.DOCUMENT_MANUAL_REVIEW_DATA && (
+                <div className={styles.flexFullCol}>
+                    <div className={styles.gridContainer}>
+                        <div className={styles.customColSpan2}>
+                            {t(
+                                'allFields.indexAutomationDocumentManualReviewReason'
+                            )}
+                        </div>
+                        <Typography
+                            variant={TypographyVariant.BodySmBold}
+                            className={styles.customColSpan3}
+                        >
+                            {transactionEntity?.entity?.reason ||
+                                DEFAULT_ERROR_STRING}
+                        </Typography>
+                        <div className={styles.customColSpan2}>
+                            {t(
+                                'allFields.indexAutomationDocumentManualReviewActionTaken'
+                            )}
+                        </div>
+                        <Typography
+                            variant={TypographyVariant.BodySmBold}
+                            className={styles.customColSpan3}
+                        >
+                            {transactionEntity?.entity?.actionTaken ||
+                                DEFAULT_ERROR_STRING}
+                        </Typography>
+                        <div className={styles.customColSpan2}>
+                            {t(
+                                'allFields.indexAutomationDocumentManualReviewQueue'
+                            )}
+                        </div>
+                        <Typography
+                            variant={TypographyVariant.BodySmBold}
+                            className={styles.customColSpan3}
+                        >
+                            {transactionEntity?.entity?.reviewQueue ||
+                                DEFAULT_ERROR_STRING}
+                        </Typography>
+                    </div>
+                </div>
+            )}
+
             {dataType === DataType.DOCUMENT_INDEXED_DATA && (
                 <div className={styles.flexFullCol}>
                     <div className={styles.gridContainer}>

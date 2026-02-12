@@ -1402,6 +1402,9 @@
         "indexAutomationDocumentExtractionRequestType": "Tipo de solicitud",
         "indexAutomationDocumentIndexedDocumentNumber": "Número de documento",
         "indexAutomationDocumentIndexedTransactionType": "Tipo de transacción",
+        "indexAutomationDocumentManualReviewReason": "Razón",
+        "indexAutomationDocumentManualReviewActionTaken": "Acción tomada",
+        "indexAutomationDocumentManualReviewQueue": "Cola de revisión",
         "indexAutomationLoading": "Cargando...",
         "indexAutomationErrorGetting": "Error al obtener",
         "indexAutomationNoData": "No hay datos"

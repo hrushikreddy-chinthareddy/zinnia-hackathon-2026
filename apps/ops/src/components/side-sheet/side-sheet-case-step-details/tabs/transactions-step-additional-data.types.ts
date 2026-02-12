@@ -21,6 +21,7 @@ export enum TransactionsAdditionalDataStepIds {
     docFieldExtraction = 'docFieldExtraction',
     docSend = 'docSend',
     docIndexedAndCaseCreated = 'docIndexedAndCaseCreated',
+    unableToIdentifyDocument = 'unableToIdentifyDocument',
 }
 
 export enum BeneNotification {

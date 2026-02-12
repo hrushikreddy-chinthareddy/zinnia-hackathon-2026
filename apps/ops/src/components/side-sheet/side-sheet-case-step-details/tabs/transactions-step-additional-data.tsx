@@ -28,6 +28,7 @@ const stepsWithIndexAutomationCase = [
     TransactionsAdditionalDataStepIds.docIndentification,
     TransactionsAdditionalDataStepIds.docFieldExtraction,
     TransactionsAdditionalDataStepIds.docIndexedAndCaseCreated,
+    TransactionsAdditionalDataStepIds.unableToIdentifyDocument,
 ];
 
 export const TransactionsStepAdditionalData = ({
