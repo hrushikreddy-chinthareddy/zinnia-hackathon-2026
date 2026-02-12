@@ -1,3 +1,4 @@
+import { FieldStatus, Label, Select } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -16,7 +17,6 @@ import Field, {
     FieldVariant,
 } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
-import SelectSimple from '@deps/components/select/select';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
@@ -380,7 +380,7 @@ const SideSheetBank = ({
     }
 
     return (
-        <div ref={errorRef} className="flex flex-col p-8">
+        <div ref={errorRef} className="flex flex-col">
             <div className="flex flex-col gap-4">
                 <CaseDocumentSelect
                     caseId={caseId}
@@ -488,18 +488,22 @@ const SideSheetBank = ({
                             : FieldVariant.Default
                     }
                 />
-                <SelectSimple
-                    aria-label={t('fieldLabels.purpose') as string}
+                <Select
+                    triggerLabel={t('fieldLabels.purpose') as string}
                     disabled={isDelete}
-                    label={t('fieldLabels.purpose') as string}
-                    onChange={(value) => {
+                    label={<Label>{t('fieldLabels.purpose') as string}</Label>}
+                    fieldStatus={FieldStatus.DEFAULT}
+                    onValueChange={(value) => {
                         setBankAccount((prevState) => ({
                             ...prevState,
                             bankAccountPurpose: value as BankAccountPurpose,
                         }));
                     }}
-                    options={purposeOptions}
-                    size={FieldSize.Small}
+                    options={purposeOptions.map((o) => ({
+                        value: o.value,
+                        textValue: o.label,
+                    }))}
+                    fieldSize="small"
                     value={bankAccount.bankAccountPurpose}
                 />
             </div>

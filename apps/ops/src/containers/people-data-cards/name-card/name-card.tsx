@@ -1,5 +1,6 @@
+import { SideSheet } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
-import { FC, useContext } from 'react';
+import { FC, useContext, useState } from 'react';
 
 import NavElement, {
     NavElementSize,
@@ -8,7 +9,6 @@ import NavElement, {
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { Party } from '@zinnia/api-types/types/sor';
@@ -30,22 +30,14 @@ export const NameCard: FC<INameCardProps> = ({
     editable,
     isUserPermissionedToEditCards,
 }) => {
-    const sidesheet = useSideSheetContextLegacy();
     const { policyDetails } = useContext(PolicyData);
     const { featureFlags } = useOptimizely();
     const partyNameChangeEnabled =
         featureFlags[FEATURE_FLAGS.PARTY_NAME_CHANGE_TRANSACTION];
+    const [isOpen, setIsOpen] = useState(false);
 
     const handleEditClick = () => {
-        sidesheet.changeSideSheetContent(
-            t('people.sideSheet.name.editName'),
-            <SidesheetNameCard
-                onCancel={() => sidesheet.handleOpen(false)}
-                policyDetails={policyDetails}
-                selectedPolicyParty={selectedPolicyParty}
-            />
-        );
-        sidesheet.handleOpen(true);
+        setIsOpen(true);
     };
     const isUserPermissionedToEditName = isUserPermissionedToEditCards ?? false;
     return (
@@ -87,6 +79,19 @@ export const NameCard: FC<INameCardProps> = ({
                     </TempNavInactive>
                 )}
             </div>
+            <SideSheet
+                trigger={null}
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                preventCloseOnOutsideClick={false}
+                header={t('people.sideSheet.name.editName')}
+            >
+                <SidesheetNameCard
+                    onCancel={() => setIsOpen(false)}
+                    policyDetails={policyDetails}
+                    selectedPolicyParty={selectedPolicyParty}
+                />
+            </SideSheet>
         </div>
     );
 };

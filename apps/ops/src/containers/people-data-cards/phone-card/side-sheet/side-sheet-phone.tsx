@@ -1,4 +1,5 @@
 import { Transition } from '@headlessui/react';
+import { FieldStatus, Label, Select } from '@zinnia/bloom/components';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -19,7 +20,6 @@ import Field, {
 } from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import Radio, { RadioOrientation } from '@deps/components/radio/radio';
-import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
@@ -467,36 +467,58 @@ export const SideSheetPhone = ({
                         {t('fieldLabels.preferredTime')}
                     </Typography>
                     <div className="flex flex-col gap-6">
-                        <SelectSimple
-                            aria-label={t('fieldLabels.bestTime') as string}
-                            className="!w-1/2"
-                            disabled={isDelete}
-                            label={t('fieldLabels.bestTime') as string}
-                            onChange={(value) =>
-                                setPhone((prevState) => ({
-                                    ...prevState,
-                                    bestTime: value,
-                                }))
-                            }
-                            options={bestTimeOptions}
-                            size={FieldSize.Small}
-                            value={phone.bestTime}
-                        />
-                        <SelectSimple
-                            aria-label={t('fieldLabels.timeZone') as string}
-                            className="!w-1/2"
-                            disabled={isDelete}
-                            label={t('fieldLabels.timeZone') as string}
-                            onChange={(value) =>
-                                setPhone((prevState) => ({
-                                    ...prevState,
-                                    timezone: value,
-                                }))
-                            }
-                            options={timeZoneOptions}
-                            size={FieldSize.Small}
-                            value={phone.timezone ?? ''}
-                        />
+                        <div className="w-1/2">
+                            <Select
+                                triggerLabel={
+                                    t('fieldLabels.bestTime') as string
+                                }
+                                disabled={isDelete}
+                                label={
+                                    <Label>
+                                        {t('fieldLabels.bestTime') as string}
+                                    </Label>
+                                }
+                                fieldStatus={FieldStatus.DEFAULT}
+                                onValueChange={(value) =>
+                                    setPhone((prevState) => ({
+                                        ...prevState,
+                                        bestTime: value,
+                                    }))
+                                }
+                                options={bestTimeOptions.map((o) => ({
+                                    value: o.value,
+                                    textValue: o.label,
+                                }))}
+                                fieldSize="small"
+                                value={phone.bestTime}
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <Select
+                                triggerLabel={
+                                    t('fieldLabels.timeZone') as string
+                                }
+                                disabled={isDelete}
+                                label={
+                                    <Label>
+                                        {t('fieldLabels.timeZone') as string}
+                                    </Label>
+                                }
+                                fieldStatus={FieldStatus.DEFAULT}
+                                onValueChange={(value) =>
+                                    setPhone((prevState) => ({
+                                        ...prevState,
+                                        timezone: value,
+                                    }))
+                                }
+                                options={timeZoneOptions.map((o) => ({
+                                    value: o.value,
+                                    textValue: o.label,
+                                }))}
+                                fieldSize="small"
+                                value={phone.timezone ?? ''}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>
