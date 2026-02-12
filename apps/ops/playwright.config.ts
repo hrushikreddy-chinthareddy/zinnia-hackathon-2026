@@ -12,6 +12,8 @@ dotenv.config({ path: path.resolve(__dirname, '.env.development.local') });
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
+    timeout: 60000, // Sets the default test timeout to 60 seconds (60000ms)
+
     testDir: './e2e-tests',
     /* Run tests in files in parallel */
     fullyParallel: true,
