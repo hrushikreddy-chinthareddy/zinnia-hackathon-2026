@@ -482,7 +482,8 @@ export default function getDlicConfig(
                         fieldName: BankingFields.isAnnuitant,
                         fieldLabel: t('distributionMethod.disburseToAnnuitant'),
                         component: DisbursementFields.BankCheckboxField,
-                        classNames: 'col-start-1 col-span-3',
+                        classNames:
+                            'col-start-1 col-span-3 flex flex-wrap gap-8 max-md:flex-col',
                         shouldDisplay: () =>
                             !!isDlic3pDisbursementChangesEnabled,
                     },
