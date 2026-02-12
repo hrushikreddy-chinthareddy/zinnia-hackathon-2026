@@ -31,6 +31,14 @@
     animation-name: spin;
 }
 
+.customMarginTop {
+    margin-top: 0.125rem;
+}
+
+.customTextColor {
+    color: #4b5563;
+}
+
 @keyframes spin {
     from {
         transform: rotate(0deg);

@@ -38,7 +38,7 @@ const IndexAutomationCase = ({
     const displayIsLoading = () => {
         return (
             <div className={styles.flexFullCol}>
-                <div className="mt-0.5">
+                <div className={styles.customMarginTop}>
                     <InProgressIcon
                         height={18}
                         width={18}
@@ -50,7 +50,7 @@ const IndexAutomationCase = ({
                 <div>
                     <Typography
                         variant={TypographyVariant.BodySmBold}
-                        className="text-gray-600"
+                        className={styles.customTextColor}
                     >
                         {t('allFields.indexAutomationLoading')}
                     </Typography>
@@ -62,7 +62,7 @@ const IndexAutomationCase = ({
     const displayError = () => {
         return (
             <div className={styles.flexFullCol}>
-                <div className="mt-0.5">
+                <div className={styles.customMarginTop}>
                     <InProgressIcon
                         height={18}
                         width={18}
@@ -74,7 +74,7 @@ const IndexAutomationCase = ({
                 <div>
                     <Typography
                         variant={TypographyVariant.BodySmBold}
-                        className="text-gray-600"
+                        className={styles.customTextColor}
                     >
                         {t('allFields.indexAutomationErrorGetting')}
                     </Typography>
