@@ -4,15 +4,17 @@ import { useTranslation } from 'react-i18next';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
-import { isTermResult } from '@deps/types/quickQuote';
+import {
+    isTermResult,
+    QuickQuoteResultTableFieldName,
+} from '@deps/types/quickQuote';
 
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { QuickQuoteResultTableSection } from '../base/result-table-section';
 import { useQuickQuoteResults } from '../results-context';
 
 export const QuickQuoteBasePremiumRangeSection = () => {
-    const { t } = useTranslation(TranslationFiles.COMMON, {});
+    const { t } = useTranslation();
     const { results, filterIneligibilityReasons, hasRiderErrorsByTermLength } =
         useQuickQuoteResults();
 
@@ -50,15 +52,22 @@ export const QuickQuoteBasePremiumRangeSection = () => {
                     (basePremiumRange) =>
                         basePremiumRange.termLength === termLength
                 );
+                const notAvailabilityReasons = filterIneligibilityReasons(
+                    (item &&
+                        item.range == null &&
+                        item.notAvailabilityReasonField) ||
+                        []
+                );
 
                 return {
+                    fieldName:
+                        QuickQuoteResultTableFieldName.BASE_PREMIUM_RANGE,
+                    termLength,
                     value: item?.range,
-                    notAvailabilityReasons:
-                        item && item.range == null
-                            ? filterIneligibilityReasons(
-                                  item.notAvailabilityReasonField
-                              )
-                            : undefined,
+                    notAvailabilityReasons: !notAvailabilityReasons?.length
+                        ? undefined
+                        : notAvailabilityReasons,
+                    hasApiError: item?.error != null,
                     period: 'mo.',
                     hasRiderErrors: hasRiderErrorsByTermLength(
                         result.data.riders,

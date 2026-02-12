@@ -1,4 +1,8 @@
-import { AssistiveTextVariant } from '@zinnia/bloom/components';
+import {
+    AssistiveTextVariant,
+    FieldDateSingle,
+    Label,
+} from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useState } from 'react';
@@ -9,20 +13,16 @@ import CaseDocumentSelect, {
     SetStateCaseId,
 } from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
-import {
-    FieldSize,
-    FieldType,
-    FieldVariant,
-} from '@deps/components/fields/field';
-import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildSystematicProgramSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
-import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
 import { Processes } from '@deps/models/case/case';
 import {
@@ -42,6 +42,8 @@ import {
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     AdhocSystematicProgram,
     AmountType,
@@ -93,7 +95,7 @@ const SideSheetCancelAutopay = ({
 }: SideSheetCancelAutopayProps) => {
     const { t } = useTranslation();
 
-    const { featureFlags } = useOptimizely();
+    const { featureFlags, featureFlagVariables } = useOptimizely();
     const systematicProgramTablesEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
@@ -111,15 +113,20 @@ const SideSheetCancelAutopay = ({
             ),
         [policy.systematicPrograms, systematicProgramReason]
     );
+    const isUseCurrentLifeCycleDate = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.USE_CURRENT_LIFECYCLE_DATE,
+        OptimizelyVariableKey.Clients,
+        policy.carrierId?.toLocaleLowerCase() || ''
+    );
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
     >([]);
     const [body, setBody] = useState(INITIAL_BODY);
     const [newCaseId, setNewCaseId] = useState<string>();
-    const [effectiveDate, setEffectiveDate] = useState<string>(
-        dayjs(policy.policyDates?.nextMonthiversaryDate).format(
-            NUMERIC_DATE_FORMAT
-        )
+    const defaultDate = dayjs(policy.policyDates?.nextMonthiversaryDate);
+    const [effectiveDate, setEffectiveDate] = useState<string | undefined>(
+        defaultDate.format(NUMERIC_DATE_FORMAT)
     );
     const [confirmCancel, setConfirmCancel] = useState<boolean>(false);
     const [validationResults, setValidationResults] = useState<
@@ -130,16 +137,14 @@ const SideSheetCancelAutopay = ({
     const [viewState, setViewState] = useState(ViewState.Default);
     const [loading, setLoading] = useState<boolean>(false);
 
-    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const dateValue = event.target.value;
-        const { effectiveDate, ...remainingErrors } = errors;
-
-        setEffectiveDate(String(dateValue));
-        setErrors(remainingErrors);
+    const handleDateChange = (date?: Date) => {
+        setEffectiveDate(
+            date ? dayjs(date).format(NUMERIC_DATE_FORMAT) : undefined
+        );
     };
 
     const validateFields = (
-        effectiveDate: string,
+        effectiveDate: string | undefined,
         confirmCancel: boolean,
         caseId?: string
     ) => {
@@ -151,15 +156,6 @@ const SideSheetCancelAutopay = ({
                 caseId:
                     errors.caseId ||
                     `${t('transactions.cancelAutopay.missingCaseDocument')}`,
-            };
-        }
-
-        if (isNullEmptyOrUndefined(effectiveDate)) {
-            localErrors = {
-                ...localErrors,
-                effectiveDate: `${t(
-                    'transactions.cancelAutopay.invalidEffectiveDate'
-                )}`,
             };
         }
 
@@ -176,11 +172,16 @@ const SideSheetCancelAutopay = ({
 
         setErrors(localErrors);
 
+        // Error display is managed by component, no need to set it here
+        if (!effectiveDate) {
+            return false;
+        }
+
         return Object.keys(localErrors).length === 0;
     };
 
     const getUpdateSystematicProgramBody = () => {
-        const effectiveDateFormatted = getUtcDate(effectiveDate);
+        const effectiveDateFormatted = getUtcDate(effectiveDate!); // Already validated
 
         return {
             caseId: body.caseId || '',
@@ -349,7 +350,7 @@ const SideSheetCancelAutopay = ({
                     setViewState={setViewState}
                     validationResults={validationResults}
                 >
-                    <CancelAutopayDetails effectiveDate={effectiveDate} />
+                    <CancelAutopayDetails effectiveDate={effectiveDate!} />
                 </BpmErrorState>
             );
         case ViewState.ApiError:
@@ -397,24 +398,31 @@ const SideSheetCancelAutopay = ({
                     setCurrentErrors={setErrors as SetStateCaseId}
                     setViewState={setViewState}
                 />
-                <FieldDateSelect
-                    data-testid={
-                        t('transactions.cancelAutopay.effectiveDate') ?? ''
+                <FieldDateSingle
+                    name="effective-date"
+                    label={
+                        <Label labelFor="effective-date">
+                            {t('transactions.cancelAutopay.effectiveDate')}
+                        </Label>
                     }
-                    className="flex max-w-[160px]"
-                    label={t('transactions.cancelAutopay.effectiveDate') ?? ''}
-                    value={String(effectiveDate)}
-                    onChange={handleDateChange}
-                    size={FieldSize.Small}
-                    type={FieldType.BaseActive}
-                    isFutureDateDisabled={false}
-                    isPastDateDisabled={true}
-                    variant={
-                        errors.effectiveDate
-                            ? FieldVariant.Error
-                            : FieldVariant.Default
+                    disableBeforeDate={
+                        isUseCurrentLifeCycleDate
+                            ? dayjs(
+                                  policy?.policyContractState
+                                      ?.currentLifecycleDate
+                              ).toDate()
+                            : dayjs().toDate()
                     }
-                    message={errors.effectiveDate || ''}
+                    defaultDate={defaultDate.toDate()}
+                    onDateSelect={(date: Date | undefined) =>
+                        handleDateChange(date)
+                    }
+                    formatErrorMsg={`${t(
+                        'transactions.cancelAutopay.invalidEffectiveDate'
+                    )}`}
+                    rangeErrorMsg={`${t(
+                        'transactions.cancelAutopay.invalidEffectiveDate'
+                    )}`}
                 />
                 <CheckboxText
                     assistiveText={

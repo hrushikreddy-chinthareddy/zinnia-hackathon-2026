@@ -31,7 +31,6 @@ export const TransactionAccordionTemplate = (
     const ui = getUiOptions(uiSchema);
     const { setCustomData } = formContext;
     const { t } = useTranslation();
-
     const {
         templateId = 'default',
         tabTitle,
@@ -80,14 +79,40 @@ export const TransactionAccordionTemplate = (
     const isIrrevocable = formContext?.customData?.contractInfo?.parties?.some(
         (party: any) => party.isIrrevocable === true
     );
+    const isIrrevocableBene =
+        formContext?.customData?.signatureData?.isIrrevocableBene ?? false;
+    const shouldShowIrrevocableSignature = isIrrevocable || isIrrevocableBene;
+
+    const irrevocableBeneSignature = {
+        isSignedPresent: false,
+        signDate: null,
+        signDesignation: null,
+        signType: Roles.IRREVOCABLE,
+        signTypeForUI: 'Irrevocable Beneficiary',
+    };
+
     if (formContext?.customData?.signatureData) {
-        formContext.customData.signatureData.signatures = isIrrevocable
-            ? formContext.customData.signatureData.signatures
-            : formContext.customData.signatureData.signatures?.filter(
-                  (signature: any) =>
-                      signature.signType !== Roles.IRREVOCABLE_BENEFICIARY &&
-                      signature.signType !== Roles.IRREVOCABLE
-              );
+        const signatures = formContext?.customData?.signatureData?.signatures;
+
+        const hasIrrevocable = signatures.some(
+            (s: any) =>
+                s.signType === Roles.IRREVOCABLE ||
+                s.signType === Roles.IRREVOCABLE_BENEFICIARY
+        );
+
+        if (shouldShowIrrevocableSignature && !hasIrrevocable) {
+            formContext.customData.signatureData.signatures = [
+                ...signatures,
+                irrevocableBeneSignature,
+            ];
+        }
+        if (!shouldShowIrrevocableSignature && hasIrrevocable) {
+            formContext.customData.signatureData.signatures = signatures.filter(
+                (s: any) =>
+                    s.signType !== Roles.IRREVOCABLE_BENEFICIARY &&
+                    s.signType !== Roles.IRREVOCABLE
+            );
+        }
     }
 
     formContext.parentActionData = formData;
