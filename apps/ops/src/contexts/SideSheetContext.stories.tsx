@@ -8,9 +8,6 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import {
     SideSheetProviderLegacy,
     useSideSheetContextLegacy,

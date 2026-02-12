@@ -9,9 +9,6 @@ import Button from '@deps/components/button/button';
 import { getPolicyBadgeStatusTooltip } from '@deps/components/global-values/global-values-bar/global-values-helpers';
 import { GlobalValues } from '@deps/components/global-values/global-values.types';
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import {
     SideSheetProviderLegacy,
     useSideSheetContextLegacy,
