@@ -10,6 +10,7 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import IllustrationCaseSumary from '@deps/components/illustrations/components/case-details/case-summary/case-summary';
 import IllustrationProductList from '@deps/components/illustrations/components/case-details/product-list/product-list';
 import IllustrationDetails from '@deps/components/illustrations/components/details/illustration-details';
+import { buildHierarchyQueryOptions } from '@deps/components/illustrations/helpers/hooks/pom';
 import { useClientCaseId } from '@deps/components/illustrations/helpers/hooks/use-client-case-id';
 import { SelectedIllustrationProvider } from '@deps/components/illustrations/providers/SelectedIllustrationProvider';
 import { PageHead } from '@deps/components/page-title';
@@ -72,8 +73,13 @@ export default function ClientCaseIllustrations({
         ),
     });
 
-    // TODO: Replace the [0] by a prompt for the user, to handle multiple carriers
-    const carrierShortName = clientCase?.carrierCode?.[0]?.toUpperCase() || '';
+    const { data: clientCaseUserHierarchy } = useQuery(
+        buildHierarchyQueryOptions({
+            sellingCode: clientCase?.agentDetails?.sellingCode,
+            // TODO: Use the correct carrier code for this client case
+            carrierShortName: 'FNWL',
+        })
+    );
 
     const {
         data: products = [],
@@ -81,15 +87,22 @@ export default function ClientCaseIllustrations({
         isError: isErrorProducts,
         isFetching: isFetchingProducts,
     } = useQuery({
-        queryKey: ['productList', carrierShortName],
+        queryKey: [
+            'productList',
+            clientCaseUserHierarchy?.carrier.carrierShortName,
+        ],
         queryFn: () => {
-            return getProductsByCarrier('', carrierShortName, '');
+            return getProductsByCarrier(
+                '',
+                clientCaseUserHierarchy?.carrier.carrierShortName || '',
+                ''
+            );
         },
         select: useCallback(
             (data: ApiResponse<Product[]>) => data.data || [],
             []
         ),
-        enabled: !!carrierShortName,
+        enabled: !!clientCaseUserHierarchy?.carrier.carrierShortName,
     });
 
     return (

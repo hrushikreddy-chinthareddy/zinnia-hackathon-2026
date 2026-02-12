@@ -36,7 +36,7 @@
         "@types/uuid": "^9.0.2",
         "@types/xml2js": "^0.4.14",
         "@typescript-eslint/eslint-plugin": "^6.18.1",
-        "@zinnia/bloom": "^7.0.3",
+        "@zinnia/bloom": "^7.3.2",
         "@zinnia/form-engine-sdk": "3.1.0",
         "ag-grid-community": "29.2.0",
         "ag-grid-react": "29.2.0",
@@ -198,5 +198,5 @@
         "clean-api-types": "node ./scripts/clean-api-types.mjs",
         "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs"
     },
-    "version": "2.26.0"
+    "version": "2.30.0"
 }

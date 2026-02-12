@@ -145,6 +145,13 @@ export enum Processes {
     FreeLookCancellation = 'Free Look Cancellation',
     PartialWithdrawal = 'Partial Withdrawal',
     FullSurrender = 'Full Surrender',
+    InitialPremium = 'Initial Premium',
+    Claims = 'Claims',
+    AgentDelegatoin = 'Agent Delegation',
+    DeathAudit = 'Death Audit',
+    Matching = 'Matching',
+    Reconciliation = 'Reconciliation',
+    OperationsReview = 'Operations Review',
     AssigneeChange = 'Assignee Change',
 }
 

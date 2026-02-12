@@ -6,8 +6,8 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { PREMIUM_FREE_RIDERS } from '@deps/types/quickQuote';
+import { RiderDataItem } from '@deps/utils/quick-quotes-rules/types';
 
-import { QuickQuoteRangeCell } from '../base/range-cell';
 import { QuickQuoteResultTableRow } from '../base/result-table-row';
 import { QuickQuoteResultTableSection } from '../base/result-table-section';
 import styles from '../content.module.css';
@@ -22,27 +22,28 @@ export const QuickQuotePremiumFreeRidersSection = () => {
         return null;
     }
 
-    // Show the rider if it's available to any result
-    const riders = PREMIUM_FREE_RIDERS.filter((riderName) => {
-        return results.some((result) => result.data.riders[riderName]);
-    });
+    const rows = PREMIUM_FREE_RIDERS.map((riderName) => {
+        const data = results.map(
+            (result): RiderDataItem => ({
+                period: 'mo.',
+                value: 0,
+                notAvailabilityReasons:
+                    result.data.riders?.[riderName]?.notAvailabilityReasonField,
+            })
+        );
 
-    const rows = riders.map((riderName) => (
-        <QuickQuoteResultTableRow
-            key={riderName}
-            rowHeader={
-                <Typography variant={TypographyVariant.BodySm}>
-                    {riderLabelMap[riderName!]}
-                </Typography>
-            }
-        >
-            <QuickQuoteRangeCell
-                className={styles.premiumFreeRiderContent}
-                value={0}
-                period="mo."
+        return (
+            <QuickQuoteResultTableRow
+                key={riderName}
+                rowHeader={
+                    <Typography variant={TypographyVariant.BodySm}>
+                        {riderLabelMap[riderName]}
+                    </Typography>
+                }
+                data={data}
             />
-        </QuickQuoteResultTableRow>
-    ));
+        );
+    });
 
     return (
         <QuickQuoteResultTableSection

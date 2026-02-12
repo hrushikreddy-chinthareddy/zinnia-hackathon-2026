@@ -38,6 +38,8 @@ const FormDisbursementSection = ({
                         disableCopyPaste,
                         validator,
                         isAddressLine2Required,
+                        annuitantAddress,
+                        selectOptions,
                     } = currentField;
                     if (
                         shouldDisplay &&
@@ -64,6 +66,8 @@ const FormDisbursementSection = ({
                         validator,
                         disableCopyPaste,
                         isAddressLine2Required,
+                        annuitantAddress,
+                        selectOptions,
                     });
                 })}
         </div>

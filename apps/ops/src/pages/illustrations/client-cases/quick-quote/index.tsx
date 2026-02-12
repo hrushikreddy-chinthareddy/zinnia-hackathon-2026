@@ -5,7 +5,7 @@ import { ComponentProps, useCallback, useEffect } from 'react';
 
 import { canUserCreateClientCase } from '@deps/components/client-case/client-case-list/sureify-flow/validate-user-permission';
 import { serializeQuickQuoteParams } from '@deps/components/client-case/quick-quote/helpers';
-import QuickQuoteForm from '@deps/components/client-case/quick-quote/quick-quote-form';
+import { QuickQuoteForm } from '@deps/components/client-case/quick-quote/quick-quote-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';

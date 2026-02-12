@@ -1,4 +1,5 @@
 import {
+    QueryClient,
     queryOptions,
     skipToken,
     useQueries,
@@ -47,10 +48,15 @@ export const POM_QUERY_PREFIXES = {
         'comp',
         'getProducerBySellingcode',
     ],
+    GET_COMP_PRODUCER_FOR_NEAREST_ROLE: [
+        'POM',
+        'comp',
+        'producerForNearestRole',
+    ],
     GET_COMP_DOWNLINE_FOR_NEAREST_ROLE: [
         'POM',
         'comp',
-        'getdownlineForNearestRole',
+        'getDownlineForNearestRole',
     ],
 } as const;
 
@@ -283,6 +289,36 @@ export const useGetWrappedProducersByIdListQuery = <MT>(
     });
 
 //
+// Query helpers
+//
+
+export const fetchNearestUplineRoleFromSellingCode = async (
+    client: QueryClient,
+    {
+        sellingCode,
+        role,
+        carrierShortName,
+    }: {
+        sellingCode: string;
+        role: ProducerRole;
+        carrierShortName: string;
+    }
+): Promise<GetHierarchyResponse | UplineItem | null> => {
+    const hierarchy = await client.fetchQuery(
+        buildHierarchyQueryOptions({
+            sellingCode,
+            carrierShortName,
+        })
+    );
+
+    if (!hierarchy) {
+        return null;
+    }
+
+    return getNearestRoleFromHierarchy(hierarchy, role);
+};
+
+//
 // Composite queries
 //
 
@@ -325,6 +361,53 @@ export const buildGetProducerBySellingCodeQueryOptions = ({
     });
 };
 
+export const buildGetProducerForNearestRoleQuery = ({
+    sellingCode,
+    role,
+    carrierShortName,
+}: {
+    sellingCode: string | undefined;
+    role: ProducerRole | undefined;
+    carrierShortName: string | undefined;
+}) => {
+    carrierShortName = carrierShortName?.toUpperCase();
+
+    return queryOptions({
+        queryKey: [
+            ...POM_QUERY_PREFIXES.GET_COMP_PRODUCER_FOR_NEAREST_ROLE,
+            carrierShortName,
+            sellingCode,
+            role,
+        ],
+        queryFn: !(sellingCode && role && carrierShortName)
+            ? skipToken
+            : async ({ client }) => {
+                  const nearestProducer =
+                      await fetchNearestUplineRoleFromSellingCode(client, {
+                          sellingCode,
+                          role,
+                          carrierShortName,
+                      });
+
+                  if (!nearestProducer) {
+                      return null;
+                  }
+
+                  const nearestProducerLookupId =
+                      'nationalProducerNumber' in nearestProducer
+                          ? nearestProducer.nationalProducerNumber
+                          : nearestProducer.producerLookupId;
+
+                  return await client.fetchQuery(
+                      buildGetProducerByIdQueryOptions(
+                          nearestProducerLookupId,
+                          carrierShortName
+                      )
+                  );
+              },
+    });
+};
+
 export const buildGetDownlineForNearestRoleQueryOptions = ({
     sellingCode,
     role,
@@ -349,21 +432,12 @@ export const buildGetDownlineForNearestRoleQueryOptions = ({
         queryFn: !(sellingCode && role && carrierShortName)
             ? skipToken
             : async ({ client }) => {
-                  const hierarchy = await client.fetchQuery(
-                      buildHierarchyQueryOptions({
+                  const nearestProducer =
+                      await fetchNearestUplineRoleFromSellingCode(client, {
                           sellingCode,
+                          role,
                           carrierShortName,
-                      })
-                  );
-
-                  if (!hierarchy) {
-                      return null;
-                  }
-
-                  const nearestProducer = getNearestRoleFromHierarchy(
-                      hierarchy,
-                      role
-                  );
+                      });
 
                   if (!nearestProducer) {
                       return null;

@@ -177,6 +177,18 @@ export const RULES_MODEL: RulesModel = {
                         ageMax: 55,
                     },
                 },
+                {
+                    riderName:
+                        'Accelerated Death Benefit Rider for Chronic Illness',
+                    riderCode: 'Rider_ABRCHR',
+                    alternatives: {
+                        ageMin: 18,
+                        ageMax: 70,
+                        policyFaceAmountMin: 150_000,
+                        requiredRiderCodes: ['Rider_ABRTRM'],
+                        notAvailableInStateCodes: ['CA'],
+                    },
+                },
             ],
         },
         {
@@ -295,6 +307,18 @@ export const RULES_MODEL: RulesModel = {
                     alternatives: {
                         ageMin: 18,
                         ageMax: 55,
+                    },
+                },
+                {
+                    riderName:
+                        'Accelerated Death Benefit Rider for Chronic Illness',
+                    riderCode: 'Rider_ABRCHR',
+                    alternatives: {
+                        ageMin: 18,
+                        ageMax: 70,
+                        policyFaceAmountMin: 150_000,
+                        requiredRiderCodes: ['Rider_ABRTRM'],
+                        notAvailableInStateCodes: ['CA'],
                     },
                 },
             ],
@@ -417,6 +441,18 @@ export const RULES_MODEL: RulesModel = {
                         ageMax: 55,
                     },
                 },
+                {
+                    riderName:
+                        'Accelerated Death Benefit Rider for Chronic Illness',
+                    riderCode: 'Rider_ABRCHR',
+                    alternatives: {
+                        ageMin: 18,
+                        ageMax: 65,
+                        policyFaceAmountMin: 150_000,
+                        requiredRiderCodes: ['Rider_ABRTRM'],
+                        notAvailableInStateCodes: ['CA'],
+                    },
+                },
             ],
         },
         {
@@ -535,6 +571,18 @@ export const RULES_MODEL: RulesModel = {
                     alternatives: {
                         ageMin: 18,
                         ageMax: 50,
+                    },
+                },
+                {
+                    riderName:
+                        'Accelerated Death Benefit Rider for Chronic Illness',
+                    riderCode: 'Rider_ABRCHR',
+                    alternatives: {
+                        ageMin: 18,
+                        ageMax: 50,
+                        policyFaceAmountMin: 150_000,
+                        requiredRiderCodes: ['Rider_ABRTRM'],
+                        notAvailableInStateCodes: ['CA'],
                     },
                 },
             ],
@@ -657,6 +705,18 @@ export const RULES_MODEL: RulesModel = {
                         ageMax: 55,
                     },
                 },
+                {
+                    riderName:
+                        'Accelerated Death Benefit Rider for Chronic Illness',
+                    riderCode: 'Rider_ABRCHR',
+                    alternatives: {
+                        ageMin: 18,
+                        ageMax: 55,
+                        policyFaceAmountMin: 150_000,
+                        requiredRiderCodes: ['Rider_ABRTRM'],
+                        notAvailableInStateCodes: ['CA'],
+                    },
+                },
             ],
         },
         {
@@ -777,6 +837,18 @@ export const RULES_MODEL: RulesModel = {
                         ageMax: 45,
                     },
                 },
+                {
+                    riderName:
+                        'Accelerated Death Benefit Rider for Chronic Illness',
+                    riderCode: 'Rider_ABRCHR',
+                    alternatives: {
+                        ageMin: 18,
+                        ageMax: 45,
+                        policyFaceAmountMin: 150_000,
+                        requiredRiderCodes: ['Rider_ABRTRM'],
+                        notAvailableInStateCodes: ['CA'],
+                    },
+                },
             ],
         },
     ],
@@ -803,15 +875,21 @@ export const RIDER_ELIGIBILITY_LIST: RiderEligibilityList[] = [
     },
 ];
 
-export const PREMIUM_RIDER_ELIGIBILITY_LIST: PremiumRiderEligibilityList[] = [
-    {
-        riderName: 'Charitable Giving Rider',
-        riderCode: 'Rider_CGR',
-        riderNameCamelCase: 'charitableGiving',
-    },
-    {
-        riderName: 'Accelerated Death Benefit Rider for Terminal Illness',
-        riderCode: 'Rider_ABRTRM',
-        riderNameCamelCase: 'acceleratedDeathBenefitForTerminalIllness',
-    },
-];
+export const PREMIUM_FREE_RIDER_ELIGIBILITY_LIST: PremiumRiderEligibilityList[] =
+    [
+        {
+            riderName: 'Charitable Giving Rider',
+            riderCode: 'Rider_CGR',
+            riderNameCamelCase: 'charitableGiving',
+        },
+        {
+            riderName: 'Accelerated Death Benefit Rider for Terminal Illness',
+            riderCode: 'Rider_ABRTRM',
+            riderNameCamelCase: 'acceleratedDeathBenefitForTerminalIllness',
+        },
+        {
+            riderName: 'Accelerated Death Benefit Rider for Chronic Illness',
+            riderCode: 'Rider_ABRCHR',
+            riderNameCamelCase: 'acceleratedDeathBenefitForChronicIllness',
+        },
+    ];

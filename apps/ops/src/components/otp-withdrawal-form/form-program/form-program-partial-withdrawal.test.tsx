@@ -329,3 +329,181 @@ describe.skip('Partial Withdrawal component', () => {
         });
     });
 });
+
+describe('Partial Withdrawal - withdrawType handling', () => {
+    window.HTMLElement.prototype.hasPointerCapture = jest.fn();
+    window.HTMLElement.prototype.scrollIntoView = jest.fn();
+
+    const formProgram = {
+        clientCode: 'USAA',
+        contractNumber: '123456789',
+        withdrawType: {
+            text: '',
+        },
+        amountQualifierType: null,
+        program: {
+            text: 'Withdrawal',
+        },
+        programType: {
+            text: '',
+        },
+        programSubType: {
+            text: null,
+        },
+        programFrequency: null,
+        rollover: null,
+        rmd: null,
+        programAmount: { text: null, amountType: AmountType.Dollar },
+        partialAmount: {
+            text: null,
+            amountType: 'DOLLAR' as AmountType,
+        },
+        partialPercent: {
+            text: null,
+            amountType: 'PERCENT' as AmountType,
+        },
+        partialGrossAmount: {
+            text: null,
+            amountType: 'DOLLAR' as AmountType,
+        },
+        partialNetAmount: {
+            text: null,
+            amountType: 'DOLLAR' as AmountType,
+        },
+        gmwbAmount: {
+            text: null,
+            amountType: 'DOLLAR' as AmountType,
+        },
+        processRequestType: null,
+        programSubTypeOptions: null,
+        asOfDate: {
+            text: null,
+        },
+        isValidAsOfDate: true,
+    };
+
+    it('should call generatePayloadFromSelection with withdrawType when withdrawType changes', async () => {
+        const generatePayloadMock = jest.fn();
+        const partialWithdrawalOptionsWithMock: PartialWithdrawalOption[] = [
+            {
+                label: 'Partial $',
+                value: 'PARTIAL_DOLLAR',
+                amountFieldType: AmountType.Dollar,
+                generatePayloadFromSelection: generatePayloadMock,
+            },
+        ];
+
+        const formProgramWithGross = {
+            ...formProgram,
+            withdrawType: { text: 'GROSS' },
+        };
+
+        const { rerender } = render(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    currentFormState: CaseStatus.Pending,
+                    formProgram: formProgramWithGross,
+                    setFormProgram: jest.fn((cb) =>
+                        typeof cb === 'function' ? cb(formProgramWithGross) : cb
+                    ),
+                }}
+            >
+                <FormProgramPartialWithdrawal
+                    options={partialWithdrawalOptionsWithMock}
+                    selectionIdentifier={() => ({
+                        selectedOption: 'PARTIAL_DOLLAR',
+                        amount: '100',
+                    })}
+                />
+            </FormDataContext.Provider>
+        );
+
+        // Initial call with GROSS
+        expect(generatePayloadMock).toHaveBeenCalledWith('100', {
+            text: 'GROSS',
+        });
+
+        generatePayloadMock.mockClear();
+
+        // Change withdrawType to NET
+        const formProgramWithNet = {
+            ...formProgram,
+            withdrawType: { text: 'NET' },
+        };
+
+        rerender(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    currentFormState: CaseStatus.Pending,
+                    formProgram: formProgramWithNet,
+                    setFormProgram: jest.fn((cb) =>
+                        typeof cb === 'function' ? cb(formProgramWithNet) : cb
+                    ),
+                }}
+            >
+                <FormProgramPartialWithdrawal
+                    options={partialWithdrawalOptionsWithMock}
+                    selectionIdentifier={() => ({
+                        selectedOption: 'PARTIAL_DOLLAR',
+                        amount: '100',
+                    })}
+                />
+            </FormDataContext.Provider>
+        );
+
+        // Should be called again with NET
+        expect(generatePayloadMock).toHaveBeenCalledWith('100', {
+            text: 'NET',
+        });
+    });
+
+    it('should pass withdrawType to generatePayloadFromSelection', async () => {
+        const generatePayloadMock = jest.fn();
+
+        const formProgramWithWithdrawType = {
+            ...formProgram,
+            withdrawType: { text: 'NET' },
+        };
+
+        const setMockData = jest.fn((cb) => {
+            return typeof cb === 'function'
+                ? cb(formProgramWithWithdrawType)
+                : cb;
+        });
+
+        const partialWithdrawalOptionsWithMock: PartialWithdrawalOption[] = [
+            {
+                label: 'caseWithdrawal.request.amountDetails.partialWithdrawal.netWithdrawal',
+                value: WithdrawalSelectionValues.NetWithdrawal,
+                amountFieldType: AmountType.Dollar,
+                generatePayloadFromSelection: generatePayloadMock,
+            },
+        ];
+
+        render(
+            <FormDataContext.Provider
+                value={{
+                    ...defaultFormDataContext,
+                    currentFormState: CaseStatus.Pending,
+                    formProgram: formProgramWithWithdrawType,
+                    setFormProgram: setMockData,
+                }}
+            >
+                <FormProgramPartialWithdrawal
+                    options={partialWithdrawalOptionsWithMock}
+                    selectionIdentifier={() => ({
+                        selectedOption: WithdrawalSelectionValues.NetWithdrawal,
+                        amount: '200',
+                    })}
+                />
+            </FormDataContext.Provider>
+        );
+
+        // Verify generatePayloadFromSelection was called with amount and withdrawType
+        expect(generatePayloadMock).toHaveBeenCalledWith('200', {
+            text: 'NET',
+        });
+    });
+});

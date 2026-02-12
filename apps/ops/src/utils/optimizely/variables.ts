@@ -7,6 +7,7 @@ export enum FEATURE_FLAG_VARIABLES {
     DOCUMENTS_V3_FEATURE_FLAG = 'documents-v3-update-client-wise',
     CREATE_QUALITY_AUDIT = 'create-quality-audit',
     ASSIGNEE_CHANGE_TRANSACTION = 'assignee-change-transaction',
+    USE_CURRENT_LIFECYCLE_DATE = 'use-current-lifecycle-date',
 }
 
 export enum FEATURE_VARIABLES_CORRESPONDENCE_KEYS {

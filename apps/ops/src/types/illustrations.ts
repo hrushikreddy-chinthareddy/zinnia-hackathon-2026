@@ -34,7 +34,6 @@ export interface IllustrationsClientCase {
     originalFaceAmount?: number;
     isMec?: boolean;
     transactionType?: TransactionType;
-    carrierCode?: string[];
 }
 
 export interface IllustrationSummary {

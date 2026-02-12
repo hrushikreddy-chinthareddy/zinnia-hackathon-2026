@@ -56,7 +56,7 @@ const ActivityCard = ({
     selectedPolicyParty,
 }: ActivityCardProps) => {
     const { t } = useTranslation();
-    const [showInactive, setShowInactive] = useState(false);
+    const [onlyShowInactive, setOnlyShowInactive] = useState(false);
     const [tabVal, setTabVal] = useState<TabKeys>(
         PeopleActivityTabValues.roles
     );
@@ -88,8 +88,8 @@ const ActivityCard = ({
                             variant={ToggleVariant.Default}
                             text={t('allFields.showInactive') as string}
                             ariaLabel={t('allFields.showInactive') as string}
-                            value={showInactive}
-                            handleToggle={setShowInactive}
+                            value={onlyShowInactive}
+                            handleToggle={setOnlyShowInactive}
                         />
                     </div>
                 </div>
@@ -133,7 +133,7 @@ const ActivityCard = ({
                                             ? selectedPolicyParty
                                             : undefined
                                     }
-                                    showInactive={showInactive}
+                                    onlyShowInactive={onlyShowInactive}
                                 />
                             </TabContent>
                         ))}

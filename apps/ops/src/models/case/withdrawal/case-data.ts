@@ -258,6 +258,11 @@ export const CaseDetails: DigitalFormWithdrawal = {
                 emailDeliveryNotification: { text: false },
                 isDifferentPayeeOrAddress: { text: false },
                 isWireApprovalPresent: { text: false },
+                isPayeeFinancialIns: false,
+                isPayeeCharity: false,
+                isAddressDifferent: false,
+                isAnnuitant: false,
+                isThirdPartyDisbursement: false,
                 bankVerification: {
                     selectedBankingType: '',
                     validationsMap: {

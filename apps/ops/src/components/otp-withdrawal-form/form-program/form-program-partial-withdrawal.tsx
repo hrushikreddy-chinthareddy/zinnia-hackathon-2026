@@ -37,7 +37,8 @@ export interface PartialWithdrawalOption extends Omit<RadioItem, 'subelement'> {
     dateFieldType?: DateFieldType;
     inputFieldLabel?: DefaultTFuncReturn;
     generatePayloadFromSelection: (
-        amount?: string | null
+        amount?: string | null,
+        withdrawType?: EditableFormProgramFields['withdrawType']
     ) => EditableFormProgramFields; // Defines what the formProgram "editable fields" should look like when the option is selected.  There is significant variance between carriers and selections on what parts of formProgram should change.
 }
 
@@ -108,7 +109,8 @@ export default function FormProgramPartialWithdrawal({
                             dayjs(
                                 maturityGuaranteePeriod,
                                 DATE_PICKER_FORMAT
-                            ).format(ZAHARA_API_DATE_FORMAT)
+                            ).format(ZAHARA_API_DATE_FORMAT),
+                            oldVal.withdrawType
                         ),
                     };
                 });
@@ -116,12 +118,20 @@ export default function FormProgramPartialWithdrawal({
                 setFormProgram((oldVal) => {
                     return {
                         ...oldVal,
-                        ...selectedOption.generatePayloadFromSelection(amount),
+                        ...selectedOption.generatePayloadFromSelection(
+                            amount,
+                            oldVal.withdrawType
+                        ),
                     };
                 });
             }
         }
-    }, [amount, selected, maturityGuaranteePeriod]);
+    }, [
+        amount,
+        selected,
+        maturityGuaranteePeriod,
+        formProgram.withdrawType?.text,
+    ]);
 
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.amountDetails.partialWithdrawal',

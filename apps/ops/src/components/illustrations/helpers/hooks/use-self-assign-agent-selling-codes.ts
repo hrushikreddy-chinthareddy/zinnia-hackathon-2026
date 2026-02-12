@@ -11,7 +11,7 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { AGENT_SEARCH_QUERY_PREFIXES } from 'components/illustrations/helpers/queries/agent-search/constants';
 
 import { buildHierarchyQueryOptions, getHierarchyAgency } from './pom';
-import { useAllAliasesWithSellingCode } from './user-identity';
+import { getSellingCodesFromAliases } from './user-identity';
 
 const buildSelfAssignAgentQuery = ({
     sellingCode,
@@ -54,18 +54,10 @@ const buildSelfAssignAgentQuery = ({
               },
     });
 
-export const useDefaultSelfAssignAgentSellingCode = () => {
+export const useSelfAssignAgentSellingCodes = () => {
     const { partyReferenceData } = usePermissionsContext();
 
-    const aliasesWithSellingCodes =
-        useAllAliasesWithSellingCode(partyReferenceData);
-
-    const sellingCodes = aliasesWithSellingCodes?.map((alias) => ({
-        sellingCode: alias.externalPartyIds?.find(
-            (id) => id.key === 'SELLING_CODE'
-        )?.value as string,
-        carrierShortName: alias.carrier,
-    }));
+    const sellingCodes = getSellingCodesFromAliases(partyReferenceData?.alias);
 
     return useQueries({
         queries:
@@ -80,21 +72,19 @@ export const useDefaultSelfAssignAgentSellingCode = () => {
                     carrierShortName: string;
                 } | null>[]
             ) => {
-                const validResult = results.find(
-                    (
-                        result
-                    ): result is QueryObserverSuccessResult<{
-                        lookupId: string;
-                        sellingCode: string;
-                        carrierShortName: string;
-                    }> => result.data != null && !result.isPlaceholderData
-                );
+                const validSelfAssignSellingCodes = results
+                    .filter(
+                        (
+                            result
+                        ): result is QueryObserverSuccessResult<{
+                            lookupId: string;
+                            sellingCode: string;
+                            carrierShortName: string;
+                        }> => result.data != null && !result.isPlaceholderData
+                    )
+                    .map((result) => result.data);
 
-                if (!validResult) {
-                    return null;
-                }
-
-                return validResult.data;
+                return validSelfAssignSellingCodes;
             },
             []
         ),

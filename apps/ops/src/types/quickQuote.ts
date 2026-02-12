@@ -7,11 +7,11 @@ import { Product, ProductTypes } from '@deps/types/product';
 import {
     IneligibilityReason,
     nonEligibleReasonByClass,
+    RiderCode,
 } from '@deps/utils/quick-quotes-rules/types';
 
 export type NumberRange = [number, number];
 export type NumberOrRange = NumberRange | number;
-
 /**
  *
  * Riders that require a face amount value for calculation
@@ -35,6 +35,7 @@ export const NO_PARAM_RIDERS = [
  */
 export const PREMIUM_FREE_RIDERS = [
     RIDER_NAMES.ACCELERATED_DEATH_BENEFIT_FOR_TERMINAL_ILLNESS,
+    RIDER_NAMES.ACCELERATED_DEATH_BENEFIT_FOR_CHRONIC_ILLNESS,
     RIDER_NAMES.CHARITABLE_GIVING,
 ] as const satisfies RiderName[];
 
@@ -52,6 +53,7 @@ export const RIDER_CODE_MAP = {
     [RIDER_NAMES.WAIVER_OF_PREMIUM]: 'Rider_WPR',
     [RIDER_NAMES.ACCELERATED_DEATH_BENEFIT_FOR_TERMINAL_ILLNESS]:
         'Rider_ABRTRM',
+    [RIDER_NAMES.ACCELERATED_DEATH_BENEFIT_FOR_CHRONIC_ILLNESS]: 'Rider_ABRCHR',
     [RIDER_NAMES.CHARITABLE_GIVING]: 'Rider_CGR',
 } as const satisfies Record<
     PremiumFreeRider | RiderWithFaceAmount | NoParamRider,
@@ -67,6 +69,19 @@ const quickQuoteParamsBaseSchema = t.object(
     t.property('faceAmount', t.number)
 );
 
+export const getRiderNameFromRiderCode = (
+    code: RiderCode
+): RiderName | null => {
+    for (const key of Object.keys(RIDER_CODE_MAP)) {
+        const value = RIDER_CODE_MAP[key as keyof typeof RIDER_CODE_MAP];
+
+        if (value === code) {
+            return key as RiderName;
+        }
+    }
+    return null;
+};
+
 const quickQuoteParamsRidersSchema = t.object(
     t.property('riders', t.record(t.string, t.union(t.number, t.boolean))),
     t.property('premiumFreeRiders', t.record(t.string, t.union(t.boolean)))
@@ -79,6 +94,11 @@ export const quickQuoteParamsSchema = t.intersection(
     quickQuoteParamsBaseSchema,
     quickQuoteParamsRidersSchema
 );
+
+export enum QuickQuoteResultTableFieldName {
+    BASE_PREMIUM_RANGE = 'BASE_PREMIUM_RANGE',
+    TOTAL_PREMIUM_RANGE = 'TOTAL_PREMIUM_RANGE',
+}
 
 /**
  * Type for the QuickQuote inputs
@@ -144,11 +164,6 @@ export type QuickQuoteFormState = Simplify<
     }
 >;
 
-interface QuickQuoteNotAvailableBaseItem {
-    range: undefined;
-    notAvailabilityReasonField?: nonEligibleReasonByClass[] | undefined;
-}
-
 export interface QuickQuoteResultBase {
     productType: ProductTypes;
     planCode: string;
@@ -166,20 +181,31 @@ interface TermQuickQuoteBaseDataItem {
 
 interface TermQuickQuoteAvailableDataItem extends TermQuickQuoteBaseDataItem {
     range: NumberOrRange;
+    notAvailabilityReasonField: undefined;
+    error: undefined;
 }
 
-interface TermQuickQuoteNotAvailableItem
-    extends TermQuickQuoteBaseDataItem,
-        QuickQuoteNotAvailableBaseItem {}
+interface TermQuickQuoteNotAvailableItem extends TermQuickQuoteBaseDataItem {
+    range: undefined;
+    notAvailabilityReasonField: nonEligibleReasonByClass[] | undefined;
+    error: undefined;
+}
+
+interface TermQuickQuoteErrorItem extends TermQuickQuoteBaseDataItem {
+    range: undefined;
+    notAvailabilityReasonField: undefined;
+    error: Error;
+}
+
+type TermQuickQuoteDataItem =
+    | TermQuickQuoteAvailableDataItem
+    | TermQuickQuoteNotAvailableItem
+    | TermQuickQuoteErrorItem;
 
 export type TermQuickQuoteRiderNotAvailableItem = {
     termLengths: number[];
     reasons?: IneligibilityReason[] | undefined;
 };
-
-type TermQuickQuoteDataItem =
-    | TermQuickQuoteAvailableDataItem
-    | TermQuickQuoteNotAvailableItem;
 
 export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;

@@ -50,17 +50,13 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import Exceptions from './exceptions';
 import {
     completionPercentageString,
+    ExceptionTypes,
     TransformedCase,
     TransformedStage,
     TransformedStep,
 } from './progress-tab-helpers';
 import Steps from './steps';
 import Tasks from './tasks';
-
-enum ExceptionTypes {
-    Technical = 'Technical',
-    Business = 'Business',
-}
 
 // Provides a status icon and tooltip for step and stage statuses
 
@@ -465,9 +461,6 @@ export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
         );
     };
 
-    const isNotTechExceptionView = transformedCase.unmappedExceptions.some(
-        (exception) => exception.exceptionType !== ExceptionTypes.Technical
-    );
     return (
         <>
             <CardContainer>
@@ -508,27 +501,24 @@ export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
                     <Stages stages={transformedCase.stages} />
                 </div>
                 {(!!transformedCase.unmappedExceptions.length ||
-                    !!transformedCase.unmappedTasks.length) &&
-                    isNotTechExceptionView && (
-                        <div className="mt-6 flex w-full flex-col">
-                            <Typography variant={TypographyVariant.H3}>
-                                {t(`caseOverview.tabs.otherIssues`)}
-                            </Typography>
+                    !!transformedCase.unmappedTasks.length) && (
+                    <div className="mt-6 flex w-full flex-col">
+                        <Typography variant={TypographyVariant.H3}>
+                            {t(`caseOverview.tabs.otherIssues`)}
+                        </Typography>
 
-                            <div className="mt-3 flex flex-col gap-2">
-                                <Exceptions
-                                    exceptions={
-                                        transformedCase.unmappedExceptions
-                                    }
-                                    unmapped={true}
-                                    groupedExceptions={
-                                        transformedCase.exceptionsGroupedByTask
-                                    }
-                                />
-                                <Tasks tasks={transformedCase.unmappedTasks} />
-                            </div>
+                        <div className="mt-3 flex flex-col gap-2">
+                            <Exceptions
+                                exceptions={transformedCase.unmappedExceptions}
+                                unmapped={true}
+                                groupedExceptions={
+                                    transformedCase.exceptionsGroupedByTask
+                                }
+                            />
+                            <Tasks tasks={transformedCase.unmappedTasks} />
                         </div>
-                    )}
+                    </div>
+                )}
             </CardContainer>
         </>
     );

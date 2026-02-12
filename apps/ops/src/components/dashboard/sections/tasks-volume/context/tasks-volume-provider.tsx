@@ -71,12 +71,12 @@ export const TasksVolumeProvider: FC<PropsWithChildren> = ({ children }) => {
             baseFilter.taskStatus = selectedStatus;
         }
 
-        if (Object.keys(selectedCarriers).length > 0) {
-            baseFilter.carrier = Object.keys(selectedCarriers);
+        if (selectedCarriers.length > 0) {
+            baseFilter.carrier = selectedCarriers;
         }
 
-        if (Object.keys(selectedBrokerDealers).length > 0) {
-            baseFilter.brokerDealerName = Object.keys(selectedBrokerDealers);
+        if (selectedBrokerDealers.length > 0) {
+            baseFilter.brokerDealerName = selectedBrokerDealers;
         }
 
         if (selectedProcess) {

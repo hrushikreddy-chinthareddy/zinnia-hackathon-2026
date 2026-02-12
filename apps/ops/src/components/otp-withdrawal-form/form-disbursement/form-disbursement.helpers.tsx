@@ -6,7 +6,10 @@ import {
     Carrier,
     FormDisbursement,
 } from '@deps/models/case/withdrawal/case';
-import { DisbursementParts } from '@deps/models/case/withdrawal/disbursement-types';
+import {
+    DisbursementParts,
+    SendCheckOption,
+} from '@deps/models/case/withdrawal/disbursement-types';
 
 import AccountTypes from './form-disbursement-parts/account-type';
 import BankAddress from './form-disbursement-parts/address';
@@ -15,6 +18,8 @@ import BankCheckboxField from './form-disbursement-parts/bank-checkbox-field';
 import BankTextField from './form-disbursement-parts/bank-text-field';
 import SelectBank from './form-disbursement-parts/select-bank';
 import SelectParticipantId from './form-disbursement-parts/select-participant-id';
+import SendCheckSelect from './form-disbursement-parts/select-send-check';
+import { IFormDisbursement } from '../form-disbursement-V2/form-disbursement.types';
 
 export const DisbursementFields = {
     AccountTypes,
@@ -24,6 +29,7 @@ export const DisbursementFields = {
     BankBooleanButtonGroup,
     BankCheckboxField,
     SelectParticipantId,
+    SendCheckSelect,
 };
 
 export enum BankingFields {
@@ -61,6 +67,8 @@ export enum BankingFields {
     FboDetails = 'fboDetails',
     ChooseBankingType = 'ChooseBankingType',
     Name = 'name',
+    isPayeeFinancialIns = 'isPayeeFinancialIns',
+    isAnnuitant = 'isAnnuitant',
 }
 
 // The values that can be impacted by user inputs, in their default forms.
@@ -110,6 +118,11 @@ export const getDefaultFormDisbursementValues = (): FormDisbursement => {
         firstTimeExpressCheck: {
             text: false,
         },
+        isPayeeFinancialIns: false,
+        isAnnuitant: false,
+        isPayeeCharity: false,
+        isAddressDifferent: false,
+        isThirdPartyDisbursement: false,
     };
 };
 
@@ -300,3 +313,96 @@ export function updateBankingDetails(
 
     return bankInfo;
 }
+
+/**
+ * Determines if the disbursement is to someone other than the owner.
+ * When all flags are false, it means disbursement is to the owner,
+ * and additional fields like payee name and address should not be displayed.
+ *
+ * @param formDisbursement - The form disbursement object
+ * @returns true if disbursement is NOT to the owner (any flag is true), false if disbursement is to the owner (all flags are false)
+ */
+export const isNotDisburseToOwner = (
+    formDisbursement: FormDisbursement | IFormDisbursement
+): boolean => {
+    const disbursement = formDisbursement as FormDisbursement;
+    return (
+        disbursement.isThirdPartyDisbursement ||
+        disbursement.isAddressDifferent ||
+        disbursement.isAnnuitant ||
+        disbursement.isPayeeCharity ||
+        disbursement.isPayeeFinancialIns
+    );
+};
+
+/**
+ * Determines if the payee name field should be displayed.
+ * Payee name should be shown for:
+ * - Financial Institution (isPayeeFinancialIns: true)
+ * - Charity (isPayeeCharity: true)
+ * - Third Party (isThirdPartyDisbursement: true)
+ *
+ * Payee name should NOT be shown for:
+ * - Annuitant (isAnnuitant: true) - only address is shown
+ * - Different Address (isAddressDifferent: true) - only address is shown
+ * - Owner (all flags false) - neither payee name nor address is shown
+ *
+ * @param formDisbursement - The form disbursement object
+ * @returns true if payee name should be displayed, false otherwise
+ */
+export const shouldDisplayPayeeName = (
+    formDisbursement: FormDisbursement | IFormDisbursement
+): boolean => {
+    const disbursement = formDisbursement as FormDisbursement;
+    // Show payee name ONLY for Financial Institution, Charity, or Third Party
+    return (
+        disbursement.isThirdPartyDisbursement ||
+        disbursement.isPayeeCharity ||
+        disbursement.isPayeeFinancialIns
+    );
+};
+
+/**
+ * Determines if the address field should be displayed.
+ * Address should be shown when disbursement is not to the owner,
+ * including when isAnnuitant is true.
+ *
+ * @param formDisbursement - The form disbursement object
+ * @returns true if address should be displayed, false otherwise
+ */
+export const shouldDisplayAddress = (
+    formDisbursement: FormDisbursement | IFormDisbursement
+): boolean => {
+    return isNotDisburseToOwner(formDisbursement);
+};
+
+export const defaultSendCheckOptions = (t: TFunction) => [
+    {
+        label: t('select'),
+        value: 'select',
+    },
+    {
+        label: t('disburseToOwnerAddress'),
+        value: SendCheckOption.OwnerAddress,
+    },
+    {
+        label: t('disburseToFinancialInstitution'),
+        value: SendCheckOption.FinancialInstitution,
+    },
+    {
+        label: t('disburseToCharity'),
+        value: SendCheckOption.Charity,
+    },
+    {
+        label: t('disburseToAnnuitant'),
+        value: SendCheckOption.Annuitant,
+    },
+    {
+        label: t('disburseToDifferentAddress'),
+        value: SendCheckOption.DifferentAddress,
+    },
+    {
+        label: t('disburseToThirdParty'),
+        value: SendCheckOption.ThirdPartyNotFinancialIns,
+    },
+];

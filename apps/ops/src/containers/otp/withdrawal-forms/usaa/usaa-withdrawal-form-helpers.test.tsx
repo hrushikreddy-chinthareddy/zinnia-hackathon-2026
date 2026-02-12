@@ -28,39 +28,47 @@ import {
     DEFAULT_BANK_DETAILS,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import getUsaaConfig, {
-    WithdrawalSelectionValues,
-} from './usaa-withdrawal-form-helpers';
-
+// Mock the helper modules before importing
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-program/form-program.helpers',
-    () => {
-        const originalModule = jest.requireActual(
-            '@deps/components/otp-withdrawal-form/form-program/form-program.helpers'
-        );
-        return {
-            ...originalModule,
-            getDefaultFormProgramValues: () => {
-                return { thisIsMocked: true };
-            },
-        };
-    }
+    () => ({
+        getDefaultFormProgramValues: () => {
+            return { thisIsMocked: true };
+        },
+    })
 );
 
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
-    () => {
-        const originalModule = jest.requireActual(
-            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
-        );
-        return {
-            ...originalModule,
-            getDefaultFormDisbursementValues: () => {
-                return { thisIsMocked: true };
-            },
-        };
-    }
+    () => ({
+        getDefaultFormDisbursementValues: () => {
+            return { thisIsMocked: true };
+        },
+        BankingFields: {
+            Bank: 'bank',
+            AccountNumber: 'accountNumber',
+            PayeeName: 'payeeName',
+            Address: 'address',
+            SelectIfPayeeIsDifferent: 'selectIfPayeeIsDifferent',
+        },
+        DisbursementFields: {
+            SelectBank: 'SelectBank',
+            BankTextField: 'BankTextField',
+            BankCheckboxField: 'BankCheckboxField',
+            BankAddress: 'BankAddress',
+            AccountTypes: 'AccountTypes',
+            BankBooleanButtonGroup: 'BankBooleanButtonGroup',
+            SendCheckSelect: 'SendCheckSelect',
+        },
+        updateBankingDetails: jest.fn(),
+        shouldDisplayPayeeName: jest.fn(),
+        shouldDisplayAddress: jest.fn(),
+    })
 );
+
+import getUsaaConfig, {
+    WithdrawalSelectionValues,
+} from './usaa-withdrawal-form-helpers';
 
 describe.skip('FLIC withdrawal form config', () => {
     const t: TFunction = (key: string | string[]) =>
@@ -558,5 +566,201 @@ describe.skip('FLIC withdrawal form config', () => {
                 );
             });
         });
+    });
+});
+
+describe('USAA PartialDollar payload generation - withdrawType handling', () => {
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
+    const usaaConfig = getUsaaConfig(t);
+    const { surrenderingInstructionsOptions } = usaaConfig;
+    const partialDollarOption = surrenderingInstructionsOptions.find(
+        (option) => option.value === ProgramType.PartialDollar
+    );
+
+    it('should generate payload with partialGrossAmount when withdrawType is GROSS', () => {
+        const payload = partialDollarOption?.generatePayloadFromSelection(
+            '500',
+            { text: WithdrawalType.Gross }
+        );
+
+        expect(payload).toBeDefined();
+        expect(payload?.partialAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+        expect(payload?.partialGrossAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+        // partialNetAmount should have null/default value, not '500'
+        expect(payload?.partialNetAmount?.text).not.toBe('500');
+    });
+
+    it('should generate payload with partialNetAmount when withdrawType is NET', () => {
+        const payload = partialDollarOption?.generatePayloadFromSelection(
+            '500',
+            { text: WithdrawalType.Net }
+        );
+
+        expect(payload).toBeDefined();
+        expect(payload?.partialAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+        expect(payload?.partialNetAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+        // partialGrossAmount should have null/default value, not '500'
+        expect(payload?.partialGrossAmount?.text).not.toBe('500');
+    });
+
+    it('should generate payload with partialNetAmount when withdrawType is undefined (falls back to NET)', () => {
+        const payload = partialDollarOption?.generatePayloadFromSelection(
+            '500',
+            undefined
+        );
+
+        expect(payload).toBeDefined();
+        expect(payload?.partialAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+        expect(payload?.partialNetAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+    });
+
+    it('should generate payload with partialNetAmount when withdrawType text is empty (falls back to NET)', () => {
+        const payload = partialDollarOption?.generatePayloadFromSelection(
+            '500',
+            { text: '' }
+        );
+
+        expect(payload).toBeDefined();
+        expect(payload?.partialAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+        expect(payload?.partialNetAmount).toEqual({
+            text: '500',
+            amountType: AmountType.Dollar,
+        });
+    });
+
+    it('should not include withdrawType in the payload (preserved from form state)', () => {
+        const payload = partialDollarOption?.generatePayloadFromSelection(
+            '500',
+            { text: WithdrawalType.Net }
+        );
+
+        // withdrawType should not be in the payload - it's preserved from oldVal in the component
+        expect(payload).not.toHaveProperty('withdrawType');
+    });
+});
+
+describe('USAA formValidation - withdrawType validation', () => {
+    const t: TFunction = (key: string | string[]) =>
+        key as unknown as TFunctionDetailedResult<string>;
+    const usaaConfig = getUsaaConfig(t);
+    const { formValidation } = usaaConfig;
+
+    const baseFormProgram = {
+        programType: { text: '' },
+        programSubType: { text: null },
+        withdrawType: { text: '' },
+        partialAmount: { text: null, amountType: AmountType.Dollar },
+        partialGrossAmount: { text: null, amountType: AmountType.Dollar },
+        partialNetAmount: { text: null, amountType: AmountType.Dollar },
+        gmwbAmount: { text: null, amountType: AmountType.Dollar },
+    } as FormProgram;
+
+    it('should return error when Partial is selected but withdrawType is not selected', () => {
+        const formProgram = {
+            ...baseFormProgram,
+            programType: { text: ProgramType.WITHDRAWAL },
+            withdrawType: { text: '' },
+        } as FormProgram;
+
+        const errors = formValidation({ formProgram });
+
+        expect(errors).toHaveProperty('withdrawType');
+        expect(errors.withdrawType).toBe(
+            'formValidation.withdrawTypeMustBeSelected'
+        );
+    });
+
+    it('should return error when Partial is selected and withdrawType is undefined', () => {
+        const formProgram = {
+            ...baseFormProgram,
+            programType: { text: ProgramType.WITHDRAWAL },
+            withdrawType: undefined,
+        } as unknown as FormProgram;
+
+        const errors = formValidation({ formProgram });
+
+        expect(errors).toHaveProperty('withdrawType');
+    });
+
+    it('should NOT return error when Partial is selected and withdrawType is GROSS', () => {
+        const formProgram = {
+            ...baseFormProgram,
+            programType: { text: ProgramType.WITHDRAWAL },
+            withdrawType: { text: WithdrawalType.Gross },
+        } as FormProgram;
+
+        const errors = formValidation({ formProgram });
+
+        expect(errors).not.toHaveProperty('withdrawType');
+    });
+
+    it('should NOT return error when Partial is selected and withdrawType is NET', () => {
+        const formProgram = {
+            ...baseFormProgram,
+            programType: { text: ProgramType.WITHDRAWAL },
+            withdrawType: { text: WithdrawalType.Net },
+        } as FormProgram;
+
+        const errors = formValidation({ formProgram });
+
+        expect(errors).not.toHaveProperty('withdrawType');
+    });
+
+    it('should NOT return error when Full Surrender is selected (withdrawType not required)', () => {
+        const formProgram = {
+            ...baseFormProgram,
+            programType: { text: ProgramType.FullSurrender },
+            withdrawType: { text: '' },
+        } as FormProgram;
+
+        const errors = formValidation({ formProgram });
+
+        expect(errors).not.toHaveProperty('withdrawType');
+    });
+
+    it('should NOT return error when Penalty Free Amount is selected (withdrawType not required)', () => {
+        const formProgram = {
+            ...baseFormProgram,
+            programType: { text: ProgramType.TotalFreeAmt },
+            withdrawType: { text: '' },
+        } as FormProgram;
+
+        const errors = formValidation({ formProgram });
+
+        expect(errors).not.toHaveProperty('withdrawType');
+    });
+
+    it('should NOT return error when no program type is selected', () => {
+        const formProgram = {
+            ...baseFormProgram,
+            programType: { text: '' },
+            withdrawType: { text: '' },
+        } as FormProgram;
+
+        const errors = formValidation({ formProgram });
+
+        expect(errors).not.toHaveProperty('withdrawType');
     });
 });

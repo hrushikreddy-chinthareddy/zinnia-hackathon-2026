@@ -2,6 +2,7 @@ import { renderHook } from '@testing-library/react';
 import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
+import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
     AccountType,
     BankDetails,
@@ -13,50 +14,58 @@ import {
     DisbursementParts,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
-import useDlicConfig from './dlic-withdrawal-form-helpers';
-
+// Mock the helper modules before importing
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-program/form-program.helpers',
-    () => {
-        const originalModule = jest.requireActual(
-            '@deps/components/otp-withdrawal-form/form-program/form-program.helpers'
-        );
-        return {
-            ...originalModule,
-            getDefaultFormProgramValues: () => {
-                return { thisIsMocked: true };
-            },
-        };
-    }
+    () => ({
+        getDefaultFormProgramValues: () => {
+            return { thisIsMocked: true };
+        },
+    })
 );
 
 jest.mock(
     '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers',
-    () => {
-        const originalModule = jest.requireActual(
-            '@deps/components/otp-withdrawal-form/form-disbursement/form-disbursement.helpers'
-        );
-        return {
-            ...originalModule,
-            getDefaultFormDisbursementValues: () => {
-                return {
-                    thisIsMocked: true,
-                };
-            },
-        };
-    }
+    () => ({
+        getDefaultFormDisbursementValues: () => {
+            return {
+                thisIsMocked: true,
+            };
+        },
+        BankingFields: {
+            Bank: 'bank',
+            AccountNumber: 'accountNumber',
+            PayeeName: 'payeeName',
+            Address: 'address',
+            SelectIfPayeeIsDifferent: 'selectIfPayeeIsDifferent',
+        },
+        DisbursementFields: {
+            SelectBank: 'SelectBank',
+            BankTextField: 'BankTextField',
+            BankCheckboxField: 'BankCheckboxField',
+            BankAddress: 'BankAddress',
+            AccountTypes: 'AccountTypes',
+            BankBooleanButtonGroup: 'BankBooleanButtonGroup',
+            SendCheckSelect: 'SendCheckSelect',
+        },
+        updateBankingDetails: jest.fn(),
+        shouldDisplayPayeeName: jest.fn(),
+        shouldDisplayAddress: jest.fn(),
+    })
 );
+
+import useDlicConfig from './dlic-withdrawal-form-helpers';
 
 describe('Dlic withdrawal form config', () => {
     const t: TFunction = (key: string | string[]) =>
         key as unknown as TFunctionDetailedResult<string>;
 
-    const {
-        result: { current },
-    } = renderHook(() => useDlicConfig(t, false));
-
     describe('Config existence', () => {
         it('should return an object with the correct configuration options', () => {
+            const {
+                result: { current },
+            } = renderHook(() => useDlicConfig(t, false));
+
             expect(current.signaturesConfig).toBeDefined();
             expect(current.signaturesNotaryConfig).toBeDefined();
             expect(current.fundWithdrawnMethodOptions).toBeDefined();
@@ -68,8 +77,14 @@ describe('Dlic withdrawal form config', () => {
         });
     });
 
-    describe('disbursementOptions', () => {
+    describe('disbursementOptions with isDlic3pDisbursementChangesEnabled = false', () => {
+        const {
+            result: { current },
+        } = renderHook(() => useDlicConfig(t, false));
         const { disbursementOptions } = current;
+        const options = disbursementOptions({
+            parties: [],
+        } as any);
         const bank: BankDetails = {
             accountNumber: '12345',
             accountType: { text: AccountType.Checking },
@@ -109,7 +124,7 @@ describe('Dlic withdrawal form config', () => {
 
         describe('payload generation', () => {
             it('should generate a correct payload for an eft bank type full selection', () => {
-                const eftOption = disbursementOptions.find(
+                const eftOption = options.find(
                     (option) => option.value === PaymentMethod.EFT
                 );
 
@@ -134,7 +149,7 @@ describe('Dlic withdrawal form config', () => {
             });
 
             it('should generate a correct payload for an eft bank type masked selection', () => {
-                const eftOption = disbursementOptions.find(
+                const eftOption = options.find(
                     (option) => option.value === PaymentMethod.EFT
                 );
 
@@ -165,7 +180,7 @@ describe('Dlic withdrawal form config', () => {
             });
 
             it('should generate a correct payload for a wire selection', () => {
-                const wireOption = disbursementOptions.find(
+                const wireOption = options.find(
                     (option) => option.value === PaymentMethod.Wire
                 );
 
@@ -190,7 +205,7 @@ describe('Dlic withdrawal form config', () => {
             });
 
             it('should generate a correct payload for a check selection', () => {
-                const checkOption = disbursementOptions.find(
+                const checkOption = options.find(
                     (option) => option.value === PaymentMailType.Check
                 );
                 const result =
@@ -208,10 +223,13 @@ describe('Dlic withdrawal form config', () => {
                         contractNumber: { text: null },
                     },
                 });
+                // Legacy version does NOT include isAnnuitant or isPayeeFinancialIns
+                expect(result?.isAnnuitant).toBeUndefined();
+                expect(result?.isPayeeFinancialIns).toBeUndefined();
             });
 
             it('should generate a correct payload for an expressCheck selection', () => {
-                const expressCheckOption = disbursementOptions.find(
+                const expressCheckOption = options.find(
                     (option) => option.value === PaymentMailType.ExpressCheck
                 );
 
@@ -224,6 +242,186 @@ describe('Dlic withdrawal form config', () => {
                     paymentMethod: { text: PaymentMailType.Check },
                     paymentMailType: { text: PaymentMailType.ExpressCheck },
                 });
+            });
+        });
+
+        it('should render Send Check option with legacy fields when flag is false', () => {
+            const checkOption = options.find(
+                (option) => option.value === PaymentMailType.Check
+            );
+
+            expect(checkOption).toBeDefined();
+            expect(checkOption?.label).toBe('distributionMethod.sendCheck');
+            expect(checkOption?.fields).toHaveLength(3);
+
+            // Check for SelectIfPayeeIsDifferent field (legacy version)
+            const selectIfPayeeField = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'selectIfPayeeIsDifferent'
+            );
+            expect(selectIfPayeeField).toBeDefined();
+            expect(selectIfPayeeField?.fieldLabel).toBe(
+                'distributionMethod.selectIfDifferentPayee'
+            );
+
+            // Check for PayeeName field (no shouldDisplay in legacy version)
+            const payeeNameField: any = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'payeeName'
+            );
+            expect(payeeNameField).toBeDefined();
+            expect(payeeNameField?.shouldDisplay).toBeUndefined();
+
+            // Check for Address field (no shouldDisplay in legacy version)
+            const addressField: any = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'address'
+            );
+            expect(addressField).toBeDefined();
+            expect(addressField?.shouldDisplay).toBeUndefined();
+        });
+    });
+
+    describe('disbursementOptions with isDlic3pDisbursementChangesEnabled = true', () => {
+        const {
+            result: { current },
+        } = renderHook(() => useDlicConfig(t, true));
+        const { disbursementOptions } = current;
+        const options = disbursementOptions({
+            parties: [],
+        } as any);
+        const bank: BankDetails = {
+            accountNumber: '12345',
+            accountType: { text: AccountType.Checking },
+            bankContactPerson: 'Fred Mockerson',
+            bankFurtherCreditAccount: '23456',
+            bankFurtherCreditName: 'Jan Mockington',
+            bankInfoCompleteInd: 'Sure',
+            bankLocation: 'Mockville',
+            bankName: 'Bank of Mockville',
+            bankPhone: '867-5309',
+            nameOnBankAccount: 'Eli Mockerson',
+            routingNumber: '123456789',
+            maskedAccountNumber: null,
+            isDirectDepositValid: {
+                text: null,
+            },
+        };
+
+        const bankingDetails: DisbursementParts = {
+            ...DEFAULT_DISBURSEMENT_UPDATE,
+            accountNumber: bank.accountNumber || '',
+            accountType: AccountType.Checking,
+            bankName: bank.bankName || '',
+            accountHolder: bank.nameOnBankAccount || '',
+            bankFurtherCreditAccount: bank.bankFurtherCreditAccount || '',
+            bankFurtherCreditName: bank.bankFurtherCreditName || '',
+            bankRoutingNumber: bank.routingNumber || '',
+            isDirectDeposit: true,
+            payeeName: 'Mock Payee',
+            address: DEFAULT_ADDRESS,
+            selectIfPayeeIsDifferent: true,
+            maskedAccountNumber: '1234',
+            isDirectDepositValid: true,
+            reEnterAccountNumber: '123',
+            reEnterBankRoutingNumber: '123',
+        };
+
+        it('should return all disbursement options including EFT, Wire, Check, and ExpressCheck', () => {
+            expect(options).toHaveLength(4);
+            expect(options[0].value).toBe(PaymentMethod.EFT);
+            expect(options[1].value).toBe(PaymentMethod.Wire);
+            expect(options[2].value).toBe(PaymentMailType.Check);
+            expect(options[3].value).toBe(PaymentMailType.ExpressCheck);
+        });
+
+        it('should render Send Check option with new fields when flag is true', () => {
+            const checkOption = options.find(
+                (option) => option.value === PaymentMailType.Check
+            );
+
+            expect(checkOption).toBeDefined();
+            expect(checkOption?.label).toBe('distributionMethod.sendCheck');
+            expect(checkOption?.fields).toHaveLength(3);
+
+            // Check for SendCheckSelect field (new version)
+            const sendCheckSelectField = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'SendCheckSelect'
+            );
+            expect(sendCheckSelectField).toBeDefined();
+
+            // Check for PayeeName field with shouldDisplay (new version)
+            const payeeNameField: any = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'payeeName'
+            );
+            expect(payeeNameField).toBeDefined();
+            expect(payeeNameField?.shouldDisplay).toBeDefined();
+            expect(typeof payeeNameField?.shouldDisplay).toBe('function');
+
+            // Check for Address field with shouldDisplay (new version)
+            const addressField: any = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'address'
+            );
+            expect(addressField).toBeDefined();
+            expect(addressField?.shouldDisplay).toBeDefined();
+            expect(typeof addressField?.shouldDisplay).toBe('function');
+            // annuitantAddress will be undefined when parties array is empty
+            expect(addressField?.annuitantAddress).toBeUndefined();
+        });
+
+        it('should NOT have SelectIfPayeeIsDifferent field when flag is true', () => {
+            const checkOption = options.find(
+                (option) => option.value === PaymentMailType.Check
+            );
+
+            const selectIfPayeeField = checkOption?.fields?.find(
+                (field: any) => field.fieldName === 'selectIfPayeeIsDifferent'
+            );
+            expect(selectIfPayeeField).toBeUndefined();
+        });
+
+        describe('payload generation', () => {
+            it('should generate a correct payload for an eft bank type full selection', () => {
+                const eftOption = options.find(
+                    (option) => option.value === PaymentMethod.EFT
+                );
+
+                const result =
+                    eftOption?.generatePayloadFromSelection(bankingDetails);
+                expect(result).toMatchObject({
+                    thisIsMocked: true,
+                    paymentMethod: { text: PaymentMethod.EFT },
+                    paymentMailType: { text: null },
+                });
+                expect(result!.bank[0]).toMatchObject({
+                    accountNumber: bankingDetails.accountNumber,
+                    accountType: {
+                        text: bankingDetails.accountType,
+                    },
+                    bankName: bankingDetails.bankName,
+                    routingNumber: bankingDetails.bankRoutingNumber,
+                    reEnterAccountNumber: bankingDetails.reEnterAccountNumber,
+                    reEnterBankRoutingNumber:
+                        bankingDetails.reEnterBankRoutingNumber,
+                });
+            });
+
+            it('should generate a correct payload for a check selection with new structure', () => {
+                const checkOption = options.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                const result =
+                    checkOption?.generatePayloadFromSelection(bankingDetails);
+                expect(result).toMatchObject({
+                    thisIsMocked: true,
+                    paymentMethod: { text: PaymentMailType.Check },
+                    paymentMailType: { text: null },
+                    isAnnuitant: bankingDetails.isAnnuitant || false,
+                    payee: {
+                        name: { text: bankingDetails.payeeName },
+                        addresses: [bankingDetails.address],
+                        contractNumber: { text: null },
+                    },
+                });
+                // Should NOT have isDifferentPayeeOrAddress in new version
+                expect(result?.isDifferentPayeeOrAddress).toBeUndefined();
             });
         });
     });

@@ -10,8 +10,14 @@ const BankAddress = ({
     disbursementInformation,
     onDataChange,
     isAddressLine2Required = false,
+    annuitantAddress,
 }: DisbursementInformation) => {
-    const address = disbursementInformation?.address;
+    const isAnnuitant = disbursementInformation?.isAnnuitant;
+    const address =
+        isAnnuitant && annuitantAddress
+            ? annuitantAddress
+            : disbursementInformation?.address;
+
     const setAddress = (val: Address) => {
         onDataChange((ogData) => ({
             ...ogData,
