@@ -1,8 +1,8 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import * as envPrefixes from '../../data/persona-env-var-prefixes.json';
-import pages from '../../pages/page-factory';
 import navigationBar from '../../pages/components/navigation-bar';
+import pages from '../../pages/page-factory';
 
 Given('User is on the {string}', (pageName: string) => {
   const page = pages[pageName];
