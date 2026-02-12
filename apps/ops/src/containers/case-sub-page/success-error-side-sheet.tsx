@@ -10,6 +10,9 @@ import CardInfo from '@deps/components/card/card-info/card-info';
 import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 interface SideSheetContextLegacy {
     handleOpen: (open: boolean) => void;
     changeSideSheetContent: (title: string, content: React.ReactNode) => void;

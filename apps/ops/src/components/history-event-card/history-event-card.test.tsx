@@ -1,5 +1,8 @@
 import { render, screen } from '@testing-library/react';
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import {
     MittEvents,
     SideSheetContextLegacy,

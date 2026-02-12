@@ -20,7 +20,9 @@ export type MittEvents = {
     closeSecondary: undefined;
 };
 
-export interface SideSheetContextLegacyProps {
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */ export interface SideSheetContextLegacyProps {
     events: Emitter<MittEvents>;
     changeSideSheetContent: (
         header: string | React.ReactNode,
@@ -36,19 +38,31 @@ export interface SideSheetContextLegacyProps {
     onClose: () => void;
 }
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 export const SideSheetContextLegacy =
     createContext<SideSheetContextLegacyProps>(
         {} as SideSheetContextLegacyProps
     );
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 export const useSideSheetContextLegacy = () => {
     return useContext(SideSheetContextLegacy);
 };
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 interface SideSheetProviderLegacyProps {
     children: React.ReactNode;
 }
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 export const SideSheetProviderLegacy = ({
     children,
 }: SideSheetProviderLegacyProps) => {
