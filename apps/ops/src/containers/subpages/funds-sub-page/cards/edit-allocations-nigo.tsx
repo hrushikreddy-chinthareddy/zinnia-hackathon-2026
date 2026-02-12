@@ -14,6 +14,9 @@ import NavElement, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as HexExclamation } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 

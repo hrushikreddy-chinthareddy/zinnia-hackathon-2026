@@ -3,6 +3,9 @@ import { useContext, useMemo } from 'react';
 
 import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/global-values-nb-bar';
 import { TranslationFiles } from '@deps/config/translations';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';

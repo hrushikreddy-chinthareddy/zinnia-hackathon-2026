@@ -8,6 +8,9 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Address } from '@zinnia/api-types/types/sor';
 

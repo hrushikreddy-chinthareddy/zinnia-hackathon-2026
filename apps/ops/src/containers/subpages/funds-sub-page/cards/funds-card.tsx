@@ -12,6 +12,9 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';

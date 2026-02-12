@@ -17,6 +17,9 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';

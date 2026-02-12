@@ -16,6 +16,9 @@ import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
 import { TranslationFiles } from '@deps/config/translations';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { useAttachments } from '@deps/hooks/useAttachments';

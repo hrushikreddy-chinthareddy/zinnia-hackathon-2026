@@ -5,6 +5,9 @@ import GlobalValuesBar from '@deps/components/global-values/global-values-bar/gl
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     WorkflowProvider,

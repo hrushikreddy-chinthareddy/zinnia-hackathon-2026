@@ -2,6 +2,9 @@ import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 
 import { useClientCaseId } from './use-client-case-id';

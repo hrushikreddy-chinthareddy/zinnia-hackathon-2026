@@ -15,6 +15,9 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import SuccessErrorSideSheet from '@deps/containers/case-sub-page/success-error-side-sheet';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Case, CorrectionReason, CorrectionType } from '@deps/models/case/case';
 import {

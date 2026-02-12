@@ -3,6 +3,9 @@ import { QuestionnaireEngine } from '@zinnia/form-engine-sdk';
 import { useRouter } from 'next/router';
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     editIllustrationToClientCase,

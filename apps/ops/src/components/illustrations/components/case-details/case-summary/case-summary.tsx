@@ -23,6 +23,9 @@ import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';

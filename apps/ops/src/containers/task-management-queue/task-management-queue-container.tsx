@@ -15,6 +15,9 @@ import { SearchBarInitialValues } from '@deps/components/search/search-bar-initi
 import MultiselectField from '@deps/components/side-sheet/side-sheet-refine-results/multiselect-field';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskManagerActiveFilters from '@deps/containers/task-manager-active-filters/';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import useTaskManagementQueue, {
     DEFAULT_SORTING_CONFIG,

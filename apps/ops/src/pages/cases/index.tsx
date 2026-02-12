@@ -29,6 +29,9 @@ import {
 } from '@deps/contexts/CaseManagementFilters';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSearchBarcontext } from '@deps/contexts/SearchBarContext';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getAdvisorsExcelCaseParams } from '@deps/helpers/advisors-excel';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';

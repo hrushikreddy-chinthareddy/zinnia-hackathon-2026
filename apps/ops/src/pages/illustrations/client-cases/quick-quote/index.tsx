@@ -7,6 +7,9 @@ import { canUserCreateClientCase } from '@deps/components/client-case/client-cas
 import { serializeQuickQuoteParams } from '@deps/components/client-case/quick-quote/helpers';
 import { QuickQuoteForm } from '@deps/components/client-case/quick-quote/quick-quote-form';
 import { TranslationFiles } from '@deps/config/translations';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';

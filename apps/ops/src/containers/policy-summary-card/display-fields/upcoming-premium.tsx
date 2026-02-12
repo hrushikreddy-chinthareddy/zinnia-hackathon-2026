@@ -13,6 +13,9 @@ import NavElement, {
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import BankingDetails from '@deps/components/side-sheet/banking-details/banking-details';
 import { TranslationFiles } from '@deps/config/translations';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';

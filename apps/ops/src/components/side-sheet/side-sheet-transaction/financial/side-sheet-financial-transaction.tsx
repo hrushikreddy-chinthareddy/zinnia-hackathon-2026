@@ -7,6 +7,9 @@ import ChipStatus from '@deps/components/chip-status/chip-status';
 import { Content, ContentVariant } from '@deps/components/content/content';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';

@@ -6,6 +6,9 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';

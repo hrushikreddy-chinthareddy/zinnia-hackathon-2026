@@ -18,6 +18,9 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PendingReasonOptions } from '@deps/models/case/enums';
 import { TaskSource, TaskType } from '@deps/models/case/task';

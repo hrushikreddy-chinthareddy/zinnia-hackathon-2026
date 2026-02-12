@@ -1,5 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react';
 
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 
 interface UseTaskIdFromUrlProps {

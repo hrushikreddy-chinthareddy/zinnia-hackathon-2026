@@ -9,6 +9,9 @@ import ClickWrapper from '@deps/components/click-container/click-wrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { CaseAdditionalData } from '@deps/models/case/case';
