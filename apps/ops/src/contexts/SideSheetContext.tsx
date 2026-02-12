@@ -22,7 +22,8 @@ export type MittEvents = {
 
 /**
  * @deprecated Use standard Sidesheet from Bloom component library
- */ export interface SideSheetContextLegacyProps {
+ */
+export interface SideSheetContextLegacyProps {
     events: Emitter<MittEvents>;
     changeSideSheetContent: (
         header: string | React.ReactNode,

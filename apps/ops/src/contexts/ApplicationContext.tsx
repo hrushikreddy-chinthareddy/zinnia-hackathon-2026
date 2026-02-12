@@ -15,9 +15,6 @@ import { OptimizelyProvider } from './OptimizelyContext';
 import { PermissionsProvider } from './PermissionsContext';
 import { PolicySearchFiltersProvider } from './PolicySearchFilters';
 import { SearchBarProvider } from './SearchBarContext';
-/**
- * @deprecated Use standard Sidesheet from Bloom component library
- */
 import { SideSheetProviderLegacy } from './SideSheetContext';
 
 interface ApplicationData {
