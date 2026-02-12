@@ -55,7 +55,36 @@ test.describe('Policy Page', () => {
             .getByRole('menu')
             .filter({ hasText: 'Send Documents' });
         await expect(quickActionMenu).toBeVisible();
+
+        // Close the menu by clicking outside before navigating
+        await page.mouse.click(10, 10);
+        await expect(quickActionMenu).toBeHidden();
+
         await policyDetailLinks.first().click();
-        await page.waitForURL('**/policies/**/policy/policy-details');
+        await page.waitForURL('**/policies/**/policy/policy-details', {
+            timeout: 15000,
+        });
+    });
+});
+
+test.describe('Transactions Ops Page ', () => {
+    test('Loads properly', async ({ page }) => {
+        await page.goto('http://localhost:3000');
+        await page.getByRole('link', { name: 'TransactionOps Suite' }).click();
+        await page.waitForURL('**/create-case');
+
+        const transactionOpsHeader = page.getByText('TransactionOps Suite');
+        await expect(transactionOpsHeader).toBeVisible({});
+    });
+});
+
+test.describe('Analytics Page ', () => {
+    test('Loads properly', async ({ page }) => {
+        await page.goto('http://localhost:3000');
+        await page.getByRole('link', { name: 'Analytics' }).click();
+        await page.waitForURL('**/analytics/cases');
+
+        const analyticsHeader = page.getByTestId('header-text');
+        await expect(analyticsHeader).toBeVisible({});
     });
 });
