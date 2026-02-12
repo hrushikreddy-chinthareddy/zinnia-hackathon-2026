@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
@@ -33,6 +34,7 @@ import { Transaction } from '@zinnia/api-types/types/sor';
 import { WithdrawalContainerProps } from '../types';
 import PartialViewContainer from './partial-view-container/partial-view-container';
 import { WithdrawalType } from './types';
+dayjs.extend(customParseFormat);
 
 const Amount = ({ policy }: WithdrawalContainerProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -92,6 +94,26 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
         const dateValue = event.target.value;
         setWithdrawal({ ...withdrawal, effectiveDate: dateValue });
     };
+
+    const handleIsDateAllowed = (d: dayjs.Dayjs) => {
+        const minDate = dayjs(
+            policy?.policyContractState?.currentLifecycleDate
+        ).format(NUMERIC_DATE_FORMAT);
+        const min = dayjs(minDate, NUMERIC_DATE_FORMAT, true).startOf('day');
+
+        if (!min.isValid()) return true;
+
+        return !d.isBefore(min, 'day');
+    };
+
+    useEffect(() => {
+        setWithdrawal({
+            ...withdrawal,
+            effectiveDate: dayjs(
+                policy?.policyContractState?.currentLifecycleDate
+            ).format(NUMERIC_DATE_FORMAT),
+        });
+    }, [policy]);
 
     const isDateValid = (date: string): boolean => {
         return dayjs(date, NUMERIC_DATE_FORMAT).isValid() && date !== '';
@@ -316,6 +338,7 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
                                             ? undefined
                                             : invalidDate
                                     }
+                                    isDateAllowed={handleIsDateAllowed}
                                 />
                             </>
                         )}
