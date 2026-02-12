@@ -14,7 +14,7 @@ test.describe('Case Page', () => {
         });
 
         // Wait for at least one case link to appear (with extended timeout)
-        await expect(caseDetailLinks.first()).toBeVisible({ timeout: 15000 });
+        await expect(caseDetailLinks.first()).toBeVisible();
 
         // Now count them
         const linkCount = await caseDetailLinks.count();
@@ -37,7 +37,7 @@ test.describe('Policy Page', () => {
         );
 
         // Wait for at least one policy link to appear (with extended timeout)
-        await expect(policyDetailLinks.first()).toBeVisible({ timeout: 15000 });
+        await expect(policyDetailLinks.first()).toBeVisible();
         // Now count them
         const linkCount = await policyDetailLinks.count();
         expect(linkCount).toBeGreaterThan(0);
@@ -46,9 +46,7 @@ test.describe('Policy Page', () => {
         const quickActionButtons = page
             .getByTestId('policy-action-cell-menu')
             .first();
-        await expect(quickActionButtons).toBeVisible({
-            timeout: 15000,
-        });
+        await expect(quickActionButtons).toBeVisible();
 
         await quickActionButtons.click();
         const quickActionMenu = page
@@ -61,9 +59,7 @@ test.describe('Policy Page', () => {
         await expect(quickActionMenu).toBeHidden();
 
         await policyDetailLinks.first().click();
-        await page.waitForURL('**/policies/**/policy/policy-details', {
-            timeout: 15000,
-        });
+        await page.waitForURL('**/policies/**/policy/policy-details');
     });
 });
 
@@ -74,7 +70,7 @@ test.describe('Transactions Ops Page ', () => {
         await page.waitForURL('**/create-case');
 
         const transactionOpsHeader = page.getByText('TransactionOps Suite');
-        await expect(transactionOpsHeader).toBeVisible({});
+        await expect(transactionOpsHeader).toBeVisible();
     });
 });
 
@@ -85,6 +81,6 @@ test.describe('Analytics Page ', () => {
         await page.waitForURL('**/analytics/cases');
 
         const analyticsHeader = page.getByTestId('header-text');
-        await expect(analyticsHeader).toBeVisible({});
+        await expect(analyticsHeader).toBeVisible();
     });
 });
