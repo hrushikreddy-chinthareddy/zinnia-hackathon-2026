@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -152,6 +152,17 @@ const SideSheetAddress = ({
     const [newCaseId, setNewCaseId] = useState<string>();
 
     const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Address,
+                newItem: address,
+                setState: setCurrentAddresses,
+            });
+        }
+    }, [viewState, action, address, setCurrentAddresses]);
 
     const { addressType } = address;
     const { caseId } = body;
@@ -348,13 +359,6 @@ const SideSheetAddress = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Address,
-                newItem: address,
-                setState: setCurrentAddresses,
-            });
-
             return (
                 <SuccessState
                     action={action}

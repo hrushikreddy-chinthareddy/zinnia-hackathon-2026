@@ -4,7 +4,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -144,6 +144,17 @@ export const SideSheetPhone = ({
     const [newCaseId, setNewCaseId] = useState<string>();
 
     const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Phone,
+                newItem: phone,
+                setState: setCurrentPhones,
+            });
+        }
+    }, [viewState, action, phone, setCurrentPhones]);
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -311,13 +322,6 @@ export const SideSheetPhone = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Phone,
-                newItem: phone,
-                setState: setCurrentPhones,
-            });
-
             return (
                 <SuccessState
                     action={action}
