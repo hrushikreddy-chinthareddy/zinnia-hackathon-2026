@@ -237,11 +237,47 @@ export default function getDlicRmdWithdrawalConfig(
     ];
 
     const sendCheckOptions = (rmdMethod: RMDType) => {
-        const isAutoRmd = rmdMethod === RMDType.AutoRMD;
-        const isOneTimeRmd = rmdMethod === RMDType.CalculateRMD;
+        const isAutoRmdOrCalculateRmd =
+            rmdMethod === RMDType.AutoRMD || rmdMethod === RMDType.CalculateRMD;
+        const isOneTimeRmd = rmdMethod === RMDType.OneTimeRMD;
 
+        // One Time RMD: 5 options with combined third party/charity option (no separate Charity)
         if (isOneTimeRmd) {
             return [
+                {
+                    label: t('distributionMethod.select'),
+                    value: 'select',
+                },
+                {
+                    label: t(
+                        'distributionMethod.disburseToThirdPartyNoCharity'
+                    ),
+                    value: SendCheckOption.ThirdPartyNotFinancialIns,
+                },
+                {
+                    label: t(
+                        'distributionMethod.disburseToFinancialInstitution'
+                    ),
+                    value: SendCheckOption.FinancialInstitution,
+                },
+                {
+                    label: t('distributionMethod.disburseToOwnerAddress'),
+                    value: SendCheckOption.OwnerAddress,
+                },
+                {
+                    label: t('distributionMethod.disburseToDifferentAddress'),
+                    value: SendCheckOption.DifferentAddress,
+                },
+            ];
+        }
+
+        // Auto RMD or Calculate RMD: 6 options with separate Charity option
+        if (isAutoRmdOrCalculateRmd) {
+            return [
+                {
+                    label: t('distributionMethod.select'),
+                    value: 'select',
+                },
                 {
                     label: t('distributionMethod.disburseToOwnerAddress'),
                     value: SendCheckOption.OwnerAddress,
@@ -257,37 +293,12 @@ export default function getDlicRmdWithdrawalConfig(
                     value: SendCheckOption.Charity,
                 },
                 {
-                    label: t('distributionMethod.disburseToDifferentAddress'),
-                    value: SendCheckOption.DifferentAddress,
-                },
-                {
                     label: t('distributionMethod.disburseToThirdParty'),
                     value: SendCheckOption.ThirdPartyNotFinancialIns,
                 },
-            ];
-        }
-
-        if (isAutoRmd) {
-            return [
-                {
-                    label: t('distributionMethod.disburseToOwnerAddress'),
-                    value: SendCheckOption.OwnerAddress,
-                },
-                {
-                    label: t(
-                        'distributionMethod.disburseToFinancialInstitution'
-                    ),
-                    value: SendCheckOption.FinancialInstitution,
-                },
                 {
                     label: t('distributionMethod.disburseToDifferentAddress'),
                     value: SendCheckOption.DifferentAddress,
-                },
-                {
-                    label: t(
-                        'distributionMethod.disburseToThirdPartyNotCharityNotFinancial'
-                    ),
-                    value: SendCheckOption.ThirdPartyNotFinancialIns,
                 },
             ];
         }
