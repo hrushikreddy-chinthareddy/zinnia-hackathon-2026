@@ -8,6 +8,7 @@
 
 ### Review checklist
 
+- [ ] QA / PM approved _before_ merge
 - [ ] checked other browsers? (chrome, firefox, edge, safari)
 - [ ] tested accessibility
 - [ ] added unit tests (if applicable)
