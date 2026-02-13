@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
+import React from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -19,6 +20,78 @@ import {
     // eslint-disable-next-line import/no-unresolved
 } from './index-automation-case.types';
 
+type FieldConfig = {
+    labelKey: string;
+    field: string;
+    variant?: TypographyVariant;
+};
+
+const DATA_TYPE_FIELDS: Record<string, FieldConfig[]> = {
+    [DataType.REQUEST_RECEIVED_DATA]: [
+        {
+            labelKey: 'allFields.indexAutomationRequestReceivedReceivedOn',
+            field: 'receivedOn',
+            variant: TypographyVariant.BodySm,
+        },
+        {
+            labelKey: 'allFields.indexAutomationRequestReceivedSource',
+            field: 'source',
+            variant: TypographyVariant.BodySm,
+        },
+    ],
+    [DataType.DOCUMENT_IDENTIFICATION_DATA]: [
+        {
+            labelKey:
+                'allFields.indexAutomationDocumentIdentificationDocTypeGroup',
+            field: 'docTypeGroup',
+        },
+        {
+            labelKey: 'allFields.indexAutomationDocumentIdentificationDocType',
+            field: 'docType',
+        },
+    ],
+    [DataType.DOCUMENT_EXTRACTION_DATA]: [
+        {
+            labelKey:
+                'allFields.indexAutomationDocumentExtractionContractNumber',
+            field: 'contractNumber',
+        },
+        {
+            labelKey: 'allFields.indexAutomationDocumentExtractionOwnerName',
+            field: 'ownerName',
+        },
+        {
+            labelKey: 'allFields.indexAutomationDocumentExtractionSsn',
+            field: 'ssn',
+        },
+    ],
+    [DataType.DOCUMENT_MANUAL_REVIEW_DATA]: [
+        {
+            labelKey: 'allFields.indexAutomationDocumentManualReviewReason',
+            field: 'reason',
+        },
+        {
+            labelKey:
+                'allFields.indexAutomationDocumentManualReviewActionTaken',
+            field: 'actionTaken',
+        },
+        {
+            labelKey: 'allFields.indexAutomationDocumentManualReviewQueue',
+            field: 'reviewQueue',
+        },
+    ],
+    [DataType.DOCUMENT_INDEXED_DATA]: [
+        {
+            labelKey: 'allFields.indexAutomationDocumentIndexedDocumentNumber',
+            field: 'documentNumber',
+        },
+        {
+            labelKey: 'allFields.indexAutomationDocumentIndexedTransactionType',
+            field: 'transactionType',
+        },
+    ],
+};
+
 const IndexAutomationCase = ({
     stepAdditionalData,
     dataType,
@@ -35,7 +108,7 @@ const IndexAutomationCase = ({
         queryFn: () => getTransactionEntityQuery(entityId),
     });
 
-    const displayIsLoading = () => {
+    const displayStatusMessage = (messageKey: string) => {
         return (
             <div className={styles.flexFullCol}>
                 <div className={styles.customMarginTop}>
@@ -52,31 +125,7 @@ const IndexAutomationCase = ({
                         variant={TypographyVariant.BodySmBold}
                         className={styles.customTextColor}
                     >
-                        {t('allFields.indexAutomationLoading')}
-                    </Typography>
-                </div>
-            </div>
-        );
-    };
-
-    const displayError = () => {
-        return (
-            <div className={styles.flexFullCol}>
-                <div className={styles.customMarginTop}>
-                    <InProgressIcon
-                        height={18}
-                        width={18}
-                        role="presentation"
-                        aria-hidden={true}
-                        className={styles.customIconStyle}
-                    />
-                </div>
-                <div>
-                    <Typography
-                        variant={TypographyVariant.BodySmBold}
-                        className={styles.customTextColor}
-                    >
-                        {t('allFields.indexAutomationErrorGetting')}
+                        {t(messageKey)}
                     </Typography>
                 </div>
             </div>
@@ -85,14 +134,14 @@ const IndexAutomationCase = ({
 
     const displayNoData = () => {
         return (
-            <div className="mt-0.5">
+            <div className={styles.customMarginTop}>
                 <Typography
                     variant={TypographyVariant.H3}
-                    className="mb-4 border-b pb-2"
+                    className={styles.customSectionDivider}
                 >
                     {t('allFields.indexAutomationTitle')}
                 </Typography>
-                <div className="text-sm font-bold">
+                <div className={styles.customSectionTitle}>
                     <AssistiveText
                         text={t('allFields.indexAutomationNoData')}
                         variant={AssistiveTextVariant.Default}
@@ -109,200 +158,52 @@ const IndexAutomationCase = ({
         );
     };
 
+    const renderFields = (fields: FieldConfig[]) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const entity = transactionEntity?.entity as Record<string, any>;
+
+        return (
+            <div className={styles.flexFullCol}>
+                <div className={styles.gridContainer}>
+                    {fields.map(({ labelKey, field, variant }) => (
+                        <React.Fragment key={field}>
+                            <div className={styles.customColSpan2}>
+                                {t(labelKey)}
+                            </div>
+                            <Typography
+                                variant={
+                                    variant ?? TypographyVariant.BodySmBold
+                                }
+                                className={styles.customColSpan3}
+                            >
+                                {entity?.[field] || DEFAULT_ERROR_STRING}
+                            </Typography>
+                        </React.Fragment>
+                    ))}
+                </div>
+            </div>
+        );
+    };
+
     if (isLoading) {
-        return displayIsLoading();
+        return displayStatusMessage('allFields.indexAutomationLoading');
     }
 
     if (isError) {
-        return displayError();
+        return displayStatusMessage('allFields.indexAutomationErrorGetting');
     }
 
     if (!transactionEntity) {
         return displayNoData();
     }
 
-    return (
-        <div className={styles.flexFullCol}>
-            {dataType === DataType.REQUEST_RECEIVED_DATA && (
-                <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationRequestReceivedReceivedOn'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySm}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.receivedOn ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationRequestReceivedSource'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySm}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.source ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                    </div>
-                </div>
-            )}
+    const fields = DATA_TYPE_FIELDS[dataType];
 
-            {dataType === DataType.DOCUMENT_IDENTIFICATION_DATA && (
-                <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentIdentificationDocTypeGroup'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.docTypeGroup ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentIdentificationDocType'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.docType ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                    </div>
-                </div>
-            )}
+    if (!fields) {
+        return null;
+    }
 
-            {dataType === DataType.DOCUMENT_EXTRACTION_DATA && (
-                <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentExtractionContractNumber'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.contractNumber ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentExtractionOwnerName'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.ownerName ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentExtractionSsn'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.ssn ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                    </div>
-                </div>
-            )}
-
-            {dataType === DataType.DOCUMENT_MANUAL_REVIEW_DATA && (
-                <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentManualReviewReason'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.reason ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentManualReviewActionTaken'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.actionTaken ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentManualReviewQueue'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.reviewQueue ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                    </div>
-                </div>
-            )}
-
-            {dataType === DataType.DOCUMENT_INDEXED_DATA && (
-                <div className={styles.flexFullCol}>
-                    <div className={styles.gridContainer}>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentIndexedDocumentNumber'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.documentNumber ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                        <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentIndexedTransactionType'
-                            )}
-                        </div>
-                        <Typography
-                            variant={TypographyVariant.BodySmBold}
-                            className={styles.customColSpan3}
-                        >
-                            {transactionEntity?.entity?.transactionType ||
-                                DEFAULT_ERROR_STRING}
-                        </Typography>
-                    </div>
-                </div>
-            )}
-        </div>
-    );
+    return <div className={styles.flexFullCol}>{renderFields(fields)}</div>;
 };
 
 export default IndexAutomationCase;
