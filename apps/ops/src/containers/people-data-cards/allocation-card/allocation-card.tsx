@@ -12,8 +12,10 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
+import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     numberFormatify,
     percentFormatify,
@@ -24,7 +26,7 @@ import {
     NonFinancialTransactions,
 } from '@deps/queries/api/bpm-non-financial';
 import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_outlined/edit-alt.svg';
-import { PartyType } from '@zinnia/api-types/types/sor';
+import { PartyType, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
 export interface AllocationCardProps {
     allocation?: number;
@@ -33,6 +35,7 @@ export interface AllocationCardProps {
     relationshipToInsured?: string;
     selectedPartyId?: string;
     selectedPartyType?: string;
+    selectedPolicyPartyRoles?: PolicyPartyRoles[];
 }
 
 export interface AllocationPercentageProps {
@@ -124,6 +127,7 @@ const AllocationCard = ({
     relationshipToInsured,
     selectedPartyId,
     selectedPartyType,
+    selectedPolicyPartyRoles,
 }: AllocationCardProps) => {
     const { t } = useTranslation();
     const { policy, refreshPolicy } = useContext(PolicyData);
@@ -143,6 +147,14 @@ const AllocationCard = ({
         );
         sideSheet.handleOpen(true);
     };
+
+    const getPartyRoleText = (partyRole: string) => {
+        return convertToChipText(partyRole, t);
+    };
+
+    const activePolicyPartyRoles = selectedPolicyPartyRoles?.filter(
+        (role) => !isEndDated(role.endDate)
+    );
 
     let estimatedValue;
     const isIndividual = selectedPartyType === PartyType.INDIVIDUAL;
@@ -170,16 +182,56 @@ const AllocationCard = ({
             </div>
         );
     } else {
-        estimatedValue = (
-            <div className="flex font-primary lg:pl-8">
-                <AllocationPercentage allocation={allocation} />
-                {isIndividual && (
-                    <RelationshipToInsuredInfo
-                        relationshipToInsured={relationshipToInsured}
-                    />
-                )}
-            </div>
-        );
+        if (activePolicyPartyRoles?.length) {
+            estimatedValue = (
+                <>
+                    <div className="flex">
+                        <Label
+                            variant={LabelVariant.FieldLabel}
+                            label={t('people.card.allocation.label')}
+                        />
+                    </div>
+                    <div className="flex flex-row">
+                        {activePolicyPartyRoles?.map((role, index) => (
+                            <div
+                                key={`agent-role-${index}`}
+                                className="flex flex-col font-primary mr-8"
+                            >
+                                <Typography variant={TypographyVariant.Value}>
+                                    {percentFormatify(role.partyPercentage, {
+                                        isInteger: true,
+                                    })}
+                                </Typography>
+                                <Typography
+                                    variant={TypographyVariant.BodySm}
+                                    className="text-gray-300"
+                                >
+                                    {getPartyRoleText(role.partyRole as string)}
+                                </Typography>
+                                {isIndividual && (
+                                    <RelationshipToInsuredInfo
+                                        relationshipToInsured={
+                                            role.relationshipToInsured
+                                        }
+                                    />
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </>
+            );
+        } else {
+            estimatedValue = (
+                <div className="flex font-primary lg:pl-8">
+                    <AllocationPercentage allocation={allocation} />
+                    {isIndividual && (
+                        <RelationshipToInsuredInfo
+                            relationshipToInsured={relationshipToInsured}
+                        />
+                    )}
+                </div>
+            );
+        }
     }
 
     return (

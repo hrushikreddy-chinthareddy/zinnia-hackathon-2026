@@ -102,9 +102,9 @@ export const TaskStatusFilter = () => {
 
     return (
         <Select
-            label={String(t('caseStats.tasks.filters.status.label') ?? '')}
+            label={String(t('allFields.taskVolumeFiltersStatusLabel') ?? '')}
             placeholder={String(
-                t('caseStats.tasks.filters.status.placeholder') ?? ''
+                t('allFields.taskVolumeFiltersStatusPlaceholder') ?? ''
             )}
             options={STATUS_OPTIONS}
             size={FieldSize.XS}

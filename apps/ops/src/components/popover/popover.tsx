@@ -62,7 +62,9 @@ export default function Popover({
     }
 
     const popoverContent = (
-        <div className={clsx(commonPopoverClasses, popoverClassName)}>
+        <div
+            className={clsx(commonPopoverClasses, 'relative', popoverClassName)}
+        >
             <div className="flex justify-between">
                 <p
                     className="label-lg mb-1 mr-6"

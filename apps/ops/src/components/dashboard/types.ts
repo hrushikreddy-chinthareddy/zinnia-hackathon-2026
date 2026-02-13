@@ -19,6 +19,20 @@ export const TabTitles = {
 
 export type TabTitle = keyof typeof TabTitles;
 
+// Policies and Contracts
+export const PoliciesContractsTabs = {
+    RETENTION_ATTRITION: 'retention-attrition',
+} as const;
+
+export type TPoliciesContractsTab = keyof typeof PoliciesContractsTabs;
+
+export const PoliciesContractsTabTitles = {
+    RETENTIONATTRITION: 'RETENTIONATTRITION',
+} as const;
+
+export type PoliciesContractsTabTitle = keyof typeof PoliciesContractsTabTitles;
+
+// Usage
 export const UsageTabs = {
     LOGINS: 'logins',
     PAGE_VIEWS: 'page-views',

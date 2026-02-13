@@ -99,6 +99,11 @@ export enum CaseType {
     SuitabilityReview = 'SuitabilityReview',
 }
 
+export enum CaseMetricType {
+    Retention = 'Retention',
+    Attrition = 'Attrition',
+}
+
 export enum Processes {
     NewBusiness = 'New Business',
     Renewal = 'Renewal',

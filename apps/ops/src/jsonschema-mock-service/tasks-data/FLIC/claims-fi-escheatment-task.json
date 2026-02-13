@@ -60,7 +60,6 @@
                     "productType": "FIXEDANNUITY",
                     "policyStatus": "DEATHCLAIMPENDING",
                     "qualificationType": "NONQUALIFIED",
-                    "ira": true,
                     "netDeathBenefit": 65063.98,
                     "maturityDate": "2042-07-23",
                     "deathReportedNotificationDate": "2025-09-30",
@@ -82,11 +81,9 @@
                                 "lastName": "Campbell",
                                 "fullName": "Owen Campbell",
                                 "gender": "MALE",
-                                "dateOfBirth": "1942-01-02",
                                 "relationshipToInsured": "OTHER",
                                 "beneficiaryPartyType": "INDIVIDUAL",
-                                "beneficiaryPercentage": 100.0,
-                                "ssn": "921959643"
+                                "beneficiaryPercentage": 100.0
                             },
                             "email": {
                                 "emailType": "PERSONAL",
@@ -96,7 +93,6 @@
                             "address": {
                                 "addressId": "743686016",
                                 "addressType": "DEFAULT",
-                                "addressLine1": "437 N HIGHLAND AVE",
                                 "city": "LOS ANGELES",
                                 "state": "CA",
                                 "zipCode": "90036",

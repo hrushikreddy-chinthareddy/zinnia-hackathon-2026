@@ -9,7 +9,6 @@ import { b64ToBlob } from '@deps/utils/blob';
 import {
     drawCanvas,
     renderTiffPagesToContainer,
-    ViewerState,
 } from '@deps/utils/fileviewer/tiffUtils';
 
 jest.mock('next/router', () => ({
@@ -36,7 +35,13 @@ jest.mock('@deps/utils/fileviewer/tiffUtils', () => ({
     renderTiffPagesToContainer: jest.fn(() => Promise.resolve([{}])),
     drawCanvas: jest.fn(),
 }));
-jest.mock('@deps/pages/404s', () => () => <div>404 Page Mock</div>);
+jest.mock(
+    '@deps/pages/404s',
+    () =>
+        function Mock404Page() {
+            return <div>404 Page Mock</div>;
+        }
+);
 
 jest.mock('react-i18next', () => ({
     useTranslation: () => ({ t: (key: string) => key }),
@@ -96,16 +101,6 @@ describe('DocumentViewerPage', () => {
         mimeType: 'application/pdf',
         fileExtension: 'pdf',
     };
-    const mockTiffState: ViewerState[] = [
-        {
-            imageData: new ImageData(1, 1),
-            width: 1,
-            height: 1,
-            scale: 1,
-            rotation: 0,
-        },
-    ];
-
     beforeEach(() => {
         jest.clearAllMocks();
         (useRouter as jest.Mock).mockReturnValue({

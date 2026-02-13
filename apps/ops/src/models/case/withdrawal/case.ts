@@ -1415,6 +1415,31 @@ export const filterParticipantIdRules = [
     },
 ];
 
+/**
+ * Helper function to get filtered participant companies based on carrier and task type.
+ * For FLIC OFT forms, push two allowed companies.
+ * For all other combinations, returns all ParticipantCompanies.
+ */
+export const getFilteredParticipantCompanies = (
+    carrier?: Carrier,
+    taskType?: TaskType
+) => {
+    if (carrier === Carrier.FLIC && taskType === TaskType.OFT) {
+        return [
+            ...ParticipantCompanies,
+            {
+                code: '3055',
+                companyName: 'DELAWARE LIFE INSURANCE COMPANY(3055)',
+            },
+            {
+                code: '4756',
+                companyName: 'RELIANCE STANDARD LIFE INSURANCE COMPANY(4756)',
+            },
+        ];
+    }
+    return ParticipantCompanies;
+};
+
 export enum SignVerificationReason {
     Single = 'SINGLE',
     MarriedWithERISA = 'MARRIED_SUBJECT_TO_ERISA',

@@ -448,36 +448,20 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                             {isAgentSelected && (
                                 <div className={styles.fullWidth}>
                                     {commissionAllocationData?.length ? (
-                                        <BeneficiaryCardContainer
-                                            title={t(
-                                                'people.commissionAllocation'
-                                            )}
+                                        <PeopleCardContainer
                                             peopleCardData={peopleCardData}
                                             filteredData={
                                                 commissionAllocationData
                                             }
-                                            classNames="mb-10"
                                             type={AgentType.PRIMARY}
-                                            tooltip={
-                                                t(
-                                                    'people.commissionAllocationTooltip'
-                                                ) as string
-                                            }
                                         />
                                     ) : null}
 
                                     {otherSectionData?.length ? (
-                                        <BeneficiaryCardContainer
-                                            title={t('people.other')}
+                                        <PeopleCardContainer
                                             peopleCardData={peopleCardData}
                                             filteredData={otherSectionData}
                                             type={AgentType.AGENT}
-                                            showAllocationBar={false}
-                                            tooltip={
-                                                t(
-                                                    'people.otherTooltip'
-                                                ) as string
-                                            }
                                         />
                                     ) : null}
                                 </div>

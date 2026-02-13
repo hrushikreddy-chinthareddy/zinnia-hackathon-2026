@@ -14,13 +14,17 @@ import CaseDocumentSelect, {
 } from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildSystematicProgramSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import {
     submitSystematicProgramUpdate,
@@ -39,6 +43,8 @@ import {
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     AdhocSystematicProgram,
     AmountType,
@@ -51,6 +57,7 @@ import {
 } from '@zinnia/api-types/types/sor';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
+import LoadingState from '../non-financial-transactions/states/loading-state';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
 import ApiErrorState from '../states/api-error-state';
 import BpmErrorState from '../states/bpm-error-state';
@@ -90,7 +97,7 @@ const SideSheetCancelAutopay = ({
 }: SideSheetCancelAutopayProps) => {
     const { t } = useTranslation();
 
-    const { featureFlags } = useOptimizely();
+    const { featureFlags, featureFlagVariables } = useOptimizely();
     const systematicProgramTablesEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
@@ -107,6 +114,12 @@ const SideSheetCancelAutopay = ({
                 (sp) => sp.reason === systematicProgramReason
             ),
         [policy.systematicPrograms, systematicProgramReason]
+    );
+    const isUseCurrentLifeCycleDate = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.USE_CURRENT_LIFECYCLE_DATE,
+        OptimizelyVariableKey.Clients,
+        policy.carrierId?.toLocaleLowerCase() || ''
     );
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
@@ -126,6 +139,13 @@ const SideSheetCancelAutopay = ({
     const [viewState, setViewState] = useState(ViewState.Default);
     const [loading, setLoading] = useState<boolean>(false);
 
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policy?.policyNumber,
+        process: [Processes.SSW],
+        requestSubType: [],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
+
     const handleDateChange = (date?: Date) => {
         setEffectiveDate(
             date ? dayjs(date).format(NUMERIC_DATE_FORMAT) : undefined
@@ -135,11 +155,12 @@ const SideSheetCancelAutopay = ({
     const validateFields = (
         effectiveDate: string | undefined,
         confirmCancel: boolean,
-        caseId?: string
+        caseId?: string,
+        hasAnyCase?: boolean
     ) => {
         let localErrors: Errors = {};
 
-        if (caseId == undefined) {
+        if (caseId == undefined && hasAnyCase) {
             localErrors = {
                 ...localErrors,
                 caseId:
@@ -196,7 +217,14 @@ const SideSheetCancelAutopay = ({
     };
 
     const validateAndSubmitUpdate = async () => {
-        if (!validateFields(effectiveDate, confirmCancel, body.caseId)) {
+        if (
+            !validateFields(
+                effectiveDate,
+                confirmCancel,
+                body.caseId,
+                hasAnyCaseResult
+            )
+        ) {
             return;
         }
 
@@ -373,20 +401,26 @@ const SideSheetCancelAutopay = ({
             break;
     }
 
+    if (isLoading) {
+        return <LoadingState />;
+    }
+
     return (
         <div className="flex flex-col">
             <div className="flex flex-col gap-8">
-                <CaseDocumentSelect
-                    caseId={body.caseId}
-                    caseDocumentOptions={caseDocumentOptions}
-                    currentErrors={errors}
-                    policyNumber={policy?.policyNumber}
-                    processType={Processes.SSW}
-                    setBody={setBody as SetStateCaseId}
-                    setCaseDocumentOptions={setCaseDocumentOptions}
-                    setCurrentErrors={setErrors as SetStateCaseId}
-                    setViewState={setViewState}
-                />
+                {hasAnyCaseResult && (
+                    <CaseDocumentSelect
+                        caseId={body.caseId}
+                        caseDocumentOptions={caseDocumentOptions}
+                        currentErrors={errors}
+                        policyNumber={policy?.policyNumber}
+                        processType={Processes.SSW}
+                        setBody={setBody as SetStateCaseId}
+                        setCaseDocumentOptions={setCaseDocumentOptions}
+                        setCurrentErrors={setErrors as SetStateCaseId}
+                        setViewState={setViewState}
+                    />
+                )}
                 <FieldDateSingle
                     name="effective-date"
                     label={
@@ -394,7 +428,14 @@ const SideSheetCancelAutopay = ({
                             {t('transactions.cancelAutopay.effectiveDate')}
                         </Label>
                     }
-                    disableBeforeDate={dayjs().toDate()}
+                    disableBeforeDate={
+                        isUseCurrentLifeCycleDate
+                            ? dayjs(
+                                  policy?.policyContractState
+                                      ?.currentLifecycleDate
+                              ).toDate()
+                            : dayjs().toDate()
+                    }
                     defaultDate={defaultDate.toDate()}
                     onDateSelect={(date: Date | undefined) =>
                         handleDateChange(date)

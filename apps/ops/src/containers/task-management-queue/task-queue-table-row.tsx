@@ -103,7 +103,6 @@ const TaskQueueTableRow = ({
     const { taskType: _taskType, status: _status, carrier } = task;
     const carrierName =
         getCarrierNameByClientId(carrier) || carrier?.toUpperCase();
-
     const { allAssigneeList, assigneeLoading, refetch } = useTaskAssignee({
         task,
     });
@@ -177,6 +176,8 @@ const TaskQueueTableRow = ({
                 getTasks={() => {
                     getTasks(true);
                 }}
+                carrier={carrier}
+                queue={task.queue}
             />
         );
         sideSheet.changeSideSheetContent(
@@ -271,7 +272,6 @@ const TaskQueueTableRow = ({
     const handleSearch = (searchValue: string): void => {
         setSearchValue(searchValue);
     };
-
     const openTaskSideSheet = useCallback(() => {
         if (task) {
             const { taskName = '', id } = task;
@@ -291,6 +291,8 @@ const TaskQueueTableRow = ({
                     taskDescription={task?.taskDetails}
                     onTaskClaimSuccess={handleTaskClaimSuccess}
                     onTaskUpdated={updateRow}
+                    carrier={carrier}
+                    queue={task.queue}
                 />,
                 true
             );
@@ -304,6 +306,7 @@ const TaskQueueTableRow = ({
         featureFlagDecisions,
         handleTaskClaimSuccess,
         updateRow,
+        carrier,
     ]);
 
     useTaskIdFromUrl({

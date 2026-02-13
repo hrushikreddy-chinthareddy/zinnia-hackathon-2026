@@ -21,6 +21,7 @@ interface GetFormErrors {
     isDelete?: boolean;
     preferredCommunication?: Email | Address;
     t: TFunction;
+    hasCase?: boolean;
 }
 
 export interface Errors {
@@ -35,10 +36,11 @@ export const getFormErrors = ({
     preferredCommunication,
     isDelete,
     t,
+    hasCase,
 }: GetFormErrors) => {
     let errors: Errors = {};
 
-    if (caseId == null) {
+    if (caseId == null && hasCase) {
         errors = {
             ...errors,
             caseId: `${t('people.sideSheet.email.errors.missingCaseDocument')}`,

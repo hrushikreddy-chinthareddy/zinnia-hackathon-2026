@@ -1,5 +1,6 @@
-import Page from '../page';
 import dayjs from 'dayjs';
+
+import Page from '../page';
 
 class OneTimePaymentAmountPage extends Page {
 

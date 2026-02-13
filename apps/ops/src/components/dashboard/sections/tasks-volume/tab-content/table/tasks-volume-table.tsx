@@ -24,8 +24,8 @@ import { useTasksVolume } from '@deps/components/dashboard/sections/tasks-volume
 import { TasksVolumeFilters } from '@deps/components/dashboard/sections/tasks-volume/tab-content/shared/tasks-volume-filters';
 import { TasksVolumeHeader } from '@deps/components/dashboard/sections/tasks-volume/tab-content/shared/tasks-volume-header';
 import {
-    CSV_COLUMNS,
     flattenTaskData,
+    generateCsvColumns,
     generateTasksCSVFilename,
     getCarrierName,
     getStatusDisplayText,
@@ -35,6 +35,8 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { useTableOptions } from '@deps/hooks/dashboard/useTableOptions';
 import { useDashboardStore } from '@deps/store/store';
 import { toSentenceCase } from '@deps/utils/strings';
+
+import styles from './tasks-volume-table.module.css';
 
 enum SortByOptions {
     CASE_TYPE = 'caseType',
@@ -124,22 +126,19 @@ export const TasksVolumeTable = () => {
     );
 
     const handleExportCSV = useCallback(() => {
-        downloadCSV(flattenedData, csvFileName, CSV_COLUMNS);
-    }, [flattenedData, csvFileName]);
+        downloadCSV(flattenedData, csvFileName, generateCsvColumns(t));
+    }, [flattenedData, csvFileName, t]);
 
     return (
         <CardContainer>
-            <div className="flex justify-between items-center">
+            <div className={sharedStyles.headerRow}>
                 <TasksVolumeHeader />
                 <div
-                    className="flex items-center gap-2 cursor-pointer"
+                    className={sharedStyles.exportLink}
                     onClick={handleExportCSV}
                 >
                     <Icon type={IconType.DOWNLOAD} />
-                    <Link
-                        href={'#'}
-                        text={t('caseStats.tasks.table.exportCSV')}
-                    />
+                    <Link href={'#'} text={t('allFields.exportCSV')} />
                 </div>
             </div>
             <TasksVolumeFilters />
@@ -154,30 +153,24 @@ export const TasksVolumeTable = () => {
                     ) : (
                         <Table>
                             <colgroup>
-                                <col style={{ width: '45%' }} />
-                                <col style={{ width: '35%' }} />
-                                <col style={{ width: '20%' }} />
+                                <col className={styles.colCaseType} />
+                                <col className={styles.colTask} />
+                                <col className={styles.colTotalTasks} />
                             </colgroup>
                             <TableHeader>
                                 <TableRow>
                                     <SortableHeaderCell
-                                        label={t(
-                                            'caseStats.tasks.table.headers.caseType'
-                                        )}
+                                        label={t('allFields.caseType')}
                                         sortKey={SortByOptions.CASE_TYPE}
                                         activeSortKey={activeSortKey}
                                         onSort={onSort}
                                         sortOrder={sortOrder}
                                     />
                                     <TableHeaderCell>
-                                        {t(
-                                            'caseStats.tasks.table.headers.task'
-                                        )}
+                                        {t('allFields.task')}
                                     </TableHeaderCell>
                                     <SortableHeaderCell
-                                        label={t(
-                                            'caseStats.tasks.table.headers.totalTasks'
-                                        )}
+                                        label={t('allFields.totalTasks')}
                                         sortKey={SortByOptions.TOTAL_TASKS}
                                         activeSortKey={activeSortKey}
                                         onSort={onSort}
@@ -201,9 +194,7 @@ export const TasksVolumeTable = () => {
                                                 {toSentenceCase(item.caseType)}
                                             </TableCell>
                                             <TableCell>
-                                                {t(
-                                                    'caseStats.tasks.table.allTasks'
-                                                )}
+                                                {t('allFields.allTasks')}
                                             </TableCell>
                                             <TableCell>
                                                 {item.totalTasks.toLocaleString()}

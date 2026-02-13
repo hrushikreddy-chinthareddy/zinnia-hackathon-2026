@@ -43,6 +43,7 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { buildFullNameFromParty } from '@deps/helpers/string.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import {
     hasErrorsAndFocus,
     useFocusOnError,
@@ -164,6 +165,13 @@ const SideSheetBank = ({
     const isDelete = action === NonFinancialTransactionActions.Delete;
     const getAction = GetAction(isAdd, isDelete);
 
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.BankChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
+
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
             body: {
@@ -206,7 +214,13 @@ const SideSheetBank = ({
     };
 
     const handleValidation = async () => {
-        const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
+        const errors = getFormErrors({
+            bankAccount,
+            caseId,
+            t,
+            isDelete,
+            hasCase: hasAnyCaseResult,
+        });
         setCurrentErrors(errors);
         if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
         let response;
@@ -379,23 +393,29 @@ const SideSheetBank = ({
             break;
     }
 
+    if (isLoading) {
+        return <LoadingState />;
+    }
+
     return (
         <div ref={errorRef} className="flex flex-col">
             <div className="flex flex-col gap-4">
-                <CaseDocumentSelect
-                    caseId={caseId}
-                    caseDocumentOptions={caseDocumentOptions}
-                    currentErrors={currentErrors}
-                    policyNumber={policyNumber}
-                    processType={Processes.PolicyUpdate}
-                    setBody={setBody as SetStateCaseId}
-                    setCaseDocumentOptions={setCaseDocumentOptions}
-                    setCurrentErrors={setCurrentErrors}
-                    setViewState={setViewState}
-                    processSubType={[Processes.BankChange]}
-                    correlationId={correlationIdFromRoute}
-                    body={body}
-                />
+                {hasAnyCaseResult && (
+                    <CaseDocumentSelect
+                        caseId={caseId}
+                        caseDocumentOptions={caseDocumentOptions}
+                        currentErrors={currentErrors}
+                        policyNumber={policyNumber}
+                        processType={Processes.PolicyUpdate}
+                        setBody={setBody as SetStateCaseId}
+                        setCaseDocumentOptions={setCaseDocumentOptions}
+                        setCurrentErrors={setCurrentErrors}
+                        setViewState={setViewState}
+                        processSubType={[Processes.BankChange]}
+                        correlationId={correlationIdFromRoute}
+                        body={body}
+                    />
+                )}
                 <Radio
                     aria-label={t('labels.accountType') as string}
                     items={accountTypeOptions}

@@ -284,8 +284,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     eschDetail?.beneficiary?.beneficiaryPercentage !==
                         prevEschDetail?.beneficiary?.beneficiaryPercentage)
             ) {
-                updatedFormData.details.beneOpsEscheatment.escheatmentDetail.beneficiary.beneficiaryDueAmount =
-                    undefined;
+                delete updatedFormData.details.beneOpsEscheatment
+                    .escheatmentDetail.beneficiary.beneficiaryDueAmount;
             }
             prevFormDataRef.current = updatedFormData;
             return updatedFormData;

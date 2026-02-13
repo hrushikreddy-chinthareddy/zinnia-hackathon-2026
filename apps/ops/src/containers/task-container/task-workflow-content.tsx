@@ -46,6 +46,8 @@ export const TaskWorkflowContent = ({
                 caseId={caseId}
                 type={'task'}
                 mappedDocuments={mappedDocuments}
+                queue={task.queue ?? ''}
+                carrier={carrierId}
             />
         );
         sideSheet.changeSideSheetContent(
