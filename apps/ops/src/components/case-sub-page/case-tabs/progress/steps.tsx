@@ -13,6 +13,8 @@ import useDynamicSideSheet from '@deps/components/side-sheet/dynamic-side-sheet'
 import StepSideSheetContent, {
     doesStepHaveSidesheet,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/case-side-sheet';
+import { stepsWithIndexAutomationCase } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/transactions-step-additional-data';
+import { TransactionsAdditionalDataStepIds } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/transactions-step-additional-data.types';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
@@ -25,8 +27,6 @@ import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/alert/not-started.svg';
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
-import { stepsWithIndexAutomationCase } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/transactions-step-additional-data';
-import { TransactionsAdditionalDataStepIds } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/transactions-step-additional-data.types';
 import { formatTimestamp } from '@deps/utils/dates';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
