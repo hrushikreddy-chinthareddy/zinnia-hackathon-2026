@@ -7,16 +7,16 @@ import ClaimsFundRelease from './claims-fund-release/claims-fund-release';
 import DeathAuditFiles from './death-audit-files/death-audit-files';
 import DeathAuditFilesTab from './death-audit-files/death-audit-files-tab';
 import {
-  DeathAuditCaseFileTypes,
-  DeathAuditFileTypes,
+    DeathAuditCaseFileTypes,
+    DeathAuditFileTypes,
 } from './death-audit-files/death-audit-files.types';
 import DeathAuditQualification from './death-audit-qualification/detah-audit-qualification';
 import DeathNotificationSidesheet from './death-notification';
 import IndexAutomationCase from './index-automation-case/index-automation-case';
 import ReceiveNewDocument from './receive-new-document/receive-new-document';
 import {
-  StepProgramTypes,
-  TransactionsAdditionalDataStepIds,
+    StepProgramTypes,
+    TransactionsAdditionalDataStepIds,
 } from './transactions-step-additional-data.types';
 import { ViewTransactions } from './view-transactions';
 
@@ -32,6 +32,7 @@ export const stepsWithIndexAutomationCase = [
   TransactionsAdditionalDataStepIds.docIndexedAndCaseCreated,
   TransactionsAdditionalDataStepIds.unableToIdentifyDocument,
 ];
+
 export const TransactionsStepAdditionalData = ({
   stepAdditionalData,
   stepKey,
