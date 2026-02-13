@@ -1,0 +1,33 @@
+.pieChartContainer {
+    min-width: 280px;
+    min-height: 550px;
+}
+
+.pieChartInformation {
+    padding: var(--measure-dimension-padding-4xl);
+    gap: var(--measure-dimension-padding-2xl);
+
+    @media screen and (min-width: 1440px) {
+        border-left: var(--measure-dimension-stroke-sm) solid
+            var(--color-base-border-border-light, #ededed);
+        padding: var(--measure-dimension-padding-5xl);
+    }
+
+    & p {
+        color: var(--color-base-text-secondary);
+    }
+}
+
+.chartTitle {
+    font-family: var(--string-font-family-font-family-primary);
+    font-weight: var(--string-font-weight-font-weight-light);
+    font-size: var(--measure-font-sizing-content-display-font-size);
+    letter-spacing: var(
+        --letter-spacing-headlines-desktop-h1-font-letter-spacing
+    );
+    padding-bottom: var(--measure-dimension-padding-lg);
+}
+
+.chartDescription {
+    font: var(--typography-titles-subtitle);
+}

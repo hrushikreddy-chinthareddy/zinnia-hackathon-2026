@@ -900,6 +900,8 @@ components:
         - caseResult
         - createdDay
         - updatedDay
+        - map_contractStatus
+        - retention_attrition_notIssued
       title: CaseCountGroupByEnum
     CaseCountInput:
       properties:
@@ -1001,6 +1003,14 @@ components:
               format: date-time
           title: Updateddateend
           example: '2025-01-21T23:34:31.316Z'
+        retention_attrition_notIssued:
+          anyOf:
+            - items:
+                type: string
+              type: array
+          title: RetentionAttritionNotIssued
+          example:
+            - retention
       type: object
       title: CaseCountInputFilter
     CaseCountOutput:

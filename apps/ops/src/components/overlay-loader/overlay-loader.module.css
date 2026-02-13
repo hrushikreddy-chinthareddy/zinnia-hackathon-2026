@@ -1,6 +1,7 @@
 .overlayContainer {
     position: relative;
-
+    /* Use low z-index so dropdowns (e.g. Carriers/Distributors in dashboard header)
+       that overlap this area are not blurred when table is loading. */
     &.isLoading::before {
         content: '';
         position: absolute;
@@ -10,7 +11,7 @@
         left: 0;
         -webkit-backdrop-filter: blur(4px);
         backdrop-filter: blur(4px);
-        z-index: 400;
+        z-index: 1;
     }
 }
 .overlayLoader {
@@ -18,5 +19,5 @@
     left: 50%;
     top: 50%;
     transform: translate(0, -50%);
-    z-index: 401;
+    z-index: 2;
 }
