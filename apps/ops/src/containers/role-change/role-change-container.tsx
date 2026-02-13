@@ -13,7 +13,11 @@ import { useRoleChange } from '@deps/contexts/RoleChangeContext';
 import { Processes } from '@deps/models/case/case';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { PartyRole, Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import { buildSignatures, getActiveRoleParty } from './role-change-helper';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';

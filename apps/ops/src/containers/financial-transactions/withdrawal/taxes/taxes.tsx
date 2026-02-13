@@ -26,7 +26,10 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { TaxWithholdingType } from '@zinnia/api-types/types/bpm';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import {
     Errors,

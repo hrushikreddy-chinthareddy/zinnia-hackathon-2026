@@ -72,7 +72,8 @@ export const getReverseRecreateTransactionSideSheetValues = (
         const isPending = status === TransactionStatus.PENDING;
 
         const amount =
-            transactionType === TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM
+            transactionType ===
+            TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM
                 ? paymentAmount
                 : appliedAmount;
 

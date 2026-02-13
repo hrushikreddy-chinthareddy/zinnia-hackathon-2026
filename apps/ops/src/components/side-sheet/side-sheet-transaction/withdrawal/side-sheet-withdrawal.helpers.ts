@@ -226,7 +226,9 @@ const getWithdrawalDetails = (
             },
         ];
     } else if (
-        withdrawalDetailsTransactions.includes(transactionType as TransactionTypeSchemaEnum) &&
+        withdrawalDetailsTransactions.includes(
+            transactionType as TransactionTypeSchemaEnum
+        ) &&
         (disbursementType === DisbursementType.GROSS ||
             disbursementType === DisbursementType.NET)
     ) {
@@ -347,7 +349,8 @@ const getRequestedWithdrawalAmount = (
     if (status === TransactionStatus.PENDING && quote?.transactionAmounts) {
         // TODO: This was very likely a bug, but run by MG to confirm
         requestedAmount =
-            transaction.transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER
+            transaction.transactionType ===
+            TransactionTypeSchemaEnum.FULL_SURRENDER
                 ? quote?.transactionAmounts?.requestedAmount
                 : quote?.transactionAmounts?.appliedAmount;
     } else {
@@ -365,7 +368,9 @@ const getActualWithdrawalAmount = (
 ): number => {
     let withdrawalAmount = 0;
 
-    if (transaction.transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER) {
+    if (
+        transaction.transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER
+    ) {
         if (quote?.transactionAmounts?.requestedAmount) {
             withdrawalAmount = quote?.transactionAmounts?.requestedAmount;
         } else {

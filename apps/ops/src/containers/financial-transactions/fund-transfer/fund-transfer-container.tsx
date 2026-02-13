@@ -13,7 +13,10 @@ import { Processes } from '@deps/models/case/case';
 import { validateFundTransfer } from '@deps/queries/api/fund-transfer';
 import { FUND_TRANSFER_STEP_WIDTH } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import { buildfundTransferRequestBody } from './fund-transfer.helpers';
 import Transfer from './transfer/transfer';

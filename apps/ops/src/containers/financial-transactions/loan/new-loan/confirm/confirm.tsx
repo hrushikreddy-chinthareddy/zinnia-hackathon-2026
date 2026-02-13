@@ -24,7 +24,10 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import { buildNewLoanRequestBody } from '../new-loan.helpers';
 

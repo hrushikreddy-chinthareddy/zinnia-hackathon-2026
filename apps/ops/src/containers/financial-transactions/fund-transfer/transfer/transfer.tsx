@@ -31,7 +31,10 @@ import { DefaultValue } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 interface TransferProps {
     policy: Policy;

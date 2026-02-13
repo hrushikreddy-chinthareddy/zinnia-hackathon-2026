@@ -29,7 +29,10 @@ import {
     NUMERIC_DATE_FORMAT,
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
     policy: Policy;

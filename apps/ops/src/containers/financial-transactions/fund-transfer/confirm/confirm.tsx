@@ -21,7 +21,10 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import { buildfundTransferRequestBody } from '../fund-transfer.helpers';
 

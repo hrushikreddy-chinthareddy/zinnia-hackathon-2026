@@ -47,7 +47,8 @@ export const getAutopayPremiumSideSheetValues = (
             payors as TransactionPayor[],
             t
         );
-        const isPayment = transactionType === TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT;
+        const isPayment =
+            transactionType === TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT;
         const reverseRecreateEnabled =
             featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
 
@@ -110,7 +111,8 @@ export const getInitialPremiumSideSheetValues = (
     const isCanceled = status === TransactionStatus.CANCELED;
 
     const amount =
-        isCanceled || transactionType === TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM
+        isCanceled ||
+        transactionType === TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM
             ? paymentAmount
             : appliedAmount;
 
@@ -156,7 +158,8 @@ export const getOneTimePremiumSideSheetValues = (
         const isPending = status === ('Pending' as TransactionStatus);
         const isCanceled = status === ('Canceled' as TransactionStatus);
         const isPayment =
-            transactionType === TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM;
+            transactionType ===
+            TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM;
 
         const amount = isCanceled || isPayment ? paymentAmount : appliedAmount;
 

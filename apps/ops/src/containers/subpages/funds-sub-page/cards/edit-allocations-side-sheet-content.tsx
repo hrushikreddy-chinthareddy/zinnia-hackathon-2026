@@ -54,7 +54,10 @@ import {
     TransactionSubmittedEventType,
 } from '@deps/types/segment-analytics';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import { FundViewModel } from '../types';
 import { AllocationSuccessFlow } from './allocation-success-flow';

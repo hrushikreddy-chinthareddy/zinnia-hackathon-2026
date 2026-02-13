@@ -19,7 +19,11 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { FeatureType, Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    FeatureType,
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 const EffectiveDate = ({
     policy,

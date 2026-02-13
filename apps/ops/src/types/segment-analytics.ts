@@ -194,7 +194,10 @@ export enum ExtendedTransactionType {
 // TODO MG: this is the same as TransactionTrackEventProps
 type BaseTransactionClickedEvent = BaseSegmentEventProps & {
     step?: TransactionStep;
-    type?: TransactionTypeSchemaEnum | ContactCenterTransactionType | ExtendedTransactionType;
+    type?:
+        | TransactionTypeSchemaEnum
+        | ContactCenterTransactionType
+        | ExtendedTransactionType;
 };
 
 export type TransactionContinueClickedEvent = BaseTransactionClickedEvent & {

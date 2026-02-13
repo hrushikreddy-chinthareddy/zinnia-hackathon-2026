@@ -31,7 +31,8 @@ const typeByTransactionType = {
     [TransactionTypeSchemaEnum.EMAIL_CHANGE]: 'email',
     [TransactionTypeSchemaEnum.PHONE_NUMBER_CHANGE]: 'phoneNumber',
     [TransactionTypeSchemaEnum.BANK_ACCOUNT_CHANGE]: 'bankAccount',
-    [TransactionTypeSchemaEnum.COMMUNICATION_PREFERENCE_CHANGE]: 'correspondencePreference',
+    [TransactionTypeSchemaEnum.COMMUNICATION_PREFERENCE_CHANGE]:
+        'correspondencePreference',
 };
 
 const changeTypeKey = {
@@ -136,7 +137,11 @@ export const getEventTitle = (
 ): string => {
     const { transactionType } = transaction;
 
-    if (PeopleChangeTransactionTypes.includes(transactionType as TransactionTypeSchemaEnum)) {
+    if (
+        PeopleChangeTransactionTypes.includes(
+            transactionType as TransactionTypeSchemaEnum
+        )
+    ) {
         return toSentenceCase(getPeopleChangeEventTitle(transaction, t));
     }
 
@@ -209,7 +214,8 @@ export const getHistoryEventCardValues = (
         case TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM:
         case TransactionTypeSchemaEnum.INITIAL_PREMIUM:
             amount =
-                transactionType === TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM
+                transactionType ===
+                TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? '';
@@ -219,7 +225,8 @@ export const getHistoryEventCardValues = (
         case TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
         case TransactionTypeSchemaEnum.ONE_TIME_PREMIUM:
             amount =
-                transactionType === TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM
+                transactionType ===
+                TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? '';
@@ -311,7 +318,8 @@ export const getHistoryEventCardValues = (
         case TransactionTypeSchemaEnum.LOAN_REPAYMENT_ONE_TIME: {
             amount =
                 isPending ||
-                transactionType === TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME
+                transactionType ===
+                    TransactionTypeSchemaEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME
                     ? paymentAmount
                     : appliedAmount;
             eventBody = bankingBody ?? t('historyEventCard.oneTimePayment');

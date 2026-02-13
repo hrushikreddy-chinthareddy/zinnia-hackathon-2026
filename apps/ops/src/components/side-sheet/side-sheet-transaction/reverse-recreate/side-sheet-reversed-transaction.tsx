@@ -78,7 +78,8 @@ export const SideSheetReversedTransaction = ({
                             }
                         ></Tag>
                     )}
-                    {transactionType !== TransactionTypeSchemaEnum.FULL_SURRENDER &&
+                    {transactionType !==
+                        TransactionTypeSchemaEnum.FULL_SURRENDER &&
                         transactionType !==
                             TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME &&
                         transactionType !==

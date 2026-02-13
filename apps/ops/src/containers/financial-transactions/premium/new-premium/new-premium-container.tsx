@@ -22,7 +22,10 @@ import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { Processes } from '@deps/models/case/case';
 import { validateOneTimePremium } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import { buildNewPremiumRequestBody } from './new-premium.helpers';
 

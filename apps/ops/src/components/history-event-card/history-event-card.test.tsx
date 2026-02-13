@@ -104,7 +104,8 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM,
+                transactionType:
+                    TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM,
             });
 
             expect(amount).toBe(86753.09);
@@ -126,7 +127,8 @@ describe('getEventCardValues', () => {
             } = getHistoryEventCardValues(mockPolicy, {
                 ...sample,
                 status: 'Pending' as TransactionStatus,
-                transactionType: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                transactionType:
+                    TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
             });
 
             expect(amount).toBe(86753.09);

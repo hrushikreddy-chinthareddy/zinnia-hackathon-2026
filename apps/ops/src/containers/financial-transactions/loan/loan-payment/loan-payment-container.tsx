@@ -16,7 +16,10 @@ import { useLoanPayment } from '@deps/contexts/transactions/LoanPaymentContext';
 import { Processes } from '@deps/models/case/case';
 import { validateLoanPayment } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';

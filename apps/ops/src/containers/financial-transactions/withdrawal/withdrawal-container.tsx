@@ -27,7 +27,10 @@ import {
     FullSurrenderRequest,
     PartialWithdrawalOneTimeRequest,
 } from '@zinnia/api-types/types/bpm';
-import { Policy, SchemaEnum as TransactionTypeSchemaEnum } from '@zinnia/api-types/types/sor';
+import {
+    Policy,
+    SchemaEnum as TransactionTypeSchemaEnum,
+} from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import { WithdrawalType } from './amount/types';
