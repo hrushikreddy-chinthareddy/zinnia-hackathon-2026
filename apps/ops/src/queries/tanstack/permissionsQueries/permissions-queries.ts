@@ -7,6 +7,7 @@ import {
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { BulkCheckTuple, FGA_Tuple } from '@deps/utils/auth';
+import { browserLogError } from '@deps/utils/browser-logging';
 import {
     checkPermissionsCookieForTuple,
     doesPermissionsHaveCarrierRelation,
@@ -176,10 +177,9 @@ export const checkQueueAccess = async (
             CheckQueueAccessRequest,
             { data: CheckQueueAccessResponse }
         >(url, requestBody);
-        console.log('response', response);
         return response?.data?.allowed;
-    } catch (error) {
-        console.error('Error in checkQueueAccess:', error);
+    } catch (error: any) {
+        browserLogError('Error in checkQueueAccess:', error);
         throw error;
     }
 };
@@ -188,9 +188,8 @@ export const checkQueuePermissions = async (
     partyId: string,
     queue?: string
 ): Promise<{ canRead: boolean | string; canWrite: boolean | string }> => {
-    console.log('partyId', partyId, queue);
     if (!partyId || !queue) {
-        return { canRead: 'false', canWrite: 'false' };
+        return { canRead: false, canWrite: false };
     }
 
     const [canRead, canWrite] = await Promise.all([

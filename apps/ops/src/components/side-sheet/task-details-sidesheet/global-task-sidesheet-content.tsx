@@ -281,15 +281,13 @@ export default function GlobalTaskSideSheet({
                           .trim()
                           .replace(/\s+/g, '_')}_${queue.toLowerCase()}`
                     : '';
-            const queueaccess = await checkQueuePermissions(
+            const queueAccess = await checkQueuePermissions(
                 user?.partyId || '',
                 finalQueue
             );
             if (
-                (queueaccess?.canRead !== false &&
-                    queueaccess?.canRead !== 'false') ||
-                (queueaccess?.canWrite !== false &&
-                    queueaccess?.canWrite !== 'false')
+                queueAccess?.canRead !== false ||
+                queueAccess?.canWrite !== false
             ) {
                 const data = await getTaskInstance({ taskId });
 
@@ -311,8 +309,8 @@ export default function GlobalTaskSideSheet({
                 return { ...taskData, assignee: finalAssignee };
             } else {
                 if (
-                    queueaccess?.canRead === false &&
-                    queueaccess?.canWrite === false
+                    queueAccess?.canRead === false &&
+                    queueAccess?.canWrite === false
                 ) {
                     const data = await getTaskSummaryById({ taskId });
 
