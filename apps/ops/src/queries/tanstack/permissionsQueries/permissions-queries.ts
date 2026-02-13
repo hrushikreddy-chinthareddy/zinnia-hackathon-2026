@@ -7,7 +7,7 @@ import {
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { BulkCheckTuple, FGA_Tuple } from '@deps/utils/auth';
-import { browserLogError } from '@deps/utils/browser-logging';
+import { browserLogInfo } from '@deps/utils/browser-logging';
 import {
     checkPermissionsCookieForTuple,
     doesPermissionsHaveCarrierRelation,
@@ -179,7 +179,7 @@ export const checkQueueAccess = async (
         >(url, requestBody);
         return response?.data?.allowed;
     } catch (error: any) {
-        browserLogError('Error in checkQueueAccess:', error);
+        browserLogInfo('Error in checkQueueAccess:', error);
         throw error;
     }
 };

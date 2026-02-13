@@ -299,7 +299,7 @@ export default function GlobalTaskSideSheet({
                 }
                 const taskData = {
                     ...data,
-                    ciamaccess: true,
+                    ciamAccess: true,
                 };
 
                 const finalAssignee = await getFinalAssignee(
@@ -322,7 +322,7 @@ export default function GlobalTaskSideSheet({
                     }
                     const taskData = {
                         ...data,
-                        ciamaccess: false,
+                        ciamAccess: false,
                     };
                     const finalAssignee = await getFinalAssignee(
                         data,
@@ -1090,7 +1090,7 @@ export default function GlobalTaskSideSheet({
                 isGoToCaseButtonVisible={isOpsManagerView}
                 isViewTaskButtonVisible={isViewTaskButtonVisible || false}
                 isViewTaskButtonDisabled={
-                    !task.data || task.ciamaccess === false
+                    !task.data || task.ciamAccess === false
                 }
                 isStartButtonDisabled={isStartButtonDisabled}
                 isStartButtonVisible={
