@@ -97,7 +97,10 @@ async function generateTypes() {
             // Using @hey-api/openapi-ts programmatic API with parser transforms to extract inline enums
             await createClient({
                 input: spec.path,
-                output: outputDir,
+                output: {
+                    path: outputDir,
+                    tsConfigPath: 'off',
+                },
                 plugins: [
                     {
                         name: '@hey-api/typescript',
