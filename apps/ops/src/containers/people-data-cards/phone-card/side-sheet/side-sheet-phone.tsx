@@ -52,6 +52,7 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { formatPhoneNumberRaw } from '@deps/helpers/phone.helpers';
 import { mapPhoneTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import {
     hasErrorsAndFocus,
     useFocusOnError,
@@ -167,6 +168,13 @@ export const SideSheetPhone = ({
         ? t('mainCta.add', { type: phoneTypeTranslationLowercase })
         : t('mainCta.update', { type: phoneTypeTranslationLowercase });
 
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.PhoneNumberChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
+
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
             body: {
@@ -210,7 +218,13 @@ export const SideSheetPhone = ({
     };
 
     const handleSubmit = async () => {
-        const errors = getFormErrors({ caseId, isDelete, phone, t: defaultT });
+        const errors = getFormErrors({
+            caseId,
+            isDelete,
+            phone,
+            t: defaultT,
+            hasCase: hasAnyCaseResult,
+        });
         setCurrentErrors(errors);
         if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
@@ -334,22 +348,28 @@ export const SideSheetPhone = ({
             break;
     }
 
+    if (isLoading) {
+        return <LoadingState />;
+    }
+
     return (
         <div ref={errorRef} className="flex flex-col gap-6 p-10">
-            <CaseDocumentSelect
-                caseDocumentOptions={caseDocumentOptions}
-                caseId={caseId}
-                currentErrors={currentErrors}
-                policyNumber={policyNumber}
-                processType={Processes.PolicyUpdate}
-                setBody={setBody as SetStateCaseId}
-                setCaseDocumentOptions={setCaseDocumentOptions}
-                setCurrentErrors={setCurrentErrors}
-                setViewState={setViewState}
-                processSubType={[Processes.PhoneNumberChange]}
-                correlationId={correlationIdFromRoute}
-                body={body}
-            />
+            {hasAnyCaseResult && (
+                <CaseDocumentSelect
+                    caseDocumentOptions={caseDocumentOptions}
+                    caseId={caseId}
+                    currentErrors={currentErrors}
+                    policyNumber={policyNumber}
+                    processType={Processes.PolicyUpdate}
+                    setBody={setBody as SetStateCaseId}
+                    setCaseDocumentOptions={setCaseDocumentOptions}
+                    setCurrentErrors={setCurrentErrors}
+                    setViewState={setViewState}
+                    processSubType={[Processes.PhoneNumberChange]}
+                    correlationId={correlationIdFromRoute}
+                    body={body}
+                />
+            )}
 
             <div className="flex flex-col gap-8">
                 <div className="flex flex-col gap-8">

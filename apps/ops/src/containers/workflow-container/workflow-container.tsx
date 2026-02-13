@@ -94,7 +94,7 @@ const WorkflowContent = ({
                     stepWidth={stepWidth}
                 />
                 <div className={styles.stepsContainer}>
-                    {steps[currentStepIndex].component}
+                    {steps[currentStepIndex]?.component}
                 </div>
             </div>
         </div>

@@ -136,11 +136,9 @@ const FinancialData = ({
             <PayeeSummaryCardRow
                 amount={totalAllocationAmount}
                 isSumTotalRow={true}
-                label={t('payeeSummaryCard.totalPayment') as string}
-                popoverTitle={t('payeeSummaryCard.totalPayment') as string}
-                popoverBody={
-                    t('payeeSummaryCard.totalPaymentTooltip') as string
-                }
+                label={t('payeeSummaryCard.totalPayment') ?? ''}
+                popoverTitle={t('payeeSummaryCard.totalPayment') ?? ''}
+                popoverBody={t('payeeSummaryCard.totalPaymentTooltip') ?? ''}
             />
         </div>
     );

@@ -2107,8 +2107,8 @@
             "overview": "Overview",
             "primaryBeneficiary": "Primary beneficiary",
             "reviewMessage": "Looking good! Be sure to review your entries before submitting",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "tag": {
                 "new": "New",
                 "none": "None",
@@ -2363,13 +2363,13 @@
                 "new": "New"
             },
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "subtitle": "Looking good! Be sure to review all the transfers and resulting fund values before submitting.",
             "effectiveDateLabel": "Effective date",
             "validationStatusLabel": "Validation status",
             "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlinkText": "Submit a help desk ticket",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
@@ -2551,7 +2551,7 @@
             "backToHome": "Back to Home"
         },
         "start": {
-            "title": "Start"
+            "title": "Manage {{partyRole}}"
         },
         "assigneeChange": {
             "start": {
@@ -5821,11 +5821,11 @@
         },
         "caseDocumentSelect": {
             "documentNumber": "Document number: ",
-            "label": "Which document are you working from?",
-            "noDocumentAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
-            "processWithoutDocument": "Process without a document",
+            "label": "If updates to a pending transaction are required, select the corresponding case and continue. Otherwise, proceed without linking a case.",
+            "noDocumentAssistiveText": "If you continue without a case selection, a new case will be created for this transaction.",
+            "processWithoutDocument": "Proceed without linking a case.",
             "noCaseSelection": "Select an open case to continue or proceed without one",
-            "caseSelectionAssistiveText": "Any existing information on this case will be updated with the details provided here"
+            "caseSelectionAssistiveText": "This case will be updated with the details provided within this transaction."
         },
         "transactionCta": {
             "checkingRules": "We're checking this policy's business rules...",
@@ -7119,9 +7119,9 @@
             "stateTaxes": "State tax ({{state}})",
             "stateTaxesTooltip": "Withdrawals in amounts greater than what the owner has paid in premiums are taxable. We can \"withhold\" the state tax, if applicable, meaning we can pay a certain amount to the state tax authority on behalf of the owner from the amount they withdraw. Or the owner can decide to pay the taxes themselves later.",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Tax and fee calculations will not be available. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "submitWithdrawal": "Submit withdrawal",
-            "submitWithErrorsText": "Submit with errors.  (This will automatically create a NIGO task in Zinnia Live.)",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "taxes": "Taxes",
             "totalPayment": "Total payment",
             "totalPaymentTooltip": "This is how much will actually be paid from this withdrawal. It's the requested amount minus any applicable transaction fees.",
@@ -7265,10 +7265,10 @@
             "payor": "Payor",
             "submit": "Submit payment",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "updateAutopay": "Update loan autopay",
             "validationStatusLabel": "Validation status",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
@@ -7305,7 +7305,7 @@
             "bpm500Error": "BPM 500 error",
             "submitPayment": "Submit payment",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "loanPaymentAmount": "Loan payment amount",
             "effectiveDate": "Effective date",
             "payor": "Payor",
@@ -7313,7 +7313,7 @@
             "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Submit a help desk ticket",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         }
     },
@@ -7374,7 +7374,7 @@
             "proRata": "Pro rata",
             "submitLoan": "Submit loan",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "loanAmount": "Loan amount",
             "effectiveDate": "Effective date",
             "effectiveDateTooltip": "This is the date used to calculate all the available account values for this loan. Because funds in the account value are invested, the account value can change day by day. Processing can happen at any time, so we need to know at what point  to effectively withdraw the funds, even if we're processing the transaction some days before or after.",
@@ -7383,7 +7383,7 @@
             "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Submit a help desk ticket",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         }
     },
@@ -7423,7 +7423,7 @@
         "summary": {
             "label": "Summary",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "paymentLabel": "Premium payment amount",
             "effectiveDateLabel": "Effective date",
             "payorTitle": "Payor",
@@ -7431,7 +7431,7 @@
             "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Submit a help desk ticket",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
@@ -7481,10 +7481,10 @@
             "payor": "Payor",
             "submit": "Submit payment",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "updateAutopay": "Update premium autopay",
             "validationStatusLabel": "Validation status",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task."
         },
         "confirm": {
@@ -7549,10 +7549,10 @@
             "payor": "Payee",
             "submit": "Submit payment",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "updateAutopay": "Update premium autopay",
             "validationStatusLabel": "Validation status",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "distributionType": "Distribution Type",
             "type": "Type",
@@ -7582,14 +7582,14 @@
             "label": "Summary",
             "title": "Summary",
             "status200subtitle": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
             "subtitle": "Looking good! Be sure to review all the transfers and resulting fund values before submitting.",
             "effectiveDateLabel": "Effective date",
             "validationStatusLabel": "Validation status",
             "internal500Error": "Services are down, so we can't continue. You can submit a help desk ticket. Please leave this transaction and try again later.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Submit a help desk ticket",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
             "transferedFrom": "Transferred From",
             "transferedTo": "Transferred To",
@@ -7800,20 +7800,20 @@
             "title": "This transaction have already completed"
         },
         "start": {
-            "documentSelectionLabel": "Which document are you working from?",
+            "documentSelectionLabel": "If updates to a pending transaction are required, select the corresponding case and continue. Otherwise, proceed without linking a case.",
             "documentNumber": "Document number: ",
             "caseId": "Case id: ",
-            "processWithoutDocument": "Process without a document",
-            "processWithoutDocAssistiveText": "If you continue without a document selection, we can't update Zinnia Live case for you.",
-            "processWithoutDocAssistiveTextWithOnBaseUpdate": "If you continue without a document selection, we can update Zinnia Live for you.",
-            "processWithoutDocWithOnBaseDocCheckAssistiveText": "If you continue without a document selection, we can update Zinnia Live for you.",
+            "processWithoutDocument": "Proceed without linking case",
+            "processWithoutDocAssistiveText": "If you continue without a case selection, a new case will be created for this transaction.",
+            "processWithoutDocAssistiveTextWithOnBaseUpdate": "If you continue without a case selection, a new case will be created for this transaction.",
+            "processWithoutDocWithOnBaseDocCheckAssistiveText": "If you continue without a case selection, a new case will be created for this transaction.",
             "missingSelection": "Select a document (or proceed without) to continue.",
             "processWithoutCase": "Proceed without linking case",
             "missingCaseSelection": "Select a case (or proceed without) to continue.",
-            "processWithoutCaseAssistiveText": "If you continue without a case selection, we can't update Zinnia Live case for you.",
-            "caseSelectionLabel": "Select a linked case, if applicable",
+            "processWithoutCaseAssistiveText": "If you continue without a case selection, a new case will be created for this transaction.",
+            "caseSelectionLabel": "If updates to a pending transaction are required, select the corresponding case and continue. Otherwise, proceed without linking a case.",
             "supportingInfo": "Supporting Information",
-            "caseSelectionAssistiveText": "Any existing information on this case will be updated with the details provided here"
+            "caseSelectionAssistiveText": "This case will be updated with the details provided within this transaction."
         },
         "paymentStep": {
             "addAddress": "Add new address details",
@@ -8790,8 +8790,8 @@
             "bpm500Error": "BPM 500 error",
             "header": "Summary",
             "reviewMessage": "Looking good! Be sure to review your entries before submitting.",
-            "status400subtitle": "Hm, we found an issue when checking this policy's rules. Review the error below.",
-            "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+            "status400subtitle": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
+            "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
             "tag": {
                 "new": "Added",
                 "none": "None",
@@ -9665,8 +9665,8 @@
         "contingentBene": "Contingent beneficiary",
         "loading": "Validation API is Running....",
         "successMessage": "Looking good! Be sure to review your entries before submitting",
-        "errorMessage": "Hm, we found an issue when checking this policy's rules. Review the error below.",
-        "submitWithErrorsText": "Submit with errors and create a NIGO task for the appropriate team to follow up on.",
+        "errorMessage": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
+        "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
         "internalServerError": "Internal Server Error",
         "failedToFetch": "Failed to fetch validation summary"
     },

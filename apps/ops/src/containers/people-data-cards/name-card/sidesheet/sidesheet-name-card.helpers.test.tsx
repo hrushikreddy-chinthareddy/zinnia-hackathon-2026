@@ -5,7 +5,26 @@ import type { TFunction } from 'i18next';
 describe('getFormErrors', () => {
     const t: TFunction = ((key: string) => key) as TFunction;
 
-    it('returns caseId error if caseId is null', () => {
+    it('returns caseId error if caseId is null and hasCase is true', () => {
+        const errors = getFormErrors({
+            caseId: undefined,
+            firstName: 'John',
+            lastName: 'Doe',
+            fullName: 'John Doe',
+            t,
+            type: 'PERSON',
+            supportingDocumentMatchesWithNewName: 'Yes',
+            signaturePresentOnDocumentForAllOwners: 'Yes',
+            dateOfSignature: '2023-01-01',
+            uploadedFiles: [],
+            hasCase: true,
+        });
+        expect(errors.caseId).toBe(
+            'people.sideSheet.email.errors.missingCaseDocument'
+        );
+    });
+
+    it('does NOT return caseId error if hasCase is false', () => {
         const errors = getFormErrors({
             caseId: undefined,
             firstName: 'John',
@@ -18,9 +37,7 @@ describe('getFormErrors', () => {
             dateOfSignature: '2023-01-01',
             uploadedFiles: [],
         });
-        expect(errors.caseId).toBe(
-            'people.sideSheet.email.errors.missingCaseDocument'
-        );
+        expect(errors.caseId).toBeUndefined();
     });
 
     it('returns organization fullName error if fullName is empty', () => {

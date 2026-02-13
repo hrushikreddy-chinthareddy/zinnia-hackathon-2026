@@ -838,7 +838,7 @@
         "zipCodeMissing": "El código postal está vacío.",
         "zinniaLiveTransactionActivityDescription": "Muestra la actividad total de transacciones de autoservicio para los roles listados en el filtro.",
         "zinniaLiveTransactionActivityTitle": "Actividad de Transacciones de Autoservicio",
-        "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en Zinnia Live.)",
+        "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
         "missingCheckToConfirm": "Para enviar, confirme que desea proceder con errores y crear una tarea NIGO.",
         "bpm500Error": "Ocurrió un error al validar su solicitud",
         "prioritizeCase": "Priorizar caso",
@@ -1826,8 +1826,8 @@
                 "overview": "Resumen",
                 "primaryBeneficiary": "Beneficiario principal",
                 "reviewMessage": "Todo bien! Asegúrese de revisar sus entradas antes de enviar",
-                "status400subtitle": "Vaya, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
-                "submitWithErrorsText": "Enviar con errores y crear una tarea de NIGO para que el equipo correspondiente siga trabajando en ella.",
+                "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
+                "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
                 "tag": {
                     "new": "Nuevo",
                     "none": "Ninguno",
@@ -2355,13 +2355,13 @@
                 "new": "Nuevo"
             },
             "status200subtitle": "Muy bien! Asegúrese de revisar sus entradas antes de enviar",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "subtitle": "Muy bien! Asegúrese de revisar todas las transferencias y los valores de los fondos resultantes antes de enviar.",
             "effectiveDateLabel": "Fecha efectiva",
             "validationStatusLabel": "Estado de validación",
             "internal500Error": "Los servicios están fuera de línea, por lo que no podemos continuar. Puede enviar un ticket de ayuda. Por favor, salga de esta transacción y vuelva a intentarlo más tarde.",
             "internal500CTAlinkText": "Enviar un ticket de ayuda",
-            "submitWithErrorsText": "Enviar con errores y crear un NIGO task para que el equipo de seguimiento lo siga.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirme que desea enviar con errores y crear un NIGO task."
         },
         "confirm": {
@@ -2543,7 +2543,7 @@
             "backToHome": "Volver al inicio"
         },
         "start": {
-            "title": "Comenzar"
+            "title": "Administrar {{partyRole}}"
         },
         "assigneeChange": {
             "start": {
@@ -5768,11 +5768,11 @@
         },
         "caseDocumentSelect": {
             "documentNumber": "N mero de documento: ",
-            "label": "  Documento est s trabajando?",
-            "noDocumentAssistiveText": "Si contin a sin selecci n de documento, no podemos actualizar OnBase por ti.",
-            "processWithoutDocument": "Procesar sin un documento",
+            "label": "Si se requieren actualizaciones de una transacción pendiente, seleccione el caso correspondiente y continúe. De lo contrario, continúe sin vincular ningún caso.",
+            "noDocumentAssistiveText": "Si continúa sin seleccionar un caso, se creará un nuevo caso para esta transacción.",
+            "processWithoutDocument": "Proceder sin vincular un caso.",
             "noCaseSelection": "Seleccione un caso abierto para continuar o proceder sin uno",
-            "caseSelectionAssistiveText": "Cualquier informaci n existente en este caso se actualizar  con los detalles proporcionados aqu "
+            "caseSelectionAssistiveText": "Este caso se actualizará con los detalles proporcionados dentro de esta transacción."
         },
         "transactionCta": {
             "checkingRules": "Estamos comprobando las reglas comerciales de esta póliza...",
@@ -7049,9 +7049,9 @@
             "stateTaxes": "Impuesto estatal ({{state}})",
             "stateTaxesTooltip": "Los retiros en montos mayores a lo que el propietario ha pagado en primas son tributables. Podemos \"retener\" el impuesto estatal, si aplica, lo que significa que podemos pagar una cierta cantidad a la autoridad fiscal estatal en nombre del propietario del monto que retiran. O el propietario puede decidir pagar los impuestos ellos mismos más tarde.",
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Los cálculos de impuestos y tarifas no estarán disponibles. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "submitWithdrawal": "Enviar retiro",
-            "submitWithErrorsText": "Enviar con errores. (Esto creará automáticamente una tarea NIGO en OnBase.)",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "taxes": "Impuestos",
             "totalPayment": "Pago total",
             "totalPaymentTooltip": "Esta es la cantidad que realmente se pagará de este retiro. Es el monto solicitado menos cualquier tarifa de transacción aplicable.",
@@ -7175,10 +7175,10 @@
             "payor": "Pagador",
             "submit": "Enviar pago",
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "updateAutopay": "Actualizar pago automático de préstamo",
             "validationStatusLabel": "Estado de validación",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO."
         },
         "confirm": {
@@ -7215,7 +7215,7 @@
             "bpm500Error": "Error BPM 500",
             "submitPayment": "Enviar pago",
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "loanPaymentAmount": "Monto del pago del préstamo",
             "effectiveDate": "Fecha efectiva",
             "payor": "Pagador",
@@ -7223,7 +7223,7 @@
             "internal500Error": "Los servicios están caídos, por lo que no podemos continuar. Puedes enviar un ticket de ayuda. Por favor, deja esta transacción e inténtalo de nuevo más tarde.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Enviar un ticket de ayuda",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO."
         }
     },
@@ -7284,7 +7284,7 @@
             "proRata": "Pro rata",
             "submitLoan": "Enviar préstamo",
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "loanAmount": "Monto del préstamo",
             "effectiveDate": "Fecha efectiva",
             "effectiveDateTooltip": "Esta es la fecha utilizada para calcular todos los valores de cuenta disponibles para este préstamo. Dado que los fondos en el valor de la cuenta están invertidos, el valor de la cuenta puede cambiar día a día. El procesamiento puede ocurrir en cualquier momento, por lo que necesitamos saber en qué punto retirar efectivamente los fondos, incluso si estamos procesando la transacción algunos días antes o después.",
@@ -7293,7 +7293,7 @@
             "internal500Error": "Los servicios están caídos, por lo que no podemos continuar. Puedes enviar un ticket de ayuda. Por favor, deja esta transacción e inténtalo de nuevo más tarde.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Enviar un ticket de ayuda",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO."
         }
     },
@@ -7333,7 +7333,7 @@
         "summary": {
             "label": "Resumen",
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "paymentLabel": "Monto del pago de prima",
             "effectiveDateLabel": "Fecha efectiva",
             "payorTitle": "Pagador",
@@ -7341,7 +7341,7 @@
             "internal500Error": "Los servicios están caídos, por lo que no podemos continuar. Puedes enviar un ticket de ayuda. Por favor, deja esta transacción e inténtalo de nuevo más tarde.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Enviar un ticket de ayuda",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO."
         },
         "confirm": {
@@ -7391,10 +7391,10 @@
             "payor": "Pagador",
             "submit": "Enviar pago",
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "updateAutopay": "Actualizar pago automático de prima",
             "validationStatusLabel": "Estado de validación",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO."
         },
         "confirm": {
@@ -7459,10 +7459,10 @@
             "payor": "Beneficiario",
             "submit": "Enviar pago",
             "status200subtitle": "¡Se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "updateAutopay": "Actualizar pago automático de prima",
             "validationStatusLabel": "Estado de validación",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente le dé seguimiento.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO.",
             "distributionType": "Tipo de distribución",
             "type": "Tipo",
@@ -7492,14 +7492,14 @@
             "label": "Resumen",
             "title": "Resumen",
             "status200subtitle": "¡Todo se ve bien! Asegúrate de revisar tus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revisa el error a continuación.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
             "subtitle": "¡Todo se ve bien! Asegúrate de revisar todas las transferencias y los valores resultantes de los fondos antes de enviar.",
             "effectiveDateLabel": "Fecha efectiva",
             "validationStatusLabel": "Estado de validación",
             "internal500Error": "Los servicios están caídos, por lo que no podemos continuar. Puedes enviar un ticket de ayuda. Por favor, deja esta transacción e inténtalo de nuevo más tarde.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Enviar un ticket de ayuda",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "missingCheckToConfirm": "Para enviar, confirma que deseas enviar con errores y crear una tarea NIGO.",
             "transferedFrom": "Transferido De",
             "transferedTo": "Transferido A",
@@ -7708,13 +7708,13 @@
             "title": "Esta transacción ya se ha completado"
         },
         "start": {
-            "documentSelectionLabel": "¿De qué documento estás trabajando?",
+            "documentSelectionLabel": "Si se requieren actualizaciones de una transacción pendiente, seleccione el caso correspondiente y continúe. De lo contrario, continúe sin vincular ningún caso.",
             "documentNumber": "Número de documento: ",
             "caseId": "ID del caso: ",
-            "processWithoutDocument": "Procesar sin un documento",
-            "processWithoutDocAssistiveText": "Si continúas sin una selección de documento, no podemos actualizar OnBase por ti.",
-            "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si continúas sin una selección de documento, podemos actualizar OnBase por ti.",
-            "processWithoutDocWithOnbaseDocCheckAssistiveText": "Si continúas sin una selección de documento, podemos actualizar OnBase por ti.",
+            "processWithoutDocument": "Proceder sin vincular el caso",
+            "processWithoutDocAssistiveText": "Si continúa sin seleccionar un caso, se creará un nuevo caso para esta transacción.",
+            "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si continúa sin seleccionar un caso, se creará un nuevo caso para esta transacción.",
+            "processWithoutDocWithOnbaseDocCheckAssistiveText": "Si continúa sin seleccionar un caso, se creará un nuevo caso para esta transacción.",
             "missingSelection": "Selecciona un documento (o continúa sin) para continuar.",
             "supportingInfo": "Información complementaria"
         },
@@ -8692,8 +8692,8 @@
             "bpm500Error": "Error BPM 500",
             "header": "Resumen",
             "reviewMessage": "¡Todo se ve bien! Asegúrese de revisar sus entradas antes de enviar.",
-            "status400subtitle": "Hm, encontramos un problema al verificar las reglas de esta póliza. Revise el error a continuación.",
-            "submitWithErrorsText": "Enviar con errores y crear una tarea NIGO para que el equipo correspondiente haga seguimiento.",
+            "status400subtitle": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
+            "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
             "tag": {
                 "new": "Agregado",
                 "none": "Ninguno",
@@ -9561,8 +9561,8 @@
         "contingentBene": "Beneficiario contingente",
         "loading": "La API de validación se está ejecutando...",
         "successMessage": "¡Se ve bien! Asegúrate de revisar tus participaciones antes de enviarlas.",
-        "errorMessage": "Encontramos un problema al revisar las reglas de esta política. Revisa el error a continuación.",
-        "submitWithErrorsText": "Envíe con errores y cree una tarea NIGO para que el equipo apropiado le haga seguimiento.",
+        "errorMessage": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
+        "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
         "internalServerError": "Error Interno del Servidor",
         "failedToFetch": "No se pudo obtener el resumen de validación"
     },

@@ -838,7 +838,7 @@
         "zipCodeMissing": "Le code postal est manquant.",
         "zinniaLiveTransactionActivityDescription": "Affiche l'activité totale des transactions en libre-service pour les rôles répertoriés dans le filtre.",
         "zinniaLiveTransactionActivityTitle": "Activité des Transactions en Libre-Service",
-        "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live.)",
+        "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
         "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez continuer avec des erreurs et créer une tâche NIGO.",
         "bpm500Error": "Une erreur s'est produite lors de la validation de votre demande",
         "prioritizeCase": "Prioriser le dossier",
@@ -2164,8 +2164,8 @@
             "overview": "Aperçu",
             "primaryBeneficiary": "Bénéficiaire principal",
             "reviewMessage": "Bien joué! Assurez-vous de passer en revue vos entrées avant de soumettre",
-            "status400subtitle": "Hum, nous avons trouvé un problème lors de la vérification des règles de cette police. Veuillez examiner l'erreur ci-dessous.",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche de NIGO pour que l'équipe appropriée suive",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "tag": {
                 "new": "Nouveau",
                 "none": "Aucun",
@@ -2409,13 +2409,13 @@
                 "new": "Nouveau"
             },
             "status200subtitle": "C'est bon! Assurez-vous de vérifier vos entrées avant de soumettre",
-            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Veuillez consulter l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "subtitle": "C'est bon! Assurez-vous de vérifier toutes les transferts et les valeurs de fonds résultantes avant de soumettre.",
             "effectiveDateLabel": "Date d'effet",
             "validationStatusLabel": "Statut de validation",
             "internal500Error": "Les services sont en panne, nous ne pouvons pas continuer. Vous pouvez soumettre un ticket d'assistance. Veuillez quitter cette transaction et réessayer plus tard.",
             "internal500CTAlinkText": "Soumettre un ticket d'assistance",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée suive.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
@@ -2597,7 +2597,7 @@
             "backToHome": "Retour à l’accueil"
         },
         "start": {
-            "title": "Commencer"
+            "title": "Gérer {{partyRole}}"
         },
         "assigneeChange": {
             "start": {
@@ -5724,11 +5724,11 @@
         },
         "caseDocumentSelect": {
             "documentNumber": "Numéro de document: ",
-            "label": "Quel est le document que vous utilisez?",
-            "noDocumentAssistiveText": "Si vous continuez sans une slection de document, nous ne pouvons pas mettre à jour le cas Zinnia Live pour vous.",
-            "processWithoutDocument": "Traiter sans document",
+            "label": "Si des mises à jour sont nécessaires pour une transaction en cours, sélectionnez le dossier correspondant et poursuivez. Sinon, continuez sans lier de dossier.",
+            "noDocumentAssistiveText": "Si vous poursuivez sans sélectionner de dossier, un nouveau dossier sera créé pour cette transaction.",
+            "processWithoutDocument": "Poursuivez sans lier de dossier.",
             "noCaseSelection": "Sélectionner un cas ouvert pour continuer ou procéder sans en sélectionner un",
-            "caseSelectionAssistiveText": "Toutes les informations existantes sur ce cas seront mises à jour avec les détails fournis ici"
+            "caseSelectionAssistiveText": "Ce dossier sera mis à jour avec les détails fournis dans cette transaction."
         },
         "transactionCta": {
             "checkingRules": "Nous vérifions les règles commerciales de cette police...",
@@ -7014,9 +7014,9 @@
             "stateTaxes": "Impôt provincial ({{state}})",
             "stateTaxesTooltip": "Les retraits d'un montant supérieur à celui des primes payées par le propriétaire sont imposables. Nous pouvons \"retenir\" l'impôt provincial, si applicable, ce qui signifie que nous pouvons verser un certain montant à l'autorité fiscale provinciale au nom du propriétaire à partir du montant qu'il retire. Ou bien le propriétaire peut décider de payer lui-même les impôts plus tard.",
             "status200subtitle": "Ça a l'air bien! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette politique. Les calculs des taxes et des frais ne seront pas disponibles. Veuillez vérifier l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "submitWithdrawal": "Soumettre un retrait",
-            "submitWithErrorsText": "Soumettre avec des erreurs. (Cela créera automatiquement une tâche NIGO dans Zinnia Live.)",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "taxes": "Impôts",
             "totalPayment": "Paiement total",
             "totalPaymentTooltip": "C'est le montant qui sera réellement payé à partir de ce retrait. C'est le montant demandé moins les frais de transaction applicables.",
@@ -7144,10 +7144,10 @@
             "payor": "Payeur",
             "submit": "Soumettre le paiement",
             "status200subtitle": "Tout est bon! Assurez-vous de revoir vos informations avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Veuillez revoir l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "updateAutopay": "Mettre à jour le paiement automatique du prêt",
             "validationStatusLabel": "Statut de validation",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
@@ -7184,7 +7184,7 @@
             "bpm500Error": "Erreur BPM 500",
             "submitPayment": "Soumettre le paiement",
             "status200subtitle": "Ça a l'air bien! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Consultez l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "loanPaymentAmount": "Montant du paiement du prêt",
             "effectiveDate": "Date effective",
             "payor": "Payeur",
@@ -7192,7 +7192,7 @@
             "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket de help desk. Veuillez quitter cette transaction et réessayer plus tard.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Soumettre un ticket de help desk",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée effectue un suivi.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO."
         }
     },
@@ -7252,7 +7252,7 @@
             "proRata": "Pro rata",
             "submitLoan": "Soumettre le prêt",
             "status200subtitle": "Cela semble bien! Assurez-vous de réviser vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Révisez l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "loanAmount": "Montant du prêt",
             "effectiveDate": "Date d'entrée en vigueur",
             "effectiveDateTooltip": "Il s'agit de la date utilisée pour calculer toutes les valeurs de compte disponibles pour ce prêt. Puisque les fonds de la valeur du compte sont investis, la valeur du compte peut changer d'un jour à l'autre. Le traitement peut se produire à tout moment, nous devons donc savoir à quel moment retirer effectivement les fonds, même si nous traitons la transaction quelques jours avant ou après.",
@@ -7261,7 +7261,7 @@
             "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket d'assistance. Veuillez quitter cette transaction et réessayer plus tard.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Soumettre un ticket d'assistance",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour l'équipe appropriée pour suivre.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
         }
     },
@@ -7301,7 +7301,7 @@
         "summary": {
             "label": "Résumé",
             "status200subtitle": "Ça a l'air bien ! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette politique. Veuillez examiner l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "paymentLabel": "Montant du paiement de prime",
             "effectiveDateLabel": "Date d'effet",
             "payorTitle": "Payeur",
@@ -7309,7 +7309,7 @@
             "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket d’assistance. Veuillez quitter cette transaction et réessayer plus tard.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Soumettre un ticket d'assistance",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée assure le suivi.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
@@ -7359,10 +7359,10 @@
             "payor": "Payeur",
             "submit": "Soumettre le paiement",
             "status200subtitle": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette police. Consultez l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "updateAutopay": "Mettre à jour le prélèvement automatique de la prime",
             "validationStatusLabel": "État de validation",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO."
         },
         "confirm": {
@@ -7427,10 +7427,10 @@
             "payor": "Bénéficiaire",
             "submit": "Soumettre le paiement",
             "status200subtitle": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette police. Consultez l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "updateAutopay": "Mettre à jour le prélèvement automatique de la prime",
             "validationStatusLabel": "État de validation",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée fasse un suivi.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous voulez soumettre avec des erreurs et créer une tâche NIGO.",
             "distributionType": "Type de distribution",
             "type": "Type",
@@ -7460,14 +7460,14 @@
             "label": "Résumé",
             "title": "Résumé",
             "status200subtitle": "Ça a l'air bien ! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème en vérifiant les règles de cette politique. Consultez l'erreur ci-dessous.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
             "subtitle": "Ça a l'air bien ! Assurez-vous de vérifier tous les transferts et les valeurs des fonds résultants avant de soumettre.",
             "effectiveDateLabel": "Date d'effet",
             "validationStatusLabel": "État de validation",
             "internal500Error": "Les services sont en panne, nous ne pouvons donc pas continuer. Vous pouvez soumettre un ticket de help desk. Veuillez quitter cette transaction et réessayer plus tard.",
             "internal500CTAlink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
             "internal500CTAlinkText": "Soumettre un ticket de help desk",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l'équipe appropriée effectue un suivi.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "missingCheckToConfirm": "Pour soumettre, confirmez que vous souhaitez soumettre avec des erreurs et créer une tâche NIGO.",
             "transferedFrom": "Transféré de",
             "transferedTo": "Transféré à",
@@ -7677,13 +7677,13 @@
             "title": "cette transaction est déjà terminée"
         },
         "start": {
-            "documentSelectionLabel": "À partir de quel document travaillez-vous ?",
+            "documentSelectionLabel": "Si des mises à jour sont nécessaires pour une transaction en cours, sélectionnez le dossier correspondant et poursuivez. Sinon, continuez sans lier de dossier.",
             "documentNumber": "Numéro de document: {{documentNumber}}",
             "caseId": "Numéro du cas: ",
-            "processWithoutDocument": "Processus sans document",
-            "processWithoutDocAssistiveText": "Si vous continuez sans sélectionner de document, nous ne pourrons pas mettre à jour Zinnia Live dossier pour vous.",
-            "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
-            "processWithoutDocWithOnBaseDocCheckAssistiveText": "Si vous continuez sans sélection de document, nous pouvons mettre à jour Zinnia Live pour vous.",
+            "processWithoutDocument": "Poursuivez sans tenir compte de la casse.",
+            "processWithoutDocAssistiveText": "Si vous poursuivez sans sélectionner de dossier, un nouveau dossier sera créé pour cette transaction.",
+            "processWithoutDocAssistiveTextWithOnBaseUpdate": "Si vous poursuivez sans sélectionner de dossier, un nouveau dossier sera créé pour cette transaction.",
+            "processWithoutDocWithOnBaseDocCheckAssistiveText": "Si vous poursuivez sans sélectionner de dossier, un nouveau dossier sera créé pour cette transaction.",
             "missingSelection": "Sélectionnez un document (ou continuez sans) pour continuer.",
             "supportingInfo": "Informations complémentaires"
         },
@@ -8659,8 +8659,8 @@
             "bpm500Error": "Erreur BPM 500",
             "header": "Résumé",
             "reviewMessage": "Tout semble bon ! Assurez-vous de vérifier vos entrées avant de soumettre.",
-            "status400subtitle": "Hm, nous avons trouvé un problème lors de la vérification des règles de cette police. Consultez l’erreur ci-dessous.",
-            "submitWithErrorsText": "Soumettre avec des erreurs et créer une tâche NIGO pour que l’équipe concernée assure le suivi.",
+            "status400subtitle": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
+            "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
             "tag": {
                 "new": "Ajouté",
                 "none": "Aucun",
@@ -9530,8 +9530,8 @@
         "contingentBene": "Bénéficiaire conditionnel",
         "loading": "L'API de validation est en cours d'exécution...",
         "successMessage": "Ça a l'air bien ! N'oubliez pas de relire vos candidatures avant de les soumettre.",
-        "errorMessage": "Hm, nous avons détecté un problème lors de la vérification des règles de cette politique. Veuillez consulter l'erreur ci-dessous.",
-        "submitWithErrorsText": "Soumettez le document en signalant les erreurs et créez une tâche NIGO pour que l'équipe concernée puisse assurer le suivi.",
+        "errorMessage": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
+        "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
         "internalServerError": "Erreur interne du serveur",
         "failedToFetch": "Impossible de récupérer le résumé de validation"
     },

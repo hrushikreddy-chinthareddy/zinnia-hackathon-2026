@@ -37,6 +37,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { hasAnyCase, useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
@@ -148,6 +149,12 @@ export const SidesheetNameCard = ({
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
     >([]);
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyDetails.policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.ExistingNameChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
     >([]);
@@ -366,6 +373,7 @@ export const SidesheetNameCard = ({
             signaturePresentOnDocumentForAllOwners,
             dateOfSignature,
             uploadedFiles,
+            hasCase: hasAnyCaseResult,
         });
 
         setCurrentErrors(errors);
@@ -431,6 +439,9 @@ export const SidesheetNameCard = ({
             onSuccessfulSubmit,
         });
     };
+    if (isLoading) {
+        return <LoadingState />;
+    }
 
     const getContent = () => {
         switch (selectedPolicyParty?.partyType) {
@@ -656,21 +667,23 @@ export const SidesheetNameCard = ({
                     id="comm-pref-form"
                     className="flex flex-col gap-8 p-8"
                 >
-                    <CaseDocumentSelect
-                        caseDocumentOptions={caseDocumentOptions}
-                        caseId={body.caseId}
-                        currentErrors={currentErrors}
-                        policyNumber={policyDetails.policyNumber}
-                        processType={Processes.PolicyUpdate}
-                        setBody={setBody as SetStateCaseId}
-                        setCaseDocumentOptions={setCaseDocumentOptions}
-                        setCurrentErrors={setCurrentErrors}
-                        setViewState={setViewState}
-                        required={true}
-                        processSubType={[Processes.ExistingNameChange]}
-                        correlationId={correlationIdFromRoute}
-                        body={body}
-                    />
+                    {hasAnyCaseResult && (
+                        <CaseDocumentSelect
+                            caseDocumentOptions={caseDocumentOptions}
+                            caseId={body.caseId}
+                            currentErrors={currentErrors}
+                            policyNumber={policyDetails.policyNumber}
+                            processType={Processes.PolicyUpdate}
+                            setBody={setBody as SetStateCaseId}
+                            setCaseDocumentOptions={setCaseDocumentOptions}
+                            setCurrentErrors={setCurrentErrors}
+                            setViewState={setViewState}
+                            required={true}
+                            processSubType={[Processes.ExistingNameChange]}
+                            correlationId={correlationIdFromRoute}
+                            body={body}
+                        />
+                    )}
 
                     {getContent()}
 

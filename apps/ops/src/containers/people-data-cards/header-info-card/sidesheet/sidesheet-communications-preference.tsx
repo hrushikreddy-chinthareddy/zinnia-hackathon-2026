@@ -36,6 +36,7 @@ import {
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
@@ -122,6 +123,13 @@ export const SidesheetCommunicationsPreference = ({
 
     const selectedContactInfo = selectedOption?.contactInfo;
 
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.CommunicationPreferenceChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
+
     const selectedRadioOption = useMemo(() => {
         if (!selectedContactInfo) return;
         if ('addressId' in selectedContactInfo) {
@@ -171,6 +179,7 @@ export const SidesheetCommunicationsPreference = ({
             caseId: caseId ?? '',
             isDelete: false,
             t: defaultT,
+            hasCase: hasAnyCaseResult,
         });
         if (Object.keys(errors).length > 0) {
             setCurrentErrors(errors);
@@ -306,6 +315,10 @@ export const SidesheetCommunicationsPreference = ({
           }
         : null;
 
+    if (isLoading) {
+        return <LoadingState />;
+    }
+
     switch (viewState) {
         case ViewState.Loading:
             return <LoadingState />;
@@ -394,22 +407,24 @@ export const SidesheetCommunicationsPreference = ({
                     id="comm-pref-form"
                     className="flex flex-col gap-8 p-8"
                 >
-                    <CaseDocumentSelect
-                        caseDocumentOptions={caseDocumentOptions}
-                        caseId={caseId}
-                        currentErrors={currentErrors}
-                        policyNumber={policyNumber}
-                        processType={Processes.PolicyUpdate}
-                        setBody={setBody as SetStateCaseId}
-                        setCaseDocumentOptions={setCaseDocumentOptions}
-                        setCurrentErrors={setCurrentErrors}
-                        setViewState={setViewState}
-                        processSubType={[
-                            Processes.CommunicationPreferenceChange,
-                        ]}
-                        correlationId={correlationIdFromRoute}
-                        body={body as NonFinancialTransactionBody}
-                    />
+                    {hasAnyCaseResult && (
+                        <CaseDocumentSelect
+                            caseDocumentOptions={caseDocumentOptions}
+                            caseId={caseId}
+                            currentErrors={currentErrors}
+                            policyNumber={policyNumber}
+                            processType={Processes.PolicyUpdate}
+                            setBody={setBody as SetStateCaseId}
+                            setCaseDocumentOptions={setCaseDocumentOptions}
+                            setCurrentErrors={setCurrentErrors}
+                            setViewState={setViewState}
+                            processSubType={[
+                                Processes.CommunicationPreferenceChange,
+                            ]}
+                            correlationId={correlationIdFromRoute}
+                            body={body as NonFinancialTransactionBody}
+                        />
+                    )}
                     <div
                         data-error-id="communicationPreference"
                         role="group"

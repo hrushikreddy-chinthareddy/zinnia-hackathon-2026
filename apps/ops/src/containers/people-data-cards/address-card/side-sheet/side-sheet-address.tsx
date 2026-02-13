@@ -50,6 +50,7 @@ import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { getStateCodes } from '@deps/helpers/states.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import { mapAddressTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import {
     hasErrorsAndFocus,
     useFocusOnError,
@@ -203,6 +204,13 @@ const SideSheetAddress = ({
         }));
     };
 
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.AddressChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
+
     const handleDelete = async () => {
         const reqBody = {
             ...body,
@@ -246,6 +254,7 @@ const SideSheetAddress = ({
             caseId,
             isDelete,
             t: defaultT,
+            hasCase: hasAnyCaseResult,
         });
         setCurrentErrors(errors);
         if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
@@ -306,6 +315,10 @@ const SideSheetAddress = ({
             onSuccessfulSubmit,
         });
     };
+
+    if (isLoading) {
+        return <LoadingState />;
+    }
 
     switch (viewState) {
         case ViewState.Loading:
@@ -372,20 +385,22 @@ const SideSheetAddress = ({
 
     return (
         <div ref={errorRef} className="flex flex-col gap-6 p-10">
-            <CaseDocumentSelect
-                caseDocumentOptions={caseDocumentOptions}
-                caseId={caseId}
-                currentErrors={currentErrors}
-                policyNumber={policyNumber}
-                processType={Processes.PolicyUpdate}
-                setBody={setBody as SetStateCaseId}
-                setCaseDocumentOptions={setCaseDocumentOptions}
-                setCurrentErrors={setCurrentErrors}
-                setViewState={setViewState}
-                processSubType={[Processes.AddressChange]}
-                correlationId={correlationIdFromRoute}
-                body={body}
-            />
+            {hasAnyCaseResult && (
+                <CaseDocumentSelect
+                    caseDocumentOptions={caseDocumentOptions}
+                    caseId={caseId}
+                    currentErrors={currentErrors}
+                    policyNumber={policyNumber}
+                    processType={Processes.PolicyUpdate}
+                    setBody={setBody as SetStateCaseId}
+                    setCaseDocumentOptions={setCaseDocumentOptions}
+                    setCurrentErrors={setCurrentErrors}
+                    setViewState={setViewState}
+                    processSubType={[Processes.AddressChange]}
+                    correlationId={correlationIdFromRoute}
+                    body={body}
+                />
+            )}
 
             {isAdd && (
                 <Radio
