@@ -832,6 +832,8 @@
         "submitWithErrorsText": "Submit with errors. (This will automatically create a NIGO task in Zinnia Live.)",
         "missingCheckToConfirm": "To submit, confirm you want to submit with errors and create a NIGO task.",
         "bpm500Error": "An error occurred while validating your request",
+        "prioritizeCase": "Prioritize case",
+        "deprioritizeCase": "De-prioritize case",
         "illustrationsQuickQuoteBasePremiumRangeError": "Could not retrieve base premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteTotalPremiumRangeError": "Could not retrieve total premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteGenericError": "Could not retrieve value for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
@@ -2592,7 +2594,7 @@
             "upload": "Upload",
             "cancel": "Cancel",
             "select": "Select",
-            "error": "Error occurred while fecthing filters. Please try again"
+            "error": "Error occurred while fetching filters. Please try again"
         },
         "fileUploadToastMessages": {
             "fileUploadError": "Failed to upload following files ({{failedUploads}})",
@@ -3340,7 +3342,7 @@
         "prioritizeCase": {
             "prioritized": "Prioritized",
             "quickActions": "Quick Actions",
-            "title": "Prioritize Case",
+            "title": "Prioritize case",
             "detailsHeader": "Details",
             "detailsBody": "This will mark the case for expedited processing.",
             "cancel": "Cancel",
@@ -3352,7 +3354,7 @@
             "errorForbidden": "You do not have permission to perform this action.",
             "successMessage": "Case ID: {{caseId}} has been prioritized.",
             "simpleTooltipBody": "This case is prioritized.",
-            "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing.",
+            "tooltipBody": "This case was prioritized on {{date}} by {{userName}} for processing.",
             "reasonLabel": "Prioritization reason",
             "reasonPlaceholder": "Select a reason",
             "sourceLabel": "Prioritization source",
@@ -3362,7 +3364,7 @@
             "refDataError": "Unable to load prioritization reasons and sources. Please refresh and try again."
         },
         "deprioritizeCase": {
-            "title": "De-prioritize Case",
+            "title": "De-prioritize case",
             "detailsHeader": "Details",
             "detailsBody": "This will move the case back to normal processing.",
             "cancel": "Cancel",
@@ -7619,10 +7621,10 @@
         "cases": {
             "requestCorrection": "Request Correction",
             "deprioritize": {
-                "title": "De-prioritize Case"
+                "title": "De-prioritize case"
             },
             "prioritize": {
-                "title": "Prioritize Case"
+                "title": "Prioritize case"
             }
         },
         "requestOperationReview": {
