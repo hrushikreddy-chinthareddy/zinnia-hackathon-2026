@@ -193,24 +193,88 @@ describe('RMDMethod Component', () => {
             expect(screen.queryByText('newRmdProgram')).not.toBeInTheDocument();
         });
 
-        it('should render one-time RMD text when rmdType is OneTimeRMD', () => {
-            const contextWithOneTimeRMD = {
+        it('should render newRmdProgram label when isLC is true and rmdMethod is AutoRMD', () => {
+            const contextWithAutoRMD = {
                 ...defaultContextValue,
                 formProgram: {
                     ...defaultFormProgram,
                     rmd: {
                         ...defaultFormProgram.rmd,
-                        rmdMethod: RMDType.OneTimeRMD,
+                        rmdMethod: RMDType.AutoRMD,
                     },
                 },
             };
 
             renderWithContext(
-                <RMDMethod isFormStateReadOnly={false} />,
-                contextWithOneTimeRMD
+                <RMDMethod isFormStateReadOnly={false} isLC={true} />,
+                contextWithAutoRMD
+            );
+
+            expect(screen.getByText('newRmdProgram')).toBeInTheDocument();
+            expect(screen.queryByText('oneTimeRmd')).not.toBeInTheDocument();
+        });
+
+        it('should render newRmdProgram label when isLC is false and rmdMethod is AutoRMD', () => {
+            const contextWithAutoRMD = {
+                ...defaultContextValue,
+                formProgram: {
+                    ...defaultFormProgram,
+                    rmd: {
+                        ...defaultFormProgram.rmd,
+                        rmdMethod: RMDType.AutoRMD,
+                    },
+                },
+            };
+
+            renderWithContext(
+                <RMDMethod isFormStateReadOnly={false} isLC={false} />,
+                contextWithAutoRMD
+            );
+
+            expect(screen.getByText('newRmdProgram')).toBeInTheDocument();
+            expect(screen.queryByText('oneTimeRmd')).not.toBeInTheDocument();
+        });
+
+        it('should render newRmdProgram label when isLC is true and rmdMethod is CalculateRMD', () => {
+            const contextWithCalculateRMD = {
+                ...defaultContextValue,
+                formProgram: {
+                    ...defaultFormProgram,
+                    rmd: {
+                        ...defaultFormProgram.rmd,
+                        rmdMethod: RMDType.CalculateRMD,
+                    },
+                },
+            };
+
+            renderWithContext(
+                <RMDMethod isFormStateReadOnly={false} isLC={true} />,
+                contextWithCalculateRMD
+            );
+
+            expect(screen.getByText('newRmdProgram')).toBeInTheDocument();
+            expect(screen.queryByText('oneTimeRmd')).not.toBeInTheDocument();
+        });
+
+        it('should render oneTimeRmd label when isLC is false and rmdMethod is CalculateRMD', () => {
+            const contextWithCalculateRMD = {
+                ...defaultContextValue,
+                formProgram: {
+                    ...defaultFormProgram,
+                    rmd: {
+                        ...defaultFormProgram.rmd,
+                        rmdMethod: RMDType.CalculateRMD,
+                    },
+                },
+            };
+
+            renderWithContext(
+                <RMDMethod isFormStateReadOnly={false} isLC={false} />,
+                contextWithCalculateRMD
             );
 
             expect(screen.getByText('oneTimeRmd')).toBeInTheDocument();
+            expect(screen.queryByText('newRmdProgram')).not.toBeInTheDocument();
         });
     });
 
