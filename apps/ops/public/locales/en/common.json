@@ -72,8 +72,13 @@
         "category": "Category",
         "caseSubtype": "Case subtype",
         "daily": "Daily",
+        "daysLabel": "days",
         "daysActive": "Days active",
+        "hoursLabel": "hours",
+        "groupBy": "Group by",
         "periodAverage": "{{period}} average",
+        "minutesLabel": "minutes",
+        "monthsLabel": "months",
         "submissionMethod": "Submission method",
         "totalCases": "Total cases",
         "totalSubmissions": "Total submissions",
@@ -87,6 +92,7 @@
         "addressId": "Address",
         "addressInfo": "Address info",
         "addUpTo5Recipients": "You may add up to 5 additional recipients.",
+        "all": "All",
         "allCarriers": "All Carriers",
         "allocationOption": "Allocation option",
         "allocationOptionType": "Allocation option type",
@@ -161,7 +167,12 @@
         "combinedFunds": "Funds",
         "commissionOption": "Commission option",
         "completedTaskTimesDescription": "Median processing times for tasks over a selected time range.",
+        "completedTaskTimesErrorState": "Data not available. Refresh the page to try again.",
+        "completedTaskTimesEmptyState": "There is no data for this selection.",
+        "completedTaskTimesLegendTitle": "Task name",
         "completedTaskTimesTitle": "Median Processing Times",
+        "completedTaskTimesXAxisLabel": "Processing time",
+        "completedTaskTimesYAxisLabel": "Case type",
         "confirm": "Confirm",
         "confirmCancelProgram": "Confirm before canceling systematic program.",
         "contestabilityEndDate": "Contestability end date",
@@ -191,6 +202,7 @@
         "coverageType": "Coverage type",
         "coveredParties": "Covered parties",
         "coveredParty": "Covered party",
+        "count": "Count",
         "created": "Created",
         "cumulativeGrossDeathBenefitAmount": "Cumulative gross death benefit amount",
         "cumulativeMatchPaymentAmount": "Cumulative match payment amount",
@@ -533,7 +545,9 @@
         "planName": "Plan name",
         "phone": "Phone",
         "phoneNumber": "Phone Number",
+        "policiesAndContracts": "Policies & Contracts",
         "policyBasics": "{{policyNomenclature, capitalize}} basics",
+        "policyContractStatus": "Policy/Contract status",
         "policyDates": "{{policyNomenclature, capitalize}} dates",
         "policyDeliveryDate": "{{policyNomenclature, capitalize}} delivery date",
         "policyFeatures": "Features",
@@ -623,6 +637,11 @@
         "requiredMinimumDistributionCalculationOption": "RMD calculation option",
         "requiredMinimumDistributionRecalculationDate": "RMD recalculation date",
         "restrictStatus": "Restrict status",
+        "retentionAttritionTitle": "Retention vs Attrition",
+        "retentionAttritionFilename": "{{carrierName}} Retention vs Attrition {{fromDate}} to {{toDate}}",
+        "retentionAttritionNoDataState": "Data not available. Try adjusting your filters.",
+        "retentionLabel": "Retention",
+        "attritionLabel": "Attrition",
         "reversalDate": "Reversal date",
         "reverseInitiator": "Reverse initiator",
         "riderBenefitAmount": "Rider benefit amount",
@@ -838,6 +857,8 @@
         "indexAutomationLoading": "Loading...",
         "indexAutomationErrorGetting": "Error getting",
         "indexAutomationNoData": "No data",
+        "prioritizeCase": "Prioritize case",
+        "deprioritizeCase": "De-prioritize case",
         "illustrationsQuickQuoteBasePremiumRangeError": "Could not retrieve base premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteTotalPremiumRangeError": "Could not retrieve total premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteGenericError": "Could not retrieve value for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
@@ -1313,6 +1334,7 @@
         "RequiredMinimumDistributionOneTime": "Required minimum distribution one time",
         "Rescission": "Rescission",
         "ResetBenefitAmounts": "Reset benefit amounts",
+        "RETENTIONATTRITION": "Retention & Attrition",
         "Reversed": "Reversed",
         "RIDER": "Rider",
         "RiderActivationAnniversary": "Rider activation anniversary",
@@ -2598,7 +2620,7 @@
             "upload": "Upload",
             "cancel": "Cancel",
             "select": "Select",
-            "error": "Error occurred while fecthing filters. Please try again"
+            "error": "Error occurred while fetching filters. Please try again"
         },
         "fileUploadToastMessages": {
             "fileUploadError": "Failed to upload following files ({{failedUploads}})",
@@ -3346,7 +3368,7 @@
         "prioritizeCase": {
             "prioritized": "Prioritized",
             "quickActions": "Quick Actions",
-            "title": "Prioritize Case",
+            "title": "Prioritize case",
             "detailsHeader": "Details",
             "detailsBody": "This will mark the case for expedited processing.",
             "cancel": "Cancel",
@@ -3358,7 +3380,7 @@
             "errorForbidden": "You do not have permission to perform this action.",
             "successMessage": "Case ID: {{caseId}} has been prioritized.",
             "simpleTooltipBody": "This case is prioritized.",
-            "tooltipBody": "This case was Prioritized on {{date}} by {{userName}} for processing.",
+            "tooltipBody": "This case was prioritized on {{date}} by {{userName}} for processing.",
             "reasonLabel": "Prioritization reason",
             "reasonPlaceholder": "Select a reason",
             "sourceLabel": "Prioritization source",
@@ -3368,7 +3390,7 @@
             "refDataError": "Unable to load prioritization reasons and sources. Please refresh and try again."
         },
         "deprioritizeCase": {
-            "title": "De-prioritize Case",
+            "title": "De-prioritize case",
             "detailsHeader": "Details",
             "detailsBody": "This will move the case back to normal processing.",
             "cancel": "Cancel",
@@ -7625,10 +7647,10 @@
         "cases": {
             "requestCorrection": "Request Correction",
             "deprioritize": {
-                "title": "De-prioritize Case"
+                "title": "De-prioritize case"
             },
             "prioritize": {
-                "title": "Prioritize Case"
+                "title": "Prioritize case"
             }
         },
         "requestOperationReview": {

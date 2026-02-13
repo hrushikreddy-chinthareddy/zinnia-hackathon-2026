@@ -176,20 +176,20 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                     />
                 </div>
 
-                <div className="flex gap-2 items-end width-full justify-end pr-5">
+                <div className={styles.prioritizeCaseButtonContainer}>
+                    <Button
+                        variant={ButtonVariant.Default}
+                        size={ButtonSize.Small}
+                        onClick={handleSubmit}
+                    >
+                        {tCommon(`${action}Case`)}
+                    </Button>
                     <Button
                         variant={ButtonVariant.Selected}
                         size={ButtonSize.Small}
                         onClick={() => sideSheet.handleOpen(false)}
                     >
                         {t('cancel')}
-                    </Button>
-                    <Button
-                        variant={ButtonVariant.Default}
-                        size={ButtonSize.Small}
-                        onClick={handleSubmit}
-                    >
-                        {t('submit')}
                     </Button>
                 </div>
             </div>

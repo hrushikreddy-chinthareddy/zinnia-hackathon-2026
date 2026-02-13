@@ -15,12 +15,21 @@ import TransactionNavigationButtons, {
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { usePremium } from '@deps/contexts/transactions/NewPremiumContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
-import { DEFAULT_EXTENDED_DATE_FORMAT } from '@deps/types/constants';
+import {
+    DEFAULT_EXTENDED_DATE_FORMAT,
+    NUMERIC_DATE_FORMAT,
+} from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { FeatureType, Policy, Transaction } from '@zinnia/api-types/types/sor';
 
 import {
@@ -52,6 +61,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     const billingFeature = policyFeatures.find(
         (item) => item.featureType === FeatureType.BILLING
     );
+    const { featureFlagVariables } = useOptimizely();
 
     const { paymentAmount: billingPaymentAmount = '' } = billingFeature || {};
 
@@ -76,6 +86,43 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
             return isDateAllowed(date, startDate, endDate);
         },
         [hasLapse, hasReinstatement]
+    );
+
+    const isUseCurrentLifeCycleDate = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.USE_CURRENT_LIFECYCLE_DATE,
+        OptimizelyVariableKey.Clients,
+        policy.carrierId?.toLocaleLowerCase() || ''
+    );
+
+    const handleDateAllowed = useCallback(
+        (date: dayjs.Dayjs) => {
+            const isAllowedByPolicyDateRules = handleIsDateAllowed(
+                date,
+                startDate,
+                endDate
+            );
+
+            const minDate = dayjs(
+                policy?.policyContractState?.currentLifecycleDate
+            ).format(NUMERIC_DATE_FORMAT);
+            const min = dayjs(minDate, NUMERIC_DATE_FORMAT, true).startOf(
+                'day'
+            );
+
+            const allowedByFarmers = isUseCurrentLifeCycleDate
+                ? !min.isValid() || !date.isBefore(min, 'day')
+                : true;
+
+            return isAllowedByPolicyDateRules && allowedByFarmers;
+        },
+        [
+            handleIsDateAllowed,
+            startDate,
+            endDate,
+            isUseCurrentLifeCycleDate,
+            policy,
+        ]
     );
 
     const handleDateChange = ({
@@ -216,9 +263,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                     onChange={handleDateChange}
                     size={FieldSize.Small}
                     type={FieldType.BaseActive}
-                    isDateAllowed={(date) =>
-                        handleIsDateAllowed(date, startDate, endDate)
-                    }
+                    isDateAllowed={handleDateAllowed}
                     isFutureDateDisabled={false}
                     variant={
                         errors.effectiveDate

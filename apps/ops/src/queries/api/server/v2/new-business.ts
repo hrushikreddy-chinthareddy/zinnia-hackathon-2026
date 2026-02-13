@@ -6,7 +6,7 @@ import { LoggingContext } from '@deps/utils/server-logging';
 
 export const NEW_BUSINESS_API_ORIGIN = 'new-business-api';
 
-export const isNewBusinessResponse = (
+export const isNewBusinessErrorResponse = (
     obj: NewBusiness | NewBusinessResponse
 ): obj is NewBusinessResponse => 'message' in obj && obj.message != null;
 
