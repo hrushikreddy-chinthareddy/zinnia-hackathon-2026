@@ -12,17 +12,12 @@ import StepAdditionalData, {
     hasAdditionalDataSideSheet,
     hasTransactionalAdditionalDataSideSheet,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/step-additional-data';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { AdditionalDataStepIds } from '@deps/models/case/additional-data-instance';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import DocumentsTab from './tabs/documents-tab';
 import MultiInstanceTab from './tabs/multi-instance-tab';
-import {
-    stepsWithIndexAutomationCase,
-    TransactionsStepAdditionalData,
-} from './tabs/transactions-step-additional-data';
+import { TransactionsStepAdditionalData } from './tabs/transactions-step-additional-data';
 import { TransactionsAdditionalDataStepIds } from './tabs/transactions-step-additional-data.types';
 
 const StepSideSheetViews = {
@@ -93,23 +88,7 @@ export default function StepSideSheetContent({
     step: TransformedStep;
 }) {
     const { t } = useTranslation();
-    const { featureFlags } = useOptimizely();
-    const isIndexAutomationEnabled =
-        featureFlags[FEATURE_FLAGS.INDEX_AUTOMATION_CASE];
-    const isIndexAutomationStep = stepsWithIndexAutomationCase.includes(
-        step.id as TransactionsAdditionalDataStepIds
-    );
-
-    const sideSheetViews = getStepSidesheetViews(step).filter((view) => {
-        if (
-            view === StepSideSheetViews.StepAdditionalData &&
-            isIndexAutomationStep &&
-            !isIndexAutomationEnabled
-        ) {
-            return false;
-        }
-        return true;
-    });
+    const sideSheetViews = getStepSidesheetViews(step);
     const [tab, setTab] = useState(sideSheetViews[0]);
 
     return (
