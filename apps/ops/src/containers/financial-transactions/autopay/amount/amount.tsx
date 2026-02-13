@@ -1,5 +1,6 @@
 import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
+import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { useTranslation } from 'next-i18next';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -16,7 +17,10 @@ import TransactionNavigationButtons, {
     ParentPage,
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
@@ -27,6 +31,8 @@ import {
 } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     Policy,
     Frequency,
@@ -36,6 +42,7 @@ import {
     FeatureType,
 } from '@zinnia/api-types/types/sor';
 
+dayjs.extend(customParseFormat);
 interface AmountProps {
     policy: Policy;
     customFarmerCheck?: boolean;
@@ -70,7 +77,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
 
     const { t } = useTranslation();
 
-    const { featureFlags } = useOptimizely();
+    const { featureFlags, featureFlagVariables } = useOptimizely();
     const systematicProgramTablesEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
@@ -107,6 +114,23 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
         [isSetUp, t]
     );
 
+    const isUseCurrentLifeCycleDate = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.USE_CURRENT_LIFECYCLE_DATE,
+        OptimizelyVariableKey.Clients,
+        policy.carrierId?.toLocaleLowerCase() || ''
+    );
+
+    const handleIsDateAllowed = (d: dayjs.Dayjs) => {
+        const minDate = dayjs(
+            policy?.policyContractState?.currentLifecycleDate
+        ).format(NUMERIC_DATE_FORMAT);
+        const min = dayjs(minDate, NUMERIC_DATE_FORMAT, true).startOf('day');
+
+        if (!min.isValid()) return true;
+
+        return !d.isBefore(min, 'day');
+    };
     useEffect(() => {
         if (autopay.initValues) {
             return;
@@ -115,11 +139,22 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
         // confirm nextProgramDate is right when updating autopayment
         const isEverly =
             policy.carrierId === 'SBUL' || policy.carrierId === 'ELIC';
-        const effectiveDate = isSetUp
-            ? isEverly
-                ? policyDates?.nextMonthiversaryDate
-                : dayjs()
-            : systematicProgramData?.nextProgramDate;
+
+        let effectiveDate: dayjs.Dayjs | null = dayjs();
+
+        if (isUseCurrentLifeCycleDate) {
+            effectiveDate = dayjs(
+                policy?.policyContractState?.currentLifecycleDate
+            );
+        } else if (isSetUp && isEverly) {
+            effectiveDate = policyDates?.nextMonthiversaryDate
+                ? dayjs(policyDates.nextMonthiversaryDate)
+                : null;
+        } else {
+            effectiveDate = systematicProgramData?.nextProgramDate
+                ? dayjs(systematicProgramData.nextProgramDate)
+                : null;
+        }
 
         setAutopay(() => ({
             ...autopay,
@@ -379,6 +414,11 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                             : FieldVariant.Default
                     }
                     message={errors.effectiveDate || ''}
+                    isDateAllowed={
+                        isUseCurrentLifeCycleDate
+                            ? handleIsDateAllowed
+                            : undefined
+                    }
                 />
             </div>
         </WorkflowCard>

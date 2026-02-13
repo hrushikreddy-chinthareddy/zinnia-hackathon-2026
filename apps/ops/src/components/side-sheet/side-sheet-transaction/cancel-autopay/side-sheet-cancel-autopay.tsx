@@ -14,7 +14,10 @@ import CaseDocumentSelect, {
 } from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyVariableKey,
+    useOptimizely,
+} from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildSystematicProgramSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
@@ -39,6 +42,8 @@ import {
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
+import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     AdhocSystematicProgram,
     AmountType,
@@ -90,7 +95,7 @@ const SideSheetCancelAutopay = ({
 }: SideSheetCancelAutopayProps) => {
     const { t } = useTranslation();
 
-    const { featureFlags } = useOptimizely();
+    const { featureFlags, featureFlagVariables } = useOptimizely();
     const systematicProgramTablesEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
@@ -107,6 +112,12 @@ const SideSheetCancelAutopay = ({
                 (sp) => sp.reason === systematicProgramReason
             ),
         [policy.systematicPrograms, systematicProgramReason]
+    );
+    const isUseCurrentLifeCycleDate = isFeatureFlagVariableActive(
+        featureFlagVariables,
+        FEATURE_FLAG_VARIABLES.USE_CURRENT_LIFECYCLE_DATE,
+        OptimizelyVariableKey.Clients,
+        policy.carrierId?.toLocaleLowerCase() || ''
     );
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
@@ -394,7 +405,14 @@ const SideSheetCancelAutopay = ({
                             {t('transactions.cancelAutopay.effectiveDate')}
                         </Label>
                     }
-                    disableBeforeDate={dayjs().toDate()}
+                    disableBeforeDate={
+                        isUseCurrentLifeCycleDate
+                            ? dayjs(
+                                  policy?.policyContractState
+                                      ?.currentLifecycleDate
+                              ).toDate()
+                            : dayjs().toDate()
+                    }
                     defaultDate={defaultDate.toDate()}
                     onDateSelect={(date: Date | undefined) =>
                         handleDateChange(date)

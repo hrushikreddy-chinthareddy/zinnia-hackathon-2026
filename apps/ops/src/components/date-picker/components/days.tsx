@@ -40,98 +40,51 @@ export const Days = ({
     onTab,
 }: DaysProps) => {
     const weekdays = dayjs.weekdaysShort();
-    const firstDayOfCurrentMonth = dayjs()
-        .year(year)
-        .month(month)
-        .date(1)
-        .day();
 
-    const currentMonth = dayjs().year(year).month(month).month();
-    const daysInCurrentMonth = dayjs().year(year).month(month).daysInMonth();
-    const daysOfCurrentMonth = Array.from(
-        { length: daysInCurrentMonth },
-        (_, i) => i + 1
+    const firstOfMonth = dayjs().year(year).month(month).date(1);
+    const firstDayOfCurrentMonth = firstOfMonth.day();
+
+    const daysInCurrentMonth = firstOfMonth.daysInMonth();
+    const daysOfCurrentMonth = useMemo(
+        () => Array.from({ length: daysInCurrentMonth }, (_, i) => i + 1),
+        [daysInCurrentMonth]
     );
 
-    const previousMonth = dayjs()
-        .year(year)
-        .month(currentMonth)
-        .subtract(1, 'month')
-        .month();
-    const daysInPreviousMonth = dayjs()
-        .year(year)
-        .month(month)
-        .subtract(1, 'month')
-        .daysInMonth();
-    const daysOfPreviousMonth = Array.from(
-        { length: firstDayOfCurrentMonth },
-        (_, i) => daysInPreviousMonth - i
-    ).sort();
+    // Render blanks to keep grid aligned, but DO NOT render prev/next month day numbers.
+    const leadingBlanks = firstDayOfCurrentMonth;
 
-    const nextMonth = dayjs()
-        .year(year)
-        .month(currentMonth)
-        .add(1, 'month')
-        .month();
-    const daysInNextMonth =
-        (daysOfPreviousMonth.length + daysInCurrentMonth) % 7 === 0
-            ? 0
-            : 7 - ((daysOfPreviousMonth.length + daysInCurrentMonth) % 7);
-    const daysOfNextMonth = Array.from(
-        { length: daysInNextMonth },
-        (_, i) => i + 1
-    );
+    // Keep a 6-row grid (42 cells) like before so layout doesn't jump month-to-month.
+    const totalCells = 42;
+    const usedCells = leadingBlanks + daysInCurrentMonth;
+    const trailingBlanks = Math.max(0, totalCells - usedCells);
 
-    const allDays = useMemo(
-        () => [
-            ...daysOfPreviousMonth.map((day, idx) => ({
-                day,
-                month: previousMonth,
-                year: month === 0 ? year - 1 : year,
-                type: 'previous',
-                originalIndex: idx,
-            })),
-            ...daysOfCurrentMonth.map((day, idx) => ({
+    // Keyboard navigation should only include focusable day buttons (current month only)
+    const focusableDays = useMemo(
+        () =>
+            daysOfCurrentMonth.map((day, idx) => ({
                 day,
                 month,
                 year,
-                type: 'current',
                 originalIndex: idx,
             })),
-            ...daysOfNextMonth.map((day, idx) => ({
-                day,
-                month: nextMonth,
-                year: month === 11 ? year + 1 : year,
-                type: 'next',
-                originalIndex: idx,
-            })),
-        ],
-        [
-            daysOfPreviousMonth,
-            daysOfCurrentMonth,
-            daysOfNextMonth,
-            previousMonth,
-            month,
-            year,
-            nextMonth,
-        ]
+        [daysOfCurrentMonth, month, year]
     );
 
     const isIndexDisabled = useCallback(
         (index: number) => {
-            const dayData = allDays[index];
+            const dayData = focusableDays[index];
             return getDisabledClasses(dayData.month, dayData.day).includes(
                 'pointer-events-none'
             );
         },
-        [allDays, getDisabledClasses]
+        [focusableDays, getDisabledClasses]
     );
 
     const { focusedIndex, setItemRef, handleKeyDown } = useKeyboardNavigation(
-        allDays.length,
+        focusableDays.length,
         7,
         (index) => {
-            const dayData = allDays[index];
+            const dayData = focusableDays[index];
             handleDateSelect(dayData.year, dayData.month, dayData.day);
         },
         onEscape,
@@ -155,6 +108,7 @@ export const Days = ({
                 >
                     <ArrowLeftMediumIcon width={21} height={21} />
                 </button>
+
                 <button
                     className={containerClasses}
                     onClick={createClickHandler(() => handleOpenMonths())}
@@ -167,6 +121,7 @@ export const Days = ({
                         dayjs.months()[month]
                     } ${year}`}</p>
                 </button>
+
                 <button
                     className={containerClasses}
                     onClick={createClickHandler(() =>
@@ -180,6 +135,7 @@ export const Days = ({
                     <ArrowRightMediumIcon width={21} height={21} />
                 </button>
             </div>
+
             <div className="grid grid-cols-7" role="grid" aria-label="Calendar">
                 {weekdays.map((dayItem, index) => (
                     <div
@@ -190,59 +146,29 @@ export const Days = ({
                         <p className={secondaryTextClasses}>{dayItem}</p>
                     </div>
                 ))}
-                {daysOfPreviousMonth.map((dayItem, index) => {
-                    const globalIndex = index;
-                    const isDisabled = getDisabledClasses(
-                        previousMonth,
-                        dayItem
-                    ).includes('pointer-events-none');
-                    return (
-                        <button
-                            key={`prev-${index}`}
-                            ref={setItemRef(globalIndex)}
-                            className={`${containerClasses} ${getSelectedClasses(
-                                previousMonth,
-                                dayItem
-                            )} ${getDisabledClasses(previousMonth, dayItem)}`}
-                            onClick={createClickHandler(() =>
-                                handleDateSelect(year, previousMonth, dayItem)
-                            )}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Tab' && !e.shiftKey && onTab) {
-                                    onTab();
-                                }
-                            }}
-                            tabIndex={getTabIndex(
-                                isDisabled,
-                                globalIndex === focusedIndex
-                            )}
-                            role="gridcell"
-                            aria-label={`${dayItem} ${
-                                dayjs.monthsShort()[previousMonth]
-                            }`}
-                            aria-disabled={isDisabled}
-                        >
-                            <p
-                                className={`${primaryTextClasses} ${getDisabledClasses(
-                                    previousMonth,
-                                    dayItem
-                                )}`}
-                            >
-                                {dayItem}
-                            </p>
-                        </button>
-                    );
-                })}
+
+                {/* Leading blank cells (no prev-month dates shown) */}
+                {Array.from({ length: leadingBlanks }).map((_, i) => (
+                    <div
+                        key={`blank-leading-${i}`}
+                        className={containerClasses}
+                        role="gridcell"
+                        aria-hidden="true"
+                    />
+                ))}
+
+                {/* Current month day buttons */}
                 {daysOfCurrentMonth.map((dayItem, index) => {
-                    const globalIndex = daysOfPreviousMonth.length + index;
+                    // focusedIndex indexes into focusableDays, which is current month only
                     const isDisabled = getDisabledClasses(
                         month,
                         dayItem
                     ).includes('pointer-events-none');
+
                     return (
                         <button
                             key={`current-${index}`}
-                            ref={setItemRef(globalIndex)}
+                            ref={setItemRef(index)}
                             className={`${containerClasses} ${getSelectedClasses(
                                 month,
                                 dayItem
@@ -257,7 +183,7 @@ export const Days = ({
                             }}
                             tabIndex={getTabIndex(
                                 isDisabled,
-                                globalIndex === focusedIndex
+                                index === focusedIndex
                             )}
                             role="gridcell"
                             aria-label={`${dayItem} ${
@@ -276,52 +202,16 @@ export const Days = ({
                         </button>
                     );
                 })}
-                {daysOfNextMonth.map((dayItem, index) => {
-                    const globalIndex =
-                        daysOfPreviousMonth.length +
-                        daysOfCurrentMonth.length +
-                        index;
-                    const isDisabled = getDisabledClasses(
-                        nextMonth,
-                        dayItem
-                    ).includes('pointer-events-none');
-                    return (
-                        <button
-                            key={`next-${index}`}
-                            ref={setItemRef(globalIndex)}
-                            className={`${containerClasses} ${getSelectedClasses(
-                                nextMonth,
-                                dayItem
-                            )} ${getDisabledClasses(nextMonth, dayItem)}`}
-                            onClick={createClickHandler(() =>
-                                handleDateSelect(year, nextMonth, dayItem)
-                            )}
-                            onKeyDown={(e) => {
-                                if (e.key === 'Tab' && !e.shiftKey && onTab) {
-                                    onTab();
-                                }
-                            }}
-                            tabIndex={getTabIndex(
-                                isDisabled,
-                                globalIndex === focusedIndex
-                            )}
-                            role="gridcell"
-                            aria-label={`${dayItem} ${
-                                dayjs.monthsShort()[nextMonth]
-                            }`}
-                            aria-disabled={isDisabled}
-                        >
-                            <p
-                                className={`${primaryTextClasses} ${getDisabledClasses(
-                                    nextMonth,
-                                    dayItem
-                                )}`}
-                            >
-                                {dayItem}
-                            </p>
-                        </button>
-                    );
-                })}
+
+                {/* Trailing blank cells (no next-month dates shown) */}
+                {Array.from({ length: trailingBlanks }).map((_, i) => (
+                    <div
+                        key={`blank-trailing-${i}`}
+                        className={containerClasses}
+                        role="gridcell"
+                        aria-hidden="true"
+                    />
+                ))}
             </div>
         </div>
     );

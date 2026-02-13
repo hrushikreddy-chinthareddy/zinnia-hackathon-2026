@@ -1,12 +1,10 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
 
-import pages from '../../pages/page-factory';
-import updateAutopayPage from '../../pages/manage-autopay-start.page';
 import amountPage from '../../pages/manage-autopay-amount.page';
-import payorPage from '../../pages/manage-autopay-payor.page';
 import paymentPage from '../../pages/manage-autopay-payment.page';
+import payorPage from '../../pages/manage-autopay-payor.page';
+import updateAutopayPage from '../../pages/manage-autopay-start.page';
 import summaryPage from '../../pages/manage-autopay-summary.page';
-import confirmPage from '../../pages/manage-autopay-confirm.page';
 
 Cypress.on('uncaught:exception', (err, runnable) => {
   if (err.message.includes('Minified React error')) {

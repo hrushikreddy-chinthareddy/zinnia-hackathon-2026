@@ -1,5 +1,6 @@
 /* eslint-disable cypress/no-assigning-return-values */
 import { When, Then } from '@badeball/cypress-cucumber-preprocessor';
+
 import pages from '../../pages/page-factory';
 
 When('I navigate to the Create Case page', () => {

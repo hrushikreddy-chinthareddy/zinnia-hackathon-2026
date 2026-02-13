@@ -1,6 +1,7 @@
-import Page from '../page';
 import dayjs from 'dayjs';
 import localizedFormat from 'dayjs/plugin/localizedFormat';
+
+import Page from '../page';
 
 dayjs.extend(localizedFormat);
 

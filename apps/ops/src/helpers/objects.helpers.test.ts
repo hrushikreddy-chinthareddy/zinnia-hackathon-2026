@@ -5,6 +5,7 @@ import {
     getObjDeepValue,
     hasSameProperties,
     isEmptyObject,
+    stripNullishValues,
 } from './objects.helpers';
 
 describe('helpers/objects.helpers', () => {
@@ -50,6 +51,68 @@ describe('helpers/objects.helpers', () => {
             const o1 = { a: 1, b: 2 };
             const o2 = { a: 1, b: 3 };
             expect(hasSameProperties(o1, o2, ['a', 'b'])).toBe(false);
+        });
+    });
+
+    describe('stripNullishValues', () => {
+        it('removes null and undefined values from flat object', () => {
+            const input = { a: 1, b: null, c: undefined, d: 'hello' };
+            expect(stripNullishValues(input)).toEqual({ a: 1, d: 'hello' });
+        });
+
+        it('recursively removes nullish values from nested objects', () => {
+            const input = {
+                name: 'John',
+                details: {
+                    age: 30,
+                    email: null,
+                    sexAtBirth: '',
+                    address: {
+                        city: 'NYC',
+                        zip: undefined,
+                    },
+                },
+            };
+            expect(stripNullishValues(input)).toEqual({
+                name: 'John',
+                details: {
+                    age: 30,
+                    address: {
+                        city: 'NYC',
+                    },
+                },
+            });
+        });
+
+        it('preserves arrays and Date objects', () => {
+            const date = new Date('2024-01-01');
+            const input = {
+                items: [1, 2, 3],
+                createdAt: date,
+                empty: null,
+            };
+            const result = stripNullishValues(input);
+            expect(result).toEqual({ items: [1, 2, 3], createdAt: date });
+            expect(result.createdAt).toBe(date);
+        });
+
+        it('removes nested objects that become empty after stripping', () => {
+            const input = {
+                a: 1,
+                nested: {
+                    b: null,
+                    c: undefined,
+                },
+            };
+            expect(stripNullishValues(input)).toEqual({ a: 1 });
+        });
+
+        it('preserves falsy but non-nullish values', () => {
+            const input = { a: 0, b: '', c: false, d: null };
+            expect(stripNullishValues(input)).toEqual({
+                a: 0,
+                c: false,
+            });
         });
     });
 

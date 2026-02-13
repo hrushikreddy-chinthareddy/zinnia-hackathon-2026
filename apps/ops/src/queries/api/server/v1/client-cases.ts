@@ -60,3 +60,28 @@ export const createClientCase = async (
         throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
     }
 };
+
+export const patchClientCase = async (
+    clientCaseData: Partial<IllustrationsClientCase> & { id: string },
+    token: string,
+    loggingContext: LoggingContext
+) => {
+    try {
+        const { data } = await serverApi.realPatch(
+            `${apiServerBaseUrl}/client-case-manager/v1/client-case/${clientCaseData.id}`,
+            clientCaseData,
+            {
+                authorization: `Bearer ${token}`,
+                headers: {
+                    'Content-type': 'application/json',
+                    'Access-Control-Allow-Origin': '*',
+                },
+            },
+            loggingContext
+        );
+
+        return data;
+    } catch (error: any) {
+        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
+    }
+};
