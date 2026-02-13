@@ -13,6 +13,7 @@ import Title, { TitleVariant } from '@deps/components/title/title';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { DetailTypesEnum } from '@deps/constants/case';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getValidFullName } from '@deps/helpers/case-management';
 import {
@@ -31,7 +32,9 @@ import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/ci
 import { formatTimestamp } from '@deps/utils/dates';
 import { toSentenceCase } from '@deps/utils/strings';
 
-type CaseDetailsSideNavProps = {
+import { getDetailsByDetailType } from './case-helpers';
+
+export type CaseDetailsSideNavProps = {
     CaseAdditionalDetails: AdditionalDataInstance;
     carrier: string;
     process?: Processes;
@@ -65,7 +68,11 @@ const CaseDetailsSideNav = ({
     const { hasCaseInsightPermission } = usePermissionsContext();
 
     const { t } = useTranslation();
-    const submissionDetails = caseProcessingDetails?.[0]?.details;
+    const submissionDetails = getDetailsByDetailType(
+        caseProcessingDetails,
+        DetailTypesEnum.Submission
+    );
+
     const { agentFirstName, agentLastName, agentNPN, agentSSN, transactionId } =
         CaseAdditionalDetails;
     const displayAgentDetails = !!(
@@ -109,7 +116,9 @@ const CaseDetailsSideNav = ({
         CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod];
     CaseAdditionalDetails[CaseAdditionalDataKeys.deliveryMethod];
 
-    const appTypeLowerCase = applicationType?.toLocaleLowerCase();
+    const appTypeLowerCase = (
+        submissionDetails?.applicationType || applicationType
+    )?.toLocaleLowerCase();
     const submissionType =
         appTypeLowerCase === 'digital' || appTypeLowerCase === 'electronic'
             ? t('sidenav.electronic')
@@ -145,7 +154,7 @@ const CaseDetailsSideNav = ({
                         </>
                     )}
 
-                    {applicationType && (
+                    {submissionType && (
                         <>
                             <Typography
                                 variant={TypographyVariant.BodySm}
@@ -155,20 +164,6 @@ const CaseDetailsSideNav = ({
                             </Typography>
                             <Content
                                 details={toSentenceCase(submissionType)}
-                                variant={ContentVariant.BodySm}
-                            />
-                        </>
-                    )}
-                    {transactionId && (
-                        <>
-                            <Typography
-                                variant={TypographyVariant.BodySm}
-                                className="text-[--color-base-text-text-secondary]"
-                            >
-                                {t('sidenav.transactionId')}
-                            </Typography>
-                            <Content
-                                details={toSentenceCase(transactionId)}
                                 variant={ContentVariant.BodySm}
                             />
                         </>
