@@ -1,0 +1,8 @@
+.loadingSubtitle {
+    filter: blur(2px);
+}
+
+.subtitle {
+    font: var(--typography-titles-subtitle);
+    color: var(--color-base-text-primary, #212121);
+}

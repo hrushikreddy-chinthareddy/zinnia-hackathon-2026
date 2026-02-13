@@ -717,6 +717,16 @@
         "tableCaptionsSentPolicyDocuments": "Liste de tous les documents de police envoyés, incluant le nom, la date d'envoi, le type de fichier et les options de téléchargement",
         "tableCaptionsTaxDocuments": "Documents fiscaux liés à la police, incluant le nom, l'année fiscale, l'ID du formulaire et les options de téléchargement",
         "task": "Tâche",
+        "taskVolumeTitle": "Volume de tâches",
+        "taskVolumeDescription": "Volume de tâches créées sur une période sélectionnée, regroupées par type de dossier et par tâche.",
+        "taskVolumeTotalCount": "{{count}} tâches",
+        "taskVolumeChartXAxisTitle": "Tous les types de dossier",
+        "taskVolumeChartYAxisTitle": "Nombre total de tâches",
+        "taskVolumeError": "Données non disponibles. Actualisez la page et réessayez.",
+        "taskVolumeEmptyStateAll": "Il semble qu'il n'y ait aucune tâche.",
+        "taskVolumeEmptyStateStatus": "Il semble qu'il n'y ait aucune tâche {{status}}.",
+        "taskVolumeFiltersStatusLabel": "Statut",
+        "taskVolumeFiltersStatusPlaceholder": "Tous",
         "taxableAmount": "Monto imponible",
         "taxableFlag": "Indicador de imponible",
         "taxBasis": "Base imponible",
@@ -9286,25 +9296,6 @@
         "tabs": {
             "issue": "Problèmes",
             "tasks": "Tâches"
-        },
-        "tasks": {
-            "title": "Volume de tâches",
-            "description": "Volume de tâches créées sur une période sélectionnée, regroupées par type de dossier et par tâche.",
-            "filters": {
-                "status": {
-                    "label": "Statut",
-                    "placeholder": "Tous"
-                }
-            },
-            "table": {
-                "headers": {
-                    "caseType": "Type de dossier",
-                    "task": "Tâche",
-                    "totalTasks": "Nombre total de tâches"
-                },
-                "allTasks": "Toutes les tâches",
-                "exportCSV": "Exporter en CSV"
-            }
         }
     },
     "usage": {

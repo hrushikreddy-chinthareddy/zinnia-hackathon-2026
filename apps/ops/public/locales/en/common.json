@@ -723,6 +723,16 @@
         "tableCaptionsSentPolicyDocuments": "List of all sent policy documents, including name, sent date, file type, and download options",
         "tableCaptionsTaxDocuments": "Tax documents related to the policy, including name, tax year, form ID, and download options",
         "task": "Task",
+        "taskVolumeTitle": "Task Volume",
+        "taskVolumeDescription": "Volume of tasks created over a selected time range, grouped by case type and task.",
+        "taskVolumeTotalCount": "{{count}} tasks",
+        "taskVolumeChartXAxisTitle": "All case types",
+        "taskVolumeChartYAxisTitle": "Total tasks",
+        "taskVolumeError": "Data not available. Refresh the page to try again.",
+        "taskVolumeEmptyStateAll": "Looks like there aren't any tasks.",
+        "taskVolumeEmptyStateStatus": "Looks like there aren't any {{status}} tasks.",
+        "taskVolumeFiltersStatusLabel": "Status",
+        "taskVolumeFiltersStatusPlaceholder": "All",
         "taxableAmount": "Taxable amount",
         "taxableFlag": "Taxable flag",
         "taxBasis": "Tax basis",
@@ -9170,27 +9180,6 @@
         "preFundTransactionsInstruction": "Manually issue checks for pre-fund transactions as needed. ",
         "postFundTransactionsInstruction": "Reverse post-fund transactions in the Admin System. ",
         "reviewFundsInstruction": "Date of death was not provided by the notifier, so checks cannot be classified as pre- or post-death funds. Please review and take appropriate action. "
-    },
-    "caseStats": {
-        "tasks": {
-            "title": "Task Volume",
-            "description": "Volume of tasks created over a selected time range, grouped by case type and task.",
-            "filters": {
-                "status": {
-                    "label": "Status",
-                    "placeholder": "All"
-                }
-            },
-            "table": {
-                "headers": {
-                    "caseType": "Case type",
-                    "task": "Task",
-                    "totalTasks": "Total tasks"
-                },
-                "allTasks": "All tasks",
-                "exportCSV": "Export to CSV"
-            }
-        }
     },
     "usage": {
         "date": "Date",
