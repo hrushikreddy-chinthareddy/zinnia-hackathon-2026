@@ -6847,7 +6847,7 @@
         "withdrawalChargePopover": "Frais appliqués à la transaction en fonction des exigences du transporteur.",
         "federalTax": "Impôt fédéral",
         "stateTax": "Taxe d'État ({{ state }})",
-        "totalPayment": "Paiement total",
+        "totalPayment": "Montant total estimé du paiement",
         "paymentMethod": "Mode de Paiement",
         "paymentType": {
             "eft": "EFT",
@@ -6859,7 +6859,8 @@
             "exchange": "Exchange"
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}",
-        "creditCardEndingIn": "Carte de crédit se terminant par {{ accountNumber }}"
+        "creditCardEndingIn": "Carte de crédit se terminant par {{ accountNumber }}",
+        "totalPaymentTooltip" : "Le montant indiqué est une estimation et peut être modifié. Le montant final du rachat, incluant les frais de gestion applicables, sera confirmé après le traitement des transactions de fin de journée."
     },
     "autopay": {
         "pendingBanner": {

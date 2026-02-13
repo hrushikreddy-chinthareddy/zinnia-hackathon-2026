@@ -6950,7 +6950,7 @@
         "withdrawalChargePopover": "Charges applied to the transaction based on carrier requirements.",
         "federalTax": "Federal tax",
         "stateTax": "State tax ({{ state }})",
-        "totalPayment": "Total payment",
+        "totalPayment": "Estimated total payment",
         "paymentMethod": "Payment Method",
         "paymentType": {
             "eft": "EFT",
@@ -6962,7 +6962,8 @@
             "exchange": "Exchange"
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}",
-        "creditCardEndingIn": "Credit card ending in {{ accountNumber }}"
+        "creditCardEndingIn": "Credit card ending in {{ accountNumber }}",
+        "totalPaymentTooltip" : "The amount shown is an estimate and may change. The final surrender amount, including applicable MVA, will be confirmed after end-of-day batch processing."
     },
     "autopay": {
         "pendingBanner": {

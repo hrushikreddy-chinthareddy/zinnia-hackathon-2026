@@ -6880,7 +6880,7 @@
         "withdrawalChargePopover": "Cargos aplicados a la transacción según los requisitos del proveedor.",
         "federalTax": "Impuesto federal",
         "stateTax": "Impuesto estatal ({{ state }})",
-        "totalPayment": "Pago total",
+        "totalPayment": "Pago total estimado",
         "paymentMethod": "Método de Pago",
         "paymentType": {
             "eft": "EFT",
@@ -6892,7 +6892,8 @@
             "exchange": "Exchange"
         },
         "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}",
-        "creditCardEndingIn": "Tarjeta de crédito terminando en {{ accountNumber }}"
+        "creditCardEndingIn": "Tarjeta de crédito terminando en {{ accountNumber }}",
+        "totalPaymentTooltip" : "La cantidad mostrada es una estimación y puede variar. El importe final del reembolso, incluyendo el ajuste por valor de mercado aplicable, se confirmará después del procesamiento de fin de día."
     },
     "autopay": {
         "pendingBanner": {
