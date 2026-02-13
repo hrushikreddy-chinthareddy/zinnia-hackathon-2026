@@ -5881,6 +5881,7 @@
             "startTask": "Démarrer la tâche",
             "goToCase": "Aller au cas",
             "viewTask": "Afficher la tâche",
+            "noAccessToTask": "Vous n'avez pas accès à cette tâche.",
             "claimTask": "Revendiquer la tâche",
             "claimTaskError": "Le système a rencontré une erreur temporaire. Veuillez réessayer.",
             "taskHeading": "Tâche",

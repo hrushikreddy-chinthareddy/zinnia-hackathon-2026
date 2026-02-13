@@ -33,7 +33,6 @@ import { removeFromCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
-
 dayjs.extend(utc);
 
 function TaskQueueDrawer({
@@ -43,6 +42,8 @@ function TaskQueueDrawer({
     getTasks,
     taskDescription,
     taskName,
+    carrier,
+    queue,
 }: TaskQueueDrawerProps) {
     const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
     const [date, setDate] = useState(tomorrow);
@@ -96,6 +97,8 @@ function TaskQueueDrawer({
                 taskId={taskId}
                 caseId={caseId || ''}
                 taskDescription={taskDescription as TaskType}
+                carrier={carrier}
+                queue={queue}
             />
         );
         sideSheet.changeSideSheetContent(
