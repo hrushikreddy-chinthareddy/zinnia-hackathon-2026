@@ -606,14 +606,21 @@ const SideSheetAddress = ({
                     checked={isSelectedMailingAddress}
                     isDisabled={(isOnlyAddress && isEdit) || isDelete}
                     label={t('labels.setAsMailingAddress')}
-                    onChange={(e) =>
+                    onChange={(e) => {
                         setBody((prevState) => ({
                             ...prevState,
                             preferredAddressIndicator: e
                                 ? PreferredAddressIndicator.Yes
                                 : PreferredAddressIndicator.No,
-                        }))
-                    }
+                            preferredAddressId: e
+                                ? address.addressId
+                                : undefined,
+                        }));
+                        setAddress((prevState) => ({
+                            ...prevState,
+                            isPreferred: e,
+                        }));
+                    }}
                 />
 
                 {!isAdd && (
