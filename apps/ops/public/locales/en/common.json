@@ -47,13 +47,12 @@
         }
     },
     "allFields": {
-        "all": "All",
         "account": "Acct",
         "createdOn": "Created on",
         "resolvedOn": "Resolved on",
         "accountValue": "Account value",
         "technicalExceptions": "Technical Exceptions",
-        "exceptionReason": "Exception reason",
+        "technicalExceptionsIndicator": "We’re having trouble updating case progress. An incident ticket has been created and will be resolved shortly.",
         "errorCode": "Error code",
         "summary": "Summary",
         "viewDetailsException": "View details exceptions",
@@ -742,8 +741,8 @@
         "taxWithheldAmounts": "Tax withheld amounts",
         "taxWithholdingInstructions": "Tax withholding instructions",
         "taxWithholdingType": "Tax withholding type",
-        "technicalIssuesWarning": "We’re having trouble updating case progress. An incident ticket has been created and will be resolved shortly.",
-        "technicalIssuesResolved": "We resolved all technical issues impacting this case.",
+        "technicalIssuesWarning": "Case progress may not be updated due to a technical issue. We’re working on a fix.",
+        "technicalIssuesResolved": "The technical issues affecting this case have been resolved. Case progress will update and resume normally.",
         "terminalRiderPaymentAmount": "Terminal rider payment amount",
         "terminationDate": "Termination date",
         "testValues": "{{policyNomenclature, capitalize}} tests",
@@ -6973,7 +6972,7 @@
         },
         "checkingEndingIn": "Checking ending in {{ accountNumber }}",
         "creditCardEndingIn": "Credit card ending in {{ accountNumber }}",
-        "totalPaymentTooltip" : "The amount shown is an estimate and may change. The final surrender amount, including applicable MVA, will be confirmed after end-of-day batch processing."
+        "totalPaymentTooltip": "The amount shown is an estimate and may change. The final surrender amount, including applicable MVA, will be confirmed after end-of-day batch processing."
     },
     "autopay": {
         "pendingBanner": {

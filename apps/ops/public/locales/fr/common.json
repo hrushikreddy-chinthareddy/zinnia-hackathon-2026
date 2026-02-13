@@ -53,15 +53,15 @@
         "createdOn": "Créer sur",
         "resolvedOn": "Résolu le",
         "technicalExceptions": "Exceptions techniques",
-        "technicalIssuesWarning": "Nous rencontrons des difficultés pour mettre à jour l'état d'avancement de votre dossier. Un ticket d'incident a été créé et sera résolu prochainement.",
-        "technicalIssuesResolved": "Nous avons résolu tous les problèmes techniques liés à cette affaire.",
+        "technicalIssuesWarning": "L’avancement de votre dossier peut ne pas être mis à jour en raison d’un problème technique. Nous travaillons à sa résolution.",
+        "technicalIssuesResolved": "Les problèmes techniques liés à ce dossier ont été résolus. L'avancement du dossier sera mis à jour et reprendra normalement.",
         "errorCode": "Code d'erreur",
         "summary": "Résumé",
-        "exceptionReason": "Raison de l'exception",
         "errorDescription": "Description",
         "sourceSystem": "Système source",
         "inProgress": "En cours",
         "resolved": "Résolu",
+        "technicalExceptionsIndicator": "Nous rencontrons des difficultés pour mettre à jour l'état d'avancement de votre dossier. Un ticket d'incident a été créé et sera résolu prochainement.",
         "accountValueByPolicyYear": "Valeur du compte par année {{policyNomenclature}}",
         "accountValues": "Valeurs du compte",
         "accountValueTooltip": "C'est le montant de la valeur en espèces détenu dans la police d'assurance-vie du propriétaire. La valeur du compte s'accumule au fil du temps à mesure que les primes sont payées et que des intérêts sont générés.",
@@ -6870,7 +6870,7 @@
         },
         "checkingEndingIn": "Compte-chèques se terminant par {{ accountNumber }}",
         "creditCardEndingIn": "Carte de crédit se terminant par {{ accountNumber }}",
-        "totalPaymentTooltip" : "Le montant indiqué est une estimation et peut être modifié. Le montant final du rachat, incluant les frais de gestion applicables, sera confirmé après le traitement des transactions de fin de journée."
+        "totalPaymentTooltip": "Le montant indiqué est une estimation et peut être modifié. Le montant final du rachat, incluant les frais de gestion applicables, sera confirmé après le traitement des transactions de fin de journée."
     },
     "autopay": {
         "pendingBanner": {

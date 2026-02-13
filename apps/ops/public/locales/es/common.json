@@ -51,16 +51,16 @@
         "account": "Cuenta",
         "createdOn": "Creado el",
         "viewDetailsException": "Ver detalles de excepciones",
-        "exceptionReason": "Razón de excepción",
         "resolvedOn": "Resuelto el",
         "accountValue": "Valor de la cuenta",
         "technicalExceptions": "Excepciones técnicas",
-        "technicalIssuesWarning": "Tenemos problemas para actualizar el progreso del caso. Se ha creado un ticket de incidente y se resolverá en breve.",
-        "technicalIssuesResolved": "Resolvimos todos los problemas técnicos que afectaron este caso.",
+        "technicalIssuesWarning": "Es posible que el progreso del caso no se actualice debido a un problema técnico. Estamos trabajando para solucionarlo.",
+        "technicalIssuesResolved": "Los problemas técnicos que afectan a este caso se han resuelto. El progreso del caso se actualizará y se reanudará con normalidad.",
         "errorCode": "Código de error",
         "summary": "Resumen",
         "errorDescription": "Descripción",
         "sourceSystem": "Sistema fuente",
+        "technicalExceptionsIndicator": "Tenemos problemas para actualizar el progreso del caso. Se ha creado un ticket de incidente y se resolverá en breve.",
         "inProgress": "En curso",
         "resolved": "Resuelto",
         "accountValueByPolicyYear": "Valor de la cuenta por año de {{policyNomenclature}}",
@@ -6903,7 +6903,7 @@
         },
         "checkingEndingIn": "Cuenta corriente terminando en {{ accountNumber }}",
         "creditCardEndingIn": "Tarjeta de crédito terminando en {{ accountNumber }}",
-        "totalPaymentTooltip" : "La cantidad mostrada es una estimación y puede variar. El importe final del reembolso, incluyendo el ajuste por valor de mercado aplicable, se confirmará después del procesamiento de fin de día."
+        "totalPaymentTooltip": "La cantidad mostrada es una estimación y puede variar. El importe final del reembolso, incluyendo el ajuste por valor de mercado aplicable, se confirmará después del procesamiento de fin de día."
     },
     "autopay": {
         "pendingBanner": {
