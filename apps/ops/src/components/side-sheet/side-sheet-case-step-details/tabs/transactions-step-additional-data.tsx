@@ -17,24 +17,27 @@ import {
     TransactionsAdditionalDataStepIds,
 } from './transactions-step-additional-data.types';
 import { ViewTransactions } from './view-transactions';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 type TransactionalStepAdditionalDataProps = {
     stepAdditionalData: CaseAdditionalStepData;
     stepKey: TransactionsAdditionalDataStepIds;
 };
 
-const stepsWithIndexAutomationCase = [
+export const stepsWithIndexAutomationCase = [
     TransactionsAdditionalDataStepIds.receiveRequest,
     TransactionsAdditionalDataStepIds.docIndentification,
     TransactionsAdditionalDataStepIds.docFieldExtraction,
     TransactionsAdditionalDataStepIds.docIndexedAndCaseCreated,
     TransactionsAdditionalDataStepIds.unableToIdentifyDocument,
 ];
-
 export const TransactionsStepAdditionalData = ({
     stepAdditionalData,
     stepKey,
 }: TransactionalStepAdditionalDataProps) => {
+    const { featureFlags } = useOptimizely();
+    const isIndexAutomationCaseEnabled = featureFlags[FEATURE_FLAGS.INDEX_AUTOMATION_CASE];
     const renderAdditionalData = (id: TransactionsAdditionalDataStepIds) => {
         switch (id) {
             case TransactionsAdditionalDataStepIds.stopSystematicPrograms:
@@ -120,7 +123,10 @@ export const TransactionsStepAdditionalData = ({
                     />
                 );
             default:
-                if (stepsWithIndexAutomationCase.includes(id)) {
+                if (
+                    isIndexAutomationCaseEnabled &&
+                    stepsWithIndexAutomationCase.includes(id)
+                ) {
                     return (
                         <IndexAutomationCase
                             stepAdditionalData={stepAdditionalData}
