@@ -1,5 +1,3 @@
-import { useEffect, useRef } from 'react';
-
 import { Address } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
 
@@ -16,7 +14,7 @@ const BankAddress = ({
 }: DisbursementInformation) => {
     const isAnnuitant = disbursementInformation?.isAnnuitant;
     const address =
-        !isFormStateReadOnly && isAnnuitant && annuitantAddress
+        isAnnuitant && annuitantAddress
             ? annuitantAddress
             : disbursementInformation?.address;
 
@@ -27,43 +25,27 @@ const BankAddress = ({
         }));
     };
 
-    // Track when address is reset to empty to force remount
-    const resetCounterRef = useRef(0);
-    const prevAddressRef = useRef(address);
-
-    useEffect(() => {
-        const prevAddress = prevAddressRef.current;
-        const currentAddress = address;
-
-        // Check if previous address had data
-        const prevHadData =
-            prevAddress?.addressLine1 ||
-            prevAddress?.city ||
-            prevAddress?.state ||
-            prevAddress?.zip;
-
-        // Check if current address is empty
-        const currentIsEmpty =
-            !currentAddress?.addressLine1 &&
-            !currentAddress?.city &&
-            !currentAddress?.state &&
-            !currentAddress?.zip;
-
-        // If we're transitioning from filled to empty, increment counter
-        if (prevHadData && currentIsEmpty) {
-            resetCounterRef.current += 1;
-        }
-
-        prevAddressRef.current = currentAddress;
-    }, [address]);
-
-    // Use resetCounter in key to force remount only when reset happens
-    const addressKey = `${fieldName}-${resetCounterRef.current}`;
+    // Generate a unique key based on the current disbursement option to reset address fields when switching options.
+    // Only generate a dynamic key when disbursement option flags are being used (at least one is explicitly set to true/false).
+    // This ensures backward compatibility with implementations that don't use these flags.
+    const disbursementFlags = [
+        disbursementInformation?.isAnnuitant,
+        disbursementInformation?.isPayeeFinancialIns,
+        disbursementInformation?.isPayeeCharity,
+        disbursementInformation?.isThirdPartyDisbursement,
+        disbursementInformation?.isAddressDifferent,
+    ];
+    const hasDisbursementFlags = disbursementFlags.some(
+        (flag) => flag !== undefined
+    );
+    const addressEntryKey = hasDisbursementFlags
+        ? disbursementFlags.join('-')
+        : 'default';
 
     return (
         <div key={fieldName} className={classNames || 'col-span-4'}>
             <AddressEntry
-                key={addressKey}
+                key={addressEntryKey}
                 isFormStateReadOnly={isFormStateReadOnly}
                 onDataChange={setAddress}
                 initialAddress={address}

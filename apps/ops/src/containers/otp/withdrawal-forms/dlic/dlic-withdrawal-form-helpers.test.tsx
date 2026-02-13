@@ -5,6 +5,7 @@ import { TFunction } from 'next-i18next';
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
 import {
     AccountType,
+    Address,
     BankDetails,
     PaymentMailType,
     PaymentMethod,
@@ -13,6 +14,12 @@ import {
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
 } from '@deps/models/case/withdrawal/disbursement-types';
+
+// Type for field configuration with optional annuitantAddress (for test assertions)
+type FieldConfig = Record<string, unknown> & {
+    fieldName: string;
+    annuitantAddress?: Address;
+};
 
 // Mock the helper modules before importing
 jest.mock(
@@ -375,6 +382,58 @@ describe('Dlic withdrawal form config', () => {
                 (field: any) => field.fieldName === 'selectIfPayeeIsDifferent'
             );
             expect(selectIfPayeeField).toBeUndefined();
+        });
+
+        it('should pass annuitantAddress to SendCheckSelect and BankAddress fields when party data is provided', () => {
+            const mockAnnuitantAddress = {
+                addressLine1: '123 Annuitant St',
+                addressLine2: 'Apt 1',
+                addressLine3: null,
+                addressLine4: null,
+                addressType: 'DEFAULT',
+                city: 'Annuitant City',
+                state: 'CA',
+                zip: '90210',
+                zipPlusFour: null,
+                country: 'USA',
+            };
+
+            const formPartyWithAddress = {
+                parties: [
+                    {
+                        partyRoleType: 'ANNUITANT',
+                        addresses: [mockAnnuitantAddress],
+                    },
+                ],
+            };
+
+            const optionsWithParty = disbursementOptions(
+                formPartyWithAddress as any
+            );
+            const checkOption = optionsWithParty.find(
+                (option) => option.value === PaymentMailType.Check
+            );
+
+            // Cast fields to allow accessing annuitantAddress property
+            const fields = checkOption?.fields as FieldConfig[] | undefined;
+
+            // Verify SendCheckSelect field receives annuitantAddress
+            const sendCheckSelectField = fields?.find(
+                (field) => field.fieldName === 'SendCheckSelect'
+            );
+            expect(sendCheckSelectField).toBeDefined();
+            expect(sendCheckSelectField?.annuitantAddress).toEqual(
+                mockAnnuitantAddress
+            );
+
+            // Verify BankAddress field also receives annuitantAddress
+            const addressField = fields?.find(
+                (field) => field.fieldName === 'address'
+            );
+            expect(addressField).toBeDefined();
+            expect(addressField?.annuitantAddress).toEqual(
+                mockAnnuitantAddress
+            );
         });
 
         describe('payload generation', () => {

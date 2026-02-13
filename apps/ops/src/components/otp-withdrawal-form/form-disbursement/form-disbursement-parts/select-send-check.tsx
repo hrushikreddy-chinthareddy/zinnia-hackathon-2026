@@ -41,6 +41,7 @@ const SendCheckSelect = ({
     isFormStateReadOnly,
     onDataChange,
     selectOptions,
+    annuitantAddress,
 }: DisbursementInformation) => {
     const { formDisbursement } = useContext(FormDataContext);
 
@@ -105,7 +106,7 @@ const SendCheckSelect = ({
                     isThirdPartyDisbursement: false,
                     isAnnuitant: true,
                     isAddressDifferent: false,
-                    address: DEFAULT_ADDRESS,
+                    address: annuitantAddress || DEFAULT_ADDRESS,
                 }));
                 break;
             case SendCheckOption.ThirdPartyNotFinancialIns:

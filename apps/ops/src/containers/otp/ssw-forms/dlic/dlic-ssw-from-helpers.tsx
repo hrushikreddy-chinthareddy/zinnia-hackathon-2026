@@ -675,6 +675,7 @@ export default function getDlicConfig(
                               component: DisbursementFields.SendCheckSelect,
                               classNames: 'col-start-1 col-span-2',
                               selectOptions: sendCheckOptions,
+                              annuitantAddress: annuitantAddress,
                           },
                           {
                               fieldName: BankingFields.PayeeName,

@@ -510,6 +510,7 @@ export default function getDlicRmdWithdrawalConfig(
                               selectOptions: sendCheckOptions(
                                   rmdMethod as RMDType
                               ),
+                              annuitantAddress: annuitantAddress,
                           },
                           {
                               fieldName: BankingFields.PayeeName,
