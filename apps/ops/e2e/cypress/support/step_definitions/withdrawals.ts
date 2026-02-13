@@ -1,12 +1,12 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 import pages from '../../pages/page-factory';
-import withdrawalStartPage from '../../pages/withdrawals/withdrawal-start.page';
 import withdrawalAmountPage from '../../pages/withdrawals/withdrawal-amount.page';
-import withdrawalTaxesPage from '../../pages/withdrawals/withdrawal-taxes.page';
 import withdrawalPayeePage from '../../pages/withdrawals/withdrawal-payee.page';
 import withdrawalPaymentPage from '../../pages/withdrawals/withdrawal-payment.page';
+import withdrawalStartPage from '../../pages/withdrawals/withdrawal-start.page';
 import withdrawalSummaryPage from '../../pages/withdrawals/withdrawal-summary.page';
+import withdrawalTaxesPage from '../../pages/withdrawals/withdrawal-taxes.page';
 
 Then('I should see withdrawal information for the policy', () => {
     cy.contains('h1', 'Withdrawals').should('be.visible');

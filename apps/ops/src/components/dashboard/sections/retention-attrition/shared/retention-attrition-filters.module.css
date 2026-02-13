@@ -1,0 +1,7 @@
+.container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    align-items: end;
+    gap: var(--measure-dimension-gap-lg);
+}

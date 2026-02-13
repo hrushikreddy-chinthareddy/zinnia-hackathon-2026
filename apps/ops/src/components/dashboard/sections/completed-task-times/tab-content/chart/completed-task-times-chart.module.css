@@ -1,0 +1,19 @@
+.tooltipContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-sm);
+}
+
+.tooltipSwatch {
+    display: inline-block;
+    width: var(--measure-dimension-z-space-3);
+    height: var(--measure-dimension-z-space-3);
+    border-radius: calc(var(--measure-dimension-z-space-1) / 2);
+    flex: 0 0 auto;
+}
+
+.tooltipText {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--measure-dimension-z-space-1) / 2);
+}

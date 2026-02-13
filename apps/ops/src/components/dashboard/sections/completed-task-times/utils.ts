@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import Highcharts from 'highcharts';
 import { TFunction } from 'next-i18next';
 
 import { defaultDateFormat } from '@deps/components/dashboard/utils';
@@ -22,6 +23,45 @@ export interface CompletedTaskTimeData {
     }[];
     totalTasks: number;
 }
+
+export const generateCompletedTaskTimesSeries = (
+    taskNames: string[],
+    caseTypes: CompletedTaskTimeData[],
+    colorMap: Map<string, string>,
+    secondsInDay: number
+): Highcharts.SeriesOptionsType[] => {
+    return taskNames.map((taskName) => {
+        const data = caseTypes.map((caseType) => {
+            const task = caseType.tasks.find(
+                (entry) => entry.taskName === taskName
+            );
+            if (!task) {
+                return {
+                    y: 0,
+                    custom: { seconds: 0, count: 0 },
+                };
+            }
+
+            return {
+                y: task.secondMedian / secondsInDay,
+                custom: {
+                    seconds: task.secondMedian,
+                    count: task.count,
+                },
+            };
+        });
+
+        return {
+            name: taskName,
+            type: 'bar',
+            data,
+            color:
+                colorMap.get(taskName) ??
+                'var(--color-base-text-link, #00628B)',
+            stack: 'tasks',
+        };
+    });
+};
 
 // CSV column generation for processing times export
 export const generateCsvColumns = (

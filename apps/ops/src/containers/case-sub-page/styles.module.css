@@ -14,14 +14,15 @@
 }
 
 .transactionLayout {
-    padding: 16px;
+    padding: var(--measure-dimension-z-space-4);
     flex-direction: column;
 }
 
 .transactionLayoutAccordion {
     border: 1px solid rgb(var(--color-100-gray));
     flex-direction: column;
-    padding: 16px 0 16px 0;
+    padding: var(--measure-dimension-z-space-4) 0
+        var(--measure-dimension-z-space-4) 0;
 }
 
 .transactionAccordionHeader {
@@ -30,20 +31,29 @@
     width: 100%;
     align-items: center;
     justify-content: space-between;
-    gap: 4px;
-    padding: 0px 16px 0px 16px;
+    gap: var(--measure-dimension-z-space-1);
+    padding: 0px var(--measure-dimension-z-space-4) 0px
+        var(--measure-dimension-z-space-4);
 }
 
 .itemsList {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: var(--measure-dimension-z-space-2);
     padding: 4px;
 }
 
 .caseActionFieldsContainer {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: var(--measure-dimension-z-space-4);
     max-width: 28rem;
+}
+
+.prioritizeCaseButtonContainer {
+    display: flex;
+    gap: var(--measure-dimension-z-space-4);
+    align-items: start;
+    width: 100%;
+    justify-content: start;
 }

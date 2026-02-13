@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
-import fs from 'fs/promises';
+import { exec } from 'child_process';
 import { existsSync } from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { exec } from 'child_process';
 import { promisify } from 'util';
 
 const execAsync = promisify(exec);

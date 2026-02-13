@@ -1,13 +1,11 @@
 import { Given, When, Then } from '@badeball/cypress-cucumber-preprocessor';
-
-import pages from '../../pages/page-factory';
-import oneTimePaymentStartPage from '../../pages/onetimepayment/onetimepayment-start.page';
-import onetimepaymentAmountPage from '../../pages/onetimepayment/onetimepayment-amount.page';
-import onetimepaymentPayorPage from '../../pages/onetimepayment/onetimepayment-payor.page';
-import onetimePaymentMethodPage from '../../pages/onetimepayment/onetimepayment-paymentmethod.page';
-import onetimePaymentSummaryPage from '../../pages/onetimepayment/onetimepayment-summary.page';
 import dayjs from 'dayjs';
-import localizedFormat from 'dayjs/plugin/localizedFormat';
+
+import onetimepaymentAmountPage from '../../pages/onetimepayment/onetimepayment-amount.page';
+import onetimePaymentMethodPage from '../../pages/onetimepayment/onetimepayment-paymentmethod.page';
+import onetimepaymentPayorPage from '../../pages/onetimepayment/onetimepayment-payor.page';
+import oneTimePaymentStartPage from '../../pages/onetimepayment/onetimepayment-start.page';
+import onetimePaymentSummaryPage from '../../pages/onetimepayment/onetimepayment-summary.page';
 
 Cypress.on('uncaught:exception', (err, runnable) => {
   if (err.message.includes('Minified React error')) {

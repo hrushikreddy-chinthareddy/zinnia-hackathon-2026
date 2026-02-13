@@ -245,6 +245,7 @@ export const buildClientCaseFromNewBusiness = async (
             NEW_BUSINESS_API_ORIGIN
         );
     }
+
     // Identify the insured party from list — New Business can contain multiple party roles
     const insuredDetails = buildInsuredDetailsFromNewbusiness(
         parties,
