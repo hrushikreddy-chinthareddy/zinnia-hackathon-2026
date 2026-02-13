@@ -2,14 +2,14 @@ import { useTranslation } from 'next-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { useDiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as BellIcon } from '@deps/styles/elements/icons/icons_outlined/bell.svg';
 
 import { DiaryNotesContent } from './diary-notes-content';
 
 const DiaryNotesWarning = () => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     // TODO: Create store and access diary notes from store
     const diaryNotesData = useDiaryNotesContext();
 

@@ -89,7 +89,7 @@ jest.mock('@deps/contexts/SideSheetContext', () => {
     };
 
     return {
-        useSideSheetContext: jest.fn(() => ({
+        useSideSheetContextLegacy: jest.fn(() => ({
             changeSideSheetContent: mockChangeSideSheetContent,
             handleOpen: mockHandleOpen,
             events: createMockEmitter(),

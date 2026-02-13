@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 
 interface UseTaskIdFromUrlProps {
     taskId?: string;
@@ -13,7 +13,7 @@ export function useTaskIdFromUrl({
     onTaskIdMatch,
     isReady = true,
 }: UseTaskIdFromUrlProps) {
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const previousTaskIdRef = useRef<string | undefined>(undefined);
     const previousIsReadyRef = useRef<boolean>(isReady);
     const onTaskIdMatchRef = useRef(onTaskIdMatch);

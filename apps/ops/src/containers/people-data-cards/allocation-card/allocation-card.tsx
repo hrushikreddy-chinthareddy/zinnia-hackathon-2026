@@ -14,7 +14,7 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import SideSheetPeopleHeader from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import {
     numberFormatify,
@@ -131,7 +131,7 @@ const AllocationCard = ({
 }: AllocationCardProps) => {
     const { t } = useTranslation();
     const { policy, refreshPolicy } = useContext(PolicyData);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(
             <SideSheetPeopleHeader

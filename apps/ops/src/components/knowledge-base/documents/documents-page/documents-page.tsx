@@ -22,7 +22,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     getDocumentsByClientId,
     searchDocuments,
@@ -69,7 +69,7 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
 
     const MIN_SEARCH_TERM_LENGTH = 3;
 
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
 
     const pageSizeOptions = [
         {

@@ -5,7 +5,7 @@ import GlobalValuesBar from '@deps/components/global-values/global-values-bar/gl
 import GlobalPolicyInfo from '@deps/components/global-values/policy-info/policy-info';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     WorkflowProvider,
     useWorkflow,
@@ -32,7 +32,7 @@ const WorkflowContent = ({
 }: WorkflowContainerProps) => {
     const { t } = useTranslation();
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const globalValuesData = useMemo(
         () => policyDataToGlobalValues(new PolicyDetails(policy), t),
         [policy, t]

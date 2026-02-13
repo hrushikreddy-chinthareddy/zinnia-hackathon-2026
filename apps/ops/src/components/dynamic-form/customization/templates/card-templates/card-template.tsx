@@ -17,7 +17,7 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { DocumentWithSource } from '@deps/containers/subpages/documents-sub-page/documents-sub-page';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { convertToUserTimezone } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
@@ -301,7 +301,7 @@ export const SingleCard = ({
     formData,
 }: SingleCardProps) => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const title = extractField(properties, data, TaskFieldTypes.Title);
     const subtitle = extractField(properties, data, TaskFieldTypes.Subtitle);
 

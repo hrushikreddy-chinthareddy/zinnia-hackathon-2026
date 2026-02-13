@@ -6,7 +6,7 @@ import ClickContainer from '@deps/components/click-container/click-container';
 import { RoleAddressCard } from '@deps/containers/address-change-container/components/roles-contract/components/role-address-cards';
 import { groupPartiesByAddress } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-helpers';
 import { PartyAddressCard } from '@deps/containers/address-change-container/components/roles-contract/utils/roles-contract-types';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PaperMail } from '@deps/models/case/correspondence';
 import { AllowedRoleTypes } from '@deps/models/case/send-document';
 import { PartyRole, PartyType, Policy } from '@zinnia/api-types/types/sor';
@@ -27,7 +27,7 @@ const ContactCenterAddress = ({
     const { t } = useTranslation();
 
     const [selectedAddress, setSelectedAddress] = useState<number>(-1);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const extractedParties = useMemo(() => policy?.parties || [], [policy]);
 
     const checkCustodialContract = policy?.parties?.find((party, index) => {

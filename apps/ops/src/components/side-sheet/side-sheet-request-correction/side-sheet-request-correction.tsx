@@ -15,7 +15,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import SuccessErrorSideSheet from '@deps/containers/case-sub-page/success-error-side-sheet';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Case, CorrectionReason, CorrectionType } from '@deps/models/case/case';
 import {
     DefaultDataEntryTask,
@@ -42,7 +42,7 @@ const SideSheetRequestCorrection = ({
 }: SideSheetRequestCorrectionProps) => {
     const { t } = useTranslation();
     const { user } = useUser();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const correctionTypeOptions = [
         {
             label: t('enums.death'),

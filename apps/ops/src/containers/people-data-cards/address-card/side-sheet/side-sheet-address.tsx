@@ -1,9 +1,10 @@
 import { Transition } from '@headlessui/react';
+import { FieldStatus, Label, Select } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import { AssistiveTextVariant } from '@deps/components/assistive-text/assistive-text';
@@ -22,7 +23,6 @@ import NavElement, {
     NavElementType,
 } from '@deps/components/nav-element/nav-element';
 import Radio from '@deps/components/radio/radio';
-import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
@@ -154,6 +154,17 @@ const SideSheetAddress = ({
 
     const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
 
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Address,
+                newItem: address,
+                setState: setCurrentAddresses,
+            });
+        }
+    }, [viewState, action, address, setCurrentAddresses]);
+
     const { addressType } = address;
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -170,7 +181,7 @@ const SideSheetAddress = ({
 
     const addressTypeOptions = getAddressTypeOptions({ t: defaultT });
     const stateOptions = getStateCodes().map((state) => ({
-        label: state,
+        textValue: state,
         value: state,
     }));
 
@@ -361,13 +372,6 @@ const SideSheetAddress = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Address,
-                newItem: address,
-                setState: setCurrentAddresses,
-            });
-
             return (
                 <SuccessState
                     action={action}
@@ -384,7 +388,7 @@ const SideSheetAddress = ({
     }
 
     return (
-        <div ref={errorRef} className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6">
             {hasAnyCaseResult && (
                 <CaseDocumentSelect
                     caseDocumentOptions={caseDocumentOptions}
@@ -569,13 +573,17 @@ const SideSheetAddress = ({
                         />
                     </div>
                     <div className="basis-1/4">
-                        <SelectSimple
-                            errorId="state"
-                            aria-label={t('labels.state') as string}
+                        <Select
+                            triggerLabel={t('labels.state') as string}
                             disabled={isDelete}
-                            label={t('labels.state') as string}
-                            message={currentErrors?.state}
-                            onChange={(value) => {
+                            label={<Label>{t('labels.state') as string}</Label>}
+                            fieldStatus={
+                                currentErrors?.state
+                                    ? FieldStatus.ERROR
+                                    : FieldStatus.DEFAULT
+                            }
+                            errorMessage={currentErrors?.state}
+                            onValueChange={(value) => {
                                 setCurrentErrors((prevState) => {
                                     const { state, ...errors } =
                                         prevState ?? {};
@@ -587,13 +595,8 @@ const SideSheetAddress = ({
                                 }));
                             }}
                             options={stateOptions}
-                            size={FieldSize.Small}
+                            fieldSize="small"
                             value={address.state}
-                            variant={
-                                currentErrors?.state
-                                    ? FieldVariant.Error
-                                    : FieldVariant.Default
-                            }
                         />
                     </div>
                 </div>

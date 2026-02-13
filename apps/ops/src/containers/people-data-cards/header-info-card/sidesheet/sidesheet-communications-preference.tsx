@@ -405,7 +405,7 @@ export const SidesheetCommunicationsPreference = ({
                     ref={errorRef}
                     role="group"
                     id="comm-pref-form"
-                    className="flex flex-col gap-8 p-8"
+                    className="flex flex-col gap-8"
                 >
                     {hasAnyCaseResult && (
                         <CaseDocumentSelect

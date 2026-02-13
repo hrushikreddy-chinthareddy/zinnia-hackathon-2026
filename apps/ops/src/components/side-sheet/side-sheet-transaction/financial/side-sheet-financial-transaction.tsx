@@ -7,7 +7,7 @@ import ChipStatus from '@deps/components/chip-status/chip-status';
 import { Content, ContentVariant } from '@deps/components/content/content';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { withdrawalFinancialTransactions } from '@deps/helpers/transaction-types.helpers';
@@ -49,7 +49,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     const [loading, setLoading] = useState<boolean>(false);
     const [asyncValues, setAsyncValues] = useState<any | null>(null);
     const [view, setView] = useState(SidesheetViews.default);
-    const { handleOpen, changeSideSheetContent } = useSideSheetContext();
+    const { handleOpen, changeSideSheetContent } = useSideSheetContextLegacy();
     const { policy, transaction, refreshTransactions } = props || {};
 
     const [sideSheetValues, setSideSheetValues] = useState<

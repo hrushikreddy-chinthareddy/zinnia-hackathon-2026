@@ -1,10 +1,10 @@
+import { SideSheet } from '@zinnia/bloom/components';
 import { TFunction } from 'next-i18next';
 import { FC, useContext, useMemo, useState } from 'react';
 
 import FieldData from '@deps/components/fields/field-data/field-data';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import useOnEditClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import {
     NonFinancialTransactionActions,
@@ -56,7 +56,6 @@ const CommunicationPreferenceField = ({
     editable = true,
     isUserPermissionedToEditCards = true,
 }: CommunicationPreferenceFieldProps): JSX.Element | null => {
-    const sidesheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
     const currentParty = policyDetails.parties?.getPartyById(
         partyInfo?.partyId ?? ''
@@ -67,6 +66,7 @@ const CommunicationPreferenceField = ({
     const [contactValue, setContactValue] = useState(
         currentParty?.preferredCommunication
     );
+    const [isOpen, setIsOpen] = useState(false);
 
     const displayValue = useMemo(() => {
         if (!contactValue) return '';
@@ -84,23 +84,7 @@ const CommunicationPreferenceField = ({
     }, [contactValue]);
 
     const openSidesheet = () => {
-        sidesheet.changeSideSheetContent(
-            <SideSheetPeopleHeader
-                action={NonFinancialTransactionActions.Edit}
-                transaction={NonFinancialTransactions.CommunicationPreference}
-            />,
-            <SidesheetCommunicationsPreference
-                planCode={policyDetails.planCode}
-                onCancel={() => sidesheet.handleOpen(false)}
-                setPreferredCommunication={setContactValue}
-                party={currentParty}
-                emails={partyInfo?.emails ?? []}
-                addresses={partyInfo?.addresses ?? []}
-                policyNumber={policyDetails.policyNumber}
-                policy={policyDetails.policy}
-            />
-        );
-        sidesheet.handleOpen(true);
+        setIsOpen(true);
     };
 
     const handleEditClick = useOnEditClick({
@@ -126,6 +110,31 @@ const CommunicationPreferenceField = ({
                     <PiiWrapper>{displayValue}</PiiWrapper>
                 </FieldData>
             </div>
+            <SideSheet
+                trigger={null}
+                open={isOpen}
+                onOpenChange={setIsOpen}
+                preventCloseOnOutsideClick={false}
+                header={
+                    <SideSheetPeopleHeader
+                        action={NonFinancialTransactionActions.Edit}
+                        transaction={
+                            NonFinancialTransactions.CommunicationPreference
+                        }
+                    />
+                }
+            >
+                <SidesheetCommunicationsPreference
+                    planCode={policyDetails.planCode}
+                    onCancel={() => setIsOpen(false)}
+                    setPreferredCommunication={setContactValue}
+                    party={currentParty}
+                    emails={partyInfo?.emails ?? []}
+                    addresses={partyInfo?.addresses ?? []}
+                    policyNumber={policyDetails.policyNumber}
+                    policy={policyDetails.policy}
+                />
+            </SideSheet>
         </div>
     );
 };

@@ -11,7 +11,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useDiaryNotesContext } from '@deps/contexts/DiaryNotesContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as AnnotationIcon } from '@deps/styles/elements/icons/icons_outlined/annotation.svg';
 import { ReactComponent as ChevronLeftIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-left.svg';
 
@@ -29,7 +29,7 @@ export default function OtpLayout({
     children,
 }: OTPLayoutProps) {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const diaryNotesData = useDiaryNotesContext();
 
     // TODO: create store and use diary notes data from store. Passing context data in props is not correct.

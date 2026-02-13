@@ -13,7 +13,7 @@ import WithdrawalsPageHeaderContainer from '@deps/containers/page-header/withdra
 import WithdrawalRules from '@deps/containers/withdrawal-rules/withdrawal-rules';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import {
     getBankDetails,
@@ -200,7 +200,7 @@ const WithdrawalsSubPage = ({ policy }: WithdrawalsSubPageProps) => {
         return rmdEligibility?.ineligibleRmdReason;
     };
 
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openCancelSideSheet = (type: string) => {
         const sideSheetTitle =
             type === ArrangementType.REQUIREDMINIMUMDISTRIBUTION

@@ -24,7 +24,7 @@ import {
 import BankingDetails from '@deps/components/side-sheet/banking-details/banking-details';
 import { TranslationFiles } from '@deps/config/translations';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
     convertKebabedDateString,
@@ -64,7 +64,7 @@ const UpcomingPaymentCard = ({
         keyPrefix: 'premium.upcoming',
     });
     const { globalValuesData } = useContentContext();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const paymentAmount =
         autopayAmount +

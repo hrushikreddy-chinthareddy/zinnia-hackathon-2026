@@ -2,7 +2,7 @@ import { useTranslation } from 'next-i18next';
 import { useCallback } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 
 import { useClientCaseId } from './use-client-case-id';
 import IllustrationSelectForApplication from '../../components/select-for-application/illustration-select-for-application-content';
@@ -14,7 +14,7 @@ import {
 export function useSelectIllustrationForApplication() {
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const clientCaseId = useClientCaseId();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const selectedIllustrationState = useSelectedIllustration();
     const sideSheetWidth = 500;
 

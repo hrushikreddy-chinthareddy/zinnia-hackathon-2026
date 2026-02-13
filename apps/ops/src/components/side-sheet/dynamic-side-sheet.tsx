@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { DynamicSideSheetDataType } from '@deps/utils/dynamicSideSheet';
 
 import DynamicSideSheetContent from './dynamic-side-sheet-content';
@@ -11,7 +11,7 @@ export default function useDynamicSideSheet(
     const tabs: DynamicSideSheetDataType['tabs'] = sideSheetData?.tabs ?? [];
 
     const [activeTab] = useState(tabs.length > 0 ? tabs[0] : null);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(
             sideSheetData?.title || '',

@@ -16,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { useAttachments } from '@deps/hooks/useAttachments';
 import { EDSDocumentRequestBody } from '@deps/models/case/document';
@@ -179,7 +179,7 @@ function FileUploadComponent({
         registry,
         options
     );
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const [toastMessage, setToastMessage] = useState<any>(undefined);
     const [toastVariant, setToastVariant] = useState<any>(undefined);

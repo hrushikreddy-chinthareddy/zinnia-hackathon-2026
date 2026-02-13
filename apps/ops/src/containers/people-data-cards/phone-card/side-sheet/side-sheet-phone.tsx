@@ -1,10 +1,11 @@
 import { Transition } from '@headlessui/react';
+import { FieldStatus, Label, Select } from '@zinnia/bloom/components';
 import { countries } from 'countries-list';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -19,7 +20,6 @@ import Field, {
 } from '@deps/components/fields/field';
 import FieldSelect from '@deps/components/fields/field-select/field-select';
 import Radio, { RadioOrientation } from '@deps/components/radio/radio';
-import SelectSimple from '@deps/components/select/select';
 import { updateOptimistically } from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transactions.helpers';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
@@ -145,6 +145,17 @@ export const SideSheetPhone = ({
     const [newCaseId, setNewCaseId] = useState<string>();
 
     const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Phone,
+                newItem: phone,
+                setState: setCurrentPhones,
+            });
+        }
+    }, [viewState, action, phone, setCurrentPhones]);
 
     const { caseId } = body;
     const { partyId } = party ?? {};
@@ -325,13 +336,6 @@ export const SideSheetPhone = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Phone,
-                newItem: phone,
-                setState: setCurrentPhones,
-            });
-
             return (
                 <SuccessState
                     action={action}
@@ -353,7 +357,7 @@ export const SideSheetPhone = ({
     }
 
     return (
-        <div ref={errorRef} className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6">
             {hasAnyCaseResult && (
                 <CaseDocumentSelect
                     caseDocumentOptions={caseDocumentOptions}
@@ -483,36 +487,58 @@ export const SideSheetPhone = ({
                         {t('fieldLabels.preferredTime')}
                     </Typography>
                     <div className="flex flex-col gap-6">
-                        <SelectSimple
-                            aria-label={t('fieldLabels.bestTime') as string}
-                            className="!w-1/2"
-                            disabled={isDelete}
-                            label={t('fieldLabels.bestTime') as string}
-                            onChange={(value) =>
-                                setPhone((prevState) => ({
-                                    ...prevState,
-                                    bestTime: value,
-                                }))
-                            }
-                            options={bestTimeOptions}
-                            size={FieldSize.Small}
-                            value={phone.bestTime}
-                        />
-                        <SelectSimple
-                            aria-label={t('fieldLabels.timeZone') as string}
-                            className="!w-1/2"
-                            disabled={isDelete}
-                            label={t('fieldLabels.timeZone') as string}
-                            onChange={(value) =>
-                                setPhone((prevState) => ({
-                                    ...prevState,
-                                    timezone: value,
-                                }))
-                            }
-                            options={timeZoneOptions}
-                            size={FieldSize.Small}
-                            value={phone.timezone ?? ''}
-                        />
+                        <div className="w-1/2">
+                            <Select
+                                triggerLabel={
+                                    t('fieldLabels.bestTime') as string
+                                }
+                                disabled={isDelete}
+                                label={
+                                    <Label>
+                                        {t('fieldLabels.bestTime') as string}
+                                    </Label>
+                                }
+                                fieldStatus={FieldStatus.DEFAULT}
+                                onValueChange={(value) =>
+                                    setPhone((prevState) => ({
+                                        ...prevState,
+                                        bestTime: value,
+                                    }))
+                                }
+                                options={bestTimeOptions.map((o) => ({
+                                    value: o.value,
+                                    textValue: o.label,
+                                }))}
+                                fieldSize="small"
+                                value={phone.bestTime}
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <Select
+                                triggerLabel={
+                                    t('fieldLabels.timeZone') as string
+                                }
+                                disabled={isDelete}
+                                label={
+                                    <Label>
+                                        {t('fieldLabels.timeZone') as string}
+                                    </Label>
+                                }
+                                fieldStatus={FieldStatus.DEFAULT}
+                                onValueChange={(value) =>
+                                    setPhone((prevState) => ({
+                                        ...prevState,
+                                        timezone: value,
+                                    }))
+                                }
+                                options={timeZoneOptions.map((o) => ({
+                                    value: o.value,
+                                    textValue: o.label,
+                                }))}
+                                fieldSize="small"
+                                value={phone.timezone ?? ''}
+                            />
+                        </div>
                     </div>
                 </div>
             </div>

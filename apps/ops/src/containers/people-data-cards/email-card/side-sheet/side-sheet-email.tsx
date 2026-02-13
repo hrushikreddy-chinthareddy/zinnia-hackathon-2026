@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -135,6 +135,17 @@ const SideSheetEmail = ({
     const [viewState, setViewState] = useState(ViewState.Default);
 
     const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
+
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Email,
+                newItem: email,
+                setState: setCurrentEmails,
+            });
+        }
+    }, [viewState, action, email, setCurrentEmails]);
 
     const { emailAddress, emailType = EmailType.PERSONAL } = email;
     const { partyId } = party ?? {};
@@ -326,13 +337,6 @@ const SideSheetEmail = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Email,
-                newItem: email,
-                setState: setCurrentEmails,
-            });
-
             return (
                 <SuccessState
                     action={action}
@@ -354,7 +358,7 @@ const SideSheetEmail = ({
     }
 
     return (
-        <div ref={errorRef} className="flex flex-col gap-6 p-10">
+        <div ref={errorRef} className="flex flex-col gap-6">
             {hasAnyCaseResult && (
                 <CaseDocumentSelect
                     caseDocumentOptions={caseDocumentOptions}

@@ -16,7 +16,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useContentContext } from '@deps/contexts/LayoutContexts/StaticContentContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { rateFormatted } from '@deps/helpers/data-transform.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
@@ -53,7 +53,7 @@ const ActiveCard = ({
     totalActiveLoans,
 }: ActiveCardProps) => {
     const { globalValuesData } = useContentContext();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const currencyFormat: Intl.NumberFormatOptions = {
         style: 'currency',
         currency,

@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     WorkflowProvider,
     useWorkflow,
@@ -70,7 +70,7 @@ const TabGroupContent = ({
         (party) => party.partyId === jointOwnerId
     );
 
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const { diaryNotes } = useDiaryNotes({
         policyNumber: policy?.policyNumber as string,
         showDiaryNotes: true,

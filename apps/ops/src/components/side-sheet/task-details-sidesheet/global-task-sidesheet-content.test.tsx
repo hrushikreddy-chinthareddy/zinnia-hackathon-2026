@@ -9,7 +9,7 @@ import '@testing-library/jest-dom';
 import '@testing-library/jest-dom/jest-globals';
 import userEvent from '@testing-library/user-event';
 
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { getTaskInstance, getTaskSummaryById } from '@deps/queries/api/v2/task';
 import { checkQueuePermissions } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
@@ -102,7 +102,7 @@ jest.mock('@auth0/nextjs-auth0/client', () => ({
 }));
 
 jest.mock('@deps/contexts/SideSheetContext', () => ({
-    useSideSheetContext: jest.fn(),
+    useSideSheetContextLegacy: jest.fn(),
 }));
 
 jest.mock('@deps/contexts/PermissionsContext', () => ({
@@ -153,7 +153,7 @@ describe('GlobalTaskSideSheet', () => {
             user: { email: 'test@example.com', partyId: 'test-party-id' },
         });
 
-        (useSideSheetContext as jest.Mock).mockReturnValue({
+        (useSideSheetContextLegacy as jest.Mock).mockReturnValue({
             closeSideSheet: jest.fn(),
         });
 

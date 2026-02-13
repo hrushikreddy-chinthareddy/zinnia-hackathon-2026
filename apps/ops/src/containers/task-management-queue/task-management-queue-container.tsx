@@ -15,7 +15,7 @@ import { SearchBarInitialValues } from '@deps/components/search/search-bar-initi
 import MultiselectField from '@deps/components/side-sheet/side-sheet-refine-results/multiselect-field';
 import { TranslationFiles } from '@deps/config/translations';
 import TaskManagerActiveFilters from '@deps/containers/task-manager-active-filters/';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import useTaskManagementQueue, {
     DEFAULT_SORTING_CONFIG,
 } from '@deps/hooks/useTaskManagementQueue';
@@ -116,7 +116,7 @@ const TaskManagementQueue = ({
     const { t: tTaskView } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'tasksView',
     });
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const [searchValue, setSearchValue] = useState(SearchBarInitialValues);
     const DEFAULT_TOGGLE_VALUE = 'taskName' as PolicySearchKeys;
     const [toggleValue, setToggleValue] = useState(DEFAULT_TOGGLE_VALUE);
