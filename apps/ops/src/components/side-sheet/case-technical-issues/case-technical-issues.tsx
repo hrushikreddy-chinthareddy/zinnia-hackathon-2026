@@ -62,7 +62,7 @@ const CaseTechnicalIssues = ({
         source: t('allFields.sourceSystem'),
         processing_reason: t('allFields.summary'),
         processing_resolution: t('allFields.errorDescription'),
-        exception_reason: t('allFields.exceptionReason'),
+        exception_reason: t('allFields.reason'),
         created_on: t('allFields.createdOn'),
         resolved_on: t('allFields.resolvedOn'),
     };

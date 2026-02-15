@@ -8,7 +8,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import SideSheetFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/financial/side-sheet-financial-transaction';
 import SideSheetNonFinancialTransaction from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/side-sheet-non-financial-transaction';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { AccessibleFormattedAmount } from '@deps/helpers/numbers.helpers';
 import { Statuses } from '@deps/models/case/case';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
@@ -44,7 +44,7 @@ const HistoryEventCard = ({
     transaction,
 }: HistoryEventCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const { processDate, status } = transaction || {};
     const {

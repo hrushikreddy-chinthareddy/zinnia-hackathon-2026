@@ -2,7 +2,7 @@ import { Button, Loader, LoaderVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'react-i18next';
 
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { IllustrationsSegmentTrackedEventName } from '@deps/types/segment-analytics';
 
 import { useClientCaseId } from '../../helpers/hooks/use-client-case-id';
@@ -20,7 +20,7 @@ export default function IllustrationSelectForApplicationFooter({
     const { t } = useTranslation(TranslationFiles.COMMON, {});
 
     const clientCaseId = useClientCaseId();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const { setIsLoadingSelectForApplication, selectedIllustration } =
         useSelectedIllustration();
     const { product } = selectedIllustration ?? {};

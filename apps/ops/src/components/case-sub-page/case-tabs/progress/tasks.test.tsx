@@ -89,7 +89,7 @@ jest.mock('@deps/contexts/SideSheetContext', () => {
     };
 
     return {
-        useSideSheetContext: jest.fn(() => ({
+        useSideSheetContextLegacy: jest.fn(() => ({
             changeSideSheetContent: mockChangeSideSheetContent,
             handleOpen: mockHandleOpen,
             events: createMockEmitter(),
@@ -148,6 +148,7 @@ describe('Task Component', () => {
         status: Statuses.New,
         createdAt: '2023-05-15',
         updatedAt: '2023-05-16',
+        queue: 'compliance',
         ...overrides,
         hasParentException: false,
     });

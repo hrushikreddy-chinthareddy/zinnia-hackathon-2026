@@ -38,6 +38,7 @@ interface GetFormErrors {
     caseId?: string;
     t: TFunction;
     isDelete: boolean;
+    hasCase?: boolean;
 }
 
 export const getAccountTypeOptions = ({ t }: GetAccountTypeOptions) => [
@@ -56,10 +57,11 @@ export const getFormErrors = ({
     caseId,
     t,
     isDelete = false,
+    hasCase,
 }: GetFormErrors) => {
     let errors: Errors = {};
 
-    if (caseId == null) {
+    if (caseId == null && hasCase) {
         errors = {
             ...errors,
             caseId: t('errors.missingCaseDocument') as string,

@@ -12,7 +12,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { CaseAction } from '@deps/models/case/enums';
 import { escalateCase, getProcessReferenceData } from '@deps/queries/api/cases';
 import { browserLogError } from '@deps/utils/browser-logging';
@@ -54,7 +54,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     >([]);
     const [reasonError, setReasonError] = useState<string | undefined>();
     const [sourceError, setSourceError] = useState<string | undefined>();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const validate = () => {
         const reasonError = reason

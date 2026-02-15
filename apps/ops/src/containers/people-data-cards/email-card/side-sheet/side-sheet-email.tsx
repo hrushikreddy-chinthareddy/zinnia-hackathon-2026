@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -41,6 +41,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { mapEmailTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import {
     hasErrorsAndFocus,
     useFocusOnError,
@@ -135,6 +136,17 @@ const SideSheetEmail = ({
 
     const { errorRef, triggerErrorFocus } = useFocusOnError(currentErrors);
 
+    useEffect(() => {
+        if (viewState === ViewState.Success) {
+            updateOptimistically({
+                action,
+                idKey: NonFinancialTransactionIdKeys.Email,
+                newItem: email,
+                setState: setCurrentEmails,
+            });
+        }
+    }, [viewState, action, email, setCurrentEmails]);
+
     const { emailAddress, emailType = EmailType.PERSONAL } = email;
     const { partyId } = party ?? {};
 
@@ -153,6 +165,13 @@ const SideSheetEmail = ({
     const mainCtaText = isAdd
         ? t('mainCta.add', { type: emailTypeTranslation })
         : t('mainCta.update', { type: emailTypeTranslation });
+
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.EmailChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
 
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
@@ -198,7 +217,13 @@ const SideSheetEmail = ({
 
     const handleSubmit = async () => {
         const caseId = body.caseId;
-        const errors = getFormErrors({ email, caseId, isDelete, t: defaultT });
+        const errors = getFormErrors({
+            email,
+            caseId,
+            isDelete,
+            t: defaultT,
+            hasCase: hasAnyCaseResult,
+        });
         setCurrentErrors(errors);
         if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
 
@@ -312,13 +337,6 @@ const SideSheetEmail = ({
                 />
             );
         case ViewState.Success:
-            updateOptimistically({
-                action,
-                idKey: NonFinancialTransactionIdKeys.Email,
-                newItem: email,
-                setState: setCurrentEmails,
-            });
-
             return (
                 <SuccessState
                     action={action}
@@ -335,22 +353,28 @@ const SideSheetEmail = ({
             break;
     }
 
+    if (isLoading) {
+        return <LoadingState />;
+    }
+
     return (
-        <div ref={errorRef} className="flex flex-col gap-6 p-10">
-            <CaseDocumentSelect
-                caseDocumentOptions={caseDocumentOptions}
-                caseId={body.caseId}
-                currentErrors={currentErrors}
-                policyNumber={policyNumber}
-                processType={Processes.PolicyUpdate}
-                setBody={setBody as SetStateCaseId}
-                setCaseDocumentOptions={setCaseDocumentOptions}
-                setCurrentErrors={setCurrentErrors}
-                setViewState={setViewState}
-                processSubType={[Processes.EmailChange]}
-                correlationId={correlationIdFromRoute}
-                body={body}
-            />
+        <div ref={errorRef} className="flex flex-col gap-6">
+            {hasAnyCaseResult && (
+                <CaseDocumentSelect
+                    caseDocumentOptions={caseDocumentOptions}
+                    caseId={body.caseId}
+                    currentErrors={currentErrors}
+                    policyNumber={policyNumber}
+                    processType={Processes.PolicyUpdate}
+                    setBody={setBody as SetStateCaseId}
+                    setCaseDocumentOptions={setCaseDocumentOptions}
+                    setCurrentErrors={setCurrentErrors}
+                    setViewState={setViewState}
+                    processSubType={[Processes.EmailChange]}
+                    correlationId={correlationIdFromRoute}
+                    body={body}
+                />
+            )}
 
             <div className="flex flex-col gap-8">
                 {isAdd && (

@@ -1,10 +1,44 @@
 import { getUiOptions, WidgetProps } from '@rjsf/utils';
+import {
+    Tooltip,
+    TooltipPlacement,
+    Icon,
+    IconType,
+} from '@zinnia/bloom/components';
 import clsx from 'clsx';
 
 import TextField from '@deps/components/dynamic-form/components/text-field/text-field';
+import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 
 import style from './text-widget.module.css';
 import { formatValueByDataType } from '../../templates/card-templates/card-template';
+
+const renderLabelWithFlag = (
+    label: string,
+    missingValueTooltipText: string
+) => {
+    return (
+        <span className={style.labelWithFlag}>
+            <span>{label}</span>
+            <Tooltip
+                placement={TooltipPlacement.TopRight}
+                trigger={
+                    <span onClick={(e) => e.preventDefault()}>
+                        <Icon
+                            type={IconType.FLAG}
+                            className={style.flagIcon}
+                            color="#ff3300"
+                        />
+                    </span>
+                }
+                triggerClassName={style.flagTrigger}
+            >
+                {missingValueTooltipText ?? ''}
+            </Tooltip>
+        </span>
+    );
+};
+
 export const TextWidget = function (props: WidgetProps) {
     const {
         id,
@@ -20,8 +54,15 @@ export const TextWidget = function (props: WidgetProps) {
         hideError,
     } = props;
 
-    const { inline, prefix, inlinetext, dataType, type, labelStyle } =
-        getUiOptions(uiSchema);
+    const {
+        inline,
+        prefix,
+        inlinetext,
+        dataType,
+        type,
+        labelStyle,
+        missingValueTooltipText,
+    } = getUiOptions(uiSchema);
 
     if (inline) {
         return (
@@ -33,7 +74,12 @@ export const TextWidget = function (props: WidgetProps) {
                         labelStyle && '!text-black'
                     )}
                 >
-                    {label}
+                    {missingValueTooltipText && isNullEmptyOrUndefined(value)
+                        ? renderLabelWithFlag(
+                              label,
+                              missingValueTooltipText as string
+                          )
+                        : label}
                 </div>
                 <div>
                     {formatValueByDataType(

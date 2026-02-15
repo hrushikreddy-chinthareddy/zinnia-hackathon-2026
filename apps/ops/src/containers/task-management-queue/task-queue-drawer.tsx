@@ -18,7 +18,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PendingReasonOptions } from '@deps/models/case/enums';
 import { TaskSource, TaskType } from '@deps/models/case/task';
 import {
@@ -33,7 +33,6 @@ import { removeFromCache } from '@deps/utils/cache';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 
 import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
-
 dayjs.extend(utc);
 
 function TaskQueueDrawer({
@@ -43,6 +42,8 @@ function TaskQueueDrawer({
     getTasks,
     taskDescription,
     taskName,
+    carrier,
+    queue,
 }: TaskQueueDrawerProps) {
     const tomorrow = dayjs().add(1, 'day').format('MMDDYYYY');
     const [date, setDate] = useState(tomorrow);
@@ -52,7 +53,7 @@ function TaskQueueDrawer({
     const [notes, setNotes] = useState('');
     const [errorMessage, setErrorMessage] = useState('');
     const router = useRouter();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setDate(e.target.value);
     };
@@ -96,6 +97,8 @@ function TaskQueueDrawer({
                 taskId={taskId}
                 caseId={caseId || ''}
                 taskDescription={taskDescription as TaskType}
+                carrier={carrier}
+                queue={queue}
             />
         );
         sideSheet.changeSideSheetContent(

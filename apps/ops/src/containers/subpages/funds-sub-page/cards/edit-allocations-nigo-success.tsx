@@ -4,13 +4,13 @@ import Button, { ButtonSize, ButtonType } from '@deps/components/button/button';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
+import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as CircleCheckMark } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 
 export const EditAllocationsNigoSuccess = ({
     sideSheet,
 }: {
-    sideSheet: SideSheetContextProps;
+    sideSheet: SideSheetContextLegacyProps;
 }) => {
     const { t } = useTranslation();
     return (

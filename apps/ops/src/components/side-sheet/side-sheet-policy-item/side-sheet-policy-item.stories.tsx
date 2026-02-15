@@ -2,8 +2,8 @@ import { Meta } from '@storybook/react';
 
 import Button from '@deps/components/button/button';
 import {
-    SideSheetProvider,
-    useSideSheetContext,
+    SideSheetProviderLegacy,
+    useSideSheetContextLegacy,
 } from '@deps/contexts/SideSheetContext';
 import { mockPolicy } from '@deps/jest/data/mockPolicy';
 
@@ -17,9 +17,9 @@ export default {
     decorators: [
         (Story) => (
             <div className="container">
-                <SideSheetProvider>
+                <SideSheetProviderLegacy>
                     <Story />
-                </SideSheetProvider>
+                </SideSheetProviderLegacy>
             </div>
         ),
     ],
@@ -32,7 +32,7 @@ export const PolicyItems = () => {
         <SideSheetPolicyItemForStoryBook key={3} policy={mockPolicy} />,
     ];
 
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(
             'Related Policies',

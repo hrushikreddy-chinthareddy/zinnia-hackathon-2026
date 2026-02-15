@@ -120,19 +120,44 @@ describe('SideSheetBank helpers', () => {
             expect(result).toEqual({});
         });
 
-        it('should return an object with all errors when all fields are missing', () => {
+        it('should return an object with all errors when all fields are missing and hasCase is true', () => {
             const bankAccount = {
                 accountNumber: '',
                 branchName: '',
                 routingNumber: '',
             };
 
-            const result = getFormErrors({ bankAccount, t, isDelete: false });
+            const result = getFormErrors({
+                bankAccount,
+                t,
+                isDelete: false,
+                hasCase: true,
+            });
 
             expect(result).toEqual({
                 accountNumber: 'errors.accountNumber',
                 branchName: 'errors.bankName',
                 caseId: 'errors.missingCaseDocument',
+                routingNumber: 'errors.routingNumber',
+            });
+        });
+
+        it('should return all errors except caseId when hasCase is not set', () => {
+            const bankAccount = {
+                accountNumber: '',
+                branchName: '',
+                routingNumber: '',
+            };
+
+            const result = getFormErrors({
+                bankAccount,
+                t,
+                isDelete: false,
+            });
+
+            expect(result).toEqual({
+                accountNumber: 'errors.accountNumber',
+                branchName: 'errors.bankName',
                 routingNumber: 'errors.routingNumber',
             });
         });

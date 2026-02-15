@@ -18,7 +18,7 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import { CaseTableData } from '@deps/contexts/CaseManagementFilters';
 import { DiaryNotesProvider } from '@deps/contexts/DiaryNotesContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     WorkflowProvider,
     useWorkflow,
@@ -141,7 +141,7 @@ const TabGroupContent = ({
     }, [fetchCases]);
 
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const globalValuesData = useMemo(
         () => policyDataToGlobalValues(new PolicyDetails(policy), t),
         [policy, t]

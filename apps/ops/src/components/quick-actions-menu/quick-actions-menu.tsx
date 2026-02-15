@@ -25,7 +25,7 @@ import {
     OptimizelyVariableKey,
 } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import {
     QUALITY_AUDIT_REVIEW_QUEUE_ADMIN,
@@ -676,7 +676,7 @@ export const CaseMenuContextualContent = ({
         sessionId,
         partyId: userPartyId,
     } = usePermissionsContext();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const { userTuplesData } = useCaseActivityContext();
     const { featureFlagVariables } = useOptimizely();
     const [isCaseEligibleForQualityAudit, setIsCaseEligibleForQualityAudit] =

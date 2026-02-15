@@ -1,10 +1,11 @@
 import { Skeleton } from '@radix-ui/themes';
 import { useQuery } from '@tanstack/react-query';
 import {
-    Icon,
-    IconType,
     BannerAlert,
     BannerVariant,
+    Icon,
+    IconType,
+    SideSheet,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import {
@@ -44,7 +45,6 @@ import {
 import QuickLinks from '@deps/containers/quick-links/quick-links';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { getSearchValueObject } from '@deps/helpers/case-management';
 import {
     getTotalMinRequiredAmount,
@@ -199,16 +199,9 @@ const QuickViewHeader = ({
         () => policyDataToGlobalValues(policy, t),
         [policy, t]
     );
-    const sideSheet = useSideSheetContext();
+    const [detailsOpen, setDetailsOpen] = useState(false);
     const openDetailsSidesheet = () => {
-        sideSheet.changeSideSheetContent(
-            <GlobalPolicyInfo
-                tooltipPlacements={PopoverPlacement.BottomLeft}
-                {...globalValuesData}
-            />,
-            <SideSheetProductDetails globalValues={globalValuesData} />
-        );
-        sideSheet.handleOpen(true);
+        setDetailsOpen(true);
     };
 
     const pendingLapse = policy.features.getFirstFeatureByType(
@@ -292,6 +285,20 @@ const QuickViewHeader = ({
                 </div>
             </div>
             <hr className="my-4 h-0.5 border-none bg-gray-100" />
+            <SideSheet
+                trigger={null}
+                open={detailsOpen}
+                onOpenChange={setDetailsOpen}
+                preventCloseOnOutsideClick={false}
+                header={
+                    <GlobalPolicyInfo
+                        tooltipPlacements={PopoverPlacement.BottomLeft}
+                        {...globalValuesData}
+                    />
+                }
+            >
+                <SideSheetProductDetails globalValues={globalValuesData} />
+            </SideSheet>
         </header>
     );
 };
@@ -605,7 +612,9 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
     const { owner } = policy;
     const { partyId } = usePermissionsContext();
 
-    const sideSheet = useSideSheetContext();
+    const [activeSideSheet, setActiveSideSheet] =
+        useState<SideSheetViews | null>(null);
+    const closeSideSheet = () => setActiveSideSheet(null);
 
     const { data: canEditPolicy } = useQuery({
         queryKey: [
@@ -706,96 +715,8 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
         owner?.partyType === PartyType.ORGANIZATION ||
         owner?.partyType === PartyType.TRUST;
 
-    const sideSheetContent = (type: SideSheetViews) => {
-        const action = NonFinancialTransactionActions.Edit;
-        let content;
-        let header;
-        switch (type) {
-            case SideSheetViews.EMAIL:
-                header = (
-                    <SideSheetPeopleHeader
-                        action={action}
-                        transaction={NonFinancialTransactions.Email}
-                        typeTranslation={
-                            t(
-                                `people.card.email.emailOptions.${emailTypeKey}`
-                            ) as string
-                        }
-                    />
-                );
-                content = (
-                    <SideSheetEmail
-                        isOnlyEmail={currentEmails.length === 1}
-                        onCancel={() => sideSheet.handleOpen(false)}
-                        party={owner?.party}
-                        planCode={policy.planCode}
-                        policy={policy.policy}
-                        policyNumber={policy.policyNumber}
-                        setCurrentEmails={setCurrentEmails}
-                        updateEmail={bestAvailEmail}
-                    />
-                );
-                break;
-            case SideSheetViews.PHONE:
-                header = (
-                    <SideSheetPeopleHeader
-                        action={action}
-                        transaction={NonFinancialTransactions.Number}
-                        typeTranslation={
-                            t(
-                                `people.card.phone.phoneOptions.${phoneTypeKey}`
-                            ) as string
-                        }
-                    />
-                );
-                content = (
-                    <SideSheetPhone
-                        onCancel={() => sideSheet.handleOpen(false)}
-                        party={owner?.party}
-                        planCode={policy.planCode}
-                        policy={policy.policy}
-                        policyNumber={policy.policyNumber}
-                        setCurrentPhones={setCurrentPhones}
-                        updatePhone={bestAvailPhone}
-                    />
-                );
-                break;
-            case SideSheetViews.ADDRESS:
-                header = (
-                    <SideSheetPeopleHeader
-                        action={action}
-                        transaction={NonFinancialTransactions.Address}
-                        typeTranslation={
-                            t(
-                                mapAddressTypeToTranslation({ addressType, t })
-                            ) as string
-                        }
-                    />
-                );
-                content = (
-                    <SideSheetAddress
-                        isCurrentMailingAddress={
-                            preferredAddressIndicator ===
-                            bestAvailAddress.addressId
-                        }
-                        isOnlyAddress={currentAddresses?.length === 1}
-                        onCancel={() => sideSheet.handleOpen(false)}
-                        party={owner?.party}
-                        planCode={policy.planCode}
-                        policyNumber={policy.policyNumber}
-                        policy={policy.policy}
-                        setCurrentAddresses={setCurrentAddresses}
-                        updateAddress={bestAvailAddress ?? undefined}
-                    />
-                );
-        }
-        return { header, content };
-    };
-
     const openSideSheet = (type: SideSheetViews) => {
-        const { header, content } = sideSheetContent(type);
-        sideSheet.changeSideSheetContent(header, content);
-        sideSheet.handleOpen(true);
+        setActiveSideSheet(type);
     };
 
     const onEditClick = useAddOrEditPhoneOrEmailClick<SideSheetViews>({
@@ -979,6 +900,104 @@ export const OwnerInformation = ({ policy }: BasePolicyComponentArgs) => {
                 )) ||
                     DEFAULT_ERROR_STRING}
             </div>
+            <SideSheet
+                trigger={null}
+                open={activeSideSheet === SideSheetViews.EMAIL}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                        closeSideSheet();
+                    }
+                }}
+                preventCloseOnOutsideClick={false}
+                header={
+                    <SideSheetPeopleHeader
+                        action={NonFinancialTransactionActions.Edit}
+                        transaction={NonFinancialTransactions.Email}
+                        typeTranslation={
+                            t(
+                                `people.card.email.emailOptions.${emailTypeKey}`
+                            ) as string
+                        }
+                    />
+                }
+            >
+                <SideSheetEmail
+                    isOnlyEmail={currentEmails.length === 1}
+                    onCancel={closeSideSheet}
+                    party={owner?.party}
+                    planCode={policy.planCode}
+                    policy={policy.policy}
+                    policyNumber={policy.policyNumber}
+                    setCurrentEmails={setCurrentEmails}
+                    updateEmail={bestAvailEmail}
+                />
+            </SideSheet>
+            <SideSheet
+                trigger={null}
+                open={activeSideSheet === SideSheetViews.PHONE}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                        closeSideSheet();
+                    }
+                }}
+                preventCloseOnOutsideClick={false}
+                header={
+                    <SideSheetPeopleHeader
+                        action={NonFinancialTransactionActions.Edit}
+                        transaction={NonFinancialTransactions.Number}
+                        typeTranslation={
+                            t(
+                                `people.card.phone.phoneOptions.${phoneTypeKey}`
+                            ) as string
+                        }
+                    />
+                }
+            >
+                <SideSheetPhone
+                    onCancel={closeSideSheet}
+                    party={owner?.party}
+                    planCode={policy.planCode}
+                    policy={policy.policy}
+                    policyNumber={policy.policyNumber}
+                    setCurrentPhones={setCurrentPhones}
+                    updatePhone={bestAvailPhone}
+                />
+            </SideSheet>
+            <SideSheet
+                trigger={null}
+                open={activeSideSheet === SideSheetViews.ADDRESS}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                        closeSideSheet();
+                    }
+                }}
+                preventCloseOnOutsideClick={false}
+                header={
+                    <SideSheetPeopleHeader
+                        action={NonFinancialTransactionActions.Edit}
+                        transaction={NonFinancialTransactions.Address}
+                        typeTranslation={
+                            t(
+                                mapAddressTypeToTranslation({ addressType, t })
+                            ) as string
+                        }
+                    />
+                }
+            >
+                <SideSheetAddress
+                    isCurrentMailingAddress={
+                        preferredAddressIndicator === bestAvailAddress.addressId
+                    }
+                    isOnlyAddress={currentAddresses?.length === 1}
+                    onCancel={closeSideSheet}
+                    party={owner?.party}
+                    planCode={policy.planCode}
+                    policyNumber={policy.policyNumber}
+                    policy={policy.policy}
+                    setCurrentAddresses={setCurrentAddresses}
+                    updateAddress={bestAvailAddress ?? undefined}
+                />
+            </SideSheet>
         </QuickViewRoot>
     );
 };

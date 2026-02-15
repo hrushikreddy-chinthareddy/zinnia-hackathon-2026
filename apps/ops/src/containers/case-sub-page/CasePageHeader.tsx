@@ -12,6 +12,7 @@ import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
+import { DetailTypesEnum } from '@deps/constants/case';
 import { toSentenceCase, toTitleCase } from '@deps/helpers/string.helpers';
 import useBreadcrumb from '@deps/hooks/useBreadcrumbs';
 import { caseProcessingDetails } from '@deps/models/case/case';
@@ -37,9 +38,6 @@ type partyDataType = {
     lastName?: string;
     id: string;
 };
-enum detailTypesEnum {
-    ESCALATION = 'ESCALATION',
-}
 const CasePageHeader = ({
     caseId,
     title,
@@ -60,12 +58,12 @@ const CasePageHeader = ({
     });
 
     const prioritizedDate = caseProcessingDetails?.find(
-        (d) => d.detailType === detailTypesEnum.ESCALATION
+        (d) => d.detailType === DetailTypesEnum.Escalation
     )?.eventTimeStamp;
     useEffect(() => {
         const fetchPartyData = async () => {
             const partyId = caseProcessingDetails?.find(
-                (d) => d.detailType === detailTypesEnum.ESCALATION
+                (d) => d.detailType === DetailTypesEnum.Escalation
             )?.details?.partyId;
             if (!partyId) return;
 

@@ -20,7 +20,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -197,7 +197,7 @@ const Step = ({
     isAccordionOpen?: boolean;
 } & React.HTMLAttributes<HTMLLIElement>) => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const { featureFlags } = useOptimizely();
     const isIndexAutomationEnabled =
         featureFlags[FEATURE_FLAGS.INDEX_AUTOMATION_CASE];

@@ -5,7 +5,7 @@ import { useMemo } from 'react';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePolicyDataContext } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { useViewState } from '@deps/contexts/ViewStateContext';
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionPermission } from '@deps/utils/auth';
@@ -69,7 +69,7 @@ export default function TransactionSidesheetActions({
     transaction: Transaction;
 }) {
     const { featureFlags } = useOptimizely();
-    const { changeSideSheetContent } = useSideSheetContext();
+    const { changeSideSheetContent } = useSideSheetContextLegacy();
     const { setViewState } = useViewState();
     const { policyDetails } = usePolicyDataContext();
     const { t } = useTranslation();

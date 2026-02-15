@@ -1,6 +1,7 @@
 import { skipToken, useQuery } from '@tanstack/react-query';
+import { SideSheet } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useContext, useMemo } from 'react';
+import { useContext, useMemo, useState } from 'react';
 
 import { FooterContent } from '@deps/components/card/card-section/card-section';
 import SystematicProgramsCard from '@deps/components/card/card-systematic-programs/card-systematic-programs';
@@ -12,7 +13,6 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import { formatValidationResult } from '@deps/helpers/bpm-transaction.helpers';
 import { isTermProduct } from '@deps/helpers/is-term-product.helpers';
 import {
@@ -44,8 +44,8 @@ import PolicyTestsCard from './cards/policy-tests-card/policy-tests-card';
 export const PremiumsSubPage = () => {
     const { policy, policyDetails } = useContext(PolicyData);
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
     const { featureFlags } = useOptimizely();
+    const [isCancelOpen, setIsCancelOpen] = useState(false);
     const premiumSetOrCancelAutopayEnabled =
         featureFlags[FEATURE_FLAGS.PREMIUM_SET_OR_CANCEL_AUTOPAY];
     const systematicProgramTablesEnabled =
@@ -209,21 +209,9 @@ export const PremiumsSubPage = () => {
 
     const openCancelSideSheet = (e?: React.MouseEvent) => {
         e && e.preventDefault();
-        sideSheet.changeSideSheetContent(
-            <Typography variant={TypographyVariant.H2}>
-                {systematicProgramTablesEnabled
-                    ? t('allFields.cancelPremiumProgram')
-                    : t('allFields.cancelPremiumAutopayTitle')}
-            </Typography>,
-            <SideSheetCancelAutopay
-                arrangementType={ArrangementType.PAYMENT}
-                onCancel={() => sideSheet.handleOpen(false)}
-                policy={policy}
-                systematicProgramReason={Reason.PREMIUM}
-            />
-        );
-        sideSheet.handleOpen(true);
+        setIsCancelOpen(true);
     };
+    const closeCancelSideSheet = () => setIsCancelOpen(false);
 
     const premiumSetUpAutopayDisable = !!(
         !setUpAutopayProgramsEligibility?.isEligibleSetUpAutopay ||
@@ -278,6 +266,26 @@ export const PremiumsSubPage = () => {
 
     return (
         <>
+            <SideSheet
+                trigger={null}
+                open={isCancelOpen}
+                onOpenChange={setIsCancelOpen}
+                preventCloseOnOutsideClick={false}
+                header={
+                    <Typography variant={TypographyVariant.H2}>
+                        {systematicProgramTablesEnabled
+                            ? t('allFields.cancelPremiumProgram')
+                            : t('allFields.cancelPremiumAutopayTitle')}
+                    </Typography>
+                }
+            >
+                <SideSheetCancelAutopay
+                    arrangementType={ArrangementType.PAYMENT}
+                    onCancel={closeCancelSideSheet}
+                    policy={policy}
+                    systematicProgramReason={Reason.PREMIUM}
+                />
+            </SideSheet>
             <PremiumsPageHeaderContainer
                 costBasis={costBasis}
                 currency={currency}

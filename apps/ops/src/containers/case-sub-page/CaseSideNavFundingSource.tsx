@@ -9,7 +9,7 @@ import ClickWrapper from '@deps/components/click-container/click-wrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { CaseAdditionalData } from '@deps/models/case/case';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
@@ -485,7 +485,7 @@ const FundingSourceItem = ({
         queryFn: () => getTransactionEntityQuery(fundingSource.value),
     });
 
-    const { changeSideSheetContent, handleOpen } = useSideSheetContext();
+    const { changeSideSheetContent, handleOpen } = useSideSheetContextLegacy();
 
     const openSideSheet = (
         transactionEntity: TransactionModelResponse | null

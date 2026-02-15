@@ -38,3 +38,12 @@
         }
     }
 }
+
+.caseIdRow {
+    display: flex;
+    gap: var(--measure-dimension-z-space-1);
+}
+
+.caseIdRow svg {
+    color: var(--color-status-text-status-warning-text);
+}
