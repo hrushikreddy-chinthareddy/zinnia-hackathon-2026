@@ -845,7 +845,13 @@
         "deprioritizeCase": "Despriorizar caso",
         "illustrationsQuickQuoteBasePremiumRangeError": "No se pudo recuperar el rango de prima base para $t(allFields.IllustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsTermLengthYear": "plazo de {{ años }} años",
-        "illustrationsQuickQuoteGenericError": "No se pudo recuperar el valor para el $t(allFields.IllustrationsTermLengthYear, {\"years\": {{years}} })."
+        "illustrationsQuickQuoteGenericError": "No se pudo recuperar el valor para el $t(allFields.IllustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "agent": "Agente",
+        "owner": "Propietario",
+        "searchByFirstNamePlaceholder": "Nombre del individuo",
+        "searchByLastNamePlaceholder": "Apellido del individuo",
+        "searchButtonOwnerName": "Nombre del propietario",
+        "searchButtonAgentName": "Nombre del agente"
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Ganancias acumuladas",

@@ -27,6 +27,7 @@ import {
 } from '@deps/models/case/task-instance';
 import { ReactComponent as SettingsIcon } from '@deps/styles/elements/icons/actions/settings.svg';
 import { browserLogError } from '@deps/utils/browser-logging';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import styles from '@deps/utils/styles';
 
@@ -88,10 +89,17 @@ const TaskQueueTable = ({
         keyPrefix: 'allFields',
     });
 
+    const showOwnerAgentColumns =
+        featureFlagDecisions?.[FEATURE_FLAGS.OPS_MANAGER_AGENT_OWNER_FILTERS];
+
     // used in ops manager view only
     const availableColumns: Column<any>[] = useMemo(() => {
-        return isOpsManagerView ? TASK_COLUMNS : [];
-    }, [isOpsManagerView]);
+        if (!isOpsManagerView) return [];
+        if (showOwnerAgentColumns) return TASK_COLUMNS;
+        return TASK_COLUMNS.filter(
+            (col) => !['owner', 'agent'].includes(col.id)
+        );
+    }, [isOpsManagerView, showOwnerAgentColumns]);
 
     const { lockedCols, selectable } = useMemo(() => {
         const lockedCols: Column<any>[] = [];

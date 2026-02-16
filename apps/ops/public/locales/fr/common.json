@@ -846,7 +846,13 @@
         "illustrationsTermLengthYear": "Durée de {{ ans }} année",
         "illustrationsQuickQuoteGenericError": "Impossible de récupérer la valeur de $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteTotalPremiumRangeError": "Impossible de récupérer la fourchette de primes totale pour $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
-        "illustrationsQuickQuoteBasePremiumRangeError": "Impossible de récupérer la plage premium de base pour $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
+        "illustrationsQuickQuoteBasePremiumRangeError": "Impossible de récupérer la plage premium de base pour $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "agent": "Agent",
+        "owner": "Propriétaire",
+        "searchByFirstNamePlaceholder": "Prénom de l'individu",
+        "searchByLastNamePlaceholder": "Nom de famille de l'individu",
+        "searchButtonOwnerName": "Nom du propriétaire",
+        "searchButtonAgentName": "Nom de l'agent"
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Gains accumulés",
