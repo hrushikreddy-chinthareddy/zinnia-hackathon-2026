@@ -27,6 +27,7 @@ import { ReactComponent as FilterIcon } from '@deps/styles/elements/icons/icons_
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
 import { LabelValue } from '@deps/types/data';
 import { PolicySearchKeys } from '@deps/types/search';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 
 import TaskQueueTable from './task-queue-table';
@@ -41,6 +42,10 @@ const SideSheetTasksResults = dynamic(
 const fieldKeyMapping: Record<string, string> = {
     taskName: 'taskName',
     caseId: 'caseId',
+    ownerFirstName: 'ownerFirstName',
+    ownerLastName: 'ownerLastName',
+    agentFirstName: 'agentFirstName',
+    agentLastName: 'agentLastName',
 };
 
 export const TaskStatusValues = Object.keys(TaskLabel)
@@ -80,6 +85,10 @@ type TaskManagementQueueProps = {
 type SearchParamsPayload = {
     caseId?: string;
     taskName?: string;
+    ownerFirstName?: string;
+    ownerLastName?: string;
+    agentFirstName?: string;
+    agentLastName?: string;
     carriers?: string[];
     queues?: string[];
     statuses?: string[];
@@ -89,8 +98,60 @@ type SearchParamsPayload = {
     escalated?: boolean | null | undefined;
 };
 
+const agentOwnerSearchFields = (
+    t: TFunction,
+    featureFlagDecisions?: FeatureFlags
+) => {
+    if (
+        !featureFlagDecisions?.[FEATURE_FLAGS.OPS_MANAGER_AGENT_OWNER_FILTERS]
+    ) {
+        return [];
+    }
+    return [
+        {
+            label: t('allFields.searchButtonOwnerName'),
+            value: 'ownerFirstName',
+            group: [
+                {
+                    label: t('allFields.searchByFirstNamePlaceholder'),
+                    value: 'ownerFirstName',
+                    placeholder:
+                        t('allFields.searchByFirstNamePlaceholder') ?? '',
+                    errorMessage: t('allFields.firstNameSearchError') ?? '',
+                },
+                {
+                    label: t('allFields.searchByLastNamePlaceholder'),
+                    value: 'ownerLastName',
+                    placeholder:
+                        t('allFields.searchByLastNamePlaceholder') ?? '',
+                    errorMessage: t('allFields.lastNameSearchError') ?? '',
+                },
+            ],
+        },
+        {
+            label: t('allFields.searchButtonAgentName'),
+            value: 'agentFirstName',
+            group: [
+                {
+                    label: t('allFields.searchByFirstNamePlaceholder'),
+                    value: 'agentFirstName',
+                    placeholder:
+                        t('allFields.searchByFirstNamePlaceholder') ?? '',
+                    errorMessage: t('allFields.firstNameSearchError') ?? '',
+                },
+                {
+                    label: t('allFields.searchByLastNamePlaceholder'),
+                    value: 'agentLastName',
+                    placeholder: '',
+                    errorMessage: t('allFields.lastNameSearchError') ?? '',
+                },
+            ],
+        },
+    ];
+};
+
 // type TaskSearchKeys = 'caseId' | 'taskName';
-const getToggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
+const getBaseToggleLabels = (t: TFunction): LabelValue<PolicySearchKeys>[] => [
     {
         label: t('tasksView.search.buttons.taskName'),
         value: 'taskName',
@@ -120,6 +181,17 @@ const TaskManagementQueue = ({
     const [searchValue, setSearchValue] = useState(SearchBarInitialValues);
     const DEFAULT_TOGGLE_VALUE = 'taskName' as PolicySearchKeys;
     const [toggleValue, setToggleValue] = useState(DEFAULT_TOGGLE_VALUE);
+
+    const getToggleLabels = useCallback(
+        (t: TFunction): LabelValue<PolicySearchKeys>[] => [
+            ...getBaseToggleLabels(t),
+            ...(agentOwnerSearchFields(
+                t,
+                featureFlagDecisions
+            ) as LabelValue<PolicySearchKeys>[]),
+        ],
+        [featureFlagDecisions]
+    );
 
     const {
         taskDetails,
@@ -211,17 +283,20 @@ const TaskManagementQueue = ({
 
     const handleSearch = useCallback(
         (value: Record<string, string>) => {
-            const [field, fieldValue] = Object.entries(value)[0];
-
-            if (!fieldValue) return;
-
-            const backendField = fieldKeyMapping[field];
-            if (!backendField) return;
-
             const additionalFilters = searchValue?.additionalFilters || {};
+            const searchFields: Record<string, string> = {};
+
+            Object.entries(value).forEach(([field, fieldValue]) => {
+                const backendField = fieldKeyMapping[field];
+                if (backendField && fieldValue) {
+                    searchFields[backendField] = fieldValue;
+                }
+            });
+
+            if (Object.keys(searchFields).length === 0) return;
 
             const searchParams = {
-                [backendField]: fieldValue,
+                ...searchFields,
                 ...additionalFilters,
                 ...(additionalFilters.carriers && {
                     carriers: transformCarriers(additionalFilters.carriers),
@@ -229,7 +304,7 @@ const TaskManagementQueue = ({
             };
 
             setSearchValue((prev) => ({
-                [backendField]: fieldValue,
+                ...searchFields,
                 additionalFilters: prev.additionalFilters,
             }));
             getTasks(true, getSafeSearchParams(searchParams));

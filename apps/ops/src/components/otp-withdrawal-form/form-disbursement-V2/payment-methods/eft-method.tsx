@@ -224,6 +224,12 @@ const EftMethod = ({
         (bankDetails?.isBankSelected &&
             bankDetails?.selectedBanking === SelectedBanking.OnFile);
 
+    const hideBankingTypeField =
+        isFormStateReadOnly &&
+        (bankingType === null ||
+            bankingType === undefined ||
+            bankingType === '');
+
     const renderField = (field: any) => {
         const isHidden =
             isDisabled &&
@@ -260,6 +266,7 @@ const EftMethod = ({
                             isFormStateReadOnly={
                                 isDisabled || (isFormStateReadOnly as boolean)
                             }
+                            classNames={hideBankingTypeField ? 'hidden' : ''}
                         />
                     </div>
                 );

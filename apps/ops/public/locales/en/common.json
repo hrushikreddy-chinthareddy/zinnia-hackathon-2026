@@ -870,7 +870,13 @@
         "deprioritizeCase": "De-prioritize case",
         "illustrationsQuickQuoteBasePremiumRangeError": "Could not retrieve base premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
         "illustrationsQuickQuoteTotalPremiumRangeError": "Could not retrieve total premium range for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
-        "illustrationsQuickQuoteGenericError": "Could not retrieve value for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} })."
+        "illustrationsQuickQuoteGenericError": "Could not retrieve value for $t(allFields.illustrationsTermLengthYear, {\"years\": {{years}} }).",
+        "agent": "Agent/SSN",
+        "owner": "Owner/SSN",
+        "searchByFirstNamePlaceholder": "Individual's first name",
+        "searchByLastNamePlaceholder": "Individual's last name",
+        "searchButtonOwnerName": "Owner name",
+        "searchButtonAgentName": "Agent name"
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Accumulated earnings",

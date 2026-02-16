@@ -201,4 +201,5 @@ export enum FEATURE_FLAGS {
     ENABLE_ISSUE_COUNT_VIEW_CASES = 'enable_issue_count_view_cases',
     DLIC_3P_DISBURSEMENT_CHANGES = 'dlic_3p_disbursement_changes_zlfeb3',
     INDEX_AUTOMATION_CASE = 'index_automation_case',
+    OPS_MANAGER_AGENT_OWNER_FILTERS = 'ops_manager_agent_owner_filters',
 }

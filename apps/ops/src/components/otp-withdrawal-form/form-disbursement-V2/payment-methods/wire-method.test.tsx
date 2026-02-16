@@ -91,29 +91,30 @@ jest.mock('../choose-banking-type', () => {
 });
 
 jest.mock('../bank-text-field-v2', () => {
-    const BankTextFieldV2Mock = ({
-        fieldName,
-        fieldLabel,
-        onDataChange,
-        value,
-        isFormStateReadOnly,
-    }: {
-        fieldName: string;
-        fieldLabel: string;
-        onDataChange: (value: any, fieldName: string) => void;
-        value: string;
-        isFormStateReadOnly: boolean;
-    }) => (
-        <div data-testid={`bank-text-field-${fieldName}`}>
-            <label>{fieldLabel}</label>
-            <input
-                data-testid={`input-${fieldName}`}
-                value={value}
-                disabled={isFormStateReadOnly}
-                onChange={(e) => onDataChange(e.target.value, fieldName)}
-            />
-        </div>
-    );
+    const BankTextFieldV2Mock = (props: any) => {
+        const {
+            fieldName,
+            fieldLabel,
+            onDataChange,
+            value,
+            isFormStateReadOnly,
+            classNames,
+        } = props;
+        return (
+            <div
+                data-testid={`bank-text-field-${fieldName}`}
+                className={classNames}
+            >
+                <label>{fieldLabel}</label>
+                <input
+                    data-testid={`input-${fieldName}`}
+                    value={value}
+                    disabled={isFormStateReadOnly}
+                    onChange={(e) => onDataChange(e.target.value, fieldName)}
+                />
+            </div>
+        );
+    };
     BankTextFieldV2Mock.displayName = 'BankTextFieldV2Mock';
     return BankTextFieldV2Mock;
 });
@@ -1023,6 +1024,192 @@ describe('WireMethod', () => {
             expect(screen.getByTestId('select-accountType')).toHaveValue(
                 'Savings'
             );
+        });
+    });
+
+    describe('Field visibility (isHidden condition)', () => {
+        it('should apply invisible class to reEnterBankRoutingNumber field when isFormStateReadOnly is true', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'text',
+                        fieldName: 'reEnterBankRoutingNumber',
+                        fieldLabel: 'Re-enter Routing Number',
+                    },
+                ],
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                    }}
+                >
+                    <WireMethod
+                        {...defaultProps}
+                        config={config}
+                        isFormStateReadOnly={true}
+                    />
+                </FormDataContext.Provider>
+            );
+
+            const textField = screen.getByTestId(
+                'bank-text-field-reEnterBankRoutingNumber'
+            );
+            expect(textField).toHaveClass('invisible');
+        });
+
+        it('should apply invisible class to reEnterAccountNumber field when isFormStateReadOnly is true', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'text',
+                        fieldName: 'reEnterAccountNumber',
+                        fieldLabel: 'Re-enter Account Number',
+                    },
+                ],
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                    }}
+                >
+                    <WireMethod
+                        {...defaultProps}
+                        config={config}
+                        isFormStateReadOnly={true}
+                    />
+                </FormDataContext.Provider>
+            );
+
+            const textField = screen.getByTestId(
+                'bank-text-field-reEnterAccountNumber'
+            );
+            expect(textField).toHaveClass('invisible');
+        });
+
+        it('should not apply invisible class to reEnterBankRoutingNumber field when isFormStateReadOnly is false', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'text',
+                        fieldName: 'reEnterBankRoutingNumber',
+                        fieldLabel: 'Re-enter Routing Number',
+                    },
+                ],
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                        isFormStateReadOnly: false,
+                    }}
+                >
+                    <WireMethod {...defaultProps} config={config} />
+                </FormDataContext.Provider>
+            );
+
+            const textField = screen.getByTestId(
+                'bank-text-field-reEnterBankRoutingNumber'
+            );
+            expect(textField).not.toHaveClass('invisible');
+        });
+
+        it('should not apply invisible class to reEnterAccountNumber field when isFormStateReadOnly is false', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'text',
+                        fieldName: 'reEnterAccountNumber',
+                        fieldLabel: 'Re-enter Account Number',
+                    },
+                ],
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                        isFormStateReadOnly: false,
+                    }}
+                >
+                    <WireMethod {...defaultProps} config={config} />
+                </FormDataContext.Provider>
+            );
+
+            const textField = screen.getByTestId(
+                'bank-text-field-reEnterAccountNumber'
+            );
+            expect(textField).not.toHaveClass('invisible');
+        });
+
+        it('should not apply invisible class to other text fields when isFormStateReadOnly is true', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'text',
+                        fieldName: 'bankName',
+                        fieldLabel: 'Bank Name',
+                    },
+                ],
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                        isFormStateReadOnly: true,
+                    }}
+                >
+                    <WireMethod {...defaultProps} config={config} />
+                </FormDataContext.Provider>
+            );
+
+            const textField = screen.getByTestId('bank-text-field-bankName');
+            expect(textField).not.toHaveClass('invisible');
+        });
+
+        it('should not apply invisible class to bankRoutingNumber field when isFormStateReadOnly is true', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'text',
+                        fieldName: 'bankRoutingNumber',
+                        fieldLabel: 'Routing Number',
+                    },
+                ],
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                        isFormStateReadOnly: true,
+                    }}
+                >
+                    <WireMethod {...defaultProps} config={config} />
+                </FormDataContext.Provider>
+            );
+
+            const textField = screen.getByTestId(
+                'bank-text-field-bankRoutingNumber'
+            );
+            expect(textField).not.toHaveClass('invisible');
         });
     });
 });

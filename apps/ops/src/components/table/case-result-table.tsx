@@ -66,7 +66,7 @@ interface PartyWithOthersProps extends PiiProps {
     isOwner?: boolean;
 }
 
-const PartyWithOthers = ({
+export const PartyWithOthers = ({
     text,
     entities,
     highlights,
