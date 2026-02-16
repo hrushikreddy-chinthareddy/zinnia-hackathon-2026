@@ -7,7 +7,7 @@ import { TaskType } from '@deps/models/case/task';
 import {
     Carrier,
     filterParticipantIdRules,
-    getFilteredParticipantCompanies,
+    ParticipantCompanies,
 } from '@deps/models/case/withdrawal/case';
 import { DisbursementInformation } from '@deps/models/case/withdrawal/disbursement-types';
 
@@ -33,30 +33,26 @@ const SelectParticipantId = ({
     const value = disbursementInformation.participantId ?? '';
 
     const participantIdOptions = () => {
-        const baseCompanies = getFilteredParticipantCompanies(
-            initialForm?.carrier as Carrier,
-            initialForm?.taskType
-        );
-
         const matchedRule = filterParticipantIdRules.find(
             (rule: FilterParticipantIdRules) =>
                 rule.clients === initialForm?.carrier &&
                 rule.taskType.includes(initialForm?.taskType)
         );
 
-        const filteredCompanies = matchedRule
-            ? baseCompanies.filter(
+        return matchedRule
+            ? ParticipantCompanies.filter(
                   (p: { code: string }) =>
                       !matchedRule.excludeParticipantCodes.includes(p.code)
-              )
-            : baseCompanies;
-
-        return filteredCompanies.map(
-            (participantId: SelectedParticipantId) => ({
-                label: `${participantId.companyName}`,
-                value: participantId.code,
-            })
-        );
+              ).map((participantId: SelectedParticipantId) => ({
+                  label: `${participantId.companyName}`,
+                  value: participantId.code,
+              }))
+            : ParticipantCompanies.map(
+                  (participantId: SelectedParticipantId) => ({
+                      label: `${participantId.companyName}`,
+                      value: participantId.code,
+                  })
+              );
     };
 
     const setDataChange = (val: string) => {
