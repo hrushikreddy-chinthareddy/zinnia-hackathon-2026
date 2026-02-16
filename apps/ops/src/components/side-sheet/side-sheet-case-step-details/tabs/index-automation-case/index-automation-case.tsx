@@ -57,6 +57,10 @@ const DATA_TYPE_FIELDS: Record<string, FieldConfig[]> = {
             field: 'contractNumber',
         },
         {
+            labelKey: 'allFields.indexAutomationDocumentExtractionRequestType',
+            field: 'requestType',
+        },
+        {
             labelKey: 'allFields.indexAutomationDocumentExtractionOwnerName',
             field: 'ownerName',
         },
