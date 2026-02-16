@@ -42,11 +42,13 @@ jest.mock('../choose-banking-type', () => {
     const ChooseBankingTypeMock = ({
         onDataChange,
         handleRadioChange,
+        classNames,
     }: {
         onDataChange: (val: string) => void;
         handleRadioChange: (fieldName: string, e: any) => void;
+        classNames?: string;
     }) => (
-        <div data-testid="choose-banking-type">
+        <div data-testid="choose-banking-type" className={classNames}>
             <button
                 data-testid="banking-type-voided-check"
                 onClick={() => onDataChange('VOIDED_CHECK')}
@@ -862,6 +864,161 @@ describe('EftMethod', () => {
             const chooseBankWrapper =
                 screen.getByTestId('choose-bank').parentElement;
             expect(chooseBankWrapper).toHaveClass('custom-class');
+        });
+    });
+    describe('ChooseBankingType hidden className', () => {
+        it('should apply hidden class when isFormStateReadOnly is true AND bankVerification is empty string', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'choose-the-banking-type',
+                        fieldName: 'chooseBankingType',
+                        fieldLabel: 'Choose Banking Type',
+                    },
+                ],
+            };
+
+            const defaultDisbursementInfo = {
+                bank: [{ bankName: '', accountType: { text: 'Checking' } }],
+                bankVerification: { selectedBankingType: '' },
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                    }}
+                >
+                    <EftMethod
+                        {...defaultProps}
+                        config={config}
+                        isFormStateReadOnly={true}
+                        defaultDisbursementInfo={defaultDisbursementInfo}
+                    />
+                </FormDataContext.Provider>
+            );
+
+            expect(screen.getByTestId('choose-banking-type')).toHaveClass(
+                'hidden'
+            );
+        });
+
+        it('should NOT apply hidden class when isFormStateReadOnly is false AND bankVerification is empty string', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'choose-the-banking-type',
+                        fieldName: 'chooseBankingType',
+                        fieldLabel: 'Choose Banking Type',
+                    },
+                ],
+            };
+
+            const defaultDisbursementInfo = {
+                bank: [{ bankName: '', accountType: { text: 'Checking' } }],
+                bankVerification: { selectedBankingType: '' },
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                    }}
+                >
+                    <EftMethod
+                        {...defaultProps}
+                        config={config}
+                        isFormStateReadOnly={false}
+                        defaultDisbursementInfo={defaultDisbursementInfo}
+                    />
+                </FormDataContext.Provider>
+            );
+
+            expect(screen.getByTestId('choose-banking-type')).not.toHaveClass(
+                'hidden'
+            );
+        });
+
+        it('should NOT apply hidden class when isFormStateReadOnly is true BUT bankVerification is not empty string', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'choose-the-banking-type',
+                        fieldName: 'chooseBankingType',
+                        fieldLabel: 'Choose Banking Type',
+                    },
+                ],
+            };
+
+            const defaultDisbursementInfo = {
+                bank: [{ bankName: '', accountType: { text: 'Checking' } }],
+                bankVerification: { selectedBankingType: 'VOIDED_CHECK' },
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                    }}
+                >
+                    <EftMethod
+                        {...defaultProps}
+                        config={config}
+                        isFormStateReadOnly={true}
+                        defaultDisbursementInfo={defaultDisbursementInfo}
+                    />
+                </FormDataContext.Provider>
+            );
+
+            expect(screen.getByTestId('choose-banking-type')).not.toHaveClass(
+                'hidden'
+            );
+        });
+
+        it('should NOT apply hidden class when both isFormStateReadOnly is false AND bankVerification is not empty string', () => {
+            const config = {
+                ...defaultProps.config,
+                fields: [
+                    {
+                        fieldType: 'choose-the-banking-type',
+                        fieldName: 'chooseBankingType',
+                        fieldLabel: 'Choose Banking Type',
+                    },
+                ],
+            };
+
+            const defaultDisbursementInfo = {
+                bank: [{ bankName: '', accountType: { text: 'Checking' } }],
+                bankVerification: {
+                    selectedBankingType: 'DIRECT_DEPOSIT_FORM',
+                },
+            };
+
+            render(
+                <FormDataContext.Provider
+                    value={{
+                        ...defaultFormDataContext,
+                        bankDetails: createBankDetails(),
+                    }}
+                >
+                    <EftMethod
+                        {...defaultProps}
+                        config={config}
+                        isFormStateReadOnly={false}
+                        defaultDisbursementInfo={defaultDisbursementInfo}
+                    />
+                </FormDataContext.Provider>
+            );
+
+            expect(screen.getByTestId('choose-banking-type')).not.toHaveClass(
+                'hidden'
+            );
         });
     });
 });
