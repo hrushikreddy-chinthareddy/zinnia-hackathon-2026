@@ -431,11 +431,21 @@
                                                                 null,
                                                                 "INDIVIDUALTRUST",
                                                                 "CORPORATETRUST",
-                                                                "TESTAMENTARYTRUST"
+                                                                "TESTAMENTARYTRUST",
+                                                                "INTERVIVOSTRUST",
+                                                                "GRANTORTRUST"
                                                             ],
                                                             "default": null
                                                         },
                                                         "dateOfBirth": {
+                                                            "title": "Date of birth",
+                                                            "type": [
+                                                                "string",
+                                                                "null"
+                                                            ],
+                                                            "default": null
+                                                        },
+                                                        "trustDate": {
                                                             "title": "Trust date",
                                                             "type": [
                                                                 "string",
@@ -478,6 +488,7 @@
                                             "middleName": "",
                                             "lastName": "",
                                             "dateOfBirth": null,
+                                            "trustDate": null,
                                             "trustType": null,
                                             "identifications": [
                                                 {
@@ -552,6 +563,7 @@
                                     "partyType",
                                     "partyRole",
                                     "trustType",
+                                    "trustDate",
                                     "firstName",
                                     "middleName",
                                     "lastName",
@@ -774,12 +786,17 @@
                                             "Select trust type",
                                             "Individual Trust",
                                             "Corporate Trust",
-                                            "Testamentary Trust"
+                                            "Testamentary Trust",
+                                            "Inter Vivos Trust",
+                                            "Grantor Trust"
                                         ]
                                     },
                                     "ui:placeholder": "Select trust type"
                                 },
                                 "dateOfBirth": {
+                                    "ui:widget": "DateWidgetV2"
+                                },
+                                "trustDate": {
                                     "ui:widget": "DateWidgetV2"
                                 }
                             }
