@@ -1963,7 +1963,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The minimum is $50,000',
+                                                en: 'Minimum face amount for this product is $50,000.',
                                                 fr: '',
                                             },
                                         },
@@ -1983,7 +1983,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The maximum is $10,000,000',
+                                                en: 'Maximum face amount for this product is $10,000,000.',
                                                 fr: '',
                                             },
                                         },
