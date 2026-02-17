@@ -851,7 +851,8 @@
         "searchByFirstNamePlaceholder": "Nombre del individuo",
         "searchByLastNamePlaceholder": "Apellido del individuo",
         "searchButtonOwnerName": "Nombre del propietario",
-        "searchButtonAgentName": "Nombre del agente"
+        "searchButtonAgentName": "Nombre del agente",
+        "illustrationsClientCasesDobDatePickerPopoverTitle": "Fecha de nacimiento"
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Ganancias acumuladas",
@@ -9298,7 +9299,7 @@
             "maleButton": "Masculino",
             "femaleButton": "Femenino",
             "dateLabel": "Fecha de nacimiento",
-            "dateErrorMessage": "El formato es mm/dd/yyyy",
+            "dateErrorMessage": "El formato es mm/dd/aaaa",
             "ageLabel": "Edad actual",
             "riskLabel": "Clase de riesgo",
             "nicotineUserLabel": "Usuario de nicotina",

@@ -1,13 +1,13 @@
 import { queryOptions } from '@tanstack/react-query';
 
 import {
-    archiveIllustration,
     createClientCase,
     patchClientCase,
     searchClientCase,
+    archiveIllustration,
     selectIllustrationForApplication,
     unarchiveIllustration,
-} from '@deps/queries/api/v1/client-cases';
+} from '@deps/queries/api/v1/client-case-manager';
 import {
     getIllustrationAsyncCalculationStatus,
     getNewIndexedUniversalLifeIllustration,
