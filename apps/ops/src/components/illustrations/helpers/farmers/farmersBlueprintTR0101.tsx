@@ -333,6 +333,7 @@ export const farmersBlueprintTR0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 3,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -1075,6 +1076,7 @@ export const farmersBlueprintTR0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -1228,7 +1230,9 @@ export const farmersBlueprintTR0101 = {
                                     copyable: 'none',
                                     optional: true,
                                     triggerStepNavigation: false,
-                                    layout: {},
+                                    layout: {
+                                        forceNewLine: true,
+                                    },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
                                     placeholder: {
@@ -1998,6 +2002,7 @@ export const farmersBlueprintTR0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2084,6 +2089,7 @@ export const farmersBlueprintTR0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2290,6 +2296,7 @@ export const farmersBlueprintTR0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2545,6 +2552,7 @@ export const farmersBlueprintTR0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
