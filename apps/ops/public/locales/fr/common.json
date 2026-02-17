@@ -1,5 +1,6 @@
 {
     "default": "Aucune traduction fournie",
+    "caseWithdrawal.request.distributionMethod.disburseToAnnuitantDlic": "Verser au rentier (Quand le titulaire est une fiducie révocable)",
     "caseStatsLoading": "Chargement des statistiques du dossier...",
     "createdVsCompleted": "Création vs Confirmation (aujourd'hui)",
     "caseVolume": "Volume du dossier",
@@ -4053,6 +4054,7 @@
                 "disburseToFinancialInstitution": "Verser à l'institution financière",
                 "disburseToCharity": "Verser à un organisme de bienfaisance",
                 "disburseToAnnuitant": "Verser au rentier",
+                "disburseToAnnuitantDlic": "Verser au rentier (Quand le titulaire est une fiducie révocable)",
                 "disburseToDifferentAddress": "Verser à une adresse différente",
                 "disburseToThirdParty": "Verser à un tiers (pas une institution financière / organisme de bienfaisance)",
                 "disburseToThirdPartyNotCharityNotFinancial": "Verser à un tiers (pas une institution financière)",

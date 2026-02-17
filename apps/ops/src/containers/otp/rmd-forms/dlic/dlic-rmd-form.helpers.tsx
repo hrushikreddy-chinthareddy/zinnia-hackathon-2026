@@ -318,7 +318,9 @@ export default function getDlicRmdWithdrawalConfig(
                 fields: [
                     {
                         fieldName: BankingFields.isAnnuitant,
-                        fieldLabel: t('distributionMethod.disburseToAnnuitant'),
+                        fieldLabel: t(
+                            'distributionMethod.disburseToAnnuitantDlic'
+                        ),
                         component: DisbursementFields.BankCheckboxField,
                         classNames:
                             'col-start-1 col-span-3 flex flex-wrap gap-8 max-md:flex-col',

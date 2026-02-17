@@ -450,7 +450,7 @@ export default function getDlicConfig(
             value: SendCheckOption.FinancialInstitution,
         },
         {
-            label: t('distributionMethod.disburseToAnnuitant'),
+            label: t('distributionMethod.disburseToAnnuitantDlic'),
             value: SendCheckOption.Annuitant,
         },
         {
@@ -480,7 +480,9 @@ export default function getDlicConfig(
                 fields: [
                     {
                         fieldName: BankingFields.isAnnuitant,
-                        fieldLabel: t('distributionMethod.disburseToAnnuitant'),
+                        fieldLabel: t(
+                            'distributionMethod.disburseToAnnuitantDlic'
+                        ),
                         component: DisbursementFields.BankCheckboxField,
                         classNames:
                             'col-start-1 col-span-3 flex flex-wrap gap-8 max-md:flex-col',

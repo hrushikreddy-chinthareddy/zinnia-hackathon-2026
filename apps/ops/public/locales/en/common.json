@@ -1,5 +1,6 @@
 {
     "default": "No translation provided",
+    "caseWithdrawal.request.distributionMethod.disburseToAnnuitantDlic": "Disburse to Annuitant (When owner is a Revocable Trust)",
     "caseStatsLoading": "Loading case stats...",
     "createdVsCompleted": "Created vs Completed (same day)",
     "caseVolume": "Case Volume",
@@ -4115,6 +4116,7 @@
                 "disburseToFinancialInstitution": "Disburse to Financial Institution",
                 "disburseToCharity": "Disburse to Charity",
                 "disburseToAnnuitant": "Disburse to Annuitant",
+                "disburseToAnnuitantDlic": "Disburse to Annuitant (When owner is a Revocable Trust)",
                 "disburseToDifferentAddress": "Disburse to different Address",
                 "disburseToThirdParty": "Disburse to Third Party(Not a Financial Institution / Charity)",
                 "disburseToThirdPartyNotCharityNotFinancial": "Disburse to Third Party or Charity (Not a Financial Institution)",

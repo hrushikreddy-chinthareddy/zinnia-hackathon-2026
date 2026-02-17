@@ -1,5 +1,6 @@
 {
     "default": "No se proporcionó traducción",
+    "caseWithdrawal.request.distributionMethod.disburseToAnnuitantDlic": "Desembolsar al Rentista (Cuando el titular es un Fideicomiso Revocable)",
     "caseStatsLoading": "Cargando estadísticas de casos...",
     "createdVsCompleted": "Creado vs Completado (mismo día)",
     "caseVolume": "Volumen de casos",
@@ -4094,6 +4095,7 @@
                 "disburseToFinancialInstitution": "Desembolsar a Institución Financiera",
                 "disburseToCharity": "Desembolsar a Organización Benéfica",
                 "disburseToAnnuitant": "Desembolsar al Rentista",
+                "disburseToAnnuitantDlic": "Desembolsar al Rentista (Cuando el titular es un Fideicomiso Revocable)",
                 "disburseToDifferentAddress": "Desembolsar a una Dirección Diferente",
                 "disburseToThirdParty": "Desembolsar a Tercero (No una Institución Financiera / Organización Benéfica)",
                 "disburseToThirdPartyNotCharityNotFinancial": "Desembolsar a Tercero (No una Institución Financiera)",
