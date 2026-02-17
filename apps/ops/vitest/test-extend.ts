@@ -1,8 +1,12 @@
 import { test as testBase } from 'vitest';
 
-import { worker } from './mocks/browser.js';
+import { worker } from './mocks/brower';
 
-export const test = testBase.extend({
+type TestContext = {
+    worker: typeof worker;
+};
+
+export const test = testBase.extend<TestContext>({
     worker: [
         async ({}, use) => {
             // Start the worker before the test.

@@ -23,6 +23,43 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
+    },
+
+    {
+      "name": "Next.js: debug ops server-side",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/ops",
+      "runtimeExecutable": "${workspaceFolder}/apps/ops/node_modules/.bin/next",
+      "runtimeArgs": ["dev"],
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**",
+        "<eval>/**",
+        "**/.next/**"
+      ],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "console": "integratedTerminal",
+      "outputCapture": "std"
+    },
+
+    {
+      "name": "Next.js: debug ops full stack",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/ops",
+      "program": "${workspaceFolder}/apps/ops/node_modules/next/dist/bin/next",
+      "runtimeArgs": ["--inspect"],
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "killOnServerStop": true,
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}/apps/ops"
+      }
     }
   ]
 }
