@@ -31,7 +31,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
+import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
@@ -71,7 +71,7 @@ interface IEditAllocationsContent {
     notElectedfunds?: FundViewModel[];
     policyNumber?: string;
     planCode: string;
-    sideSheet: SideSheetContextProps;
+    sideSheet: SideSheetContextLegacyProps;
     investmentType?: string;
     policyOwner: string;
     policy: Policy;

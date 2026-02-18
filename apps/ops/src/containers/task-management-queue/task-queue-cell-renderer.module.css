@@ -3,6 +3,15 @@
     display: flex;
 }
 
+.flexCol {
+    display: flex;
+    flex-direction: column;
+}
+
+.detail {
+    margin-top: 2px;
+}
+
 .itemsCenter {
     align-items: center;
 }

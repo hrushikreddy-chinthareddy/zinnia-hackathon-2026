@@ -7,7 +7,7 @@ import { canUserCreateClientCase } from '@deps/components/client-case/client-cas
 import { serializeQuickQuoteParams } from '@deps/components/client-case/quick-quote/helpers';
 import { QuickQuoteForm } from '@deps/components/client-case/quick-quote/quick-quote-form';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { UserProfile } from '@deps/models/user-profile';
@@ -31,7 +31,7 @@ export default function NewQuickQuote(
 ) {
     const router = useRouter();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const closeSideSheet = useCallback(() => {
         router.push({

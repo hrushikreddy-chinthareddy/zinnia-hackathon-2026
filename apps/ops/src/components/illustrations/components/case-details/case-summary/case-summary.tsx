@@ -23,7 +23,7 @@ import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
 import { patchIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
@@ -64,7 +64,7 @@ const IllustrationCaseSumary = ({
     const [insurredFullName, setInsurredFullName] = useState('');
     const [agentFullName, setAgentFullName] = useState('');
     const queryClient = useQueryClient();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     useEffect(() => {
         if (

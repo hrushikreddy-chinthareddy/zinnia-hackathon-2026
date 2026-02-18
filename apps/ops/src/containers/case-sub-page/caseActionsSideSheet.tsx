@@ -12,7 +12,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { CaseAction } from '@deps/models/case/enums';
 import { escalateCase, getProcessReferenceData } from '@deps/queries/api/cases';
 import { browserLogError } from '@deps/utils/browser-logging';
@@ -54,7 +54,7 @@ function CaseActionSideSheet({ caseId, action }: Props) {
     >([]);
     const [reasonError, setReasonError] = useState<string | undefined>();
     const [sourceError, setSourceError] = useState<string | undefined>();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const validate = () => {
         const reasonError = reason
@@ -176,20 +176,20 @@ function CaseActionSideSheet({ caseId, action }: Props) {
                     />
                 </div>
 
-                <div className="flex gap-2 items-end width-full justify-end pr-5">
+                <div className={styles.prioritizeCaseButtonContainer}>
+                    <Button
+                        variant={ButtonVariant.Default}
+                        size={ButtonSize.Small}
+                        onClick={handleSubmit}
+                    >
+                        {tCommon(`${action}Case`)}
+                    </Button>
                     <Button
                         variant={ButtonVariant.Selected}
                         size={ButtonSize.Small}
                         onClick={() => sideSheet.handleOpen(false)}
                     >
                         {t('cancel')}
-                    </Button>
-                    <Button
-                        variant={ButtonVariant.Default}
-                        size={ButtonSize.Small}
-                        onClick={handleSubmit}
-                    >
-                        {t('submit')}
                     </Button>
                 </div>
             </div>

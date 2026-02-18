@@ -1,0 +1,60 @@
+.flexFullCol {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+.gridContainer {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.5rem;
+    font-size: 1rem;
+    margin-bottom: 1rem;
+    align-items: center;
+    justify-items: start;
+}
+
+.customColSpan2 {
+    grid-column: span 2 / span 2;
+    color: var(--color-base-text-text-secondary);
+}
+
+.customColSpan3 {
+    grid-column: span 3 / span 3;
+}
+
+.customIconStyle {
+    flex-shrink: 0;
+    color: #4b5563;
+    transform-origin: center;
+    animation-duration: 5000ms;
+    animation-timing-function: linear;
+    animation-name: spin;
+}
+
+.customMarginTop {
+    margin-top: 0.125rem;
+}
+
+.customTextColor {
+    color: #4b5563;
+}
+
+.customSectionDivider {
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--color-base-border-border-primary, #e5e7eb);
+    padding-bottom: 0.5rem;
+}
+
+.customSectionTitle {
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}

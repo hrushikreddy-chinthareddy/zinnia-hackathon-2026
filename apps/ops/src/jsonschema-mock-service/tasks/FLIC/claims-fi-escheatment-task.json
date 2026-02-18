@@ -71,15 +71,6 @@
                                                     "type": "string",
                                                     "title": "Due Diligence completed on doc"
                                                 },
-                                                "ira": {
-                                                    "type": "boolean",
-                                                    "title": "IRA or NON IRA",
-                                                    "enum": [true, false],
-                                                    "enumNames": [
-                                                        "IRA",
-                                                        "Non IRA"
-                                                    ]
-                                                },
                                                 "qualificationType": {
                                                     "type": "string",
                                                     "title": "IRA Type"
@@ -429,12 +420,6 @@
                                         "dataType": "string"
                                     }
                                 },
-                                "ira": {
-                                    "ui:widget": "radio",
-                                    "ui:options": {
-                                        "readonly": true
-                                    }
-                                },
                                 "qualificationType": {
                                     "ui:options": {
                                         "inline": true,
@@ -479,7 +464,8 @@
                                                 "ui:options": {
                                                     "label": false,
                                                     "inline": true,
-                                                    "dataType": "string"
+                                                    "dataType": "string",
+                                                    "missingValueTooltipText": "Missing SSN"
                                                 }
                                             },
                                             "firstName": {
@@ -515,7 +501,8 @@
                                                     "inline": true,
                                                     "label": false,
                                                     "dataType": "date",
-                                                    "disabled": true
+                                                    "disabled": true,
+                                                    "missingValueTooltipText": "Missing Date of Birth (DOB)"
                                                 }
                                             }
                                         },
@@ -527,7 +514,8 @@
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
-                                                    "dataType": "string"
+                                                    "dataType": "string",
+                                                    "missingValueTooltipText": "Missing Address"
                                                 }
                                             },
                                             "addressLine2": {

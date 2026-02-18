@@ -1,6 +1,9 @@
 import { useTranslation } from 'next-i18next';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PayeesStep, {
     PayeesStepSetState,
@@ -20,6 +23,7 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useAutopay } from '@deps/contexts/transactions/AutopayContext';
+import { useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import { validateSystematicProgramUpdate } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
@@ -54,6 +58,51 @@ export type AutopayContainerProps = {
     translationKeyPrefix: string;
 };
 
+const getTitle = ({
+    isSetUp,
+    t,
+    translationKeyPrefix,
+    systematicProgramTablesEnabled,
+    parentPage,
+    arrangementType,
+}: {
+    isSetUp: boolean;
+    t: (key: string) => string;
+    translationKeyPrefix: string;
+    systematicProgramTablesEnabled: boolean;
+    parentPage: ParentPage;
+    arrangementType?: ArrangementType;
+}): string => {
+    if (isSetUp) {
+        return t(
+            `allFields.${translationKeyPrefix}${
+                systematicProgramTablesEnabled
+                    ? 'SystematicProgramTitleStart'
+                    : 'TitleStart'
+            }`
+        );
+    }
+    let title = t(
+        `allFields.${translationKeyPrefix}${
+            systematicProgramTablesEnabled
+                ? 'SystematicProgramManageStart'
+                : 'ManageStart'
+        }`
+    );
+    switch (parentPage) {
+        case ParentPage.Withdrawals:
+            if (arrangementType === ArrangementType.WITHDRAWAL) {
+                title += ' Withdrawal';
+            } else {
+                title += ' RMD';
+            }
+            break;
+        default:
+            break;
+    }
+    return title;
+};
+
 const AutopayContainer = ({
     arrangementType,
     policy,
@@ -79,6 +128,16 @@ const AutopayContainer = ({
     const systematicProgramTablesEnabled =
         featureFlags[FEATURE_FLAGS.SYSTEMATIC_PROGRAMS_TABLE];
 
+    const processSubType = getProcessSubTypes(parentPage);
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policy.policyNumber,
+        process: [Processes.SSW],
+        requestSubType: processSubType.length ? processSubType : undefined,
+        enabled: !!policy.policyNumber && !!featureFlags,
+    });
+    const hasCases =
+        Array.isArray(casesResponse?.data) && casesResponse.data.length > 0;
+
     useEffect(() => {
         setAutopay((prevState) => ({
             ...prevState,
@@ -97,7 +156,7 @@ const AutopayContainer = ({
         translationKeyPrefix,
     ]);
 
-    const validateCall = async () => {
+    const validateCall = useCallback(async () => {
         const { systematicProgram, arrangementId } = getSystematicInfo(
             systematicPrograms,
             systematicProgramReason,
@@ -122,7 +181,15 @@ const AutopayContainer = ({
         );
 
         return response?.data;
-    };
+    }, [
+        systematicPrograms,
+        systematicProgramReason,
+        isSetUp,
+        parentPage,
+        autopay,
+        policy.product?.planCode,
+        policy.policyNumber,
+    ]);
 
     const transactionType = useMemo(() => {
         if (parentPage === ParentPage.Premiums) {
@@ -155,147 +222,174 @@ const AutopayContainer = ({
         systematicProgramReason == Reason.PREMIUM &&
         checkCustomPolicy(policy, CarrierCode.Farmers, FarmersPlanCodes);
 
-    const processSubType = getProcessSubTypes(parentPage);
-
-    const steps: Step[] = [
-        {
-            component: (
-                <StartStep
-                    parentPage={parentPage}
-                    policy={policy}
-                    processType={Processes.SSW}
-                    setState={setAutopay as StartStepSetState}
-                    state={autopay}
-                    subtitle={
-                        !isSetUp &&
-                        (parentPage === ParentPage.Premiums ||
-                            parentPage === ParentPage.Loans)
-                            ? t(
-                                  translationKeyPrefix + '.start.subtitleManage'
-                              ) ?? ''
-                            : undefined
-                    }
-                    title={
-                        isSetUp
-                            ? t(
-                                  `allFields.${translationKeyPrefix}${
-                                      systematicProgramTablesEnabled
-                                          ? 'SystematicProgramTitleStart'
-                                          : 'TitleStart'
-                                  }`
-                              )
-                            : `${t(
-                                  `allFields.${translationKeyPrefix}${
-                                      systematicProgramTablesEnabled
-                                          ? 'SystematicProgramManageStart'
-                                          : 'ManageStart'
-                                  }`
-                              )}${
-                                  parentPage === ParentPage.Withdrawals
-                                      ? ` ${
-                                            autopay.arrangementType ===
-                                            ArrangementType.WITHDRAWAL
-                                                ? 'Withdrawal'
-                                                : 'RMD'
-                                        }`
-                                      : ''
-                              }`
-                    }
-                    trackEventProps={{
-                        type: transactionType,
-                        step: TransactionStep.Start,
-                    }}
-                    processSubType={processSubType}
-                />
-            ),
-            screenReaderLabel: startLabel,
-            index: 0,
-            text: startLabel,
-        },
-        {
-            component:
-                parentPage === ParentPage.Withdrawals ? (
-                    <WithdrawalAmount policy={policy} />
-                ) : (
-                    <Amount
-                        policy={policy}
-                        customFarmerCheck={customFarmerCheck}
-                    />
-                ),
-            screenReaderLabel: amountLabel,
-            index: 1,
-            text: amountLabel,
-        },
-        {
-            component:
-                parentPage == ParentPage.Withdrawals ? (
-                    <PayeesStep
-                        parentPage={ParentPage.Withdrawals}
-                        policy={policy as PolicyView}
-                        setState={setAutopay as PayeesStepSetState}
-                        state={autopay as any}
-                        trackEventProps={{
-                            type: transactionType,
-                            step: TransactionStep.Payees,
-                        }}
-                    />
-                ) : (
-                    <PayorStep
+    const steps: Step[] = useMemo(
+        () => [
+            {
+                component: (
+                    <StartStep
                         parentPage={parentPage}
                         policy={policy}
-                        setState={setAutopay as PayorStepSetState}
+                        processType={Processes.SSW}
+                        setState={setAutopay as StartStepSetState}
                         state={autopay}
+                        subtitle={
+                            !isSetUp &&
+                            (parentPage === ParentPage.Premiums ||
+                                parentPage === ParentPage.Loans)
+                                ? t(
+                                      translationKeyPrefix +
+                                          '.start.subtitleManage'
+                                  ) ?? ''
+                                : undefined
+                        }
+                        title={getTitle({
+                            isSetUp,
+                            t,
+                            translationKeyPrefix,
+                            systematicProgramTablesEnabled,
+                            parentPage,
+                            arrangementType: autopay.arrangementType,
+                        })}
                         trackEventProps={{
                             type: transactionType,
-                            step: TransactionStep.Payor,
+                            step: TransactionStep.Start,
                         }}
+                        processSubType={processSubType}
                     />
                 ),
-            screenReaderLabel: payorLabel,
-            index: 2,
-            text: payorLabel,
-        },
-        {
-            component: (
-                <PaymentStepComponent
-                    parentPage={parentPage}
-                    policy={policy}
-                    setState={setAutopay as PaymentStepSetState}
-                    state={autopay}
-                    validateTransaction={validateCall}
-                    trackEventProps={
-                        parentPage !== ParentPage.Withdrawals
-                            ? {
-                                  type: transactionType,
-                                  step: TransactionStep.Payment,
-                              }
-                            : undefined
-                    }
-                />
-            ),
-            screenReaderLabel: paymentLabel,
-            index: 3,
-            text: paymentLabel,
-        },
-        {
-            component: isSetUp ? (
-                <SetUpSummary policy={policy} />
-            ) : (
-                <ManageSummary policy={policy} />
-            ),
-            screenReaderLabel: summaryLabel,
-            index: 4,
-            text: summaryLabel,
-        },
-        {
-            component: <Confirm policy={policy} />,
-            screenReaderLabel: confirmLabel,
-            index: 5,
-            text: confirmLabel,
-        },
-    ];
+                screenReaderLabel: startLabel,
+                index: 0,
+                text: startLabel,
+                isVisible: () => hasCases,
+            },
+            {
+                component:
+                    parentPage === ParentPage.Withdrawals ? (
+                        <WithdrawalAmount policy={policy} />
+                    ) : (
+                        <Amount
+                            policy={policy}
+                            customFarmerCheck={customFarmerCheck}
+                        />
+                    ),
+                screenReaderLabel: amountLabel,
+                index: 1,
+                text: amountLabel,
+                isVisible: () => true,
+            },
+            {
+                component:
+                    parentPage == ParentPage.Withdrawals ? (
+                        <PayeesStep
+                            parentPage={ParentPage.Withdrawals}
+                            policy={policy as PolicyView}
+                            setState={setAutopay as PayeesStepSetState}
+                            state={autopay as any}
+                            trackEventProps={{
+                                type: transactionType,
+                                step: TransactionStep.Payees,
+                            }}
+                        />
+                    ) : (
+                        <PayorStep
+                            parentPage={parentPage}
+                            policy={policy}
+                            setState={setAutopay as PayorStepSetState}
+                            state={autopay}
+                            trackEventProps={{
+                                type: transactionType,
+                                step: TransactionStep.Payor,
+                            }}
+                        />
+                    ),
+                screenReaderLabel: payorLabel,
+                index: 2,
+                text: payorLabel,
+                isVisible: () => true,
+            },
+            {
+                component: (
+                    <PaymentStepComponent
+                        parentPage={parentPage}
+                        policy={policy}
+                        setState={setAutopay as PaymentStepSetState}
+                        state={autopay}
+                        validateTransaction={validateCall}
+                        trackEventProps={
+                            parentPage !== ParentPage.Withdrawals
+                                ? {
+                                      type: transactionType,
+                                      step: TransactionStep.Payment,
+                                  }
+                                : undefined
+                        }
+                    />
+                ),
+                screenReaderLabel: paymentLabel,
+                index: 3,
+                text: paymentLabel,
+                isVisible: () => true,
+            },
+            {
+                component: isSetUp ? (
+                    <SetUpSummary policy={policy} />
+                ) : (
+                    <ManageSummary policy={policy} />
+                ),
+                screenReaderLabel: summaryLabel,
+                index: 4,
+                text: summaryLabel,
+                isVisible: () => true,
+            },
+            {
+                component: <Confirm policy={policy} />,
+                screenReaderLabel: confirmLabel,
+                index: 5,
+                text: confirmLabel,
+                isVisible: () => true,
+            },
+        ],
+        [
+            parentPage,
+            policy,
+            isSetUp,
+            setAutopay,
+            autopay,
+            t,
+            startLabel,
+            amountLabel,
+            payorLabel,
+            paymentLabel,
+            summaryLabel,
+            confirmLabel,
+            customFarmerCheck,
+            PaymentStepComponent,
+            validateCall,
+            transactionType,
+            processSubType,
+            hasCases,
+            systematicProgramTablesEnabled,
+            translationKeyPrefix,
+        ]
+    );
 
-    return <WorkflowContainer policy={policy} steps={steps} />;
+    const filteredSteps: Step[] = useMemo(
+        () =>
+            steps
+                .filter((item: any) => item.isVisible?.())
+                .map((item: any, index: number) => ({ ...item, index })),
+        [steps]
+    );
+
+    return (
+        <>
+            {isLoading ? (
+                <PageLoader variant={PageLoaderVariant.Center} />
+            ) : (
+                <WorkflowContainer policy={policy} steps={filteredSteps} />
+            )}
+        </>
+    );
 };
 
 export default AutopayContainer;

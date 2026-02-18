@@ -1,0 +1,14 @@
+.popoverContainer {
+    width: auto;
+
+    color: var(--color-base-text-primary);
+    background-color: var(--color-base-surface-primary, #fff);
+
+    & > div {
+        margin-bottom: 0;
+    }
+
+    & div > button > svg {
+        color: var(--color-base-icon-action-text-link);
+    }
+}

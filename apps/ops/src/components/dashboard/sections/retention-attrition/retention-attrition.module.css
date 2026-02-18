@@ -1,0 +1,11 @@
+.retentionAttritionContainer {
+    --button-border-width: 1px;
+    --button-border-style: solid;
+    --button-border-radius: var(--measure-border-radius-radius-md);
+
+    display: flex;
+    border-radius: var(--button-border-radius);
+    border: var(--button-border-width) var(--button-border-style)
+        var(--color-base-border-border-light, #ededed);
+    color: var(--color-button-primary-button-primary-default-text);
+}

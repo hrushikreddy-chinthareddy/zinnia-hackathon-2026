@@ -13,11 +13,14 @@ import useDynamicSideSheet from '@deps/components/side-sheet/dynamic-side-sheet'
 import StepSideSheetContent, {
     doesStepHaveSidesheet,
 } from '@deps/components/side-sheet/side-sheet-case-step-details/case-side-sheet';
+import { stepsWithIndexAutomationCase } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/transactions-step-additional-data';
+import { TransactionsAdditionalDataStepIds } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/transactions-step-additional-data.types';
 import Tooltip from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -25,6 +28,7 @@ import { ReactComponent as NotStartedIcon } from '@deps/styles/elements/icons/al
 import { ReactComponent as CompletedIcon } from '@deps/styles/elements/icons/icons_outlined/check-circle.svg';
 import { ReactComponent as ExceptionIcon } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 import { formatTimestamp } from '@deps/utils/dates';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import Exceptions from './exceptions';
@@ -193,8 +197,16 @@ const Step = ({
     isAccordionOpen?: boolean;
 } & React.HTMLAttributes<HTMLLIElement>) => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
-    const hasSidesheet = doesStepHaveSidesheet(step);
+    const sideSheet = useSideSheetContextLegacy();
+    const { featureFlags } = useOptimizely();
+    const isIndexAutomationEnabled =
+        featureFlags[FEATURE_FLAGS.INDEX_AUTOMATION_CASE];
+    const isIndexAutomationStep = stepsWithIndexAutomationCase.includes(
+        step.id as TransactionsAdditionalDataStepIds
+    );
+    const hasSidesheet =
+        doesStepHaveSidesheet(step) &&
+        !(isIndexAutomationStep && !isIndexAutomationEnabled);
 
     const aiEnabledAdditional = step.stepAdditionalData?.find(
         (additional) => additional.label === StepAdditionalLabels.AIEnabledFlag

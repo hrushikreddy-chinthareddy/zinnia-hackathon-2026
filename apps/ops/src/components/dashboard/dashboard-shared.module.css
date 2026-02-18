@@ -160,7 +160,7 @@
 .exportLink {
     display: flex;
     align-items: center;
-    gap: var(--measure-dimension-gap-sm);
+    gap: var(--measure-dimension-gap-sm, 8px);
     cursor: pointer;
 }
 

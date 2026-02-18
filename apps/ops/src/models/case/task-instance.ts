@@ -74,6 +74,7 @@ export type ManagementTask<T = TaskStatus> = {
     cancellationReason?: string;
     taskDetails?: string;
     createdByPartyId?: string;
+    ciamaccess?: boolean;
 };
 
 export type TaskDocument = {
@@ -154,6 +155,8 @@ export interface TaskSideSheetProps {
     taskDescription?: string;
     taskName?: string;
     mappedDocuments?: TaskDocument[];
+    queue?: string;
+    carrier?: string;
     onTaskClaimSuccess?: () => void;
     onTaskUpdated?: (updatedTask: Task) => void;
 }
@@ -166,6 +169,8 @@ export interface TaskQueueDrawerProps {
     caseId?: string;
     taskDescription?: string;
     taskName?: string;
+    carrier?: string;
+    queue?: string;
 }
 
 export type UnassignedTask<T = TaskStatus> = {

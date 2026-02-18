@@ -8,6 +8,7 @@ import EmailCard from '@deps/containers/people-data-cards/email-card/email-card'
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { isEndDated } from '@deps/helpers/date.helpers';
 import PomAgentParty from '@deps/helpers/policy-sor/PomAgentParty';
 import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
@@ -49,6 +50,13 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                 : undefined,
     });
 
+    // show allocation card if there are any roles NOT endDated
+    const showAllocationCard = useMemo(() => {
+        return !!selectedPolicyPartyRoles?.some(
+            (role) => !isEndDated(role.endDate)
+        );
+    }, [selectedPolicyPartyRoles]);
+
     return (
         <div className="shadow-elevation-light-04">
             {isLoading && (
@@ -66,12 +74,19 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                     />
 
                     <hr className=" h-0.5 border-none bg-gray-100" />
-                    <AllocationCard
-                        allocation={agentData?.party?.partyPercentage}
-                        deathBenefit={null}
-                    />
 
-                    <hr className=" h-0.5 border-none bg-gray-100" />
+                    {showAllocationCard && (
+                        <>
+                            <AllocationCard
+                                deathBenefit={null}
+                                selectedPolicyPartyRoles={
+                                    selectedPolicyPartyRoles
+                                }
+                            />
+                            <hr className=" h-0.5 border-none bg-gray-100" />
+                        </>
+                    )}
+
                     <IdentificationCard
                         selectedPolicyParty={agentData}
                         isAnnuity={policyDetails.isAnnuity}

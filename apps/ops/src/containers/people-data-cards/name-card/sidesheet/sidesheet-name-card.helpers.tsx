@@ -28,6 +28,7 @@ export interface GetFormErrors {
     t: TFunction;
     dateOfSignature?: string;
     uploadedFiles: File[];
+    hasCase?: boolean;
 }
 
 interface NameDetailsProps {
@@ -67,10 +68,11 @@ export const getFormErrors = ({
     signaturePresentOnDocumentForAllOwners,
     dateOfSignature,
     uploadedFiles,
+    hasCase,
 }: GetFormErrors): Errors => {
     const errors: Errors = {};
 
-    if (caseId == null) {
+    if (caseId == null && hasCase) {
         errors.caseId = String(
             t('people.sideSheet.email.errors.missingCaseDocument')
         );

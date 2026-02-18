@@ -1,6 +1,9 @@
 import { useTranslation } from 'next-i18next';
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import PayeesStep, {
     PayeesStepSetState,
@@ -16,6 +19,7 @@ import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-ite
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWithdrawal } from '@deps/contexts/transactions/WithdrawalContext';
+import { useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import {
     validateFullSurrenderWithdrawal,
@@ -62,7 +66,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
             : TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
-    const validateCall = () => {
+    const validateCall = useCallback(() => {
         const query = buildWithdrawalsRequestBody(
             withdrawal,
             wireCheckPaymentsEnabled
@@ -79,100 +83,159 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                   policy.policyNumber,
                   query as PartialWithdrawalOneTimeRequest
               );
-    };
-
-    const steps: Step[] = [
-        {
-            component: (
-                <StartStep
-                    parentPage={ParentPage.Withdrawals}
-                    policy={policy}
-                    processType={Processes.Withdrawal}
-                    setState={setWithdrawal as StartStepSetState}
-                    state={withdrawal}
-                    title={t('withdrawals.start.title') as string}
-                    subtitle={t('withdrawals.start.subtitle') as string}
-                    trackEventProps={{
-                        type: transactionType,
-                        step: TransactionStep.Start,
-                    }}
-                    processSubType={[
-                        Processes.PartialWithdrawal,
-                        Processes.FullSurrender,
-                    ]}
-                />
-            ),
-            screenReaderLabel: startLabel,
-            index: 0,
-            text: startLabel,
-        },
-        {
-            component: <Amount policy={policy} />,
-            screenReaderLabel: amountLabel,
-            index: 1,
-            text: amountLabel,
-        },
-        {
-            component: <Taxes policy={policy as Policy} />,
-            screenReaderLabel: taxesLabel,
-            index: 2,
-            text: taxesLabel,
-        },
-        {
-            component: (
-                <PayeesStep
-                    parentPage={ParentPage.Withdrawals}
-                    policy={policy as Policy}
-                    setState={setWithdrawal as PayeesStepSetState}
-                    state={withdrawal}
-                    trackEventProps={{
-                        type: transactionType,
-                        step: TransactionStep.Payees,
-                    }}
-                />
-            ),
-            screenReaderLabel: payeeLabel,
-            index: 3,
-            text: payeeLabel,
-        },
-        {
-            component: wireCheckPaymentsEnabled ? (
-                <PaymentStepMoneyOut
-                    parentPage={ParentPage.Withdrawals}
-                    policy={policy}
-                    setState={setWithdrawal as PaymentStepSetState}
-                    state={withdrawal}
-                    validateTransaction={validateCall}
-                    transactionName={TransactionName.Withdrawal}
-                />
-            ) : (
-                <PaymentStep
-                    parentPage={ParentPage.Withdrawals}
-                    policy={policy}
-                    setState={setWithdrawal as PaymentStepSetState}
-                    state={withdrawal}
-                    validateTransaction={validateCall}
-                />
-            ),
-            screenReaderLabel: paymentLabel,
-            index: 4,
-            text: paymentLabel,
-        },
-        {
-            component: <Summary policy={policy as Policy} />,
-            screenReaderLabel: summaryLabel,
-            index: 5,
-            text: summaryLabel,
-        },
-        {
-            component: <Confirm policy={policy as Policy} />,
-            screenReaderLabel: confirmLabel,
-            index: 6,
-            text: confirmLabel,
-        },
+    }, [
+        withdrawal,
+        wireCheckPaymentsEnabled,
+        policy.product?.planCode,
+        policy.policyNumber,
+    ]);
+    const processSubType = [
+        Processes.PartialWithdrawal,
+        Processes.FullSurrender,
     ];
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policy.policyNumber,
+        process: [Processes.Withdrawal],
+        requestSubType: processSubType,
+        enabled: !!policy.policyNumber && !!featureFlags,
+    });
+    const hasCases =
+        Array.isArray(casesResponse?.data) && casesResponse.data.length > 0;
 
-    return <WorkflowContainer policy={policy} steps={steps} />;
+    const steps: Step[] = useMemo(
+        () => [
+            {
+                component: (
+                    <StartStep
+                        parentPage={ParentPage.Withdrawals}
+                        policy={policy}
+                        processType={Processes.Withdrawal}
+                        setState={setWithdrawal as StartStepSetState}
+                        state={withdrawal}
+                        title={t('withdrawals.start.title') as string}
+                        subtitle={t('withdrawals.start.subtitle') as string}
+                        trackEventProps={{
+                            type: transactionType,
+                            step: TransactionStep.Start,
+                        }}
+                        processSubType={[
+                            Processes.PartialWithdrawal,
+                            Processes.FullSurrender,
+                        ]}
+                    />
+                ),
+                screenReaderLabel: startLabel,
+                index: 0,
+                text: startLabel,
+                isVisible: () => hasCases,
+            },
+            {
+                component: <Amount policy={policy} />,
+                screenReaderLabel: amountLabel,
+                index: 1,
+                text: amountLabel,
+                isVisible: () => true,
+            },
+            {
+                component: <Taxes policy={policy as Policy} />,
+                screenReaderLabel: taxesLabel,
+                index: 2,
+                text: taxesLabel,
+                isVisible: () => true,
+            },
+            {
+                component: (
+                    <PayeesStep
+                        parentPage={ParentPage.Withdrawals}
+                        policy={policy as Policy}
+                        setState={setWithdrawal as PayeesStepSetState}
+                        state={withdrawal}
+                        trackEventProps={{
+                            type: transactionType,
+                            step: TransactionStep.Payees,
+                        }}
+                    />
+                ),
+                screenReaderLabel: payeeLabel,
+                index: 3,
+                text: payeeLabel,
+                isVisible: () => true,
+            },
+            {
+                component: wireCheckPaymentsEnabled ? (
+                    <PaymentStepMoneyOut
+                        parentPage={ParentPage.Withdrawals}
+                        policy={policy}
+                        setState={setWithdrawal as PaymentStepSetState}
+                        state={withdrawal}
+                        validateTransaction={validateCall}
+                        transactionName={TransactionName.Withdrawal}
+                    />
+                ) : (
+                    <PaymentStep
+                        parentPage={ParentPage.Withdrawals}
+                        policy={policy}
+                        setState={setWithdrawal as PaymentStepSetState}
+                        state={withdrawal}
+                        validateTransaction={validateCall}
+                    />
+                ),
+                screenReaderLabel: paymentLabel,
+                index: 4,
+                text: paymentLabel,
+                isVisible: () => true,
+            },
+            {
+                component: <Summary policy={policy as Policy} />,
+                screenReaderLabel: summaryLabel,
+                index: 5,
+                text: summaryLabel,
+                isVisible: () => true,
+            },
+            {
+                component: <Confirm policy={policy as Policy} />,
+                screenReaderLabel: confirmLabel,
+                index: 6,
+                text: confirmLabel,
+                isVisible: () => true,
+            },
+        ],
+        [
+            policy,
+            setWithdrawal,
+            withdrawal,
+            t,
+            startLabel,
+            amountLabel,
+            taxesLabel,
+            payeeLabel,
+            paymentLabel,
+            summaryLabel,
+            confirmLabel,
+            wireCheckPaymentsEnabled,
+            validateCall,
+            hasCases,
+            transactionType,
+        ]
+    );
+
+    const filteredSteps: Step[] = useMemo(
+        () =>
+            steps
+                .filter((item: any) => item.isVisible?.())
+                .map((item: any, index: number) => ({ ...item, index })),
+        [steps]
+    );
+
+    return (
+        <>
+            {isLoading ? (
+                <PageLoader variant={PageLoaderVariant.Center} />
+            ) : (
+                <WorkflowContainer policy={policy} steps={filteredSteps} />
+            )}
+        </>
+    );
 };
 
 export default WithdrawalContainer;

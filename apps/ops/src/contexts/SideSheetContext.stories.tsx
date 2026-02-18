@@ -8,11 +8,14 @@ import NavElement, {
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
 
-import { SideSheetProvider, useSideSheetContext } from './SideSheetContext';
+import {
+    SideSheetProviderLegacy,
+    useSideSheetContextLegacy,
+} from './SideSheetContext';
 
 export default {
     title: 'Context/SideSheet',
-    component: SideSheetProvider,
+    component: SideSheetProviderLegacy,
     decorators: [
         (Story) => (
             <div className="container">
@@ -20,20 +23,20 @@ export default {
             </div>
         ),
     ],
-} as Meta<typeof SideSheetProvider>;
+} as Meta<typeof SideSheetProviderLegacy>;
 
 export const MyApp = () => {
     return (
         <div className="flex">
-            <SideSheetProvider>
+            <SideSheetProviderLegacy>
                 <MyComponent></MyComponent>
-            </SideSheetProvider>
+            </SideSheetProviderLegacy>
         </div>
     );
 };
 
 const MyComponent = () => {
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const clickButton1 = () => {
         sideSheet.changeSideSheetContent('Header 1', <SideSheetContent1 />);
@@ -59,7 +62,7 @@ const SideSheetContent1: React.FC = () => {
 };
 
 const SideSheetContent2: React.FC = () => {
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const swapClick = () => {
         sideSheet.changeSideSheetContent(

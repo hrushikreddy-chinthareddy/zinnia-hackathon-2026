@@ -9,7 +9,7 @@ import {
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
 import { DynamicKey } from '@deps/containers/task-container/components/steps/claims/claims.type';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { DataFormattingTypes } from '@deps/models/case/task';
 import { AddressType } from '@zinnia/api-types/types/sor';
 
@@ -57,7 +57,7 @@ export function ChangeAddressTemplate({
 }: ChangeAddressTemplateProps) {
     const { customData, setCustomData } = formContext;
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const dynamicKey = customData.details.beneAddress
         ? DynamicKey.BENE_ADDRESS

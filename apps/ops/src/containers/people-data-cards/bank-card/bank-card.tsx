@@ -1,5 +1,6 @@
+import { SideSheet } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useState, useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import NavElement, {
     NavElementSize,
@@ -20,7 +21,6 @@ import SideSheetPeopleHeader, {
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -58,37 +58,20 @@ export const BankCard = ({
     });
     const { t: tAllFields } = useTranslation();
 
-    const sideSheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
 
     const [currentBankAccounts, setCurrentBankAccounts] = useState(
         filterPastEndDate(party?.bankDetails)
     );
+    const [activeSideSheet, setActiveSideSheet] =
+        useState<OpenSideSheet | null>(null);
+    const closeSideSheet = () => setActiveSideSheet(null);
     const { featureFlags } = useOptimizely();
     const shouldShowAddBankChange =
         featureFlags[FEATURE_FLAGS.BANK_CHANGE_TRANSACTION];
 
-    const openSidesheet = ({
-        bankAccount,
-        header: { action, transaction, typeTranslation },
-    }: OpenSideSheet) => {
-        sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader
-                action={action}
-                transaction={transaction}
-                typeTranslation={typeTranslation}
-            />,
-            <SideSheetBank
-                party={party}
-                planCode={planCode}
-                policyNumber={policyNumber}
-                policy={policyDetails.policy}
-                onCancel={() => sideSheet.handleOpen(false)}
-                setCurrentBankAccounts={setCurrentBankAccounts}
-                updatedBank={bankAccount as BankAccount}
-            />
-        );
-        sideSheet.handleOpen(true);
+    const openSidesheet = (params: OpenSideSheet) => {
+        setActiveSideSheet(params);
     };
     const isUserPermissionedToEditBankingDetails =
         isUserPermissionedToEditCards ?? false;
@@ -163,6 +146,39 @@ export const BankCard = ({
             ) : (
                 <EmptyCard text={t('general.empty') as string} />
             )}
+            <SideSheet
+                trigger={null}
+                open={!!activeSideSheet}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                        closeSideSheet();
+                    }
+                }}
+                preventCloseOnOutsideClick={false}
+                header={
+                    activeSideSheet ? (
+                        <SideSheetPeopleHeader
+                            action={activeSideSheet.header.action}
+                            transaction={activeSideSheet.header.transaction}
+                            typeTranslation={
+                                activeSideSheet.header.typeTranslation
+                            }
+                        />
+                    ) : undefined
+                }
+            >
+                {activeSideSheet && (
+                    <SideSheetBank
+                        onCancel={closeSideSheet}
+                        party={party}
+                        planCode={planCode}
+                        policy={policyDetails.policy}
+                        policyNumber={policyNumber}
+                        setCurrentBankAccounts={setCurrentBankAccounts}
+                        updatedBank={activeSideSheet.bankAccount as BankAccount}
+                    />
+                )}
+            </SideSheet>
         </CardContainer>
     );
 };

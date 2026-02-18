@@ -96,4 +96,4 @@ export const SOURCE = 'Self-Service Portal';
 export const NOT_YET_AVAILABLE = 'notYetAvailable';
 export const DEBOUNCE_INTERVAL_200 = 200;
 
-export const PROCESS_WITHOUT_DOCUMENT = 'Process without a document';
+export const PROCESS_WITHOUT_DOCUMENT = 'Proceed without linking case';

@@ -37,7 +37,7 @@ import { AssigneePopoverPositionMode } from '@deps/containers/task-management-qu
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import { formatDateTime, toTitleCase } from '@deps/helpers/string.helpers';
 import { useTaskAssignee } from '@deps/hooks/useTaskAssignee';
@@ -69,9 +69,14 @@ import {
     assignTaskAsAdmin,
     unAssignTaskAsAdmin,
 } from '@deps/queries/api/v1/task-admin';
-import { getTaskInstance, updateTask } from '@deps/queries/api/v2/task';
+import {
+    getTaskInstance,
+    getTaskSummaryById,
+    updateTask,
+} from '@deps/queries/api/v2/task';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
+import { checkQueuePermissions } from '@deps/queries/tanstack/permissionsQueries/permissions-queries';
 import { ReactComponent as ChevronDownIcon } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as CircleCheckIcon } from '@deps/styles/elements/icons/circles/circle-checkmark.svg';
 import { ReactComponent as BanIcon } from '@deps/styles/elements/icons/content/ban.svg';
@@ -217,6 +222,8 @@ export default function GlobalTaskSideSheet({
     taskDescription,
     taskName,
     featureFlagDecisions,
+    queue,
+    carrier,
     onTaskClaimSuccess,
     onTaskUpdated,
     mappedDocuments,
@@ -232,7 +239,6 @@ export default function GlobalTaskSideSheet({
     const [errorClaimingTask, setErrorClaimingTask] = useState(false);
     const [claimingTaskErrorMessage, setClaimingTaskErrorMessage] =
         useState('');
-
     const [searchValue, setSearchValue] = useState('');
     const [assignLoader, setAssignLoader] = useState(false);
     const [isAssigneePopoverOpen, setIsAssigneePopoverOpen] = useState(false);
@@ -244,34 +250,91 @@ export default function GlobalTaskSideSheet({
     const offset = 0;
 
     const { user } = useUser();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const isOpsManagerView = type === OPS_MANAGER_VIEW_TASK;
+
+    const getFinalAssignee = async (
+        task: ManagementTask,
+        isManagerView: boolean
+    ): Promise<string> => {
+        if (!isManagerView) {
+            return task.assignee ?? task.prefferedAssignee ?? '';
+        }
+        return await resolveAssigneeForTask(task);
+    };
 
     const {
         data: task,
         isLoading: loading,
         isFetching,
     } = useQuery({
-        queryKey: ['taskInstance', taskId, isOpsManagerView],
+        queryKey: [
+            'taskInstance',
+            taskId,
+            isOpsManagerView,
+            carrier,
+            queue,
+            user?.partyId,
+        ],
         queryFn: async () => {
-            const data = await getTaskInstance({ taskId });
-            if (data && !data.caseId) {
-                data.caseId = caseId;
-            }
-            if (!data) {
-                return;
-            }
+            const finalQueue =
+                carrier && queue
+                    ? `${carrier
+                          .toLowerCase()
+                          .trim()
+                          .replace(/\s+/g, '_')}_${queue.toLowerCase()}`
+                    : '';
+            const queueAccess = await checkQueuePermissions(
+                user?.partyId || '',
+                finalQueue
+            );
+            if (
+                queueAccess?.canRead !== false ||
+                queueAccess?.canWrite !== false
+            ) {
+                const data = await getTaskInstance({ taskId });
 
-            let finalAssignee = NO_ASSIGNEE;
+                if (!data) {
+                    return;
+                }
+                if (!data.caseId) {
+                    data.caseId = caseId;
+                }
+                const taskData = {
+                    ...data,
+                    ciamAccess: true,
+                };
 
-            if (!isOpsManagerView) {
-                finalAssignee = data.assignee ?? data.prefferedAssignee ?? '';
+                const finalAssignee = await getFinalAssignee(
+                    data,
+                    isOpsManagerView
+                );
+                return { ...taskData, assignee: finalAssignee };
             } else {
-                finalAssignee = await resolveAssigneeForTask(data);
+                if (
+                    queueAccess?.canRead === false &&
+                    queueAccess?.canWrite === false
+                ) {
+                    const data = await getTaskSummaryById({ taskId });
+
+                    if (!data) {
+                        return;
+                    }
+                    if (!data.caseId) {
+                        data.caseId = caseId;
+                    }
+                    const taskData = {
+                        ...data,
+                        ciamAccess: false,
+                    };
+                    const finalAssignee = await getFinalAssignee(
+                        data,
+                        isOpsManagerView
+                    );
+                    return { ...taskData, assignee: finalAssignee };
+                }
             }
-            return { ...data, assignee: finalAssignee };
         },
-        refetchOnMount: 'always',
     });
 
     const { allAssigneeList, assigneeLoading, refetch } = useTaskAssignee({
@@ -592,6 +655,8 @@ export default function GlobalTaskSideSheet({
                 taskStatus={task.status}
                 taskDescription={taskDescription}
                 taskName={taskName ?? task.taskName}
+                carrier={carrier}
+                queue={queue}
             />
         );
         sideSheet.changeSideSheetContent(
@@ -1026,7 +1091,9 @@ export default function GlobalTaskSideSheet({
                 handleStart={handleStart}
                 isGoToCaseButtonVisible={isOpsManagerView}
                 isViewTaskButtonVisible={isViewTaskButtonVisible || false}
-                isViewTaskButtonDisabled={!task.data}
+                isViewTaskButtonDisabled={
+                    !task.data || task.ciamAccess === false
+                }
                 isStartButtonDisabled={isStartButtonDisabled}
                 isStartButtonVisible={
                     shouldRenderStartButton ? isStartButtonVisible : false

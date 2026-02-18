@@ -19,7 +19,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     DocumentsDisplayType,
     KnowledgeBasePages,
@@ -53,7 +53,7 @@ const KnowledgeBaseSidenav = ({
     const { startNewChatSession, selectedClientId } = useKnowledgeBaseContext();
     const router = useRouter();
     const [isSearchFocused, setIsSearchFocused] = useState(false);
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
 
     const handleStartNewChat = () => {
         const currentPage = router.pathname.split('/').pop();

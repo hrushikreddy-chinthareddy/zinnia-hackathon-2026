@@ -1,5 +1,6 @@
+import { SideSheet } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useState, useContext } from 'react';
+import { useContext, useState } from 'react';
 
 import NavElement, {
     NavElementType,
@@ -27,7 +28,6 @@ import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import {
     NonFinancialTransactionActions,
     NonFinancialTransactions,
@@ -54,9 +54,11 @@ const AddressCard = ({
     });
     const { t: tAllFields } = useTranslation();
 
-    const sideSheet = useSideSheetContext();
     const { policyDetails } = useContext(PolicyData);
     const [showAdditional, setShowAdditional] = useState(false);
+    const [activeSideSheet, setActiveSideSheet] =
+        useState<OpenSideSheet | null>(null);
+    const closeSideSheet = () => setActiveSideSheet(null);
 
     const { addresses, preferredAddressIndicator } = party ?? {};
     const [currentAddresses, setCurrentAddresses] = useState<Address[]>(
@@ -68,31 +70,8 @@ const AddressCard = ({
 
     const showToggle = currentAddresses.length > 4;
 
-    const openSideSheet = ({
-        address,
-        header: { action, transaction, typeTranslation },
-    }: OpenSideSheet) => {
-        sideSheet.changeSideSheetContent(
-            <SideSheetPeopleHeader
-                action={action}
-                transaction={transaction}
-                typeTranslation={typeTranslation}
-            />,
-            <SideSheetAddress
-                isCurrentMailingAddress={
-                    party?.preferredAddressIndicator === address?.addressId
-                }
-                isOnlyAddress={currentAddresses?.length === 1}
-                onCancel={() => sideSheet.handleOpen(false)}
-                party={party}
-                planCode={planCode}
-                policy={policyDetails.policy}
-                policyNumber={policyNumber}
-                setCurrentAddresses={setCurrentAddresses}
-                updateAddress={address ?? undefined}
-            />
-        );
-        sideSheet.handleOpen(true);
+    const openSideSheet = (params: OpenSideSheet) => {
+        setActiveSideSheet(params);
     };
     const isUserPermissionedToEditAddress =
         isUserPermissionedToEditCards ?? false;
@@ -128,9 +107,7 @@ const AddressCard = ({
                                         action: NonFinancialTransactionActions.Add,
                                         transaction:
                                             NonFinancialTransactions.Address,
-                                        typeTranslation: t(
-                                            'general.new'
-                                        ) as string,
+                                        typeTranslation: `${t('general.new')}`,
                                     },
                                 })
                             }
@@ -177,6 +154,44 @@ const AddressCard = ({
             ) : (
                 <EmptyCard text={t('general.empty') as string} />
             )}
+            <SideSheet
+                trigger={null}
+                open={!!activeSideSheet}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                        closeSideSheet();
+                    }
+                }}
+                preventCloseOnOutsideClick={false}
+                header={
+                    activeSideSheet ? (
+                        <SideSheetPeopleHeader
+                            action={activeSideSheet.header.action}
+                            transaction={activeSideSheet.header.transaction}
+                            typeTranslation={
+                                activeSideSheet.header.typeTranslation
+                            }
+                        />
+                    ) : undefined
+                }
+            >
+                {activeSideSheet && (
+                    <SideSheetAddress
+                        isCurrentMailingAddress={
+                            party?.preferredAddressIndicator ===
+                            activeSideSheet.address?.addressId
+                        }
+                        isOnlyAddress={currentAddresses?.length === 1}
+                        onCancel={closeSideSheet}
+                        party={party}
+                        planCode={planCode}
+                        policy={policyDetails.policy}
+                        policyNumber={policyNumber}
+                        setCurrentAddresses={setCurrentAddresses}
+                        updateAddress={activeSideSheet.address ?? undefined}
+                    />
+                )}
+            </SideSheet>
         </CardContainer>
     );
 };

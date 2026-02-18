@@ -1,6 +1,4 @@
 import {
-    CarrierAvatar,
-    CarrierName,
     Heading,
     HeadingVariant,
     Icon,
@@ -9,6 +7,7 @@ import {
     TooltipPlacement,
 } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import Image from 'next/image';
 import { useTranslation } from 'next-i18next';
 
 import Badge from '@deps/components/badge/badge';
@@ -19,6 +18,7 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import useNavLink from '@deps/hooks/useNavLink';
 import { ProductTypeLabel, ProductTypes } from '@deps/types/product';
+import { getCarrierLogoByClientId } from '@deps/utils/carriers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import style from './illustration-details-header.module.css';
@@ -27,7 +27,7 @@ import IllustrationMenu from '../../case-details/illustration-item/illustration-
 
 type IllustrationDetailsHeaderProps = {
     title?: string;
-    carrier: CarrierName;
+    carrier: string;
     label?: string;
     eAppId?: string;
     eAppLink?: string;
@@ -48,6 +48,7 @@ export default function IllustrationDetailsHeader({
     const planType =
         ProductTypeLabel.get(product?.productType ?? ProductTypes.TERM) ??
         DEFAULT_ERROR_STRING;
+    const imageSrc = getCarrierLogoByClientId(carrier);
 
     const eappHtmlLink = eAppLink ? (
         <a
@@ -80,7 +81,16 @@ export default function IllustrationDetailsHeader({
 
     return (
         <div className={style.headerWrapper}>
-            <CarrierAvatar carrier={carrier} height={48} width={48} />
+            <div className={style.logoContainer}>
+                <Image
+                    src={imageSrc}
+                    alt={`${carrier} icon`}
+                    width={28}
+                    height={28}
+                    role="presentation"
+                    aria-hidden="true"
+                />
+            </div>
             <div className={style.headerContent}>
                 <div className={style.topLine}>
                     <div className={style.centerLine}>

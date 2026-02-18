@@ -9,7 +9,9 @@ export type ColumnId =
     | 'createdAt'
     | 'updatedAt'
     | 'policyNumber'
-    | 'scheduledDate';
+    | 'scheduledDate'
+    | 'agent'
+    | 'owner';
 
 export type Column<T> = {
     id: ColumnId;
@@ -40,6 +42,16 @@ export const TASK_COLUMNS: Column<AssignedTask | UnassignedTask>[] = [
         id: 'carrierCase',
         label: 'taskManagementQueue.carrierCase',
         defaultVisible: true,
+    },
+    {
+        id: 'agent',
+        label: 'allFields.agent',
+        defaultVisible: false,
+    },
+    {
+        id: 'owner',
+        label: 'allFields.owner',
+        defaultVisible: false,
     },
     {
         id: 'assignee',

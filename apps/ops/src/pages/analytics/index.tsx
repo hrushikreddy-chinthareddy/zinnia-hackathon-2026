@@ -42,6 +42,7 @@ import {
 import nextI18nextConfig from 'next-i18next.config';
 
 import Cases from './content/cases';
+import PoliciesAndContracts from './content/politics-and-contracts';
 import Usage from './content/usage';
 
 interface AnalyticsPageProps extends SegmentTrackedPageProps {
@@ -113,6 +114,9 @@ const AnalyticsPage = ({
                 <TabGroup defaultValue={slug} value={slug} ref={tabContentRef}>
                     <TabContent value={AnalyticsRouteValues.cases}>
                         <Cases tab={tab} />
+                    </TabContent>
+                    <TabContent value={AnalyticsRouteValues.policies}>
+                        <PoliciesAndContracts tab={tab} />
                     </TabContent>
                     <TabContent value={AnalyticsRouteValues.usage}>
                         <Usage tab={tab} />

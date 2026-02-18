@@ -12,7 +12,7 @@ import CreateClientCaseForm from '@deps/components/client-case/client-case-creat
 import { createClientCaseFromSureify } from '@deps/components/client-case/client-case-list/sureify-flow/create-client-case-from-sureify';
 import { canUserCreateClientCase } from '@deps/components/client-case/client-case-list/sureify-flow/validate-user-permission';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
@@ -47,7 +47,7 @@ export default function NewClientCase(
 ) {
     const router = useRouter();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const searchParams = useSearchParams();
     useSegmentPageTracker(
         props.additionalData.user,

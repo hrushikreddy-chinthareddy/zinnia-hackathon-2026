@@ -54,7 +54,6 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                     (totalPremiumRange) =>
                         totalPremiumRange.termLength === termLength
                 );
-
                 const notAvailabilityReasons = filterIneligibilityReasons(
                     (item &&
                         item.range == null &&

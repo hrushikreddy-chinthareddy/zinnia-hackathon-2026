@@ -1,0 +1,83 @@
+.exportContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--measure-dimension-margin-md);
+}
+
+.exportContainerButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+    cursor: pointer;
+
+    & span {
+        font: var(--typography-nav-links);
+        text-align: left;
+    }
+}
+
+.dataContainer {
+    display: flex;
+}
+
+.retentionAttritionTable colgroup col:nth-child(1) {
+    width: 50%;
+}
+
+.retentionAttritionTable colgroup col:nth-child(2) {
+    width: 30%;
+}
+
+.retentionAttritionTable colgroup col:nth-child(3) {
+    width: 20%;
+}
+
+.containerFullWidth {
+    width: 100%;
+}
+
+.tableWrapper {
+    border-right: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    border-bottom: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+}
+
+.tableWrapper table {
+    border-right: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+    border-bottom: var(--measure-dimension-stroke-sm) solid
+        var(--color-base-border-border-light);
+}
+
+.sortHeaderContent {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-xs);
+    justify-content: flex-end;
+}
+
+.srOnly {
+    position: absolute;
+    width: var(--measure-dimension-stroke-xs);
+    height: var(--measure-dimension-stroke-xs);
+    padding: 0;
+    margin: calc(-1 * var(--measure-dimension-stroke-xs));
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.errorMessageContainer {
+    display: grid;
+    grid-template-columns: min-content max-content;
+    gap: var(--measure-dimension-gap-sm);
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    min-height: var(--measure-dimension-min-height-state-message, 25rem);
+}

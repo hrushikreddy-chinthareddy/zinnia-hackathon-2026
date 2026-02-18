@@ -1,4 +1,4 @@
-import { groupBy, includes, isEqual, zip } from 'lodash';
+import { groupBy, includes, zip } from 'lodash';
 import {
     createContext,
     ReactNode,
@@ -106,6 +106,16 @@ export const QuickQuoteResultsProvider = ({
     quickQuoteParams,
     children,
 }: QuickQuoteResultsProviderProps) => {
+    /**
+     * Filters ineligibility reasons that are shared by all the periods or are
+     * nicotine-related
+     *
+     * First, get a list of reasons without repeats. Additionally
+     * remove nicotine ones since they would not need to be evaluated.
+     * This because nicotine depends on the filters directly and not from an input value.
+     *
+     * Then, validate and remove reasons that are not repeated across all perieods.
+     */
     const filterIneligibilityReasons = useCallback(
         (
             reasons: nonEligibleReasonByClass[] | undefined
@@ -117,7 +127,8 @@ export const QuickQuoteResultsProvider = ({
                 .filter(
                     (reason, index, self) =>
                         index === self.findIndex((t) => t.field == reason.field)
-                );
+                )
+                .filter((reason) => reason.field !== 'nicotine');
 
             filteredReasons.forEach((fr, i) => {
                 reasons.forEach((reason) => {
@@ -171,23 +182,17 @@ export const QuickQuoteResultsProvider = ({
      *  { field: 'face', ... }}
      * ]
      */
-    const sanitizeReasonArray = useCallback(
-        (
-            reasons: IneligibilityReason[] | undefined
-        ): IneligibilityReason[] | undefined => {
-            return reasons?.map((r) => {
-                // For errors other than age, return them
-                if (r.field !== 'age') return r;
+    const sanitizeAgeExpectedReason = useCallback(
+        (reason: IneligibilityReason): any | undefined => {
+            // For errors other than age, return them
+            if (reason.field !== 'age')
+                return 'expected' in reason ? reason.expected : undefined;
 
-                const minAge = r.expected[0];
-                // If the error was due to the age is lesser than the minimun, override the max range to homologate with other reasons
-                const maxAge = r.actual <= minAge ? 0 : r.expected[1];
+            const minAge = reason.expected[0];
+            // If the error was due to the age is lesser than the minimun, override the max range to homologate with other reasons
+            const maxAge = reason.actual <= minAge ? 0 : reason.expected[1];
 
-                return {
-                    ...r,
-                    expected: [minAge, maxAge],
-                };
-            });
+            return [minAge, maxAge];
         },
         []
     );
@@ -196,33 +201,56 @@ export const QuickQuoteResultsProvider = ({
         (
             reasons: TermQuickQuoteRiderNotAvailableItem[]
         ): TermQuickQuoteRiderNotAvailableItem[] => {
-            const grouped = reasons.reduce(
-                (acc: TermQuickQuoteRiderNotAvailableItem[], reason) => {
-                    if (!reason.reasons) return acc;
+            // Group reasons to their corresponding termLengths
+            const reasonMap: Map<
+                string,
+                { termLengths: number[]; reason: IneligibilityReason }
+            > = new Map();
 
-                    const accReason = acc.find((a) =>
-                        isEqual(
-                            sanitizeReasonArray(a.reasons),
-                            sanitizeReasonArray(reason.reasons)
-                        )
-                    );
+            for (const item of reasons) {
+                if (!item.reasons) break;
+                for (const reason of item.reasons) {
+                    const key = JSON.stringify({
+                        field: reason.field,
+                        reason: reason.reason,
+                        expected: sanitizeAgeExpectedReason(reason),
+                        actual: 'actual' in reason ? reason.actual : undefined,
+                    });
 
-                    // If not reason is already found in the accumulator, add it
-                    if (!accReason) {
-                        acc.push(reason);
-                    } else {
-                        // If found, add the term legth to the existing one
-                        accReason.termLengths.push(...reason.termLengths);
+                    if (!reasonMap.has(key)) {
+                        reasonMap.set(key, { termLengths: [], reason });
                     }
 
-                    return acc;
-                },
-                []
-            );
+                    reasonMap.get(key)?.termLengths.push(...item.termLengths);
+                }
+            }
 
-            return grouped;
+            // Group reason that share the same termLength
+            const groupMap: Map<
+                string,
+                { termLengths: number[]; reasons: IneligibilityReason[] }
+            > = new Map();
+
+            for (const { termLengths, reason } of Array.from(
+                reasonMap.values()
+            )) {
+                const key = JSON.stringify([...termLengths]);
+
+                if (!groupMap.has(key)) {
+                    groupMap.set(key, {
+                        termLengths: [...termLengths],
+                        reasons: [],
+                    });
+                }
+
+                groupMap.get(key)?.reasons.push(reason);
+            }
+
+            const result = Array.from(groupMap.values());
+
+            return result;
         },
-        [sanitizeReasonArray]
+        [sanitizeAgeExpectedReason]
     );
 
     // TODO: Get real variations based on params
@@ -320,7 +348,6 @@ export const QuickQuoteResultsProvider = ({
                                     return item.variant.termLength;
                                 }
                             );
-
                             const extractNotAvailabilityReason = (
                                 data: WrappedIllustrationResult[]
                             ) =>
@@ -328,7 +355,7 @@ export const QuickQuoteResultsProvider = ({
                                     (
                                         item
                                     ): item is WrappedErrorIllustrationResult =>
-                                        item.error != null
+                                        item.error == null
                                 )?.variant?.notAvailabilityReasonField;
 
                             const extractRiderNotAvailabilityReason = (
@@ -393,6 +420,7 @@ export const QuickQuoteResultsProvider = ({
                                         if (notAvailabilityReasonField) {
                                             return {
                                                 termLength,
+                                                range,
                                                 available: false,
                                                 notAvailabilityReasonField,
                                                 error: undefined,
@@ -441,6 +469,7 @@ export const QuickQuoteResultsProvider = ({
                                         if (notAvailabilityReasonField) {
                                             return {
                                                 termLength,
+                                                range,
                                                 available: false,
                                                 notAvailabilityReasonField,
                                                 error: undefined,

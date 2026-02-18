@@ -10,7 +10,7 @@ import NavElement, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
+import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 
 export const EditAllocationSuccess = ({
     caseId,
@@ -18,7 +18,7 @@ export const EditAllocationSuccess = ({
     policyOwner,
 }: {
     caseId: string;
-    sideSheet: SideSheetContextProps;
+    sideSheet: SideSheetContextLegacyProps;
     policyOwner: string;
 }) => {
     const { t } = useTranslation();

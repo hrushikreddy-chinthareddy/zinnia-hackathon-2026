@@ -2,6 +2,9 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useEffect, useMemo } from 'react';
 
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import StartStep, {
     StartStepSetState,
@@ -9,7 +12,9 @@ import StartStep, {
 } from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
 import { PolicyRole, RoleLabel, SourceType } from '@deps/constants/policy';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useRoleChange } from '@deps/contexts/RoleChangeContext';
+import { useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
@@ -89,6 +94,18 @@ const RoleChangeContainer = ({
         }
     };
 
+    const { featureFlags } = useOptimizely();
+    const processSubType = getProcessSubType();
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policy.policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: processSubType.length ? processSubType : undefined,
+        enabled: !!policy.policyNumber && !!featureFlags,
+    });
+
+    const hasCases =
+        Array.isArray(casesResponse?.data) && casesResponse.data.length > 0;
+
     const steps = useMemo(
         () => [
             {
@@ -113,8 +130,9 @@ const RoleChangeContainer = ({
                 ),
                 screenReaderLabel: t('tabs.start'),
                 text: t('tabs.start'),
-                isVisible: () => true,
+                isVisible: () => hasCases,
             },
+
             {
                 ariaLabel: t('tabs.roleDetails', { roleLabel }),
                 isVisible: () => true,
@@ -188,7 +206,7 @@ const RoleChangeContainer = ({
                 text: t('tabs.confirm'),
             },
         ],
-        [roleData.caseId]
+        [roleData.caseId, hasCases]
     );
 
     const filteredSteps: Step[] = useMemo(
@@ -196,15 +214,21 @@ const RoleChangeContainer = ({
             steps
                 .filter((item: any) => item.isVisible?.())
                 .map((item: any, index: number) => ({ ...item, index })),
-        [steps]
+        [steps, hasCases]
     );
 
     return (
-        <WorkflowContainer
-            policy={policy}
-            steps={filteredSteps}
-            stepWidth={DEFAULT_STEP_WIDTH}
-        />
+        <>
+            {isLoading ? (
+                <PageLoader variant={PageLoaderVariant.Center} />
+            ) : (
+                <WorkflowContainer
+                    policy={policy}
+                    steps={filteredSteps}
+                    stepWidth={DEFAULT_STEP_WIDTH}
+                />
+            )}
+        </>
     );
 };
 

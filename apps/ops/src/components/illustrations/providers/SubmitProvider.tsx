@@ -3,11 +3,11 @@ import { QuestionnaireEngine } from '@zinnia/form-engine-sdk';
 import { useRouter } from 'next/router';
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react';
 
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     editIllustrationToClientCase,
     saveIllustrationToClientCase,
-} from '@deps/queries/api/v1/client-cases';
+} from '@deps/queries/api/v1/client-case-manager';
 import { createIllustration } from '@deps/queries/api/v3/illustrations';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import {
@@ -47,7 +47,7 @@ export function SubmitProvider({
 }: SubmitProviderProps) {
     const { questionnaireEngine } = useQuestionnaireEngine();
     const queryClient = useQueryClient();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const router = useRouter();
 
     const createIllustrationMutation = useMutation({

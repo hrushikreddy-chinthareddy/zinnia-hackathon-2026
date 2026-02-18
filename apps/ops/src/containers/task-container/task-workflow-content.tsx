@@ -3,7 +3,7 @@ import { useContext, useMemo } from 'react';
 
 import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/global-values-nb-bar';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
 import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
@@ -27,7 +27,7 @@ export const TaskWorkflowContent = ({
     const { t } = useTranslation(TranslationFiles.COMMON);
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
     const { task, mappedDocuments } = useContext(TaskDataContext);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const handleProgressBarClick = (step: Step) => {
         if (
@@ -46,6 +46,8 @@ export const TaskWorkflowContent = ({
                 caseId={caseId}
                 type={'task'}
                 mappedDocuments={mappedDocuments}
+                queue={task.queue ?? ''}
+                carrier={carrierId}
             />
         );
         sideSheet.changeSideSheetContent(

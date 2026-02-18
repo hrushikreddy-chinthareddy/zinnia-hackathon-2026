@@ -186,7 +186,7 @@ interface TermQuickQuoteAvailableDataItem extends TermQuickQuoteBaseDataItem {
 }
 
 interface TermQuickQuoteNotAvailableItem extends TermQuickQuoteBaseDataItem {
-    range: undefined;
+    range: number | NumberOrRange | undefined;
     notAvailabilityReasonField: nonEligibleReasonByClass[] | undefined;
     error: undefined;
 }

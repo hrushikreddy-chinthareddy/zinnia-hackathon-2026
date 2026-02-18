@@ -12,7 +12,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { checkEligibilityFundAllocation } from '@deps/queries/api/fund-allocation';
@@ -89,7 +89,7 @@ const FundsCard = ({
         checkElligibility();
     }, []);
     // Sidesheet Support
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSideBar = () => {
         sideSheet.changeSideSheetContent(
             t('fundAllocation.editAllocationsTitle') as string,

@@ -43,14 +43,17 @@ export const useReRegSignatureStepConfig = (
                     SignatureValidationTypeWithdrawal.Owner
             );
 
-            // No choice made for signature
-            if (
-                ownerSignature?.isSigned !== false &&
-                !ownerSignature?.isSigned
-            ) {
-                errors[
-                    `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
-                ] = t('signatureShouldBePresent');
+            // Only validate if owner signature exists in the array
+            if (ownerSignature) {
+                // No choice made for signature
+                if (
+                    ownerSignature?.isSigned !== false &&
+                    !ownerSignature?.isSigned
+                ) {
+                    errors[
+                        `${SignatureValidationTypeWithdrawal.Owner}${SignatureFieldNames.SignaturePresent}`
+                    ] = t('signatureShouldBePresent');
+                }
             }
 
             return errors;
@@ -178,29 +181,6 @@ export const useReRegSignatureStepConfig = (
                           ],
                           signatureType:
                               SignatureValidationTypeWithdrawal.IrrevocableBeneficiary,
-                      },
-                  ]
-                : []),
-            ...(ownerState?.toUpperCase() === 'MA' && carrierId === 'FLIC'
-                ? [
-                      {
-                          key: `sig-val-witness`,
-                          fields: [
-                              {
-                                  component: SignatureFields.SignatureType,
-                                  key: 'witness-type',
-                              },
-                              {
-                                  component: SignatureFields.SignaturePresent,
-                                  key: 'witness-sign-present',
-                              },
-                              {
-                                  component: SignatureFields.SignatureDate,
-                                  key: 'witness-date',
-                              },
-                          ],
-                          signatureType:
-                              SignatureValidationTypeWithdrawal.Witness,
                       },
                   ]
                 : []),

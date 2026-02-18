@@ -1,3 +1,4 @@
+import { FieldStatus, Label, Select } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -16,7 +17,6 @@ import Field, {
     FieldVariant,
 } from '@deps/components/fields/field';
 import Radio from '@deps/components/radio/radio';
-import SelectSimple from '@deps/components/select/select';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
@@ -43,6 +43,7 @@ import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analy
 import { getFirstLastName } from '@deps/helpers/party-info-helpers';
 import { buildFullNameFromParty } from '@deps/helpers/string.helpers';
 import { mapAccountTypeToTranslation } from '@deps/helpers/translation.helpers';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import {
     hasErrorsAndFocus,
     useFocusOnError,
@@ -164,6 +165,13 @@ const SideSheetBank = ({
     const isDelete = action === NonFinancialTransactionActions.Delete;
     const getAction = GetAction(isAdd, isDelete);
 
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.BankChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
+
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
             body: {
@@ -206,7 +214,13 @@ const SideSheetBank = ({
     };
 
     const handleValidation = async () => {
-        const errors = getFormErrors({ bankAccount, caseId, t, isDelete });
+        const errors = getFormErrors({
+            bankAccount,
+            caseId,
+            t,
+            isDelete,
+            hasCase: hasAnyCaseResult,
+        });
         setCurrentErrors(errors);
         if (hasErrorsAndFocus(errors, triggerErrorFocus)) return;
         let response;
@@ -379,23 +393,29 @@ const SideSheetBank = ({
             break;
     }
 
+    if (isLoading) {
+        return <LoadingState />;
+    }
+
     return (
-        <div ref={errorRef} className="flex flex-col p-8">
+        <div ref={errorRef} className="flex flex-col">
             <div className="flex flex-col gap-4">
-                <CaseDocumentSelect
-                    caseId={caseId}
-                    caseDocumentOptions={caseDocumentOptions}
-                    currentErrors={currentErrors}
-                    policyNumber={policyNumber}
-                    processType={Processes.PolicyUpdate}
-                    setBody={setBody as SetStateCaseId}
-                    setCaseDocumentOptions={setCaseDocumentOptions}
-                    setCurrentErrors={setCurrentErrors}
-                    setViewState={setViewState}
-                    processSubType={[Processes.BankChange]}
-                    correlationId={correlationIdFromRoute}
-                    body={body}
-                />
+                {hasAnyCaseResult && (
+                    <CaseDocumentSelect
+                        caseId={caseId}
+                        caseDocumentOptions={caseDocumentOptions}
+                        currentErrors={currentErrors}
+                        policyNumber={policyNumber}
+                        processType={Processes.PolicyUpdate}
+                        setBody={setBody as SetStateCaseId}
+                        setCaseDocumentOptions={setCaseDocumentOptions}
+                        setCurrentErrors={setCurrentErrors}
+                        setViewState={setViewState}
+                        processSubType={[Processes.BankChange]}
+                        correlationId={correlationIdFromRoute}
+                        body={body}
+                    />
+                )}
                 <Radio
                     aria-label={t('labels.accountType') as string}
                     items={accountTypeOptions}
@@ -488,18 +508,22 @@ const SideSheetBank = ({
                             : FieldVariant.Default
                     }
                 />
-                <SelectSimple
-                    aria-label={t('fieldLabels.purpose') as string}
+                <Select
+                    triggerLabel={t('fieldLabels.purpose') as string}
                     disabled={isDelete}
-                    label={t('fieldLabels.purpose') as string}
-                    onChange={(value) => {
+                    label={<Label>{t('fieldLabels.purpose') as string}</Label>}
+                    fieldStatus={FieldStatus.DEFAULT}
+                    onValueChange={(value) => {
                         setBankAccount((prevState) => ({
                             ...prevState,
                             bankAccountPurpose: value as BankAccountPurpose,
                         }));
                     }}
-                    options={purposeOptions}
-                    size={FieldSize.Small}
+                    options={purposeOptions.map((o) => ({
+                        value: o.value,
+                        textValue: o.label,
+                    }))}
+                    fieldSize="small"
                     value={bankAccount.bankAccountPurpose}
                 />
             </div>
