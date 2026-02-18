@@ -238,12 +238,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                     return serverSidePropsLogout();
                 }
 
+                const upsertIfExists =
+                    !!featureFlagDecisions?.[
+                        FEATURE_FLAGS
+                            .CASE_MANAGEMENT_SUREIFY_FLOW_UPSERT_IF_EXISTS
+                    ];
+
                 return merge(
                     { props: commonProps },
                     await createClientCaseFromSureify(
                         eAppId,
                         accessToken,
-                        loggingContext
+                        loggingContext,
+                        upsertIfExists
                     )
                 );
             }
