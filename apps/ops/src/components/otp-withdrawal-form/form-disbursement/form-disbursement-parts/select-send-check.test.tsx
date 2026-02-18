@@ -30,7 +30,7 @@ jest.mock('../form-disbursement.helpers', () => ({
             label: 'Third Party',
             value: 'Disburse to Third Party(Not a Financial Institution / Charity)',
         },
-        { label: 'Different Address', value: 'Disburse to different Address' },
+        { label: 'Different Address', value: 'Disburse to Different Address' },
     ],
 }));
 

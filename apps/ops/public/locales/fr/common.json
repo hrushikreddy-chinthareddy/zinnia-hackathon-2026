@@ -4055,7 +4055,7 @@
                 "disburseToCharity": "Verser à un organisme de bienfaisance",
                 "disburseToAnnuitant": "Verser au rentier",
                 "disburseToAnnuitantDlic": "Verser au rentier (Quand le titulaire est une fiducie révocable)",
-                "disburseToDifferentAddress": "Verser à une adresse différente",
+                "disburseToDifferentAddress": "Verser à une Adresse Différente",
                 "disburseToThirdParty": "Verser à un tiers (pas une institution financière / organisme de bienfaisance)",
                 "disburseToThirdPartyNotCharityNotFinancial": "Verser à un tiers (pas une institution financière)",
                 "acordFormReceived": "Le formulaire ACORD a-t-il été reçu ?",
