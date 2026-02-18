@@ -33,7 +33,7 @@ const patchClientCaseMock = jest.mocked(patchClientCase);
 const loggingContext = {} as LoggingContext;
 
 describe('createClientCaseFromSureify', () => {
-    it('updates and redirects if a client case exists', async () => {
+    it('updates and redirects if a client case exists and feature flag is enabled', async () => {
         const newBusinessObject = {
             caseId: 'caseId',
         } as NewBusiness;
@@ -52,7 +52,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            true // upsertIfExists
         );
 
         expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
@@ -106,7 +107,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -165,7 +167,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(createClientCaseMock).toHaveBeenCalledWith(
@@ -205,7 +208,8 @@ describe('createClientCaseFromSureify', () => {
             const { props, redirect } = await createClientCaseFromSureify(
                 'eappid',
                 'accessToken',
-                loggingContext
+                loggingContext,
+                false // upsertIfExists
             );
 
             expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -244,7 +248,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -289,7 +294,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(createClientCaseMock).toHaveBeenCalledWith(
