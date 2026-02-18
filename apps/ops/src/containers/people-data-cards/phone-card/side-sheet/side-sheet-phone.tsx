@@ -77,7 +77,7 @@ import {
     PhoneType,
     Party,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
@@ -569,7 +569,7 @@ export const SideSheetPhone = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: TransactionTypeSchemaEnum.PHONE_NUMBER_CHANGE,
+                    type: TransactionTypeEnum.PHONE_NUMBER_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

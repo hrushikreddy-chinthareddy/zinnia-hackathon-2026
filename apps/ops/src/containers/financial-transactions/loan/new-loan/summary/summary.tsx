@@ -32,7 +32,7 @@ import { TransactionStep } from '@deps/types/segment-analytics';
 import {
     Address,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
@@ -216,7 +216,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     submitLabel={t('submitLoan') as string}
                     // TODO MG: pass up correlationId
                     trackEventProps={{
-                        type: TransactionTypeSchemaEnum.NEW_LOAN,
+                        type: TransactionTypeEnum.NEW_LOAN,
                         step: TransactionStep.Summary,
                     }}
                 />

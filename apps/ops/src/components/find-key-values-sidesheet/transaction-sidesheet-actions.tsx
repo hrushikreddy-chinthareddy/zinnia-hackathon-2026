@@ -12,7 +12,7 @@ import { TransactionPermission } from '@deps/utils/auth';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
@@ -47,12 +47,12 @@ const isTransactionEligibleForCancel = (transaction: Transaction): boolean => {
 
 const getCancelCta = (transaction: Transaction, t: TFunction): string => {
     switch (transaction?.transactionType) {
-        case TransactionTypeSchemaEnum.FULL_SURRENDER:
+        case TransactionTypeEnum.FULL_SURRENDER:
             return t('policy.history.sidesheet.cancelSurrender');
-        case TransactionTypeSchemaEnum.NEW_LOAN:
+        case TransactionTypeEnum.NEW_LOAN:
             return t('policy.history.sidesheet.cancelLoan');
-        case TransactionTypeSchemaEnum.ONE_TIME_PREMIUM:
-        case TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM:
             return t('policy.history.sidesheet.cancelPayment');
         default:
             return t('allFields.cancel');

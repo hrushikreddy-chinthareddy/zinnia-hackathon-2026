@@ -22,7 +22,7 @@ import { TransactionStep } from '@deps/types/segment-analytics';
 import {
     FeatureType,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 const EffectiveDate = ({
@@ -78,7 +78,7 @@ const EffectiveDate = ({
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
                     trackEventProps={{
-                        type: TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION,
+                        type: TransactionTypeEnum.FREE_LOOK_CANCELLATION,
                         step: TransactionStep.Date,
                     }}
                 />

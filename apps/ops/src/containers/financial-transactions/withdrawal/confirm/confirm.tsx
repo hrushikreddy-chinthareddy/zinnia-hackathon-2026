@@ -34,10 +34,7 @@ import {
     FullSurrenderRequest,
     PartialWithdrawalOneTimeRequest,
 } from '@zinnia/api-types/types/bpm';
-import {
-    Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
-} from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalType } from '../amount/types';
 
@@ -97,8 +94,8 @@ const Confirm = ({ policy }: ConfirmProps) => {
                 authSessionId: sessionId,
                 userId: partyId,
                 type: isSurrender
-                    ? TransactionTypeSchemaEnum.FULL_SURRENDER
-                    : TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
+                    ? TransactionTypeEnum.FULL_SURRENDER
+                    : TransactionTypeEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
                 correlationId: requestBody.correlationId,
             }
         );

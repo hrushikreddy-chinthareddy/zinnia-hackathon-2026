@@ -36,7 +36,7 @@ import { TransactionStep } from '@deps/types/segment-analytics';
 import {
     Address,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 interface SummaryProps {
@@ -216,7 +216,7 @@ const Summary = ({ policy }: SummaryProps) => {
                     planCode={product?.planCode}
                     policyNumber={policyNumber}
                     trackEventProps={{
-                        type: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                        type: TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Summary,
                     }}
                 />

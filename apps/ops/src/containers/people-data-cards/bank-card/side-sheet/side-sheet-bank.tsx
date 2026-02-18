@@ -73,7 +73,7 @@ import {
     BankAccountPurpose,
     Party,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 dayjs.extend(utc);
@@ -556,7 +556,7 @@ const SideSheetBank = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: TransactionTypeSchemaEnum.BANK_ACCOUNT_CHANGE,
+                    type: TransactionTypeEnum.BANK_ACCOUNT_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

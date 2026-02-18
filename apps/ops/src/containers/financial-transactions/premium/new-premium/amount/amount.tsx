@@ -33,7 +33,7 @@ import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import {
     FeatureType,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -249,7 +249,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Premiums}
                     trackEventProps={{
-                        type: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                        type: TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Amount,
                     }}
                 />

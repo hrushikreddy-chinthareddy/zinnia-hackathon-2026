@@ -18,7 +18,7 @@ import { TransactionPermission } from '@deps/utils/auth';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
 
@@ -163,7 +163,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
     let SidesheetContent;
 
     switch (true) {
-        case transactionType === TransactionTypeSchemaEnum.NEW_LOAN:
+        case transactionType === TransactionTypeEnum.NEW_LOAN:
             SidesheetContent = (
                 <SideSheetNewLoanTransactionContent
                     t={t}
@@ -175,7 +175,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
             );
             break;
         case withdrawalFinancialTransactions.includes(
-            transactionType as TransactionTypeSchemaEnum
+            transactionType as TransactionTypeEnum
         ):
             SidesheetContent = (
                 <SideSheetWithdrawalContent
@@ -251,9 +251,9 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                         <div className="flex flex-col">
                             {![
                                 ...withdrawalFinancialTransactions,
-                                TransactionTypeSchemaEnum.NEW_LOAN,
+                                TransactionTypeEnum.NEW_LOAN,
                             ].includes(
-                                transactionType as TransactionTypeSchemaEnum
+                                transactionType as TransactionTypeEnum
                             ) && (
                                 <div className={cancelCta ? 'mb-4' : ''}>
                                     <Content
@@ -333,7 +333,7 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                                             className={clsx(
                                                 '!justify-start !p-0',
                                                 transactionType ===
-                                                    TransactionTypeSchemaEnum.FULL_SURRENDER
+                                                    TransactionTypeEnum.FULL_SURRENDER
                                                     ? 'mb-6'
                                                     : ''
                                             )}

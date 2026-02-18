@@ -24,10 +24,7 @@ import { Processes } from '@deps/models/case/case';
 import { validateNewLoan } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import {
-    Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
-} from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import Confirm from './confirm/confirm';
@@ -92,7 +89,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                         title={t('start.title') as string}
                         subtitle={t('start.subtitle') as string}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.NEW_LOAN,
+                            type: TransactionTypeEnum.NEW_LOAN,
                             step: TransactionStep.Start,
                         }}
                     />
@@ -117,7 +114,7 @@ const NewLoanContainer = ({ policy }: NewLoanContainerProps) => {
                         setState={setNewLoan as PayeesStepSetState}
                         state={newLoan}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.NEW_LOAN,
+                            type: TransactionTypeEnum.NEW_LOAN,
                             step: TransactionStep.Payees,
                         }}
                     />

@@ -27,10 +27,7 @@ import { useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import { validateOneTimePremium } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import {
-    Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
-} from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import { buildNewPremiumRequestBody } from './new-premium.helpers';
 
@@ -87,7 +84,7 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                         title={t('newPremium.start.title') as string}
                         subtitle={t('newPremium.start.subtitle') as string}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                            type: TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
                             step: TransactionStep.Start,
                         }}
                     />
@@ -117,7 +114,7 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                         setState={setPremium as PayorStepSetState}
                         state={premium}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                            type: TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
                             step: TransactionStep.Payor,
                         }}
                     />
@@ -136,7 +133,7 @@ const NewPremiumContainer = ({ policy }: NewPremiumContainerProps) => {
                         state={premium}
                         validateTransaction={validateCall}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM,
+                            type: TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
                             step: TransactionStep.Payment,
                         }}
                     />

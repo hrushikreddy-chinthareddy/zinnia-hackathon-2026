@@ -12,7 +12,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import {
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
     Transaction,
     TransactionPayor,
     TransactionStatus,
@@ -48,7 +48,7 @@ export const getAutopayPremiumSideSheetValues = (
             t
         );
         const isPayment =
-            transactionType === TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT;
+            transactionType === TransactionTypeEnum.SUBSEQUENT_PAYMENT;
         const reverseRecreateEnabled =
             featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
 
@@ -112,7 +112,7 @@ export const getInitialPremiumSideSheetValues = (
 
     const amount =
         isCanceled ||
-        transactionType === TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM
+        transactionType === TransactionTypeEnum.PAYMENT_INITIAL_PREMIUM
             ? paymentAmount
             : appliedAmount;
 
@@ -158,8 +158,7 @@ export const getOneTimePremiumSideSheetValues = (
         const isPending = status === ('Pending' as TransactionStatus);
         const isCanceled = status === ('Canceled' as TransactionStatus);
         const isPayment =
-            transactionType ===
-            TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM;
+            transactionType === TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM;
 
         const amount = isCanceled || isPayment ? paymentAmount : appliedAmount;
 
@@ -194,8 +193,8 @@ export const getOneTimePremiumSideSheetValues = (
                 isCanceled || isPending ? paymentAmount : requestedAmount,
             transactionId,
             transactionType: isPending
-                ? TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM
-                : TransactionTypeSchemaEnum.ONE_TIME_PREMIUM,
+                ? TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM
+                : TransactionTypeEnum.ONE_TIME_PREMIUM,
             transactionValue: amount || requestedAmount,
         };
     } catch (error) {

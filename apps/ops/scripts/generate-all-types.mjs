@@ -111,11 +111,34 @@ async function generateTypes() {
                 parser: {
                     transforms: {
                         // Extract inline enums to root level with custom naming
-                        // TODO: hey-api currently does not support meaningfully naming rootenums
+                        // TODO: hey-api currently only passes the direct parent name as the enum name; we should request the full breadcrumb as a feature
                         enums: {
                             mode: 'root',
                             name: (name) => `${name}Enum`,
                             case: 'PascalCase',
+                        },
+                    },
+                    filters: {
+                        operations: {
+                            // Path definitions do not affect TS code generation, but can potentially mess up enum names.
+                            // Note that currently including an empty array (incorrectly) ignores this override.
+                            // Passing an empty string essentially tells the filter to ignore all operations.
+                            include: [''],
+                        },
+                    },
+                    patch: {
+                        schemas: {
+                            // TODO:
+                            // preferredCommunicationType inside CommunicationPreferenceChange is a different enum from
+                            // preferredCommunicationType inside Party; this patches the collision by renaming one of the enums,
+                            // but we should agree with the API teams that no two enums should have the same name, unless
+                            // they share the exact same values (at which point the enum should be defined at the root level).
+                            CommunicationPreferenceChange: (schema) => {
+                                schema.properties.communicationPreference.properties.CommunicationPreferenceChangePreferredCommunicationType =
+                                    schema.properties.communicationPreference.properties.preferredCommunicationType;
+                                delete schema.properties.communicationPreference
+                                    .properties.preferredCommunicationType;
+                            },
                         },
                     },
                 },

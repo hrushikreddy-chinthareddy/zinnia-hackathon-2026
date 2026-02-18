@@ -6,7 +6,7 @@ import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
     Transaction,
     TransactionPayor,
 } from '@zinnia/api-types/types/sor';
@@ -55,40 +55,40 @@ export const getFinancialTransactionSideSheetValues = (
     const { transactionType } = transaction;
 
     switch (transactionType) {
-        case TransactionTypeSchemaEnum.PAYMENT_INITIAL_PREMIUM:
-        case TransactionTypeSchemaEnum.INITIAL_PREMIUM:
+        case TransactionTypeEnum.PAYMENT_INITIAL_PREMIUM:
+        case TransactionTypeEnum.INITIAL_PREMIUM:
             return getInitialPremiumSideSheetValues(policy, transaction, t);
-        case TransactionTypeSchemaEnum.PAYMENT_ONE_TIME_PREMIUM:
-        case TransactionTypeSchemaEnum.ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.ONE_TIME_PREMIUM:
             return getOneTimePremiumSideSheetValues(
                 policy,
                 transaction,
                 t,
                 featureFlags || {}
             );
-        case TransactionTypeSchemaEnum.SUBSEQUENT_PAYMENT:
-        case TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM:
+        case TransactionTypeEnum.SUBSEQUENT_PAYMENT:
+        case TransactionTypeEnum.SUBSEQUENT_PREMIUM:
             return getAutopayPremiumSideSheetValues(
                 policy,
                 transaction,
                 t,
                 featureFlags || {}
             );
-        case TransactionTypeSchemaEnum.FULL_SURRENDER:
-        case TransactionTypeSchemaEnum.PARTIAL_WITHDRAWAL_ONE_TIME:
-        case TransactionTypeSchemaEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
-        case TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL:
-        case TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
-        case TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
-        case TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP:
+        case TransactionTypeEnum.FULL_SURRENDER:
+        case TransactionTypeEnum.PARTIAL_WITHDRAWAL_ONE_TIME:
+        case TransactionTypeEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME:
+        case TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL:
+        case TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP:
+        case TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION:
+        case TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP:
             return getWithdrawalSideSheetValues(policy, transaction, t);
-        case TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION:
+        case TransactionTypeEnum.FREE_LOOK_CANCELLATION:
             return getFreeLookCancellationSideSheetValues(
                 policy,
                 transaction,
                 t
             );
-        case TransactionTypeSchemaEnum.NEW_LOAN:
+        case TransactionTypeEnum.NEW_LOAN:
             return getNewLoanSideSheetValues(policy, transaction, t);
         default:
             return {};

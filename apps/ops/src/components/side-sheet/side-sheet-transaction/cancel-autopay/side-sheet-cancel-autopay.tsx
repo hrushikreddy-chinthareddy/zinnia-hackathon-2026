@@ -53,7 +53,7 @@ import {
     PaymentForm,
     Policy,
     Reason,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
@@ -273,7 +273,7 @@ const SideSheetCancelAutopay = ({
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: TransactionTypeSchemaEnum.SYSTEMATIC_PROGRAM_UPDATE,
+                type: TransactionTypeEnum.SYSTEMATIC_PROGRAM_UPDATE,
                 correlationId: updateBody.correlationId,
             }
         );
@@ -488,13 +488,13 @@ const SideSheetCancelAutopay = ({
                 trackEventProps={{
                     type:
                         systematicProgramReason === Reason.LOANREPAYMENT
-                            ? TransactionTypeSchemaEnum.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT
+                            ? TransactionTypeEnum.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT
                             : systematicProgramReason === Reason.WITHDRAWAL
-                            ? TransactionTypeSchemaEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL
+                            ? TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL
                             : systematicProgramReason ===
                               Reason.REQUIREDMINIMUMDISTRIBUTION
-                            ? TransactionTypeSchemaEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION
-                            : TransactionTypeSchemaEnum.SUBSEQUENT_PREMIUM,
+                            ? TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION
+                            : TransactionTypeEnum.SUBSEQUENT_PREMIUM,
                     step: TransactionStep.Cancel,
                     correlationId: body.correlationId,
                 }}

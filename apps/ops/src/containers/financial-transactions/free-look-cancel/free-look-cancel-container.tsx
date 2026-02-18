@@ -26,10 +26,7 @@ import { Processes } from '@deps/models/case/case';
 import { validateFreeLookCancellation } from '@deps/queries/api/bpm';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import {
-    Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
-} from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import Confirm from './confirm/confirm';
 import { buildFreeLookCancelRequestBody } from './free-look-cancel.helpers';
@@ -94,7 +91,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                         state={withdrawal}
                         title={t('cancelFreeLook.start.title') as string}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION,
+                            type: TransactionTypeEnum.FREE_LOOK_CANCELLATION,
                             step: TransactionStep.Start,
                         }}
                         processSubType={[Processes.FreeLookCancellation]}
@@ -132,7 +129,7 @@ const FreeLookCancelContainer = ({ policy }: { policy: Policy }) => {
                         setState={setWithdrawal as PayeesStepSetState}
                         state={withdrawal}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION,
+                            type: TransactionTypeEnum.FREE_LOOK_CANCELLATION,
                             step: TransactionStep.Payees,
                         }}
                     />

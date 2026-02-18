@@ -53,13 +53,13 @@ import {
 } from '@deps/types/segment-analytics';
 import {
     CommunicationPreferenceChangeRequest,
-    PreferredCommunicationTypeEnum,
+    CommunicationPreferenceChangePreferredCommunicationTypeEnum,
 } from '@zinnia/api-types/types/bpm';
 import {
     Address,
     Email,
     PreferredCommunicationType,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { sortEmailsByType } from '../../email-card/email-card.helpers';
@@ -224,11 +224,11 @@ export const SidesheetCommunicationsPreference = ({
         }
 
         const preferredCommunication: {
-            preferredCommunicationType: PreferredCommunicationTypeEnum;
+            preferredCommunicationType: CommunicationPreferenceChangePreferredCommunicationTypeEnum;
             email?: string;
         } = {
             preferredCommunicationType:
-                PreferredCommunicationTypeEnum.NOPREFERENCE,
+                CommunicationPreferenceChangePreferredCommunicationTypeEnum.NOPREFERENCE,
         };
 
         if (
@@ -236,11 +236,11 @@ export const SidesheetCommunicationsPreference = ({
             PreferredCommunicationType.REGULARMAIL
         ) {
             preferredCommunication.preferredCommunicationType =
-                PreferredCommunicationTypeEnum.REGULARMAIL;
+                CommunicationPreferenceChangePreferredCommunicationTypeEnum.REGULARMAIL;
         }
         if (selectedOption?.contactType === PreferredCommunicationType.EMAIL) {
             preferredCommunication.preferredCommunicationType =
-                PreferredCommunicationTypeEnum.EMAIL;
+                CommunicationPreferenceChangePreferredCommunicationTypeEnum.EMAIL;
             preferredCommunication.email = (
                 selectedOption.contactInfo as Email
             )?.emailAddress;
@@ -515,7 +515,7 @@ export const SidesheetCommunicationsPreference = ({
                         }}
                         stopLoading={!loading}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.COMMUNICATION_PREFERENCE_CHANGE,
+                            type: TransactionTypeEnum.COMMUNICATION_PREFERENCE_CHANGE,
                             correlationId: body.correlationId,
                         }}
                         newSpinner={true}

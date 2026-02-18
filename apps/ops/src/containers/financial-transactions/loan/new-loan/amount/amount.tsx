@@ -33,7 +33,7 @@ import { TransactionStep } from '@deps/types/segment-analytics';
 import {
     DisbursementType,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 interface AmountProps {
@@ -240,7 +240,7 @@ const Amount = ({ policy }: AmountProps) => {
                     planCode={policy.product?.planCode}
                     policyNumber={policy.policyNumber}
                     trackEventProps={{
-                        type: TransactionTypeSchemaEnum.NEW_LOAN,
+                        type: TransactionTypeEnum.NEW_LOAN,
                         step: TransactionStep.Amount,
                     }}
                 />

@@ -15,10 +15,7 @@ import {
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { withdrawalDetailsTransactions } from '@deps/helpers/transaction-types.helpers';
 import { DEFAULT_ERROR_STRING, toTitleCase } from '@deps/utils/strings';
-import {
-    Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
-} from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import { WithdrawalSideSheetValues } from './types';
 
@@ -66,17 +63,15 @@ const SideSheetWithdrawalContent = ({
     } = values || {};
     let transactionTypeLabel;
 
-    if (transactionType === TransactionTypeSchemaEnum.FULL_SURRENDER) {
+    if (transactionType === TransactionTypeEnum.FULL_SURRENDER) {
         transactionTypeLabel = t('historyEventCard.surrender');
     } else if (
         withdrawalDetailsTransactions.includes(
-            transactionType as TransactionTypeSchemaEnum
+            transactionType as TransactionTypeEnum
         )
     ) {
         transactionTypeLabel = t('historyEventCard.withdrawal');
-    } else if (
-        transactionType == TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION
-    ) {
+    } else if (transactionType == TransactionTypeEnum.FREE_LOOK_CANCELLATION) {
         transactionTypeLabel = t('enums.FreeLookCancellation');
     }
 
@@ -138,8 +133,7 @@ const SideSheetWithdrawalContent = ({
                     <hr className="my-6 h-0.5 bg-gray-200" />
                 </>
             )}
-            {transactionType !==
-                TransactionTypeSchemaEnum.FREE_LOOK_CANCELLATION && (
+            {transactionType !== TransactionTypeEnum.FREE_LOOK_CANCELLATION && (
                 <>
                     <section>
                         <div className="mb-4 flex items-center gap-4">

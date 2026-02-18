@@ -21,7 +21,7 @@ import { TransactionStep } from '@deps/types/segment-analytics';
 import {
     PartyRole,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { buildSignatures, getActiveRoleParty } from './role-change-helper';
@@ -122,7 +122,7 @@ const RoleChangeContainer = ({
                         title={t('start.title', { roleLabel }) as string}
                         subtitle={'' as string}
                         trackEventProps={{
-                            type: TransactionTypeSchemaEnum.ADD_OWNER,
+                            type: TransactionTypeEnum.ADD_OWNER,
                             step: TransactionStep.Start,
                         }}
                         type={SourceType.Case}

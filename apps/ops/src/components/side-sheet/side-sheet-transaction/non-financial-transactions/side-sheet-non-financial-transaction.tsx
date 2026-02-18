@@ -28,7 +28,7 @@ import {
     Address as PolicyAddress,
     FeatureType,
     Policy,
-    SchemaEnum as TransactionTypeSchemaEnum,
+    TransactionTypeEnum,
     Transaction,
 } from '@zinnia/api-types/types/sor';
 
@@ -558,15 +558,15 @@ const getChanges = (
     }
 
     switch (transaction.transactionType) {
-        case TransactionTypeSchemaEnum.ADDRESS_CHANGE:
+        case TransactionTypeEnum.ADDRESS_CHANGE:
             return getAddressChanges(policy, transaction, t);
-        case TransactionTypeSchemaEnum.BANK_ACCOUNT_CHANGE:
+        case TransactionTypeEnum.BANK_ACCOUNT_CHANGE:
             return getBankAccountChanges(policy, transaction, t);
-        case TransactionTypeSchemaEnum.EMAIL_CHANGE:
+        case TransactionTypeEnum.EMAIL_CHANGE:
             return getEmailChanges(policy, transaction, t);
-        case TransactionTypeSchemaEnum.PHONE_NUMBER_CHANGE:
+        case TransactionTypeEnum.PHONE_NUMBER_CHANGE:
             return getPhoneChanges(policy, transaction, t);
-        case TransactionTypeSchemaEnum.LAPSE:
+        case TransactionTypeEnum.LAPSE:
             return getPolicyLapse(policy, transaction, t);
         default:
             return null;
@@ -584,7 +584,7 @@ const SideSheetNonFinancialTransaction = ({
     return (
         <div className="p-8">
             <div className="flex flex-col gap-8">
-                {!TransactionTypeSchemaEnum.LAPSE && (
+                {!TransactionTypeEnum.LAPSE && (
                     <>
                         <FieldData
                             label={t('policy.history.sidesheet.effectiveDate')}
