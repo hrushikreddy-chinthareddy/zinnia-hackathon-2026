@@ -33,6 +33,7 @@ const baseExtends = compat
             'turbo',
             'plugin:@next/next/recommended',
             'plugin:@tanstack/eslint-plugin-query/recommended',
+            'plugin:@vitest/legacy-recommended',
         ],
     })
     .flatMap((config) => fixupConfigRules(config));

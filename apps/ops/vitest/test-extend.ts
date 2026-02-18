@@ -1,26 +1,17 @@
 import { test as testBase } from 'vitest';
 
-import { worker } from './mocks/brower';
+import { server } from './mocks/server';
 
 type TestContext = {
-    worker: typeof worker;
+    server: typeof server;
 };
 
 export const test = testBase.extend<TestContext>({
-    worker: [
+    server: [
         async ({}, use) => {
-            // Start the worker before the test.
-            await worker.start();
-
-            // Expose the worker object on the test's context.
-            await use(worker);
-
-            // Remove any request handlers added in individual test cases.
-            // This prevents them from affecting unrelated tests.
-            worker.resetHandlers();
-
-            // Stop the worker after the test.
-            worker.stop();
+            // Expose the server object on the test's context
+            // (server lifecycle is managed by vitest/setup.ts)
+            await use(server);
         },
         {
             auto: true,
