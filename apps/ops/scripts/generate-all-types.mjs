@@ -128,7 +128,7 @@ async function generateTypes() {
                     },
                     patch: {
                         schemas: {
-                            // TODO:
+                            // TODO (BPM):
                             // preferredCommunicationType inside CommunicationPreferenceChange is a different enum from
                             // preferredCommunicationType inside Party; this patches the collision by renaming one of the enums,
                             // but we should agree with the API teams that no two enums should have the same name, unless
@@ -139,6 +139,23 @@ async function generateTypes() {
                                 delete schema.properties.communicationPreference
                                     .properties.preferredCommunicationType;
                             },
+                            // TODO (SOR, unused):
+                            // This can potentially cause naming ambiguity as well, but is currently unused.
+                            //
+                            // PartyPatchRequestPartyUpdate: (schema) => {
+                            //     schema.properties.PartyPatchRequestPartyUpdatePartyRole =
+                            //         schema.properties.partyRole;
+                            //     delete schema.properties.partyRole;
+                            // },
+                            //
+                            // TODO (Case, unused):
+                            // This can potentially cause naming ambiguity as well, but is currently unused.
+                            //
+                            // Phone: (schema) => {
+                            //     schema.properties.phoneType =
+                            //         schema.properties.phoneType.properties
+                            //             ?.text ?? schema.properties.phoneType;
+                            // },
                         },
                     },
                 },
