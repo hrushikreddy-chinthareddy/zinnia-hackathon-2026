@@ -23,8 +23,10 @@ import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-progr
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
 import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { getStateCode } from '@deps/helpers/states.helpers';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
+    Address,
     AddressTypes,
     AmountType,
     FormParts,
@@ -53,6 +55,21 @@ import {
     DisbursementToggleType,
     SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
+
+// Type for raw API address data that uses different property names
+interface RawApiAddress {
+    addressLine1?: string;
+    addressLine2?: string | null;
+    addressLine3?: string | null;
+    addressLine4?: string | null;
+    addressType?: AddressTypes;
+    city?: string | null;
+    country?: string | null;
+    state?: string;
+    zipCode?: string;
+    zipCodeExtension?: string | null;
+    preferredAddress?: boolean;
+}
 
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../utils/form-validator.helpers';
@@ -585,10 +602,46 @@ export default function useDlicConfig(
         },
     ];
 
-    const disbursementOptions = (formParty: FormParty) => {
-        const annuitantAddress = formParty?.parties?.find(
+    const disbursementOptions = (
+        formParty: FormParty,
+        isLC: boolean,
+        parties: any[],
+        partyRoles: any[]
+    ) => {
+        let annuitantAddress = formParty?.parties?.find(
             (party) => party.partyRoleType === PartyRoles.ANNUITANT
         )?.addresses?.[0];
+
+        if (!annuitantAddress && !isLC) {
+            const annuitant = parties.filter((party) => {
+                const partyId = partyRoles.find(
+                    (role) => role.partyRole === PartyRoles.ANNUITANT
+                )?.partyId;
+
+                return party.partyId === partyId;
+            });
+
+            const rawAddress: RawApiAddress | undefined =
+                annuitant[0]?.addresses?.filter(
+                    (address: RawApiAddress) => address.preferredAddress
+                )[0];
+
+            if (rawAddress) {
+                annuitantAddress = {
+                    addressLine1: rawAddress.addressLine1 ?? '',
+                    addressLine2: rawAddress.addressLine2 ?? null,
+                    addressLine3: rawAddress.addressLine3 ?? null,
+                    addressLine4: rawAddress.addressLine4 ?? null,
+                    addressType: rawAddress.addressType ?? AddressTypes.DEFAULT,
+                    city: rawAddress.city ?? null,
+                    country: rawAddress.country ?? null,
+                    state: getStateCode(rawAddress.state ?? ''),
+                    zip: rawAddress.zipCode ?? '',
+                    zipPlusFour: rawAddress.zipCodeExtension ?? null,
+                } as Address;
+            }
+        }
+
         return [
             {
                 label: t('distributionMethod.eft'),
