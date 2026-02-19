@@ -1,9 +1,24 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen } from '@testing-library/react';
+import i18next from 'i18next';
 import React from 'react';
+import { I18nextProvider, initReactI18next } from 'react-i18next';
 import { describe, vi } from 'vitest';
 
+import commonEn from '../../../../public/locales/en/common.json';
 import PolicyDetailsPage from '../../../../src/pages/policies/[planCode]/[id]/policy-details-page';
+
+const i18nInstance = i18next.createInstance();
+i18nInstance.use(initReactI18next).init({
+    lng: 'en',
+    fallbackLng: 'en',
+    ns: ['common'],
+    defaultNS: 'common',
+    resources: {
+        en: { common: commonEn },
+    },
+    interpolation: { escapeValue: false },
+});
 
 vi.mock('next/router', () => {
     const routerMock = {
@@ -21,13 +36,12 @@ vi.mock('next/router', () => {
     };
 });
 
-vi.mock('react-i18next', () => ({
-    useTranslation: () => ({
-        t: (key: string) => key,
-        i18n: { language: 'en', changeLanguage: vi.fn() },
-        ready: true,
-    }),
-}));
+// next-i18next uses its own i18next instance in non-Next.js environments;
+// delegate to react-i18next so it reads from I18nextProvider instead.
+vi.mock('next-i18next', async () => {
+    const { useTranslation } = await import('react-i18next');
+    return { useTranslation };
+});
 
 vi.mock('@deps/contexts/PermissionsContext', () => ({
     usePermissionsContext: () => ({
@@ -36,29 +50,7 @@ vi.mock('@deps/contexts/PermissionsContext', () => ({
     }),
 }));
 
-vi.mock('@deps/hooks/useSegmentPageTracker', () => ({
-    useSegmentPageTracker: vi.fn(),
-}));
 
-vi.mock('@deps/contexts/PeopleRolesFilter', () => ({
-    PeopleRolesFilterProvider: ({ children }: any) => children,
-}));
-
-// next-i18next (CJS) is used by Custom404Page and other transitive deps
-vi.mock('next-i18next', () => ({
-    useTranslation: () => ({
-        t: (key: string) => key,
-        i18n: { language: 'en', changeLanguage: vi.fn() },
-        ready: true,
-    }),
-}));
-
-// OptimizelyContext is used by PolicyDetailsPage
-vi.mock('@deps/contexts/OptimizelyContext', () => ({
-    useOptimizely: () => ({
-        featureFlags: {},
-    }),
-}));
 
 const defaultProps = {
     subPageTitleKey: 'policyDetails',
@@ -86,9 +78,11 @@ function createWrapper() {
 
     function Wrapper({ children }: { children: React.ReactNode }) {
         return (
-            <QueryClientProvider client={queryClient}>
-                {children}
-            </QueryClientProvider>
+            <I18nextProvider i18n={i18nInstance}>
+                <QueryClientProvider client={queryClient}>
+                    {children}
+                </QueryClientProvider>
+            </I18nextProvider>
         );
     }
 
@@ -96,11 +90,11 @@ function createWrapper() {
 }
 
 describe('policy-details-page (browser mode)', () => {
-    test('renders initial loading UI', async () => {
+    test('renders policy details heading after data loads', async () => {
         render(<PolicyDetailsPage {...defaultProps} />, {
             wrapper: createWrapper(),
         });
 
-        await screen.findByRole('progressbar');
+        await screen.findByText('Policy Details');
     });
 });

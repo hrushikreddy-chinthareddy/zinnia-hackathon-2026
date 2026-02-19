@@ -361,7 +361,7 @@ importers:
         specifier: ^9.0.0
         version: 9.3.4
       '@testing-library/jest-dom':
-        specifier: ^6.6.3
+        specifier: ^6.9.1
         version: 6.9.1
       '@testing-library/react':
         specifier: ^14.3.1
