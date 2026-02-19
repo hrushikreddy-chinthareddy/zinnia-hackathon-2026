@@ -150,7 +150,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         [dateOfBirth]
     );
 
-    const displayNicotineSection = currentAge >= 18;
+    const displayNicotineSection = !(currentAge > 0 && currentAge < 18);
 
     const isFetchingAgencies =
         useIsFetching({
