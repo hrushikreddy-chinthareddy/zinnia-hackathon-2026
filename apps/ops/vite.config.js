@@ -7,6 +7,11 @@ const mediaTypes = ['png', 'jpg', 'jpeg', 'gif',  'webp', 'ico', 'bmp', 'avif', 
 
 
 export default defineConfig({
+    resolve: {
+        alias: {
+            'next/image': '/vitest/stubs/next-image.tsx',
+        },
+    },
     plugins: [
         react(),
         svgr({
