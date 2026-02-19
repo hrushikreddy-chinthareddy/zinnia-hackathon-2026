@@ -28,8 +28,6 @@ export const TransactionAccordionTemplate = (
         formContext,
         formData,
     } = props;
-    console.log('formDataa', formData);
-    console.log('formContext', formContext);
     const ui = getUiOptions(uiSchema);
     const { setCustomData } = formContext;
     const { t } = useTranslation();
@@ -78,20 +76,12 @@ export const TransactionAccordionTemplate = (
               );
     }
 
-    // const isIrrevocableInParties =
-    //     formContext?.customData?.contractInfo?.parties?.some(
-    //         (party: any) => party.isIrrevocable === true
-    //     );
-    const isIrrevocableInActionData = formContext?.customData?.actionData?.some(
+    const isIrrevocable = formContext?.customData?.actionData?.some(
         (item: any) =>
             item.isIrrevocable === true && item.action !== Action.DELETE
     );
-    // const isIrrevocableBene =
-    //   formContext?.customData?.signatureData?.isIrrevocableBene ?? false;
-    const shouldShowIrrevocableSignature =
-        //  isIrrevocableInParties ||
-        isIrrevocableInActionData;
-    //|| isIrrevocableBene;
+
+    const shouldShowIrrevocableSignature = isIrrevocable;
 
     const irrevocableBeneSignature = {
         isSignedPresent: false,
