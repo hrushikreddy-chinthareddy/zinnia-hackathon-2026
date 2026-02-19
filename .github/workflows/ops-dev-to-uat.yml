@@ -1,5 +1,4 @@
-name: Portal Frontend Dev to UAT
-
+name: Portal Frontend Deploy branch to UAT
 on:
   workflow_dispatch:
 
