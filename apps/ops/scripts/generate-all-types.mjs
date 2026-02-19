@@ -13,6 +13,40 @@ const generatedTypesDir = path.resolve(
     '../api-types/generated-types'
 );
 
+const schemaPatches = {
+    bpm: {
+        // TODO (BPM):
+        // preferredCommunicationType inside CommunicationPreferenceChange is a different enum from
+        // preferredCommunicationType inside Party; this patches the collision by renaming one of the enums,
+        // but we should agree with the API teams that no two enums should have the same name, unless
+        // they share the exact same values (at which point the enum should be defined at the root level).
+        CommunicationPreferenceChange: (schema) => {
+            schema.properties.communicationPreference.properties.CommunicationPreferenceChangePreferredCommunicationType =
+                schema.properties.communicationPreference.properties.preferredCommunicationType;
+            delete schema.properties.communicationPreference.properties
+                .preferredCommunicationType;
+        },
+    },
+    sor: {
+        // This is unused, but can potentially cause naming ambiguity if reordered.
+        PartyPatchRequestPartyUpdate: (schema) => {
+            schema.properties.PartyPatchRequestPartyUpdatePartyRole =
+                schema.properties.partyRole;
+            delete schema.properties.partyRole;
+        },
+    },
+    //
+    // TODO (Case, unused):
+    // This is an example of a patch for a generic enum property that can potentially cause naming ambiguity,
+    // but is currently unused.
+    //
+    // Phone: (schema) => {
+    //     schema.properties.phoneType =
+    //         schema.properties.phoneType.properties
+    //             ?.text ?? schema.properties.phoneType;
+    // },
+};
+
 async function findSpecFiles() {
     let files;
     try {
@@ -127,36 +161,7 @@ async function generateTypes() {
                         },
                     },
                     patch: {
-                        schemas: {
-                            // TODO (BPM):
-                            // preferredCommunicationType inside CommunicationPreferenceChange is a different enum from
-                            // preferredCommunicationType inside Party; this patches the collision by renaming one of the enums,
-                            // but we should agree with the API teams that no two enums should have the same name, unless
-                            // they share the exact same values (at which point the enum should be defined at the root level).
-                            CommunicationPreferenceChange: (schema) => {
-                                schema.properties.communicationPreference.properties.CommunicationPreferenceChangePreferredCommunicationType =
-                                    schema.properties.communicationPreference.properties.preferredCommunicationType;
-                                delete schema.properties.communicationPreference
-                                    .properties.preferredCommunicationType;
-                            },
-                            // TODO (SOR, unused):
-                            // This can potentially cause naming ambiguity as well, but is currently unused.
-                            //
-                            // PartyPatchRequestPartyUpdate: (schema) => {
-                            //     schema.properties.PartyPatchRequestPartyUpdatePartyRole =
-                            //         schema.properties.partyRole;
-                            //     delete schema.properties.partyRole;
-                            // },
-                            //
-                            // TODO (Case, unused):
-                            // This can potentially cause naming ambiguity as well, but is currently unused.
-                            //
-                            // Phone: (schema) => {
-                            //     schema.properties.phoneType =
-                            //         schema.properties.phoneType.properties
-                            //             ?.text ?? schema.properties.phoneType;
-                            // },
-                        },
+                        schemas: schemaPatches[spec.name],
                     },
                 },
             });
