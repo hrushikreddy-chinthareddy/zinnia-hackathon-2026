@@ -69,7 +69,6 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
         getAsyncSideSheetValues,
         reverseCta,
         processDate,
-        reversalTransactionId,
         transactionId,
         transactionValue,
     } = sideSheetValues || {};
@@ -236,8 +235,8 @@ const SideSheetFinancialTransaction = (props: SideSheetTransactionProps) => {
                     }}
                     policyNumber={policy?.policyNumber}
                     planCode={policy?.product?.planCode}
+                    transactionId={transactionId as string}
                     transactionType={transactionType as string}
-                    reversalTransactionId={reversalTransactionId as string}
                 />
             );
         case SidesheetViews.default:
