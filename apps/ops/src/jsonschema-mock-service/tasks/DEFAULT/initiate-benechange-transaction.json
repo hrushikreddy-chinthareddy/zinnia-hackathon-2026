@@ -2142,13 +2142,7 @@
                     },
                     "signatureData": {
                         "ui:options": { "label": false },
-                        "isIrrevocableBene": {
-                            "ui:widget": "RadioWidget",
-                            "ui:options": {
-                                "inline": true,
-                                "enumNames": ["Yes", "No"]
-                            }
-                        },
+                       
                         "signatures": {
                             "ui:options": {
                                 "ArrayFieldTemplate": "TransactionAccordionTemplate",
