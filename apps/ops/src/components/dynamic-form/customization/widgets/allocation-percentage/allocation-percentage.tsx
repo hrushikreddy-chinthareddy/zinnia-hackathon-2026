@@ -6,6 +6,7 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 
 const allocationPercentageValidationError =
     'Please make sure allocation is equal to 100%';
@@ -50,14 +51,35 @@ const PercentageWidget = ({
     formContext,
 }: WidgetProps) => {
     const actionData = formContext.customData.actionData;
-    let validate = validatePercentage(actionData);
-    const beneficiaryPercentages = Array.isArray(actionData)
-        ? actionData.map((item) => item?.party?.beneficiaryPercentage).join(',')
-        : '';
+    const validate = validatePercentage(actionData);
+    const { setSubmitEnabled, setSubmitDisabledStepIndex } = formContext;
+    const { currentStepIndex } = useWorkflow();
+    const indexMatch = id.match(/actionData_(\d+)_/);
+    const index = indexMatch ? Number(indexMatch[1]) : -1;
 
     useEffect(() => {
-        validate = validatePercentage(actionData);
-    }, [beneficiaryPercentages]);
+        if (Array.isArray(actionData)) {
+            const updatedActionData = actionData.map((item, i) => {
+                if (i === index) {
+                    if (setSubmitDisabledStepIndex) {
+                        setSubmitDisabledStepIndex(currentStepIndex);
+                    }
+                    return {
+                        ...item,
+                        party: {
+                            ...item.party,
+                            beneficiaryPercentage: value,
+                        },
+                    };
+                }
+                return item;
+            });
+            const isValid = validatePercentage(updatedActionData);
+            if (setSubmitEnabled) {
+                setSubmitEnabled(isValid);
+            }
+        }
+    }, [value, actionData, setSubmitEnabled]);
 
     return readonly ? (
         value
