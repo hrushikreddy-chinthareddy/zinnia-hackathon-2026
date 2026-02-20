@@ -5,7 +5,7 @@ import {
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -138,6 +138,7 @@ const SideSheetCancelAutopay = ({
     const [errors, setErrors] = useState<Errors>({});
     const [viewState, setViewState] = useState(ViewState.Default);
     const [loading, setLoading] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
 
     const { data: casesResponse, isLoading } = useCasesQuery({
         policyNumber: policy?.policyNumber,
@@ -406,7 +407,7 @@ const SideSheetCancelAutopay = ({
     }
 
     return (
-        <div className="flex flex-col">
+        <div className="flex flex-col" ref={containerRef}>
             <div className="flex flex-col gap-8">
                 {hasAnyCaseResult && (
                     <CaseDocumentSelect
@@ -446,6 +447,7 @@ const SideSheetCancelAutopay = ({
                     rangeErrorMsg={`${t(
                         'transactions.cancelAutopay.invalidEffectiveDate'
                     )}`}
+                    container={containerRef.current}
                 />
                 <CheckboxText
                     assistiveText={
