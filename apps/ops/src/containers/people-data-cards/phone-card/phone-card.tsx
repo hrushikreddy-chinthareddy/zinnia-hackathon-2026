@@ -1,5 +1,6 @@
+import { SideSheet } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useState, useContext, useCallback } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
 import NavElement, {
     NavElementSize,
@@ -27,7 +28,6 @@ import SideSheetPeopleHeader, {
     SideSheetPeopleHeaderProps,
 } from '@deps/containers/people-data-cards/side-sheet-people-header/side-sheet-people-header';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
 import useAddOrEditPhoneOrEmailClick from '@deps/hooks/user-carrier-specific/useOnEditClick';
 import {
     NonFinancialTransactionActions,
@@ -56,9 +56,11 @@ const PhoneCard = ({
     const { t: tAllFields } = useTranslation();
 
     const { policyDetails } = useContext(PolicyData);
-    const sideSheet = useSideSheetContext();
 
     const [showAdditional, setShowAdditional] = useState(false);
+    const [activeSideSheet, setActiveSideSheet] =
+        useState<OpenSideSheet | null>(null);
+    const closeSideSheet = () => setActiveSideSheet(null);
 
     const { phones } = party ?? {};
     const [currentPhones, setCurrentPhones] = useState<Phone[]>(
@@ -67,31 +69,9 @@ const PhoneCard = ({
 
     const showToggle = currentPhones.length > 4;
 
-    const openSideSheet = useCallback(
-        ({
-            phone,
-            header: { action, transaction, typeTranslation },
-        }: OpenSideSheet) => {
-            sideSheet.changeSideSheetContent(
-                <SideSheetPeopleHeader
-                    action={action}
-                    transaction={transaction}
-                    typeTranslation={typeTranslation}
-                />,
-                <SideSheetPhone
-                    onCancel={() => sideSheet.handleOpen(false)}
-                    party={party}
-                    planCode={planCode}
-                    policyNumber={policyNumber}
-                    policy={policyDetails.policy}
-                    setCurrentPhones={setCurrentPhones}
-                    updatePhone={phone}
-                />
-            );
-            sideSheet.handleOpen(true);
-        },
-        [sideSheet, party, planCode, policyNumber, setCurrentPhones]
-    );
+    const openSideSheet = useCallback((params: OpenSideSheet) => {
+        setActiveSideSheet(params);
+    }, []);
 
     const onEditClick = useAddOrEditPhoneOrEmailClick<OpenSideSheet>({
         defaultCallback: openSideSheet,
@@ -177,6 +157,39 @@ const PhoneCard = ({
             ) : (
                 <EmptyCard text={t('general.empty') as string} />
             )}
+            <SideSheet
+                trigger={null}
+                open={!!activeSideSheet}
+                onOpenChange={(isOpen) => {
+                    if (!isOpen) {
+                        closeSideSheet();
+                    }
+                }}
+                preventCloseOnOutsideClick={false}
+                header={
+                    activeSideSheet ? (
+                        <SideSheetPeopleHeader
+                            action={activeSideSheet.header.action}
+                            transaction={activeSideSheet.header.transaction}
+                            typeTranslation={
+                                activeSideSheet.header.typeTranslation
+                            }
+                        />
+                    ) : undefined
+                }
+            >
+                {activeSideSheet && (
+                    <SideSheetPhone
+                        onCancel={closeSideSheet}
+                        party={party}
+                        planCode={planCode}
+                        policy={policyDetails.policy}
+                        policyNumber={policyNumber}
+                        setCurrentPhones={setCurrentPhones}
+                        updatePhone={activeSideSheet.phone}
+                    />
+                )}
+            </SideSheet>
         </CardContainer>
     );
 };

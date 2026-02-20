@@ -14,3 +14,17 @@
     cursor: not-allowed !important;
     opacity: 0.5;
 }
+
+.labelWithFlag {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.flagIcon {
+    vertical-align: middle;
+}
+
+.flagTrigger {
+    vertical-align: middle;
+}

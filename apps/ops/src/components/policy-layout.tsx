@@ -6,7 +6,7 @@ import { PopoverPlacement } from '@deps/components/popover/popover';
 import SideSheetProductDetails from '@deps/components/side-sheet/side-sheet-product-details/side-sheet-product-details';
 import ContentContainer from '@deps/containers/static-layout-elements/content-container';
 import { StaticContentProvider } from '@deps/contexts/LayoutContexts/StaticContentContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { PolicySearchResult } from '@deps/types/search';
@@ -31,7 +31,7 @@ const PolicyLayout: React.FC<PageLayoutProps> = ({
     showLink,
 }) => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const policy = new PolicyDetails(policyDetails);
 

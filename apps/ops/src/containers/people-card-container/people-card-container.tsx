@@ -33,7 +33,6 @@ const mapDataToPeopleCard = ({
     party,
     peopleCard,
     isRereg,
-    type,
 }: MapDataToPeopleProps) => {
     const {
         partyType,
@@ -43,7 +42,6 @@ const mapDataToPeopleCard = ({
         tags,
         beneficiaryPercentage,
         partyId,
-        agentPercentage,
         producerType,
         producerName,
         isIrrevocable,
@@ -55,7 +53,6 @@ const mapDataToPeopleCard = ({
         planCode,
         policyNumber,
         isBeneficiarySelected,
-        isAgentSelected,
         router,
     } = peopleCard;
 
@@ -93,12 +90,6 @@ const mapDataToPeopleCard = ({
     let allocationValue: string = '';
     if (isBeneficiarySelected) {
         allocationValue = beneficiaryPercentage?.toString() ?? '0';
-    } else if (isAgentSelected) {
-        if (type === AgentType.PRIMARY) {
-            allocationValue = agentPercentage?.toString() ?? '0';
-        } else if (type === AgentType.AGENT) {
-            allocationValue = '';
-        }
     }
 
     const convertedTags = tags.map((tag) => ({

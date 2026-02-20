@@ -2,6 +2,7 @@ import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 import { v4 as uuidv4 } from 'uuid';
 
+import { DetailTypesEnum } from '@deps/constants/case';
 import { convertToChipText } from '@deps/containers/people-sub-page/people-sub-page.helpers';
 import { CaseActivityContextProps } from '@deps/contexts/CaseActivityContext';
 import { calculateDaysAgo } from '@deps/helpers/case-management';
@@ -17,6 +18,7 @@ import { PartyInstance } from '@deps/models/case/party-instance';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { CaseTimePredictOutput } from '@zinnia/api-types/types/analytics';
 
+import { CaseDetailsSideNavProps } from './case-details-side-nav';
 import { CaseSideNavProps } from './CaseSideNav';
 import { PartiesProps, PartyInfo } from './CaseSideNavParties';
 
@@ -355,4 +357,13 @@ export const buildCreateQualityAuditPayload = (caseDetails: Case) => {
         auditRequestId: auditRequestId,
         policyNumber,
     };
+};
+
+export const getDetailsByDetailType = (
+    caseProcessingDetails: CaseDetailsSideNavProps['caseProcessingDetails'],
+    detailType: DetailTypesEnum
+) => {
+    return caseProcessingDetails?.find(
+        (detail) => detail.detailType === detailType
+    )?.details;
 };

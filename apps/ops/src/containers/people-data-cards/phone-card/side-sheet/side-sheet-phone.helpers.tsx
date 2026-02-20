@@ -37,6 +37,7 @@ interface GetFormErrors {
     caseId?: string;
     phone: Phone;
     t: TFunction;
+    hasCase?: boolean;
 }
 
 const CountryCodeLabel = ({ countryCode }: CountryCodeLabelProps) => {
@@ -220,6 +221,7 @@ export const getFormErrors = ({
     isDelete,
     phone,
     t,
+    hasCase,
 }: GetFormErrors) => {
     let errors: Errors = {};
 
@@ -227,7 +229,7 @@ export const getFormErrors = ({
     const phoneNumber = `${areaCode}${dialNumber}`;
     const phoneRegex = /^\d{10}$/;
 
-    if (caseId == null) {
+    if (caseId == null && hasCase) {
         errors = {
             ...errors,
             caseId: `${t('people.sideSheet.phone.errors.missingCaseDocument')}`,

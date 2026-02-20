@@ -61,7 +61,7 @@ const BpmErrorState = ({
                 subtitle={t('subtitle')}
                 title={t('title')}
             />
-            <div className="flex flex-col gap-6 px-8">
+            <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-6 rounded border-2 border-gray-200 p-6">
                     <NavElement
                         className="w-fit"

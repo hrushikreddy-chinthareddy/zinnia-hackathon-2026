@@ -19,7 +19,7 @@ import Popover, { PopoverPlacement } from '@deps/components/popover/popover';
 import { TranslationFiles } from '@deps/config/translations';
 import { getBeneficiaryColor } from '@deps/containers/people-card-container/people-card-container.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import {
     isNullEmptyOrUndefined,
@@ -63,7 +63,7 @@ const FundsTable = ({
     caption,
     isElected = false,
 }: FundsTableProps) => {
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const { featureFlags } = useOptimizely();
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'policy.funds.fundsTable',

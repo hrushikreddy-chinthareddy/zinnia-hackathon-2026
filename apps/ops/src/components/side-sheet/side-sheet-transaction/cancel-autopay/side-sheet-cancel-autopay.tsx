@@ -5,7 +5,7 @@ import {
 } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { v4 as uuidV4 } from 'uuid';
 
 import CaseDocumentSelect, {
@@ -24,6 +24,7 @@ import { buildSystematicProgramSubmittedEvent } from '@deps/helpers/analytics/su
 import { getUtcDate } from '@deps/helpers/date.helpers';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getFrequency } from '@deps/helpers/systematic-program.helpers';
+import { useCasesQuery, hasAnyCase } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import {
     submitSystematicProgramUpdate,
@@ -56,6 +57,7 @@ import {
 } from '@zinnia/api-types/types/sor';
 
 import { CancelAutopayDetails } from './cancel-autopay-details';
+import LoadingState from '../non-financial-transactions/states/loading-state';
 import { ViewState } from '../non-financial-transactions/states/states.helpers';
 import ApiErrorState from '../states/api-error-state';
 import BpmErrorState from '../states/bpm-error-state';
@@ -136,6 +138,14 @@ const SideSheetCancelAutopay = ({
     const [errors, setErrors] = useState<Errors>({});
     const [viewState, setViewState] = useState(ViewState.Default);
     const [loading, setLoading] = useState<boolean>(false);
+    const containerRef = useRef<HTMLDivElement>(null);
+
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policy?.policyNumber,
+        process: [Processes.SSW],
+        requestSubType: [],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
 
     const handleDateChange = (date?: Date) => {
         setEffectiveDate(
@@ -146,11 +156,12 @@ const SideSheetCancelAutopay = ({
     const validateFields = (
         effectiveDate: string | undefined,
         confirmCancel: boolean,
-        caseId?: string
+        caseId?: string,
+        hasAnyCase?: boolean
     ) => {
         let localErrors: Errors = {};
 
-        if (caseId == undefined) {
+        if (caseId == undefined && hasAnyCase) {
             localErrors = {
                 ...localErrors,
                 caseId:
@@ -207,7 +218,14 @@ const SideSheetCancelAutopay = ({
     };
 
     const validateAndSubmitUpdate = async () => {
-        if (!validateFields(effectiveDate, confirmCancel, body.caseId)) {
+        if (
+            !validateFields(
+                effectiveDate,
+                confirmCancel,
+                body.caseId,
+                hasAnyCaseResult
+            )
+        ) {
             return;
         }
 
@@ -384,20 +402,26 @@ const SideSheetCancelAutopay = ({
             break;
     }
 
+    if (isLoading) {
+        return <LoadingState />;
+    }
+
     return (
-        <div className="flex flex-col p-8">
+        <div className="flex flex-col" ref={containerRef}>
             <div className="flex flex-col gap-8">
-                <CaseDocumentSelect
-                    caseId={body.caseId}
-                    caseDocumentOptions={caseDocumentOptions}
-                    currentErrors={errors}
-                    policyNumber={policy?.policyNumber}
-                    processType={Processes.SSW}
-                    setBody={setBody as SetStateCaseId}
-                    setCaseDocumentOptions={setCaseDocumentOptions}
-                    setCurrentErrors={setErrors as SetStateCaseId}
-                    setViewState={setViewState}
-                />
+                {hasAnyCaseResult && (
+                    <CaseDocumentSelect
+                        caseId={body.caseId}
+                        caseDocumentOptions={caseDocumentOptions}
+                        currentErrors={errors}
+                        policyNumber={policy?.policyNumber}
+                        processType={Processes.SSW}
+                        setBody={setBody as SetStateCaseId}
+                        setCaseDocumentOptions={setCaseDocumentOptions}
+                        setCurrentErrors={setErrors as SetStateCaseId}
+                        setViewState={setViewState}
+                    />
+                )}
                 <FieldDateSingle
                     name="effective-date"
                     label={
@@ -423,6 +447,7 @@ const SideSheetCancelAutopay = ({
                     rangeErrorMsg={`${t(
                         'transactions.cancelAutopay.invalidEffectiveDate'
                     )}`}
+                    container={containerRef.current}
                 />
                 <CheckboxText
                     assistiveText={

@@ -1,4 +1,10 @@
-import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
+import {
+    AssistiveText,
+    AssistiveTextVariant,
+    FieldStatus,
+    Label,
+    Select,
+} from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import { useRouter } from 'next/router';
@@ -22,7 +28,6 @@ import Radio, {
     RadioOrientation,
     RadioVariant,
 } from '@deps/components/radio/radio';
-import SelectSimple from '@deps/components/select/select';
 import ApiErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/api-error-state';
 import BpmErrorState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/bpm-error-state';
 import LoadingState from '@deps/components/side-sheet/side-sheet-transaction/non-financial-transactions/states/loading-state';
@@ -37,6 +42,7 @@ import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-anal
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getFileSubtype } from '@deps/helpers/document.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { hasAnyCase, useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { useFocusOnError } from '@deps/hooks/useFocusOnError';
 import { Processes } from '@deps/models/case/case';
 import { ValidationResult } from '@deps/queries/api/bpm';
@@ -148,6 +154,12 @@ export const SidesheetNameCard = ({
     const [caseDocumentOptions, setCaseDocumentOptions] = useState<
         CaseDocumentOption[]
     >([]);
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policyDetails.policyNumber,
+        process: [Processes.PolicyUpdate],
+        requestSubType: [Processes.ExistingNameChange],
+    });
+    const hasAnyCaseResult = hasAnyCase(casesResponse);
     const [validationResults, setValidationResults] = useState<
         ValidationResult[]
     >([]);
@@ -162,7 +174,7 @@ export const SidesheetNameCard = ({
         Prefix.MISS,
         Prefix.DR,
         Prefix.MRS,
-    ].map((option) => ({ label: option, value: option }));
+    ].map((option) => ({ textValue: option, value: option }));
 
     const [dateOfSignature, setDateOfSignature] = useState('');
     const [dateOfSignatureError, setDateOfSignatureError] = useState(false);
@@ -172,7 +184,7 @@ export const SidesheetNameCard = ({
         Parties.suffix.III,
         Parties.suffix.JR,
         Parties.suffix.SN,
-    ].map((option) => ({ label: option, value: option }));
+    ].map((option) => ({ textValue: option, value: option }));
     const [selectedOption, setSelectedOption] = useState('');
     const documentMatchesOptions = ['Yes', 'No'].map((option) => ({
         label: option,
@@ -366,6 +378,7 @@ export const SidesheetNameCard = ({
             signaturePresentOnDocumentForAllOwners,
             dateOfSignature,
             uploadedFiles,
+            hasCase: hasAnyCaseResult,
         });
 
         setCurrentErrors(errors);
@@ -431,6 +444,9 @@ export const SidesheetNameCard = ({
             onSuccessfulSubmit,
         });
     };
+    if (isLoading) {
+        return <LoadingState />;
+    }
 
     const getContent = () => {
         switch (selectedPolicyParty?.partyType) {
@@ -505,16 +521,20 @@ export const SidesheetNameCard = ({
                         >
                             <div className="flex gap-4">
                                 <div className="basis-1/4 max-w-[250px]">
-                                    <SelectSimple
-                                        aria-label={t('prefix') as string}
-                                        label={t('prefix') as string}
-                                        onChange={(value) => {
+                                    <Select
+                                        triggerLabel={t('prefix') as string}
+                                        label={
+                                            <Label>
+                                                {t('prefix') as string}
+                                            </Label>
+                                        }
+                                        onValueChange={(value) => {
                                             setPrefix(value as Prefix);
                                         }}
                                         options={prefixOptions}
-                                        size={FieldSize.Small}
+                                        fieldSize="small"
                                         value={prefix}
-                                        variant={FieldVariant.Default}
+                                        fieldStatus={FieldStatus.DEFAULT}
                                     />
                                 </div>
                                 <div className="basis-1/2">
@@ -590,16 +610,20 @@ export const SidesheetNameCard = ({
                                     />
                                 </div>
                                 <div className="basis-1/4">
-                                    <SelectSimple
-                                        aria-label={t('suffix') as string}
-                                        label={t('suffix') as string}
-                                        onChange={(value) => {
+                                    <Select
+                                        triggerLabel={t('suffix') as string}
+                                        label={
+                                            <Label>
+                                                {t('suffix') as string}
+                                            </Label>
+                                        }
+                                        onValueChange={(value) => {
                                             setSuffix(value as Parties.suffix);
                                         }}
                                         options={suffixOptions}
-                                        size={FieldSize.Small}
+                                        fieldSize="small"
                                         value={suffix}
-                                        variant={FieldVariant.Default}
+                                        fieldStatus={FieldStatus.DEFAULT}
                                     />
                                 </div>
                             </div>
@@ -654,23 +678,25 @@ export const SidesheetNameCard = ({
                     ref={errorRef}
                     role="group"
                     id="comm-pref-form"
-                    className="flex flex-col gap-8 p-8"
+                    className="flex flex-col gap-8"
                 >
-                    <CaseDocumentSelect
-                        caseDocumentOptions={caseDocumentOptions}
-                        caseId={body.caseId}
-                        currentErrors={currentErrors}
-                        policyNumber={policyDetails.policyNumber}
-                        processType={Processes.PolicyUpdate}
-                        setBody={setBody as SetStateCaseId}
-                        setCaseDocumentOptions={setCaseDocumentOptions}
-                        setCurrentErrors={setCurrentErrors}
-                        setViewState={setViewState}
-                        required={true}
-                        processSubType={[Processes.ExistingNameChange]}
-                        correlationId={correlationIdFromRoute}
-                        body={body}
-                    />
+                    {hasAnyCaseResult && (
+                        <CaseDocumentSelect
+                            caseDocumentOptions={caseDocumentOptions}
+                            caseId={body.caseId}
+                            currentErrors={currentErrors}
+                            policyNumber={policyDetails.policyNumber}
+                            processType={Processes.PolicyUpdate}
+                            setBody={setBody as SetStateCaseId}
+                            setCaseDocumentOptions={setCaseDocumentOptions}
+                            setCurrentErrors={setCurrentErrors}
+                            setViewState={setViewState}
+                            required={true}
+                            processSubType={[Processes.ExistingNameChange]}
+                            correlationId={correlationIdFromRoute}
+                            body={body}
+                        />
+                    )}
 
                     {getContent()}
 

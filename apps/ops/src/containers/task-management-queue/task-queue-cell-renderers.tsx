@@ -5,12 +5,20 @@ import Image from 'next/image';
 import NextLink from 'next/link';
 
 import Badge from '@deps/components/badge/badge';
+import CaseDetailField from '@deps/components/card/case-search-card/case-detail-field';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Dropdown from '@deps/components/dropdown/Dropdown';
+import { PartyWithOthers } from '@deps/components/table/case-result-table';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { toSentenceCase } from '@deps/helpers/string.helpers';
+import { getValidFullName } from '@deps/helpers/case-management';
+import { getAgents, getPolicyOwners } from '@deps/helpers/parties';
+import {
+    formatSSN,
+    toSentenceCase,
+    toTitleCase,
+} from '@deps/helpers/string.helpers';
 import { EarlyTaskType } from '@deps/models/case/task';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
@@ -49,6 +57,37 @@ export const createCellRenderers = (ctx: {
     isOpsManagerView: boolean;
 }) => {
     const { task, styles } = ctx;
+
+    const parties = task?.parties ?? [];
+    const agents = getAgents(parties);
+    const policyOwners = task.parties ? getPolicyOwners(task.parties) : [];
+
+    const toNameSsnEntity = (
+        party: Parameters<typeof getValidFullName>[0] & { ssn?: string }
+    ) => ({
+        name: toTitleCase(getValidFullName(party)),
+        ssn: formatSSN(party.ssn),
+    });
+    const formatPrimarySsn = (party?: { ssn?: string } | null) =>
+        party?.ssn ? formatSSN(party.ssn) : undefined;
+
+    const ownerEntities = policyOwners.slice(1).map(toNameSsnEntity);
+    const ownerSsn = formatPrimarySsn(policyOwners[0]);
+    const ownerComponentProps = {
+        text: toTitleCase((getValidFullName(policyOwners[0]) ?? '')?.trim()),
+        highlights: [],
+        entities: ownerEntities,
+        truncate: true,
+    };
+
+    const otherAgents = agents.slice(1).map(toNameSsnEntity);
+    const agentSsn = formatPrimarySsn(agents[0]);
+    const agentComponentProps = {
+        text: toTitleCase(getValidFullName(agents[0]) ?? ''),
+        highlights: [],
+        entities: otherAgents,
+        truncate: true,
+    };
 
     return {
         task: () => (
@@ -164,6 +203,44 @@ export const createCellRenderers = (ctx: {
                         )}
                     </div>
                 </div>
+            </div>
+        ),
+
+        owner: () => (
+            <div className={cellRendererStyle.flexCol}>
+                <Typography variant={TypographyVariant.BodySm}>
+                    {policyOwners.length > 1 ? (
+                        <PartyWithOthers {...ownerComponentProps} />
+                    ) : (
+                        <CaseDetailField pii={true} {...ownerComponentProps} />
+                    )}
+                </Typography>
+
+                {ownerSsn && (
+                    <CaseDetailField
+                        pii={true}
+                        text={ownerSsn}
+                        className={cellRendererStyle.detail}
+                    />
+                )}
+            </div>
+        ),
+        agent: () => (
+            <div className={cellRendererStyle.flexCol}>
+                <Typography variant={TypographyVariant.BodySm}>
+                    {agents.length > 1 ? (
+                        <PartyWithOthers {...agentComponentProps} />
+                    ) : (
+                        <CaseDetailField pii={true} {...agentComponentProps} />
+                    )}
+                </Typography>
+                {agentSsn && (
+                    <CaseDetailField
+                        pii={true}
+                        text={agentSsn}
+                        className={cellRendererStyle.detail}
+                    />
+                )}
             </div>
         ),
 

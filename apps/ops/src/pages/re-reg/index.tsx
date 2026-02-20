@@ -60,8 +60,8 @@ const BeneChange = ({
     const showJointOwner = policy?.carrierId === Carrier.FLIC;
 
     useSegmentPageTracker(user, SegmentPageName.BeneChange, {
-        policyNumber: policy.policyNumber,
-        documentNumber: document.documentNumber,
+        policyNumber: policy?.policyNumber,
+        documentNumber: document?.documentNumber,
         clientId,
         planCode,
     });

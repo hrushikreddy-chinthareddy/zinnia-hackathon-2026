@@ -130,6 +130,7 @@ export const formatParties = (policyResponse: PolicyResponse) => {
         dateOfBirth: party?.dateOfBirth ?? null,
         suffix: party?.suffix ?? null,
         trustType: party?.trustType ?? null,
+        trustDate: party?.trustDate ?? null,
         addresses: getAddresses(party?.addresses ?? []),
         identifications: getIdentifications(party.identifications),
         emails:

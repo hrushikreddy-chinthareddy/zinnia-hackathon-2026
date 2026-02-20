@@ -87,7 +87,7 @@ export const ValueWidget = function (props: WidgetProps) {
         <div className="max-w-sm flex w-full flex-col">
             <Field
                 name={id}
-                value={defaultValue}
+                value={defaultValue ?? ''}
                 formatOptions={numberFormat}
                 leading={<div>$</div>}
                 id={id}

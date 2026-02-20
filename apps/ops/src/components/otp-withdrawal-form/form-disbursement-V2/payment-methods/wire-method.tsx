@@ -178,6 +178,11 @@ const WireMethod = ({
     };
 
     const renderField = (field: any) => {
+        const isHidden =
+            isFormStateReadOnly &&
+            ['reEnterBankRoutingNumber', 'reEnterAccountNumber'].includes(
+                field.fieldName
+            );
         switch (field.fieldType) {
             case 'choose-the-bank':
                 return (
@@ -219,6 +224,7 @@ const WireMethod = ({
                         fieldName={field.fieldName}
                         validator={field.validator}
                         onDataChange={onDataChange}
+                        classNames={isHidden ? 'invisible' : ''}
                         isFormStateReadOnly={isFormStateReadOnly}
                         maskOnBlur={field.maskOnBlur}
                         defaultDisbursementInfo={defaultDisbursementInfo}

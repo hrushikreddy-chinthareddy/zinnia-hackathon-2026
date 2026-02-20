@@ -287,9 +287,11 @@ export default function RMDMethod({
                         variant={TypographyVariant.BodyBold}
                         className="my-2"
                     >
-                        {rmdMethod === RMDType.AutoRMD
-                            ? t(`newRmdProgram`)
-                            : t(`oneTimeRmd`)}
+                        {(rmdMethod === RMDType.CalculateRMD ||
+                            rmdMethod === RMDType.OneTimeRMD) &&
+                        !isLC
+                            ? t(`oneTimeRmd`)
+                            : t(`newRmdProgram`)}
                     </Typography>
                     {rmdRows.map((rmdMethod, index) => (
                         <div

@@ -15,7 +15,7 @@ import Typography, {
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getCallLogsQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
@@ -68,7 +68,7 @@ const CallLogCard = ({
     const timestampText = dayjs(createdAt).format('M/D/YY h:mm a');
     const missingSummaryText = t('sideSheet.noCallLogSummary');
     // Sidesheet Support
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const { featureFlags } = useOptimizely();
     const audioFeatureEnabled = featureFlags[FEATURE_FLAGS.CALL_AUDIO_FEATURE];
     const { isCallLogAudioPermitted } = usePermissionsContext();

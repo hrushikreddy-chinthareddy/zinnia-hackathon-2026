@@ -50,6 +50,7 @@ interface GetFormErrors {
     isDelete?: boolean;
     caseId?: string;
     t: TFunction;
+    hasCase?: boolean;
 }
 
 export const AdditionalAddressLine = ({
@@ -171,12 +172,13 @@ export const getFormErrors = ({
     caseId,
     isDelete,
     t,
+    hasCase,
 }: GetFormErrors) => {
     let errors: Errors = {};
 
     const { addressLine1, city, state, zipCode } = address;
 
-    if (caseId == null) {
+    if (caseId == null && hasCase) {
         errors = { ...errors, caseId: `${t('allFields.missingCaseDocument')}` };
     }
 

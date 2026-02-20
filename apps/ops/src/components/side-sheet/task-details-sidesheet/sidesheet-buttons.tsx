@@ -100,7 +100,11 @@ const ViewTaskButton = ({
     return disabled ? (
         <Tooltip
             placement={PopoverPlacement.BottomRight}
-            body={t('sideSheet.task.noPermissionToViewTask')}
+            body={
+                task.ciamaccess === false
+                    ? (t('sideSheet.task.noAccessToTask') as string)
+                    : (t('sideSheet.task.noPermissionToViewTask') as string)
+            }
             key={`view-task-tooltip`}
         >
             {button}

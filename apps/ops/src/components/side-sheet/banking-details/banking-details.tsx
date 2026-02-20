@@ -6,7 +6,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getBankAccountType } from '@deps/helpers/party-info-helpers';
 import { formatAccountNumber, toTitleCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as CircleExclamationIcon } from '@deps/styles/elements/icons/circles/circle-exclamation.svg';
@@ -15,7 +15,7 @@ import { BankAccount } from '@zinnia/api-types/types/sor';
 
 const BankingDetails = ({ bankDetails }: { bankDetails?: BankAccount }) => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     if (!bankDetails) {
         return (

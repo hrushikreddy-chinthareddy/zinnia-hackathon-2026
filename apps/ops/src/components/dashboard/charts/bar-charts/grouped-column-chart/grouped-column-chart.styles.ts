@@ -1,12 +1,13 @@
 export const AXIS_TITLE_STYLE: Highcharts.CSSObject = {
-    color: '#212121',
-    fontSize: '14px',
+    color: 'var(--color-base-text-primary)',
+    fontSize: 'var(--measure-dimension-font-size-md, 14px)',
     fontWeight: '700',
     fontFamily: 'Lato',
 };
 
 export const AXIS_LABEL_STYLE = {
-    fontSize: '13px',
+    color: 'var(--color-base-text-primary)',
+    fontSize: 'var(--measure-dimension-font-size-sm, 13px)',
     fontWeight: '600',
     fontFamily: 'Lato',
 };
@@ -15,9 +16,9 @@ export const DRILLDOWN_STYLES = {
     breadcrumbs: {
         buttonTheme: {
             style: {
-                fontSize: '13px',
+                fontSize: 'var(--measure-dimension-font-size-sm, 13px)',
                 fontWeight: '600',
-                color: '#00628B',
+                color: 'var(--color-base-text-link)',
                 fontFamily: 'Lato',
             },
             states: {
@@ -30,8 +31,8 @@ export const DRILLDOWN_STYLES = {
         separator: {
             text: ' / ',
             style: {
-                color: '#666666',
-                fontSize: '13px',
+                color: 'var(--color-base-text-secondary)',
+                fontSize: 'var(--measure-dimension-font-size-sm, 13px)',
                 fontWeight: '600',
                 fontFamily: 'Lato',
             },
@@ -39,7 +40,7 @@ export const DRILLDOWN_STYLES = {
     },
     activeAxisLabel: {
         textDecoration: 'none',
-        color: '#00628B',
+        color: 'var(--color-base-text-link)',
         fontWeight: '600',
     },
 } as const;

@@ -20,7 +20,10 @@ export type MittEvents = {
     closeSecondary: undefined;
 };
 
-export interface SideSheetContextProps {
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
+export interface SideSheetContextLegacyProps {
     events: Emitter<MittEvents>;
     changeSideSheetContent: (
         header: string | React.ReactNode,
@@ -36,19 +39,34 @@ export interface SideSheetContextProps {
     onClose: () => void;
 }
 
-export const SideSheetContext = createContext<SideSheetContextProps>(
-    {} as SideSheetContextProps
-);
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
+export const SideSheetContextLegacy =
+    createContext<SideSheetContextLegacyProps>(
+        {} as SideSheetContextLegacyProps
+    );
 
-export const useSideSheetContext = () => {
-    return useContext(SideSheetContext);
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
+export const useSideSheetContextLegacy = () => {
+    return useContext(SideSheetContextLegacy);
 };
 
-interface SideSheetProviderProps {
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
+interface SideSheetProviderLegacyProps {
     children: React.ReactNode;
 }
 
-export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
+/**
+ * @deprecated Use standard Sidesheet from Bloom component library
+ */
+export const SideSheetProviderLegacy = ({
+    children,
+}: SideSheetProviderLegacyProps) => {
     const emitter = useEmitter<MittEvents>();
     const [header, setHeader] = useState<string | undefined>('');
     const [headerComponent, setHeaderComponent] = useState<React.ReactNode>(
@@ -158,7 +176,7 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
     const ComponentToRender = contentComponent;
 
     return (
-        <SideSheetContext.Provider
+        <SideSheetContextLegacy.Provider
             value={{
                 events: emitter,
                 handleOpen,
@@ -190,6 +208,6 @@ export const SideSheetProvider = ({ children }: SideSheetProviderProps) => {
             >
                 {secondarySideSheetContent}
             </SideSheet>
-        </SideSheetContext.Provider>
+        </SideSheetContextLegacy.Provider>
     );
 };

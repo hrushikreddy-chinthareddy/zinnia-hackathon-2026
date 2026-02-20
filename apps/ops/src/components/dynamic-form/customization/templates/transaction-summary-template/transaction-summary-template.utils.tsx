@@ -148,10 +148,17 @@ type RequestBodyBuilder = (customData: any) => any;
 const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
     INITIATE_BENECHANGE_TRANSACTION: (customData) => {
         const { task } = customData;
-        const requestSource =
-            customData.businessKey === PROCESS_WITHOUT_DOCUMENT
-                ? REQUEST_SOURCE.SELF_SERVE
-                : REQUEST_SOURCE.DATA_ENTRY;
+
+        const isBusinessKeyMissing = customData.businessKey === undefined;
+        const isCaseIdMissing = customData.caseId === undefined;
+
+        const isSelfServe =
+            customData.businessKey === PROCESS_WITHOUT_DOCUMENT ||
+            (isBusinessKeyMissing && isCaseIdMissing);
+
+        const requestSource = isSelfServe
+            ? REQUEST_SOURCE.SELF_SERVE
+            : REQUEST_SOURCE.DATA_ENTRY;
 
         const actionData = Array.isArray(customData?.actionData)
             ? customData.actionData.map((item: any) => {

@@ -12,7 +12,6 @@ import IllustrationDetailsContent from './content/illustration-details-content';
 import IllustrationDetailsHeader from './header/illustration-details-header';
 import NoIllustration from './no-illustration';
 import IllustrationDetailsToolbar from './toolbar/illustration-details-toolbar';
-import { getProductCarrierName } from '../../helpers/get-product-carrier-name';
 import { IllustrationDetailProvider } from '../../providers/IllustrationDetailProvider';
 import { useSelectedIllustration } from '../../providers/SelectedIllustrationProvider';
 import { EAppProviders } from '../eapp/eapp-providers';
@@ -89,7 +88,7 @@ export default function IllustrationDetails({
                     <Skeleton loading={isLoading}>
                         <IllustrationDetailsHeader
                             title={illustration.title}
-                            carrier={getProductCarrierName(product)}
+                            carrier={product?.carrier}
                             eAppId={eAppId}
                             eAppLink={getEAppLink()}
                             hasIllustrationSelected={hasIllustrationSelected()}

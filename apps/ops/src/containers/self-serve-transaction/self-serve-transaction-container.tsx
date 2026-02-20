@@ -1,16 +1,29 @@
 import Form, { IChangeEvent } from '@rjsf/core';
 import { GenericObjectType, RJSFSchema } from '@rjsf/utils';
-import { createRef, RefObject, useEffect, useMemo, useState } from 'react';
+import { TFunction } from 'i18next';
+import {
+    createRef,
+    RefObject,
+    useEffect,
+    useMemo,
+    useState,
+    useCallback,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import TransactionNavigationButtons, {
     ParentPage,
 } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import StartStep from '@deps/components/workflows/start-step/start-step';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
+import { useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import { FormMetadata } from '@deps/models/case/task';
 import { browserLogError } from '@deps/utils/browser-logging';
@@ -57,15 +70,41 @@ const SelfServeTransactionContainer = ({
     submitResponseHandler,
     confirmStepSubtitle,
 }: SelfServeTransactionContainerProps) => {
+    const { featureFlags } = useOptimizely();
+
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policy.policyNumber,
+        process: [processType],
+        requestSubType: processSubType,
+        enabled: !!policy.policyNumber && !!featureFlags,
+    });
+    const hasCases =
+        Array.isArray(casesResponse?.data) && casesResponse.data.length > 0;
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'selfServeTransaction',
     });
+
+    const getStartStepTitle = useCallback(
+        (transactionType: string, t: TFunction) => {
+            const partyRoleMap: Record<string, string> = {
+                ASSIGNEE_CHANGE: 'Assignees',
+                BENE_CHANGE: 'Beneficiaries',
+            };
+            const partyRole = partyRoleMap[transactionType] || '';
+            return t('start.title', { partyRole });
+        },
+        []
+    );
     const { schemaContent } = metaData;
     const { currentStepIndex, setCurrentStepIndex, goToNext } = useWorkflow();
     const { formData, setFormData } = useSelfServeTransactionContext();
     const [validationSummary, setValidationSummary] = useState<any>(null);
     const [hasValidationErrors, setHasValidationErrors] =
         useState<boolean>(false);
+    const [submitEnabled, setSubmitEnabled] = useState<boolean>(true);
+    const [submitDisabledStepIndex, setSubmitDisabledStepIndex] = useState<
+        number | null
+    >(null);
 
     const steps = useMemo(
         () => schemaContent?.tabSchemas ?? [],
@@ -108,6 +147,8 @@ const SelfServeTransactionContainer = ({
                 }));
             },
             setValidationSummary,
+            setSubmitEnabled,
+            setSubmitDisabledStepIndex,
         }),
         [formData, setFormData]
     );
@@ -175,7 +216,12 @@ const SelfServeTransactionContainer = ({
                             submitLabel={t('continue') ?? ''}
                             cancelLabel={t('cancel') ?? ''}
                             isSubmit={false}
-                            disableContinue={hasValidationErrors}
+                            disableContinue={
+                                hasValidationErrors ||
+                                (!submitEnabled &&
+                                    submitDisabledStepIndex ===
+                                        currentStepIndex)
+                            }
                             handleContinue={() =>
                                 handleStepContinue(
                                     title,
@@ -205,42 +251,74 @@ const SelfServeTransactionContainer = ({
         };
     });
 
-    const startStep: Step = {
-        isVisible: () => true,
-        component: (
-            <StartStep
-                parentPage={parentPage}
-                policy={policy}
-                state={formData}
-                setState={setFormData}
-                title={t('start.title')}
-                subtitle={startStepSubtitle}
-                processType={processType}
-                processSubType={processSubType}
-                leaveTransactionLink={leaveTransactionLink}
-            />
-        ),
-        text: t('start.title'),
-        index: 0,
-        screenReaderLabel: t('start.title'),
-    };
+    const startStep: Step = useMemo(
+        () => ({
+            isVisible: () => hasCases,
+            component: (
+                <StartStep
+                    parentPage={parentPage}
+                    policy={policy}
+                    state={formData}
+                    setState={setFormData}
+                    title={getStartStepTitle(transactionType, t)}
+                    subtitle={startStepSubtitle}
+                    processType={processType}
+                    processSubType={processSubType}
+                    leaveTransactionLink={leaveTransactionLink}
+                />
+            ),
+            text: getStartStepTitle(transactionType, t),
+            index: 0,
+            screenReaderLabel: getStartStepTitle(transactionType, t),
+        }),
+        [
+            hasCases,
+            parentPage,
+            policy,
+            formData,
+            setFormData,
+            transactionType,
+            t,
+            startStepSubtitle,
+            processType,
+            processSubType,
+            leaveTransactionLink,
+            getStartStepTitle,
+        ]
+    );
 
-    const confirmStep: Step = {
-        isVisible: () => true,
-        component: (
-            <ConfirmStep
-                customData={formData}
-                transactionType={transactionType}
-                submitResponseHandler={submitResponseHandler}
-                subTitle={confirmStepSubtitle}
-            />
-        ),
-        text: t('confirm.header'),
-        index: dynamicSteps.length + 1,
-        screenReaderLabel: t('confirm.header'),
-    };
+    const confirmStep: Step = useMemo(
+        () => ({
+            isVisible: () => true,
+            component: (
+                <ConfirmStep
+                    customData={formData}
+                    transactionType={transactionType}
+                    submitResponseHandler={submitResponseHandler}
+                    subTitle={confirmStepSubtitle}
+                />
+            ),
+            text: t('confirm.header'),
+            index: dynamicSteps.length + 1,
+            screenReaderLabel: t('confirm.header'),
+        }),
+        [
+            formData,
+            transactionType,
+            submitResponseHandler,
+            confirmStepSubtitle,
+            t,
+            dynamicSteps.length,
+        ]
+    );
 
-    const allSteps = [startStep, ...dynamicSteps, confirmStep];
+    const allSteps = useMemo(
+        () =>
+            [startStep, ...dynamicSteps, confirmStep]
+                .filter((step) => step.isVisible?.())
+                .map((step, idx) => ({ ...step, index: idx })),
+        [startStep, dynamicSteps, confirmStep]
+    );
 
     useEffect(() => {
         if (
@@ -256,6 +334,9 @@ const SelfServeTransactionContainer = ({
             };
         });
     }, [initialFormData, setFormData, policy]);
+    if (isLoading) {
+        return <PageLoader variant={PageLoaderVariant.Center} />;
+    }
     return (
         <div>
             <ProgressBarSteps

@@ -4,8 +4,8 @@ import React from 'react';
 
 import Button from '@deps/components/button/button';
 import {
-    SideSheetProvider,
-    useSideSheetContext,
+    SideSheetProviderLegacy,
+    useSideSheetContextLegacy,
 } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as AnnotationsIcon } from '@deps/styles/elements/icons/communications/annotations.svg';
 import { ReactComponent as PaperClipIcon } from '@deps/styles/elements/icons/communications/paper-clip.svg';
@@ -19,9 +19,9 @@ export default {
     decorators: [
         (Story) => (
             <div className="container">
-                <SideSheetProvider>
+                <SideSheetProviderLegacy>
                     <Story />
-                </SideSheetProvider>
+                </SideSheetProviderLegacy>
             </div>
         ),
     ],
@@ -29,7 +29,7 @@ export default {
 
 export const DocumentEmpty = () => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(
             'Documents (0)',
@@ -59,7 +59,7 @@ export const DocumentEmpty = () => {
 
 export const NoteEmpty = () => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(
             'Notes (0)',
@@ -89,7 +89,7 @@ export const NoteEmpty = () => {
 
 export const CallsEmpty = () => {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
     const openSideSheet = () => {
         sideSheet.changeSideSheetContent(
             'Calls (0)',

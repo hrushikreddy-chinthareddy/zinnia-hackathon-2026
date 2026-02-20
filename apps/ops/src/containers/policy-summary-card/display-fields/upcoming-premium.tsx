@@ -13,7 +13,7 @@ import NavElement, {
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import BankingDetails from '@deps/components/side-sheet/banking-details/banking-details';
 import { TranslationFiles } from '@deps/config/translations';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { policyDataToGlobalValues } from '@deps/helpers/global-values';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { BasePolicyComponentArgs } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -40,7 +40,7 @@ const TransactionLink: React.FC<BasePolicyComponentArgs> = ({
         TranslationFiles.COMMON,
         TranslationFiles.COLDEFS,
     ]);
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const premiumProgram = policy.systematicPrograms.getProgramsByReason(
         Reason.PREMIUM

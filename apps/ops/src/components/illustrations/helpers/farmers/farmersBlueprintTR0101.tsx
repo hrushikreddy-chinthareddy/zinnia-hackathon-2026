@@ -2999,14 +2999,6 @@ export const farmersBlueprintTR0101 = {
                                                 isEqual: false,
                                             },
                                             {
-                                                // Requires ADB rider to also be selected
-                                                type: 'matchesCondition',
-                                                value: ['Rider_ABRTRM'],
-                                                targetNodeId:
-                                                    'accelerated-death-benefit-rider-for-terminal-illness',
-                                                quantifier: 'any',
-                                            },
-                                            {
                                                 // Not available for Juvenile
                                                 type: 'numberComparisonCondition',
                                                 value: 18,

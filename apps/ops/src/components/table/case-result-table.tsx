@@ -48,6 +48,7 @@ import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import styles from './case-result-table.module.css';
 import CaseDetailField from '../card/case-search-card/case-detail-field';
+import TechnicalDetailsIndicator from '../card/case-search-card/technical-exception-indicator';
 import { CaseStatusTooltip } from '../case-list/components/case-status-tooltip';
 import Highlighter from '../highlighter/highlighter';
 import { PiiProps } from '../pii/pii';
@@ -65,7 +66,7 @@ interface PartyWithOthersProps extends PiiProps {
     isOwner?: boolean;
 }
 
-const PartyWithOthers = ({
+export const PartyWithOthers = ({
     text,
     entities,
     highlights,
@@ -271,14 +272,19 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                             ? toTitleCase(singleCase.processSubType)
                             : singleCase.process}
                     </Typography>
-                    <CaseDetailField
-                        text={singleCase.id}
-                        className={styles.detail}
-                        escalated={showBadge}
-                        highlights={
-                            searchValues?.caseId ? [searchValues.caseId] : null
-                        }
-                    />
+                    <div className={styles.caseIdRow}>
+                        <CaseDetailField
+                            text={singleCase.id}
+                            className={styles.detail}
+                            escalated={showBadge}
+                            highlights={
+                                searchValues?.caseId
+                                    ? [searchValues.caseId]
+                                    : null
+                            }
+                        />
+                        <TechnicalDetailsIndicator singleCase={singleCase} />
+                    </div>
                 </div>
             </TableCell>
             <TableCell>

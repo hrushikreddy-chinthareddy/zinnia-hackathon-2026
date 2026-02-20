@@ -45,3 +45,10 @@ export const ProcessesToCaseTypeMap: Partial<Record<Processes, CaseType>> = {
 };
 
 export const DocumentsLimit: number = 25;
+
+export enum DetailTypesEnum {
+    Escalation = 'ESCALATION',
+    Submission = 'SUBMISSION',
+    Deescalation = 'DE-ESCALATION',
+    SubmittionDetails = 'submissionDetails',
+}

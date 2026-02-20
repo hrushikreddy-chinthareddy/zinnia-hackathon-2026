@@ -1,4 +1,6 @@
 import { CaseAdditionalStepData } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-types';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import ComplianceDbUpdate from './bene-notification-tab/compliance-db-update/compliance-db-update';
 import ClaimsFundRelease from './claims-fund-release/claims-fund-release';
@@ -10,6 +12,7 @@ import {
 } from './death-audit-files/death-audit-files.types';
 import DeathAuditQualification from './death-audit-qualification/detah-audit-qualification';
 import DeathNotificationSidesheet from './death-notification';
+import IndexAutomationCase from './index-automation-case/index-automation-case';
 import ReceiveNewDocument from './receive-new-document/receive-new-document';
 import {
     StepProgramTypes,
@@ -22,10 +25,21 @@ type TransactionalStepAdditionalDataProps = {
     stepKey: TransactionsAdditionalDataStepIds;
 };
 
+export const stepsWithIndexAutomationCase = [
+    TransactionsAdditionalDataStepIds.receiveRequest,
+    TransactionsAdditionalDataStepIds.docIndentification,
+    TransactionsAdditionalDataStepIds.docFieldExtraction,
+    TransactionsAdditionalDataStepIds.docIndexedAndCaseCreated,
+    TransactionsAdditionalDataStepIds.unableToIdentifyDocument,
+];
+
 export const TransactionsStepAdditionalData = ({
     stepAdditionalData,
     stepKey,
 }: TransactionalStepAdditionalDataProps) => {
+    const { featureFlags } = useOptimizely();
+    const isIndexAutomationCaseEnabled =
+        featureFlags[FEATURE_FLAGS.INDEX_AUTOMATION_CASE];
     const renderAdditionalData = (id: TransactionsAdditionalDataStepIds) => {
         switch (id) {
             case TransactionsAdditionalDataStepIds.stopSystematicPrograms:
@@ -111,6 +125,17 @@ export const TransactionsStepAdditionalData = ({
                     />
                 );
             default:
+                if (
+                    isIndexAutomationCaseEnabled &&
+                    stepsWithIndexAutomationCase.includes(id)
+                ) {
+                    return (
+                        <IndexAutomationCase
+                            stepAdditionalData={stepAdditionalData}
+                            dataType={stepAdditionalData.dataType}
+                        />
+                    );
+                }
                 return null;
         }
     };

@@ -31,7 +31,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { useTaskIdFromUrl } from '@deps/hooks/useTaskIdFromUrl';
 import { Case, Statuses } from '@deps/models/case/case';
@@ -401,7 +401,7 @@ const StepProgressBar = ({
 //#region Progress Bar
 export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
     const { t } = useTranslation();
-    const sideSheet = useSideSheetContext();
+    const sideSheet = useSideSheetContextLegacy();
 
     const EXCEPTION_IN_PROGRESS = 'In Progress';
 

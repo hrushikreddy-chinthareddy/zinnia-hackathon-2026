@@ -60,7 +60,6 @@
                     "productType": "FIXEDANNUITY",
                     "policyStatus": "DEATHCLAIMPENDING",
                     "qualificationType": "NONQUALIFIED",
-                    "ira": true,
                     "netDeathBenefit": 65063.9,
                     "maturityDate": "2042-07-23",
                     "deathReportedNotificationDate": "2025-09-30",
@@ -83,8 +82,7 @@
                                 "dateOfBirth": "1942-01-02",
                                 "relationshipToInsured": "OTHER",
                                 "beneficiaryPartyType": "INDIVIDUAL",
-                                "beneficiaryPercentage": 100.0,
-                                "ssn": "921959643"
+                                "beneficiaryPercentage": 100.0
                             },
                             "email": {
                                 "emailType": "PERSONAL",

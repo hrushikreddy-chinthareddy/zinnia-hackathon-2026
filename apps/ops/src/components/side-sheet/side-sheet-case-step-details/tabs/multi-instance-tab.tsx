@@ -13,7 +13,7 @@ import GlobalTaskSideSheet from '@deps/components/side-sheet/task-details-sidesh
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Statuses } from '@deps/models/case/case';
 import { ExceptionStatuses } from '@deps/models/case/exception-instance';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -91,7 +91,7 @@ const getStepStatusText = (
 
 function SideSheetTask({ task }: { task: TaskView }) {
     const { t } = useTranslation();
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
     const router = useRouter();
     const caseId = router.query.id as string;
 

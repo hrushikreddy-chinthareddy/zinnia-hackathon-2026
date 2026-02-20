@@ -11,7 +11,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useKnowledgeBaseContext } from '@deps/contexts/KnowledgeBaseContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import useNavLink from '@deps/hooks/useNavLink';
 import { sendResponseFeedback } from '@deps/queries/api/knowledge-base';
 import { ReactComponent as Dislike } from '@deps/styles/elements/icons/icons_outlined/thumb-down.svg';
@@ -90,7 +90,7 @@ const ChatResponse = ({
     const markdownRef = useRef<HTMLDivElement | null>(null);
     const likeTimerRef = useRef<NodeJS.Timeout | null>(null);
 
-    const sidesheet = useSideSheetContext();
+    const sidesheet = useSideSheetContextLegacy();
 
     const validateFeedbackPayload = () => {
         if (feedbackComment.trim().length < 1) return false;

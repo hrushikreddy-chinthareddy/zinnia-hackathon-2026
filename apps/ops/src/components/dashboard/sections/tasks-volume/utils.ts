@@ -47,12 +47,14 @@ export const taskVolumeStartDates: Record<TaskVolumeTimeframeOptions, string> =
             .format(defaultDateFormat),
     };
 /**
- * CSV column definitions for task volume export
+ * CSV column definitions for task volume export (translated)
  */
-export const CSV_COLUMNS: { label: string; key: keyof FlattenedTaskData }[] = [
-    { label: 'Case type', key: 'caseType' },
-    { label: 'Task', key: 'taskName' },
-    { label: 'Total tasks', key: 'count' },
+export const generateCsvColumns = (
+    t: TFunction
+): { label: string; key: keyof FlattenedTaskData }[] => [
+    { label: t('allFields.caseType'), key: 'caseType' },
+    { label: t('allFields.task'), key: 'taskName' },
+    { label: t('allFields.totalTasks'), key: 'count' },
 ];
 
 export enum TaskStatus {

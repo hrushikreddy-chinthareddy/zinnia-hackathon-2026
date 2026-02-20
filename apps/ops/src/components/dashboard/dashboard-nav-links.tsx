@@ -49,6 +49,15 @@ export const DashboardTabNav: FC<
                     />
                     {t('allFields.cases')}
                 </TabTrigger>
+                <TabTrigger value={AnalyticsRouteValues.policies}>
+                    <Icon
+                        type={IconType.SHIELD_CHECKMARK}
+                        width={24}
+                        height={24}
+                        className="hidden lg:block"
+                    />
+                    {t('allFields.policiesAndContracts')}
+                </TabTrigger>
                 {usageTabEnabled && (
                     <TabTrigger value={AnalyticsRouteValues.usage}>
                         <Icon

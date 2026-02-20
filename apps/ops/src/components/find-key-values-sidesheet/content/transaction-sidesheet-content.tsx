@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import SidesheetCancelPending from '@deps/components/side-sheet/side-sheet-transaction/cancel-pending/side-sheet-cancel-pending';
 import SidesheetReverseRecreate from '@deps/components/side-sheet/side-sheet-transaction/reverse-recreate/side-sheet-reverse-recreate';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
-import { useSideSheetContext } from '@deps/contexts/SideSheetContext';
+import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { useViewState } from '@deps/contexts/ViewStateContext';
 import { useDebounce } from '@deps/hooks/useDebounce';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
@@ -44,11 +44,7 @@ import {
     getAllParties,
     addAccountingEntriesGroup,
 } from '../transformations/section-grouping';
-import {
-    getReversalTransactionId,
-    getTransactionAmount,
-    TransactionSidesheetViews,
-} from '../utils';
+import { getTransactionAmount, TransactionSidesheetViews } from '../utils';
 
 export const TransactionSidesheetContent = ({
     accountingEntries,
@@ -66,7 +62,7 @@ export const TransactionSidesheetContent = ({
     const { policy, policyDetails } = useContext(PolicyData);
 
     const { viewState, setViewState } = useViewState();
-    const { handleOpen } = useSideSheetContext();
+    const { handleOpen } = useSideSheetContextLegacy();
 
     const debouncedSearchValue = useDebounce(searchValue, 200);
 
@@ -195,7 +191,7 @@ export const TransactionSidesheetContent = ({
                 policyNumber={policy?.policyNumber}
                 planCode={policy?.product?.planCode}
                 transactionType={transaction?.transactionType}
-                reversalTransactionId={getReversalTransactionId(transaction)}
+                transactionId={transaction.transactionId}
             />
         );
     }

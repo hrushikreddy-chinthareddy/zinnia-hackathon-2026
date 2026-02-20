@@ -11,7 +11,7 @@ import NavElement, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
+import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as HexExclamation } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 
 export const EditAllocationsSystemDown = ({
@@ -20,7 +20,7 @@ export const EditAllocationsSystemDown = ({
     setIsNigo,
     setIsSuccessFlow,
 }: {
-    sideSheet: SideSheetContextProps;
+    sideSheet: SideSheetContextLegacyProps;
     setIsSystenDown: Dispatch<SetStateAction<boolean>>;
     setIsSuccessFlow: Dispatch<SetStateAction<boolean>>;
     setIsNigo: Dispatch<SetStateAction<boolean>>;

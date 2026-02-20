@@ -14,7 +14,7 @@ import NavElement, {
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { SideSheetContextProps } from '@deps/contexts/SideSheetContext';
+import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 import { ReactComponent as HexExclamation } from '@deps/styles/elements/icons/icons_outlined/hex-exclamation.svg';
 
 import { FundViewModel } from '../types';
@@ -25,7 +25,7 @@ interface IEditAllocationNigo {
     setIsNigo: Dispatch<SetStateAction<boolean>>;
     total: number;
     error: string;
-    sideSheet: SideSheetContextProps;
+    sideSheet: SideSheetContextLegacyProps;
     submitHandler: (location: string) => Promise<void>;
 }
 export const EditAllocationNigo = ({

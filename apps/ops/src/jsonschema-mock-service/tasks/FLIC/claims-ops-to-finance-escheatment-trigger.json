@@ -71,15 +71,6 @@
                                                     "type": "string",
                                                     "title": "Due Diligence completed on doc"
                                                 },
-                                                "ira": {
-                                                    "type": "boolean",
-                                                    "title": "IRA or NON IRA",
-                                                    "enum": [true, false],
-                                                    "enumNames": [
-                                                        "IRA",
-                                                        "NON IRA"
-                                                    ]
-                                                },
                                                 "qualificationType": {
                                                     "type": "string",
                                                     "title": "IRA Type"
@@ -339,7 +330,6 @@
                                             },
                                             "required": [
                                                 "netDeathBenefit",
-                                                "ira",
                                                 "owners",
                                                 "beneficiary"
                                             ]
@@ -452,9 +442,6 @@
                                         "dataType": "string"
                                     }
                                 },
-                                "ira": {
-                                    "ui:widget": "radio"
-                                },
                                 "deathTransactionProcessDate": {
                                     "ui:options": {
                                         "dataType": "date"
@@ -486,7 +473,8 @@
                                                 "ui:options": {
                                                     "label": false,
                                                     "inline": true,
-                                                    "dataType": "string"
+                                                    "dataType": "string",
+                                                    "missingValueTooltipText": "Missing SSN"
                                                 }
                                             },
                                             "firstName": {
@@ -521,7 +509,8 @@
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
-                                                    "dataType": "date"
+                                                    "dataType": "date",
+                                                    "missingValueTooltipText": "Missing Date of Birth (DOB)"
                                                 }
                                             }
                                         },
@@ -531,7 +520,8 @@
                                                 "ui:options": {
                                                     "inline": true,
                                                     "label": false,
-                                                    "dataType": "string"
+                                                    "dataType": "string",
+                                                    "missingValueTooltipText": "Missing Address"
                                                 }
                                             },
                                             "addressLine2": {
