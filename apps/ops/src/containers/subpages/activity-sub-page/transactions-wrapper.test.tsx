@@ -8,6 +8,7 @@ import {
 } from '@deps/contexts/HistoryFiltersContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { useTransactions } from '@deps/hooks/useTransactions';
 import { TransactionSummary } from '@deps/types/transactions';
 import {
     Policy,
@@ -25,11 +26,11 @@ jest.mock('react-i18next', () => ({
 
 jest.mock('@deps/hooks/useTransactions', () => ({
     initialFilterTransactions: {
-        [TransactionStatus.COMPLETED]: [],
-        [TransactionStatus.PENDING]: [],
-        [TransactionStatus.CANCELED]: [],
-        [TransactionStatus.FAILED]: [],
-        [TransactionStatus.REVERSED]: [],
+        Completed: [],
+        Pending: [],
+        Canceled: [],
+        Failed: [],
+        Reversed: [],
     },
     useTransactions: jest.fn(),
 }));
@@ -94,8 +95,6 @@ const renderComponent = ({
         [TransactionStatus.REVERSED]: [],
     };
 
-    // eslint-disable-next-line @typescript-eslint/no-require-imports
-    const { useTransactions } = require('@deps/hooks/useTransactions');
     (useTransactions as jest.Mock).mockReturnValue({
         data: mockTransactions,
         isLoading: false,
