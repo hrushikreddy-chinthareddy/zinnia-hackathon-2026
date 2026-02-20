@@ -33,7 +33,11 @@ const patchClientCaseMock = jest.mocked(patchClientCase);
 const loggingContext = {} as LoggingContext;
 
 describe('createClientCaseFromSureify', () => {
-    it('updates and redirects if a client case exists', async () => {
+    beforeEach(() => {
+        jest.clearAllMocks();
+    });
+
+    it('updates and redirects if a client case exists and feature flag is enabled', async () => {
         const newBusinessObject = {
             caseId: 'caseId',
         } as NewBusiness;
@@ -52,7 +56,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            true // upsertIfExists
         );
 
         expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
@@ -85,6 +90,37 @@ describe('createClientCaseFromSureify', () => {
         });
     });
 
+    it('does not update, and only redirects if a client case exists but feature flag is disabled', async () => {
+        searchClientCaseByEappIdMock.mockResolvedValue([
+            { id: 'client-case-id' },
+        ] as IllustrationsClientCase[]);
+
+        const { props, redirect } = await createClientCaseFromSureify(
+            'eappid',
+            'accessToken',
+            loggingContext,
+            false // upsertIfExists
+        );
+
+        expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
+            'eappid',
+            'accessToken',
+            expect.anything()
+        );
+
+        // When upsertIfExists is false, these should NOT be called
+        expect(getNewBusinessByIdMock).not.toHaveBeenCalled();
+        expect(buildClientCaseFromNewBusinessMock).not.toHaveBeenCalled();
+        expect(patchClientCaseMock).not.toHaveBeenCalled();
+
+        expect(props).toBeUndefined();
+        expect(redirect).toEqual({
+            destination:
+                '/illustrations/client-cases/client-case-id/illustrate',
+            permanent: false,
+        });
+    });
+
     it('opens the creation sideSheet if the insured sexAtBirth is not available (not a conversion)', async () => {
         const newBusinessObject = {
             caseId: 'caseId',
@@ -106,7 +142,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -165,7 +202,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(createClientCaseMock).toHaveBeenCalledWith(
@@ -205,7 +243,8 @@ describe('createClientCaseFromSureify', () => {
             const { props, redirect } = await createClientCaseFromSureify(
                 'eappid',
                 'accessToken',
-                loggingContext
+                loggingContext,
+                false // upsertIfExists
             );
 
             expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -244,7 +283,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -289,7 +329,8 @@ describe('createClientCaseFromSureify', () => {
         const { props, redirect } = await createClientCaseFromSureify(
             'eappid',
             'accessToken',
-            loggingContext
+            loggingContext,
+            false // upsertIfExists
         );
 
         expect(createClientCaseMock).toHaveBeenCalledWith(
