@@ -246,12 +246,11 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 return merge(
                     { props: commonProps },
-                    await createClientCaseFromSureify(
-                        eAppId,
+                    await createClientCaseFromSureify(eAppId, {
                         accessToken,
                         loggingContext,
-                        upsertIfExists
-                    )
+                        upsertIfExists,
+                    })
                 );
             }
             return {

@@ -32,6 +32,12 @@ const patchClientCaseMock = jest.mocked(patchClientCase);
 
 const loggingContext = {} as LoggingContext;
 
+const optionsWithUpsertSetTo = (upsertIfExists: boolean) => ({
+    accessToken: 'accessToken',
+    loggingContext,
+    upsertIfExists,
+});
+
 describe('createClientCaseFromSureify', () => {
     beforeEach(() => {
         jest.clearAllMocks();
@@ -53,11 +59,9 @@ describe('createClientCaseFromSureify', () => {
             id: 'client-case-id',
         } as IllustrationsClientCase);
 
-        const { props, redirect } = await createClientCaseFromSureify(
+        const result = await createClientCaseFromSureify(
             'eappid',
-            'accessToken',
-            loggingContext,
-            true // upsertIfExists
+            optionsWithUpsertSetTo(true)
         );
 
         expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
@@ -82,8 +86,8 @@ describe('createClientCaseFromSureify', () => {
             expect.anything()
         );
 
-        expect(props).toBeUndefined();
-        expect(redirect).toEqual({
+        expect('props' in result).toBe(false);
+        expect('redirect' in result && result.redirect).toEqual({
             destination:
                 '/illustrations/client-cases/client-case-id/illustrate',
             permanent: false,
@@ -95,11 +99,9 @@ describe('createClientCaseFromSureify', () => {
             { id: 'client-case-id' },
         ] as IllustrationsClientCase[]);
 
-        const { props, redirect } = await createClientCaseFromSureify(
+        const result = await createClientCaseFromSureify(
             'eappid',
-            'accessToken',
-            loggingContext,
-            false // upsertIfExists
+            optionsWithUpsertSetTo(false)
         );
 
         expect(searchClientCaseByEappIdMock).toHaveBeenCalledWith(
@@ -113,8 +115,8 @@ describe('createClientCaseFromSureify', () => {
         expect(buildClientCaseFromNewBusinessMock).not.toHaveBeenCalled();
         expect(patchClientCaseMock).not.toHaveBeenCalled();
 
-        expect(props).toBeUndefined();
-        expect(redirect).toEqual({
+        expect('props' in result).toBe(false);
+        expect('redirect' in result && result.redirect).toEqual({
             destination:
                 '/illustrations/client-cases/client-case-id/illustrate',
             permanent: false,
@@ -139,11 +141,9 @@ describe('createClientCaseFromSureify', () => {
 
         getNewBusinessByIdMock.mockResolvedValue(newBusinessObject);
 
-        const { props, redirect } = await createClientCaseFromSureify(
+        const result = await createClientCaseFromSureify(
             'eappid',
-            'accessToken',
-            loggingContext,
-            false // upsertIfExists
+            optionsWithUpsertSetTo(false)
         );
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -156,8 +156,8 @@ describe('createClientCaseFromSureify', () => {
             expect.anything()
         );
 
-        expect(redirect).toBeUndefined();
-        expect(props).toEqual({
+        expect('redirect' in result).toBe(false);
+        expect('props' in result && result.props).toEqual({
             clientCase: {
                 insuredDetails: {
                     firstName: 'John',
@@ -199,11 +199,9 @@ describe('createClientCaseFromSureify', () => {
             id: 'new-client-case-id',
         });
 
-        const { props, redirect } = await createClientCaseFromSureify(
+        const result = await createClientCaseFromSureify(
             'eappid',
-            'accessToken',
-            loggingContext,
-            false // upsertIfExists
+            optionsWithUpsertSetTo(false)
         );
 
         expect(createClientCaseMock).toHaveBeenCalledWith(
@@ -212,8 +210,8 @@ describe('createClientCaseFromSureify', () => {
             expect.anything()
         );
 
-        expect(props).toBeUndefined();
-        expect(redirect).toEqual({
+        expect('props' in result).toBe(false);
+        expect('redirect' in result && result.redirect).toEqual({
             destination:
                 '/illustrations/client-cases/new-client-case-id/illustrate',
             permanent: false,
@@ -240,11 +238,9 @@ describe('createClientCaseFromSureify', () => {
 
             getNewBusinessByIdMock.mockResolvedValue(newBusinessObject);
 
-            const { props, redirect } = await createClientCaseFromSureify(
+            const result = await createClientCaseFromSureify(
                 'eappid',
-                'accessToken',
-                loggingContext,
-                false // upsertIfExists
+                optionsWithUpsertSetTo(false)
             );
 
             expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -257,7 +253,8 @@ describe('createClientCaseFromSureify', () => {
                 expect.anything()
             );
 
-            expect(redirect).toBeUndefined();
+            expect('redirect' in result).toBe(false);
+            const props = 'props' in result ? result.props : undefined;
             expect(props?.fetchingErrorOrigin).not.toBeUndefined();
             expect(props?.fetchingErrorMessage).toMatch(
                 /\bmissing insured required fields\b/
@@ -280,11 +277,9 @@ describe('createClientCaseFromSureify', () => {
 
         getNewBusinessByIdMock.mockResolvedValue(newBusinessObject);
 
-        const { props, redirect } = await createClientCaseFromSureify(
+        const result = await createClientCaseFromSureify(
             'eappid',
-            'accessToken',
-            loggingContext,
-            false // upsertIfExists
+            optionsWithUpsertSetTo(false)
         );
 
         expect(getNewBusinessByIdMock).toHaveBeenCalledWith(
@@ -297,7 +292,8 @@ describe('createClientCaseFromSureify', () => {
             expect.anything()
         );
 
-        expect(redirect).toBeUndefined();
+        expect('redirect' in result).toBe(false);
+        const props = 'props' in result ? result.props : undefined;
         expect(props?.fetchingErrorOrigin).not.toBeUndefined();
         expect(props?.fetchingErrorMessage).toMatch(/\bface amount\b/);
     });
@@ -326,11 +322,9 @@ describe('createClientCaseFromSureify', () => {
             id: 'new-client-case-id',
         });
 
-        const { props, redirect } = await createClientCaseFromSureify(
+        const result = await createClientCaseFromSureify(
             'eappid',
-            'accessToken',
-            loggingContext,
-            false // upsertIfExists
+            optionsWithUpsertSetTo(false)
         );
 
         expect(createClientCaseMock).toHaveBeenCalledWith(
@@ -338,8 +332,8 @@ describe('createClientCaseFromSureify', () => {
             'accessToken',
             expect.anything()
         );
-        expect(props).toBeUndefined();
-        expect(redirect).toEqual({
+        expect('props' in result).toBe(false);
+        expect('redirect' in result && result.redirect).toEqual({
             destination:
                 '/illustrations/client-cases/new-client-case-id/illustrate',
             permanent: false,
