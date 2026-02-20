@@ -25,9 +25,9 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import PolicyDetailsPage from './policy-details-page';
+import PolicyDetailsPage from './policy-slug';
 
-export type { PolicyPageProps } from './policy-details-page';
+export type { PolicyPageProps } from './policy-slug';
 
 const parseSlugToKey = (slug: string[] | undefined): string => {
     if (!slug || slug.length === 0) return 'policyDetails';

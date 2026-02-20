@@ -1,10 +1,19 @@
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vitest/config';
-import tsconfigPaths from 'vite-tsconfig-paths';
 import svgr from 'vite-plugin-svgr';
+import tsconfigPaths from 'vite-tsconfig-paths';
+import { defineConfig } from 'vitest/config';
 
-const mediaTypes = ['png', 'jpg', 'jpeg', 'gif',  'webp', 'ico', 'bmp', 'avif', 'webp'];
-
+const mediaTypes = [
+    'png',
+    'jpg',
+    'jpeg',
+    'gif',
+    'webp',
+    'ico',
+    'bmp',
+    'avif',
+    'webp',
+];
 
 export default defineConfig({
     resolve: {
@@ -24,21 +33,21 @@ export default defineConfig({
         tsconfigPaths({
             projects: ['./tsconfig.paths.json'],
         }),
-         /**
-       * A custom plugin to convert media files to data URLs for jsdom resources: usable
-       */
-      {
-        name: 'media-to-data-url',
-        enforce: 'pre',
-        load(id) {
-          for (const mediaType of mediaTypes) {
-            if (id.endsWith(`.${mediaType}`)) {
-              const src = readFileSync(id).toString('base64');
-              return `export default "data:image/${mediaType};base64,${src}"`;
-            }
-          }
+        /**
+         * A custom plugin to convert media files to data URLs for jsdom resources: usable
+         */
+        {
+            name: 'media-to-data-url',
+            enforce: 'pre',
+            load(id) {
+                for (const mediaType of mediaTypes) {
+                    if (id.endsWith(`.${mediaType}`)) {
+                        const src = readFileSync(id).toString('base64');
+                        return `export default "data:image/${mediaType};base64,${src}"`;
+                    }
+                }
+            },
         },
-      },
     ],
     test: {
         globals: true,
@@ -59,18 +68,6 @@ export default defineConfig({
                     setupFiles: ['./vitest/vitest.setup.ts'],
                 },
             },
-            // {
-            //     extends: true,
-            //     test: {
-            //         name: 'browser',
-            //         include: ['**/*.vitest.browser.{test,spec}.{ts,tsx}'],
-            //         browser: {
-            //             enabled: true,
-            //             provider: playwright(),
-            //             instances: [{ browser: 'chromium' }],
-            //         },
-            //     },
-            // },
         ],
     },
 });

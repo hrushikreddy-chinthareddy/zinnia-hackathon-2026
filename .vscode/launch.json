@@ -34,6 +34,7 @@
       "runtimeArgs": ["dev"],
       "skipFiles": [
         "<node_internals>/**",
+        "**/VM*",
         "**/node_modules/**",
         "<eval>/**",
         "**/.next/**"
@@ -60,6 +61,18 @@
         "uriFormat": "%s",
         "webRoot": "${workspaceFolder}/apps/ops"
       }
+    },
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Test File in Vitest",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "cwd": "${workspaceFolder}/apps/ops",
+      "program": "${workspaceFolder}/apps/ops/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${file}"],
+      "smartStep": true,
+      "console": "integratedTerminal"
     }
   ]
 }

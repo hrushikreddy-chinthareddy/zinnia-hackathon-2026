@@ -11,7 +11,7 @@ import {
     FeatureFlagVariableType,
 } from '@deps/utils/optimizely/optimizely';
 
-interface OptimizelyData {
+export interface OptimizelyData {
     featureFlags: FeatureFlags;
     featureFlagVariables: FeatureFlagVariableType;
     areFlagsLoading: boolean;
