@@ -42,7 +42,7 @@ type SidesheetReverseRecreateProps = {
     closeSidesheet: () => void;
     planCode: string | undefined;
     policyNumber: string | undefined;
-    reversalTransactionId: string | undefined;
+    transactionId: string | undefined;
     transactionType: string | undefined;
 };
 
@@ -53,7 +53,7 @@ export default function SidesheetReverseRecreate({
     exitTransaction,
     planCode,
     policyNumber,
-    reversalTransactionId,
+    transactionId,
     transactionType,
 }: SidesheetReverseRecreateProps) {
     const { t } = useTranslation();
@@ -83,7 +83,7 @@ export default function SidesheetReverseRecreate({
             planCode,
             policyNumber,
             correlationId,
-            reversalTransactionId,
+            transactionId,
             caseId
         );
 
@@ -93,7 +93,7 @@ export default function SidesheetReverseRecreate({
                 authSessionId: sessionId,
                 userId: partyId,
                 type: 'ReverseRecreate' as Transaction.transactionType,
-                transactionId: reversalTransactionId,
+                transactionId: transactionId,
                 correlationId: correlationId,
             }
         );
