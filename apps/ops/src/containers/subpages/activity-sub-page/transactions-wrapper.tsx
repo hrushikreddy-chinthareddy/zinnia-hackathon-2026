@@ -1,3 +1,4 @@
+import { Toggle } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import {
     useCallback,
@@ -27,7 +28,10 @@ import {
 } from '@deps/hooks/useTransactions';
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { TransactionSummary } from '@deps/types/transactions';
-import { TransactionStatus } from '@zinnia/api-types/types/sor';
+import {
+    Transaction as TransactionModel,
+    TransactionStatus,
+} from '@zinnia/api-types/types/sor';
 
 import styles from './transaction-wrapper.module.css';
 import { TransactionsTable } from './transactions-table';
@@ -38,38 +42,62 @@ export const TransactionsWrapper = () => {
     const { historyFilters, setHistoryFilters } = useHistoryFiltersContext();
     const { statusFilter = TransactionStatus.COMPLETED } = historyFilters;
     const [offset, setOffset] = useState(0);
+    const [hideDailyInterest, setHideDailyInterest] = useState(false);
     const limit = 25;
     const previousHistory = useRef(historyFilters);
-    const selectedDateRange = {
-        from:
-            historyFilters?.datesFilter?.from.format(
-                DEFAULT_DATE_DISPLAY_FORMAT
-            ) ??
-            dayjs().subtract(1, 'year').format(DEFAULT_DATE_DISPLAY_FORMAT),
-        to:
-            historyFilters?.datesFilter?.to.format(
-                DEFAULT_DATE_DISPLAY_FORMAT
-            ) ??
-            dayjs()
-                .add(1, 'month')
-                .endOf('month')
-                .format(DEFAULT_DATE_DISPLAY_FORMAT),
-    };
-    const {
-        data: filteredTransactions = initialFilterTransactions,
-        isLoading,
-        refetch,
-    } = useTransactions(
-        policy,
-        {
+    const isCompletedTab = statusFilter === TransactionStatus.COMPLETED;
+    const INTEREST_CREDIT_TYPE =
+        TransactionModel.transactionType.INTEREST_CREDIT;
+    const selectedDateRange = useMemo(
+        () => ({
+            from:
+                historyFilters?.datesFilter?.from.format(
+                    DEFAULT_DATE_DISPLAY_FORMAT
+                ) ??
+                dayjs().subtract(1, 'year').format(DEFAULT_DATE_DISPLAY_FORMAT),
+            to:
+                historyFilters?.datesFilter?.to.format(
+                    DEFAULT_DATE_DISPLAY_FORMAT
+                ) ??
+                dayjs()
+                    .add(1, 'month')
+                    .endOf('month')
+                    .format(DEFAULT_DATE_DISPLAY_FORMAT),
+        }),
+        [historyFilters?.datesFilter]
+    );
+    const dateFilters = useMemo(
+        () => ({
             ...historyFilters,
             datesFilter: {
                 from: dayjs(selectedDateRange.from).utc(),
                 to: dayjs(selectedDateRange.to).utc(),
             },
-        },
-        historyFilters?.transactionTypes
+        }),
+        [historyFilters, selectedDateRange]
     );
+
+    const {
+        data: filteredTransactions = initialFilterTransactions,
+        isLoading,
+        refetch,
+    } = useTransactions(policy, dateFilters, historyFilters?.transactionTypes);
+
+    // Date-only filters (excludes transactionTypes) so the counts query key is stable across type filter changes
+    const dateOnlyFilters = useMemo(
+        () => ({
+            statusFilter: historyFilters.statusFilter,
+            datesFilter: {
+                from: dayjs(selectedDateRange.from).utc(),
+                to: dayjs(selectedDateRange.to).utc(),
+            },
+        }),
+        [historyFilters.statusFilter, selectedDateRange]
+    );
+
+    // Fetch all transactions (no type filter) so per-type counts only change on initial load or date change
+    const { data: allTransactions = initialFilterTransactions } =
+        useTransactions(policy, dateOnlyFilters, undefined, true);
 
     const goToPage = useCallback(
         (pageNumber: number) => {
@@ -84,18 +112,49 @@ export const TransactionsWrapper = () => {
         }
     }, [previousHistory, historyFilters, goToPage]);
 
+    // Reset pagination when toggle changes
+    useEffect(() => {
+        goToPage(1);
+    }, [hideDailyInterest, goToPage]);
+
+    // Apply the toggle filter directly to filteredTransactions so tab counts and table stay in sync
+    const filteredWithToggle = useMemo(() => {
+        if (!hideDailyInterest) {
+            return filteredTransactions;
+        }
+        return {
+            ...filteredTransactions,
+            [TransactionStatus.COMPLETED]: (
+                filteredTransactions[TransactionStatus.COMPLETED] ?? []
+            ).filter((txn) => txn.transactionType !== INTEREST_CREDIT_TYPE),
+        };
+    }, [filteredTransactions, hideDailyInterest, INTEREST_CREDIT_TYPE]);
+
+    const currentTabFilteredTransactions = useMemo(
+        () => filteredWithToggle[statusFilter] ?? [],
+        [filteredWithToggle, statusFilter]
+    );
+
+    // Transaction counts per type — only changes on initial load or date filter change
+    const transactionTypeCounts = useMemo(() => {
+        const transactions = allTransactions[statusFilter] ?? [];
+        return transactions.reduce<Record<string, number>>((acc, txn) => {
+            const type = txn.transactionType ?? '';
+            acc[type] = (acc[type] ?? 0) + 1;
+            return acc;
+        }, {});
+    }, [allTransactions, statusFilter]);
+
     const liveResultsMessage = useMemo(() => {
-        if (filteredTransactions?.length) {
+        if (currentTabFilteredTransactions.length) {
             return t('policy.documents.xToYOfZ', {
-                x: filteredTransactions?.[statusFilter].length + 1,
+                x: offset + 1,
                 y: Math.min(
-                    filteredTransactions?.[statusFilter].length + limit,
-                    filteredTransactions?.[statusFilter].length || 0
+                    offset + limit,
+                    currentTabFilteredTransactions.length
                 ),
-                z: `${filteredTransactions?.[statusFilter].length ?? '0'}${
-                    filteredTransactions?.[statusFilter].length === 10000
-                        ? '+'
-                        : ''
+                z: `${currentTabFilteredTransactions.length ?? '0'}${
+                    currentTabFilteredTransactions.length === 10000 ? '+' : ''
                 }`,
             });
         } else {
@@ -103,7 +162,7 @@ export const TransactionsWrapper = () => {
                 status: statusFilter.toLocaleLowerCase(),
             });
         }
-    }, [filteredTransactions, limit, t, statusFilter]);
+    }, [currentTabFilteredTransactions, offset, limit, t, statusFilter]);
 
     const [selectedTransaction, setSelectedTransaction] =
         useState<TransactionSummary>({});
@@ -137,7 +196,10 @@ export const TransactionsWrapper = () => {
                 headerText={t('pageHeader.transactions.headerText') || ''}
             />
             <div className={styles.filters}>
-                <TransactionTypeSelect />
+                <TransactionTypeSelect
+                    transactionCounts={transactionTypeCounts}
+                    onInterestCreditSelected={() => setHideDailyInterest(false)}
+                />
                 <CustomDateRange
                     handleTimerangeChange={(dates) =>
                         setHistoryFilters((prevState) => ({
@@ -158,10 +220,24 @@ export const TransactionsWrapper = () => {
             {!isLoading ? (
                 <>
                     <TransactionStatusTabGroup
-                        transactions={filteredTransactions}
+                        transactions={filteredWithToggle}
                     >
+                        {isCompletedTab && (
+                            <div className={styles.toggleRow}>
+                                <Toggle
+                                    labelId="hide-daily-interest-toggle"
+                                    text={
+                                        t('allFields.hideDailyInterest') || ''
+                                    }
+                                    pressed={hideDailyInterest}
+                                    onClick={() =>
+                                        setHideDailyInterest((prev) => !prev)
+                                    }
+                                />
+                            </div>
+                        )}
                         <TransactionsTable
-                            transactions={filteredTransactions[statusFilter]}
+                            transactions={currentTabFilteredTransactions}
                             status={statusFilter}
                             offset={offset}
                             limit={limit}
@@ -171,8 +247,7 @@ export const TransactionsWrapper = () => {
                             <Typography
                                 variant={TypographyVariant.BodySm}
                                 className={`mb-6 lg:mb-0 ${
-                                    (filteredTransactions?.[statusFilter]
-                                        .length || 0) < 1
+                                    currentTabFilteredTransactions.length < 1
                                         ? 'hidden'
                                         : ''
                                 }`}
@@ -181,16 +256,14 @@ export const TransactionsWrapper = () => {
                                     x: offset + 1,
                                     y: Math.min(
                                         offset + limit,
-                                        filteredTransactions?.[statusFilter]
-                                            .length || 0
+                                        currentTabFilteredTransactions.length
                                     ),
                                     z: `${
-                                        filteredTransactions?.[
-                                            statusFilter
-                                        ].length.toLocaleString() ?? '0'
+                                        currentTabFilteredTransactions.length.toLocaleString() ??
+                                        '0'
                                     }${
-                                        filteredTransactions?.[statusFilter]
-                                            .length === 10000
+                                        currentTabFilteredTransactions.length ===
+                                        10000
                                             ? '+'
                                             : ''
                                     }`,
@@ -199,10 +272,7 @@ export const TransactionsWrapper = () => {
                             <PaginationControls
                                 limit={limit}
                                 offset={offset}
-                                total={
-                                    filteredTransactions?.[statusFilter]
-                                        .length || 0
-                                }
+                                total={currentTabFilteredTransactions.length}
                                 goToPage={goToPage}
                             />
                         </div>

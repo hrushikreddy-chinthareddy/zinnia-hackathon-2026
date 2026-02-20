@@ -12,6 +12,10 @@
             var(--measure-dimension-padding-4xl);
     }
 
+    .toggleRow {
+        padding-bottom: var(--measure-dimension-padding-4xl);
+    }
+
     .table {
         display: flex;
         flex-direction: column;
