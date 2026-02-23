@@ -10,7 +10,7 @@ import {
     formMetadataHandler,
     fundsEligibilityHandlers,
     personEligibilityHandlers,
-} from './eligibility-handlers';
+} from './policy-msw-handlers';
 import {
     createMockRouter,
     createMockPolicyPageProps,
