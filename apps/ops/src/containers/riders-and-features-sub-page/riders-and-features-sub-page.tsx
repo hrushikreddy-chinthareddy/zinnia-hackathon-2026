@@ -65,9 +65,6 @@ const RidersAndFeaturesSubPage = () => {
         setSelectedOption(ExtraFilters.All);
     }, [selectedTab]);
 
-    const riders = policyDetails.riders;
-    const features = policyDetails.features;
-
     return (
         <>
             <div className="text-gray-900">
