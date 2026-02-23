@@ -29,7 +29,7 @@ export default function RidersTable({
     const { t } = useTranslation();
     const riders = policyDetails.riders;
 
-    const openSideSheet = (rider: Rider) => {};
+    const openSideSheet = (_rider: Rider) => {};
     return (
         <Table>
             <TableHeader>

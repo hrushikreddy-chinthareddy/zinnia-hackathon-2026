@@ -25,7 +25,7 @@ export default function FeaturesTable({
 }) {
     const { t } = useTranslation();
     const features = policyDetails.features.all.filter(filterValidFeature);
-    const openSideSheet = (feature: PolicyFeature) => {};
+    const openSideSheet = (_feature: PolicyFeature) => {};
     return (
         <Table>
             <TableHeader>
