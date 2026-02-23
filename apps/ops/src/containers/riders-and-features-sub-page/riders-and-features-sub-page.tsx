@@ -1,4 +1,9 @@
-import { TabGroup, TabList, TabTrigger } from '@zinnia/bloom/components';
+import {
+    TabContent,
+    TabGroup,
+    TabList,
+    TabTrigger,
+} from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useContext, useEffect, useState } from 'react';
 
@@ -8,18 +13,21 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import PolicyExtrasCards, {
     ExtrasCardType,
 } from '@deps/containers/policy-extras-cards/policy-extras-cards';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import FeaturesTable from './features-table/features-table';
 import {
     calculaterFilterProps,
     ExtraFilters,
 } from './riders-and-features-sub-page.helpers';
+import RidersTable from './riders-table/riders-table';
 
 const RidersAndFeaturesSubPage = () => {
-    const { t } = useTranslation(undefined, {
-        keyPrefix: 'policy.detailCards.ridersAndFeatures',
-    });
+    const { t } = useTranslation();
     const { policyDetails } = useContext(PolicyData);
+    const { featureFlags } = useOptimizely();
 
     const [selectedTab, setSelectedTab] = useState<ExtrasCardType>(
         ExtrasCardType.Rider
@@ -28,6 +36,9 @@ const RidersAndFeaturesSubPage = () => {
     const [selectedOption, setSelectedOption] = useState<ExtraFilters>(
         ExtraFilters.All
     );
+
+    const showTableView =
+        featureFlags[FEATURE_FLAGS.FEATURES_AND_RIDERS_TABLE_VIEW];
 
     const options = calculaterFilterProps({
         riders: policyDetails.riders,
@@ -54,10 +65,17 @@ const RidersAndFeaturesSubPage = () => {
         setSelectedOption(ExtraFilters.All);
     }, [selectedTab]);
 
+    const riders = policyDetails.riders;
+    const features = policyDetails.features;
+
     return (
         <>
             <div className="text-gray-900">
-                <PageHeader headerText={t('title') || ''} />
+                <PageHeader
+                    headerText={
+                        t('policy.detailCards.ridersAndFeatures.title') || ''
+                    }
+                />
             </div>
             <CardContainer classNames="flex flex-col gap-4 !pt-0">
                 <>
@@ -77,30 +95,48 @@ const RidersAndFeaturesSubPage = () => {
                                 </TabTrigger>
                             ))}
                         </TabList>
+                        {showTableView && (
+                            <>
+                                <TabContent value={ExtraFilters.Riders}>
+                                    <RidersTable
+                                        policyDetails={policyDetails}
+                                    />
+                                </TabContent>
+                                <TabContent value={ExtraFilters.Features}>
+                                    <FeaturesTable
+                                        policyDetails={policyDetails}
+                                    />
+                                </TabContent>
+                            </>
+                        )}
                     </TabGroup>
-                    <SelectComponent
-                        className="md:w-1/4"
-                        label="Status"
-                        value={selectedOption}
-                        onChange={(value) =>
-                            setSelectedOption(value as ExtraFilters)
-                        }
-                        options={
-                            selectOption?.options.map((opt) => ({
-                                label: opt.text,
-                                value: opt.value as ExtraFilters,
-                                totalValue: opt.quantity,
-                                disabled: opt.disabled,
-                            })) ?? []
-                        }
-                        disabled={selectOption?.disabled}
-                    />
+                    {!showTableView && (
+                        <>
+                            <SelectComponent
+                                className="md:w-1/4"
+                                label="Status"
+                                value={selectedOption}
+                                onChange={(value) =>
+                                    setSelectedOption(value as ExtraFilters)
+                                }
+                                options={
+                                    selectOption?.options.map((opt) => ({
+                                        label: opt.text,
+                                        value: opt.value as ExtraFilters,
+                                        totalValue: opt.quantity,
+                                        disabled: opt.disabled,
+                                    })) ?? []
+                                }
+                                disabled={selectOption?.disabled}
+                            />
+                            <PolicyExtrasCards
+                                policyDetails={policyDetails}
+                                selectedTab={selectedTab}
+                                filterValues={filterValues}
+                            />
+                        </>
+                    )}
                 </>
-                <PolicyExtrasCards
-                    policyDetails={policyDetails}
-                    selectedTab={selectedTab}
-                    filterValues={filterValues}
-                />
             </CardContainer>
         </>
     );

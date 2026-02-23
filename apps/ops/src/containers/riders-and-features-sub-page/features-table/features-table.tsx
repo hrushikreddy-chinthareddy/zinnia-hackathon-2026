@@ -1,0 +1,73 @@
+import {
+    Button,
+    Table,
+    TableBody,
+    TableCell,
+    TableHeader,
+    TableHeaderCell,
+    TableRow,
+} from '@zinnia/bloom/components';
+import { useTranslation } from 'next-i18next';
+
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { PolicyFeature } from '@zinnia/api-types/types/sor';
+
+import {
+    filterValidFeature,
+    getFeatureNameText,
+    getFeatureStatusText,
+} from './features-table-helpers';
+export default function FeaturesTable({
+    policyDetails,
+}: {
+    policyDetails: PolicyDetails;
+}) {
+    const { t } = useTranslation();
+    const features = policyDetails.features.all.filter(filterValidFeature);
+    const openSideSheet = (feature: PolicyFeature) => {};
+    return (
+        <Table>
+            <TableHeader>
+                <TableHeaderCell className="typography-content-body-sm-bold">
+                    {t('policy.extras.riders.riderName')}
+                </TableHeaderCell>
+                <TableHeaderCell className="typography-content-body-sm-bold">
+                    {t('policy.extras.riders.status')}
+                </TableHeaderCell>
+                <TableHeaderCell className="typography-content-body-sm-bold">
+                    {t('allFields.startDate')}
+                </TableHeaderCell>
+                <TableHeaderCell className="typography-content-body-sm-bold">
+                    {t('allFields.endDate')}
+                </TableHeaderCell>
+            </TableHeader>
+            <TableBody>
+                {features?.map((feature) => (
+                    <TableRow key={`${feature.featureId}`}>
+                        <TableCell>
+                            <Button
+                                mode="link"
+                                size="small"
+                                onClick={() => {
+                                    openSideSheet(feature);
+                                }}
+                            >
+                                {getFeatureNameText(feature, t)}
+                            </Button>
+                        </TableCell>
+                        <TableCell>
+                            {getFeatureStatusText(feature, t)}
+                        </TableCell>
+                        <TableCell>
+                            {convertKebabedDateString(feature.startDate)}
+                        </TableCell>
+                        <TableCell>
+                            {convertKebabedDateString(feature.endDate)}
+                        </TableCell>
+                    </TableRow>
+                ))}
+            </TableBody>
+        </Table>
+    );
+}

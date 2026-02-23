@@ -5299,6 +5299,7 @@
                 "coverageAmount": "Monto de la cobertura",
                 "notElected": "No elegido",
                 "notElectedTooltip": "Los riders o características no elegidos son aquellos que el propietario tiene la opción de agregar a esta póliza. Actualmente no están pagando por estos tipos adicionales de cobertura y no pueden presentar reclamaciones por beneficios relacionados. Pero podrían potencialmente agregarlos a la póliza.",
+                "suspended": "Suspendido",
                 "terminalIllnessBenefit": "Hasta el {{percent}}% ({{amount}}).",
                 "terminated": "Terminado",
                 "terminatedTooltip": "Los riders o características terminados son aquellos que están vencidos o no se pueden usar nuevamente.",

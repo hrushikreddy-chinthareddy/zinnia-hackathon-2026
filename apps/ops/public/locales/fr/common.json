@@ -5245,6 +5245,7 @@
                 "coverageAmount": "Montant de la couverture",
                 "notElected": "Non choisi",
                 "notElectedTooltip": "Les avenants ou fonctionnalités non choisis sont ceux que le propriétaire a la possibilité d'ajouter à cette police. Ils ne paient pas actuellement pour ces types de couverture supplémentaire et pourraient ne pas être en mesure de soumettre des réclamations pour des prestations connexes. Cependant, ils pourraient éventuellement les ajouter à la police.",
+                "suspended": "Suspens",
                 "terminalIllnessBenefit": "Jusqu'à {{percent}}% ({{amount}})",
                 "terminated": "Terminé",
                 "terminatedTooltip": "Les avenants ou fonctionnalités résiliés sont ceux qui sont soit expirés, soit ne peuvent pas être utilisés à nouveau.",
