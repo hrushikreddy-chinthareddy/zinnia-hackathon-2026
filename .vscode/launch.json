@@ -24,7 +24,7 @@
         "action": "debugWithChrome"
       }
     },
-
+    //Allows debugging of the ops app server-side, with most unnecessary files skipped
     {
       "name": "Next.js: debug ops server-side",
       "type": "node",
@@ -46,7 +46,7 @@
       "console": "integratedTerminal",
       "outputCapture": "std"
     },
-
+    //Allows debugging of the ops app full stack, with most unnecessary files skipped
     {
       "name": "Next.js: debug ops full stack",
       "type": "node",
@@ -62,6 +62,20 @@
         "webRoot": "${workspaceFolder}/apps/ops"
       }
     },
+    //Allows debugging of all vitest tests in the ops app, with most unnecessary files skipped
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug All Vitest Tests",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "cwd": "${workspaceFolder}/apps/ops",
+      "program": "${workspaceFolder}/apps/ops/node_modules/vitest/vitest.mjs",
+      "args": ["run"], // "run" command ensures all tests run once and exit
+      "console": "integratedTerminal",
+      "smartStep": true
+    },
+    //Allows debugging of the current test file in vitest, with most unnecessary files skipped
     {
       "type": "node",
       "request": "launch",

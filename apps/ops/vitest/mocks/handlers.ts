@@ -1,47 +1,6 @@
 import { http, HttpResponse } from 'msw';
 
 import policyEndpointData from './policyPage/policyEndpointData.json';
-const mockPolicy = {
-    policyNumber: 'POL123',
-    carrierId: 'SBLI',
-    status: 'Active',
-    policyStatus: 'Active',
-    system: 'zahara',
-    product: {
-        planCode: 'PLAN1',
-        marketingName: 'Mock Product',
-        lineOfBusiness: 'LIFE',
-        productType: 'WHOLE_LIFE',
-    },
-    policyDates: {
-        issueDate: '2020-01-01',
-    },
-    parties: [
-        {
-            partyId: 'party-owner-1',
-            firstName: 'Jane',
-            lastName: 'Doe',
-            partyType: 'PERSON',
-            addresses: [
-                {
-                    addressId: 'addr-1',
-                    addressType: 'MAILING',
-                    line1: '123 Main St',
-                    city: 'Springfield',
-                    state: 'IL',
-                    zip: '62701',
-                },
-            ],
-            preferredAddressIndicator: 'addr-1',
-        },
-    ],
-    partyRoles: [
-        {
-            partyId: 'party-owner-1',
-            partyRole: 'OWNER',
-        },
-    ],
-};
 
 export const mockPolicyData = {
     policyNumber: 'POL456',
