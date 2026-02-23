@@ -25,7 +25,7 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import PolicyDetailsPage from './policy-slug';
+import PolicySlug from './policy-slug';
 
 export type { PolicyPageProps } from './policy-slug';
 
@@ -154,4 +154,4 @@ export const getServerSideProps = withPageAuthAndLogging(
     }
 );
 
-export default PolicyDetailsPage;
+export default PolicySlug;

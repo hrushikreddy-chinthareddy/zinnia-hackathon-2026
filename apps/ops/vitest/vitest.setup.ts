@@ -9,9 +9,6 @@ export const server = setupServer(...handlers);
 // Start MSW server before all tests
 beforeAll(() => {
     server.listen({ onUnhandledRequest: 'error' });
-    server.events.on('request:start', ({ request }) => {
-        console.log('Outgoing:', request.method, request.url);
-    });
 });
 
 // Reset handlers after each test (to remove any test-specific overrides)

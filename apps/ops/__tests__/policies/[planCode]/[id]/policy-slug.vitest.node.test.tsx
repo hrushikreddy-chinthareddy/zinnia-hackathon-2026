@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
-import PolicyDetailsPage from '@deps/pages/policies/[planCode]/[id]/policy-slug';
+import PolicySlug from '@deps/pages/policies/[planCode]/[id]/policy-slug';
 
 import { mockPolicyData } from '../../../../vitest/mocks/handlers';
 import { createTestWrapper } from '../../../../vitest/utils/create-test-wrapper';
@@ -83,7 +83,7 @@ const renderPolicyPage = (...runtimeHandlers: any[]) => {
         server.use(...runtimeHandlers);
     }
 
-    return render(<PolicyDetailsPage {...defaultProps} />, {
+    return render(<PolicySlug {...defaultProps} />, {
         wrapper: createTestWrapper(),
     });
 };

@@ -67,7 +67,7 @@ const Slugs = {
     BeneChange: 'benechange',
 };
 
-const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
+const PolicySlug: React.FC<PolicyPageProps> = ({
     user,
     subPageTitleKey,
 }: PolicyPageProps) => {
@@ -328,4 +328,4 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
     );
 };
 
-export default PolicyDetailsPage;
+export default PolicySlug;
