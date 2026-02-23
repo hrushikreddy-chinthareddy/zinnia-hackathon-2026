@@ -18,6 +18,7 @@ import { getUserData } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
+import { parseClientCase } from '@deps/queries/api/v1/client-case-manager/parse-client-case';
 import { postIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { SegmentPageName } from '@deps/types/segment-analytics';
@@ -117,7 +118,11 @@ export default function NewClientCase(
                 onCancel={closeSideSheet}
                 onSubmit={onSubmitForm}
                 isEdit={false}
-                clientCase={props.clientCase}
+                clientCase={
+                    props.clientCase
+                        ? parseClientCase(props.clientCase)
+                        : undefined
+                }
             />
         );
         sideSheet.handleOpen(true, 500);
@@ -238,12 +243,19 @@ export const getServerSideProps = withPageAuthAndLogging(
                     return serverSidePropsLogout();
                 }
 
+                const upsertIfExists =
+                    !!featureFlagDecisions?.[
+                        FEATURE_FLAGS
+                            .CASE_MANAGEMENT_SUREIFY_FLOW_UPSERT_IF_EXISTS
+                    ];
+
                 return merge(
                     { props: commonProps },
                     await createClientCaseFromSureify(
                         eAppId,
                         accessToken,
-                        loggingContext
+                        loggingContext,
+                        upsertIfExists
                     )
                 );
             }

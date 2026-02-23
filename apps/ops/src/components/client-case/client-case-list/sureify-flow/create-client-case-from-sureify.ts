@@ -69,7 +69,8 @@ import { validateConversionPayload } from './conversions';
 export const createClientCaseFromSureify = async (
     eAppId: string,
     accessToken: string,
-    loggingContext: LoggingContext
+    loggingContext: LoggingContext,
+    upsertIfExists: boolean
 ) => {
     const logPrefix = `ClientCases:New:Sureify`;
     const logCtx = {
@@ -99,52 +100,54 @@ export const createClientCaseFromSureify = async (
                 clientCaseId: defaultClientCaseId,
             });
 
-            const newBusinessResponseObject = await getNewBusinessById(
-                eAppId,
-                logCtx
-            );
-
-            if (isEmptyObject(newBusinessResponseObject)) {
-                // New Business was not found
-                throwTypedError(
-                    'New Business not found',
-                    NEW_BUSINESS_API_ORIGIN
-                );
-            }
-            if (isNewBusinessErrorResponse(newBusinessResponseObject)) {
-                // The API returned an error
-                throwTypedError(
-                    newBusinessResponseObject.message,
-                    NEW_BUSINESS_API_ORIGIN
-                );
-            }
-
-            const updatedClientCasePayload =
-                await buildClientCaseFromNewBusiness(
-                    newBusinessResponseObject,
+            if (upsertIfExists) {
+                const newBusinessResponseObject = await getNewBusinessById(
                     eAppId,
                     logCtx
                 );
 
-            // Strip null/undefined values to avoid overwriting existing data
-            const sanitizedPayload = stripNullishValues(
-                updatedClientCasePayload
-            );
+                if (isEmptyObject(newBusinessResponseObject)) {
+                    // New Business was not found
+                    throwTypedError(
+                        'New Business not found',
+                        NEW_BUSINESS_API_ORIGIN
+                    );
+                }
+                if (isNewBusinessErrorResponse(newBusinessResponseObject)) {
+                    // The API returned an error
+                    throwTypedError(
+                        newBusinessResponseObject.message,
+                        NEW_BUSINESS_API_ORIGIN
+                    );
+                }
 
-            const patchedCase = await patchClientCase(
-                {
-                    ...sanitizedPayload,
-                    id: defaultClientCaseId,
-                },
-                accessToken,
-                logCtx
-            );
+                const updatedClientCasePayload =
+                    await buildClientCaseFromNewBusiness(
+                        newBusinessResponseObject,
+                        eAppId,
+                        logCtx
+                    );
 
-            if (!patchedCase) {
-                return throwTypedError(
-                    'Client case was not updated',
-                    CLIENT_CASE_MANAGER_API_ORIGIN
+                // Strip null/undefined values to avoid overwriting existing data
+                const sanitizedPayload = stripNullishValues(
+                    updatedClientCasePayload
                 );
+
+                const patchedCase = await patchClientCase(
+                    {
+                        ...sanitizedPayload,
+                        id: defaultClientCaseId,
+                    },
+                    accessToken,
+                    logCtx
+                );
+
+                if (!patchedCase) {
+                    return throwTypedError(
+                        'Client case was not updated',
+                        CLIENT_CASE_MANAGER_API_ORIGIN
+                    );
+                }
             }
 
             return {

@@ -1,3 +1,4 @@
+import { TabTitle } from '@deps/components/dynamic-form/customization/templates/transaction-accordion/types';
 import { Action, EntityTypeValue } from '@deps/constants/policy';
 import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
@@ -476,7 +477,7 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
             }
         }
 
-        metadata[0].uiSchema.declineReason = {
+        const declineReasonUiSchema = {
             'ui:options': {
                 label: true,
                 widget: 'CheckBoxesSelectWidget',
@@ -484,6 +485,15 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
             },
             'ui:dataPath': ['declineReason'],
         };
+
+        metadata.forEach((tab: any) => {
+            if (
+                tab.title === TabTitle.ReviewFormData ||
+                tab.title === TabTitle.FormReview
+            ) {
+                tab.uiSchema.declineReason = declineReasonUiSchema;
+            }
+        });
 
         if (task) {
             Object.assign(task, {
