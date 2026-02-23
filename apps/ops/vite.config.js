@@ -12,7 +12,6 @@ const mediaTypes = [
     'ico',
     'bmp',
     'avif',
-    'webp',
 ];
 
 export default defineConfig({
