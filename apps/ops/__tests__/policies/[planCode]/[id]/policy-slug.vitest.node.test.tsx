@@ -6,7 +6,9 @@ import { describe, vi, beforeEach, test, expect } from 'vitest';
 import PolicySlug from '@deps/pages/policies/[planCode]/[id]/policy-slug';
 
 import {
+    documentsHandlers,
     formMetadataHandler,
+    fundsEligibilityHandlers,
     personEligibilityHandlers,
 } from './eligibility-handlers';
 import { createMockRouter, createMockPolicyPageProps } from './test-fixtures';
@@ -72,17 +74,24 @@ describe('policy-details-page', () => {
         });
 
         test('renders PersonSubPage when slug is people with person ID', async () => {
+            // Use actual owner partyId from mock data (Sam Mathew)
             mockRouter = createMockRouter({
-                slug: ['people', 'person-123'],
+                slug: ['people', '0a2b5d2279f34fc49b6de65739f14985'],
             });
 
-            renderPolicyPage();
+            renderPolicyPage(...personEligibilityHandlers);
 
-            // PersonSubPage should render - verify it's not showing the main People tab
-            const peopleHeading = screen.queryByRole('heading', {
-                name: 'People',
+            // PersonSubPage should render with the person's name
+            const personHeading = await screen.findByRole('heading', {
+                name: 'Sam Mathew',
             });
-            expect(peopleHeading).not.toBeInTheDocument();
+            expect(personHeading).toBeInTheDocument();
+
+            // Should show Identification card
+            const identificationHeading = await screen.findByText(
+                'Identification'
+            );
+            expect(identificationHeading).toBeInTheDocument();
         });
 
         test('does not render SelfServeTransactionContainer for assigneechange when transactionData is null', async () => {
@@ -94,10 +103,10 @@ describe('policy-details-page', () => {
 
             // Should not render transaction container, falls through to PersonSubPage
             // Verify it's not showing the main People tab
-            const peopleHeading = screen.queryByRole('heading', {
-                name: 'People',
+            const asigneeDetail = screen.queryByRole('heading', {
+                name: 'Asignee Details',
             });
-            expect(peopleHeading).not.toBeInTheDocument();
+            expect(asigneeDetail).not.toBeInTheDocument();
         });
 
         test('does not render SelfServeTransactionContainer for benechange when transactionData is null', async () => {
@@ -178,37 +187,31 @@ describe('policy-details-page', () => {
     });
 
     describe('transactions and policy slug routes', () => {
-        test('routes to correct component when slug is policy/coverage', async () => {
+        test('renders CoverageSubPage when slug is policy/coverage', async () => {
             mockRouter = createMockRouter({ slug: ['policy', 'coverage'] });
 
             renderPolicyPage();
 
-            // Verify routing worked - page should have navigation
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Base Coverage',
             });
-            expect(peopleLink).toBeInTheDocument();
-
-            // Should NOT show Policy Details (default fallback)
-            const policyDetails = screen.queryByText('Policy Details');
-            expect(policyDetails).not.toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is transactions/coverage', async () => {
+        test('renders CoverageSubPage when slug is transactions/coverage', async () => {
             mockRouter = createMockRouter({
                 slug: ['transactions', 'coverage'],
             });
 
             renderPolicyPage();
 
-            // Verify routing worked (backwards compatibility route)
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Base Coverage',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/policy-details', async () => {
+        test('renders PolicyDetailsContainer when slug is policy/policy-details', async () => {
             mockRouter = createMockRouter({
                 slug: ['policy', 'policy-details'],
             });
@@ -219,124 +222,113 @@ describe('policy-details-page', () => {
             expect(element).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/riders-and-features', async () => {
+        test('renders RidersAndFeaturesSubPage when slug is policy/riders-and-features', async () => {
             mockRouter = createMockRouter({
                 slug: ['policy', 'riders-and-features'],
             });
 
             renderPolicyPage();
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Riders and Features',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/policy-extras', async () => {
+        test('renders RidersAndFeaturesSubPage when slug is policy/policy-extras (backwards compatibility)', async () => {
             mockRouter = createMockRouter({
                 slug: ['policy', 'policy-extras'],
             });
 
             renderPolicyPage();
 
-            // Verify routing worked (backwards compatibility)
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Riders and Features',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/funds', async () => {
+        test('renders FundsSubPage when slug is policy/funds', async () => {
             mockRouter = createMockRouter({ slug: ['policy', 'funds'] });
 
-            renderPolicyPage();
+            renderPolicyPage(...fundsEligibilityHandlers);
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Funds and Accounts',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/premiums', async () => {
+        test('renders PremiumsSubPage when slug is policy/premiums', async () => {
             mockRouter = createMockRouter({ slug: ['policy', 'premiums'] });
 
             renderPolicyPage();
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Premiums',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/withdrawals', async () => {
+        test('renders WithdrawalsSubPage when slug is policy/withdrawals', async () => {
             mockRouter = createMockRouter({
                 slug: ['policy', 'withdrawals'],
             });
 
             renderPolicyPage();
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Withdrawals',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/loans', async () => {
+        test('renders LoansSubPage when slug is policy/loans', async () => {
             mockRouter = createMockRouter({ slug: ['policy', 'loans'] });
 
             renderPolicyPage();
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Loans',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
 
-        test('routes to correct component when slug is policy/annuitization', async () => {
+        test('renders AnnuitizationSubPage when slug is policy/annuitization', async () => {
             mockRouter = createMockRouter({
                 slug: ['policy', 'annuitization'],
             });
 
             renderPolicyPage();
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
-            });
-            expect(peopleLink).toBeInTheDocument();
+            const heading = await screen.findByText('Annuitization and Payout');
+            expect(heading).toBeInTheDocument();
         });
     });
 
     describe('activity slug routes', () => {
-        test('routes to correct component when slug is activity', async () => {
+        test('renders ActivitySubPage when slug is activity', async () => {
             mockRouter = createMockRouter({ slug: ['activity'] });
 
             renderPolicyPage();
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Activity',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
     });
 
     describe('documents slug routes', () => {
-        test('routes to correct component when slug is documents', async () => {
+        test('renders DocumentsSubPage when slug is documents', async () => {
             mockRouter = createMockRouter({ slug: ['documents'] });
 
-            renderPolicyPage();
+            renderPolicyPage(...documentsHandlers);
 
-            // Verify routing worked
-            const peopleLink = await screen.findByRole('link', {
-                name: 'People',
+            const heading = await screen.findByRole('heading', {
+                name: 'Documents',
             });
-            expect(peopleLink).toBeInTheDocument();
+            expect(heading).toBeInTheDocument();
         });
     });
 

@@ -22,6 +22,30 @@ export const personEligibilityHandlers = [
     ),
 ];
 
+export const fundsEligibilityHandlers = [
+    http.post(
+        '*/api/bpm/v1/policies/:planCode/:policyId/fundtransfer/eligibilitycheck',
+        () => HttpResponse.json({ status: 'Success' })
+    ),
+    http.post(
+        '*/api/bpm/v1/policies/:planCode/:policyId/fundallocations/eligibilitycheck',
+        () => HttpResponse.json({ status: 'Success' })
+    ),
+    http.get('*/api/funds/v1/carriers/:carrierId/products/:planCode', () =>
+        HttpResponse.json({ funds: [] })
+    ),
+    http.get(
+        '*/api/product-rate/v1/carriers/:carrierId/products/:planCode/*',
+        () => HttpResponse.json({ value: null })
+    ),
+];
+
+export const documentsHandlers = [
+    http.post('*/api/document/v3/documents/search', () =>
+        HttpResponse.json({ documents: [], totalCount: 0 })
+    ),
+];
+
 export const formMetadataHandler = http.get(
     '*/api/case/v1/form/metadata',
     () => {
