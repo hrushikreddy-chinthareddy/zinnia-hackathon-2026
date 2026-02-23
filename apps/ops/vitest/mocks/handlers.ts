@@ -94,6 +94,8 @@ export const handlers = [
                 product: {
                     ...policyEndpointData.product,
                     planCode: String(params.planCode ?? 'PLAN1'),
+                    lineOfBusiness: 'LIFE',
+                    productType: 'TERM',
                 },
             },
         });

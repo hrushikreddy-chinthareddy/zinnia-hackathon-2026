@@ -1,42 +1,38 @@
-import { vi } from 'vitest';
+import { createMockRouter as createGenericMockRouter } from '../../../../vitest/utils/create-mock-router';
 
 import type { NextRouter } from 'next/router';
 
 /**
- * Factory function to create a mock Next.js router with custom query params
+ * Default query parameters for policy page tests
+ */
+export const DEFAULT_POLICY_QUERY = {
+    id: 'POL123',
+    planCode: 'PLAN1',
+    slug: ['policy-details'],
+};
+
+/**
+ * Factory function to create a mock router for policy pages with custom query params
  */
 export const createMockRouter = (
     queryOverrides: Partial<NextRouter['query']> = {}
 ): Partial<NextRouter> => {
     const query = {
-        id: 'POL123',
-        planCode: 'PLAN1',
-        slug: ['policy-details'],
+        ...DEFAULT_POLICY_QUERY,
         ...queryOverrides,
     };
 
-    return {
+    const slugPath = query.slug
+        ? `/${Array.isArray(query.slug) ? query.slug.join('/') : query.slug}`
+        : '';
+    const asPath = `/policies/${query.planCode}/${query.id}${slugPath}`;
+
+    return createGenericMockRouter({
         query,
         pathname: '/policies/[planCode]/[id]/[...slug]',
-        asPath: `/policies/${query.planCode}/${query.id}${
-            query.slug
-                ? `/${
-                      Array.isArray(query.slug)
-                          ? query.slug.join('/')
-                          : query.slug
-                  }`
-                : ''
-        }`,
-        isReady: true,
-        push: vi.fn(),
-        replace: vi.fn(),
-        events: { on: vi.fn(), off: vi.fn(), emit: vi.fn() },
         route: '/policies/[planCode]/[id]/[...slug]',
-        basePath: '',
-        isFallback: false,
-        isLocaleDomain: false,
-        isPreview: false,
-    };
+        asPath,
+    });
 };
 
 /**
