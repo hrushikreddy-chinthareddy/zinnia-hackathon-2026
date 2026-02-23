@@ -69,22 +69,21 @@ describe('policy-details-page', () => {
             );
             expect(identificationHeading).toBeInTheDocument();
         });
-        //Need better testcase
+        // TODO: Just need to do in general
         test.todo(
             'does not render SelfServeTransactionContainer for assigneechange when transactionData is null'
         );
+        // TODO: Just need to do in general
 
-        //Need better testcase
         test.todo(
             'does not render SelfServeTransactionContainer for benechange when transactionData is null'
         );
+        // TODO: Need to figure out how to mock transaction data for these tests
 
-        //Need to figure out how to put in nec mockData for transactionData to exist
         test.todo(
             'renders SelfServeTransactionContainer for assigneechange when transactionData exists'
         );
-
-        //Need to figure out how to put in nec mockData for transactionData to exist
+        // TODO: Need to figure out how to mock transaction data for these tests
         test.todo(
             'renders SelfServeTransactionContainer for benechange when transactionData exists'
         );
@@ -114,6 +113,7 @@ describe('policy-details-page', () => {
     });
 
     describe('sub-page routing', () => {
+        // Routes that don't require additional MSW handlers
         test.each([
             { slug: ['policy', 'coverage'], heading: 'Base Coverage' },
             { slug: ['transactions', 'coverage'], heading: 'Base Coverage' },
@@ -143,6 +143,7 @@ describe('policy-details-page', () => {
             }
         );
 
+        // Requires fund transfer/allocation eligibility and fund data handlers
         test('renders FundsSubPage for policy/funds', async () => {
             mockRouter = createMockRouter({ slug: ['policy', 'funds'] });
             renderPolicyPage(...fundsEligibilityHandlers);
@@ -153,6 +154,7 @@ describe('policy-details-page', () => {
             expect(heading).toBeInTheDocument();
         });
 
+        // Requires document search API handler
         test('renders DocumentsSubPage for documents', async () => {
             mockRouter = createMockRouter({ slug: ['documents'] });
             renderPolicyPage(...documentsHandlers);
@@ -163,6 +165,7 @@ describe('policy-details-page', () => {
             expect(heading).toBeInTheDocument();
         });
 
+        // Uses findByText because the heading is not rendered with a heading role
         test('renders AnnuitizationSubPage for policy/annuitization', async () => {
             mockRouter = createMockRouter({
                 slug: ['policy', 'annuitization'],
@@ -173,6 +176,7 @@ describe('policy-details-page', () => {
             expect(heading).toBeInTheDocument();
         });
 
+        // Fallback: unrecognized, undefined, or empty slugs render the default PolicyDetailsContainer
         test.each([
             { slug: ['unknown-route'], label: 'unknown slug' },
             { slug: undefined as unknown as string[], label: 'no slug' },
