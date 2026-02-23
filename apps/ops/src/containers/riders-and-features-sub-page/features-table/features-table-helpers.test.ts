@@ -81,7 +81,7 @@ describe('getFeatureNameText', () => {
         } as PolicyFeature;
 
         const result = getFeatureNameText(feature, t);
-        expect(result).toBe('SOMECUSTOMTYPE');
+        expect(result).toBe('Somecustomtype');
     });
 
     it('returns empty string when featureType is undefined', () => {

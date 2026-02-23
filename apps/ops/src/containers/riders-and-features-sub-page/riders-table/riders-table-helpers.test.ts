@@ -2,10 +2,17 @@ import { TFunction } from 'next-i18next';
 
 import { PolicyParty } from '@deps/helpers/policy-sor/Parties';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 import { PartyStatus, Rider, Status } from '@zinnia/api-types/types/sor';
 
 import { getRiderInsured, getRiderStatusText } from './riders-table-helpers';
 import { RIDER_NOT_ELECTED } from '../../policy-extras-cards/consts';
+
+jest.mock('@deps/utils/browser-logging', () => ({
+    browserLogWarn: jest.fn(),
+}));
+
+const mockBrowserLogWarn = browserLogWarn as jest.Mock;
 
 const t = ((key: string) => key) as unknown as TFunction;
 
@@ -41,7 +48,7 @@ describe('getRiderStatusText', () => {
         };
 
         const result = getRiderStatusText(rider, t);
-        expect(result).toBe('Riders.notelected');
+        expect(result).toBe('Policy.extras.riders.notelected');
     });
 
     it('returns available text when rider status is active', () => {
@@ -51,7 +58,7 @@ describe('getRiderStatusText', () => {
         };
 
         const result = getRiderStatusText(rider, t);
-        expect(result).toBe('Riders.available');
+        expect(result).toBe('Policy.extras.riders.available');
     });
 
     it('returns active text when rider status is pending', () => {
@@ -61,7 +68,7 @@ describe('getRiderStatusText', () => {
         };
 
         const result = getRiderStatusText(rider, t);
-        expect(result).toBe('Riders.active');
+        expect(result).toBe('Policy.extras.riders.active');
     });
 
     it('returns terminated text when rider status is terminated', () => {
@@ -71,34 +78,24 @@ describe('getRiderStatusText', () => {
         };
 
         const result = getRiderStatusText(rider, t);
-        expect(result).toBe('Riders.terminated');
+        expect(result).toBe('Policy.extras.riders.terminated');
     });
 
     it('returns rider status and logs error for unknown status', () => {
-        const consoleSpy = jest
-            .spyOn(console, 'error')
-            .mockImplementation(() => {});
-
         const rider = {
             ...baseRider,
             status: 'unknown_status' as Status,
         };
 
         const result = getRiderStatusText(rider, t);
-        expect(result).toBe('unknown_status');
-        expect(consoleSpy).toHaveBeenCalledWith(
+        expect(result).toBe('Unknown_status');
+        expect(mockBrowserLogWarn).toHaveBeenCalledWith(
             'getRiderStatusText::Invalid or unsupported rider type',
-            'unknown_status'
+            { riderStatus: 'unknown_status' }
         );
-
-        consoleSpy.mockRestore();
     });
 
     it('returns empty string for unknown status when rider.status is undefined', () => {
-        const consoleSpy = jest
-            .spyOn(console, 'error')
-            .mockImplementation(() => {});
-
         const rider = {
             ...baseRider,
             status: undefined,
@@ -106,9 +103,10 @@ describe('getRiderStatusText', () => {
 
         const result = getRiderStatusText(rider, t);
         expect(result).toBe('');
-        expect(consoleSpy).toHaveBeenCalled();
-
-        consoleSpy.mockRestore();
+        expect(mockBrowserLogWarn).toHaveBeenCalledWith(
+            'getRiderStatusText::Invalid or unsupported rider type',
+            { riderStatus: undefined }
+        );
     });
 
     it('prioritizes notElected check over status', () => {
@@ -119,7 +117,7 @@ describe('getRiderStatusText', () => {
         };
 
         const result = getRiderStatusText(rider, t);
-        expect(result).toBe('Riders.notelected');
+        expect(result).toBe('Policy.extras.riders.notelected');
     });
 });
 
@@ -145,7 +143,7 @@ describe('getRiderInsured', () => {
         const policyDetails = mockPolicyDetails({});
 
         const result = getRiderInsured(policyDetails, rider);
-        expect(result).toEqual([{ name: '--', isPii: false }]);
+        expect(result).toEqual([{ name: '--' }]);
     });
 
     it('returns DEFAULT_ERROR_STRING when riderParticipant is undefined', () => {
@@ -156,7 +154,7 @@ describe('getRiderInsured', () => {
         const policyDetails = mockPolicyDetails({});
 
         const result = getRiderInsured(policyDetails, rider);
-        expect(result).toEqual([{ name: '--', isPii: false }]);
+        expect(result).toEqual([{ name: '--' }]);
     });
 
     it('returns insured data with href when party is linkable', () => {
@@ -181,7 +179,6 @@ describe('getRiderInsured', () => {
                 name: 'John Doe',
                 partyId: 'Party_1',
                 href: '/policies/PLAN1/POL123/people/Party_1',
-                isPii: true,
             },
         ]);
     });
@@ -204,7 +201,6 @@ describe('getRiderInsured', () => {
         expect(result).toEqual([
             {
                 name: 'Jane Doe',
-                isPii: true,
             },
         ]);
     });
@@ -227,7 +223,6 @@ describe('getRiderInsured', () => {
         expect(result).toEqual([
             {
                 name: 'No Id Person',
-                isPii: true,
             },
         ]);
     });
@@ -264,7 +259,6 @@ describe('getRiderInsured', () => {
                 name: 'Approved Person',
                 partyId: 'Party_1',
                 href: '/policies/PLAN1/POL123/people/Party_1',
-                isPii: true,
             },
         ]);
     });
@@ -287,7 +281,6 @@ describe('getRiderInsured', () => {
         expect(result).toEqual([
             {
                 name: '--',
-                isPii: true,
             },
         ]);
     });

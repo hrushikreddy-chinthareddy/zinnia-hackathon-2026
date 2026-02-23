@@ -94,49 +94,37 @@ export const calculaterFilterProps = ({
 
     return [
         {
-            text: t(
-                `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Riders}`
-            ),
+            text: t(`filter.${ExtraFilters.Riders}`),
             value: ExtraFilters.Riders,
             quantity: riders?.length,
             disabled: riders?.length === 0,
             options: [
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.All}`
-                    ),
+                    text: t(`filter.${ExtraFilters.All}`),
                     value: ExtraFilters.All,
                     quantity: totalRiders,
                     disabled: totalRiders === 0,
                 },
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Active}`
-                    ),
+                    text: t(`filter.${ExtraFilters.Active}`),
                     value: ExtraFilters.Active,
                     quantity: numActiveRiders,
                     disabled: numActiveRiders === 0,
                 },
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Available}`
-                    ),
+                    text: t(`filter.${ExtraFilters.Available}`),
                     value: ExtraFilters.Available,
                     quantity: numAvailableRiders,
                     disabled: numAvailableRiders === 0,
                 },
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Terminated}`
-                    ),
+                    text: t(`filter.${ExtraFilters.Terminated}`),
                     value: ExtraFilters.Terminated,
                     quantity: numTerminatedRiders,
                     disabled: numTerminatedRiders === 0,
                 },
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.NotElected}`
-                    ),
+                    text: t(`filter.${ExtraFilters.NotElected}`),
                     value: ExtraFilters.NotElected,
                     quantity: numNotElected,
                     disabled: numNotElected === 0,
@@ -144,41 +132,31 @@ export const calculaterFilterProps = ({
             ],
         },
         {
-            text: t(
-                `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Features}`
-            ),
+            text: t(`filter.${ExtraFilters.Features}`),
             value: ExtraFilters.Features,
             quantity: features.length,
             disabled: features.length === 0,
             options: [
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.All}`
-                    ),
+                    text: t(`filter.${ExtraFilters.All}`),
                     value: ExtraFilters.All,
                     quantity: totalFeatures,
                     disabled: totalFeatures === 0,
                 },
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Active}`
-                    ),
+                    text: t(`filter.${ExtraFilters.Active}`),
                     value: ExtraFilters.Active,
                     quantity: numActiveFeatures,
                     disabled: numActiveFeatures === 0,
                 },
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Available}`
-                    ),
+                    text: t(`filter.${ExtraFilters.Available}`),
                     value: ExtraFilters.Available,
                     quantity: numAvailableFeatures,
                     disabled: numAvailableFeatures === 0,
                 },
                 {
-                    text: t(
-                        `policy.detailCards.ridersAndFeatures.filter.${ExtraFilters.Terminated}`
-                    ),
+                    text: t(`filter.${ExtraFilters.Terminated}`),
                     value: ExtraFilters.Terminated,
                     quantity: numTerminatedFeatures,
                     disabled: numTerminatedFeatures === 0,

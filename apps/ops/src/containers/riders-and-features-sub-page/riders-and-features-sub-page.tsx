@@ -25,7 +25,9 @@ import {
 import RidersTable from './riders-table/riders-table';
 
 const RidersAndFeaturesSubPage = () => {
-    const { t } = useTranslation();
+    const { t } = useTranslation(undefined, {
+        keyPrefix: 'policy.detailCards.ridersAndFeatures',
+    });
     const { policyDetails } = useContext(PolicyData);
     const { featureFlags } = useOptimizely();
 
@@ -68,11 +70,7 @@ const RidersAndFeaturesSubPage = () => {
     return (
         <>
             <div className="text-gray-900">
-                <PageHeader
-                    headerText={
-                        t('policy.detailCards.ridersAndFeatures.title') || ''
-                    }
-                />
+                <PageHeader headerText={t('title') || ''} />
             </div>
             <CardContainer classNames="flex flex-col gap-4 !pt-0">
                 <>
