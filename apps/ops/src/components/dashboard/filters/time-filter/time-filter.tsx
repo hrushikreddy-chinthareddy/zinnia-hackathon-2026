@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { FC } from 'react';
 
 import { ChipRadio, RadioOption } from '@deps/components/chip-radio/chip-radio';
@@ -41,6 +42,7 @@ export const TimeFilter: FC<TimeFilterProps> = ({
             <CustomDateRange
                 timerange={timerange}
                 handleTimerangeChange={handleTimerangeChange}
+                endMonth={dayjs().toDate()}
             />
             <ChipRadio
                 id="timeframe-select"
