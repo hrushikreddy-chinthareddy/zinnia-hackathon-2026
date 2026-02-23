@@ -16,6 +16,8 @@ const mediaTypes = [
 ];
 
 export default defineConfig({
+    // Replaces next/image with a lightweight stub so tests don't depend on Next.js image optimization
+    // which only happens server-side in Next.js
     resolve: {
         alias: {
             'next/image': '/vitest/stubs/next-image.tsx',
@@ -23,6 +25,7 @@ export default defineConfig({
     },
     plugins: [
         react(),
+        // Transforms SVG imports into named React components (e.g., import { ReactComponent } from './icon.svg')
         svgr({
             include: '**/*.svg',
             svgrOptions: {
@@ -30,6 +33,7 @@ export default defineConfig({
                 namedExport: 'ReactComponent',
             },
         }),
+        // Resolves path aliases defined in tsconfig.paths.json (e.g., @deps/*, @vitest/*)
         tsconfigPaths({
             projects: ['./tsconfig.paths.json'],
         }),
@@ -51,6 +55,8 @@ export default defineConfig({
     ],
     test: {
         globals: true,
+        // Uses original class names instead of hashed/scoped names, making CSS modules easier to query in tests
+        // https://vitest.dev/config/#css-modules-classnamestrategy
         css: {
             modules: {
                 classNameStrategy: 'non-scoped',
