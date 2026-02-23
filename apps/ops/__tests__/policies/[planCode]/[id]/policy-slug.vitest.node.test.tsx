@@ -1,25 +1,21 @@
 import { render, screen } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
+import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
+import { server } from '@vitest/vitest.setup';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import PolicySlug from '@deps/pages/policies/[planCode]/[id]/policy-slug';
 
+import {
+    formMetadataHandler,
+    personEligibilityHandlers,
+} from './eligibility-handlers';
 import { createMockRouter, createMockPolicyPageProps } from './test-fixtures';
-import { createTestWrapper } from '../../../../vitest/utils/create-test-wrapper';
-import { server } from '../../../../vitest/vitest.setup';
 
 let mockRouter = createMockRouter();
 
 vi.mock('next/router', () => ({
     useRouter: () => mockRouter,
 }));
-
-// next-i18next uses its own i18next instance in non-Next.js environments;
-// delegate to react-i18next so it reads from I18nextProvider instead.
-vi.mock('next-i18next', async () => {
-    const { useTranslation } = await import('react-i18next');
-    return { useTranslation };
-});
 
 const defaultProps = createMockPolicyPageProps();
 
@@ -124,27 +120,6 @@ describe('policy-details-page', () => {
                 slug: ['people', 'assigneechange'],
             });
 
-            // Add runtime handler for form metadata to enable transactionData
-            const formMetadataHandler = http.get(
-                '*/api/case/v1/form/metadata',
-                () => {
-                    return HttpResponse.json({
-                        schemaContent: {
-                            tabSchemas: [
-                                {
-                                    title: 'Initial Tab',
-                                    schema: {},
-                                },
-                                {
-                                    title: 'Form Tab',
-                                    schema: {},
-                                },
-                            ],
-                        },
-                    });
-                }
-            );
-
             renderPolicyPage(formMetadataHandler);
 
             // Wait for transactionData to be set and component to re-render
@@ -158,33 +133,47 @@ describe('policy-details-page', () => {
                 slug: ['people', 'benechange'],
             });
 
-            // Add runtime handler for form metadata to enable transactionData
-            const formMetadataHandler = http.get(
-                '*/api/case/v1/form/metadata',
-                () => {
-                    return HttpResponse.json({
-                        schemaContent: {
-                            tabSchemas: [
-                                {
-                                    title: 'Initial Tab',
-                                    schema: {},
-                                },
-                                {
-                                    title: 'Form Tab',
-                                    schema: {},
-                                },
-                            ],
-                        },
-                    });
-                }
-            );
-
-            renderPolicyPage(formMetadataHandler);
+            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
 
             // Wait for transactionData to be set and component to re-render
-            // The transaction container should render instead of PersonSubPage
+            // PersonSubPage should render with Owner Details for this test
             const ownerDetails = await screen.findByText('Owner Details');
             expect(ownerDetails).toBeInTheDocument();
+        });
+        test('renders PersonSubPage for assigneechange with eligibility checks', async () => {
+            mockRouter = createMockRouter({
+                slug: ['people', 'assigneechange'],
+            });
+
+            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
+
+            // PersonSubPage should render with Assignee Details when eligibility checks are present
+            const assigneeDetails = await screen.findByText('Assignee Details');
+            expect(assigneeDetails).toBeInTheDocument();
+        });
+
+        test('renders PersonSubPage with Allocation card for beneficiary', async () => {
+            // Use actual beneficiary partyId from mock data (Sarah Mathew with 100% allocation)
+            mockRouter = createMockRouter({
+                slug: ['people', 'c8a283b5d8d540a29fe71aad239c0352'],
+            });
+
+            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
+
+            // Wait for PersonSubPage to load by checking for Identification card
+            await screen.findByText('Identification');
+
+            // Verify Allocation card renders (only shows for beneficiaries)
+            const allocationHeading = await screen.findByRole('heading', {
+                name: 'Allocation',
+            });
+            expect(allocationHeading).toBeInTheDocument();
+
+            // Verify beneficiary name is shown
+            const beneficiaryName = screen.getByRole('heading', {
+                name: 'Sarah Mathew',
+            });
+            expect(beneficiaryName).toBeInTheDocument();
         });
     });
 
