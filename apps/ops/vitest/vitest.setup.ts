@@ -5,10 +5,24 @@ import { beforeAll, afterEach, afterAll, vi } from 'vitest';
 import { handlers } from './mocks/handlers.js';
 
 // Global mock for next-i18next
-// Delegate to react-i18next so it reads from I18nextProvider instead
+// Delegate to react-i18next for useTranslation so it reads from I18nextProvider,
+// and also export i18n for components that import it directly
 vi.mock('next-i18next', async () => {
-    const { useTranslation } = await import('react-i18next');
-    return { useTranslation };
+    const reactI18next = await import('react-i18next');
+    return {
+        useTranslation: reactI18next.useTranslation,
+        Trans: reactI18next.Trans,
+        i18n: {
+            language: 'en',
+            changeLanguage: vi.fn(),
+            languages: ['en'],
+            options: {},
+            t: (key: string) => key,
+        },
+        I18n: class {
+            t = (key: string) => key;
+        },
+    };
 });
 
 // Mock ResizeObserver for jsdom

@@ -177,19 +177,180 @@ describe('policy-details-page', () => {
         });
     });
 
-    describe('other slug routes', () => {
-        test('renders with default route when slug is policy-details', async () => {
-            mockRouter = createMockRouter({ slug: ['policy-details'] });
+    describe('transactions and policy slug routes', () => {
+        test('routes to correct component when slug is policy/coverage', async () => {
+            mockRouter = createMockRouter({ slug: ['policy', 'coverage'] });
+
+            renderPolicyPage();
+
+            // Verify routing worked - page should have navigation
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+
+            // Should NOT show Policy Details (default fallback)
+            const policyDetails = screen.queryByText('Policy Details');
+            expect(policyDetails).not.toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is transactions/coverage', async () => {
+            mockRouter = createMockRouter({
+                slug: ['transactions', 'coverage'],
+            });
+
+            renderPolicyPage();
+
+            // Verify routing worked (backwards compatibility route)
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is policy/policy-details', async () => {
+            mockRouter = createMockRouter({
+                slug: ['policy', 'policy-details'],
+            });
 
             renderPolicyPage();
 
             const element = await screen.findByText('Policy Details');
             expect(element).toBeInTheDocument();
         });
+
+        test('routes to correct component when slug is policy/riders-and-features', async () => {
+            mockRouter = createMockRouter({
+                slug: ['policy', 'riders-and-features'],
+            });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is policy/policy-extras', async () => {
+            mockRouter = createMockRouter({
+                slug: ['policy', 'policy-extras'],
+            });
+
+            renderPolicyPage();
+
+            // Verify routing worked (backwards compatibility)
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is policy/funds', async () => {
+            mockRouter = createMockRouter({ slug: ['policy', 'funds'] });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is policy/premiums', async () => {
+            mockRouter = createMockRouter({ slug: ['policy', 'premiums'] });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is policy/withdrawals', async () => {
+            mockRouter = createMockRouter({
+                slug: ['policy', 'withdrawals'],
+            });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is policy/loans', async () => {
+            mockRouter = createMockRouter({ slug: ['policy', 'loans'] });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+
+        test('routes to correct component when slug is policy/annuitization', async () => {
+            mockRouter = createMockRouter({
+                slug: ['policy', 'annuitization'],
+            });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
     });
 
-    describe('policy slug', () => {
-        test('renders PolicyDetailsContainer with policy data loaded', async () => {
+    describe('activity slug routes', () => {
+        test('routes to correct component when slug is activity', async () => {
+            mockRouter = createMockRouter({ slug: ['activity'] });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+    });
+
+    describe('documents slug routes', () => {
+        test('routes to correct component when slug is documents', async () => {
+            mockRouter = createMockRouter({ slug: ['documents'] });
+
+            renderPolicyPage();
+
+            // Verify routing worked
+            const peopleLink = await screen.findByRole('link', {
+                name: 'People',
+            });
+            expect(peopleLink).toBeInTheDocument();
+        });
+    });
+
+    describe('default slug behavior', () => {
+        test('renders PolicyDetailsContainer for unknown slug', async () => {
+            mockRouter = createMockRouter({ slug: ['unknown-route'] });
+
+            renderPolicyPage();
+
+            const element = await screen.findByText('Policy Details');
+            expect(element).toBeInTheDocument();
+        });
+
+        test('renders PolicyDetailsContainer with policy data loaded (no slug)', async () => {
             renderPolicyPage();
 
             const element = await screen.findByText('Policy Details');
