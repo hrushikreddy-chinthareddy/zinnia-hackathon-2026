@@ -41,21 +41,23 @@ export default function RidersTable({
         <>
             <Table>
                 <TableHeader>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('policy.extras.riders.riderName')}
-                    </TableHeaderCell>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('policy.extras.riders.status')}
-                    </TableHeaderCell>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('policy.extras.riders.effectiveDate')}
-                    </TableHeaderCell>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('policy.extras.riders.expirationDate')}
-                    </TableHeaderCell>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('policy.extras.riders.insured')}
-                    </TableHeaderCell>
+                    <TableRow>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('policy.extras.riders.riderName')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('policy.extras.riders.status')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('policy.extras.riders.effectiveDate')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('policy.extras.riders.expirationDate')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('policy.extras.riders.insured')}
+                        </TableHeaderCell>
+                    </TableRow>
                 </TableHeader>
                 <TableBody>
                     {riders?.map((rider) => (

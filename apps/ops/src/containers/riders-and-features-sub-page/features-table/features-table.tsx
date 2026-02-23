@@ -29,18 +29,20 @@ export default function FeaturesTable({
     return (
         <Table>
             <TableHeader>
-                <TableHeaderCell className="typography-content-body-sm-bold">
-                    {t('policy.extras.riders.riderName')}
-                </TableHeaderCell>
-                <TableHeaderCell className="typography-content-body-sm-bold">
-                    {t('policy.extras.riders.status')}
-                </TableHeaderCell>
-                <TableHeaderCell className="typography-content-body-sm-bold">
-                    {t('allFields.startDate')}
-                </TableHeaderCell>
-                <TableHeaderCell className="typography-content-body-sm-bold">
-                    {t('allFields.endDate')}
-                </TableHeaderCell>
+                <TableRow>
+                    <TableHeaderCell className="typography-content-body-sm-bold">
+                        {t('policy.extras.riders.riderName')}
+                    </TableHeaderCell>
+                    <TableHeaderCell className="typography-content-body-sm-bold">
+                        {t('policy.extras.riders.status')}
+                    </TableHeaderCell>
+                    <TableHeaderCell className="typography-content-body-sm-bold">
+                        {t('allFields.startDate')}
+                    </TableHeaderCell>
+                    <TableHeaderCell className="typography-content-body-sm-bold">
+                        {t('allFields.endDate')}
+                    </TableHeaderCell>
+                </TableRow>
             </TableHeader>
             <TableBody>
                 {features?.map((feature) => (
