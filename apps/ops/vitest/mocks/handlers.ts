@@ -134,6 +134,35 @@ export const handlers = [
         () => HttpResponse.json({ status: 'Success' })
     ),
 
+    http.post(
+        '*/api/bpm/v1/policies/:planCode/:policyId/onetimepremium/eligibilitycheck',
+        () => HttpResponse.json({ status: 'Success' })
+    ),
+
+    http.post(
+        '*/api/bpm/v1/policies/:planCode/:policyId/systematicprograms/*/eligibilitycheck',
+        () => HttpResponse.json({ status: 'Success' })
+    ),
+
+    http.post(
+        '*/api/bpm/v1/policies/:planCode/:policyId/partialwithdrawalonetime/eligibilitycheck',
+        () => HttpResponse.json({ status: 'Success' })
+    ),
+
+    http.post(
+        '*/api/bpm/v1/policies/:planCode/:policyId/fullsurrender/eligibilitycheck',
+        () => HttpResponse.json({ status: 'Success' })
+    ),
+
+    http.get(
+        '*/api/product-rate/v1/carriers/:carrierId/products/:planCode/benefits/:benefitType/configured-settings/:settingName',
+        () => HttpResponse.json({ effectiveDate: {} })
+    ),
+
+    http.get('*/api/policy/v1/policies/:planCode/:policyId/transactions', () =>
+        HttpResponse.json({ data: [], total: 0 })
+    ),
+
     http.post('*/api/case/v1/cases/search', () => {
         return HttpResponse.json({ data: [], total: 0 });
     }),

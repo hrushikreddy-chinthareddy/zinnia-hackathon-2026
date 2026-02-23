@@ -1,8 +1,7 @@
 import '@testing-library/jest-dom/vitest';
-import { setupServer } from 'msw/node';
 import { beforeAll, afterEach, afterAll, vi } from 'vitest';
 
-import { handlers } from './mocks/handlers.js';
+import { server } from './mocks/node';
 
 // Global mock for next-i18next
 // Delegate to react-i18next for useTranslation so it reads from I18nextProvider,
@@ -31,8 +30,6 @@ global.ResizeObserver = class ResizeObserver {
     unobserve() {}
     disconnect() {}
 };
-
-export const server = setupServer(...handlers);
 
 // Start MSW server before all tests
 beforeAll(() => {

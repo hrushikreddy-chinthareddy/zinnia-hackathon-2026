@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react';
+import { server } from '@vitest/mocks/node';
 import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
-import { server } from '@vitest/vitest.setup';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import PolicySlug from '@deps/pages/policies/[planCode]/[id]/policy-slug';
@@ -10,8 +10,11 @@ import {
     formMetadataHandler,
     fundsEligibilityHandlers,
     personEligibilityHandlers,
-} from './eligibility-handlers';
-import { createMockRouter, createMockPolicyPageProps } from './test-fixtures';
+} from './policy-msw-handlers';
+import {
+    createMockRouter,
+    createMockPolicyPageProps,
+} from './policy-test-fixtures';
 
 let mockRouter = createMockRouter();
 

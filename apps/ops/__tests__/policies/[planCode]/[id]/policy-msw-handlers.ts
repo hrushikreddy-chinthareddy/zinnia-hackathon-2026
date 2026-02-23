@@ -36,7 +36,7 @@ export const fundsEligibilityHandlers = [
     ),
     http.get(
         '*/api/product-rate/v1/carriers/:carrierId/products/:planCode/*',
-        () => HttpResponse.json({ value: null })
+        () => HttpResponse.json({ effectiveDate: {} })
     ),
 ];
 
