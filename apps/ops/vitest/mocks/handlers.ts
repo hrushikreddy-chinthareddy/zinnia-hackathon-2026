@@ -129,6 +129,11 @@ export const handlers = [
         () => HttpResponse.json({ status: 'Success' })
     ),
 
+    http.post(
+        '*/api/bpm/v1/policies/:planCode/:policyId/parties/:partyRole/eligibilitycheck',
+        () => HttpResponse.json({ status: 'Success' })
+    ),
+
     http.post('*/api/case/v1/cases/search', () => {
         return HttpResponse.json({ data: [], total: 0 });
     }),
