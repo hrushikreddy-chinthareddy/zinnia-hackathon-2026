@@ -1,6 +1,8 @@
 import { test as setup, expect } from '@playwright/test';
 import path from 'path';
 
+const TIMEOUT = 15_000;
+
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
@@ -10,10 +12,13 @@ setup('authenticate', async ({ page }) => {
         name: 'Continue to sign in',
     });
     if (await signInButton.isVisible()) {
-        await signInButton.click();
+        await Promise.all([
+            page.waitForURL(/\/u\/login\/identifier/i),
+            signInButton.click(),
+        ]);
     }
     const signInField = page.getByLabel('Email address');
-    await expect(signInField).toBeVisible();
+    await expect(signInField).toBeVisible({ timeout: TIMEOUT });
     await signInField.fill(process.env.E2E_USERNAME!);
     await page.getByRole('button', { name: 'Continue' }).click();
     await page.getByLabel('Password').fill(process.env.E2E_PASSWORD!);

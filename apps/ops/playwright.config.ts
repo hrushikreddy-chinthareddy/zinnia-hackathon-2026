@@ -13,7 +13,7 @@ dotenv.config({ path: path.resolve(__dirname, '.env.development.local') });
 export default defineConfig({
     timeout: 60000, // Sets the default test timeout to 60 seconds (60000ms)
 
-    testDir: './e2e-tests',
+    testDir: './e2e-tests-playwright',
     /* Run tests in files in parallel */
     fullyParallel: true,
     /* Fail the build on CI if you accidentally left test.only in the source code. */
