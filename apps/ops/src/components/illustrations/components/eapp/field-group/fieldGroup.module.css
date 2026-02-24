@@ -5,7 +5,7 @@
 .fieldGroup {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: var(--measure-dimension-gap-lg);
 }
 
 .questionHeaderWrapper {

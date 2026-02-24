@@ -13,7 +13,6 @@
 }
 
 .fieldTag {
-    margin-right: var(--measure-dimension-gap-md);
     margin-bottom: var(--measure-dimension-gap-lg);
 }
 
