@@ -124,7 +124,7 @@ export default function Illustrations({
                 }
                 break;
             case ErrorOrigin.ClientCase:
-                setBannerText(INTERNAL_ERROR_LABEL);
+                setBannerText(fetchingErrorMessage ?? INTERNAL_ERROR_LABEL);
                 break;
             case ErrorOrigin.Internal:
                 setBannerText(fetchingErrorMessage ?? INTERNAL_ERROR_LABEL);
@@ -191,7 +191,7 @@ export default function Illustrations({
         <>
             <PageHead titleKey="clientCases" />
             <IllustrationsClientCaseProvider>
-                {bannerText !== '' && (
+                {!!bannerText && (
                     <BannerAlert
                         bodyText={bannerBodyText}
                         variant={BannerVariant.Error}

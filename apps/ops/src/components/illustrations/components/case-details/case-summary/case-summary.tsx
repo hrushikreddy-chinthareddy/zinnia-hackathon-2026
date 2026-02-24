@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     AssistiveText,
     AssistiveTextVariant,
+    BannerAlert,
+    BannerVariant,
     BodyVariant,
     Breadcrumb,
     Button,
@@ -12,7 +14,9 @@ import {
     Label,
     Text,
 } from '@zinnia/bloom/components';
+import { AxiosResponse } from 'axios';
 import clsx from 'clsx';
+import { get } from 'lodash';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
@@ -21,6 +25,9 @@ import CreateClientCaseForm from '@deps/components/client-case/client-case-creat
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
@@ -49,6 +56,7 @@ const IllustrationCaseSumary = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const { isAllowWriteClientCase, partyReferenceData } =
         usePermissionsContext();
+    const [bannerText, setBannerText] = useState('');
 
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
     const isAgent = aliases?.length ?? 0 > 0;
@@ -118,7 +126,7 @@ const IllustrationCaseSumary = ({
         sideSheet.handleOpen(true, 500);
     };
 
-    const { mutate } = useMutation({
+    const { mutateAsync } = useMutation({
         mutationKey: ['clientCase', clientCase?.id],
         mutationFn: (data: Partial<IllustrationsClientCase>) =>
             patchIllustrationsClientCase(data),
@@ -131,15 +139,20 @@ const IllustrationCaseSumary = ({
         onMutate: () => {
             // add loading logic
         },
-        onError: () => {
-            // add error logic
+        onError: (error: Error | AxiosResponse) => {
+            // Extract error message from axios response if available
+            const errorMessage =
+                'data' in error
+                    ? ((get(error, 'data.message') ||
+                          get(error, 'data.title')) as undefined | string)
+                    : error?.message;
+
+            setBannerText(errorMessage || '');
         },
     });
 
-    const onSubmitForm = (clientCaseData: Partial<IllustrationsClientCase>) => {
-        mutate(clientCaseData);
-        closeSideSheet();
-    };
+    const onSubmitForm = (clientCaseData: Partial<IllustrationsClientCase>) =>
+        mutateAsync(clientCaseData).then(closeSideSheet);
 
     const isConversion =
         clientCase?.transactionType === TransactionType.CONVERSION;
@@ -153,6 +166,22 @@ const IllustrationCaseSumary = ({
 
     return (
         <header className={clsx(styles.header)}>
+            {!!bannerText && (
+                <BannerAlert
+                    bodyText={
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={styles.bannerText}
+                        >
+                            {bannerText}
+                        </Typography>
+                    }
+                    variant={BannerVariant.Error}
+                    canDismiss
+                    onDismiss={() => setBannerText('')}
+                    className={styles.bannerWrapper}
+                />
+            )}
             <section>
                 <div className={clsx(styles.breadcrumb)}>
                     <Breadcrumb

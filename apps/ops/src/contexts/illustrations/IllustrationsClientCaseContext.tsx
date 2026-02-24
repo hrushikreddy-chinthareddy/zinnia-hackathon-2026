@@ -12,14 +12,14 @@ import {
 import { searchIllustrationsClientCases } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import {
     ClientCaseSearchInputs,
-    IllustraionsClientCaseSearchResponse,
+    IllustrationsClientCaseSearchResponse,
 } from '@deps/types/illustrations';
 
 export type IllustrationsClientCaseContextValue = {
     filters: ClientCaseSearchInputs;
     setFilters: (filters: ClientCaseSearchInputs) => void;
-    results: IllustraionsClientCaseSearchResponse;
-    isError?: Error | null;
+    results: IllustrationsClientCaseSearchResponse;
+    error?: Error | null;
     isLoading?: boolean;
     defaultFilters: ClientCaseSearchInputs;
     defaultLimit: number;
@@ -115,7 +115,6 @@ export function IllustrationsClientCaseProvider({
         queryFn: () => {
             return searchIllustrationsClientCases(parseFilters);
         },
-        // enabled: true,
     });
 
     return (
@@ -124,7 +123,7 @@ export function IllustrationsClientCaseProvider({
                 filters,
                 setFilters,
                 results,
-                isError: clientCaseDataError,
+                error: clientCaseDataError,
                 isLoading: clientCaseDataFetching,
                 defaultFilters,
                 defaultLimit: DEFAULT_LIMIT,

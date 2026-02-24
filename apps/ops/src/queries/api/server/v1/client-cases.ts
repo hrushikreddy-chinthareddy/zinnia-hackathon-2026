@@ -1,15 +1,25 @@
 import { AxiosResponse } from 'axios';
+import { get } from 'lodash';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
 import {
-    IllustraionsClientCaseSearchResponse,
+    IllustrationsClientCaseSearchResponse,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
 import { LoggingContext } from '@deps/utils/server-logging';
 
 export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
+
+const handleError = (error: unknown) => {
+    const message =
+        get(error, 'data.message') ??
+        get(error, 'message') ??
+        'Unknown error creating client case';
+    throwTypedError(message, CLIENT_CASE_MANAGER_API_ORIGIN);
+};
+
 export const searchClientCaseByEappId = async (
     eAppId: string,
     token: string,
@@ -27,12 +37,12 @@ export const searchClientCaseByEappId = async (
         const searchUrl = `${apiServerBaseUrl}/client-case-manager/v1/client-case/search?eAppId=${eAppId}`;
         const { data: searchResponse } = await serverApi.get<
             any,
-            AxiosResponse<IllustraionsClientCaseSearchResponse>
+            AxiosResponse<IllustrationsClientCaseSearchResponse>
         >(searchUrl, config, loggingContext);
 
         return searchResponse.results || [];
-    } catch (error: any) {
-        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
+    } catch (error: unknown) {
+        handleError(error);
     }
 };
 
@@ -56,8 +66,8 @@ export const createClientCase = async (
         );
 
         return data;
-    } catch (error: any) {
-        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
+    } catch (error: unknown) {
+        handleError(error);
     }
 };
 
@@ -81,7 +91,7 @@ export const patchClientCase = async (
         );
 
         return data;
-    } catch (error: any) {
-        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
+    } catch (error: unknown) {
+        handleError(error);
     }
 };

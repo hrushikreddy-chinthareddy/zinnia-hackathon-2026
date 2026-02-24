@@ -15,7 +15,7 @@ import {
 } from '@deps/queries/api/v3/illustrations';
 import {
     ClientCaseSearchInputs,
-    IllustraionsClientCaseSearchResponse,
+    IllustrationsClientCaseSearchResponse,
     IllustrationProductType,
     IllustrationsClientCase,
     IllustrationType,
@@ -73,8 +73,8 @@ export function filterClientCaseDataFromQueryString(
 
 export const searchIllustrationsClientCases = async (
     searchFilter: ClientCaseSearchInputs
-): Promise<IllustraionsClientCaseSearchResponse> => {
-    const { data } = await searchClientCase(searchFilter);
+): Promise<IllustrationsClientCaseSearchResponse> => {
+    const data = await searchClientCase(searchFilter);
 
     return {
         limit: searchFilter.limit || 10,
@@ -82,7 +82,7 @@ export const searchIllustrationsClientCases = async (
         results: data.results,
         total: data.count,
         count: data.results?.length || 0,
-    } as IllustraionsClientCaseSearchResponse; //filteredResults;
+    } as IllustrationsClientCaseSearchResponse; //filteredResults;
 };
 
 export const postIllustrationsClientCase = async (

@@ -1,5 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useMutation } from '@tanstack/react-query';
+import { get } from 'lodash';
 import merge from 'lodash/merge';
 import { GetServerSidePropsContext } from 'next';
 import { useSearchParams } from 'next/navigation';
@@ -22,6 +23,7 @@ import { parseClientCase } from '@deps/queries/api/v1/client-case-manager/parse-
 import { postIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { SegmentPageName } from '@deps/types/segment-analytics';
+import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -67,7 +69,7 @@ export default function NewClientCase(
         });
     }, [router, searchParams]);
 
-    const { mutateAsync } = useMutation({
+    const { mutateAsync, error } = useMutation({
         mutationKey: ['createClientCase'],
         mutationFn: (data: Partial<IllustrationsClientCase>) =>
             postIllustrationsClientCase(data),
@@ -77,7 +79,9 @@ export default function NewClientCase(
                     `/illustrations/client-cases/${data?.id}/illustrate`
                 );
             }
-            console.log('ID not found after client case creation');
+            browserLogError('ID not found after client case creation', {
+                data,
+            });
         },
 
         onMutate: () => {
@@ -130,7 +134,21 @@ export default function NewClientCase(
     }, [searchParams]);
     // We cannot add SideSheet as a dependency because updating the content also changes this reference
 
-    return IllustrationsPage(props);
+    // Extract error message from axios response if available
+    const errorMessage =
+        error instanceof Object && 'data' in error
+            ? ((get(error, 'data.message') || get(error, 'data.title')) as
+                  | undefined
+                  | string)
+            : error?.message;
+
+    return IllustrationsPage({
+        ...props,
+        ...(error && {
+            fetchingErrorMessage: errorMessage,
+            fetchingErrorOrigin: ErrorOrigin.ClientCase,
+        }),
+    });
 }
 const getAuthToken = async (
     context: GetServerSidePropsContext,
