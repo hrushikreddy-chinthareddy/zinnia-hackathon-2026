@@ -6,10 +6,16 @@
 
     .filters {
         display: flex;
-        justify-content: space-between;
-        align-items: end;
+        flex-direction: column;
+        gap: var(--measure-dimension-padding-2xl);
         padding: 0 var(--measure-dimension-padding-4xl)
             var(--measure-dimension-padding-4xl);
+
+        @media (min-width: 768px) {
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: end;
+        }
     }
 
     .filterGroup {
@@ -44,4 +50,9 @@
         padding: var(--measure-dimension-padding-4xl);
         text-align: center;
     }
+}
+
+.filterItem {
+    min-width: 325px;
+    max-width: 400px;
 }

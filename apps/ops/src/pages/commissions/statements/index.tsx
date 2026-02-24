@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import {
     CarrierAvatar,
     CarrierName,
+    FieldDateRange,
     FieldSize,
     Pagination,
     Select,
@@ -19,7 +20,6 @@ import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { CustomDateRange } from '@deps/components/dashboard/filters/time-filter/custom-date-range';
 import DocumentPreviewer from '@deps/components/document-viewer/document-previewer';
 import { BlurOverlayLoader } from '@deps/components/overlay-loader/overlay-loader';
 import { TranslationFiles } from '@deps/config/translations';
@@ -161,11 +161,21 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
                     />
 
                     <div className={styles.carrierSelect}>
-                        <CustomDateRange
-                            timerange={timerange}
-                            handleTimerangeChange={handleRangeChange}
-                            showIcon={false}
-                            endMonth={dayjs().toDate()}
+                        <FieldDateRange
+                            name="commissionStatementsDateRange"
+                            showActionButtons
+                            onApply={(startDate, endDate) => {
+                                handleRangeChange({
+                                    from: dayjs(startDate).format(
+                                        ZAHARA_DATE_FORMAT
+                                    ),
+                                    to: dayjs(endDate).format(
+                                        ZAHARA_DATE_FORMAT
+                                    ),
+                                });
+                            }}
+                            defaultEndDate={timerange.to}
+                            defaultStartDate={timerange.from}
                         />
                     </div>
                 </div>

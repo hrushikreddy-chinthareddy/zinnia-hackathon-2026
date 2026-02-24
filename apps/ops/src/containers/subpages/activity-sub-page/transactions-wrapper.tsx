@@ -1,4 +1,4 @@
-import { Label, Toggle } from '@zinnia/bloom/components';
+import { Label, Toggle, FieldDateRange } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import {
     useCallback,
@@ -10,7 +10,6 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CustomDateRange } from '@deps/components/dashboard/filters/time-filter/custom-date-range';
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import { FindAllKeyValuesTransactionSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-transaction-sidesheet';
 import { TransactionStatusTabGroup } from '@deps/components/history/filters/transaction-status-tab-group';
@@ -204,18 +203,20 @@ export const TransactionsWrapper = () => {
                         onClick={() => setHideDailyInterest((prev) => !prev)}
                     />
                 </div>
-                <CustomDateRange
-                    handleTimerangeChange={(dates) =>
+                <FieldDateRange
+                    name="transactionsDateRange"
+                    showActionButtons
+                    onApply={(startDate, endDate) =>
                         setHistoryFilters((prevState) => ({
                             ...prevState,
                             datesFilter: {
-                                from: dayjs(dates.from).utc(),
-                                to: dayjs(dates.to).utc(),
+                                from: dayjs(startDate).utc(),
+                                to: dayjs(endDate).utc(),
                             },
                         }))
                     }
-                    timerange={selectedDateRange}
-                    disableFutureDates={false}
+                    defaultStartDate={selectedDateRange.from}
+                    defaultEndDate={selectedDateRange.to}
                 />
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">
