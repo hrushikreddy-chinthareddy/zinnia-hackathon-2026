@@ -6,6 +6,10 @@ import { defineConfig } from 'vitest/config';
 
 const mediaTypes = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'bmp', 'avif'];
 
+const mimeTypeMap = {
+    jpg: 'jpeg',
+};
+
 export default defineConfig({
     // Replaces next/image with a lightweight stub so tests don't depend on Next.js image optimization
     // which only happens server-side in Next.js
@@ -38,7 +42,8 @@ export default defineConfig({
                 for (const mediaType of mediaTypes) {
                     if (id.endsWith(`.${mediaType}`)) {
                         const src = readFileSync(id).toString('base64');
-                        return `export default "data:image/${mediaType};base64,${src}"`;
+                        const mimeType = mimeTypeMap[mediaType] ?? mediaType;
+                        return `export default "data:image/${mimeType};base64,${src}"`;
                     }
                 }
             },
