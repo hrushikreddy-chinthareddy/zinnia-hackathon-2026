@@ -64,7 +64,8 @@ function NumbersWidget<
                 ?.flatMap((a: any) => a.party?.phones || [])
                 ?.find(
                     (phone: any) =>
-                        phone.dialNumber.slice(-7) === value.slice(-7)
+                        phone?.dialNumber &&
+                        phone?.dialNumber?.slice(-7) === value.slice(-7)
                 );
 
             if (phoneObject) {
