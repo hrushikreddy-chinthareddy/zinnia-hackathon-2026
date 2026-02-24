@@ -14,7 +14,7 @@ import clsx from 'clsx';
 import dayjs from 'dayjs';
 import router from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -290,7 +290,6 @@ export default function GlobalTaskSideSheet({
                 queueAccess?.canWrite !== false
             ) {
                 const data = await getTaskInstance({ taskId });
-
                 if (!data) {
                     return;
                 }
@@ -333,6 +332,12 @@ export default function GlobalTaskSideSheet({
             }
         },
     });
+
+    useEffect(() => {
+        queryClient.invalidateQueries({
+            queryKey: ['taskInstance', taskId],
+        });
+    }, [router.asPath, taskId]);
 
     const { allAssigneeList, assigneeLoading, refetch } = useTaskAssignee({
         task: task ?? ({} as ManagementTask),

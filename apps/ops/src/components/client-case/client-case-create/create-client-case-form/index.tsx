@@ -14,19 +14,14 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Controller, useForm, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
-import DateTextInput from '@deps/components/date-text-input/date-text-input';
+import DateInput from '@deps/components/date-text-input/date-input';
 import { POM_QUERY_PREFIXES } from '@deps/components/illustrations/helpers/hooks/pom';
 import { useIllustrationAnalytics } from '@deps/components/illustrations/helpers/hooks/use-illustration-analytics';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
-import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
-import {
-    formatUTCDate,
-    parseAndFormatDate,
-} from '@deps/helpers/string.helpers';
 import {
     IllustrationAgentDetails,
     IllustrationsClientCase,
@@ -105,7 +100,7 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     clientCase,
     isEdit,
 }: CreateClientCaseFormProps) => {
-    const { t } = useTranslation(TranslationFiles.COMMON);
+    const { t } = useTranslation();
     const { isSuperIllustrator } = usePermissionsContext();
     const {
         sendClientCaseTitleInput,
@@ -155,7 +150,8 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
         [dateOfBirth]
     );
 
-    const displayNicotineSection = currentAge >= 18;
+    //Need to have currentAge > 0 cause it's computed to be 0 initially
+    const displayNicotineSection = !(currentAge > 0 && currentAge < 18);
 
     const isFetchingAgencies =
         useIsFetching({
@@ -234,22 +230,6 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     const onCancelForm = useCallback(() => {
         onCancel?.();
     }, [onCancel]);
-
-    const handleDateChange = (birthDate: string) => {
-        // We manually build a custom ISO date string to ensure that the
-        // local timezone offset is ignored
-        const formatedDate = parseAndFormatDate(
-            'M/D/YYYY',
-            'YYYY-MM-DD',
-            birthDate
-        );
-
-        setValue(
-            'insuredDetails.dateOfBirth',
-            new Date(`${formatedDate}T00:00:00Z`),
-            { shouldDirty: true }
-        );
-    };
 
     const handleSelectAgentOption = useCallback(
         (agentOption: AgentOption) => {
@@ -563,60 +543,64 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                 </Label>
                             }
                             defaultValue={String(field.value)}
-                            value={field.value} // Added to force selection on edit
-                            onClick={(v) => {
-                                field.onChange(v);
-                            }}
+                            onClick={field.onChange}
                             inactive={!canEditInsuredDetails}
                         />
                     )}
                 />
 
-                <div className={styles.datePickerContainer}>
-                    <div className={styles.datePicker}>
-                        <Typography variant={TypographyVariant.FieldLabel}>
-                            {t('clientCase.createClientCaseForm.dateLabel')}
-                        </Typography>
-                        <Controller
-                            control={control}
-                            name="insuredDetails.dateOfBirth"
-                            rules={{
-                                validate: (v) => {
-                                    const parsedDate = dayjs(v);
+                <Controller
+                    control={control}
+                    name="insuredDetails.dateOfBirth"
+                    rules={{
+                        required: true,
+                        validate: (v) => {
+                            const parsedDate = dayjs(v);
 
-                                    const formattedDate = parsedDate.isValid()
-                                        ? parsedDate.format('MM/DD/YYYY')
-                                        : null;
+                            const formattedDate = parsedDate.isValid()
+                                ? parsedDate.format('MM/DD/YYYY')
+                                : null;
 
-                                    return isValidDate(formattedDate);
-                                },
-                            }}
-                            render={() => (
-                                <DateTextInput
-                                    {...(dateOfBirth && {
-                                        defaultDate: isValidDate(dateOfBirth)
-                                            ? formatUTCDate(
-                                                  new Date(String(dateOfBirth))
-                                              )
-                                            : '',
-                                    })}
+                            return isValidDate(formattedDate);
+                        },
+                    }}
+                    render={({ field }) => (
+                        <div className={styles.datePickerContainer}>
+                            <div className={styles.datePicker}>
+                                <Typography
+                                    variant={TypographyVariant.FieldLabel}
+                                >
+                                    {t(
+                                        'clientCase.createClientCaseForm.dateLabel'
+                                    )}
+                                </Typography>
+                                <DateInput
+                                    {...{
+                                        defaultDate: field.value,
+                                    }}
+                                    popOverTitle={t(
+                                        'allFields.illustrationsClientCasesDobDatePickerPopoverTitle'
+                                    )}
                                     errorMessage={t(
                                         'clientCase.createClientCaseForm.dateErrorMessage'
                                     )}
-                                    onChange={handleDateChange}
+                                    onChange={field.onChange}
+                                    onBlur={field.onBlur}
                                     disabled={!canEditInsuredDetails}
                                 />
+                            </div>
+                            {field.value != null && (
+                                <div className={styles.ageLabel}>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                    >
+                                        Current age: {currentAge}
+                                    </Typography>
+                                </div>
                             )}
-                        />
-                    </div>
-                    {dateOfBirth !== null && (
-                        <div className={styles.ageLabel}>
-                            <Typography variant={TypographyVariant.BodySm}>
-                                Current age: {currentAge}
-                            </Typography>
                         </div>
                     )}
-                </div>
+                />
                 {displayNicotineSection && (
                     <Controller
                         control={control}

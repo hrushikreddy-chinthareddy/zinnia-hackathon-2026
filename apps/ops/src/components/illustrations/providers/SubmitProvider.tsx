@@ -7,7 +7,7 @@ import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import {
     editIllustrationToClientCase,
     saveIllustrationToClientCase,
-} from '@deps/queries/api/v1/client-cases';
+} from '@deps/queries/api/v1/client-case-manager';
 import { createIllustration } from '@deps/queries/api/v3/illustrations';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import {

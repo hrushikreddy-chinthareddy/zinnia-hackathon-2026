@@ -1,0 +1,21 @@
+.popoverContainer {
+    width: auto;
+
+    padding: 0;
+
+    color: var(--color-base-text-primary);
+    background-color: var(--color-base-surface-primary, #fff);
+
+    & > div {
+        display: none;
+    }
+
+    & div > button > svg {
+        color: var(--color-base-icon-action-text-link);
+    }
+}
+
+.datePicker {
+    display: flex;
+    justify-content: center;
+}

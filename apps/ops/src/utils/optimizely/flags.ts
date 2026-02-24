@@ -196,10 +196,12 @@ export enum FEATURE_FLAGS {
     DASHBOARD_COMPLETED_TASK_TIME_TABLE = 'dashboard_completed_task_time_table',
     USAA_SSW_VALIDATION_V2 = 'usaa-ssw-validation-v2',
     ENABLE_BENE_CHANGE_PAPER_FORM_SUMMARY_SCREEN = 'enable_bene_change_paper_form_summary_screen',
+    BENE_CHANGE_OWNER_MISMATCH = 'bene-change-owner-mismatch',
     FKV_REVISED_FUND_SIDESHEETS = 'fkv_revised_fund_sidesheets',
     DELAWARE_BANK_SEC_FEATS = 'delaware_bank_sec_feats',
     ENABLE_ISSUE_COUNT_VIEW_CASES = 'enable_issue_count_view_cases',
     DLIC_3P_DISBURSEMENT_CHANGES = 'dlic_3p_disbursement_changes_zlfeb3',
     INDEX_AUTOMATION_CASE = 'index_automation_case',
     OPS_MANAGER_AGENT_OWNER_FILTERS = 'ops_manager_agent_owner_filters',
+    CASE_MANAGEMENT_SUREIFY_FLOW_UPSERT_IF_EXISTS = 'case_management_sureify_flow_upsert_if_exists',
 }

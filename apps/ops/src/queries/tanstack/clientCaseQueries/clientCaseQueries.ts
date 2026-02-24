@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback } from 'react';
 
-import { getClientCaseById } from '@deps/queries/api/v1/client-case';
+import { getClientCaseById } from '@deps/queries/api/v1/client-case-manager';
 import { listProductsByCarrier } from '@deps/queries/api/v1/product';
 import { ApiResponse } from '@deps/types/api-response';
 import { Product } from '@deps/types/product';

@@ -198,7 +198,7 @@
                                         ],
                                         "phones": [
                                             {
-                                                "dialNumber": "",
+                                                "dialNumber": "1",
                                                 "phoneType": "MOBILE",
                                                 "isPreferred": true
                                             }
@@ -392,7 +392,7 @@
                                                 "items": {
                                                     "type": "object",
                                                     "default": {
-                                                        "dialNumber": "",
+                                                        "dialNumber": "1",
                                                         "phoneType": "MOBILE",
                                                         "isPreferred": false
                                                     },
@@ -1140,6 +1140,7 @@
                                         "dialNumber": {
                                             "ui:widget": "NumbersWidget",
                                             "format": "+### (###) ###-####",
+                                            "isPhone": true,
                                             "errorMessage": "Please enter valid phone number"
                                         }
                                     }

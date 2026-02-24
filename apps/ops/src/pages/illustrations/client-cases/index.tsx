@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useEffect, useState } from 'react';
+import { Jsonify } from 'type-fest';
 
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
 import ClientCaseSearchBar from '@deps/components/client-case/client-case-list/search-bar/client-case-search-bar';
@@ -57,7 +58,7 @@ interface IllustrationsPageProps extends SegmentTrackedPageProps {
     additionalData: additionalDataProps;
     fetchingErrorMessage: string;
     fetchingErrorOrigin: ErrorOrigin;
-    clientCase?: IllustrationsClientCase;
+    clientCase?: Jsonify<IllustrationsClientCase>;
 }
 
 const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';

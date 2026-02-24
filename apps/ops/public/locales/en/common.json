@@ -354,6 +354,7 @@
         "illustrationsClientCasesNoResultsUnfilteredParagraph": "You’ll soon see client cases here. If you think something is missing, check with your administrator.",
         "illustrationsClientCasesNoResultsFilteredTitle": "We couldn't find a client case that matches your search.",
         "illustrationsClientCasesNoResultsFilteredParagraph": "Check your input and try again.",
+        "illustrationsClientCasesDobDatePickerPopoverTitle": "Date of birth",
         "illustrationsTermLengthYear": "{{ years }} year term",
         "impactedParty": "Impacted party",
         "initialPaymentAmountReceivedDate": "Initial premium received date",

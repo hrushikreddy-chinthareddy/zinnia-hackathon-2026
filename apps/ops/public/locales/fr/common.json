@@ -852,7 +852,8 @@
         "searchByFirstNamePlaceholder": "Prénom de l'individu",
         "searchByLastNamePlaceholder": "Nom de famille de l'individu",
         "searchButtonOwnerName": "Nom du propriétaire",
-        "searchButtonAgentName": "Nom de l'agent"
+        "searchButtonAgentName": "Nom de l'agent",
+        "illustrationsClientCasesDobDatePickerPopoverTitle": "Date de naissance"
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Gains accumulés",
