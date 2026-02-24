@@ -56,13 +56,13 @@ test.describe('Policy Page', () => {
 
         await quickActionButton.click();
         const quickActionMenu = page
-            .getByRole('menu')
+            .locator('[role="menu"][data-state="open"]')
             .filter({ hasText: 'Send Documents' });
         await expect(quickActionMenu).toBeVisible({ timeout: TIMEOUT });
 
         // Close the menu by clicking the trigger again
         await quickActionButton.click();
-        await expect(quickActionMenu).toBeHidden({ timeout: TIMEOUT });
+        await expect(quickActionMenu).toHaveCount(0, { timeout: TIMEOUT });
 
         // Synchronize click and navigation to avoid race conditions
         await Promise.all([
@@ -71,6 +71,14 @@ test.describe('Policy Page', () => {
             }),
             policyDetailLinks.first().click(),
         ]);
+        await page.waitForURL('**/policies/**/policy/policy-details', {
+            timeout: TIMEOUT,
+        });
+        await expect(
+            page.getByRole('heading', {
+                name: /(Policy|Contract)\s+Details/,
+            })
+        ).toBeVisible({ timeout: TIMEOUT });
     });
 });
 

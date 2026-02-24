@@ -13,7 +13,7 @@ setup('authenticate', async ({ page }) => {
         await signInButton.click();
     }
     const signInField = page.getByLabel('Email address');
-
+    await expect(signInField).toBeVisible();
     await signInField.fill(process.env.E2E_USERNAME!);
     await page.getByRole('button', { name: 'Continue' }).click();
     await page.getByLabel('Password').fill(process.env.E2E_PASSWORD!);
