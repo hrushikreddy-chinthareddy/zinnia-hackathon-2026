@@ -42,6 +42,7 @@ import {
     getUserData,
 } from '@deps/helpers/query-data.helpers';
 import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
+import { usePrefetchAgentData } from '@deps/hooks/usePrefetchAgentData';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SorSystem } from '@deps/models/policy/enums';
 import { UserPermission } from '@deps/models/user-profile';
@@ -168,6 +169,9 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
         planCode: planCode,
         policyNumber: id,
     });
+
+    // Prefetch agent data for all agent parties on the policy
+    usePrefetchAgentData(policy);
 
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
 
