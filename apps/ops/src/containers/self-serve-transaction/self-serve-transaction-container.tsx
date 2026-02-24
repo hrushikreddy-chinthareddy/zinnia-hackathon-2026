@@ -101,6 +101,10 @@ const SelfServeTransactionContainer = ({
     const [validationSummary, setValidationSummary] = useState<any>(null);
     const [hasValidationErrors, setHasValidationErrors] =
         useState<boolean>(false);
+    const [submitEnabled, setSubmitEnabled] = useState<boolean>(true);
+    const [submitDisabledStepIndex, setSubmitDisabledStepIndex] = useState<
+        number | null
+    >(null);
 
     const steps = useMemo(
         () => schemaContent?.tabSchemas ?? [],
@@ -143,6 +147,8 @@ const SelfServeTransactionContainer = ({
                 }));
             },
             setValidationSummary,
+            setSubmitEnabled,
+            setSubmitDisabledStepIndex,
         }),
         [formData, setFormData]
     );
@@ -210,7 +216,12 @@ const SelfServeTransactionContainer = ({
                             submitLabel={t('continue') ?? ''}
                             cancelLabel={t('cancel') ?? ''}
                             isSubmit={false}
-                            disableContinue={hasValidationErrors}
+                            disableContinue={
+                                hasValidationErrors ||
+                                (!submitEnabled &&
+                                    submitDisabledStepIndex ===
+                                        currentStepIndex)
+                            }
                             handleContinue={() =>
                                 handleStepContinue(
                                     title,

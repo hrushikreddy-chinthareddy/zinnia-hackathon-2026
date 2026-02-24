@@ -1,3 +1,4 @@
+import { TabTitle } from '@deps/components/dynamic-form/customization/templates/transaction-accordion/types';
 import { Action, EntityTypeValue } from '@deps/constants/policy';
 import { ExtendedAddress } from '@deps/contexts/RoleChangeContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
@@ -13,6 +14,7 @@ import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { LoggingContext } from '@deps/utils/server-logging';
 
+import { getFormattedPhoneNumber } from '../../task.helpers';
 import {
     TaskHandler,
     Reason,
@@ -147,24 +149,41 @@ export const formatParties = (policyResponse: PolicyResponse) => {
                   ],
         phones:
             party.phones.length > 0
-                ? [party.phones[0]].map((phone: any) => ({
-                      areaCode: phone?.areaCode ?? null,
-                      bestTime: phone?.bestTime ?? null,
-                      countryCode: phone?.countryCode ?? 'US',
-                      dialNumber: phone?.dialNumber ?? null,
-                      endDate: phone?.endDate ?? null,
-                      extension: phone?.extension ?? null,
-                      isPreferred: phone?.isPreferred ?? false,
-                      phoneId: phone?.phoneId ?? null,
-                      phoneType: phone?.phoneType ?? PhoneType.HOME,
-                      startDate: phone?.startDate ?? null,
-                      timezone: phone?.timezone ?? null,
-                  }))
+                ? [party.phones[0]].map((phone: any) => {
+                      const dialNumber = phone?.dialNumber ?? '';
+                      return {
+                          areaCode:
+                              phone?.areaCode ??
+                              (dialNumber.length >= 10
+                                  ? dialNumber.slice(
+                                        dialNumber.length - 10,
+                                        dialNumber.length - 7
+                                    )
+                                  : null),
+                          bestTime: phone?.bestTime ?? null,
+                          countryCode:
+                              phone?.countryCode ??
+                              (dialNumber.length > 10
+                                  ? dialNumber.slice(0, dialNumber.length - 10)
+                                  : '1'),
+                          dialNumber:
+                              dialNumber.length > 0
+                                  ? getFormattedPhoneNumber(phone) ?? null
+                                  : null,
+                          endDate: phone?.endDate ?? null,
+                          extension: phone?.extension ?? null,
+                          isPreferred: phone?.isPreferred ?? false,
+                          phoneId: phone?.phoneId ?? null,
+                          phoneType: phone?.phoneType ?? PhoneType.HOME,
+                          startDate: phone?.startDate ?? null,
+                          timezone: phone?.timezone ?? null,
+                      };
+                  })
                 : [
                       {
                           areaCode: null,
                           bestTime: null,
-                          countryCode: 'US',
+                          countryCode: '1',
                           dialNumber: null,
                           endDate: null,
                           extension: null,
@@ -293,26 +312,50 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                   ],
                         phones:
                             bene.phones.length > 0
-                                ? [bene.phones[0]].map((phone: any) => ({
-                                      areaCode: phone.areaCode ?? null,
-                                      bestTime: phone.bestTime ?? null,
-                                      countryCode: phone.countryCode ?? 'USA',
-                                      dialNumber: phone.dialNumber ?? null,
-                                      endDate: phone.endDate ?? null,
-                                      extension: phone.extension ?? null,
-                                      isPreferred: phone.isPreferred ?? false,
-                                      phoneId: phone.phoneId ?? null,
-                                      phoneType:
-                                          phone.phoneType ?? PhoneType.HOME,
-                                      startDate: phone.startDate ?? null,
-                                      timezone: phone.timezone ?? null,
-                                  }))
+                                ? [bene.phones[0]].map((phone: any) => {
+                                      const dialNumber =
+                                          phone?.dialNumber ?? '';
+                                      return {
+                                          areaCode:
+                                              phone?.areaCode ??
+                                              (dialNumber.length >= 10
+                                                  ? dialNumber.slice(
+                                                        dialNumber.length - 10,
+                                                        dialNumber.length - 7
+                                                    )
+                                                  : null),
+                                          bestTime: phone.bestTime ?? null,
+                                          countryCode:
+                                              phone?.countryCode ??
+                                              (dialNumber.length > 10
+                                                  ? dialNumber.slice(
+                                                        0,
+                                                        dialNumber.length - 10
+                                                    )
+                                                  : '1'),
+                                          dialNumber:
+                                              dialNumber.length > 0
+                                                  ? getFormattedPhoneNumber(
+                                                        phone
+                                                    ) ?? null
+                                                  : null,
+                                          endDate: phone.endDate ?? null,
+                                          extension: phone.extension ?? null,
+                                          isPreferred:
+                                              phone.isPreferred ?? false,
+                                          phoneId: phone.phoneId ?? null,
+                                          phoneType:
+                                              phone.phoneType ?? PhoneType.HOME,
+                                          startDate: phone.startDate ?? null,
+                                          timezone: phone.timezone ?? null,
+                                      };
+                                  })
                                 : [
                                       {
                                           phoneType: PhoneType.HOME,
                                           areaCode: null,
                                           bestTime: null,
-                                          countryCode: 'USA',
+                                          countryCode: '1',
                                           dialNumber: null,
                                           endDate: null,
                                           extension: null,
@@ -476,7 +519,7 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
             }
         }
 
-        metadata[0].uiSchema.declineReason = {
+        const declineReasonUiSchema = {
             'ui:options': {
                 label: true,
                 widget: 'CheckBoxesSelectWidget',
@@ -484,6 +527,15 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
             },
             'ui:dataPath': ['declineReason'],
         };
+
+        metadata.forEach((tab: any) => {
+            if (
+                tab.title === TabTitle.ReviewFormData ||
+                tab.title === TabTitle.FormReview
+            ) {
+                tab.uiSchema.declineReason = declineReasonUiSchema;
+            }
+        });
 
         if (task) {
             Object.assign(task, {

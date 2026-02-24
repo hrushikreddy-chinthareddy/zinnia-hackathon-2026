@@ -32,6 +32,7 @@ export const DateInputPopover = ({
             {...{ title, open }}
         >
             <DatePicker
+                className={styles.datePicker}
                 required
                 mode="single"
                 timeZone="UTC"

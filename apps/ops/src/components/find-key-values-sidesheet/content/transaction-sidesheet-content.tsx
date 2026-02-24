@@ -44,11 +44,7 @@ import {
     getAllParties,
     addAccountingEntriesGroup,
 } from '../transformations/section-grouping';
-import {
-    getReversalTransactionId,
-    getTransactionAmount,
-    TransactionSidesheetViews,
-} from '../utils';
+import { getTransactionAmount, TransactionSidesheetViews } from '../utils';
 
 export const TransactionSidesheetContent = ({
     accountingEntries,
@@ -195,7 +191,7 @@ export const TransactionSidesheetContent = ({
                 policyNumber={policy?.policyNumber}
                 planCode={policy?.product?.planCode}
                 transactionType={transaction?.transactionType}
-                reversalTransactionId={getReversalTransactionId(transaction)}
+                transactionId={transaction.transactionId}
             />
         );
     }

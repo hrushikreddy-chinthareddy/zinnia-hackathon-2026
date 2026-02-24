@@ -19,6 +19,7 @@ import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { LoggingContext } from '@deps/utils/server-logging';
 import { Identification as ApiIdentification } from '@zinnia/api-types/types/sor';
 
+import { getFormattedPhoneNumber } from '../../task.helpers';
 import {
     TaskHandler,
     Reason,
@@ -67,15 +68,33 @@ const getAddresses = (addresses?: Party['addresses']): Address[] => {
         : [formatAddress()];
 };
 
-const formatPhone = (phone?: Partial<Phone>): Phone => ({
-    phoneType: (phone?.phoneType as string) ?? PhoneType.MOBILE,
-    dialNumber: phone?.dialNumber ?? null,
-    areaCode: phone?.areaCode ?? null,
-    countryCode: phone?.countryCode ?? 'USA',
-    endDate: (phone?.endDate as string) ?? null,
-    isPreferred: Boolean(phone?.isPreferred),
-    startDate: (phone?.startDate as string) ?? null,
-});
+const formatPhone = (phone?: Partial<Phone>): Phone => {
+    const dialNumber = phone?.dialNumber ?? '';
+
+    return {
+        phoneType: (phone?.phoneType as string) ?? PhoneType.MOBILE,
+        dialNumber:
+            dialNumber.length > 0
+                ? getFormattedPhoneNumber(phone as Phone) ?? null
+                : null,
+        areaCode:
+            phone?.areaCode ??
+            (dialNumber.length >= 10
+                ? dialNumber.slice(
+                      dialNumber.length - 10,
+                      dialNumber.length - 7
+                  )
+                : null),
+        countryCode:
+            phone?.countryCode ??
+            (dialNumber.length > 10
+                ? dialNumber.slice(0, dialNumber.length - 10)
+                : '1'),
+        endDate: (phone?.endDate as string) ?? null,
+        isPreferred: Boolean(phone?.isPreferred),
+        startDate: (phone?.startDate as string) ?? null,
+    };
+};
 
 const getPhones = (phones?: Party['phones']): Phone[] => {
     const arr = ensureArray(phones);

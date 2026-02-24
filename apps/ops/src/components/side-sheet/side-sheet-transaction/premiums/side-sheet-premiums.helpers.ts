@@ -46,8 +46,6 @@ export const getAutopayPremiumSideSheetValues = (
             payors as TransactionPayor[],
             t
         );
-        const isPayment =
-            transactionType === Transaction.transactionType.SUBSEQUENT_PAYMENT;
         const reverseRecreateEnabled =
             featureFlags[FEATURE_FLAGS.REVERSE_RECREATE_ENABLED];
 
@@ -69,14 +67,13 @@ export const getAutopayPremiumSideSheetValues = (
             processDate: convertKebabedDateString(processDate),
             reverseCta:
                 reverseRecreateEnabled &&
+                transactionType ===
+                    Transaction.transactionType.SUBSEQUENT_PAYMENT &&
                 transaction.status === TransactionStatus.COMPLETED
                     ? (t(
                           'policy.history.reverseRecreateSidesheet.reversePayment'
                       ) as string)
                     : undefined,
-            reversalTransactionId: isPayment
-                ? transactionId
-                : transaction.parentId,
             status,
             submittedAmount:
                 isCanceled || isPending ? paymentAmount : requestedAmount,
@@ -179,15 +176,13 @@ export const getOneTimePremiumSideSheetValues = (
             processDate: convertKebabedDateString(processDate),
             reverseCta:
                 reverseRecreateEnabled &&
+                transactionType ===
+                    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM &&
                 transaction.status === TransactionStatus.COMPLETED
                     ? (t(
                           'policy.history.reverseRecreateSidesheet.reversePayment'
                       ) as string)
                     : undefined,
-            // Payment One Time Premium and One Time Premium are different - we'll need the parentId for Premiums
-            reversalTransactionId: isPayment
-                ? transactionId
-                : transaction.parentId,
             status,
             submittedAmount:
                 isCanceled || isPending ? paymentAmount : requestedAmount,

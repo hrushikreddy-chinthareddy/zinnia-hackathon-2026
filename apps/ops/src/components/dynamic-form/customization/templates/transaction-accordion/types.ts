@@ -7,6 +7,10 @@ export enum TabTitle {
     BeneficiaryDetails = 'Beneficiary Details',
     Signature = 'Signature',
     AssigneeDetails = 'Assignee Details',
+    ReviewFormData = 'Review Form Data',
+    FormReview = 'Form Review',
+    NIGOSummary = 'NIGO Summary',
+    Summary = 'Summary',
 }
 
 export enum BeneficiaryRole {
