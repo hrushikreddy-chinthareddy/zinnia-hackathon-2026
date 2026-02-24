@@ -2021,6 +2021,48 @@ export const farmersBlueprintTR0101 = {
                                             },
                                         ],
                                     },
+                                    valid: [
+                                        {
+                                            id: '24664fee-5bfa-4862-9049-42b636d5686c',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 50000,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'greaterThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Minimum face amount for this product is $50,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                        {
+                                            id: 'a7fb41e3-1408-426d-99ca-6a019e846fca',
+                                            conditions: {
+                                                booleanOperator: 'and',
+                                                conditions: [
+                                                    {
+                                                        type: 'numberComparisonCondition',
+                                                        value: 10000000,
+                                                        targetNodeId:
+                                                            'face-amount',
+                                                        operator:
+                                                            'lessThanOrEqual',
+                                                    },
+                                                ],
+                                            },
+                                            message: {
+                                                en: 'Maximum face amount for this product is $10,000,000.',
+                                                fr: '',
+                                            },
+                                        },
+                                    ],
                                 },
                                 {
                                     fieldType: 'money',
