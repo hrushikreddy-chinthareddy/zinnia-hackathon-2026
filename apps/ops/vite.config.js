@@ -1,18 +1,10 @@
 import react from '@vitejs/plugin-react';
+import { readFileSync } from 'node:fs';
 import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
 import { defineConfig } from 'vitest/config';
 
-const mediaTypes = [
-    'png',
-    'jpg',
-    'jpeg',
-    'gif',
-    'webp',
-    'ico',
-    'bmp',
-    'avif',
-];
+const mediaTypes = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'ico', 'bmp', 'avif'];
 
 export default defineConfig({
     // Replaces next/image with a lightweight stub so tests don't depend on Next.js image optimization

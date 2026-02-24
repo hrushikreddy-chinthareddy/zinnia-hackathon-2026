@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/react';
-import { server } from '@vitest/mocks/node';
-import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import PolicySlug from '@deps/pages/policies/[planCode]/[id]/policy-slug';
+import { server } from '@vitest/mocks/node';
+import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
 
 import {
     documentsHandlers,

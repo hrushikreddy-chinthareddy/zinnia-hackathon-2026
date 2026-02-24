@@ -135,7 +135,7 @@ export const handlers = [
         });
     }),
 
-    http.get('*/api/mcs/:clientCode/salesentity', ({ params, request }) => {
+    http.get('*/api/mcs/:clientCode/salesentity', ({ request }) => {
         const url = new URL(request.url);
         const id = url.searchParams.get('id');
         return HttpResponse.json({

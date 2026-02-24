@@ -33,7 +33,6 @@ const baseExtends = compat
             'turbo',
             'plugin:@next/next/recommended',
             'plugin:@tanstack/eslint-plugin-query/recommended',
-            'plugin:@vitest/legacy-recommended',
         ],
     })
     .flatMap((config) => fixupConfigRules(config));
@@ -127,6 +126,10 @@ module.exports = [
                             group: 'internal',
                         },
                         {
+                            pattern: '@vitest/**',
+                            group: 'internal',
+                        },
+                        {
                             pattern: 'next-i18next.config',
                             group: 'internal',
                         },
@@ -205,6 +208,16 @@ module.exports = [
             '@next/next/no-html-link-for-pages': 'off',
         },
     },
+    // Scope Vitest lint rules to only Vitest test files
+    ...compat
+        .config({
+            extends: ['plugin:@vitest/legacy-recommended'],
+        })
+        .flatMap((config) => fixupConfigRules(config))
+        .map((config) => ({
+            ...config,
+            files: ['**/*.vitest.*.{ts,tsx}'],
+        })),
     {
         files: [
             'src/components/button-group/button-group.stories.tsx',
