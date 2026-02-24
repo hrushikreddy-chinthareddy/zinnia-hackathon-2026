@@ -5,7 +5,7 @@ const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
     // Perform authentication steps. Replace these actions with your own.
-    await page.goto('http://localhost:3000');
+    await page.goto('/');
     const signInButton = page.getByRole('button', {
         name: 'Continue to sign in',
     });

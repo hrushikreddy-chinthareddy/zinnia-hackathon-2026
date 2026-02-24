@@ -25,7 +25,7 @@ test.describe('Case Page', () => {
 });
 
 test.describe('Policy Page', () => {
-    test('Loads properly, loads quick action menu for an item and can also navigate to that item', async ({
+    test('loads page, opens quick action menu, and navigates to policy details', async ({
         page,
     }) => {
         await page.goto('http://localhost:3000');
@@ -66,10 +66,10 @@ test.describe('Policy Page', () => {
 
         // Synchronize click and navigation to avoid race conditions
         await Promise.all([
+            policyDetailLinks.first().click(),
             page.waitForURL('**/policies/**/policy/policy-details', {
                 timeout: TIMEOUT,
             }),
-            policyDetailLinks.first().click(),
         ]);
         await page.waitForURL('**/policies/**/policy/policy-details', {
             timeout: TIMEOUT,
