@@ -2,6 +2,12 @@
     margin-bottom: var(--measure-dimension-margin-md);
 }
 
+.fieldGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
 .questionHeaderWrapper {
     margin-bottom: var(--measure-dimension-margin-xs);
     color: var(--color-base-text-primary, #212121);
