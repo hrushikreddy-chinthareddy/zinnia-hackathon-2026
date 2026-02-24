@@ -208,7 +208,7 @@ module.exports = [
             '@next/next/no-html-link-for-pages': 'off',
         },
     },
-    // Scope Vitest lint rules to only Vitest test files
+    // Scope Vitest lint rules to only Vitest test files and the Vitest directory
     ...compat
         .config({
             extends: ['plugin:@vitest/legacy-recommended'],
@@ -216,7 +216,7 @@ module.exports = [
         .flatMap((config) => fixupConfigRules(config))
         .map((config) => ({
             ...config,
-            files: ['**/*.vitest.*.{ts,tsx}'],
+            files: ['vitest/**/*.{ts,tsx}', '**/*.vitest.*.{ts,tsx}'],
         })),
     {
         files: [

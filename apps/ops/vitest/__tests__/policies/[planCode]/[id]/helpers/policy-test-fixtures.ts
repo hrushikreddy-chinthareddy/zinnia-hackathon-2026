@@ -1,4 +1,4 @@
-import { createMockRouter as createGenericMockRouter } from '../../../../vitest/utils/create-mock-router';
+import { createMockRouter as createGenericMockRouter } from '@vitest/utils/create-mock-router';
 
 import type { NextRouter } from 'next/router';
 
