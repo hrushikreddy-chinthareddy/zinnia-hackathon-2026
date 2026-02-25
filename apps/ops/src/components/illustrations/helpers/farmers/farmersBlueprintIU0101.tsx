@@ -397,6 +397,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 3,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -1241,6 +1242,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2807,6 +2809,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2840,6 +2843,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2907,6 +2911,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -3325,6 +3330,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -3376,6 +3382,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -3797,6 +3804,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -4439,6 +4447,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -4578,6 +4587,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -5023,7 +5033,6 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
-                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -5618,6 +5627,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -6830,6 +6840,7 @@ export const farmersBlueprintIU0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
