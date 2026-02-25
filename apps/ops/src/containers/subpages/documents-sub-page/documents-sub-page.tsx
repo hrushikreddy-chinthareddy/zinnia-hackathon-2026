@@ -18,14 +18,15 @@ import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
     PolicyDocument,
     excludeDocumentTypes,
-    includeDocumentTypesInbound,
     includeDocumentTypeForInboundSearch,
+    includeDocumentTypesInbound,
 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     SearchRequest,
@@ -35,6 +36,7 @@ import { Policy } from '@zinnia/api-types/types/sor';
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
+import IllustrationDocumentsTable from './illustration-documents-table';
 import TaxDocumentsTable from './tax-documents-table';
 
 type DocumentsSubPageProps = {
@@ -179,6 +181,11 @@ const NormalDocs = ({
                 <EventsLoader
                     message={t('policy.documents.loadingDocuments')}
                 />
+            ) : documentType === 'illustrations' ? (
+                <IllustrationDocumentsTable
+                    carrierCode={policy.carrierId ?? ''}
+                    results={policyDocuments ?? []}
+                />
             ) : (
                 <DocumentsResultsTable
                     carrierCode={policy.carrierId ?? ''}
@@ -297,6 +304,8 @@ const TaxDocs = ({
 export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     const { t } = useTranslation();
 
+    const { featureFlags } = useOptimizely();
+
     const [documentType, setDocumentType] = useState(
         DocumentTypeView.Policy as string
     );
@@ -314,6 +323,17 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
         if (val === yearSelection) return;
         setYearSelection(val);
     };
+
+    const asIsIllustrationsEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_AS_IS_ILLUSTRATIONS];
+
+    const { data: BPMEligibility } = useQuery({
+        queryKey: ['checkBPMAsIsIllustrationEligibility'],
+        queryFn: () => {
+            // This is a placeholder variable, should be replaced with a BPM call to check eligibility
+            return true;
+        },
+    });
 
     return (
         <>
@@ -358,18 +378,26 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         <RadioGroup.Item className="chip" value={'tax-forms'}>
                             {t('policy.documents.taxDocuments') as string}
                         </RadioGroup.Item>
+                        {asIsIllustrationsEnabled && BPMEligibility && (
+                            <RadioGroup.Item
+                                className="chip"
+                                value={'illustrations'}
+                            >
+                                {t('policy.documents.illustrations') as string}
+                            </RadioGroup.Item>
+                        )}
                     </RadioGroup.Root>
                 </div>
-                {documentType !== 'tax-forms' ? (
-                    <NormalDocs
+                {documentType === 'tax-forms' ? (
+                    <TaxDocs
                         yearSelection={yearSelection}
-                        documentType={documentType}
                         policy={policy}
                         isFirstYearSelected={isFirstYearSelected}
                     />
                 ) : (
-                    <TaxDocs
+                    <NormalDocs
                         yearSelection={yearSelection}
+                        documentType={documentType}
                         policy={policy}
                         isFirstYearSelected={isFirstYearSelected}
                     />
