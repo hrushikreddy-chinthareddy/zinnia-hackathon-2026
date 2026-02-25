@@ -12,8 +12,8 @@ import { useTransactions } from '@deps/hooks/useTransactions';
 import { TransactionSummary } from '@deps/types/transactions';
 import {
     Policy,
-    Transaction,
     TransactionStatus,
+    TransactionTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { TransactionsWrapper } from './transactions-wrapper';
@@ -37,7 +37,7 @@ jest.mock('@deps/hooks/useTransactions', () => ({
 
 jest.mock('@deps/utils/server-logging');
 
-const INTEREST_CREDIT_TYPE = Transaction.transactionType.INTEREST_CREDIT;
+const INTEREST_CREDIT_TYPE = TransactionTypeEnum.INTEREST_CREDIT;
 
 /** Helper to build a minimal TransactionSummary */
 const buildTransaction = (
@@ -46,7 +46,7 @@ const buildTransaction = (
     transactionId: `txn-${Math.random()}`,
     policyNumber: 'POL123',
     status: TransactionStatus.COMPLETED,
-    transactionType: Transaction.transactionType.SUBSEQUENT_PREMIUM,
+    transactionType: TransactionTypeEnum.SUBSEQUENT_PREMIUM,
     effectiveDate: '2024-01-15',
     processDate: '2024-01-15',
     requestDate: '2024-01-10',
@@ -59,7 +59,7 @@ const interestCreditTxn = buildTransaction({
 });
 
 const premiumTxn = buildTransaction({
-    transactionType: Transaction.transactionType.SUBSEQUENT_PREMIUM,
+    transactionType: TransactionTypeEnum.SUBSEQUENT_PREMIUM,
     transactionId: 'txn-premium',
 });
 
@@ -153,9 +153,7 @@ describe('TransactionsWrapper – Hide daily interest toggle', () => {
             screen.getByText(`enums.${INTEREST_CREDIT_TYPE}`)
         ).toBeInTheDocument();
         expect(
-            screen.getByText(
-                `enums.${Transaction.transactionType.SUBSEQUENT_PREMIUM}`
-            )
+            screen.getByText(`enums.${TransactionTypeEnum.SUBSEQUENT_PREMIUM}`)
         ).toBeInTheDocument();
 
         // Press the toggle
@@ -170,9 +168,7 @@ describe('TransactionsWrapper – Hide daily interest toggle', () => {
         ).not.toBeInTheDocument();
         // Other transactions remain
         expect(
-            screen.getByText(
-                `enums.${Transaction.transactionType.SUBSEQUENT_PREMIUM}`
-            )
+            screen.getByText(`enums.${TransactionTypeEnum.SUBSEQUENT_PREMIUM}`)
         ).toBeInTheDocument();
     });
 

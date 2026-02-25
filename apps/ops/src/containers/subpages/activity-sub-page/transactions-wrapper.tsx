@@ -29,7 +29,7 @@ import {
 import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { TransactionSummary } from '@deps/types/transactions';
 import {
-    Transaction as TransactionModel,
+    TransactionTypeEnum,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
 
@@ -45,8 +45,7 @@ export const TransactionsWrapper = () => {
     const [hideDailyInterest, setHideDailyInterest] = useState(false);
     const limit = 25;
     const previousHistory = useRef(historyFilters);
-    const INTEREST_CREDIT_TYPE =
-        TransactionModel.transactionType.INTEREST_CREDIT;
+    const INTEREST_CREDIT_TYPE = TransactionTypeEnum.INTEREST_CREDIT;
 
     const selectedDateRange = useMemo(
         () => ({
@@ -140,17 +139,6 @@ export const TransactionsWrapper = () => {
         [filteredWithToggle, statusFilter]
     );
 
-    // Transaction counts per type — derived from full dataset, only changes on date filter change
-    const transactionTypeCounts = useMemo(() => {
-        return Object.values(allTransactions)
-            .flat()
-            .reduce<Record<string, number>>((acc, txn) => {
-                const type = txn.transactionType ?? '';
-                acc[type] = (acc[type] ?? 0) + 1;
-                return acc;
-            }, {});
-    }, [allTransactions]);
-
     const liveResultsMessage = useMemo(() => {
         if (currentTabFilteredTransactions.length) {
             return t('policy.documents.xToYOfZ', {
@@ -203,7 +191,6 @@ export const TransactionsWrapper = () => {
             />
             <div className={styles.filters}>
                 <TransactionTypeSelect
-                    transactionCounts={transactionTypeCounts}
                     onInterestCreditSelected={() => setHideDailyInterest(false)}
                 />
                 <div className={styles.toggleRow}>
