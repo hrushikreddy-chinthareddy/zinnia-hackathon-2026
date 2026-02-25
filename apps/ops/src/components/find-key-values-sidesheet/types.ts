@@ -1,4 +1,6 @@
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Collapse, Expand } from '@deps/hooks/useTreeState';
+import { PolicyFeature, Rider } from '@zinnia/api-types/types/sor';
 
 export type ExpandCollapse = typeof Expand | typeof Collapse;
 
@@ -7,6 +9,16 @@ export interface FindAllKeyValuesSidebarProps {
     policyNumber: string;
     container?: any;
     handleCalendarOpen?: (isOpen: boolean) => void;
+}
+
+export interface RiderSidesheetProps {
+    policyDetails: PolicyDetails;
+    rider: Rider | null;
+}
+
+export interface FeatureSidesheetProps {
+    policyDetails: PolicyDetails;
+    feature: PolicyFeature | null;
 }
 
 export type Primitive = string | number | boolean;
