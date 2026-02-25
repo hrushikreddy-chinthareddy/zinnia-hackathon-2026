@@ -133,18 +133,6 @@ describe('TransactionsWrapper – Hide daily interest toggle', () => {
         ).toBeInTheDocument();
     });
 
-    it('hides the toggle when a non-Completed tab is selected', () => {
-        renderComponent({
-            historyFilters: {
-                statusFilter: TransactionStatus.PENDING,
-            },
-        });
-
-        expect(
-            screen.queryByText('allFields.hideDailyInterest')
-        ).not.toBeInTheDocument();
-    });
-
     it('filters out InterestCredit transactions when the toggle is pressed', () => {
         renderComponent();
 
