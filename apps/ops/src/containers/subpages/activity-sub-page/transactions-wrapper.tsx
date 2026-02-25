@@ -45,9 +45,9 @@ export const TransactionsWrapper = () => {
     const [hideDailyInterest, setHideDailyInterest] = useState(false);
     const limit = 25;
     const previousHistory = useRef(historyFilters);
-    const isCompletedTab = statusFilter === TransactionStatus.COMPLETED;
     const INTEREST_CREDIT_TYPE =
         TransactionModel.transactionType.INTEREST_CREDIT;
+
     const selectedDateRange = useMemo(
         () => ({
             from:
@@ -66,38 +66,40 @@ export const TransactionsWrapper = () => {
         }),
         [historyFilters?.datesFilter]
     );
-    const dateFilters = useMemo(
-        () => ({
-            ...historyFilters,
-            datesFilter: {
-                from: dayjs(selectedDateRange.from).utc(),
-                to: dayjs(selectedDateRange.to).utc(),
-            },
-        }),
-        [historyFilters, selectedDateRange]
-    );
-
-    const {
-        data: filteredTransactions = initialFilterTransactions,
-        isLoading,
-        refetch,
-    } = useTransactions(policy, dateFilters, historyFilters?.transactionTypes);
-
-    // Date-only filters (excludes transactionTypes) so the counts query key is stable across type filter changes
+    // Only include date-related filters so the query key is stable across type/tab/toggle changes
     const dateOnlyFilters = useMemo(
         () => ({
-            statusFilter: historyFilters.statusFilter,
             datesFilter: {
                 from: dayjs(selectedDateRange.from).utc(),
                 to: dayjs(selectedDateRange.to).utc(),
             },
         }),
-        [historyFilters.statusFilter, selectedDateRange]
+        [selectedDateRange]
     );
 
-    // Fetch all transactions (no type filter) so per-type counts only change on initial load or date change
-    const { data: allTransactions = initialFilterTransactions } =
-        useTransactions(policy, dateOnlyFilters, undefined, true);
+    // Single query — fetches all transactions for the date range
+    const {
+        data: allTransactions = initialFilterTransactions,
+        isLoading,
+        refetch,
+    } = useTransactions(policy, dateOnlyFilters, undefined, true);
+
+    // Client-side filtering by selected transaction types
+    const filteredTransactions = useMemo(() => {
+        const selectedTypes = historyFilters?.transactionTypes;
+        if (!selectedTypes?.length) {
+            return allTransactions;
+        }
+        return Object.entries(allTransactions).reduce(
+            (acc, [status, txns]) => ({
+                ...acc,
+                [status]: txns.filter((txn) =>
+                    selectedTypes.includes(txn.transactionType ?? '')
+                ),
+            }),
+            {} as typeof allTransactions
+        );
+    }, [allTransactions, historyFilters?.transactionTypes]);
 
     const goToPage = useCallback(
         (pageNumber: number) => {
@@ -122,12 +124,15 @@ export const TransactionsWrapper = () => {
         if (!hideDailyInterest) {
             return filteredTransactions;
         }
-        return {
-            ...filteredTransactions,
-            [TransactionStatus.COMPLETED]: (
-                filteredTransactions[TransactionStatus.COMPLETED] ?? []
-            ).filter((txn) => txn.transactionType !== INTEREST_CREDIT_TYPE),
-        };
+        return Object.keys(filteredTransactions).reduce(
+            (acc, status) => ({
+                ...acc,
+                [status]: (filteredTransactions[status] ?? []).filter(
+                    (txn) => txn.transactionType !== INTEREST_CREDIT_TYPE
+                ),
+            }),
+            {} as typeof filteredTransactions
+        );
     }, [filteredTransactions, hideDailyInterest, INTEREST_CREDIT_TYPE]);
 
     const currentTabFilteredTransactions = useMemo(
@@ -135,15 +140,16 @@ export const TransactionsWrapper = () => {
         [filteredWithToggle, statusFilter]
     );
 
-    // Transaction counts per type — only changes on initial load or date filter change
+    // Transaction counts per type — derived from full dataset, only changes on date filter change
     const transactionTypeCounts = useMemo(() => {
-        const transactions = allTransactions[statusFilter] ?? [];
-        return transactions.reduce<Record<string, number>>((acc, txn) => {
-            const type = txn.transactionType ?? '';
-            acc[type] = (acc[type] ?? 0) + 1;
-            return acc;
-        }, {});
-    }, [allTransactions, statusFilter]);
+        return Object.values(allTransactions)
+            .flat()
+            .reduce<Record<string, number>>((acc, txn) => {
+                const type = txn.transactionType ?? '';
+                acc[type] = (acc[type] ?? 0) + 1;
+                return acc;
+            }, {});
+    }, [allTransactions]);
 
     const liveResultsMessage = useMemo(() => {
         if (currentTabFilteredTransactions.length) {
@@ -200,6 +206,14 @@ export const TransactionsWrapper = () => {
                     transactionCounts={transactionTypeCounts}
                     onInterestCreditSelected={() => setHideDailyInterest(false)}
                 />
+                <div className={styles.toggleRow}>
+                    <Toggle
+                        labelId="hide-daily-interest-toggle"
+                        text={t('allFields.hideDailyInterest') || ''}
+                        pressed={hideDailyInterest}
+                        onClick={() => setHideDailyInterest((prev) => !prev)}
+                    />
+                </div>
                 <CustomDateRange
                     handleTimerangeChange={(dates) =>
                         setHistoryFilters((prevState) => ({
@@ -222,20 +236,6 @@ export const TransactionsWrapper = () => {
                     <TransactionStatusTabGroup
                         transactions={filteredWithToggle}
                     >
-                        {isCompletedTab && (
-                            <div className={styles.toggleRow}>
-                                <Toggle
-                                    labelId="hide-daily-interest-toggle"
-                                    text={
-                                        t('allFields.hideDailyInterest') || ''
-                                    }
-                                    pressed={hideDailyInterest}
-                                    onClick={() =>
-                                        setHideDailyInterest((prev) => !prev)
-                                    }
-                                />
-                            </div>
-                        )}
                         <TransactionsTable
                             transactions={currentTabFilteredTransactions}
                             status={statusFilter}

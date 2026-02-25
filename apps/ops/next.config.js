@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 // @ts-check
+const path = require('path');
 const webpackLib = require('webpack');
 
 /** @type {import('next').NextConfig} */
@@ -91,6 +92,13 @@ const nextConfig = {
 module.exports = {
     ...nextConfig,
     webpack(config) {
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            react: path.dirname(require.resolve('react/package.json')),
+            'react-dom': path.dirname(
+                require.resolve('react-dom/package.json')
+            ),
+        };
         config.module.rules.push({
             test: /\.svg$/i,
             issuer: {

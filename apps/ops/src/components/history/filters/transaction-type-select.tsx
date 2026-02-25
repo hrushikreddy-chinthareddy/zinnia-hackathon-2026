@@ -25,6 +25,25 @@ export const TransactionTypeSelect = ({
 
     const INTEREST_CREDIT_TYPE = Transaction.transactionType.INTEREST_CREDIT;
 
+    /**
+     * Remove selected types that no longer have results when counts change
+    useEffect(() => {
+        if (!transactionCounts) {
+            return;
+        }
+        setSelections((prev) => {
+            const pruned = prev.filter((type) => !!transactionCounts[type]);
+            if (pruned.length !== prev.length) {
+                setHistoryFilters((prevState) => ({
+                    ...prevState,
+                    transactionTypes: pruned,
+                }));
+            }
+            return pruned;
+        });
+    }, [transactionCounts, setHistoryFilters]);
+     */
+
     // Return filter options with counts for each option
     const typeOptions = useMemo(() => {
         return Object.values(TransactionType)
@@ -34,11 +53,19 @@ export const TransactionTypeSelect = ({
                 return {
                     value: type,
                     label: transactionCounts
-                        ? `${baseLabel} (${count})`
+                        ? `${baseLabel} (${count})` // FIXME: should be aria-safe
                         : baseLabel,
+                    ariaLabel: transactionCounts
+                        ? `${baseLabel}, ${count} results`
+                        : baseLabel,
+                    count,
                 };
             })
-            .sort((a, b) => a.label.localeCompare(b.label));
+            .sort(
+                (a, b) =>
+                    (b.count && 1) - (a.count && 1) ||
+                    a.label.localeCompare(b.label)
+            );
     }, [transactionCounts, t]);
 
     const updateSelections = (value: string[]) => {

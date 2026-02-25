@@ -27,5 +27,8 @@
     "overrides": {
       "canvas": "npm:empty-npm-package@1.0.0"
     }
+  },
+  "dependencies": {
+    "@zinnia/bloom": "link:../bloom"
   }
 }
