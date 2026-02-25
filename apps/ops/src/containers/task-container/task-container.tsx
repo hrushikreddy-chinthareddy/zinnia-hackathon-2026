@@ -2,11 +2,13 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { useContext } from 'react';
 
+import DefaultTaskCard from '@deps/components/workflows/default-task-card/default-task-card';
 import { TranslationFiles } from '@deps/config/translations';
 import { TASK_MODE_EDIT } from '@deps/constants/task';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { WorkflowProvider } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 
 import { stepsProvider } from './steps-helper/steps-provider';
 import { TaskDataContext } from './task-context';
@@ -39,6 +41,15 @@ const TaskContainer = ({
     const readOnly = !isEditMode;
 
     const { featureFlags } = useOptimizely();
+    if (taskMetadata?.length === 0) {
+        browserLogWarn('task-container::Task schema not found', {
+            taskId: id,
+            taskType: taskType as TaskType,
+            carrier: carrier,
+            caseId: caseId,
+        });
+        return <DefaultTaskCard leaveRoute={taskInfoLink} />;
+    }
     const steps = stepsProvider.getSteps(taskType as TaskType, {
         carrierId: carrier,
         caseId,
@@ -56,6 +67,7 @@ const TaskContainer = ({
         readOnly,
         featureFlags,
     });
+
     return (
         <WorkflowProvider>
             <TaskWorkflowContent
