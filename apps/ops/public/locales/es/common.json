@@ -709,7 +709,7 @@
         "systemProgramStatus": "Estado",
         "tableCaptionsCasesTable": "Lista de todos los casos, incluyendo estado, propietario, aseguradora, agente y fecha de creación",
         "tableCaptionsElectedFunds": "Asignaciones de fondos elegidos, incluyendo nombre del fondo, tipo, período de garantía, tasa de interés, valor y porcentaje de asignación",
-        "tableCaptionsIllustrationDocuments": "Lista de todas las ilustraciones relacionadas con la póliza, incluyendo nombre, creado, creado por, último visto y opciones de descarga",
+        "tableCaptionsIllustrationDocuments": "Lista de todas las ilustraciones relacionadas con la póliza, incluyendo nombre, creado, creado por y opciones de descarga",
         "tableCaptionsNotElectedFunds": "Fondos no elegidos, incluyendo nombre del fondo, tipo, período de garantía, tasa de interés y valor",
         "tableCaptionsPoliciesTable": "Lista de todas las pólizas y contratos, incluyendo número de póliza o contrato, estado, SSN del propietario, casos abiertos y última actualización",
         "tableCaptionsReceivedCaseDocuments": "Lista de todos los documentos de caso recibidos, incluyendo nombre, fecha de recepción, tipo de archivo y opciones de descarga",

@@ -709,7 +709,7 @@
         "systemProgramStatus": "Statut",
         "tableCaptionsCasesTable": "Liste de tous les cas, incluant le statut, le propriétaire, l'assureur, l'agent et la date de création",
         "tableCaptionsElectedFunds": "Allocations de fonds élus, incluant le nom du fonds, le type, la période de garantie, le taux d'intérêt, la valeur et le pourcentage d'allocation",
-        "tableCaptionsIllustrationDocuments": "Liste de toutes les illustrations liées à la police, incluant le nom, créé le, créé par, dernier affichage et les options de téléchargement",
+        "tableCaptionsIllustrationDocuments": "Liste de toutes les illustrations liées à la police, incluant le nom, créé le, créé par et les options de téléchargement",
         "tableCaptionsNotElectedFunds": "Fonds non élus, incluant le nom du fonds, le type, la période de garantie, le taux d'intérêt et la valeur",
         "tableCaptionsPoliciesTable": "Liste de toutes les polices et contrats, incluant le numéro de police ou de contrat, le statut, le SSN du propriétaire, les cas ouverts et la dernière mise à jour",
         "tableCaptionsReceivedCaseDocuments": "Liste de tous les documents de cas reçus, incluant le nom, la date de réception, le type de fichier et les options de téléchargement",
