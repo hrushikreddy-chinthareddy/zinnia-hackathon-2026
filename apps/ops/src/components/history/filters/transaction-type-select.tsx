@@ -4,23 +4,13 @@ import { useTranslation } from 'react-i18next';
 
 import { useHistoryFiltersContext } from '@deps/contexts/HistoryFiltersContext';
 import { TransactionType } from '@deps/types/transactionTypes';
-import { TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import styles from './transaction-type-select.module.css';
 
-interface TransactionTypeSelectProps {
-    // Called when the user selects InterestCredit in the filter
-    onInterestCreditSelected?: () => void;
-}
-
-export const TransactionTypeSelect = ({
-    onInterestCreditSelected,
-}: TransactionTypeSelectProps) => {
+export const TransactionTypeSelect = () => {
     const { t } = useTranslation();
     const { setHistoryFilters } = useHistoryFiltersContext();
     const [selections, setSelections] = useState<string[]>([]);
-
-    const INTEREST_CREDIT_TYPE = TransactionTypeEnum.INTEREST_CREDIT;
 
     // Return filter options with counts for each option
     const typeOptions = useMemo(() => {
@@ -40,11 +30,6 @@ export const TransactionTypeSelect = ({
             ...prevState,
             transactionTypes: value,
         }));
-
-        // Auto-off the hide-daily-interest toggle when InterestCredit is selected
-        if (value.includes(INTEREST_CREDIT_TYPE) && onInterestCreditSelected) {
-            onInterestCreditSelected();
-        }
     };
 
     return (

@@ -191,11 +191,7 @@ export const TransactionsWrapper = () => {
             />
             <div className={styles.filters}>
                 <div className={styles.filterGroup}>
-                    <TransactionTypeSelect
-                        onInterestCreditSelected={() =>
-                            setHideDailyInterest(false)
-                        }
-                    />
+                    <TransactionTypeSelect />
                     <Toggle
                         labelId="hide-daily-interest-toggle"
                         text={t('allFields.hideDailyInterest') || ''}
