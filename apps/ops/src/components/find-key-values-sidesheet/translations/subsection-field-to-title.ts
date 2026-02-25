@@ -7,7 +7,6 @@ export const sectionTypeToSubSectionTitleFields: Record<string, string> = {
     features: 'featureType',
     policyFeatures: 'featureType',
     riders: 'riderName',
-    riderParticipants: 'partyId',
     parties: 'partyId',
     funds: 'fundId',
     fundAllocationsInvestments: 'fundId',

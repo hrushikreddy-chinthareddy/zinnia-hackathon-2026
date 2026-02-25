@@ -20,7 +20,11 @@ import {
     transformNodes,
 } from '../data-node-helpers/mutations';
 import styles from '../find-all-key-values-sidesheet.module.css';
-import { addToolTip, formatNode } from '../transformations/formatters';
+import {
+    addPartyLink,
+    addToolTip,
+    formatNode,
+} from '../transformations/formatters';
 import {
     excludeNodeByLabel,
     searchNodes,
@@ -57,6 +61,12 @@ export const RiderSidesheetContent = ({
                                 // Excludes sections and fields that are required to be hidden across all data
                                 excludeNodeByLabel({
                                     node,
+                                    useCase: 'riders',
+                                }),
+                            (node) =>
+                                addPartyLink({
+                                    node,
+                                    policyDetails,
                                 }),
                             (node) =>
                                 // Adds a tooltip to the node if it exists in the tooltip mapping
@@ -83,8 +93,16 @@ export const RiderSidesheetContent = ({
         [riderNodes, debouncedSearchValue]
     );
 
+    const riderDescription = t(
+        `policy.extras.coverageID.${rider?.coverageId}`,
+        { defaultValue: null }
+    );
+
     return (
         <div className={styles.keyValuesContainer}>
+            {!!riderDescription && (
+                <p className="typography-content-body-sm">{riderDescription}</p>
+            )}
             <FieldData
                 onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     setSearchValue(e.target.value)
