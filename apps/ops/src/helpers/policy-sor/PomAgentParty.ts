@@ -3,7 +3,7 @@ import {
     AddressType,
     Country,
     EmailType,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     State,
 } from '@zinnia/api-types/types/sor';
@@ -21,7 +21,7 @@ export const transformPomAgentDataToParty = (
         partyData?.identifications?.filter((id) => {
             if (
                 agentData?.socialSecurityNumber &&
-                id.identificationType === Identification.identificationType.SSN
+                id.identificationType === IdentificationTypeEnum.SSN
             ) {
                 return false;
             }
@@ -70,8 +70,7 @@ export const transformPomAgentDataToParty = (
             ...(agentData?.socialSecurityNumber
                 ? [
                       {
-                          identificationType:
-                              Identification.identificationType.SSN,
+                          identificationType: IdentificationTypeEnum.SSN,
                           identificationValue: agentData.socialSecurityNumber,
                       },
                   ]

@@ -9,7 +9,7 @@ import {
     AddressType,
     Country,
     PartyRole,
-    PolicyPartyRoles,
+    RelationshipToInsuredEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { DeliveryMethods } from './bene-notification-tab/bene-notification-tab.types';
@@ -91,7 +91,7 @@ describe('##DeathNotificationSidesheet Component', () => {
                             fullName: 'Jane Notifier',
                             phone: { dialNumber: '1234567890' },
                             relationshipToInsured:
-                                PolicyPartyRoles.relationshipToInsured.BROTHER,
+                                RelationshipToInsuredEnum.BROTHER,
                         },
                     },
                 },
@@ -160,8 +160,7 @@ describe('##DeathNotificationSidesheet Component', () => {
                                 fullName: 'Jane owner',
                                 partyRole: PartyRole.OWNER,
                                 relationshipToInsured:
-                                    PolicyPartyRoles.relationshipToInsured
-                                        .BROTHER,
+                                    RelationshipToInsuredEnum.BROTHER,
                             },
                             isDeceased: true,
                             isDiedInForeignCountry: true,
@@ -172,8 +171,7 @@ describe('##DeathNotificationSidesheet Component', () => {
                                 fullName: 'Non Deceased Owner',
                                 partyRole: PartyRole.OWNER,
                                 relationshipToInsured:
-                                    PolicyPartyRoles.relationshipToInsured
-                                        .BROTHER,
+                                    RelationshipToInsuredEnum.BROTHER,
                             },
                             isDeceased: false,
                             isDiedInForeignCountry: true,

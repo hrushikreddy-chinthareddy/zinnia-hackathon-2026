@@ -9,6 +9,7 @@ import {
     EntityType,
     Gender,
     Identification,
+    IdentificationTypeEnum,
     Parties as ApiParties,
     PartyRole,
     PartyType,
@@ -117,7 +118,7 @@ export class PolicyParty {
         return this.party.identifications?.find(
             (identification) =>
                 identification.identificationType ===
-                ('DRIVERLICENSE' as Identification.identificationType)
+                ('DRIVERLICENSE' as IdentificationTypeEnum)
         );
     }
 
@@ -125,7 +126,7 @@ export class PolicyParty {
         return this.party.identifications?.filter(
             (identification) =>
                 identification.identificationType ===
-                Identification.identificationType.PASSPORT
+                IdentificationTypeEnum.PASSPORT
         );
     }
 
@@ -139,15 +140,14 @@ export class PolicyParty {
         return this.party.identifications?.find(
             (identification) =>
                 identification.identificationType ===
-                Identification.identificationType.STATEPHOTOID
+                IdentificationTypeEnum.STATEPHOTOID
         )?.identificationValue;
     }
 
     public get taxId() {
         return this.party.identifications?.find(
             (identification) =>
-                identification.identificationType ===
-                Identification.identificationType.TIN
+                identification.identificationType === IdentificationTypeEnum.TIN
         )?.identificationValue;
     }
 

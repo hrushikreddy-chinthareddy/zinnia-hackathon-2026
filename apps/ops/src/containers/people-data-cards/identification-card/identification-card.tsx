@@ -28,7 +28,11 @@ import {
 } from '@deps/helpers/string.helpers';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { Identification, PartyType } from '@zinnia/api-types/types/sor';
+import {
+    Identification,
+    IdentificationTypeEnum,
+    PartyType,
+} from '@zinnia/api-types/types/sor';
 
 export interface IdentificationCardProps {
     editable?: boolean;
@@ -38,8 +42,8 @@ export interface IdentificationCardProps {
 
 const formatIdentificationValue = (identification: Identification): string => {
     switch (identification?.identificationType) {
-        case Identification.identificationType.SSN:
-        case Identification.identificationType.TIN:
+        case IdentificationTypeEnum.SSN:
+        case IdentificationTypeEnum.TIN:
             return formatSSN(identification?.identificationValue);
         default:
             return identification?.identificationValue || DEFAULT_ERROR_STRING;
@@ -48,19 +52,17 @@ const formatIdentificationValue = (identification: Identification): string => {
 
 const showState = (identification: Identification): boolean => {
     return [
-        Identification.identificationType.DRIVERLICENSENUMBER,
-        Identification.identificationType.STATEPHOTOID,
-        'DRIVERLICENSE' as Identification.identificationType,
+        IdentificationTypeEnum.DRIVERLICENSENUMBER,
+        IdentificationTypeEnum.STATEPHOTOID,
+        'DRIVERLICENSE' as IdentificationTypeEnum,
     ].includes(
-        identification?.identificationType ||
-            ('' as Identification.identificationType)
+        identification?.identificationType || ('' as IdentificationTypeEnum)
     );
 };
 
 const showCountry = (identification: Identification): boolean => {
-    return [Identification.identificationType.PASSPORT].includes(
-        identification?.identificationType ||
-            ('' as Identification.identificationType)
+    return [IdentificationTypeEnum.PASSPORT].includes(
+        identification?.identificationType || ('' as IdentificationTypeEnum)
     );
 };
 
@@ -78,10 +80,10 @@ const IdentificationDisplay = ({
             )}
             sentenceCase={
                 ![
-                    Identification.identificationType.SSN,
-                    Identification.identificationType.EXTERNAL,
+                    IdentificationTypeEnum.SSN,
+                    IdentificationTypeEnum.EXTERNAL,
                 ].includes(
-                    identification.identificationType as Identification.identificationType
+                    identification.identificationType as IdentificationTypeEnum
                 )
             }
         >

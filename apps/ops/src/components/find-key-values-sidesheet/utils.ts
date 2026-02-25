@@ -16,8 +16,9 @@ import {
 import { fillColDefs } from '@deps/helpers/data-transform.helpers';
 import { DataDefinition } from '@deps/types/data';
 import {
+    LineOfBusiness,
     Policy,
-    Product,
+    TransactionTypeEnum,
     Transaction,
     TransactionStatus,
 } from '@zinnia/api-types/types/sor';
@@ -40,15 +41,15 @@ export const TransactionSidesheetViews = {
 };
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_REVERSAL = [
-    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
-    Transaction.transactionType.SUBSEQUENT_PAYMENT,
+    TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionTypeEnum.SUBSEQUENT_PAYMENT,
 ];
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_CANCEL = [
-    Transaction.transactionType.FULL_SURRENDER,
-    Transaction.transactionType.NEW_LOAN,
-    Transaction.transactionType.ONE_TIME_PREMIUM,
-    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionTypeEnum.FULL_SURRENDER,
+    TransactionTypeEnum.NEW_LOAN,
+    TransactionTypeEnum.ONE_TIME_PREMIUM,
+    TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
 ];
 
 /**
@@ -66,18 +67,18 @@ export const getTransactionAmount = (
     const { appliedAmount, paymentAmount, requestedAmount } =
         transaction?.transactionAmounts ?? {};
     switch (transaction?.transactionType) {
-        case Transaction.transactionType.NEW_LOAN:
+        case TransactionTypeEnum.NEW_LOAN:
             return transaction?.transactionAmounts?.requestedAmount;
-        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM:
             return paymentAmount || requestedAmount;
-        case Transaction.transactionType.ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.ONE_TIME_PREMIUM:
             return appliedAmount || requestedAmount;
-        case Transaction.transactionType.SUBSEQUENT_PAYMENT:
-        case Transaction.transactionType.SUBSEQUENT_PREMIUM:
+        case TransactionTypeEnum.SUBSEQUENT_PAYMENT:
+        case TransactionTypeEnum.SUBSEQUENT_PREMIUM:
             return transaction?.status === TransactionStatus.PENDING
                 ? paymentAmount
                 : appliedAmount;
-        case Transaction.transactionType.FULL_SURRENDER:
+        case TransactionTypeEnum.FULL_SURRENDER:
             return undefined;
         default:
             return appliedAmount || requestedAmount;
@@ -89,8 +90,7 @@ export const getTransactionAmount = (
  */
 export const prepareSearchableData = (policy: Policy, t: TFunction) => {
     const dto = generatePolicyAnnuityDetailsDto(policy);
-    const isLifePolicy =
-        policy.product?.lineOfBusiness === Product.lineOfBusiness.LIFE;
+    const isLifePolicy = policy.product?.lineOfBusiness === LineOfBusiness.LIFE;
     const isTermLife = isLifePolicy && isTermLifeProduct(policy);
     const colDefs = isLifePolicy
         ? isTermLife

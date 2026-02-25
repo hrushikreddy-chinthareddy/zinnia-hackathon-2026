@@ -11,7 +11,7 @@ import { areObjectsDifferent } from '@deps/helpers/objects.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
 import {
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     PartyType,
     Policy,
@@ -96,8 +96,7 @@ export const hasBeneficiaryChanged = (
         item?.party?.allocation?.beneficiaryPercentage;
 
     const existingIdentification = existingParty?.identifications?.find(
-        (id: any) =>
-            id.identificationType === Identification.identificationType.SSN
+        (id: any) => id.identificationType === IdentificationTypeEnum.SSN
     );
 
     const entityChanged =

@@ -31,7 +31,7 @@ import {
     FullSurrenderRequest,
     PartialWithdrawalOneTimeRequest,
 } from '@zinnia/api-types/types/bpm';
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
 import { WithdrawalType } from './amount/types';
@@ -59,8 +59,8 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
 
     const transactionType = useMemo(() => {
         return withdrawal.type === WithdrawalType.Surrender
-            ? Transaction.transactionType.FULL_SURRENDER
-            : Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+            ? TransactionTypeEnum.FULL_SURRENDER
+            : TransactionTypeEnum.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     const validateCall = useCallback(() => {
