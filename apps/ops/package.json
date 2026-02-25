@@ -35,7 +35,7 @@
         "@types/react-dom": "^18.3.0",
         "@types/uuid": "^9.0.2",
         "@types/xml2js": "^0.4.14",
-        "@zinnia/bloom": "^7.3.2",
+        "@zinnia/bloom": "^7.7.1",
         "@zinnia/form-engine-sdk": "3.1.0",
         "ag-grid-community": "29.2.0",
         "ag-grid-react": "29.2.0",

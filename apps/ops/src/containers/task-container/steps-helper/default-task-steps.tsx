@@ -1,10 +1,13 @@
 import { GetStepsProps } from './types';
+import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
 const getDefaultTaskSteps = ({
     taskInfoLink,
     taskMetadata,
     readOnly,
+    task,
+    t,
 }: GetStepsProps) => {
     const steps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
@@ -25,7 +28,23 @@ const getDefaultTaskSteps = ({
         screenReaderLabel: metadata?.title || '',
     }));
 
-    return steps;
+    const confirmStep = {
+        ariaLabel: t('confirm'),
+        isVisible: () => Boolean(true),
+        component: (
+            <ConfirmStep
+                taskType={task?.taskType}
+                taskInfoLink={taskInfoLink}
+            ></ConfirmStep>
+        ),
+        text: t('confirm'),
+        index: taskMetadata.length,
+        screenReaderLabel: t('confirm'),
+        isSubmit: true,
+        isCompleted: true,
+    };
+
+    return [...steps, confirmStep];
 };
 
 export default getDefaultTaskSteps;
