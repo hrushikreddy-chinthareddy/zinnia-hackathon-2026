@@ -165,6 +165,7 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
                             timerange={timerange}
                             handleTimerangeChange={handleRangeChange}
                             showIcon={false}
+                            endMonth={dayjs().toDate()}
                         />
                     </div>
                 </div>

@@ -41,10 +41,8 @@ export const TransactionSidesheetViews = {
 };
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_REVERSAL = [
-    TransactionTypeEnum.ONE_TIME_PREMIUM,
     TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
     TransactionTypeEnum.SUBSEQUENT_PAYMENT,
-    TransactionTypeEnum.SUBSEQUENT_PREMIUM,
 ];
 
 export const TRANSACTION_TYPES_ELIGIBLE_FOR_CANCEL = [
@@ -53,31 +51,6 @@ export const TRANSACTION_TYPES_ELIGIBLE_FOR_CANCEL = [
     TransactionTypeEnum.ONE_TIME_PREMIUM,
     TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
 ];
-
-/**
- * Gets the Transaction ID of the Transaction to be reversed
- * NOTE - Reversals are only supported for 4 transaction types for now
- * defaulting to transactionId for the other transaction types
- * @param transaction - the Transaction to be reversed
- * @returns
- */
-export const getReversalTransactionId = (
-    transaction: Transaction | undefined
-): string | undefined => {
-    if (!transaction || !transaction?.transactionType) {
-        return undefined;
-    }
-
-    switch (transaction.transactionType) {
-        case TransactionTypeEnum.ONE_TIME_PREMIUM:
-        case TransactionTypeEnum.SUBSEQUENT_PREMIUM:
-            return transaction.parentId;
-        case TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM:
-        case TransactionTypeEnum.SUBSEQUENT_PAYMENT:
-        default:
-            return transaction.transactionId;
-    }
-};
 
 /**
  * Gets the "proper" display amount of the transaction using pre-existing business logic
