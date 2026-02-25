@@ -10,7 +10,7 @@ import {
 import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import { FindAllKeyValuesRiderSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-riders-sidesheet';
+import { FindAllKeyValuesRiderSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-rider-sidesheet';
 import NavElement, {
     NavElementSize,
     NavElementType,

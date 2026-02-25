@@ -11,7 +11,7 @@ import { RiderSidesheetProps } from './types';
 /**
  * A Sidesheet component that displays all key-value pairs of a rider.
  *
- * @param {Rider} transaction - the rider
+ * @param {Rider} Rider - the rider
  * @returns {JSX.Element} - the rendered component
  */
 export const FindAllKeyValuesRiderSidesheet = ({
