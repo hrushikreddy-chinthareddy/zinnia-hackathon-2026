@@ -10,10 +10,6 @@ overrides:
 importers:
 
   .:
-    dependencies:
-      '@zinnia/bloom':
-        specifier: link:../bloom
-        version: link:../bloom
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^2.1.4
