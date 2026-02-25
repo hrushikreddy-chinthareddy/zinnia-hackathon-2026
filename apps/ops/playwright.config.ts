@@ -55,16 +55,6 @@ export default defineConfig({
             dependencies: ['setup'],
         },
 
-        {
-            name: 'webkit',
-            use: {
-                ...devices['Desktop Safari'],
-                // Use prepared auth state.
-                storageState: 'playwright/.auth/user.json',
-            },
-            dependencies: ['setup'],
-        },
-
         /* Test against mobile viewports. */
         // {
         //   name: 'Mobile Chrome',

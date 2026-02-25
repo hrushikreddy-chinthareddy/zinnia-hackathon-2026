@@ -11,12 +11,11 @@ setup('authenticate', async ({ page }) => {
     const signInButton = page.getByRole('button', {
         name: 'Continue to sign in',
     });
-    if (await signInButton.isVisible()) {
-        await Promise.all([
-            page.waitForURL(/\/u\/login\/identifier/i),
-            signInButton.click(),
-        ]);
-    }
+    await expect(signInButton).toBeVisible({ timeout: TIMEOUT });
+    await Promise.all([
+        page.waitForURL(/\/u\/login\/identifier/i),
+        signInButton.click(),
+    ]);
     const signInField = page.getByLabel('Email address');
     await expect(signInField).toBeVisible({ timeout: TIMEOUT });
     await signInField.fill(process.env.E2E_USERNAME!);

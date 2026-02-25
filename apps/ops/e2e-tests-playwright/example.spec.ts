@@ -88,7 +88,9 @@ test.describe('Transactions Ops Page ', () => {
         await page.getByRole('link', { name: 'TransactionOps Suite' }).click();
         await page.waitForURL('**/create-case');
 
-        const transactionOpsHeader = page.getByText('TransactionOps Suite');
+        const transactionOpsHeader = page.getByRole('heading', {
+            name: 'Transaction Ops Suite',
+        });
         await expect(transactionOpsHeader).toBeVisible({ timeout: TIMEOUT });
     });
 });
