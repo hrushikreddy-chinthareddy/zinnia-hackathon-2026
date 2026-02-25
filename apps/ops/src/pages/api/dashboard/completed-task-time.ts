@@ -6,14 +6,14 @@ import { requestHandler } from '@deps/queries/api-utils/server';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 import {
     CompletedTaskTimeOutput,
-    HTTPValidationError,
+    HttpValidationError,
 } from '@zinnia/api-types/types/analytics';
 
 export default withAuthAndLogging(
     async (
         req: NextApiRequest,
         res: NextApiResponse<
-            AxiosResponse<CompletedTaskTimeOutput> | HTTPValidationError
+            AxiosResponse<CompletedTaskTimeOutput> | HttpValidationError
         >,
         loggingContext
     ) => {

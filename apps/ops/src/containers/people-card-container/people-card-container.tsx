@@ -7,7 +7,7 @@ import { goTo } from '@deps/helpers/routing.helpers';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
 import { AGENT_ROLES } from '@deps/types/constants';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
+import { PomModelsProducerType } from '@zinnia/api-types/types/pom';
 import { PartyType } from '@zinnia/api-types/types/sor';
 
 import { tagsToBeneficiaryType } from './people-card-container.helpers';
@@ -68,10 +68,10 @@ const mapDataToPeopleCard = ({
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
-            if (producerType === POM_Models_ProducerType.INDIVIDUAL) {
+            if (producerType === PomModelsProducerType.INDIVIDUAL) {
                 name = `${toTitleCase(firstName)} ${toTitleCase(lastName)}`;
             } else if (
-                producerType === POM_Models_ProducerType.CORPORATION &&
+                producerType === PomModelsProducerType.CORPORATION &&
                 producerName
             ) {
                 name = toTitleCase(producerName);

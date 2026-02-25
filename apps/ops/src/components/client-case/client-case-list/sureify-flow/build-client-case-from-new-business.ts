@@ -186,6 +186,7 @@ export const buildAgentDetailsFromNewBusiness = async (
         lastName,
         email: agentEmailAddress,
         sellingCode: agentSellingCode,
+        partyId,
     };
 };
 
@@ -284,6 +285,7 @@ export const buildClientCaseFromNewBusiness = async (
             insuredDetails,
             agentDetails,
             agencyId,
+            agentPartyId: agentDetails.partyId,
         },
         conversionData
     );

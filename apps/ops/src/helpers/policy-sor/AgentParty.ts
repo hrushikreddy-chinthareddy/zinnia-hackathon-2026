@@ -6,11 +6,12 @@ import {
     Email,
     EmailType,
     Gender,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     Phone,
     Prefix,
     State,
+    SuffixEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from './Parties';
@@ -28,9 +29,8 @@ export const transformAgentDataToParty = (
     const taxIds =
         partyData?.identifications?.filter(
             (id) =>
-                id.identificationType ===
-                    Identification.identificationType.SSN ||
-                id.identificationType === Identification.identificationType.TIN
+                id.identificationType === IdentificationTypeEnum.SSN ||
+                id.identificationType === IdentificationTypeEnum.TIN
         ) ?? [];
 
     const alreadyHasTheSameTaxId = taxIds.find(
@@ -62,8 +62,7 @@ export const transformAgentDataToParty = (
                 ? []
                 : [
                       {
-                          identificationType:
-                              Identification.identificationType.SSN,
+                          identificationType: IdentificationTypeEnum.SSN,
                           identificationValue:
                               agentData?.taxId ||
                               firstAgent?.taxId ||
@@ -103,7 +102,7 @@ export const transformAgentDataToParty = (
         lastName: firstAgent?.lastName || undefined,
         gender: (firstAgent?.gender as Gender) || undefined,
         prefix: (firstAgent?.prefix as Prefix) || undefined,
-        suffix: (firstAgent?.suffix as Parties.suffix) || undefined,
+        suffix: (firstAgent?.suffix as SuffixEnum) || undefined,
     };
     return party;
 };

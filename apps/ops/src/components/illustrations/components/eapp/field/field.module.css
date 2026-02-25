@@ -1,7 +1,6 @@
 .fieldContainer {
-    display: flex;
-    gap: 1rem;
-    margin-bottom: var(--measure-dimension-margin-xs);
+    box-sizing: border-box;
+    min-width: 0;
 }
 
 .fieldHeader {
@@ -14,7 +13,6 @@
 }
 
 .fieldTag {
-    margin-right: var(--measure-dimension-gap-md);
     margin-bottom: var(--measure-dimension-gap-lg);
 }
 
@@ -32,52 +30,67 @@
     border-color: var(--color-status-surface-status-error-border-alt, #db004f);
 }
 
-/* Layout width classes */
+/* Layout width classes (flexbox version)
+ * Gap is var(--measure-dimension-gap-lg), so we subtract (12 - N) / 12 * gap from each column
+ * to account for the gap space distributed across items.
+ * Formula: calc(N/12 * 100% - (12 - N) / 12 * var(--measure-dimension-gap-lg))
+ *
+ * Todo for cleaner and more controlled tabular data: implement a grid layout
+ *  + provide layout selection in blueprint
+ */
 .layout-1 {
-    flex: 0 0 8.3333%;
-    max-width: 8.3333%;
+    flex: 0 0 calc(8.3333% - 0.9167 * var(--measure-dimension-gap-lg));
+    max-width: calc(8.3333% - 0.9167 * var(--measure-dimension-gap-lg));
 }
 .layout-2 {
-    flex: 0 0 16.6667%;
-    max-width: 16.6667%;
+    flex: 0 0 calc(16.6667% - 0.8333 * var(--measure-dimension-gap-lg));
+    max-width: calc(16.6667% - 0.8333 * var(--measure-dimension-gap-lg));
 }
 .layout-3 {
-    flex: 0 0 25%;
-    max-width: 25%;
+    flex: 0 0 calc(25% - 0.75 * var(--measure-dimension-gap-lg));
+    max-width: calc(25% - 0.75 * var(--measure-dimension-gap-lg));
 }
 .layout-4 {
-    flex: 0 0 33.3333%;
-    max-width: 33.3333%;
+    flex: 0 0 calc(33.3333% - 0.6667 * var(--measure-dimension-gap-lg));
+    max-width: calc(33.3333% - 0.6667 * var(--measure-dimension-gap-lg));
 }
 .layout-5 {
-    flex: 0 0 41.6667%;
-    max-width: 41.6667%;
+    flex: 0 0 calc(41.6667% - 0.5833 * var(--measure-dimension-gap-lg));
+    max-width: calc(41.6667% - 0.5833 * var(--measure-dimension-gap-lg));
 }
 .layout-6 {
-    flex: 0 0 50%;
-    max-width: 50%;
+    flex: 0 0 calc(50% - 0.5 * var(--measure-dimension-gap-lg));
+    max-width: calc(50% - 0.5 * var(--measure-dimension-gap-lg));
 }
 .layout-7 {
-    flex: 0 0 58.3333%;
-    max-width: 58.3333%;
+    flex: 0 0 calc(58.3333% - 0.4167 * var(--measure-dimension-gap-lg));
+    max-width: calc(58.3333% - 0.4167 * var(--measure-dimension-gap-lg));
 }
 .layout-8 {
-    flex: 0 0 66.6667%;
-    max-width: 66.6667%;
+    flex: 0 0 calc(66.6667% - 0.3333 * var(--measure-dimension-gap-lg));
+    max-width: calc(66.6667% - 0.3333 * var(--measure-dimension-gap-lg));
 }
 .layout-9 {
-    flex: 0 0 75%;
-    max-width: 75%;
+    flex: 0 0 calc(75% - 0.25 * var(--measure-dimension-gap-lg));
+    max-width: calc(75% - 0.25 * var(--measure-dimension-gap-lg));
 }
 .layout-10 {
-    flex: 0 0 83.3333%;
-    max-width: 83.3333%;
+    flex: 0 0 calc(83.3333% - 0.1667 * var(--measure-dimension-gap-lg));
+    max-width: calc(83.3333% - 0.1667 * var(--measure-dimension-gap-lg));
 }
 .layout-11 {
-    flex: 0 0 91.6667%;
-    max-width: 91.6667%;
+    flex: 0 0 calc(91.6667% - 0.0833 * var(--measure-dimension-gap-lg));
+    max-width: calc(91.6667% - 0.0833 * var(--measure-dimension-gap-lg));
 }
 .layout-12 {
     flex: 0 0 100%;
     max-width: 100%;
+}
+
+/* Force new line - creates a flex break before the element */
+.forceNewLine {
+    flex-basis: 100%;
+    width: 0;
+    height: 0;
+    overflow: hidden;
 }

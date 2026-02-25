@@ -18,8 +18,9 @@ import { TaskDocument } from '@deps/models/case/task-instance';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { handleKeyDown } from '@deps/utils/events';
 import {
-    SearchRequest,
+    DocumentClassificationEnum,
     MetadataSearchResponse,
+    SearchRequest,
 } from '@zinnia/api-types/types/documents-v3';
 
 import { FileAttachmentProps } from '../../widgets/file-widget/file-widget';
@@ -60,7 +61,7 @@ export const FileSearchField = ({
     const caseId = extractedCaseId || formContext?.customData?.caseId;
 
     const searchParams: SearchRequest = {
-        documentClassification: SearchRequest.documentClassification.INBOUND,
+        documentClassification: DocumentClassificationEnum.INBOUND,
         zinniaLiveCaseId: caseId,
         parentCarrierCode: extractedCarrier,
     };

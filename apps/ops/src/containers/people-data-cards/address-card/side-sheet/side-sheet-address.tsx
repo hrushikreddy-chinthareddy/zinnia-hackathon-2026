@@ -78,8 +78,8 @@ import {
     Country,
     Party,
     Policy,
+    TransactionTypeEnum,
     State,
-    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 export interface SideSheetAddressProps {
@@ -653,7 +653,7 @@ const SideSheetAddress = ({
                 }}
                 stopLoading={stopLoading}
                 trackEventProps={{
-                    type: Transaction.transactionType.ADDRESS_CHANGE,
+                    type: TransactionTypeEnum.ADDRESS_CHANGE,
                     correlationId: body.correlationId,
                 }}
             />

@@ -92,7 +92,10 @@ import { formatTimestamp } from '@deps/utils/dates';
 import { isProd } from '@deps/utils/environment.helpers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import {
+    DocumentClassificationEnum,
+    SearchRequest,
+} from '@zinnia/api-types/types/documents-v3';
 
 import styles from './global-task-side-sheet-content.module.css';
 import SidesheetButtons from './sidesheet-buttons';
@@ -350,8 +353,7 @@ export default function GlobalTaskSideSheet({
 
         return {
             parentCarrierCode: task.carrier,
-            documentClassification:
-                SearchRequest.documentClassification.INBOUND,
+            documentClassification: DocumentClassificationEnum.INBOUND,
             zinniaLiveCaseId: task.caseId,
             excludeDocumentTypes,
             ...(includeDocumentTypeForInboundSearch(task.carrier) &&
