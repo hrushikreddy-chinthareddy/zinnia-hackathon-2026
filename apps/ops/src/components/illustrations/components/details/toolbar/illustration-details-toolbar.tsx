@@ -113,6 +113,8 @@ export default function IllustrationDetailsToolbar({
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
 
+            window.open(url, '_blank', 'noopener,noreferrer');
+
             const link = document.createElement('a');
             link.href = url;
             link.setAttribute('download', `illustration_${illustrationId}.pdf`);
@@ -173,7 +175,7 @@ export default function IllustrationDetailsToolbar({
             icon={IconType.DOCUMENT_REPORT}
             className={styles.linkButton}
         >
-            Export PDF
+            {t('clientCase.illustrationDetails.exportPDF')}
             <Icon type={IconType.CHEVRON} small />
         </ToolbarButton>
     );

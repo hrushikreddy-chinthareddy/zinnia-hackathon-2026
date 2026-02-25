@@ -9377,7 +9377,8 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive"
+            "archive": "Archive",
+            "exportPDF": "Export PDF"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",

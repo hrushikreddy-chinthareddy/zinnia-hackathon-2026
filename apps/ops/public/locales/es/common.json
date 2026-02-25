@@ -9278,7 +9278,8 @@
             "addProductAriaLabel": "Boton para agregar un producto",
             "editIllustration": "Editar ilustración",
             "initialDeathBenefitOption": "Opción de beneficio por muerte inicial",
-            "archive": "Archivar"
+            "archive": "Archivar",
+            "exportPDF": "Exportar a PDF"
         },
         "illustrationSelectForApplication": {
             "subtitle": "Esta ilustración se enviará para asociarla con una solicitud.",
