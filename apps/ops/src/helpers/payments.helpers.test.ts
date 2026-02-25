@@ -1,5 +1,5 @@
 import {
-    FlatExtra,
+    FlatExtraTypeEnum,
     Parties,
     PolicyCoverage,
     SystematicProgram,
@@ -57,7 +57,7 @@ describe('payments.helper.ts', () => {
                                 flatExtra: [
                                     {
                                         flatExtraType:
-                                            FlatExtra.flatExtraType.TEMPORARY,
+                                            FlatExtraTypeEnum.TEMPORARY,
                                     },
                                 ],
                             },
@@ -67,7 +67,7 @@ describe('payments.helper.ts', () => {
                 ],
             };
             expect(getFlatExtra(coverage)).toEqual([
-                { flatExtraType: FlatExtra.flatExtraType.TEMPORARY },
+                { flatExtraType: FlatExtraTypeEnum.TEMPORARY },
             ]);
         });
 

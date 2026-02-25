@@ -25,7 +25,7 @@ import { useDebounce } from '@deps/hooks/useDebounce';
 import { usePolicyQuery } from '@deps/hooks/usePolicyQuery';
 import { Expand, useTreeState } from '@deps/hooks/useTreeState';
 import { NUMERIC_DATE_FORMAT } from '@deps/types/constants';
-import { Product } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
 import { DataNodesRenderer } from '../components/data-node-renderer';
 import {
@@ -93,7 +93,7 @@ export const PolicySidesheetContent = ({
     const lineOfBusiness = policy?.product?.lineOfBusiness;
     const productType = policy?.product?.productType;
     const policyNomenclature =
-        lineOfBusiness === Product.lineOfBusiness.LIFE
+        lineOfBusiness === LineOfBusiness.LIFE
             ? t('policy.nomenclature.policy')
             : t('policy.nomenclature.contract');
 

@@ -28,7 +28,7 @@ import {
 import { getVariableQuote } from '@deps/queries/api/policies';
 import { calculateRmd } from '@deps/queries/api/rmd-calculation';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
-import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import { RelationshipToInsuredEnum } from '@zinnia/api-types/types/sor';
 
 import styles from './rmd-calculator.module.css';
 import { DEFAULT_RMD, RMDMethodId, frequencyToValue } from './rmd-method';
@@ -187,7 +187,7 @@ export default function RMDCalculator({
                 );
                 if (ageDifference > 10) {
                     annuitant.relationshipToInsured =
-                        PolicyPartyRoles.relationshipToParty.SPOUSE;
+                        RelationshipToInsuredEnum.SPOUSE;
                 }
             }
 

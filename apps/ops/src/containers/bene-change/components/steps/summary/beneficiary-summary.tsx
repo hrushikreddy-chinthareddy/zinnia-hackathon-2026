@@ -30,7 +30,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import {
     Gender,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     PartyRole,
     PartyType,
@@ -284,8 +284,7 @@ const BeneficiarySummary = ({ policy }: { policy: Policy }) => {
 
                 const ssnIdentification = (existingIdentifications ?? []).find(
                     (id: any) =>
-                        id.identificationType ===
-                        Identification.identificationType.SSN
+                        id.identificationType === IdentificationTypeEnum.SSN
                 ) as any;
 
                 const { isPerStirpes, isIrrevocable } = item?.beneInfo || {};

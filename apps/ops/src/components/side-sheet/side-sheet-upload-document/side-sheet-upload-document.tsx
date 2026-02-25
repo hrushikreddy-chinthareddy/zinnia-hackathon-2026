@@ -16,7 +16,7 @@ import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { SourceSystem } from '@deps/types/documents-v3';
 import { browserLogError } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './side-sheet-upload-document.module.css';
 
@@ -65,8 +65,7 @@ const SideSheetUploadDocument = ({
                             data.documentTypeDescription ?? file.name,
                         documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                         fileType: getFileSubtype(blob),
-                        docClassification:
-                            SearchRequest.documentClassification.INBOUND,
+                        docClassification: DocumentClassificationEnum.INBOUND,
                         sourceSystem: SourceSystem.ZL,
                         zinniaLiveCaseId: caseDetails?.id ?? '',
                         parentCarrierCode: caseDetails?.carrier ?? '',

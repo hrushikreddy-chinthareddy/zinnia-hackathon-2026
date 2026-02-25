@@ -9,7 +9,7 @@ import {
     Address,
     Email,
     EmailType,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     Phone,
 } from '@zinnia/api-types/types/sor';
@@ -38,8 +38,7 @@ export const toPolicyOwnerDto = ({
     return {
         fullName: buildFullName(firstName, middleName, lastName, suffix),
         ssn: identifications?.find(
-            (ids) =>
-                ids.identificationType === Identification.identificationType.SSN
+            (ids) => ids.identificationType === IdentificationTypeEnum.SSN
         )?.identificationValue,
         birthDate: convertKebabedDateString(dateOfBirth),
         primaryPhone: phones?.find((phone) => !isEndDated(phone.endDate)),

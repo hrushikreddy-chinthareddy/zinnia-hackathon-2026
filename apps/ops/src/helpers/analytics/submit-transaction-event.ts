@@ -13,7 +13,11 @@ import {
     FullSurrenderRequest,
     PartialWithdrawalOneTimeRequest,
 } from '@zinnia/api-types/types/bpm';
-import { ArrangementType, Policy, Product } from '@zinnia/api-types/types/sor';
+import {
+    ArrangementType,
+    LineOfBusiness,
+    Policy,
+} from '@zinnia/api-types/types/sor';
 
 import { EventConfig } from './submit-transaction-event-constants';
 
@@ -29,7 +33,7 @@ export const getCarrierFromPolicy = (policy: Policy | undefined) =>
     policy?.carrierId;
 
 export const getProductKindFromPolicy = (policy: Policy | undefined) =>
-    policy?.product?.lineOfBusiness === Product.lineOfBusiness.LIFE
+    policy?.product?.lineOfBusiness === LineOfBusiness.LIFE
         ? 'policy'
         : 'contract';
 

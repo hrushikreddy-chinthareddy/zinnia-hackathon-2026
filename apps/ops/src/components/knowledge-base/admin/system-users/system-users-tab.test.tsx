@@ -6,7 +6,7 @@ import {
     searchUser,
 } from '@deps/queries/api/knowledge-base';
 import { SortBy, SortDirection } from '@deps/types/knowledge-base';
-import { UserResponse } from '@zinnia/api-types/types/knowledgebase';
+import { RoleEnum, UserResponse } from '@zinnia/api-types/types/knowledgebase';
 
 import SystemUsersTab from './system-users-tab';
 
@@ -15,7 +15,7 @@ const mockUsers: UserResponse[] = [
         id: 'user-1',
         name: 'Test User1',
         email: 'test.user1@zinnia.com',
-        role: UserResponse.role.ADMIN,
+        role: RoleEnum.ADMIN,
         conductorOneUserId: 'conductorOne-user-1',
         createdAt: '2025-07-23T11:59:55.644',
         updatedAt: '2025-07-23T11:59:55.644',
@@ -187,7 +187,7 @@ describe('SystemUsersTab', () => {
                     id: 'user-2',
                     name: 'Test User2',
                     email: 'test.user2@zinnia.com',
-                    role: UserResponse.role.ASSOCIATE,
+                    role: RoleEnum.ASSOCIATE,
                     conductorOneUserId: 'conductorOne-user-2',
                     createdAt: '2025-07-23T11:59:55.644',
                     updatedAt: '2025-07-23T11:59:55.644',
@@ -196,7 +196,7 @@ describe('SystemUsersTab', () => {
                     id: 'user-1',
                     name: 'Test User1',
                     email: 'test.user1@zinnia.com',
-                    role: UserResponse.role.ASSOCIATE,
+                    role: RoleEnum.ASSOCIATE,
                     conductorOneUserId: 'conductorOne-user-1',
                     createdAt: '2025-07-23T11:59:55.644',
                     updatedAt: '2025-07-23T11:59:55.644',
@@ -231,7 +231,7 @@ describe('SystemUsersTab', () => {
                     id: 'user-2',
                     name: 'Test User2',
                     email: 'test.user2@zinnia.com',
-                    role: UserResponse.role.ASSOCIATE,
+                    role: RoleEnum.ASSOCIATE,
                     conductorOneUserId: 'conductorOne-user-2',
                     createdAt: '2025-07-24T09:10:00.000',
                     updatedAt: '2025-07-25T14:20:00.000',
@@ -240,7 +240,7 @@ describe('SystemUsersTab', () => {
                     id: 'user-1',
                     name: 'Test User1',
                     email: 'test.user1@zinnia.com',
-                    role: UserResponse.role.ASSOCIATE,
+                    role: RoleEnum.ASSOCIATE,
                     conductorOneUserId: 'conductorOne-user-1',
                     createdAt: '2025-07-22T08:00:00.000',
                     updatedAt: '2025-07-23T10:30:00.000',

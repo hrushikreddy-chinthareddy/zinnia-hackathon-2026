@@ -25,7 +25,7 @@ import { getDocumentPreviewV2 } from '@deps/queries/api/client/documents/v2/prev
 import { getDocumentPreviewV3 } from '@deps/queries/api/client/documents/v3/preview';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 
 import { DocumentTypeView } from '../side-sheet/documents/DocumentTypeView';
 
@@ -58,12 +58,11 @@ const DocumentViewer = (props: DocumentViewerProps) => {
                 let docClass;
                 switch (documentType) {
                     case DocumentTypeView.Correspondence:
-                        docClass =
-                            SearchRequest.documentClassification.OUTBOUND;
+                        docClass = DocumentClassificationEnum.OUTBOUND;
                         break;
                     case DocumentTypeView.Policy:
                     default:
-                        docClass = SearchRequest.documentClassification.INBOUND;
+                        docClass = DocumentClassificationEnum.INBOUND;
                         break;
                 }
                 download = await getDocumentPreviewV3(
