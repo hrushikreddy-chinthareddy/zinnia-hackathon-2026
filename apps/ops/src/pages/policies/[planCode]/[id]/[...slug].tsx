@@ -3,6 +3,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { AE_FGA_ROLE } from '@deps/constants/advisors-excel';
+import PolicySlug from '@deps/containers/policy-slug/policy-slug';
 import { serverSidePropsLogout } from '@deps/helpers/logout.helpers';
 import {
     doesUserHavePagePermissions,
@@ -25,9 +26,7 @@ import {
 } from '@deps/utils/server-logging';
 import nextI18nextConfig from 'next-i18next.config';
 
-import PolicySlug from '../../../../containers/policy-slug/policy-slug';
-
-export type { PolicyPageProps } from '../../../../containers/policy-slug/policy-slug';
+export type { PolicyPageProps } from '@deps/containers/policy-slug/policy-slug';
 
 const parseSlugToKey = (slug: string[] | undefined): string => {
     if (!slug || slug.length === 0) return 'policyDetails';
