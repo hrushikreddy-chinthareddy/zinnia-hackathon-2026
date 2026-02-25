@@ -178,8 +178,6 @@
     "scripts": {
         "build": "pnpm run build-api-types-if-needed && next build --no-lint",
         "build-storybook": "pnpm run build-api-types-if-needed && storybook build",
-        "cypress": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh",
-        "cypress:local": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh --local",
         "dev": "pnpm run build-api-types-if-needed && next dev",
         "lint": "pnpm run build-api-types-if-needed && cross-env NODE_OPTIONS=--max-old-space-size=8192 ESLINT_USE_FLAT_CONFIG=true eslint . --max-warnings=0",
         "lint-staged": "pnpm run build-api-types-if-needed && lint-staged",
