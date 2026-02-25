@@ -21,7 +21,6 @@ module.exports = createJestConfig({
         '^jose': require.resolve('jose'),
         '^@panva/hkdf$': require.resolve('@panva/hkdf'),
     },
-    transformIgnorePatterns: ['/node_modules/(?!(jose|@panva/hkdf)/)'],
     testRegex: '/.*(\\.test\\.tsx?$)',
     collectCoverage: true,
     coverageReporters: ['text', 'json', 'html'],
