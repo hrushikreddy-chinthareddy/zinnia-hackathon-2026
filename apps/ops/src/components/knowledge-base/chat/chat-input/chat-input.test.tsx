@@ -7,7 +7,7 @@ import {
     BOT_ERROR_MESSAGE_ID,
     MessageRole,
 } from '@deps/types/knowledge-base';
-import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
+import { MeResponse, RoleEnum } from '@zinnia/api-types/types/knowledgebase';
 
 import ChatInput from './chat-input';
 
@@ -41,7 +41,7 @@ const mockOpsUserData: MeResponse = {
     id: '1234567890',
     name: 'Test',
     email: 'test@zinnia.com',
-    role: MeResponse.role.ASSOCIATE,
+    role: RoleEnum.ASSOCIATE,
     client: [{ id: 'client-123', name: 'Security Benefit', default: true }],
 };
 

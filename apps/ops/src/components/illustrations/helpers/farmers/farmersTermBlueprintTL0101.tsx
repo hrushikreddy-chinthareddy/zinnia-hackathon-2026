@@ -267,6 +267,7 @@ export const farmersTermBlueprintTL0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 3,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -1011,6 +1012,7 @@ export const farmersTermBlueprintTL0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -1164,7 +1166,9 @@ export const farmersTermBlueprintTL0101 = {
                                     copyable: 'none',
                                     optional: true,
                                     triggerStepNavigation: false,
-                                    layout: {},
+                                    layout: {
+                                        forceNewLine: true,
+                                    },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
                                     placeholder: {
@@ -1935,6 +1939,7 @@ export const farmersTermBlueprintTL0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -1963,7 +1968,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The minimum is $50,000',
+                                                en: 'Minimum face amount for this product is $50,000.',
                                                 fr: '',
                                             },
                                         },
@@ -1983,7 +1988,7 @@ export const farmersTermBlueprintTL0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'The maximum is $10,000,000',
+                                                en: 'Maximum face amount for this product is $10,000,000.',
                                                 fr: '',
                                             },
                                         },
@@ -2019,6 +2024,7 @@ export const farmersTermBlueprintTL0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2062,6 +2068,7 @@ export const farmersTermBlueprintTL0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2290,6 +2297,7 @@ export const farmersTermBlueprintTL0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],
@@ -2553,6 +2561,7 @@ export const farmersTermBlueprintTL0101 = {
                                     triggerStepNavigation: false,
                                     layout: {
                                         size: 6,
+                                        forceNewLine: true,
                                     },
                                     displayInCardPreview: false,
                                     applicationModes: ['digital', 'paper'],

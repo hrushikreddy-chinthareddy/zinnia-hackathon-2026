@@ -4,7 +4,7 @@ import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { requestHandler } from '@deps/queries/api-utils/server';
 import { withAuthAndLogging } from '@deps/utils/server-logging';
 import {
-    HTTPValidationError,
+    HttpValidationError,
     UserTransactionOutput,
 } from '@zinnia/api-types/types/analytics';
 
@@ -14,7 +14,7 @@ export default withAuthAndLogging(
     async (
         req: NextApiRequest,
         res: NextApiResponse<
-            AxiosResponse<UserTransactionOutput> | HTTPValidationError
+            AxiosResponse<UserTransactionOutput> | HttpValidationError
         >,
         loggingContext
     ) => {

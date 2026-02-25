@@ -79,7 +79,7 @@ export function InnerFieldGroup(props: FieldGroupProps): ReactElement | null {
                     </p>
                 )}
             </div>
-            <div>
+            <div className={style.fieldGroup}>
                 {fieldGroup.fields.map(
                     (field: RenderingField, index: number) => {
                         const key = `${field.id}${

@@ -3,7 +3,7 @@ import {
     AddressType,
     Country,
     EmailType,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     State,
 } from '@zinnia/api-types/types/sor';
@@ -14,25 +14,27 @@ export const transformPomAgentDataToParty = (
     // TODO: replace PomAgentData type with POM_Producer_Models_SearchProducersResult
     agentData: PomAgentData | undefined,
     partyData: Parties
-): Parties => {
+): Parties & { producerName?: string; producerType?: string } => {
     // Filter out SSN from partyData if agent has one (agent data takes precedence)
     // This prevents duplicate SSN when both policy and agent data have SSN
     const filteredPartyIdentifications =
         partyData?.identifications?.filter((id) => {
             if (
                 agentData?.socialSecurityNumber &&
-                id.identificationType === Identification.identificationType.SSN
+                id.identificationType === IdentificationTypeEnum.SSN
             ) {
                 return false;
             }
             return true;
         }) ?? [];
 
-    const party: Parties = {
+    const party: Parties & { producerName?: string; producerType?: string } = {
         ...partyData,
         firstName: agentData?.firstName,
         lastName: agentData?.lastName,
         middleName: agentData?.middleName,
+        producerName: agentData?.producerName,
+        producerType: agentData?.producerType,
         addresses: [
             {
                 addressLine1: agentData?.businessAddress.line || undefined,
@@ -68,8 +70,7 @@ export const transformPomAgentDataToParty = (
             ...(agentData?.socialSecurityNumber
                 ? [
                       {
-                          identificationType:
-                              Identification.identificationType.SSN,
+                          identificationType: IdentificationTypeEnum.SSN,
                           identificationValue: agentData.socialSecurityNumber,
                       },
                   ]

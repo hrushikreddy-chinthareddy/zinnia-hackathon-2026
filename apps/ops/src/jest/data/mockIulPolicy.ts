@@ -9,23 +9,23 @@ import {
     FundAccountType,
     Gender,
     HoldingForm,
-    Identification,
+    IdentificationTypeEnum,
     InvestmentType,
     IssueType,
     LoanType,
     PartyRole,
     PartyType,
     PhoneType,
-    Policy,
-    PolicyCoverage,
     PolicyPartyRoles,
     PolicyStatus,
     PreferredCommunicationType,
-    Product,
     ProductType,
     RiderType,
     RiskClass,
     State,
+    CoverageBandEnum,
+    LineOfBusiness,
+    QualificationTypeEnum,
     SubStandardRating,
 } from '@zinnia/api-types/types/sor';
 
@@ -42,7 +42,7 @@ const partyRoles: PolicyPartyRoles[] = [
 export const mockIulPolicy = {
     partyRoles: partyRoles,
     product: {
-        lineOfBusiness: Product.lineOfBusiness.LIFE,
+        lineOfBusiness: LineOfBusiness.LIFE,
         planName: 'Everly IUL TermVest+',
         productType: ProductType.INDEXEDUNIVERSALLIFE,
         marketingName: 'Everly Life',
@@ -52,7 +52,7 @@ export const mockIulPolicy = {
         generalLedgerPlanCode: 'V2201',
         holdingForm: HoldingForm.INDIVIDUAL,
     },
-    qualificationType: Policy.qualificationType.NONQUALIFIED,
+    qualificationType: QualificationTypeEnum.NONQUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'ZNQA19182448',
@@ -93,7 +93,7 @@ export const mockIulPolicy = {
         minimumCoverageAmount: 10000,
         maximumCoverageAmount: 10000000,
         coverageChangeEffectiveDate: '2024-03-28',
-        coverageBand: PolicyCoverage.coverageBand.BAND1,
+        coverageBand: CoverageBandEnum.BAND1,
         maximumAnnualCoverageChangeAllowedPerPolicy: 1,
         minimumCoverageDecreaseAmount: 10000,
         maximumCoverageDecreaseAmount: 239999,
@@ -163,14 +163,14 @@ export const mockIulPolicy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '650-21-4576',
                     issueState: 'CA' as State,
                     issueCountry: 'US' as Country,
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: '',
                     issueState: 'NJ' as State,
                     issueCountry: 'US' as Country,
@@ -275,14 +275,14 @@ export const mockIulPolicy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '650-21-4576',
                     issueState: 'CA' as State,
                     issueCountry: 'US' as Country,
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: '',
                     issueState: 'NJ' as State,
                     issueCountry: 'US' as Country,
@@ -359,14 +359,14 @@ export const mockIulPolicy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '650-21-4576',
                     issueState: 'CA' as State,
                     issueCountry: 'US' as Country,
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: '',
                     issueState: 'NJ' as State,
                     issueCountry: 'US' as Country,

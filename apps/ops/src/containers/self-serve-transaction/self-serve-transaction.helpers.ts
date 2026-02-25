@@ -20,13 +20,22 @@ import {
 } from './transactions/bene-change-transaction';
 import { SelfServeTransaction } from './types';
 
-const removeFirstTabSchema = (metadata: any) => ({
-    ...metadata,
-    schemaContent: {
-        ...metadata.schemaContent,
-        tabSchemas: metadata.schemaContent?.tabSchemas?.slice(1),
-    },
-});
+const removeFirstTabSchema = (metadata: any, taskType: TaskType) => {
+    const benechangeDiscardedTabIndexes = [0, 1, 5];
+    return {
+        ...metadata,
+        schemaContent: {
+            ...metadata.schemaContent,
+            tabSchemas:
+                taskType === TaskType.Initiate_BeneChange_Transaction
+                    ? metadata.schemaContent?.tabSchemas?.filter(
+                          (_: any, index: number) =>
+                              !benechangeDiscardedTabIndexes.includes(index)
+                      )
+                    : metadata.schemaContent?.tabSchemas?.slice(1),
+        },
+    };
+};
 
 const getTransactionMetadata = async (
     taskType: TaskType,
@@ -51,7 +60,7 @@ const getTransactionMetadata = async (
               ProcessType.PolicyUpdate
           )
         : (await dynamicImport()).default;
-    return removeFirstTabSchema(metaData);
+    return removeFirstTabSchema(metaData, taskType);
 };
 
 export const getSelfServeTransactionData = async (

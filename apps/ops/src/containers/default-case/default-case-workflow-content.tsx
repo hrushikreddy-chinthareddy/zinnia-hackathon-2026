@@ -3,6 +3,7 @@ import { useTranslation } from 'next-i18next';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
 import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/global-values-nb-bar';
+import DefaultTaskCard from '@deps/components/workflows/default-task-card/default-task-card';
 import { TranslationFiles } from '@deps/config/translations';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -10,6 +11,7 @@ import ConfirmStep from '@deps/containers/task-container/components/steps/confir
 import { useDefaultCase } from '@deps/contexts/DefaultCaseContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
+import { browserLogWarn } from '@deps/utils/browser-logging';
 import { policyOwner } from '@deps/utils/data';
 import { Party, PolicyStatus, ProductType } from '@zinnia/api-types/types/sor';
 
@@ -43,6 +45,16 @@ const DefaultCaseWorkflowContent = ({
             return;
         setCurrentStepIndex(step.index);
     };
+
+    if (taskMetadata.length === 0) {
+        browserLogWarn('default-case-workflow-content::missing-task-metadata', {
+            caseId: caseDetails?.id,
+            policyNumber: policy?.policyNumber,
+            planCode: policy?.product?.planCode,
+            taskType: taskType as TaskType,
+        });
+        return <DefaultTaskCard leaveRoute={taskInfoLink} />;
+    }
 
     const getSteps = () => {
         const dynamicSteps = taskMetadata.map((metadata, index) => {

@@ -174,8 +174,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                                     uiParty.lastName ??
                                     (uiParty.partyType !== PartyType.INDIVIDUAL
                                         ? uiParty.fullName ?? null
-                                        : null) ??
-                                    null,
+                                        : null),
                                 fullName: toFullName(uiParty),
                                 addresses: cleanAddresses(uiParty.addresses),
                                 emails: cleanEmails(uiParty.emails),
@@ -320,8 +319,7 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
                       uiParty.lastName ??
                       (uiParty.partyType !== PartyType.INDIVIDUAL
                           ? uiParty.fullName ?? null
-                          : null) ??
-                      null,
+                          : null),
                   fullName: toFullName(uiParty),
                   entityType:
                       uiParty.partyType === PartyType.ORGANIZATION &&

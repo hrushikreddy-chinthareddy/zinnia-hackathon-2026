@@ -8,7 +8,7 @@ import { ReactComponent as User } from '@deps/styles/elements/icons/actions/user
 import { ReactComponent as DocumentIcon } from '@deps/styles/elements/icons/icons_outlined/document-text-2.svg';
 import { ReactComponent as OfficeBuildingIcon } from '@deps/styles/elements/icons/icons_outlined/office-building.svg';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
+import { PomModelsProducerType } from '@zinnia/api-types/types/pom';
 import {
     AccountType,
     Address,
@@ -20,8 +20,8 @@ import {
     PartyType,
     Policy,
     PolicyCoverage,
-    PolicyPartyRoles,
     PreferredCommunicationType,
+    RelationshipToInsuredEnum,
     RiskClass,
     SubStandardRating,
 } from '@zinnia/api-types/types/sor';
@@ -84,7 +84,7 @@ export const getHeaderText = (
     switch (partyType) {
         case PartyType.INDIVIDUAL:
             if (
-                producerType === POM_Models_ProducerType.CORPORATION &&
+                producerType === PomModelsProducerType.CORPORATION &&
                 producerName
             ) {
                 return <PiiWrapper>{toTitleCase(producerName)}</PiiWrapper>;
@@ -215,43 +215,43 @@ export const getPrefCommunicationType = (
 };
 
 export const getRelationshipToInsured = (
-    relationshipToInsured: PolicyPartyRoles.relationshipToParty | null,
+    relationshipToInsured: RelationshipToInsuredEnum | null,
     t: TFunction
 ): string | null => {
     switch (relationshipToInsured) {
-        case PolicyPartyRoles.relationshipToParty.CHILD:
+        case RelationshipToInsuredEnum.CHILD:
             return t('relationshipToInsured.child');
-        case PolicyPartyRoles.relationshipToParty.SON:
+        case RelationshipToInsuredEnum.SON:
             return t('relationshipToInsured.son');
-        case PolicyPartyRoles.relationshipToParty.DAUGHTER:
+        case RelationshipToInsuredEnum.DAUGHTER:
             return t('relationshipToInsured.daughter');
-        case PolicyPartyRoles.relationshipToParty.GRANDCHILD:
+        case RelationshipToInsuredEnum.GRANDCHILD:
             return t('relationshipToInsured.grandchild');
-        case PolicyPartyRoles.relationshipToParty.BROTHER:
+        case RelationshipToInsuredEnum.BROTHER:
             return t('relationshipToInsured.brother');
-        case PolicyPartyRoles.relationshipToParty.SISTER:
+        case RelationshipToInsuredEnum.SISTER:
             return t('relationshipToInsured.sister');
-        case PolicyPartyRoles.relationshipToParty.FATHER:
+        case RelationshipToInsuredEnum.FATHER:
             return t('relationshipToInsured.father');
-        case PolicyPartyRoles.relationshipToParty.MOTHER:
+        case RelationshipToInsuredEnum.MOTHER:
             return t('relationshipToInsured.mother');
-        case PolicyPartyRoles.relationshipToParty.STEPFATHER:
+        case RelationshipToInsuredEnum.STEPFATHER:
             return t('relationshipToInsured.stepfather');
-        case PolicyPartyRoles.relationshipToParty.STEPMOTHER:
+        case RelationshipToInsuredEnum.STEPMOTHER:
             return t('relationshipToInsured.stepmother');
-        case PolicyPartyRoles.relationshipToParty.SPOUSE:
+        case RelationshipToInsuredEnum.SPOUSE:
             return t('relationshipToInsured.spouse');
-        case PolicyPartyRoles.relationshipToParty.DOMESTICPARTNER:
+        case RelationshipToInsuredEnum.DOMESTICPARTNER:
             return t('relationshipToInsured.domesticPartner');
-        case PolicyPartyRoles.relationshipToParty.LIFEPARTNER:
+        case RelationshipToInsuredEnum.LIFEPARTNER:
             return t('relationshipToInsured.lifePartner');
-        case PolicyPartyRoles.relationshipToParty.FIANCE:
+        case RelationshipToInsuredEnum.FIANCE:
             return t('relationshipToInsured.fiance');
-        case PolicyPartyRoles.relationshipToParty.EXECUTORS:
+        case RelationshipToInsuredEnum.EXECUTORS:
             return t('relationshipToInsured.executors');
-        case PolicyPartyRoles.relationshipToParty.SELF:
+        case RelationshipToInsuredEnum.SELF:
             return t('relationshipToInsured.self');
-        case PolicyPartyRoles.relationshipToParty.OTHER:
+        case RelationshipToInsuredEnum.OTHER:
             return t('relationshipToInsured.other');
         default:
             return relationshipToInsured;

@@ -10,16 +10,16 @@ import {
     EmailType,
     EmploymentStatus,
     Gender,
-    Parties,
     PartyType,
     PhoneType,
     PolicyCoverage,
-    PolicyPartyRoles,
     PreferredCommunicationType,
     Prefix,
+    RelationshipToInsuredEnum,
     RiskClass,
     State,
     SubStandardRating,
+    SuffixEnum,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -49,7 +49,7 @@ const partyInfo: Party & {
     lastName: 'SINGH-TC03',
     fullName: '',
     prefix: Prefix.MR,
-    suffix: Parties.suffix.JR,
+    suffix: SuffixEnum.JR,
     gender: Gender.MALE,
     dateOfBirth: '2004-10-05',
     birthCountry: Country.US,
@@ -186,7 +186,7 @@ describe('getPrefCommunicationType', () => {
 describe('getRelationshipToInsured', () => {
     it('should return correct relationship to insured', () => {
         const relationshipToInsured = getRelationshipToInsured(
-            PolicyPartyRoles.relationshipToParty.STEPFATHER,
+            RelationshipToInsuredEnum.STEPFATHER,
             t
         );
 

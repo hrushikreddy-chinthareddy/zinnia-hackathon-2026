@@ -169,6 +169,378 @@
                 }
             },
             {
+                "title": "Form Review",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "policyInformation": {
+                            "type": "string",
+                            "title": "Policy Information"
+                        },
+                        "policyNumber": {
+                            "type": "string",
+                            "title": "Policy Number"
+                        },
+                        "people": {
+                            "type": "object",
+                            "title": "People"
+                        },
+                        "ownerDetails": {
+                            "type": "string",
+                            "title": "Policy Information"
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Supporting document",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Supporting information",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": { "type": "string" },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "issueResolved": {
+                            "type": "array",
+                            "items": {
+                                "type": "string",
+                                "enum": ["yes", "no_missing", "no_mismatched"]
+                            },
+                            "uniqueItems": true,
+                            "title": "Is the paper application complete and ready for processing?"
+                        }
+                    },
+                    "dependencies": {
+                        "issueResolved": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "contains": {
+                                                "const": "yes"
+                                            }
+                                        }
+                                    }
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "allOf": [
+                                                {
+                                                    "contains": {
+                                                        "const": "no_missing"
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "contains": {
+                                                            "const": "no_mismatched"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "declineReason": {
+                                            "type": "array",
+                                            "title": "What is missing or incorrect in the form?",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "exceptionSubRefs"
+                                                ]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    },
+                                    "required": [
+                                        "issueResolved",
+                                        "declineReason"
+                                    ]
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "allOf": [
+                                                {
+                                                    "contains": {
+                                                        "const": "no_mismatched"
+                                                    }
+                                                },
+                                                {
+                                                    "not": {
+                                                        "contains": {
+                                                            "const": "no_missing"
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "declineReason": {
+                                            "type": "array",
+                                            "title": "Select the role that has mismatched information?",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 1,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": [
+                                                    "value",
+                                                    "exceptionSubRefs"
+                                                ]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    },
+                                    "required": [
+                                        "issueResolved",
+                                        "declineReason"
+                                    ]
+                                },
+                                {
+                                    "properties": {
+                                        "issueResolved": {
+                                            "allOf": [
+                                                {
+                                                    "contains": {
+                                                        "const": "no_missing"
+                                                    }
+                                                },
+                                                {
+                                                    "contains": {
+                                                        "const": "no_mismatched"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "declineReason": {
+                                            "type": "array",
+                                            "title": "",
+                                            "items": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "value": {
+                                                        "type": "string"
+                                                    },
+                                                    "exceptionSubRefs": {
+                                                        "type": "array",
+                                                        "minItems": 0,
+                                                        "items": {
+                                                            "type": "object",
+                                                            "additionalProperties": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    }
+                                                },
+                                                "required": ["value"]
+                                            },
+                                            "minItems": 1
+                                        }
+                                    },
+                                    "required": [
+                                        "issueResolved",
+                                        "declineReason"
+                                    ]
+                                }
+                            ]
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:order": [
+                        "policyInformation",
+                        "policyNumber",
+                        "people",
+                        "ownerDetails",
+                        "details",
+                        "issueResolved",
+                        "declineReason"
+                    ],
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "policyInformation": {
+                        "ui:options": {
+                            "FieldTemplate": "TitleFieldTemplate",
+                            "titleVariant": "h3",
+                            "className": "mt-3 mb-3",
+                            "title": "Policy Information",
+                            "omitValue": true
+                        }
+                    },
+                    "policyNumber": {
+                        "ui:widget": "text",
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:dataPath": ["policyNumber"],
+                        "ui:readonly": true
+                    },
+                    "issueResolved": {
+                        "ui:widget": "IssueResolvedRadioWidget",
+                        "ui:options": {
+                            "label": true,
+                            "enumOptions": [
+                                { "value": "yes", "label": "Yes" },
+                                {
+                                    "value": "no_missing",
+                                    "label": "No, it has missing information"
+                                },
+                                {
+                                    "value": "no_mismatched",
+                                    "label": "No, it has mismatched information"
+                                }
+                            ]
+                        },
+                        "ui:dataPath": ["issueResolved"],
+                        "ui:hideError": true
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "documents": {
+                            "props": {
+                                "readonly": true
+                            },
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "addable": false,
+                                "label": true
+                            },
+                            "ui:dataPath": ["documents"]
+                        },
+                        "ui:dataPath": ["details"]
+                    },
+                    "ownerDetails": {
+                        "ui:options": {
+                            "label": false,
+                            "title": "People",
+                            "dataKey": "actionData",
+                            "templateType": "summaryCard",
+                            "ObjectFieldTemplate": "TransactionSummaryTemplate",
+                            "titleVariant": "Label",
+                            "sections": [
+                                {
+                                    "label": "Personal Details",
+                                    "fields": [
+                                        { "key": "ssn", "label": "SSN" },
+                                        {
+                                            "key": "trustDate",
+                                            "label": "Trust date"
+                                        },
+                                        {
+                                            "key": "dateOfBirth",
+                                            "label": "Birth date"
+                                        }
+                                    ]
+                                },
+                                {
+                                    "label": "Communication Details",
+                                    "fields": [
+                                        {
+                                            "key": "address",
+                                            "label": "Address"
+                                        },
+                                        {
+                                            "key": "phone",
+                                            "label": "Phone Number"
+                                        },
+                                        { "key": "email", "label": "Email" }
+                                    ]
+                                }
+                            ]
+                        }
+                    },
+                    "people": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "ui:readonly": true
+                    }
+                }
+            },
+            {
                 "title": "Owner Details",
                 "formSchema": {
                     "type": "object",
@@ -666,6 +1038,7 @@
                                             },
                                             "ui:widget": "NumbersWidget",
                                             "format": "+### (###) ###-####",
+                                            "isPhone": true,
                                             "errorMessage": "Please enter valid phone number"
                                         }
                                     }
@@ -844,7 +1217,7 @@
                                         "phones": [
                                             {
                                                 "phoneType": "MOBILE",
-                                                "dialNumber": "",
+                                                "dialNumber": "1",
                                                 "isPreferred": true
                                             }
                                         ],
@@ -1089,7 +1462,7 @@
                                                     },
                                                     "default": {
                                                         "phoneType": "MOBILE",
-                                                        "dialNumber": "",
+                                                        "dialNumber": "1",
                                                         "isPreferred": false
                                                     }
                                                 }
@@ -1918,6 +2291,7 @@
                                         "dialNumber": {
                                             "ui:widget": "NumbersWidget",
                                             "format": "+### (###) ###-####",
+                                            "isPhone": true,
                                             "errorMessage": "Please enter valid phone number"
                                         }
                                     }
@@ -2143,11 +2517,7 @@
                     "signatureData": {
                         "ui:options": { "label": false },
                         "isIrrevocableBene": {
-                            "ui:widget": "RadioWidget",
-                            "ui:options": {
-                                "inline": true,
-                                "enumNames": ["Yes", "No"]
-                            }
+                            "ui:widget": "hidden"
                         },
                         "signatures": {
                             "ui:options": {
@@ -2216,6 +2586,75 @@
                                 }
                             }
                         }
+                    }
+                }
+            },
+            {
+                "title": "NIGO Summary",
+                "formSchema": {
+                    "type": "object",
+                    "properties": {
+                        "nigoSummary": {
+                            "type": "object"
+                        },
+                        "issueResolved": {
+                            "type": "array"
+                        },
+                        "declineReason": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "value": {
+                                        "type": "string"
+                                    },
+                                    "detailedReason": {
+                                        "type": "string"
+                                    },
+                                    "exceptionSubRefs": {
+                                        "type": "array",
+                                        "items": {
+                                            "type": "object",
+                                            "properties": {
+                                                "value": {
+                                                    "type": "string"
+                                                },
+                                                "subNmId": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "uiSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:hideError": true,
+                    "ui:hideFooter": true,
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "nigoSummary": {
+                        "ui:options": {
+                            "label": false,
+                            "ObjectFieldTemplate": "NigoSummaryTemplate"
+                        }
+                    },
+                    "issueResolved": {
+                        "ui:widget": "hidden",
+                        "ui:dataPath": ["issueResolved"]
+                    },
+                    "declineReason": {
+                        "ui:widget": "hidden",
+                        "ui:dataPath": ["declineReason"]
                     }
                 }
             },

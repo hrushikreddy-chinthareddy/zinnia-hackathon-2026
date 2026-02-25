@@ -83,15 +83,16 @@ const getSideSheetValues = (
     t: TFunction
 ): TransactionEntitySideSheetValues => {
     const { entity } = transactionEntity;
+    const payment = entity?.payment as any; // Not defined in spec
     const {
         exchangeReplace,
         institutionName,
         moneySource,
         receivedAmount,
         documentSentDate,
-    } = entity?.payment || {};
-    const { deliveryMethod } = entity?.payment?.exchangeReplace ?? null;
-    const trackingNumber = entity?.trackingNumber ?? null;
+    } = payment || {};
+    const { deliveryMethod } = payment?.exchangeReplace ?? null;
+    const trackingNumber = (entity?.trackingNumber as any) ?? null; // Not defined in spec
     const rateLockEndDate = exchangeReplace?.rateLockEndDate;
     const rateLockStartDate = exchangeReplace?.rateLockStartDate;
     const values: TransactionEntitySideSheetValues = {
@@ -112,11 +113,9 @@ const getSideSheetValues = (
         fundingCompany: institutionName ?? null,
         fundingContract: exchangeReplace?.sourcePolicyNumber ?? null,
         contactDetails: null,
-        paymentMethod: entity?.payment?.paymentMethod
-            ? entity?.payment?.paymentMethod
-            : null,
-        grossAmount: numberFormatify(entity?.payment?.grossAmount) ?? null,
-        netAmount: numberFormatify(entity?.payment?.netAmount) ?? null,
+        paymentMethod: payment?.paymentMethod ? payment?.paymentMethod : null,
+        grossAmount: numberFormatify(payment?.grossAmount) ?? null,
+        netAmount: numberFormatify(payment?.netAmount) ?? null,
         rateLockEndDate: rateLockEndDate
             ? dayjs(exchangeReplace?.rateLockEndDate).format(
                   DEFAULT_DATE_FORMAT

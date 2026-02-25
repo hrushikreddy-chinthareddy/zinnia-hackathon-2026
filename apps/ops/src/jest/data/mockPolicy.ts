@@ -5,11 +5,9 @@ import {
     Currency,
     State,
     PolicyStatus,
-    PolicyFeature,
     Frequency,
     PartyRole,
     Policy,
-    PolicyCoverage,
     PolicyPartyRoles,
     ProductType,
     Reason,
@@ -29,9 +27,12 @@ import {
     InvestmentType,
     FundAccountType,
     LoanType,
-    Identification,
+    CoverageBandEnum,
+    FeatureSubTypeEnum,
     FeatureType,
-    Product,
+    IdentificationTypeEnum,
+    LineOfBusiness,
+    QualificationTypeEnum,
 } from '@zinnia/api-types/types/sor';
 
 const partyRoles: PolicyPartyRoles[] = [
@@ -56,7 +57,7 @@ export const mockPremiumSystematicProgram: SystematicProgram = {
 export const mockPolicy = {
     partyRoles: partyRoles,
     product: {
-        lineOfBusiness: Product.lineOfBusiness.LIFE,
+        lineOfBusiness: LineOfBusiness.LIFE,
         planName: 'SB UL Premium Match',
         productType: ProductType.UNIVERSALLIFE,
         marketingName: 'Everly Life',
@@ -66,7 +67,7 @@ export const mockPolicy = {
         generalLedgerPlanCode: 'V2201',
         holdingForm: HoldingForm.INDIVIDUAL,
     },
-    qualificationType: Policy.qualificationType.NONQUALIFIED,
+    qualificationType: QualificationTypeEnum.NONQUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'AU29035902',
@@ -108,7 +109,7 @@ export const mockPolicy = {
         minimumCoverageAmount: 10000,
         maximumCoverageAmount: 10000000,
         coverageChangeEffectiveDate: '2024-03-28',
-        coverageBand: PolicyCoverage.coverageBand.BAND1,
+        coverageBand: CoverageBandEnum.BAND1,
         maximumAnnualCoverageChangeAllowedPerPolicy: 1,
         minimumCoverageDecreaseAmount: 10000,
         maximumCoverageDecreaseAmount: 239999,
@@ -179,17 +180,17 @@ export const mockPolicy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '650-21-4576',
-                    issueState: Identification.issueState.CA,
-                    issueCountry: Identification.issueCountry.US,
+                    issueState: State.CA,
+                    issueCountry: Country.US,
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: '',
-                    issueState: Identification.issueState.NJ,
-                    issueCountry: Identification.issueCountry.US,
+                    issueState: State.NJ,
+                    issueCountry: Country.US,
                 },
             ],
             addresses: [
@@ -291,17 +292,17 @@ export const mockPolicy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '650-21-4576',
-                    issueState: Identification.issueState.CA,
-                    issueCountry: Identification.issueCountry.US,
+                    issueState: State.CA,
+                    issueCountry: Country.US,
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: '',
-                    issueState: Identification.issueState.NJ,
-                    issueCountry: Identification.issueCountry.US,
+                    issueState: State.NJ,
+                    issueCountry: Country.US,
                 },
             ],
             addresses: [
@@ -375,17 +376,17 @@ export const mockPolicy = {
             preferredCommunicationType: PreferredCommunicationType.EMAIL,
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '650-21-4576',
-                    issueState: Identification.issueState.CA,
-                    issueCountry: Identification.issueCountry.US,
+                    issueState: State.CA,
+                    issueCountry: Country.US,
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: '',
-                    issueState: Identification.issueState.NJ,
-                    issueCountry: Identification.issueCountry.US,
+                    issueState: State.NJ,
+                    issueCountry: Country.US,
                 },
             ],
             addresses: [
@@ -737,7 +738,7 @@ export const mockPolicy = {
             frequency: undefined,
             paymentForm: undefined,
             featureId: undefined,
-            featureSubType: PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT,
+            featureSubType: FeatureSubTypeEnum.MULTIPLEPOLICYDISCOUNT,
         },
         {
             reducedPaidUpFaceAmount: undefined,
@@ -762,7 +763,7 @@ export const mockPolicy = {
             frequency: undefined,
             paymentForm: undefined,
             featureId: undefined,
-            featureSubType: PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT,
+            featureSubType: FeatureSubTypeEnum.MULTIPLEPOLICYDISCOUNT,
         },
     ],
     allocation: {
