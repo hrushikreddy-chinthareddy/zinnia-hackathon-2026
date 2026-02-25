@@ -12,8 +12,10 @@
             var(--measure-dimension-padding-4xl);
     }
 
-    .toggleRow {
-        padding-left: var(--measure-dimension-padding-xl);
+    .filterGroup {
+        display: flex;
+        align-items: end;
+        gap: var(--measure-dimension-padding-2xl);
     }
 
     .table {
