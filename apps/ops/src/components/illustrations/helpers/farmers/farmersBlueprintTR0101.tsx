@@ -2978,6 +2978,7 @@ export const farmersBlueprintTR0101 = {
                                             isCustom: true,
                                         },
                                     ],
+                                    defaultValue: ['Rider_ABRTRM'],
                                 },
                                 {
                                     answerNodeId: 'charitable-giving-rider',
@@ -3020,6 +3021,7 @@ export const farmersBlueprintTR0101 = {
                                             isCustom: true,
                                         },
                                     ],
+                                    defaultValue: ['Rider_CGR'],
                                 },
                                 {
                                     fieldType: 'checkboxGroup',

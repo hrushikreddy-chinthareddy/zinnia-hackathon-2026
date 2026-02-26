@@ -6363,6 +6363,7 @@ export const farmersBlueprintIU0101 = {
                                             isCustom: true,
                                         },
                                     ],
+                                    defaultValue: ['Rider_ABRTRM'],
                                 },
                                 {
                                     fieldType: 'checkboxGroup',
@@ -6600,6 +6601,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     isCustom: true,
+                                    defaultValue: ['Rider_OPR'],
                                 },
                             ],
                             displayAsCard: false,
