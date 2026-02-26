@@ -233,7 +233,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
         [nameTags]
     );
     const clientCode = policy?.carrierId;
-    const { data: agentData } = useQueries({
+    const { data: agentData, isLoading: isAgentDataLoading } = useQueries({
         queries: agentParties?.map((party) => ({
             queryKey: [
                 'agentData',
@@ -260,11 +260,10 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                     : undefined,
         })),
 
-        combine: (results) => {
-            return {
-                data: results.map((result) => result.data),
-            };
-        },
+        combine: (results) => ({
+            data: results.map((result) => result.data),
+            isLoading: results.some((result) => result.isLoading),
+        }),
     });
 
     const handleRadioClick = (value: string) => {
@@ -303,7 +302,13 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                         agent?.party?.agentExternalId === tag.agentExternalId
                 );
                 // NOTE: this is complicated but POM and Zahara partyId for the same agent DO NOT match - MR
-                return { ...agent?.party, partyId: tag.partyId } as NameTag;
+                // Preserve SOR-derived tags/partyRoles so Servicing vs Writing Agent labels are correct
+                return {
+                    ...agent?.party,
+                    partyId: tag.partyId,
+                    tags: tag.tags,
+                    partyRoles: tag.partyRoles,
+                } as NameTag;
             } else {
                 return tag;
             }
@@ -454,6 +459,9 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                                 commissionAllocationData
                                             }
                                             type={AgentType.PRIMARY}
+                                            isAgentDataLoading={
+                                                isAgentDataLoading
+                                            }
                                         />
                                     ) : null}
 
@@ -462,6 +470,9 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                             peopleCardData={peopleCardData}
                                             filteredData={otherSectionData}
                                             type={AgentType.AGENT}
+                                            isAgentDataLoading={
+                                                isAgentDataLoading
+                                            }
                                         />
                                     ) : null}
                                 </div>
@@ -471,6 +482,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                                 <PeopleCardContainer
                                     peopleCardData={peopleCardData}
                                     filteredData={filteredNameTags}
+                                    isAgentDataLoading={isAgentDataLoading}
                                 />
                             )}
                         </div>

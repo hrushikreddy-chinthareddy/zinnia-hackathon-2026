@@ -1,7 +1,8 @@
 import {
-    ContactSearchResponse,
     ContactSearchResult,
-    PersonalInfo,
+    GenderEnum,
+    MaritalStatusEnum,
+    StatusEnum,
 } from '@zinnia/api-types/types/contact-management';
 
 import { maskContactManagementSearch } from './contact-management';
@@ -166,13 +167,13 @@ describe('contact-management sanitizers', () => {
                             lastName: 'Doe',
                             email: 'john@example.com',
                             phoneNumber: '123-456-7890',
-                            gender: PersonalInfo.gender.MALE,
-                            maritalStatus: PersonalInfo.maritalStatus.YES,
+                            gender: GenderEnum.MALE,
+                            maritalStatus: MaritalStatusEnum.YES,
                         },
                         address: {
                             street1: '123 Main St',
                         },
-                        status: ContactSearchResponse.status.ACTIVE,
+                        status: StatusEnum.ACTIVE,
                         createdAt: '2023-01-01T00:00:00Z',
                         updatedAt: '2023-06-01T00:00:00Z',
                     },
@@ -186,16 +187,12 @@ describe('contact-management sanitizers', () => {
 
             expect(result.data?.[0].id).toBe('123');
             expect(result.data?.[0].partyId).toBe('party-456');
-            expect(result.data?.[0].status).toBe(
-                ContactSearchResponse.status.ACTIVE
-            );
+            expect(result.data?.[0].status).toBe(StatusEnum.ACTIVE);
             expect(result.data?.[0].createdAt).toBe('2023-01-01T00:00:00Z');
             expect(result.data?.[0].updatedAt).toBe('2023-06-01T00:00:00Z');
-            expect(result.data?.[0].personalInfo?.gender).toBe(
-                PersonalInfo.gender.MALE
-            );
+            expect(result.data?.[0].personalInfo?.gender).toBe(GenderEnum.MALE);
             expect(result.data?.[0].personalInfo?.maritalStatus).toBe(
-                PersonalInfo.maritalStatus.YES
+                MaritalStatusEnum.YES
             );
             expect(result.total).toBe(1);
             expect(result.offset).toBe(0);

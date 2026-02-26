@@ -15,7 +15,7 @@ import {
     optimizelyService,
 } from '@deps/utils/optimizely/optimizely';
 import { logWarn, withPageAuthAndLogging } from '@deps/utils/server-logging';
-import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
+import { MeResponse, RoleEnum } from '@zinnia/api-types/types/knowledgebase';
 import nextI18nextConfig from 'next-i18next.config';
 
 type additionalDataProps = {
@@ -96,7 +96,7 @@ export const getServerSideProps = withPageAuthAndLogging(
                 );
                 if (
                     !opsUserData?.client?.length ||
-                    opsUserData?.role !== MeResponse.role.ADMIN
+                    opsUserData?.role !== RoleEnum.ADMIN
                 ) {
                     logWarn('zinnia-ai-assistant::User is not admin', logCtx);
                     return {

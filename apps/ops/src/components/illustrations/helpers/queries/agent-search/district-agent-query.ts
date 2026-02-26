@@ -6,7 +6,10 @@ import { AGENT_SEARCH_QUERY_PREFIXES } from './constants';
 import { buildAgentsFromDownline } from './helpers';
 import { buildGetDownlineForNearestRoleQueryOptions } from '../../hooks/pom';
 
-const buildDistrictAgentQuery = ({
+/**
+ * Returns the agents from the selling code district manager's downline
+ */
+const buildDistrictAgentsQuery = ({
     sellingCode,
     carrierShortName,
     partialFullName = '',
@@ -44,6 +47,9 @@ const buildDistrictAgentQuery = ({
               },
     });
 
+/**
+ * Returns the agents that belong to the district of the provided selling code
+ */
 export const fetchDistrictAgents = (
     client: QueryClient,
     {
@@ -57,7 +63,7 @@ export const fetchDistrictAgents = (
     }
 ) =>
     client.fetchQuery(
-        buildDistrictAgentQuery({
+        buildDistrictAgentsQuery({
             sellingCode,
             carrierShortName,
             partialFullName,

@@ -4,6 +4,7 @@ import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { getPolicyTransaction } from '@deps/queries/api/policies';
 import {
     Policy,
+    TransactionTypeEnum,
     Transaction,
     TransactionPayor,
     TransactionStatus,
@@ -30,7 +31,7 @@ export const getReverseRecreateTransactionSideSheetValues = (
 
     const isPending = transaction.status === TransactionStatus.PENDING;
     const amount =
-        transactionType === Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
+        transactionType === TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM
             ? paymentAmount
             : appliedAmount;
 
@@ -71,8 +72,7 @@ export const getReverseRecreateTransactionSideSheetValues = (
         const isPending = status === TransactionStatus.PENDING;
 
         const amount =
-            transactionType ===
-            Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
+            transactionType === TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM
                 ? paymentAmount
                 : appliedAmount;
 

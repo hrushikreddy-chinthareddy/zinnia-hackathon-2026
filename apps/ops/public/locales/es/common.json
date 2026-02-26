@@ -852,7 +852,12 @@
         "searchByLastNamePlaceholder": "Apellido del individuo",
         "searchButtonOwnerName": "Nombre del propietario",
         "searchButtonAgentName": "Nombre del agente",
-        "illustrationsClientCasesDobDatePickerPopoverTitle": "Fecha de nacimiento"
+        "illustrationsClientCasesDobDatePickerPopoverTitle": "Fecha de nacimiento",
+        "defaultTaskCardTitle": "¡Ups! Algo salió mal al cargar la tarea. Por favor, inténtalo de nuevo.",
+        "defaultTaskCardSubtitle": "Para cualquier ayuda adicional, ",
+        "helpDesk": "Enviar un ticket al servicio de soporte.",
+        "helpDeskLink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+        "leaveTransaction": "Salir de esta transacción"
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Ganancias acumuladas",

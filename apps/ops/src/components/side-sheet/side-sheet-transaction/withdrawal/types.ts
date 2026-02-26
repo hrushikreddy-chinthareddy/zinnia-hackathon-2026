@@ -5,6 +5,7 @@ import {
     BankAccount,
     PartialWithdrawalOneTimeQuoteResponse,
     Policy,
+    TransactionTypeEnum,
     Transaction,
 } from '@zinnia/api-types/types/sor';
 
@@ -46,7 +47,7 @@ export interface WithdrawalSideSheetValues
     payeePaymentDetails?: PayeePaymentDetails[];
     effectiveDate?: string;
     processDate?: string;
-    transactionType?: Transaction.transactionType;
+    transactionType?: TransactionTypeEnum;
 }
 
 export type WithdrawalChargesValues = {
@@ -104,7 +105,7 @@ export type WithdrawalDetailsValues = {
     // This is the total charged from the withdrawal.
     totalChargeAmount?: number;
     // ---------------------
-    transactionType?: Transaction.transactionType;
+    transactionType?: TransactionTypeEnum;
 };
 
 export type WithdrawalSideSheetProps = {

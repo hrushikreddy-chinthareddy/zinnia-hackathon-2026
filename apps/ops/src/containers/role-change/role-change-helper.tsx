@@ -31,7 +31,7 @@ import {
 import { DEFAULT_ERROR_STRING, capitalize } from '@deps/utils/strings';
 import {
     Country,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     PartyRole,
     PartyType,
@@ -386,9 +386,7 @@ export const getActiveRoleParty = (
                 const ssnIdentification = (
                     existingData.identifications ?? []
                 ).find(
-                    (id) =>
-                        id.identificationType ===
-                        Identification.identificationType.SSN
+                    (id) => id.identificationType === IdentificationTypeEnum.SSN
                 ) as any;
 
                 if (ssnIdentification) {

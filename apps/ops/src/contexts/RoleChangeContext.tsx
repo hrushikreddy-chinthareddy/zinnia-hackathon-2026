@@ -18,7 +18,7 @@ import {
     Country,
     Email,
     EmailType,
-    Identification,
+    IdentificationTypeEnum,
     Parties,
     Phone,
     PhoneType,
@@ -33,7 +33,7 @@ export type RoleIdentification = {
     usCitizen?: string | null;
     issueCountry?: string | null;
     endDate?: string | null;
-    identificationType?: Identification.identificationType;
+    identificationType?: IdentificationTypeEnum;
     identificationValue?: string | null;
     startDate?: string;
 };
@@ -103,7 +103,7 @@ export const defaultRoleValue: RoleChangeContextType = {
                 {
                     startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
                     endDate: null,
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '',
                     issueCountry: undefined,
                     usCitizen: null,

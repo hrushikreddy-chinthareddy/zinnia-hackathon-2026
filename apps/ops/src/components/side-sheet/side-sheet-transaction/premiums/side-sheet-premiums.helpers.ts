@@ -12,6 +12,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import {
     Policy,
+    TransactionTypeEnum,
     Transaction,
     TransactionPayor,
     TransactionStatus,
@@ -67,8 +68,7 @@ export const getAutopayPremiumSideSheetValues = (
             processDate: convertKebabedDateString(processDate),
             reverseCta:
                 reverseRecreateEnabled &&
-                transactionType ===
-                    Transaction.transactionType.SUBSEQUENT_PAYMENT &&
+                transactionType === TransactionTypeEnum.SUBSEQUENT_PAYMENT &&
                 transaction.status === TransactionStatus.COMPLETED
                     ? (t(
                           'policy.history.reverseRecreateSidesheet.reversePayment'
@@ -108,7 +108,7 @@ export const getInitialPremiumSideSheetValues = (
 
     const amount =
         isCanceled ||
-        transactionType === Transaction.transactionType.PAYMENT_INITIAL_PREMIUM
+        transactionType === TransactionTypeEnum.PAYMENT_INITIAL_PREMIUM
             ? paymentAmount
             : appliedAmount;
 
@@ -154,8 +154,7 @@ export const getOneTimePremiumSideSheetValues = (
         const isPending = status === ('Pending' as TransactionStatus);
         const isCanceled = status === ('Canceled' as TransactionStatus);
         const isPayment =
-            transactionType ===
-            Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM;
+            transactionType === TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM;
 
         const amount = isCanceled || isPayment ? paymentAmount : appliedAmount;
 
@@ -177,7 +176,7 @@ export const getOneTimePremiumSideSheetValues = (
             reverseCta:
                 reverseRecreateEnabled &&
                 transactionType ===
-                    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM &&
+                    TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM &&
                 transaction.status === TransactionStatus.COMPLETED
                     ? (t(
                           'policy.history.reverseRecreateSidesheet.reversePayment'
@@ -188,8 +187,8 @@ export const getOneTimePremiumSideSheetValues = (
                 isCanceled || isPending ? paymentAmount : requestedAmount,
             transactionId,
             transactionType: isPending
-                ? Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM
-                : Transaction.transactionType.ONE_TIME_PREMIUM,
+                ? TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM
+                : TransactionTypeEnum.ONE_TIME_PREMIUM,
             transactionValue: amount || requestedAmount,
         };
     } catch (error) {

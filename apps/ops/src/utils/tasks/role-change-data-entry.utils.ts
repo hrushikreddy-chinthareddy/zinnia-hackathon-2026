@@ -66,6 +66,24 @@ export function cleanPhones(arr: any[] = []) {
     if (!Array.isArray(arr)) return null;
 
     const cleaned = arr.filter((p) => p?.phoneType && p?.dialNumber);
+    cleaned.forEach((phone) => {
+        const dialNumber =
+            phone.dialNumber.length === 7
+                ? phone.dialNumber
+                : phone?.dialNumber.slice(-7) ?? '';
+        const areaCode =
+            phone.dialNumber.length > 7
+                ? phone.dialNumber.slice(-10, -7)
+                : phone?.areaCode ?? null;
+        const countryCode =
+            phone?.dialNumber && phone.dialNumber.length > 10
+                ? phone.dialNumber.slice(0, -10)
+                : phone?.countryCode ?? '1';
+
+        phone.dialNumber = dialNumber;
+        phone.areaCode = areaCode;
+        phone.countryCode = countryCode;
+    });
     return cleaned.length > 0 ? cleaned : null;
 }
 

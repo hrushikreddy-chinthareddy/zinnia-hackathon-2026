@@ -39,7 +39,7 @@ import {
 import { SourceSystem } from '@deps/types/documents-v3';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 import { PartyType, Policy } from '@zinnia/api-types/types/sor';
 
 import {
@@ -279,8 +279,7 @@ const BeneficiaryIdentification = ({
                     documentTypeDescription: file.name,
                     documentDate: dayjs().format(EDS_DATE_DISPLAY_FORMAT),
                     fileType: getFileSubtype(blob),
-                    docClassification:
-                        SearchRequest.documentClassification.INBOUND,
+                    docClassification: DocumentClassificationEnum.INBOUND,
                     sourceSystem: SourceSystem.ZL,
                     zinniaLiveCaseId: '',
                     parentCarrierCode: policy.carrierId ?? '',
