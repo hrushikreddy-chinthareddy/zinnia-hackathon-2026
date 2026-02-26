@@ -71,7 +71,7 @@
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "cwd": "${workspaceFolder}/apps/ops",
       "program": "${workspaceFolder}/apps/ops/node_modules/vitest/vitest.mjs",
-      "args": ["run"], // "run" command ensures all tests run once and exit
+      "args": ["run", "--test-timeout=0", "--no-file-parallelism"], // "run" command ensures all tests run once and exit
       "console": "integratedTerminal",
       "smartStep": true
     },
@@ -84,7 +84,7 @@
       "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
       "cwd": "${workspaceFolder}/apps/ops",
       "program": "${workspaceFolder}/apps/ops/node_modules/vitest/vitest.mjs",
-      "args": ["run", "${file}"],
+      "args": ["run", "${file}", "--test-timeout=0", "--no-file-parallelism"],
       "smartStep": true,
       "console": "integratedTerminal"
     }

@@ -528,9 +528,6 @@ importers:
       vitest:
         specifier: ^4.0.18
         version: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@20.19.33)(@vitest/browser-playwright@4.0.18)(jiti@1.21.7)(jsdom@21.1.2)(less@4.4.2)(msw@2.12.10(@types/node@20.19.33)(typescript@5.9.3))(terser@5.46.0)(yaml@2.8.1)
-      vitest-browser-react:
-        specifier: ^2.0.5
-        version: 2.0.5(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@4.0.18)
 
   apps/sso-mpv:
     dependencies:
@@ -11828,20 +11825,6 @@ packages:
       tsx:
         optional: true
       yaml:
-        optional: true
-
-  vitest-browser-react@2.0.5:
-    resolution: {integrity: sha512-YODQX8mHTJCyKNVYTWJrLEYrUtw+QfLl78owgvuE7C5ydgmGBq6v5s4jK2w6wdPhIZsN9PpV1rQbmAevWJjO9g==}
-    peerDependencies:
-      '@types/react': ^18.0.0 || ^19.0.0
-      '@types/react-dom': ^18.0.0 || ^19.0.0
-      react: ^18.0.0 || ^19.0.0
-      react-dom: ^18.0.0 || ^19.0.0
-      vitest: ^4.0.0
-    peerDependenciesMeta:
-      '@types/react':
-        optional: true
-      '@types/react-dom':
         optional: true
 
   vitest@4.0.18:
@@ -27048,15 +27031,6 @@ snapshots:
       less: 4.4.2
       terser: 5.46.0
       yaml: 2.8.1
-
-  vitest-browser-react@2.0.5(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(vitest@4.0.18):
-    dependencies:
-      react: 18.3.1
-      react-dom: 18.3.1(react@18.3.1)
-      vitest: 4.0.18(@opentelemetry/api@1.9.0)(@types/node@20.19.33)(@vitest/browser-playwright@4.0.18)(jiti@1.21.7)(jsdom@21.1.2)(less@4.4.2)(msw@2.12.10(@types/node@20.19.33)(typescript@5.9.3))(terser@5.46.0)(yaml@2.8.1)
-    optionalDependencies:
-      '@types/react': 18.3.26
-      '@types/react-dom': 18.3.7(@types/react@18.3.26)
 
   vitest@4.0.18(@opentelemetry/api@1.9.0)(@types/node@20.19.33)(@vitest/browser-playwright@4.0.18)(jiti@1.21.7)(jsdom@21.1.2)(less@4.4.2)(msw@2.12.10(@types/node@20.19.33)(typescript@5.9.3))(terser@5.46.0)(yaml@2.8.1):
     dependencies:

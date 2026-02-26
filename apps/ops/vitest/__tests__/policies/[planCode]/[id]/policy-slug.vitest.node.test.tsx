@@ -72,25 +72,97 @@ describe('policy-details-page', () => {
             );
             expect(identificationHeading).toBeInTheDocument();
         });
-        // TODO: Just need to do in general
-        test.todo(
-            'does not render SelfServeTransactionContainer for assigneechange when transactionData is null'
-        );
-        // TODO: Just need to do in general
+        test('renders nothing for assigneechange when transactionData is null', async () => {
+            vi.doMock(
+                '@deps/containers/self-serve-transaction/self-serve-transaction.helpers',
+                () => ({
+                    getSelfServeTransactionData: vi
+                        .fn()
+                        .mockResolvedValue(null),
+                })
+            );
 
-        test.todo(
-            'does not render SelfServeTransactionContainer for benechange when transactionData is null'
-        );
-        // TODO: Need to figure out how to mock transaction data for these tests
+            mockRouter = createMockRouter({
+                slug: ['people', 'assigneechange'],
+            });
 
-        test.todo(
-            'renders SelfServeTransactionContainer for assigneechange when transactionData exists'
-        );
-        // TODO: Need to figure out how to mock transaction data for these tests
-        test.todo(
-            'renders SelfServeTransactionContainer for benechange when transactionData exists'
-        );
-        test('renders PersonSubPage with Allocation card for beneficiary', async () => {
+            renderPolicyPage();
+
+            // Wait for policy layout to load
+            await screen.findByTestId('quick-links');
+
+            // No sub-page content should render while transactionData is null
+            expect(
+                screen.queryByText('Identification')
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByRole('heading', { name: 'Assignee Details' })
+            ).not.toBeInTheDocument();
+        });
+        test('renders nothing for benechange when transactionData is null', async () => {
+            vi.doMock(
+                '@deps/containers/self-serve-transaction/self-serve-transaction.helpers',
+                () => ({
+                    getSelfServeTransactionData: vi
+                        .fn()
+                        .mockResolvedValue(null),
+                })
+            );
+
+            mockRouter = createMockRouter({
+                slug: ['people', 'benechange'],
+            });
+
+            renderPolicyPage();
+
+            // Wait for policy layout to load
+            await screen.findByTestId('quick-links');
+
+            // No sub-page content should render while transactionData is null
+            expect(
+                screen.queryByText('Identification')
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByRole('heading', { name: 'Owner Details' })
+            ).not.toBeInTheDocument();
+        });
+        test('renders SelfServeTransactionContainer for assigneechange when transactionData exists', async () => {
+            // Use actual beneficiary partyId from mock data (Sarah Mathew with 100% allocation)
+            mockRouter = createMockRouter({
+                slug: ['people', 'assigneechange'],
+            });
+
+            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
+
+            // Verify Beneficiary Details card renders (shows for transaction page)
+            const beneficiaryDetailsHeading = await screen.findByRole(
+                'heading',
+                {
+                    name: 'Assignee Details',
+                }
+            );
+            expect(beneficiaryDetailsHeading).toBeInTheDocument();
+        });
+
+        test('renders SelfServeTransactionContainer for benechange when transactionData exists', async () => {
+            // Use actual beneficiary partyId from mock data (Sarah Mathew with 100% allocation)
+            mockRouter = createMockRouter({
+                slug: ['people', 'benechange'],
+            });
+
+            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
+
+            // Verify Beneficiary Details card renders (shows for transaction page)
+            const beneficiaryDetailsHeading = await screen.findByRole(
+                'heading',
+                {
+                    name: 'Owner Details',
+                }
+            );
+            expect(beneficiaryDetailsHeading).toBeInTheDocument();
+        });
+
+        test('renders PersonSubPage when Party is neither Beneficiary nor Asignee', async () => {
             // Use actual beneficiary partyId from mock data (Sarah Mathew with 100% allocation)
             mockRouter = createMockRouter({
                 slug: ['people', 'c8a283b5d8d540a29fe71aad239c0352'],
