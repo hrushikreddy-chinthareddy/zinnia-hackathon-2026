@@ -45,13 +45,86 @@ const renderPolicyPage = (...runtimeHandlers: any[]) => {
     });
 };
 
-describe('policy-details-page', () => {
+describe('Policy Slug Page', () => {
     beforeEach(() => {
         mockRouter = createMockRouter();
     });
+    describe('route guard', () => {
+        test('renders Custom404Page when the policy API returns an error', async () => {
+            server.use(
+                http.get('*/api/policies/:planCode/:policyId', () =>
+                    HttpResponse.json({}, { status: 500 })
+                )
+            );
 
-    describe('people tab', () => {
-        test('renders PeopleTab when slug is people with no second slug', async () => {
+            renderPolicyPage();
+
+            await screen.findByText('Page Not Found');
+        });
+
+        test('renders Custom404Page when the policy API returns no data', async () => {
+            server.use(
+                http.get('*/api/policies/:planCode/:policyId', () =>
+                    HttpResponse.json({ data: null })
+                )
+            );
+
+            renderPolicyPage();
+
+            await screen.findByText('Page Not Found');
+        });
+
+        test.each([
+            { slug: ['policy', 'coverage'] },
+            { slug: ['policy', 'loans'] },
+        ])(
+            'renders Custom404Page when an annuity policy accesses the $slug[1] route',
+            async ({ slug }) => {
+                server.use(
+                    http.get(
+                        '*/api/policies/:planCode/:policyId',
+                        ({ params }) =>
+                            HttpResponse.json({
+                                data: {
+                                    ...policyEndpointData,
+                                    policyNumber: String(
+                                        params.policyId ?? 'POL123'
+                                    ),
+                                    product: {
+                                        ...policyEndpointData.product,
+                                        planCode: String(
+                                            params.planCode ?? 'PLAN1'
+                                        ),
+                                        lineOfBusiness: 'ANNUITY',
+                                    },
+                                },
+                            })
+                    )
+                );
+                mockRouter = createMockRouter({ slug });
+
+                renderPolicyPage();
+
+                await screen.findByText('Page Not Found');
+            }
+        );
+    });
+    describe('default route fallback', () => {
+        test.each([
+            { slug: ['unknown-route'], label: 'unknown slug' },
+            { slug: undefined as unknown as string[], label: 'no slug' },
+            { slug: [] as string[], label: 'empty slug array' },
+        ])('renders PolicyDetailsContainer for $label', async ({ slug }) => {
+            mockRouter = createMockRouter({ slug });
+            renderPolicyPage();
+
+            const element = await screen.findByText('Policy Details');
+            expect(element).toBeInTheDocument();
+        });
+    });
+
+    describe('people route', () => {
+        test('renders generic PersonSubpage when slug is people without a PartyId', async () => {
             mockRouter = createMockRouter({ slug: ['people'] });
 
             renderPolicyPage();
@@ -62,7 +135,7 @@ describe('policy-details-page', () => {
             expect(element).toBeInTheDocument();
         });
 
-        test('renders PersonSubPage when slug is people with person ID', async () => {
+        test('renders specific PersonSubpage when slug is people with a PartyId other than assigneechange and benechange', async () => {
             // Use actual owner partyId from mock data (Sam Mathew)
             mockRouter = createMockRouter({
                 slug: ['people', '0a2b5d2279f34fc49b6de65739f14985'],
@@ -101,7 +174,7 @@ describe('policy-details-page', () => {
             // Wait for policy layout to load
             await screen.findByTestId('quick-links');
 
-            // No sub-page content should render while transactionData is null
+            // Not how to test this, but it seems no sub-page content should render while transactionData is null
             expect(
                 screen.queryByText('Identification')
             ).not.toBeInTheDocument();
@@ -128,7 +201,7 @@ describe('policy-details-page', () => {
             // Wait for policy layout to load
             await screen.findByTestId('quick-links');
 
-            // No sub-page content should render while transactionData is null
+            // Not how to test this, but it seems no sub-page content should render while transactionData is null
             expect(
                 screen.queryByText('Identification')
             ).not.toBeInTheDocument();
@@ -260,79 +333,5 @@ describe('policy-details-page', () => {
             const heading = await screen.findByText('Annuitization and Payout');
             expect(heading).toBeInTheDocument();
         });
-
-        // Fallback: unrecognized, undefined, or empty slugs render the default PolicyDetailsContainer
-        test.each([
-            { slug: ['unknown-route'], label: 'unknown slug' },
-            { slug: undefined as unknown as string[], label: 'no slug' },
-            { slug: [] as string[], label: 'empty slug array' },
-        ])('renders PolicyDetailsContainer for $label', async ({ slug }) => {
-            mockRouter = createMockRouter({ slug });
-            renderPolicyPage();
-
-            const element = await screen.findByText('Policy Details');
-            expect(element).toBeInTheDocument();
-        });
-    });
-
-    describe('guard: error, missing policy, and annuity forbidden page', () => {
-        test('renders Custom404Page when the policy API returns an error', async () => {
-            server.use(
-                http.get('*/api/policies/:planCode/:policyId', () =>
-                    HttpResponse.json({}, { status: 500 })
-                )
-            );
-
-            renderPolicyPage();
-
-            await screen.findByText('Page Not Found');
-        });
-
-        test('renders Custom404Page when the policy API returns no data', async () => {
-            server.use(
-                http.get('*/api/policies/:planCode/:policyId', () =>
-                    HttpResponse.json({ data: null })
-                )
-            );
-
-            renderPolicyPage();
-
-            await screen.findByText('Page Not Found');
-        });
-
-        test.each([
-            { slug: ['policy', 'coverage'] },
-            { slug: ['policy', 'loans'] },
-        ])(
-            'renders Custom404Page for annuity policy on forbidden $slug[1] route',
-            async ({ slug }) => {
-                server.use(
-                    http.get(
-                        '*/api/policies/:planCode/:policyId',
-                        ({ params }) =>
-                            HttpResponse.json({
-                                data: {
-                                    ...policyEndpointData,
-                                    policyNumber: String(
-                                        params.policyId ?? 'POL123'
-                                    ),
-                                    product: {
-                                        ...policyEndpointData.product,
-                                        planCode: String(
-                                            params.planCode ?? 'PLAN1'
-                                        ),
-                                        lineOfBusiness: 'ANNUITY',
-                                    },
-                                },
-                            })
-                    )
-                );
-                mockRouter = createMockRouter({ slug });
-
-                renderPolicyPage();
-
-                await screen.findByText('Page Not Found');
-            }
-        );
     });
 });
