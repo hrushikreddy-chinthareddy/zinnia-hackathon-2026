@@ -363,17 +363,6 @@ describe('Policy Slug Page', () => {
             expect(heading).toBeInTheDocument();
         });
 
-        // Requires document search API handler
-        test('renders DocumentsSubPage for documents', async () => {
-            mockRouter = createMockRouter({ slug: ['documents'] });
-            renderPolicyPage(documentsHandlers);
-
-            const heading = await screen.findByRole('heading', {
-                name: 'Documents',
-            });
-            expect(heading).toBeInTheDocument();
-        });
-
         // Uses findByText because the heading is not rendered with a heading role
         test('renders AnnuitizationSubPage for policy/annuitization', async () => {
             mockRouter = createMockRouter({
@@ -419,6 +408,18 @@ describe('Policy Slug Page', () => {
             });
             const heading = await screen.findByRole('heading', {
                 name: 'Call logs',
+            });
+            expect(heading).toBeInTheDocument();
+        });
+    });
+
+    describe('documents route', () => {
+        test('renders DocumentsSubPage for documents', async () => {
+            mockRouter = createMockRouter({ slug: ['documents'] });
+            renderPolicyPage(documentsHandlers);
+
+            const heading = await screen.findByRole('heading', {
+                name: 'Documents',
             });
             expect(heading).toBeInTheDocument();
         });
