@@ -33,6 +33,10 @@ export const getFeatureNameText = (
         case FeatureType.LAPSEPROTECTION:
             return t('policy.extras.features.lapseProtection') as string;
         default:
-            return toSentenceCase(feature.featureType) ?? DEFAULT_ERROR_STRING;
+            return toSentenceCase(
+                t(`enums.${feature.featureType}`, {
+                    defaultValue: feature.featureType ?? DEFAULT_ERROR_STRING,
+                }) as string
+            );
     }
 };

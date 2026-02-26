@@ -1,5 +1,6 @@
 import { TFunction } from 'next-i18next';
 
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { FeatureType, PolicyFeature } from '@zinnia/api-types/types/sor';
 
 import {
@@ -8,7 +9,8 @@ import {
     getFeatureStatusText,
 } from './features-table-helpers';
 
-const t = ((key: string) => key) as unknown as TFunction;
+const t = ((key: string, opts?: { defaultValue?: string }) =>
+    opts?.defaultValue ?? key) as unknown as TFunction;
 
 const baseFeature = {
     startDate: '2023-01-01',
@@ -84,14 +86,14 @@ describe('getFeatureNameText', () => {
         expect(result).toBe('Somecustomtype');
     });
 
-    it('returns empty string when featureType is undefined', () => {
+    it('returns DEFAULT_ERROR_STRING when featureType is undefined', () => {
         const feature = {
             ...baseFeature,
             featureType: undefined,
         } as PolicyFeature;
 
         const result = getFeatureNameText(feature, t);
-        expect(result).toBe('');
+        expect(result).toBe(DEFAULT_ERROR_STRING);
     });
 });
 
