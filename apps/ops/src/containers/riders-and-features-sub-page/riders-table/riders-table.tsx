@@ -22,6 +22,7 @@ import { toSentenceCase } from '@deps/utils/strings';
 import { Rider } from '@zinnia/api-types/types/sor';
 
 import { getRiderInsured, getRiderStatusText } from './riders-table-helpers';
+import styles from './riders-table.module.css';
 
 export default function RidersTable({
     policyDetails,
@@ -60,6 +61,16 @@ export default function RidersTable({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
+                    {!riders?.length && (
+                        <TableRow>
+                            <TableCell
+                                className={styles.noResultsTd}
+                                colSpan={5}
+                            >
+                                {t('policy.extras.riders.empty')}
+                            </TableCell>
+                        </TableRow>
+                    )}
                     {riders?.map((rider) => (
                         <TableRow key={`${rider.riderName}-${rider.riderCode}`}>
                             <TableCell>

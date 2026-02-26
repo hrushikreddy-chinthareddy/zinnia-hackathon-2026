@@ -18,6 +18,7 @@ import {
     getFeatureNameText,
     getFeatureStatusText,
 } from './features-table-helpers';
+import styles from './features-table.module.css';
 export default function FeaturesTable({
     policyDetails,
 }: {
@@ -45,6 +46,13 @@ export default function FeaturesTable({
                 </TableRow>
             </TableHeader>
             <TableBody>
+                {!features?.length && (
+                    <TableRow>
+                        <TableCell className={styles.noResultsTd} colSpan={4}>
+                            {t('policy.extras.features.empty')}
+                        </TableCell>
+                    </TableRow>
+                )}
                 {features?.map((feature) => (
                     <TableRow key={`${feature.featureId}`}>
                         <TableCell>
