@@ -3,17 +3,41 @@ import { TFunctionDetailedResult } from 'i18next';
 import { TFunction } from 'next-i18next';
 
 import { DEFAULT_ADDRESS } from '@deps/components/otp-withdrawal-form/address-entry';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import {
     AccountType,
     Address,
     BankDetails,
+    FormParty,
     PaymentMailType,
     PaymentMethod,
+    Party,
+    PartyRoles,
 } from '@deps/models/case/withdrawal/case';
 import {
+    BankFieldConfig,
     DEFAULT_DISBURSEMENT_UPDATE,
     DisbursementParts,
 } from '@deps/models/case/withdrawal/disbursement-types';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    Party as SorParty,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
+
+// Helper type for disbursementOptions parties arg (LifeCadParty[] | Party[] from API)
+type PartiesArg = LifeCadParty[] | SorParty[];
+
+/** Minimal party shape used when testing annuitant address fallback (partyId + addresses only). */
+type MockPartyForAddressFallback = {
+    partyId: string;
+    addresses?: Array<Record<string, unknown>>;
+};
+
+/** Cast test mock parties to PartiesArg; disbursementOptions only uses partyId and addresses. */
+function partiesArg(parties: MockPartyForAddressFallback[]): PartiesArg {
+    return parties as PartiesArg;
+}
 
 // Type for field configuration with optional annuitantAddress (for test assertions)
 type FieldConfig = Record<string, unknown> & {
@@ -85,13 +109,20 @@ describe('Dlic withdrawal form config', () => {
     });
 
     describe('disbursementOptions with isDlic3pDisbursementChangesEnabled = false', () => {
+        const featureFlags = {
+            [FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES]: false,
+        };
         const {
             result: { current },
-        } = renderHook(() => useDlicConfig(t, false));
+        } = renderHook(() =>
+            useDlicConfig(
+                t,
+                !!featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES]
+            )
+        );
         const { disbursementOptions } = current;
-        const options = disbursementOptions({
-            parties: [],
-        } as any);
+        const emptyFormParty: FormParty = { parties: [] };
+        const options = disbursementOptions(emptyFormParty, false, [], []);
         const bank: BankDetails = {
             accountNumber: '12345',
             accountType: { text: AccountType.Checking },
@@ -164,7 +195,7 @@ describe('Dlic withdrawal form config', () => {
                 const maskedBankingDetails: DisbursementParts = {
                     ...DEFAULT_DISBURSEMENT_UPDATE,
                     accountNumber: '',
-                    accountType: undefined as any,
+                    accountType: '' as AccountType,
                     bankName: '',
                     bankRoutingNumber: '',
                     isDirectDeposit: false,
@@ -263,7 +294,8 @@ describe('Dlic withdrawal form config', () => {
 
             // Check for SelectIfPayeeIsDifferent field (legacy version)
             const selectIfPayeeField = checkOption?.fields?.find(
-                (field: any) => field.fieldName === 'selectIfPayeeIsDifferent'
+                (field: BankFieldConfig) =>
+                    field.fieldName === 'selectIfPayeeIsDifferent'
             );
             expect(selectIfPayeeField).toBeDefined();
             expect(selectIfPayeeField?.fieldLabel).toBe(
@@ -271,15 +303,15 @@ describe('Dlic withdrawal form config', () => {
             );
 
             // Check for PayeeName field (no shouldDisplay in legacy version)
-            const payeeNameField: any = checkOption?.fields?.find(
-                (field: any) => field.fieldName === 'payeeName'
+            const payeeNameField = checkOption?.fields?.find(
+                (field: BankFieldConfig) => field.fieldName === 'payeeName'
             );
             expect(payeeNameField).toBeDefined();
             expect(payeeNameField?.shouldDisplay).toBeUndefined();
 
             // Check for Address field (no shouldDisplay in legacy version)
-            const addressField: any = checkOption?.fields?.find(
-                (field: any) => field.fieldName === 'address'
+            const addressField = checkOption?.fields?.find(
+                (field: BankFieldConfig) => field.fieldName === 'address'
             );
             expect(addressField).toBeDefined();
             expect(addressField?.shouldDisplay).toBeUndefined();
@@ -287,13 +319,20 @@ describe('Dlic withdrawal form config', () => {
     });
 
     describe('disbursementOptions with isDlic3pDisbursementChangesEnabled = true', () => {
+        const featureFlags = {
+            [FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES]: true,
+        };
         const {
             result: { current },
-        } = renderHook(() => useDlicConfig(t, true));
+        } = renderHook(() =>
+            useDlicConfig(
+                t,
+                !!featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES]
+            )
+        );
         const { disbursementOptions } = current;
-        const options = disbursementOptions({
-            parties: [],
-        } as any);
+        const emptyFormParty: FormParty = { parties: [] };
+        const options = disbursementOptions(emptyFormParty, false, [], []);
         const bank: BankDetails = {
             accountNumber: '12345',
             accountType: { text: AccountType.Checking },
@@ -350,21 +389,21 @@ describe('Dlic withdrawal form config', () => {
 
             // Check for SendCheckSelect field (new version)
             const sendCheckSelectField = checkOption?.fields?.find(
-                (field: any) => field.fieldName === 'SendCheckSelect'
+                (field: FieldConfig) => field.fieldName === 'SendCheckSelect'
             );
             expect(sendCheckSelectField).toBeDefined();
 
             // Check for PayeeName field with shouldDisplay (new version)
-            const payeeNameField: any = checkOption?.fields?.find(
-                (field: any) => field.fieldName === 'payeeName'
+            const payeeNameField = checkOption?.fields?.find(
+                (field: BankFieldConfig) => field.fieldName === 'payeeName'
             );
             expect(payeeNameField).toBeDefined();
             expect(payeeNameField?.shouldDisplay).toBeDefined();
             expect(typeof payeeNameField?.shouldDisplay).toBe('function');
 
             // Check for Address field with shouldDisplay (new version)
-            const addressField: any = checkOption?.fields?.find(
-                (field: any) => field.fieldName === 'address'
+            const addressField = checkOption?.fields?.find(
+                (field: BankFieldConfig) => field.fieldName === 'address'
             );
             expect(addressField).toBeDefined();
             expect(addressField?.shouldDisplay).toBeDefined();
@@ -379,7 +418,8 @@ describe('Dlic withdrawal form config', () => {
             );
 
             const selectIfPayeeField = checkOption?.fields?.find(
-                (field: any) => field.fieldName === 'selectIfPayeeIsDifferent'
+                (field: BankFieldConfig) =>
+                    field.fieldName === 'selectIfPayeeIsDifferent'
             );
             expect(selectIfPayeeField).toBeUndefined();
         });
@@ -398,17 +438,20 @@ describe('Dlic withdrawal form config', () => {
                 country: 'USA',
             };
 
-            const formPartyWithAddress = {
+            const formPartyWithAddress: FormParty = {
                 parties: [
                     {
-                        partyRoleType: 'ANNUITANT',
+                        partyRoleType: PartyRoles.ANNUITANT,
                         addresses: [mockAnnuitantAddress],
-                    },
+                    } as Party,
                 ],
             };
 
             const optionsWithParty = disbursementOptions(
-                formPartyWithAddress as any
+                formPartyWithAddress,
+                false,
+                [],
+                []
             );
             const checkOption = optionsWithParty.find(
                 (option) => option.value === PaymentMailType.Check
@@ -434,6 +477,168 @@ describe('Dlic withdrawal form config', () => {
             expect(addressField?.annuitantAddress).toEqual(
                 mockAnnuitantAddress
             );
+        });
+
+        describe('building annuitant address from parties when formParty has no address and not LC', () => {
+            it('should build annuitantAddress from parties and partyRoles and pass to Check option fields', () => {
+                const formPartyNoAddress: FormParty = { parties: [] };
+                const partyRoles = [
+                    { partyRole: 'ANNUITANT', partyId: 'annuitant-party-1' },
+                ];
+                const rawPreferredAddress = {
+                    preferredAddress: true,
+                    addressLine1: '456 Raw API St',
+                    addressLine2: 'Suite B',
+                    addressLine3: null,
+                    addressLine4: null,
+                    addressType: 'RESIDENCE',
+                    city: 'New York',
+                    state: 'NY',
+                    zipCode: '10001',
+                    zipCodeExtension: '1234',
+                    country: 'USA',
+                };
+                const parties = [
+                    {
+                        partyId: 'annuitant-party-1',
+                        addresses: [rawPreferredAddress],
+                    },
+                ];
+
+                const optionsWithParties = disbursementOptions(
+                    formPartyNoAddress,
+                    false,
+                    partiesArg(parties),
+                    partyRoles as PolicyPartyRoles[]
+                );
+                const checkOption = optionsWithParties.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                const fields = checkOption?.fields as FieldConfig[] | undefined;
+
+                const sendCheckSelectField = fields?.find(
+                    (field) => field.fieldName === 'SendCheckSelect'
+                );
+                const addressField = fields?.find(
+                    (field) => field.fieldName === 'address'
+                );
+
+                expect(sendCheckSelectField?.annuitantAddress).toBeDefined();
+                expect(sendCheckSelectField?.annuitantAddress).toMatchObject({
+                    addressLine1: '456 Raw API St',
+                    addressLine2: 'Suite B',
+                    city: 'New York',
+                    zip: '10001',
+                    zipPlusFour: '1234',
+                    country: 'USA',
+                });
+                expect(addressField?.annuitantAddress).toBeDefined();
+                expect(addressField?.annuitantAddress).toMatchObject({
+                    addressLine1: '456 Raw API St',
+                    addressLine2: 'Suite B',
+                    city: 'New York',
+                    zip: '10001',
+                    zipPlusFour: '1234',
+                    country: 'USA',
+                });
+            });
+
+            it('should not build address from parties when isLC is true', () => {
+                const formPartyNoAddress: FormParty = { parties: [] };
+                const partyRoles = [
+                    { partyRole: 'ANNUITANT', partyId: 'annuitant-party-1' },
+                ];
+                const parties = [
+                    {
+                        partyId: 'annuitant-party-1',
+                        addresses: [
+                            {
+                                preferredAddress: true,
+                                addressLine1: '456 St',
+                                zipCode: '10001',
+                                state: 'NY',
+                                city: 'New York',
+                                country: 'USA',
+                            },
+                        ],
+                    },
+                ];
+
+                const options = disbursementOptions(
+                    formPartyNoAddress,
+                    true,
+                    partiesArg(parties),
+                    partyRoles as PolicyPartyRoles[]
+                );
+                const checkOption = options.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                const addressField = (
+                    checkOption?.fields as FieldConfig[]
+                )?.find((field) => field.fieldName === 'address');
+
+                expect(addressField?.annuitantAddress).toBeUndefined();
+            });
+
+            it('should not build address when parties has no matching annuitant', () => {
+                const formPartyNoAddress: FormParty = { parties: [] };
+                const partyRoles = [
+                    { partyRole: 'ANNUITANT', partyId: 'annuitant-party-1' },
+                ];
+                const parties = [{ partyId: 'other-party', addresses: [] }];
+
+                const options = disbursementOptions(
+                    formPartyNoAddress,
+                    false,
+                    partiesArg(parties),
+                    partyRoles as PolicyPartyRoles[]
+                );
+                const checkOption = options.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                const addressField = (
+                    checkOption?.fields as FieldConfig[]
+                )?.find((field) => field.fieldName === 'address');
+
+                expect(addressField?.annuitantAddress).toBeUndefined();
+            });
+
+            it('should not build address when annuitant party has no preferred address', () => {
+                const formPartyNoAddress: FormParty = { parties: [] };
+                const partyRoles = [
+                    { partyRole: 'ANNUITANT', partyId: 'annuitant-party-1' },
+                ];
+                const parties = [
+                    {
+                        partyId: 'annuitant-party-1',
+                        addresses: [
+                            {
+                                preferredAddress: false,
+                                addressLine1: '456 St',
+                                zipCode: '10001',
+                                state: 'NY',
+                                city: 'New York',
+                                country: 'USA',
+                            },
+                        ],
+                    },
+                ];
+
+                const options = disbursementOptions(
+                    formPartyNoAddress,
+                    false,
+                    partiesArg(parties),
+                    partyRoles as PolicyPartyRoles[]
+                );
+                const checkOption = options.find(
+                    (option) => option.value === PaymentMailType.Check
+                );
+                const addressField = (
+                    checkOption?.fields as FieldConfig[]
+                )?.find((field) => field.fieldName === 'address');
+
+                expect(addressField?.annuitantAddress).toBeUndefined();
+            });
         });
 
         describe('payload generation', () => {

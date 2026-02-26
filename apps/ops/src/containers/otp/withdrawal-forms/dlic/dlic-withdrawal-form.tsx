@@ -148,14 +148,12 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
             ) : (
                 <FormDisbursement
                     isFormStateReadOnly={isFormStateReadOnly}
-                    options={
-                        disbursementOptions(
-                            formParty,
-                            isLC ?? false,
-                            parties ?? [],
-                            partyRoles ?? []
-                        ) as any
-                    }
+                    options={disbursementOptions(
+                        formParty,
+                        isLC ?? false,
+                        parties ?? [],
+                        partyRoles ?? []
+                    )}
                 />
             )}
 

@@ -21,33 +21,41 @@ import { getDefaultSSWFormProgramValues } from '@deps/components/otp-withdrawal-
 import { SSWProgramOptions } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-program';
 import { SSWProgram } from '@deps/components/otp-withdrawal-form/ssw-program/ssw-row';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { getStateCode } from '@deps/helpers/states.helpers';
 import { SswUpdateOption } from '@deps/models/case/enums';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
+    AccountType,
+    Address,
+    AddressTypes,
+    AmountType,
+    FormDisbursement,
     FormParts,
+    FormParty,
     FormValidationErrors,
+    Frequency,
     FundWithdrawnMethod,
     PartyRoles,
     PaymentMailType,
     PaymentMethod,
     PhoneTypes,
     SSWType,
-    Frequency,
-    AmountType,
-    AddressTypes,
     TaxWithholdingPlace,
-    FormDisbursement,
-    AccountType,
-    FormParty,
 } from '@deps/models/case/withdrawal/case';
 import {
-    DisbursementParts,
     DEFAULT_BANK_DETAILS,
-    FormDisbursementSelections,
     DEFAULT_DISBURSEMENT_UPDATE,
+    DisbursementParts,
+    FormDisbursementSelections,
     SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import {
+    Address as SorAddress,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../../withdrawal-forms/utils/form-validator.helpers';
@@ -465,10 +473,58 @@ export default function getDlicConfig(
         },
     ];
 
-    const disbursementOptions = (formParty: FormParty) => {
-        const annuitantAddress = formParty?.parties?.find(
+    const disbursementOptions = (
+        formParty: FormParty,
+        isLC: boolean,
+        parties: LifeCadParty[] | Party[],
+        partyRoles: PolicyPartyRoles[]
+    ) => {
+        let annuitantAddress = formParty?.parties?.find(
             (party) => party.partyRoleType === PartyRoles.ANNUITANT
         )?.addresses?.[0];
+
+        if (!annuitantAddress && !isLC) {
+            const annuitantPartyId = partyRoles.find(
+                (role) => String(role.partyRole) === PartyRoles.ANNUITANT
+            )?.partyId;
+            const annuitantParty = parties.find(
+                (party) => party.partyId === annuitantPartyId
+            ) as { addresses?: SorAddress[] } | undefined;
+            const preferredAddressFromParty: SorAddress | undefined =
+                annuitantParty?.addresses?.filter(
+                    (address: SorAddress) =>
+                        (address as SorAddress & { preferredAddress?: boolean })
+                            .preferredAddress
+                )[0];
+
+            if (preferredAddressFromParty) {
+                const addressWithLine4 =
+                    preferredAddressFromParty as SorAddress & {
+                        addressLine4?: string | null;
+                    };
+                annuitantAddress = {
+                    addressLine1: preferredAddressFromParty.addressLine1 ?? '',
+                    addressLine2:
+                        preferredAddressFromParty.addressLine2 ?? null,
+                    addressLine3:
+                        preferredAddressFromParty.addressLine3 ?? null,
+                    addressLine4: addressWithLine4.addressLine4 ?? null,
+                    addressType:
+                        (preferredAddressFromParty.addressType as
+                            | AddressTypes
+                            | undefined) ?? AddressTypes.DEFAULT,
+                    city: preferredAddressFromParty.city ?? null,
+                    country: preferredAddressFromParty.country ?? null,
+                    state: getStateCode(
+                        String(preferredAddressFromParty.state ?? '')
+                    ),
+                    zip: preferredAddressFromParty.zipCode ?? '',
+                    zipPlusFour:
+                        preferredAddressFromParty.zipCodeExtension ?? null,
+                } satisfies Address;
+            }
+        }
+
         return [
             {
                 label: t('distributionMethod.eft'),

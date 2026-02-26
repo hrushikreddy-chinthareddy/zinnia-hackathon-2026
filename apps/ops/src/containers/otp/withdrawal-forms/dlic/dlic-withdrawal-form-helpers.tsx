@@ -24,6 +24,7 @@ import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-for
 import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
 import { getStateCode } from '@deps/helpers/states.helpers';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     Address,
@@ -53,23 +54,14 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
     DisbursementToggleType,
+    PaymentMethodOption,
     SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
-
-// Type for raw API address data that uses different property names
-interface RawApiAddress {
-    addressLine1?: string;
-    addressLine2?: string | null;
-    addressLine3?: string | null;
-    addressLine4?: string | null;
-    addressType?: AddressTypes;
-    city?: string | null;
-    country?: string | null;
-    state?: string;
-    zipCode?: string;
-    zipCodeExtension?: string | null;
-    preferredAddress?: boolean;
-}
+import {
+    Address as SorAddress,
+    Party,
+    PolicyPartyRoles,
+} from '@zinnia/api-types/types/sor';
 
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../utils/form-validator.helpers';
@@ -605,40 +597,52 @@ export default function useDlicConfig(
     const disbursementOptions = (
         formParty: FormParty,
         isLC: boolean,
-        parties: any[],
-        partyRoles: any[]
-    ) => {
+        parties: LifeCadParty[] | Party[],
+        partyRoles: PolicyPartyRoles[]
+    ): PaymentMethodOption[] => {
         let annuitantAddress = formParty?.parties?.find(
             (party) => party.partyRoleType === PartyRoles.ANNUITANT
         )?.addresses?.[0];
 
         if (!annuitantAddress && !isLC) {
-            const annuitant = parties.filter((party) => {
-                const partyId = partyRoles.find(
-                    (role) => role.partyRole === PartyRoles.ANNUITANT
-                )?.partyId;
-
-                return party.partyId === partyId;
-            });
-
-            const rawAddress: RawApiAddress | undefined =
-                annuitant[0]?.addresses?.filter(
-                    (address: RawApiAddress) => address.preferredAddress
+            const annuitantPartyId = partyRoles.find(
+                (role) => String(role.partyRole) === PartyRoles.ANNUITANT
+            )?.partyId;
+            const annuitantParty = parties.find(
+                (party) => party.partyId === annuitantPartyId
+            ) as { addresses?: SorAddress[] } | undefined;
+            const preferredAddressFromParty: SorAddress | undefined =
+                annuitantParty?.addresses?.filter(
+                    (address: SorAddress) =>
+                        (address as SorAddress & { preferredAddress?: boolean })
+                            .preferredAddress
                 )[0];
 
-            if (rawAddress) {
+            if (preferredAddressFromParty) {
+                const addressWithLine4 =
+                    preferredAddressFromParty as SorAddress & {
+                        addressLine4?: string | null;
+                    };
                 annuitantAddress = {
-                    addressLine1: rawAddress.addressLine1 ?? '',
-                    addressLine2: rawAddress.addressLine2 ?? null,
-                    addressLine3: rawAddress.addressLine3 ?? null,
-                    addressLine4: rawAddress.addressLine4 ?? null,
-                    addressType: rawAddress.addressType ?? AddressTypes.DEFAULT,
-                    city: rawAddress.city ?? null,
-                    country: rawAddress.country ?? null,
-                    state: getStateCode(rawAddress.state ?? ''),
-                    zip: rawAddress.zipCode ?? '',
-                    zipPlusFour: rawAddress.zipCodeExtension ?? null,
-                } as Address;
+                    addressLine1: preferredAddressFromParty.addressLine1 ?? '',
+                    addressLine2:
+                        preferredAddressFromParty.addressLine2 ?? null,
+                    addressLine3:
+                        preferredAddressFromParty.addressLine3 ?? null,
+                    addressLine4: addressWithLine4.addressLine4 ?? null,
+                    addressType:
+                        (preferredAddressFromParty.addressType as
+                            | AddressTypes
+                            | undefined) ?? AddressTypes.DEFAULT,
+                    city: preferredAddressFromParty.city ?? null,
+                    country: preferredAddressFromParty.country ?? null,
+                    state: getStateCode(
+                        String(preferredAddressFromParty.state ?? '')
+                    ),
+                    zip: preferredAddressFromParty.zipCode ?? '',
+                    zipPlusFour:
+                        preferredAddressFromParty.zipCodeExtension ?? null,
+                } satisfies Address;
             }
         }
 
@@ -1171,7 +1175,7 @@ export default function useDlicConfig(
                     };
                 },
             },
-        ];
+        ] as PaymentMethodOption[];
     };
 
     const formPartyConfigs: PartyConfig[] = [

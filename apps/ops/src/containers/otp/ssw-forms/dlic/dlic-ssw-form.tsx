@@ -44,7 +44,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
 
     const isDelawareBankSecFeatsEnabled =
         featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
-    const isDlic3pDisbursementChangesEnabled = true;
+    const isDlic3pDisbursementChangesEnabled =
+        featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES];
     const [_, setSswProgramFrequency] = useState('' as Frequency);
 
     const {
@@ -62,6 +63,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         setFormESignatureData,
         formErrors,
         isLC,
+        parties,
+        partyRoles,
     } = useContext(FormDataContext);
 
     const {
@@ -184,7 +187,12 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 <FormDisbursement
                     isFormStateReadOnly={isFormStateReadOnly}
                     options={
-                        disbursementOptions(formParty) as PaymentMethodOption[]
+                        disbursementOptions(
+                            formParty,
+                            isLC ?? false,
+                            parties ?? [],
+                            partyRoles ?? []
+                        ) as PaymentMethodOption[]
                     }
                 />
             )}

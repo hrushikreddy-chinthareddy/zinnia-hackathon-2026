@@ -35,7 +35,8 @@ const DlicRmdWithdrawalForm = () => {
     const isDelawareBankSecFeatsEnabled =
         featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
 
-    const isDlic3pDisbursementChangesEnabled = true;
+    const isDlic3pDisbursementChangesEnabled =
+        featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES];
 
     const {
         formValidation,
