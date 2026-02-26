@@ -46,6 +46,19 @@ export const documentsHandlers = [
     ),
 ];
 
+export const activityTransactionsHandler = http.get(
+    '*/api/policy/v1/policies/:planCode/:policyId/transactions',
+    () => HttpResponse.json({ data: [] })
+);
+
+// GET transactions (HistoryEventFeed in legacy ActivitySubPage when REVISED_HISTORY_TABLE flag is off)
+export const activityHandlers = [
+    http.get(
+        '*/api/policy/v1/policies/:planCode/:policyId/transactions',
+        () => HttpResponse.json({ data: [] })
+    ),
+];
+
 export const formMetadataHandler = http.get(
     '*/api/case/v1/form/metadata',
     () => {

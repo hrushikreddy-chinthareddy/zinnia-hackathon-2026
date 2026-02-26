@@ -25,7 +25,7 @@ export enum OptimizelyVariableKey {
     Clients = 'clients',
 }
 
-const OptimizelyDataContext = createContext<OptimizelyData>({
+export const OptimizelyDataContext = createContext<OptimizelyData>({
     featureFlags: {},
     featureFlagVariables: {},
     areFlagsLoading: true,

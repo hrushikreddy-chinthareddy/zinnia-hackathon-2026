@@ -1,6 +1,9 @@
-import { ReactNode, createContext, useContext } from 'react';
+import { ReactNode } from 'react';
 
-import { OptimizelyData } from '@deps/contexts/OptimizelyContext';
+import {
+    OptimizelyData,
+    OptimizelyDataContext,
+} from '@deps/contexts/OptimizelyContext';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 interface MockOptimizelyProviderProps {
@@ -9,16 +12,6 @@ interface MockOptimizelyProviderProps {
     featureFlagVariables?: OptimizelyData['featureFlagVariables'];
     areFlagsLoading?: boolean;
 }
-
-const MockOptimizelyDataContext = createContext<OptimizelyData>({
-    featureFlags: {},
-    featureFlagVariables: {},
-    areFlagsLoading: false,
-});
-
-export const useMockOptimizely = () => {
-    return useContext(MockOptimizelyDataContext);
-};
 
 /**
  * Mock provider for testing components that use OptimizelyContext.
@@ -47,7 +40,7 @@ export const MockOptimizelyProvider = ({
     areFlagsLoading = false,
 }: MockOptimizelyProviderProps) => {
     return (
-        <MockOptimizelyDataContext.Provider
+        <OptimizelyDataContext.Provider
             value={{
                 featureFlags: featureFlags as Record<FEATURE_FLAGS, boolean>,
                 featureFlagVariables,
@@ -55,7 +48,7 @@ export const MockOptimizelyProvider = ({
             }}
         >
             {children}
-        </MockOptimizelyDataContext.Provider>
+        </OptimizelyDataContext.Provider>
     );
 };
 

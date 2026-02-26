@@ -11,7 +11,7 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { MockOptimizelyProvider } from './mock-optimizely-provider';
 
-interface CreateTestWrapperOptions {
+export interface CreateTestWrapperOptions {
     featureFlags?: Partial<Record<FEATURE_FLAGS, boolean>>;
     queryClientOptions?: ConstructorParameters<typeof QueryClient>[0];
 }

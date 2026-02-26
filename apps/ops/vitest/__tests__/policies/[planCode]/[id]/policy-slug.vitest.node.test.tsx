@@ -3,11 +3,16 @@ import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import PolicySlug from '@deps/containers/policy-slug/policy-slug';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { server } from '@vitest/mocks/node';
 import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
-import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
+import {
+    createTestWrapper,
+    CreateTestWrapperOptions,
+} from '@vitest/utils/create-test-wrapper';
 
 import {
+    activityTransactionsHandler,
     documentsHandlers,
     formMetadataHandler,
     fundsEligibilityHandlers,
@@ -34,14 +39,19 @@ vi.mock('next/router', () => ({
 
 const defaultProps = createMockPolicyPageProps();
 
-// Factory function to render with optional runtime handlers
-const renderPolicyPage = (...runtimeHandlers: any[]) => {
-    if (runtimeHandlers.length > 0) {
-        server.use(...runtimeHandlers);
+type FeatureFlagOverrides = CreateTestWrapperOptions['featureFlags'];
+
+// Factory function to render with optional MSW handlers and optional feature flag overrides
+const renderPolicyPage = (
+    handlers: Parameters<typeof server.use> = [],
+    featureFlags: FeatureFlagOverrides = {}
+) => {
+    if (handlers.length > 0) {
+        server.use(...handlers);
     }
 
     return render(<PolicySlug {...defaultProps} />, {
-        wrapper: createTestWrapper(),
+        wrapper: createTestWrapper({ featureFlags }),
     });
 };
 
@@ -141,9 +151,7 @@ describe('Policy Slug Page', () => {
                 slug: ['people', '0a2b5d2279f34fc49b6de65739f14985'],
             });
 
-            renderPolicyPage(...personEligibilityHandlers);
-
-            // PersonSubPage should render with the person's name
+            renderPolicyPage(personEligibilityHandlers);
             const personHeading = await screen.findByRole('heading', {
                 name: 'Sam Mathew',
             });
@@ -156,6 +164,7 @@ describe('Policy Slug Page', () => {
             expect(identificationHeading).toBeInTheDocument();
         });
         test('renders nothing when second slug is assigneechange IF transactionData is null', async () => {
+            //Mocking this because I'm not sure of another way to get transactionData to be null since as of now it's automocked otherwise
             vi.doMock(
                 '@deps/containers/self-serve-transaction/self-serve-transaction.helpers',
                 () => ({
@@ -174,7 +183,7 @@ describe('Policy Slug Page', () => {
             // Wait for policy layout to load
             await screen.findByTestId('quick-links');
 
-            // Not how to test this, but it seems no sub-page content should render while transactionData is null
+            // Not sure how to test this, but it seems no sub-page content should render while transactionData is null
             expect(
                 screen.queryByText('Identification')
             ).not.toBeInTheDocument();
@@ -183,6 +192,7 @@ describe('Policy Slug Page', () => {
             ).not.toBeInTheDocument();
         });
         test('renders nothing for benechange when second slug is benechange IF transactionData is null', async () => {
+            //Mocking this because I'm not sure of another way to get transactionData to be null since as of now it's automocked otherwise
             vi.doMock(
                 '@deps/containers/self-serve-transaction/self-serve-transaction.helpers',
                 () => ({
@@ -201,7 +211,7 @@ describe('Policy Slug Page', () => {
             // Wait for policy layout to load
             await screen.findByTestId('quick-links');
 
-            // Not how to test this, but it seems no sub-page content should render while transactionData is null
+            // Not sure how to test this, but it seems no sub-page content should render while transactionData is null
             expect(
                 screen.queryByText('Identification')
             ).not.toBeInTheDocument();
@@ -215,7 +225,10 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'assigneechange'],
             });
 
-            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
+            renderPolicyPage([
+                formMetadataHandler,
+                ...personEligibilityHandlers,
+            ]);
 
             // Verify Beneficiary Details card renders (shows for transaction page)
             const beneficiaryDetailsHeading = await screen.findByRole(
@@ -233,7 +246,10 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'benechange'],
             });
 
-            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
+            renderPolicyPage([
+                formMetadataHandler,
+                ...personEligibilityHandlers,
+            ]);
 
             // Verify Beneficiary Details card renders (shows for transaction page)
             const beneficiaryDetailsHeading = await screen.findByRole(
@@ -251,7 +267,10 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'c8a283b5d8d540a29fe71aad239c0352'],
             });
 
-            renderPolicyPage(formMetadataHandler, ...personEligibilityHandlers);
+            renderPolicyPage([
+                formMetadataHandler,
+                ...personEligibilityHandlers,
+            ]);
 
             // Wait for PersonSubPage to load by checking for Identification card
             await screen.findByText('Identification');
@@ -274,7 +293,6 @@ describe('Policy Slug Page', () => {
         // Routes that don't require additional MSW handlers
         test.each([
             { slug: ['policy', 'coverage'], heading: 'Base Coverage' },
-            { slug: ['transactions', 'coverage'], heading: 'Base Coverage' },
             { slug: ['policy', 'policy-details'], heading: 'Policy Details' },
             {
                 slug: ['policy', 'riders-and-features'],
@@ -287,7 +305,30 @@ describe('Policy Slug Page', () => {
             { slug: ['policy', 'premiums'], heading: 'Premiums' },
             { slug: ['policy', 'withdrawals'], heading: 'Withdrawals' },
             { slug: ['policy', 'loans'], heading: 'Loans' },
-            { slug: ['activity'], heading: 'Activity' },
+            {
+                slug: ['policy', 'annuitization'],
+                heading: 'Annuitization and Payout',
+            },
+            { slug: ['transactions', 'coverage'], heading: 'Base Coverage' },
+            {
+                slug: ['transactions', 'policy-details'],
+                heading: 'Policy Details',
+            },
+            {
+                slug: ['transactions', 'riders-and-features'],
+                heading: 'Riders and Features',
+            },
+            {
+                slug: ['transactions', 'policy-extras'],
+                heading: 'Riders and Features',
+            },
+            { slug: ['transactions', 'premiums'], heading: 'Premiums' },
+            { slug: ['transactions', 'withdrawals'], heading: 'Withdrawals' },
+            { slug: ['transactions', 'loans'], heading: 'Loans' },
+            {
+                slug: ['transactions', 'annuitization'],
+                heading: 'Annuitization and Payout',
+            },
         ])(
             'renders correct sub-page for $slug',
             async ({ slug, heading: expectedHeading }) => {
@@ -304,7 +345,17 @@ describe('Policy Slug Page', () => {
         // Requires fund transfer/allocation eligibility and fund data handlers
         test('renders FundsSubPage for policy/funds', async () => {
             mockRouter = createMockRouter({ slug: ['policy', 'funds'] });
-            renderPolicyPage(...fundsEligibilityHandlers);
+            renderPolicyPage(fundsEligibilityHandlers);
+
+            const heading = await screen.findByRole('heading', {
+                name: 'Funds and Accounts',
+            });
+            expect(heading).toBeInTheDocument();
+        });
+
+        test('renders FundsSubPage for transactions/funds', async () => {
+            mockRouter = createMockRouter({ slug: ['transactions', 'funds'] });
+            renderPolicyPage(fundsEligibilityHandlers);
 
             const heading = await screen.findByRole('heading', {
                 name: 'Funds and Accounts',
@@ -315,7 +366,7 @@ describe('Policy Slug Page', () => {
         // Requires document search API handler
         test('renders DocumentsSubPage for documents', async () => {
             mockRouter = createMockRouter({ slug: ['documents'] });
-            renderPolicyPage(...documentsHandlers);
+            renderPolicyPage(documentsHandlers);
 
             const heading = await screen.findByRole('heading', {
                 name: 'Documents',
@@ -331,6 +382,44 @@ describe('Policy Slug Page', () => {
             renderPolicyPage();
 
             const heading = await screen.findByText('Annuitization and Payout');
+            expect(heading).toBeInTheDocument();
+        });
+    });
+
+    describe('activity route', () => {
+        test('renders ActivitySubPage when REVISED_HISTORY_TABLE flag is off', async () => {
+            mockRouter = createMockRouter({
+                slug: ['activity', 'transactions'],
+            });
+            renderPolicyPage([activityTransactionsHandler]);
+
+            const heading = await screen.findByRole('heading', {
+                name: 'Activity',
+            });
+            expect(heading).toBeInTheDocument();
+        });
+
+        test('renders FilterTransactions for activity/transactions when REVISED_HISTORY_TABLE flag is on', async () => {
+            mockRouter = createMockRouter({
+                slug: ['activity', 'transactions'],
+            });
+            renderPolicyPage([activityTransactionsHandler], {
+                [FEATURE_FLAGS.REVISED_HISTORY_TABLE]: true,
+            });
+            const heading = await screen.findByRole('heading', {
+                name: 'Transactions',
+            });
+            expect(heading).toBeInTheDocument();
+        });
+
+        test('renders CallLogs for activity/call-logs when REVISED_HISTORY_TABLE flag is on', async () => {
+            mockRouter = createMockRouter({ slug: ['activity', 'call-logs'] });
+            renderPolicyPage([], {
+                [FEATURE_FLAGS.REVISED_HISTORY_TABLE]: true,
+            });
+            const heading = await screen.findByRole('heading', {
+                name: 'Call logs',
+            });
             expect(heading).toBeInTheDocument();
         });
     });
