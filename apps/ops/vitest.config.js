@@ -71,5 +71,6 @@ export default defineConfig({
                 },
             },
         ],
+        silent: 'passed-only', // https://vitest.dev/config/#silent
     },
 });

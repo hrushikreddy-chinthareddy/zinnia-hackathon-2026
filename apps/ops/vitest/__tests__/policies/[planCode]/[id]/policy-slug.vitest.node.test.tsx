@@ -69,7 +69,9 @@ describe('Policy Slug Page', () => {
 
             renderPolicyPage();
 
-            expect(await screen.findByText('Page Not Found')).toBeInTheDocument();
+            expect(
+                await screen.findByText('Page Not Found')
+            ).toBeInTheDocument();
         });
 
         test('renders Custom404Page when the policy API returns no data', async () => {
@@ -81,14 +83,16 @@ describe('Policy Slug Page', () => {
 
             renderPolicyPage();
 
-            expect(await screen.findByText('Page Not Found')).toBeInTheDocument();
+            expect(
+                await screen.findByText('Page Not Found')
+            ).toBeInTheDocument();
         });
 
         test.each([
             { slug: ['policy', 'coverage'] },
             { slug: ['policy', 'loans'] },
         ])(
-            'renders Custom404Page when an annuity policy accesses the $slug[1] route',
+            'renders Custom404Page when an annuity policy accesses the $slug.0/$slug.1 route',
             async ({ slug }) => {
                 server.use(
                     http.get(
@@ -115,7 +119,9 @@ describe('Policy Slug Page', () => {
 
                 renderPolicyPage();
 
-                expect(await screen.findByText('Page Not Found')).toBeInTheDocument();
+                expect(
+                    await screen.findByText('Page Not Found')
+                ).toBeInTheDocument();
             }
         );
     });
@@ -330,7 +336,7 @@ describe('Policy Slug Page', () => {
                 heading: 'Annuitization and Payout',
             },
         ])(
-            'renders correct sub-page for $slug',
+            'renders correct sub-page for $slug.0/$slug.1',
             async ({ slug, heading: expectedHeading }) => {
                 mockRouter = createMockRouter({ slug });
                 renderPolicyPage();
