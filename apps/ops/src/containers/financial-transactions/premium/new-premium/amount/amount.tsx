@@ -30,7 +30,11 @@ import {
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
-import { FeatureType, Policy, Transaction } from '@zinnia/api-types/types/sor';
+import {
+    FeatureType,
+    Policy,
+    TransactionTypeEnum,
+} from '@zinnia/api-types/types/sor';
 
 import {
     isDateAllowed,
@@ -245,8 +249,7 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
                     policyNumber={policyNumber}
                     parentPage={ParentPage.Premiums}
                     trackEventProps={{
-                        type: Transaction.transactionType
-                            .PAYMENT_ONE_TIME_PREMIUM,
+                        type: TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
                         step: TransactionStep.Amount,
                     }}
                 />

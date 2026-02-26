@@ -16,6 +16,7 @@ import {
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DistributionType,
+    FeatureSubTypeEnum,
     FeatureType,
     Policy,
     PolicyFeature,
@@ -258,8 +259,7 @@ export const getApplicationDetailsData = (
     const customFeatures = policy.getFeaturesByType(FeatureType.CUSTOMFEATURE);
     const multiplePolicyDiscountFeature = customFeatures.filter(
         (feature) =>
-            feature.featureSubType ===
-            PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT
+            feature.featureSubType === FeatureSubTypeEnum.MULTIPLEPOLICYDISCOUNT
     );
 
     const multiplePolicyDiscountIndicator =
@@ -267,7 +267,7 @@ export const getApplicationDetailsData = (
             (acc: Pick<PolicyFeature, 'featureIndicator'>, curr) => {
                 if (
                     curr.featureSubType ===
-                    PolicyFeature.featureSubType.MULTIPLEPOLICYDISCOUNT
+                    FeatureSubTypeEnum.MULTIPLEPOLICYDISCOUNT
                 ) {
                     const { endDate, featureIndicator } = curr;
 

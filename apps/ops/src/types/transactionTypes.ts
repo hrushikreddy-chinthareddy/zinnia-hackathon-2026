@@ -1,4 +1,4 @@
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 const TRANSACTION_TYPES_NOT_IN_SPEC = {
     ADDITIONAL_BENEFIT_END: 'AdditionalBenefitEnd',
@@ -73,7 +73,7 @@ const TRANSACTION_TYPES_NOT_IN_SPEC = {
 };
 
 const combinedTransactionTypes = {
-    ...Transaction.transactionType,
+    ...TransactionTypeEnum,
     ...TRANSACTION_TYPES_NOT_IN_SPEC,
 };
 

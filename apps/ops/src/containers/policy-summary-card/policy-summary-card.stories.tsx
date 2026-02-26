@@ -12,11 +12,12 @@ import {
     Frequency,
     HoldingForm,
     IssueType,
+    LineOfBusiness,
     PaymentForm,
     Policy,
     PolicyStatus,
-    Product,
     ProductType,
+    QualificationTypeEnum,
     Reason,
     State,
     Status,
@@ -31,7 +32,7 @@ export default {
 
 const mockPendingLapsePolicy: Policy = {
     product: {
-        lineOfBusiness: Product.lineOfBusiness.LIFE,
+        lineOfBusiness: LineOfBusiness.LIFE,
         planName: 'SB UL Premium Match',
         productType: ProductType.UNIVERSALLIFE,
         marketingName: 'Everly Life',
@@ -41,7 +42,7 @@ const mockPendingLapsePolicy: Policy = {
         generalLedgerPlanCode: 'V2201',
         holdingForm: HoldingForm.INDIVIDUAL,
     },
-    qualificationType: Policy.qualificationType.QUALIFIED,
+    qualificationType: QualificationTypeEnum.QUALIFIED,
     policyYear: 1,
     monthOfYear: 1,
     policyNumber: 'AU29035902',

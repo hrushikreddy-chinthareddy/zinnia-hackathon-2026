@@ -6545,7 +6545,7 @@
           }
         }
       },
-      "PartyTaxWithholding": {
+      "TaxWithholding": {
         "type": "object",
         "properties": {
           "appliesToPartyId": {
@@ -7354,7 +7354,7 @@
           "taxWithholdings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PartyTaxWithholding"
+              "$ref": "#/components/schemas/TaxWithholding"
             }
           },
           "partyStatus": {
@@ -9241,7 +9241,7 @@
           "taxWithholdings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PartyTaxWithholding"
+              "$ref": "#/components/schemas/TaxWithholding"
             }
           },
           "partyStatus": {
@@ -9754,7 +9754,7 @@
           "taxWithholdings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PartyTaxWithholding"
+              "$ref": "#/components/schemas/TaxWithholding"
             }
           },
           "partyStatus": {
@@ -13884,7 +13884,7 @@
           "taxWithholdings": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/PartyTaxWithholding"
+              "$ref": "#/components/schemas/TaxWithholding"
             }
           },
           "partyStatus": {

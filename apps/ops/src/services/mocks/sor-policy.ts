@@ -1,7 +1,6 @@
 import { PolicySearchResult } from '@deps/types/search';
 import {
     AccountStatus,
-    AccountValues,
     AccountType,
     AddressType,
     AllocationOption,
@@ -29,11 +28,8 @@ import {
     PhoneType,
     FeatureType,
     Policy,
-    PolicyCoverage,
-    PolicyPartyRoles,
     PolicyStatus,
     PreferredCommunicationType,
-    Product,
     ProductType,
     Reason,
     RiskClass,
@@ -43,8 +39,13 @@ import {
     TaxRateToUse,
     TaxWithholdingType,
     RiderType,
-    Identification,
-    SystematicProgramParties,
+    CoverageBandEnum,
+    IdentificationTypeEnum,
+    LineOfBusiness,
+    Outcome,
+    PartyRoleEnum,
+    QualificationTypeEnum,
+    RelationshipToInsuredEnum,
 } from '@zinnia/api-types/types/sor';
 
 // FIXME: Mock data structure may not fully match Policy type after API regeneration
@@ -57,7 +58,7 @@ export const mockPolicy: Policy = {
         minimumCoverageAmount: 10000,
         maximumCoverageAmount: 10000000,
         coverageChangeEffectiveDate: '2023-07-11',
-        coverageBand: PolicyCoverage.coverageBand.BAND3,
+        coverageBand: CoverageBandEnum.BAND3,
         maximumAnnualCoverageChangeAllowedPerPolicy: 1,
         minimumCoverageDecreaseAmount: 10000,
         maximumCoverageDecreaseAmount: 490000,
@@ -143,16 +144,16 @@ export const mockPolicy: Policy = {
             // },
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '***-**-****',
                     // issueState: null,
                     // issueCountry: null,
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: '*******',
-                    issueState: Identification.issueState.CA,
+                    issueState: State.CA,
                     // issueCountry: null,
                 },
             ],
@@ -563,7 +564,7 @@ export const mockPolicy: Policy = {
             amount: 80,
             parties: [
                 {
-                    partyRole: SystematicProgramParties.partyRole.PAYOR,
+                    partyRole: PartyRoleEnum.PAYOR,
                     partyId: 'Party_PI_1',
                     percentage: 100,
                     bankId: 'Bank_1',
@@ -688,7 +689,7 @@ export const mockPolicy: Policy = {
     policyReferenceId: '922e84fa774f40c291d6d0fcb9445e3b',
     thirdPartyAdministratorId: 'tpa-12345',
     product: {
-        lineOfBusiness: Product.lineOfBusiness.LIFE,
+        lineOfBusiness: LineOfBusiness.LIFE,
         planName: 'SB UL Premium Match',
         productType: ProductType.UNIVERSALLIFE,
         marketingName: 'Everly Life',
@@ -699,7 +700,7 @@ export const mockPolicy: Policy = {
         holdingForm: HoldingForm.INDIVIDUAL,
         // renewable: null,
     },
-    qualificationType: Policy.qualificationType.NONQUALIFIED,
+    qualificationType: QualificationTypeEnum.NONQUALIFIED,
     policyTerm: 20,
     policyYear: 2,
     monthOfYear: 8,
@@ -748,8 +749,7 @@ export const mockPolicy: Policy = {
         initialPaymentAmountReceivedDate: '2022-07-11',
         cumulativePremiumSinceIssue: 1600,
         totalYearToDatePremiumAmount: 640,
-        modifiedEndowmentContractAuthorization:
-            AccountValues.modifiedEndowmentContractAuthorization.FALSE,
+        modifiedEndowmentContractAuthorization: Outcome.FALSE,
         // projectedLapseIndicator: null,
         policyGainAmount: 0,
         uncollectedCharges: 0,
@@ -852,8 +852,7 @@ export const mockPolicy: Policy = {
             partyRoleId: '34', // FIXME: API spec is wrong
             partyRole: PartyRole.PRIMARYBENEFICIARY,
             partyId: 'Party_PB_Primary_Bene_1',
-            relationshipToInsured:
-                PolicyPartyRoles.relationshipToInsured.STEPMOTHER,
+            relationshipToInsured: RelationshipToInsuredEnum.STEPMOTHER,
             startDate: '2022-07-11',
             // endDate: null,
         },
@@ -861,8 +860,7 @@ export const mockPolicy: Policy = {
             partyRoleId: '35', // FIXME: API spec is wrong
             partyRole: PartyRole.PRIMARYBENEFICIARY,
             partyId: 'Party_PB_Primary_Bene_2',
-            relationshipToInsured:
-                PolicyPartyRoles.relationshipToInsured.BROTHER,
+            relationshipToInsured: RelationshipToInsuredEnum.BROTHER,
             startDate: '2022-07-11',
             // endDate: null,
         },

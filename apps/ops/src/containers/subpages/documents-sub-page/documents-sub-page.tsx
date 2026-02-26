@@ -28,6 +28,8 @@ import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQu
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
+    DocumentClassificationEnum,
+    OrderByDirectionEnum,
     SearchRequest,
     TaxformResponse,
 } from '@zinnia/api-types/types/documents-v3';
@@ -102,8 +104,8 @@ const NormalDocs = ({
 
         const documentClassification =
             documentType === DocumentTypeView.Policy
-                ? SearchRequest.documentClassification.INBOUND
-                : SearchRequest.documentClassification.OUTBOUND;
+                ? DocumentClassificationEnum.INBOUND
+                : DocumentClassificationEnum.OUTBOUND;
 
         const params: SearchRequest = {
             ...optionalParams,
@@ -112,14 +114,13 @@ const NormalDocs = ({
             planCode: policy?.product?.planCode,
             parentCarrierCode: policy?.carrierId,
             orderBy: 'documentDate',
-            orderByDirection: SearchRequest.orderByDirection.DESC,
+            orderByDirection: OrderByDirectionEnum.DESC,
             // @ts-expect-error: excludeDocumentTypes is missing from our types but most recent spec has other breaking changes
             excludeDocumentTypes,
         };
 
         if (
-            documentClassification ===
-                SearchRequest.documentClassification.INBOUND &&
+            documentClassification === DocumentClassificationEnum.INBOUND &&
             includeDocumentTypeForInboundSearch(policy?.carrierId) &&
             !isZinniaInternalProcessor // IMH-85894
         ) {

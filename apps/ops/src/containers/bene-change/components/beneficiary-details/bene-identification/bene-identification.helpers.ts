@@ -1,7 +1,7 @@
 import { TFunction } from 'next-i18next';
 
 import { NewTrustType, PolicyRole } from '@deps/constants/policy';
-import { Gender, Parties, PartyType } from '@zinnia/api-types/types/sor';
+import { Gender, PartyType, SuffixEnum } from '@zinnia/api-types/types/sor';
 export interface Errors {
     firstName?: string;
     lastName?: string;
@@ -87,23 +87,23 @@ export const trustOption = (t: TFunction) => [
 export const suffixOptions = (t: TFunction) => [
     {
         label: t('suffixOptions.jr'),
-        value: Parties.suffix.JR,
+        value: SuffixEnum.JR,
     },
     {
         label: t('suffixOptions.sn'),
-        value: Parties.suffix.SN,
+        value: SuffixEnum.SN,
     },
     {
         label: t('suffixOptions.i'),
-        value: Parties.suffix.I,
+        value: SuffixEnum.I,
     },
     {
         label: t('suffixOptions.ii'),
-        value: Parties.suffix.II,
+        value: SuffixEnum.II,
     },
     {
         label: t('suffixOptions.iii'),
-        value: Parties.suffix.III,
+        value: SuffixEnum.III,
     },
 ];
 
