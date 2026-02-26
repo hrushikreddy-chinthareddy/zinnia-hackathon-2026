@@ -23,13 +23,14 @@ import {
     CaseSearchResponse,
     PolicyReferenceSearchResponse,
 } from '@deps/types/search';
-import { POM_Producer_Models_SearchProducersResult } from '@zinnia/api-types/types/pom';
+import { PomProducerModelsSearchProducersResult } from '@zinnia/api-types/types/pom';
 import {
     Address,
     BankAccount,
     Email,
     Identification,
-    PartyTaxWithholding,
+    IdentificationTypeEnum,
+    TaxWithholding,
     Phone,
     Policy,
     PolicyCoverage,
@@ -110,10 +111,7 @@ export const sanitizeIdentifications = (
     identifications: Identification[] | undefined
 ): Identification[] | undefined => {
     return identifications?.map((identification) => {
-        if (
-            identification.identificationType ===
-            Identification.identificationType.SSN
-        ) {
+        if (identification.identificationType === IdentificationTypeEnum.SSN) {
             return {
                 ...identification,
                 identificationValue: formatSSN(
@@ -321,10 +319,7 @@ const fullyMaskIdentifications = (
     identifications: Identification[] | undefined
 ): Identification[] | undefined => {
     return identifications?.map((identification) => {
-        if (
-            identification.identificationType ===
-            Identification.identificationType.SSN
-        ) {
+        if (identification.identificationType === IdentificationTypeEnum.SSN) {
             return {
                 ...identification,
                 identificationValue: formatSSN(
@@ -380,8 +375,8 @@ const fullyMaskPhones = (phones: Phone[] | undefined): Phone[] | undefined => {
 };
 
 const fullyMaskTaxWithholdings = (
-    taxWithholdings: PartyTaxWithholding[] | undefined
-): PartyTaxWithholding[] | undefined => {
+    taxWithholdings: TaxWithholding[] | undefined
+): TaxWithholding[] | undefined => {
     return taxWithholdings;
 };
 
@@ -595,7 +590,7 @@ export const mcsResponseSanitizer = (
 };
 
 export const agentPartySanitizer = (
-    agent: POM_Producer_Models_SearchProducersResult
+    agent: PomProducerModelsSearchProducersResult
 ) => {
     try {
         const { socialSecurityNumber } = agent;

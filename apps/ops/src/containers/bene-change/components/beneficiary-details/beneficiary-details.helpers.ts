@@ -1,6 +1,6 @@
 import {
     Email,
-    Identification,
+    IdentificationTypeEnum,
     PartyRole,
     PartyType,
 } from '@zinnia/api-types/types/sor';
@@ -58,8 +58,7 @@ export const getInitialBene = (
         suffix: selectedParty?.suffix,
         gender: selectedParty?.gender,
         ssn: selectedParty?.identifications?.find(
-            (ids: any) =>
-                ids.identificationType === Identification.identificationType.SSN
+            (ids: any) => ids.identificationType === IdentificationTypeEnum.SSN
         )?.identificationValue,
         trustName: selectedParty?.lastName,
         companyName: selectedParty?.lastName,

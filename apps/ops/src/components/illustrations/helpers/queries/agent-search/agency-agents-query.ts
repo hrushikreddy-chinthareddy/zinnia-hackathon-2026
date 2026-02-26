@@ -6,6 +6,9 @@ import { fetchAgentsForNearestRoleDownline } from './agents-for-nearest-role-dow
 import { AGENT_SEARCH_QUERY_PREFIXES } from './constants';
 import { fetchSelfAgentForNearestRole } from './self-agent-for-nearest-role-query';
 
+/**
+ * Returns the agents from the selling code agency owner downline
+ */
 export const buildAgencyAgentsQuery = ({
     sellingCode,
     carrierShortName,
@@ -52,7 +55,9 @@ export const buildAgencyAgentsQuery = ({
                   return [agencyOwnerAgent, ...agencyAgents];
               },
     });
-
+/**
+ * Returns the agents that belong to the agency of the provided selling code
+ */
 export const fetchAgencyAgents = (
     client: QueryClient,
     {

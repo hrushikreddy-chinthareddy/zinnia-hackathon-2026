@@ -106,7 +106,8 @@ export const userRolesMap = (tuples: ReadTuplesResponse['tuples']) => {
             if (
                 !relationalData ||
                 typeof relationalData !== 'object' ||
-                !('object' in relationalData)
+                !('object' in relationalData) ||
+                typeof relationalData.object !== 'string' // not defined in spec
             ) {
                 return acc;
             }

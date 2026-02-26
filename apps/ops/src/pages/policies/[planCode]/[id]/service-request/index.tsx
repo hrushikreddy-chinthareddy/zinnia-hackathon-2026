@@ -155,15 +155,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     taskMetadata?.schemaContent?.tabSchemas ||
                     ([] as FormMetadata[]);
 
-                if (!currentTaskMetadata.length) {
-                    const fallbackMetadata: FormMetadata = {
-                        title: '',
-                        formSchema: taskMetadata?.formSchema ?? {},
-                        uiSchema: taskMetadata?.uiSchema ?? {},
-                    };
-                    currentTaskMetadata.push(fallbackMetadata ?? {});
-                }
-
                 const defaultTask = {
                     taskType: TaskType.Default_Case_DataEntry,
                     carrier: policy.carrierId,

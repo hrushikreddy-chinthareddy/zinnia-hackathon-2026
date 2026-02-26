@@ -2,7 +2,7 @@ import { Meta } from '@storybook/react';
 import { useTranslation } from 'next-i18next';
 
 import { getRelationshipToInsured } from '@deps/helpers/party-info-helpers';
-import { PolicyPartyRoles } from '@zinnia/api-types/types/sor';
+import { RelationshipToInsuredEnum } from '@zinnia/api-types/types/sor';
 
 import AllocationCard from './allocation-card';
 
@@ -15,8 +15,7 @@ export const AllocationCardContainer = () => {
     const { t } = useTranslation();
     const allocation = 100;
     const deathBenefit = 80000;
-    const relationshipToInsured =
-        PolicyPartyRoles.relationshipToParty.STEPFATHER;
+    const relationshipToInsured = RelationshipToInsuredEnum.STEPFATHER;
     return (
         <div className="p-6">
             <AllocationCard
@@ -26,7 +25,7 @@ export const AllocationCardContainer = () => {
                     getRelationshipToInsured(
                         relationshipToInsured,
                         t
-                    ) as PolicyPartyRoles.relationshipToParty
+                    ) as RelationshipToInsuredEnum
                 }
                 selectedPartyId={''}
                 selectedPartyType="Individual"

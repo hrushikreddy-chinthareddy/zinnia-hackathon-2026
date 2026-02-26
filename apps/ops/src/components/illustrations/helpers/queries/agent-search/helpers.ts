@@ -54,7 +54,7 @@ export const buildAgentsFromDownline = (
 /*
  * Create an `DelegatedAgent` from a producer object
  */
-export const buildAgentsFromProducer = (
+export const buildAgentFromProducer = (
     {
         firstName,
         middleName,

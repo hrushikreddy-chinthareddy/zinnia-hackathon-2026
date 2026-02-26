@@ -33,6 +33,7 @@ import { PeopleRolesFilterProvider } from '@deps/contexts/PeopleRolesFilter';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import { usePrefetchAgentData } from '@deps/hooks/usePrefetchAgentData';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { SorSystem } from '@deps/models/policy/enums';
 import { UserPermission } from '@deps/models/user-profile';
@@ -124,6 +125,9 @@ const PolicySlug: React.FC<PolicyPageProps> = ({
         planCode: planCode,
         policyNumber: id,
     });
+
+    // Prefetch agent data for all agent parties on the policy
+    usePrefetchAgentData(policy);
 
     const policyDetails = useMemo(() => new PolicyDetails(policy), [policy]);
 

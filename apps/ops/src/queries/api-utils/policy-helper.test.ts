@@ -1,5 +1,5 @@
 import { SorSystem } from '@deps/models/policy/enums';
-import { Identification, Policy } from '@zinnia/api-types/types/sor';
+import { IdentificationTypeEnum, Policy } from '@zinnia/api-types/types/sor';
 
 import { updateIdentificationsFromPolicy } from './policy-helper';
 
@@ -44,13 +44,11 @@ describe('policy-helper', () => {
                         partyId: '123',
                         identifications: [
                             {
-                                identificationType:
-                                    Identification.identificationType.SSN,
+                                identificationType: IdentificationTypeEnum.SSN,
                                 value: '123-45-6789',
                             },
                             {
-                                identificationType:
-                                    Identification.identificationType.TIN,
+                                identificationType: IdentificationTypeEnum.TIN,
                                 value: 'DL12345',
                             },
                         ],
@@ -59,8 +57,7 @@ describe('policy-helper', () => {
                         partyId: '456',
                         identifications: [
                             {
-                                identificationType:
-                                    Identification.identificationType.SSN,
+                                identificationType: IdentificationTypeEnum.SSN,
                                 value: '987-65-4321',
                             },
                         ],
@@ -83,7 +80,7 @@ describe('policy-helper', () => {
                             identifications: [
                                 {
                                     identificationType:
-                                        Identification.identificationType.SSN,
+                                        IdentificationTypeEnum.SSN,
                                     identificationValue: '*****6789',
                                 },
                             ], // should be replaced
@@ -95,7 +92,7 @@ describe('policy-helper', () => {
                             identifications: [
                                 {
                                     identificationType:
-                                        Identification.identificationType.SSN,
+                                        IdentificationTypeEnum.SSN,
                                     identificationValue: '455656787',
                                 },
                             ], // no matching policy party
@@ -108,25 +105,25 @@ describe('policy-helper', () => {
 
             expect(result.actionData[0].party.identifications).toEqual([
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     value: '123-45-6789',
                 },
                 {
-                    identificationType: Identification.identificationType.TIN,
+                    identificationType: IdentificationTypeEnum.TIN,
                     value: 'DL12345',
                 },
             ]);
 
             expect(result.actionData[1].party.identifications).toEqual([
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     value: '987-65-4321',
                 },
             ]);
 
             expect(result.actionData[2].party.identifications).toEqual([
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '455656787',
                 },
             ]);
@@ -139,8 +136,7 @@ describe('policy-helper', () => {
                         partyId: '123',
                         identifications: [
                             {
-                                identificationType:
-                                    Identification.identificationType.SSN,
+                                identificationType: IdentificationTypeEnum.SSN,
                                 value: '123-45-6789',
                             },
                         ],
@@ -157,7 +153,7 @@ describe('policy-helper', () => {
                             identifications: [
                                 {
                                     identificationType:
-                                        Identification.identificationType.SSN,
+                                        IdentificationTypeEnum.SSN,
                                     identificationValue: '123-45-6789',
                                 },
                             ],
@@ -188,7 +184,7 @@ describe('policy-helper', () => {
                             identifications: [
                                 {
                                     identificationType:
-                                        Identification.identificationType.SSN,
+                                        IdentificationTypeEnum.SSN,
                                     identificationValue: '123-498-678',
                                 },
                             ],
@@ -202,7 +198,7 @@ describe('policy-helper', () => {
             expect(result.actionData[0].party.identifications).toEqual([]);
             expect(result.actionData[1].party.identifications).toEqual([
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '123-498-678',
                 },
             ]);
