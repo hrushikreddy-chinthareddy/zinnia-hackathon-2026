@@ -85,7 +85,7 @@ export const RiderSidesheetContent = ({
                         ],
                     })
             )(rider),
-        [rider, t, policyNomenclature]
+        [rider, t, policyNomenclature, policyDetails]
     );
 
     const matches = useMemo(
