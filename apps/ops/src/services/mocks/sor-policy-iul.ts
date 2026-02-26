@@ -1,8 +1,5 @@
 import {
-    Party,
     Policy,
-    PolicyCoverage,
-    PolicyPartyRoles,
     ProofOfDeathReceived,
     RiskClass,
     SubStandardRating,
@@ -18,7 +15,6 @@ import {
     FeatureType,
     InvestmentType,
     FundAccountType,
-    Product,
     ProductType,
     DistributionType,
     HoldingForm,
@@ -44,8 +40,13 @@ import {
     AccountType,
     PartyStatus,
     AgentType,
-    Identification,
-    AccountValues,
+    CoverageBandEnum,
+    IdentificationTypeEnum,
+    LineOfBusiness,
+    Outcome,
+    PartyRoleEnum,
+    QualificationTypeEnum,
+    RelationshipToInsuredEnum,
 } from '@zinnia/api-types/types/sor';
 
 // Using 'as Policy' cast since mock data may not match all strict API type requirements after regeneration
@@ -59,7 +60,7 @@ export const mockPolicy: Policy = {
         minimumCoverageAmount: 10000,
         maximumCoverageAmount: 2000000,
         coverageChangeEffectiveDate: '2025-06-01',
-        coverageBand: PolicyCoverage.coverageBand.BAND1,
+        coverageBand: CoverageBandEnum.BAND1,
         maximumAnnualCoverageChangeAllowedPerPolicy: 1,
         minimumCoverageDecreaseAmount: 10000,
         maximumCoverageDecreaseAmount: 40000,
@@ -223,7 +224,7 @@ export const mockPolicy: Policy = {
             amount: 111,
             party: [
                 {
-                    partyRole: Party.partyRole.PAYOR,
+                    partyRole: PartyRoleEnum.PAYOR,
                     partyId: 'Party_PI_1',
                     percentage: 100,
                     bankId: 'Bank_1',
@@ -398,7 +399,7 @@ export const mockPolicy: Policy = {
     policyReferenceId: '3a3ac660f49c49ed9b9f062dacd7faef',
     thirdPartyAdministratorId: 'tpa-12345',
     product: {
-        lineOfBusiness: Product.lineOfBusiness.LIFE,
+        lineOfBusiness: LineOfBusiness.LIFE,
         planName: 'Everly IUL TermVest+',
         productType: ProductType.INDEXEDUNIVERSALLIFE,
         marketingName: 'Everly IUL TermVest+',
@@ -411,7 +412,7 @@ export const mockPolicy: Policy = {
     },
     matchBonusVersion: '2021.10.15',
     banding: 'NOPREMIUMBANDING' as Policy['banding'],
-    qualificationType: Policy.qualificationType.NONQUALIFIED,
+    qualificationType: QualificationTypeEnum.NONQUALIFIED,
     policyTerm: 20,
     policyYear: 1,
     monthOfYear: 3,
@@ -453,8 +454,7 @@ export const mockPolicy: Policy = {
         initialPaymentAmountReceivedDate: '2024-06-01',
         cumulativePremiumSinceIssue: 333,
         totalYearToDatePremiumAmount: 333,
-        modifiedEndowmentContractAuthorization:
-            AccountValues.modifiedEndowmentContractAuthorization.FALSE,
+        modifiedEndowmentContractAuthorization: Outcome.FALSE,
         projectedLapseIndicator: false,
         policyGainAmount: 0,
         uncollectedCharges: 0,
@@ -524,29 +524,28 @@ export const mockPolicy: Policy = {
             partyRoleId: '31',
             partyRole: PartyRole.PAYOR,
             partyId: 'Party_PI_1',
-            relationshipToInsured: PolicyPartyRoles.relationshipToInsured.SELF,
+            relationshipToInsured: RelationshipToInsuredEnum.SELF,
             startDate: '2024-06-01',
         },
         {
             partyRoleId: '8',
             partyRole: PartyRole.OWNER,
             partyId: 'Party_PI_1',
-            relationshipToInsured: PolicyPartyRoles.relationshipToInsured.SELF,
+            relationshipToInsured: RelationshipToInsuredEnum.SELF,
             startDate: '2024-06-01',
         },
         {
             partyRoleId: '119',
             partyRole: PartyRole.PAYEE,
             partyId: 'Party_PI_1',
-            relationshipToInsured: PolicyPartyRoles.relationshipToInsured.SELF,
+            relationshipToInsured: RelationshipToInsuredEnum.SELF,
             startDate: '2024-06-01',
         },
         {
             partyRoleId: '34',
             partyRole: PartyRole.PRIMARYBENEFICIARY,
             partyId: 'Party_PB_Primary_Bene_1',
-            relationshipToInsured:
-                PolicyPartyRoles.relationshipToInsured.BROTHER,
+            relationshipToInsured: RelationshipToInsuredEnum.BROTHER,
             startDate: '2024-06-01',
         },
         {
@@ -707,14 +706,14 @@ export const mockPolicy: Policy = {
             ],
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '***-**-6768',
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: 'FL085409537',
-                    issueState: Identification.issueState.FL,
+                    issueState: State.FL,
                 },
             ],
         },
@@ -770,14 +769,14 @@ export const mockPolicy: Policy = {
             bankDetails: [],
             identifications: [
                 {
-                    identificationType: Identification.identificationType.SSN,
+                    identificationType: IdentificationTypeEnum.SSN,
                     identificationValue: '***-**-9999',
                 },
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: 'FL085409999',
-                    issueState: Identification.issueState.FL,
+                    issueState: State.FL,
                 },
             ],
         },
@@ -843,10 +842,10 @@ export const mockPolicy: Policy = {
             identifications: [
                 {
                     identificationType:
-                        Identification.identificationType.DRIVERLICENSENUMBER,
+                        IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     identificationValue: 'FL085401111',
-                    issueState: Identification.issueState.FL,
-                    issueCountry: Identification.issueCountry.US,
+                    issueState: State.FL,
+                    issueCountry: Country.US,
                 },
             ],
         },

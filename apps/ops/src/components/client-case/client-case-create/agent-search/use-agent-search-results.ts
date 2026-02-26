@@ -8,6 +8,9 @@ import { buildAgentOptionFromDelegatedAgent } from 'components/client-case/clien
 
 import { AgentOption } from './types';
 
+/**
+ * Deduplicates agents grouping them by "npn"
+ */
 const deduplicateDelegatedAgents = (
     agents: DelegatedAgent[]
 ): DelegatedAgent[] => {
@@ -42,6 +45,12 @@ const delegatedAgentsCombinator = (
     );
 };
 
+/**
+ * Hook that fetches the agent search results for non-super-illustrator users
+ *
+ * The search results are fetched separately for each sellingCode and then
+ * filtered, merged and deduplicated
+ */
 export const useAgentSearchResults = (partialFullName: string | undefined) => {
     const agentSellingCodes = useAuthenticatedAgentSellingCodes();
 

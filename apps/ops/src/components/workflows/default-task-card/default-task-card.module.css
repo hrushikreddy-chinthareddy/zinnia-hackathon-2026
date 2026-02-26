@@ -1,0 +1,22 @@
+.container {
+    display: flex;
+    height: 500px;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.25rem;
+    border: 2px dashed var(--color-semantics-color-semantic-warning); /* replace with your semantic warning color */
+    background-color: var(--color-base-surface-primary);
+}
+
+@media (min-width: 640px) {
+    .container {
+        padding: var(--measure-dimension-padding-2xl);
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        padding: var(--measure-dimension-padding-3xl);
+    }
+}

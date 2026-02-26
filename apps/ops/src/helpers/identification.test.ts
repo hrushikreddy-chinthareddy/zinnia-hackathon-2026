@@ -1,6 +1,9 @@
 import { cleanup } from '@testing-library/react';
 
-import { Identification } from '@zinnia/api-types/types/sor';
+import {
+    Identification,
+    IdentificationTypeEnum,
+} from '@zinnia/api-types/types/sor';
 
 import {
     getMainActiveIdentifications,
@@ -15,7 +18,7 @@ describe('helpers/identification', () => {
     });
 
     const createMockIdentification = (
-        type: Identification.identificationType,
+        type: IdentificationTypeEnum,
         endDate?: string
     ): Identification => ({
         identificationId: 'test-id',
@@ -38,31 +41,29 @@ describe('helpers/identification', () => {
             // assert
             expect(result).toHaveLength(4);
             expect(result.map((id) => id.identificationType)).toEqual([
-                Identification.identificationType.SSN,
-                Identification.identificationType.TIN,
-                Identification.identificationType.EXTERNAL,
-                Identification.identificationType.OTHER,
+                IdentificationTypeEnum.SSN,
+                IdentificationTypeEnum.TIN,
+                IdentificationTypeEnum.EXTERNAL,
+                IdentificationTypeEnum.OTHER,
             ]);
         });
 
         it('should filter out end-dated identifications', () => {
             const identifications: Identification[] = [
-                createMockIdentification(Identification.identificationType.SSN),
+                createMockIdentification(IdentificationTypeEnum.SSN),
                 createMockIdentification(
-                    Identification.identificationType.TIN,
+                    IdentificationTypeEnum.TIN,
                     '2023-12-31'
                 ),
-                createMockIdentification(
-                    Identification.identificationType.EXTERNAL
-                ),
+                createMockIdentification(IdentificationTypeEnum.EXTERNAL),
             ];
 
             const result = getMainActiveIdentifications(identifications);
 
             expect(result).toHaveLength(2);
             expect(result.map((id) => id.identificationType)).toEqual([
-                Identification.identificationType.SSN,
-                Identification.identificationType.EXTERNAL,
+                IdentificationTypeEnum.SSN,
+                IdentificationTypeEnum.EXTERNAL,
             ]);
         });
 
@@ -80,21 +81,21 @@ describe('helpers/identification', () => {
 
         it('should exclude identifications without identificationType', () => {
             const identifications: Identification[] = [
-                createMockIdentification(Identification.identificationType.SSN),
+                createMockIdentification(IdentificationTypeEnum.SSN),
                 {
                     identificationId: 'test-id',
                     startDate: '2023-01-01',
                     identificationValue: 'test-value',
                 } as Identification,
-                createMockIdentification(Identification.identificationType.TIN),
+                createMockIdentification(IdentificationTypeEnum.TIN),
             ];
 
             const result = getMainActiveIdentifications(identifications);
 
             expect(result).toHaveLength(2);
             expect(result.map((id) => id.identificationType)).toEqual([
-                Identification.identificationType.SSN,
-                Identification.identificationType.TIN,
+                IdentificationTypeEnum.SSN,
+                IdentificationTypeEnum.TIN,
             ]);
         });
     });
@@ -102,49 +103,41 @@ describe('helpers/identification', () => {
     describe('getAdditionalActiveIdentifications', () => {
         it('should return non-main identifications that are not end-dated', () => {
             const identifications: Identification[] = [
+                createMockIdentification(IdentificationTypeEnum.PASSPORT),
                 createMockIdentification(
-                    Identification.identificationType.PASSPORT
+                    IdentificationTypeEnum.DRIVERLICENSENUMBER
                 ),
-                createMockIdentification(
-                    Identification.identificationType.DRIVERLICENSENUMBER
-                ),
-                createMockIdentification(
-                    Identification.identificationType.STATEPHOTOID
-                ),
-                createMockIdentification(Identification.identificationType.SSN),
-                createMockIdentification(Identification.identificationType.TIN),
+                createMockIdentification(IdentificationTypeEnum.STATEPHOTOID),
+                createMockIdentification(IdentificationTypeEnum.SSN),
+                createMockIdentification(IdentificationTypeEnum.TIN),
             ];
 
             const result = getAdditionalActiveIdentifications(identifications);
 
             expect(result).toHaveLength(3);
             expect(result.map((id) => id.identificationType)).toEqual([
-                Identification.identificationType.PASSPORT,
-                Identification.identificationType.DRIVERLICENSENUMBER,
-                Identification.identificationType.STATEPHOTOID,
+                IdentificationTypeEnum.PASSPORT,
+                IdentificationTypeEnum.DRIVERLICENSENUMBER,
+                IdentificationTypeEnum.STATEPHOTOID,
             ]);
         });
 
         it('should exclude end-dated identifications', () => {
             const identifications: Identification[] = [
+                createMockIdentification(IdentificationTypeEnum.PASSPORT),
                 createMockIdentification(
-                    Identification.identificationType.PASSPORT
-                ),
-                createMockIdentification(
-                    Identification.identificationType.DRIVERLICENSENUMBER,
+                    IdentificationTypeEnum.DRIVERLICENSENUMBER,
                     '2023-12-31'
                 ),
-                createMockIdentification(
-                    Identification.identificationType.STATEPHOTOID
-                ),
+                createMockIdentification(IdentificationTypeEnum.STATEPHOTOID),
             ];
 
             const result = getAdditionalActiveIdentifications(identifications);
 
             expect(result).toHaveLength(2);
             expect(result.map((id) => id.identificationType)).toEqual([
-                Identification.identificationType.PASSPORT,
-                Identification.identificationType.STATEPHOTOID,
+                IdentificationTypeEnum.PASSPORT,
+                IdentificationTypeEnum.STATEPHOTOID,
             ]);
         });
 
@@ -162,16 +155,14 @@ describe('helpers/identification', () => {
 
         it('should exclude identifications without identificationType', () => {
             const identifications: Identification[] = [
-                createMockIdentification(
-                    Identification.identificationType.PASSPORT
-                ),
+                createMockIdentification(IdentificationTypeEnum.PASSPORT),
                 {
                     identificationId: 'test-id',
                     startDate: '2023-01-01',
                     identificationValue: 'test-value',
                 } as Identification,
                 createMockIdentification(
-                    Identification.identificationType.DRIVERLICENSENUMBER
+                    IdentificationTypeEnum.DRIVERLICENSENUMBER
                 ),
             ];
 
@@ -179,8 +170,8 @@ describe('helpers/identification', () => {
 
             expect(result).toHaveLength(2);
             expect(result.map((id) => id.identificationType)).toEqual([
-                Identification.identificationType.PASSPORT,
-                Identification.identificationType.DRIVERLICENSENUMBER,
+                IdentificationTypeEnum.PASSPORT,
+                IdentificationTypeEnum.DRIVERLICENSENUMBER,
             ]);
         });
     });

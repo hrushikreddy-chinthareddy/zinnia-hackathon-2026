@@ -4,7 +4,7 @@ import {
     PolicyFilters,
     TransactionFilters,
 } from '@deps/contexts/HistoryFiltersContext';
-import { Transaction } from '@zinnia/api-types/types/sor';
+import { TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 enum MissingTransactionTypes {
     CalendarProcessing = 'CalendarProcessing',
@@ -13,52 +13,42 @@ enum MissingTransactionTypes {
 }
 
 export const PeopleChangeTransactionTypes = [
-    Transaction.transactionType.ADDRESS_CHANGE as Transaction.transactionType,
-    Transaction.transactionType.EMAIL_CHANGE as Transaction.transactionType,
-    Transaction.transactionType
-        .PHONE_NUMBER_CHANGE as Transaction.transactionType,
-    Transaction.transactionType
-        .BANK_ACCOUNT_CHANGE as Transaction.transactionType,
+    TransactionTypeEnum.ADDRESS_CHANGE as TransactionTypeEnum,
+    TransactionTypeEnum.EMAIL_CHANGE as TransactionTypeEnum,
+    TransactionTypeEnum.PHONE_NUMBER_CHANGE as TransactionTypeEnum,
+    TransactionTypeEnum.BANK_ACCOUNT_CHANGE as TransactionTypeEnum,
 ];
 
 // BPB - ToDo: Remove these once the Sor spec has been updated to include them.
 export const TransactionTypesNotInTheSpecYet = [
-    MissingTransactionTypes.CalendarProcessing as unknown as Transaction.transactionType,
-    MissingTransactionTypes.FundAllocationsChange as unknown as Transaction.transactionType,
-    MissingTransactionTypes.FundTransfer as unknown as Transaction.transactionType,
+    MissingTransactionTypes.CalendarProcessing as unknown as TransactionTypeEnum,
+    MissingTransactionTypes.FundAllocationsChange as unknown as TransactionTypeEnum,
+    MissingTransactionTypes.FundTransfer as unknown as TransactionTypeEnum,
 ];
 
 export const allTransactionTypes = [
-    ...Object.values(Transaction.transactionType),
+    ...Object.values(TransactionTypeEnum),
     ...TransactionTypesNotInTheSpecYet,
 ];
 
 const addressTransactions = [
-    Transaction.transactionType.ADDRESS_CHANGE,
-    Transaction.transactionType.PREFERRED_MAILING_ADDRESS_CHANGE,
+    TransactionTypeEnum.ADDRESS_CHANGE,
+    TransactionTypeEnum.PREFERRED_MAILING_ADDRESS_CHANGE,
 ];
-const bankAccountTransactions = [
-    Transaction.transactionType.BANK_ACCOUNT_CHANGE,
-];
-const beneficiaryTransactions = [
-    Transaction.transactionType.BENEFICIARY_CHANGE,
-];
+const bankAccountTransactions = [TransactionTypeEnum.BANK_ACCOUNT_CHANGE];
+const beneficiaryTransactions = [TransactionTypeEnum.BENEFICIARY_CHANGE];
 const communicationPreferenceTransactions = [
-    Transaction.transactionType.COMMUNICATION_PREFERENCE_CHANGE,
+    TransactionTypeEnum.COMMUNICATION_PREFERENCE_CHANGE,
 ];
-const emailTransactions = [Transaction.transactionType.EMAIL_CHANGE];
-const nameTransactions = [
-    Transaction.transactionType.EXISTING_PARTY_NAME_CHANGE,
-];
-const phoneNumberTransactions = [
-    Transaction.transactionType.PHONE_NUMBER_CHANGE,
-];
+const emailTransactions = [TransactionTypeEnum.EMAIL_CHANGE];
+const nameTransactions = [TransactionTypeEnum.EXISTING_PARTY_NAME_CHANGE];
+const phoneNumberTransactions = [TransactionTypeEnum.PHONE_NUMBER_CHANGE];
 const roleTransactions = [
-    Transaction.transactionType.OWNER_CHANGE,
-    Transaction.transactionType.PAYEE_CHANGE,
-    Transaction.transactionType.PAYOR_CHANGE,
+    TransactionTypeEnum.OWNER_CHANGE,
+    TransactionTypeEnum.PAYEE_CHANGE,
+    TransactionTypeEnum.PAYOR_CHANGE,
 ];
-const tpdTransactions = [Transaction.transactionType.TPDCHANGE];
+const tpdTransactions = [TransactionTypeEnum.TPD_CHANGE];
 
 export const peopleTransactions = {
     [PeopleFilters.Address]: addressTransactions,
@@ -85,38 +75,38 @@ export const peopleTransactions = {
 };
 
 const anniversaryTransactions = [
-    Transaction.transactionType.ANNIVERSARY,
-    Transaction.transactionType.LAPSE_ASSESSMENT,
-    Transaction.transactionType.MATCH_BONUS_VESTING,
+    TransactionTypeEnum.ANNIVERSARY,
+    TransactionTypeEnum.LAPSE_ASSESSMENT,
+    TransactionTypeEnum.MATCH_BONUS_VESTING,
 ];
 const coverageTransactions = [
-    Transaction.transactionType.CANCEL_NO_PREMIUM,
-    Transaction.transactionType.DEATH_CLAIM,
+    TransactionTypeEnum.CANCEL_NO_PREMIUM,
+    TransactionTypeEnum.DEATH_CLAIM,
 ];
 const feesTransactions = [
-    Transaction.transactionType.COST_OF_INSURANCE,
-    Transaction.transactionType.EXPENSE_CHARGE,
-    Transaction.transactionType.INTEREST_CREDIT,
-    Transaction.transactionType.INTEREST_CREDIT_LOAN,
-    Transaction.transactionType.INTEREST_CREDIT_MATCH,
-    Transaction.transactionType.INTEREST_LOAN,
-    Transaction.transactionType.UNIT_EXPENSE_CHARGE,
+    TransactionTypeEnum.COST_OF_INSURANCE,
+    TransactionTypeEnum.EXPENSE_CHARGE,
+    TransactionTypeEnum.INTEREST_CREDIT,
+    TransactionTypeEnum.INTEREST_CREDIT_LOAN,
+    TransactionTypeEnum.INTEREST_CREDIT_MATCH,
+    TransactionTypeEnum.INTEREST_LOAN,
+    TransactionTypeEnum.UNIT_EXPENSE_CHARGE,
 ];
 const keyDateTransaction = [
-    Transaction.transactionType.ACTIVATION,
-    Transaction.transactionType.CONVERSION_ACTIVATION,
-    Transaction.transactionType.DELIVERY_DATE_SETUP,
-    Transaction.transactionType.FACE_AMOUNT_CHANGE,
-    Transaction.transactionType.FACE_AMOUNT_DECREASE,
-    Transaction.transactionType.FACE_AMOUNT_INCREASE,
-    Transaction.transactionType.FORCE_OUT,
-    Transaction.transactionType.FREE_LOOK_EXPIRATION,
-    Transaction.transactionType.ISSUANCE,
-    Transaction.transactionType.LAPSE,
-    Transaction.transactionType.NOTIFICATION_OF_DEATH_CLAIM,
-    Transaction.transactionType.REINSTATEMENT,
-    Transaction.transactionType.REINSTATEMENT_APPROVED,
-    Transaction.transactionType.VALUE_ADJUSTMENT,
+    TransactionTypeEnum.ACTIVATION,
+    TransactionTypeEnum.CONVERSION_ACTIVATION,
+    TransactionTypeEnum.DELIVERY_DATE_SETUP,
+    TransactionTypeEnum.FACE_AMOUNT_CHANGE,
+    TransactionTypeEnum.FACE_AMOUNT_DECREASE,
+    TransactionTypeEnum.FACE_AMOUNT_INCREASE,
+    TransactionTypeEnum.FORCE_OUT,
+    TransactionTypeEnum.FREE_LOOK_EXPIRATION,
+    TransactionTypeEnum.ISSUANCE,
+    TransactionTypeEnum.LAPSE,
+    TransactionTypeEnum.NOTIFICATION_OF_DEATH_CLAIM,
+    TransactionTypeEnum.REINSTATEMENT,
+    TransactionTypeEnum.REINSTATEMENT_APPROVED,
+    TransactionTypeEnum.VALUE_ADJUSTMENT,
 ];
 
 export const policyTransactions = {
@@ -133,56 +123,56 @@ export const policyTransactions = {
 };
 
 export const withdrawalDetailsTransactions = [
-    Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
-    Transaction.transactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
-    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
-    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+    TransactionTypeEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionTypeEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];
 
 export const withdrawalFinancialTransactions = [
     ...withdrawalDetailsTransactions,
-    Transaction.transactionType.FULL_SURRENDER,
-    Transaction.transactionType.FREE_LOOK_CANCELLATION,
+    TransactionTypeEnum.FULL_SURRENDER,
+    TransactionTypeEnum.FREE_LOOK_CANCELLATION,
 ];
 
 const loanTransactions = [
-    Transaction.transactionType.LOAN_REPAYMENT_ONE_TIME,
-    Transaction.transactionType.NEW_LOAN,
-    Transaction.transactionType.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
-    Transaction.transactionType.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT,
-    Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT,
+    TransactionTypeEnum.LOAN_REPAYMENT_ONE_TIME,
+    TransactionTypeEnum.NEW_LOAN,
+    TransactionTypeEnum.PAYMENT_LOAN_REPAYMENT_ONE_TIME,
+    TransactionTypeEnum.PAYMENT_SYSTEMATIC_LOAN_REPAYMENT,
+    TransactionTypeEnum.SYSTEMATIC_LOAN_REPAYMENT,
 ];
 
 const premiumTransactions = [
-    Transaction.transactionType.INITIAL_PREMIUM,
-    Transaction.transactionType.ONE_TIME_PREMIUM,
-    Transaction.transactionType.PAYMENT_INITIAL_PREMIUM,
-    Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM,
-    Transaction.transactionType.SUBSEQUENT_PAYMENT,
-    Transaction.transactionType.SUBSEQUENT_PREMIUM,
+    TransactionTypeEnum.INITIAL_PREMIUM,
+    TransactionTypeEnum.ONE_TIME_PREMIUM,
+    TransactionTypeEnum.PAYMENT_INITIAL_PREMIUM,
+    TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM,
+    TransactionTypeEnum.SUBSEQUENT_PAYMENT,
+    TransactionTypeEnum.SUBSEQUENT_PREMIUM,
 ];
 const systematicProgramTransactions = [
-    Transaction.transactionType.SYSTEMATIC_PROGRAM_UPDATE,
-    Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP,
-    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
-    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionTypeEnum.SYSTEMATIC_PROGRAM_UPDATE,
+    TransactionTypeEnum.SYSTEMATIC_LOAN_REPAYMENT_SETUP,
+    TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+    TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
 ];
 
 const withdrawalTransactions = [
-    Transaction.transactionType.CLAIM_PAYOUT,
-    Transaction.transactionType.DISBURSEMENT,
-    Transaction.transactionType.FREE_LOOK_CANCELLATION,
-    Transaction.transactionType.FULL_SURRENDER,
-    Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME,
-    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL,
-    Transaction.transactionType.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
-    Transaction.transactionType.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
-    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
-    Transaction.transactionType.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
+    TransactionTypeEnum.CLAIM_PAYOUT,
+    TransactionTypeEnum.DISBURSEMENT,
+    TransactionTypeEnum.FREE_LOOK_CANCELLATION,
+    TransactionTypeEnum.FULL_SURRENDER,
+    TransactionTypeEnum.PARTIAL_WITHDRAWAL_ONE_TIME,
+    TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL,
+    TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP,
+    TransactionTypeEnum.REQUIRED_MINIMUM_DISTRIBUTION_ONE_TIME,
+    TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION,
+    TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION_SETUP,
 ];
 
 export const financialTransactions = {

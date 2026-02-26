@@ -8,7 +8,7 @@ import {
 } from '@deps/models/case/default-case';
 import { UserProfile } from '@deps/models/user-profile';
 import { policyOwner } from '@deps/utils/data';
-import { Identification, Policy } from '@zinnia/api-types/types/sor';
+import { IdentificationTypeEnum, Policy } from '@zinnia/api-types/types/sor';
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
 export const defaultCorrespondenceState = {
@@ -50,8 +50,7 @@ const getCaseDetails = (
     const ssn =
         owner?.identifications?.find(
             (identification) =>
-                identification.identificationType ===
-                Identification.identificationType.SSN
+                identification.identificationType === IdentificationTypeEnum.SSN
         )?.identificationValue || undefined;
     return {
         ...currentData,

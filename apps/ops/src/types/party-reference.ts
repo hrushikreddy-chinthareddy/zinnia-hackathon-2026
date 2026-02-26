@@ -1,20 +1,8 @@
+import { AliasModel } from 'api-types/generated-types/partyreference/types.gen';
+
 export interface ExternalPartyId {
     key: string;
     value: string;
-}
-
-export interface AliasBase {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    phoneNumber?: string;
-    carrier?: string;
-    externalPartyIds?: ExternalPartyId[];
-    policyNumber?: string;
-    planCode?: string;
-    partyId?: string;
-    partyRoles?: string[];
-    externalId?: string;
 }
 
 export interface PartyReference {
@@ -29,5 +17,5 @@ export interface PartyReference {
     lastUpdated: string; // ISO date string
     createdAt: string; // ISO date string
     id: string;
-    alias: AliasBase[];
+    alias: AliasModel[];
 }

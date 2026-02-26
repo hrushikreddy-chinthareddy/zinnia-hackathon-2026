@@ -1,5 +1,6 @@
 import { DocumentTypeView } from '@deps/components/side-sheet/documents/DocumentTypeView';
 import {
+    DocumentClassificationEnum,
     DocumentDownloadResponse,
     MetadataSearchResponse,
     SearchRequest as SearchRequestBody,
@@ -19,7 +20,7 @@ export type V3DocumentWithSource = MetadataSearchResponse & {
     documentSource: DocumentTypeView;
 };
 
-export type DocumentClassification = SearchRequestBody.documentClassification;
+export type DocumentClassification = DocumentClassificationEnum;
 
 // Per Amit Agarwal, this should work
 export type SearchRequest = SearchRequestBody & {

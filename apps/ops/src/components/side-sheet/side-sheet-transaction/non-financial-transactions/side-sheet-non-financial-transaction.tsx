@@ -26,9 +26,10 @@ import { DEFAULT_EXTENDED_DAY_DATE_FORMAT } from '@deps/types/constants';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     Address as PolicyAddress,
-    Policy,
-    Transaction,
     FeatureType,
+    Policy,
+    TransactionTypeEnum,
+    Transaction,
 } from '@zinnia/api-types/types/sor';
 
 import { SideSheetTransactionProps } from '../types';
@@ -557,15 +558,15 @@ const getChanges = (
     }
 
     switch (transaction.transactionType) {
-        case Transaction.transactionType.ADDRESS_CHANGE:
+        case TransactionTypeEnum.ADDRESS_CHANGE:
             return getAddressChanges(policy, transaction, t);
-        case Transaction.transactionType.BANK_ACCOUNT_CHANGE:
+        case TransactionTypeEnum.BANK_ACCOUNT_CHANGE:
             return getBankAccountChanges(policy, transaction, t);
-        case Transaction.transactionType.EMAIL_CHANGE:
+        case TransactionTypeEnum.EMAIL_CHANGE:
             return getEmailChanges(policy, transaction, t);
-        case Transaction.transactionType.PHONE_NUMBER_CHANGE:
+        case TransactionTypeEnum.PHONE_NUMBER_CHANGE:
             return getPhoneChanges(policy, transaction, t);
-        case Transaction.transactionType.LAPSE:
+        case TransactionTypeEnum.LAPSE:
             return getPolicyLapse(policy, transaction, t);
         default:
             return null;
@@ -583,7 +584,7 @@ const SideSheetNonFinancialTransaction = ({
     return (
         <div className="p-8">
             <div className="flex flex-col gap-8">
-                {!Transaction.transactionType.LAPSE && (
+                {!TransactionTypeEnum.LAPSE && (
                     <>
                         <FieldData
                             label={t('policy.history.sidesheet.effectiveDate')}

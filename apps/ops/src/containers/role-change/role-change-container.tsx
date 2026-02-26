@@ -18,7 +18,11 @@ import { useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import { DEFAULT_STEP_WIDTH } from '@deps/types/constants';
 import { TransactionStep } from '@deps/types/segment-analytics';
-import { PartyRole, Policy, Transaction } from '@zinnia/api-types/types/sor';
+import {
+    PartyRole,
+    Policy,
+    TransactionTypeEnum,
+} from '@zinnia/api-types/types/sor';
 
 import { buildSignatures, getActiveRoleParty } from './role-change-helper';
 import { Step } from '../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -118,7 +122,7 @@ const RoleChangeContainer = ({
                         title={t('start.title', { roleLabel }) as string}
                         subtitle={'' as string}
                         trackEventProps={{
-                            type: Transaction.transactionType.ADD_OWNER,
+                            type: TransactionTypeEnum.ADD_OWNER,
                             step: TransactionStep.Start,
                         }}
                         type={SourceType.Case}

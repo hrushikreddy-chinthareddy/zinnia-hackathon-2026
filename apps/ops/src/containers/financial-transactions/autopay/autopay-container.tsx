@@ -31,10 +31,10 @@ import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     ArrangementType,
     Policy,
-    Reason,
-    SystematicProgram,
     Policy as PolicyView,
-    Transaction,
+    Reason,
+    TransactionTypeEnum,
+    SystematicProgram,
 } from '@zinnia/api-types/types/sor';
 
 import Amount from './amount/amount';
@@ -193,23 +193,20 @@ const AutopayContainer = ({
 
     const transactionType = useMemo(() => {
         if (parentPage === ParentPage.Premiums) {
-            return Transaction.transactionType.SUBSEQUENT_PREMIUM;
+            return TransactionTypeEnum.SUBSEQUENT_PREMIUM;
         }
         if (parentPage === ParentPage.Withdrawals) {
             if (isSetUp) {
-                return Transaction.transactionType
-                    .SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP;
+                return TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL_SETUP;
             }
             if (arrangementType === ArrangementType.WITHDRAWAL) {
-                return Transaction.transactionType
-                    .SYSTEMATIC_PARTIAL_WITHDRAWAL;
+                return TransactionTypeEnum.SYSTEMATIC_PARTIAL_WITHDRAWAL;
             }
-            return Transaction.transactionType
-                .SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION;
+            return TransactionTypeEnum.SYSTEMATIC_REQUIRED_MINIMUM_DISTRIBUTION;
         }
         return isSetUp
-            ? Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT_SETUP
-            : Transaction.transactionType.SYSTEMATIC_LOAN_REPAYMENT;
+            ? TransactionTypeEnum.SYSTEMATIC_LOAN_REPAYMENT_SETUP
+            : TransactionTypeEnum.SYSTEMATIC_LOAN_REPAYMENT;
     }, [isSetUp, parentPage, arrangementType]);
 
     autopay.arrangementType === ArrangementType.WITHDRAWAL

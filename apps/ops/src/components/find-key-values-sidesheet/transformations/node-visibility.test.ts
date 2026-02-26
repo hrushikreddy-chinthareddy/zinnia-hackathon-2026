@@ -1,4 +1,4 @@
-import { Product, ProductType } from '@zinnia/api-types/types/sor';
+import { LineOfBusiness, ProductType } from '@zinnia/api-types/types/sor';
 
 import { DataGroup, DataNode, DataSection, FieldType } from '../types';
 import {
@@ -100,7 +100,7 @@ describe('excludeNodesByLabel', () => {
 });
 
 describe('excludeNodeByCarrierRules', () => {
-    const LOB_LIFE = Product.lineOfBusiness.LIFE;
+    const LOB_LIFE = LineOfBusiness.LIFE;
     const PROD_TERM = ProductType.TERM;
 
     it('returns node unchanged when node is not a field or section', () => {

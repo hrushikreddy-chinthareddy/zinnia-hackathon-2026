@@ -19,7 +19,7 @@ export interface FieldContainerProps {
 
 export function FieldContainer(props: FieldContainerProps): ReactElement {
     const {
-        // forceNewLine,
+        forceNewLine,
         field,
         children,
         // fieldSize,
@@ -41,6 +41,12 @@ export function FieldContainer(props: FieldContainerProps): ReactElement {
         }
     }, [focusedIncompleteFieldId, field.blueprintId]);
 
+    /**
+     * Grid layout: to be implemented as an option (otherwise default to flexbox)
+     * Requires: implement a field.style.layout = 'grid' | default: 'flexbox' property in the form engine SDK
+     * Advantage: more control over layout when needed
+     */
+
     // const gridSize = useMemo(() => {
     //   if (withoutInfoSupplement) {
     //     return 12;
@@ -55,17 +61,16 @@ export function FieldContainer(props: FieldContainerProps): ReactElement {
         : '';
 
     return (
-        <div className={style.fieldContainer}>
-            {/*  TODO: handle force new line*/}
-            {/* {forceNewLine && <SpacerField styleVariant={styleVariant} />} */}
-
-            <div className={clsx(style.fieldItem, layoutStyle)}>{children}</div>
-            {withoutInfoSupplement === false && field.info && (
-                <div>
+        <>
+            {forceNewLine && <div className={style.forceNewLine} />}
+            <div className={clsx(style.fieldContainer, layoutStyle)}>
+                <div className={style.fieldItem}>{children}</div>
+                {withoutInfoSupplement === false && field.info && (
                     <div>
-                        {/* TODO: info supplement */}
-                        <div>(i)</div>
-                        {/* <InfoSupplement
+                        <div>
+                            {/* TODO: info supplement */}
+                            <div>(i)</div>
+                            {/* <InfoSupplement
               title={field.info.title}
               text={field.info.text}
               image={infoSupplementImage}
@@ -73,10 +78,11 @@ export function FieldContainer(props: FieldContainerProps): ReactElement {
               onClick={onInfoIconClick}
               boldedBorder={boldedBorder}
             /> */}
+                        </div>
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        </>
     );
 }
 
