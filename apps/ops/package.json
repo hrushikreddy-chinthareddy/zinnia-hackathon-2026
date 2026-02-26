@@ -59,6 +59,7 @@
         "highcharts-react-official": "^3.2.1",
         "html-react-parser": "^5.2.2",
         "i18next": "^22.4.15",
+        "jose": "^4.15.9",
         "lodash": "^4.17.21",
         "lodash.merge": "^4.6.2",
         "marked": "^16.1.2",

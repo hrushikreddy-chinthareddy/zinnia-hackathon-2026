@@ -206,6 +206,9 @@ importers:
       i18next:
         specifier: ^22.4.15
         version: 22.5.1
+      jose:
+        specifier: ^4.15.9
+        version: 4.15.9
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
