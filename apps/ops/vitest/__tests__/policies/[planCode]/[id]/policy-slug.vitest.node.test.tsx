@@ -69,7 +69,7 @@ describe('Policy Slug Page', () => {
 
             renderPolicyPage();
 
-            await screen.findByText('Page Not Found');
+            expect(await screen.findByText('Page Not Found')).toBeInTheDocument();
         });
 
         test('renders Custom404Page when the policy API returns no data', async () => {
@@ -81,7 +81,7 @@ describe('Policy Slug Page', () => {
 
             renderPolicyPage();
 
-            await screen.findByText('Page Not Found');
+            expect(await screen.findByText('Page Not Found')).toBeInTheDocument();
         });
 
         test.each([
@@ -115,7 +115,7 @@ describe('Policy Slug Page', () => {
 
                 renderPolicyPage();
 
-                await screen.findByText('Page Not Found');
+                expect(await screen.findByText('Page Not Found')).toBeInTheDocument();
             }
         );
     });
