@@ -2,7 +2,7 @@ import { QueryClient } from '@tanstack/react-query';
 
 import { ProducerRole } from '@deps/types/producers';
 
-import { buildAgentsFromProducer, hasPartialFullName } from './helpers';
+import { buildAgentFromProducer, hasPartialFullName } from './helpers';
 import { buildGetProducerForNearestRoleQuery } from '../../hooks/pom';
 
 /**
@@ -34,7 +34,7 @@ export const fetchSelfAgentForNearestRole = async (
         return null;
     }
 
-    const agent = buildAgentsFromProducer(producer, {
+    const agent = buildAgentFromProducer(producer, {
         sellingCode,
         carrierShortName,
     });
