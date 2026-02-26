@@ -1,8 +1,10 @@
 import { render, screen } from '@testing-library/react';
+import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import PolicySlug from '@deps/containers/policy-slug/policy-slug';
 import { server } from '@vitest/mocks/node';
+import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
 
 import {
@@ -20,6 +22,14 @@ let mockRouter = createMockRouter();
 
 vi.mock('next/router', () => ({
     useRouter: () => mockRouter,
+    // Custom404Page uses `import router from 'next/router'` to read router.query which needs a default export
+    default: {
+        query: {},
+        push: () => Promise.resolve(true),
+        replace: () => Promise.resolve(true),
+        prefetch: () => Promise.resolve(),
+        back: () => {},
+    },
 }));
 
 const defaultProps = createMockPolicyPageProps();
@@ -263,5 +273,66 @@ describe('policy-details-page', () => {
             const element = await screen.findByText('Policy Details');
             expect(element).toBeInTheDocument();
         });
+    });
+
+    describe('guard: error, missing policy, and annuity forbidden page', () => {
+        test('renders Custom404Page when the policy API returns an error', async () => {
+            server.use(
+                http.get('*/api/policies/:planCode/:policyId', () =>
+                    HttpResponse.json({}, { status: 500 })
+                )
+            );
+
+            renderPolicyPage();
+
+            await screen.findByText('Page Not Found');
+        });
+
+        test('renders Custom404Page when the policy API returns no data', async () => {
+            server.use(
+                http.get('*/api/policies/:planCode/:policyId', () =>
+                    HttpResponse.json({ data: null })
+                )
+            );
+
+            renderPolicyPage();
+
+            await screen.findByText('Page Not Found');
+        });
+
+        test.each([
+            { slug: ['policy', 'coverage'] },
+            { slug: ['policy', 'loans'] },
+        ])(
+            'renders Custom404Page for annuity policy on forbidden $slug[1] route',
+            async ({ slug }) => {
+                server.use(
+                    http.get(
+                        '*/api/policies/:planCode/:policyId',
+                        ({ params }) =>
+                            HttpResponse.json({
+                                data: {
+                                    ...policyEndpointData,
+                                    policyNumber: String(
+                                        params.policyId ?? 'POL123'
+                                    ),
+                                    product: {
+                                        ...policyEndpointData.product,
+                                        planCode: String(
+                                            params.planCode ?? 'PLAN1'
+                                        ),
+                                        lineOfBusiness: 'ANNUITY',
+                                    },
+                                },
+                            })
+                    )
+                );
+                mockRouter = createMockRouter({ slug });
+
+                renderPolicyPage();
+
+                await screen.findByText('Page Not Found');
+            }
+        );
     });
 });
