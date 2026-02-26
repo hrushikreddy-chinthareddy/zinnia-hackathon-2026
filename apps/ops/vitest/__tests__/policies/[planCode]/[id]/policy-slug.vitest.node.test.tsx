@@ -123,8 +123,8 @@ describe('Policy Slug Page', () => {
         });
     });
 
-    describe('people route', () => {
-        test('renders generic PersonSubpage when slug is people without a PartyId', async () => {
+    describe('people route, when first slug is people', () => {
+        test('renders generic PersonSubpage second slug of PartyId', async () => {
             mockRouter = createMockRouter({ slug: ['people'] });
 
             renderPolicyPage();
@@ -135,7 +135,7 @@ describe('Policy Slug Page', () => {
             expect(element).toBeInTheDocument();
         });
 
-        test('renders specific PersonSubpage when slug is people with a PartyId other than assigneechange and benechange', async () => {
+        test('renders specific PersonSubpage when second slug is a PartyId other than assigneechange and benechange', async () => {
             // Use actual owner partyId from mock data (Sam Mathew)
             mockRouter = createMockRouter({
                 slug: ['people', '0a2b5d2279f34fc49b6de65739f14985'],
@@ -155,7 +155,7 @@ describe('Policy Slug Page', () => {
             );
             expect(identificationHeading).toBeInTheDocument();
         });
-        test('renders nothing for assigneechange when transactionData is null', async () => {
+        test('renders nothing when second slug is assigneechange IF transactionData is null', async () => {
             vi.doMock(
                 '@deps/containers/self-serve-transaction/self-serve-transaction.helpers',
                 () => ({
@@ -182,7 +182,7 @@ describe('Policy Slug Page', () => {
                 screen.queryByRole('heading', { name: 'Assignee Details' })
             ).not.toBeInTheDocument();
         });
-        test('renders nothing for benechange when transactionData is null', async () => {
+        test('renders nothing for benechange when second slug is benechange IF transactionData is null', async () => {
             vi.doMock(
                 '@deps/containers/self-serve-transaction/self-serve-transaction.helpers',
                 () => ({
@@ -209,7 +209,7 @@ describe('Policy Slug Page', () => {
                 screen.queryByRole('heading', { name: 'Owner Details' })
             ).not.toBeInTheDocument();
         });
-        test('renders SelfServeTransactionContainer for assigneechange when transactionData exists', async () => {
+        test('renders SelfServeTransactionContainer for assigneechange when second slug is assigneechange AND transactionData exists', async () => {
             // Use actual beneficiary partyId from mock data (Sarah Mathew with 100% allocation)
             mockRouter = createMockRouter({
                 slug: ['people', 'assigneechange'],
@@ -227,7 +227,7 @@ describe('Policy Slug Page', () => {
             expect(beneficiaryDetailsHeading).toBeInTheDocument();
         });
 
-        test('renders SelfServeTransactionContainer for benechange when transactionData exists', async () => {
+        test('renders SelfServeTransactionContainer for benechange when second slug is benechange AND transactionData exists', async () => {
             // Use actual beneficiary partyId from mock data (Sarah Mathew with 100% allocation)
             mockRouter = createMockRouter({
                 slug: ['people', 'benechange'],
@@ -245,7 +245,7 @@ describe('Policy Slug Page', () => {
             expect(beneficiaryDetailsHeading).toBeInTheDocument();
         });
 
-        test('renders PersonSubPage when Party is neither Beneficiary nor Asignee', async () => {
+        test('renders PersonSubPage when second slug is a PartyId that is neither Beneficiary nor Asignee', async () => {
             // Use actual beneficiary partyId from mock data (Sarah Mathew with 100% allocation)
             mockRouter = createMockRouter({
                 slug: ['people', 'c8a283b5d8d540a29fe71aad239c0352'],
