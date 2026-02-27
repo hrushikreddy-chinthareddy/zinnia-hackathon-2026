@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { Loader } from '@zinnia/bloom/components';
+import { Icon, IconType, Loader } from '@zinnia/bloom/components';
+import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
 import PersonPageHeader from '@deps/containers/page-header/interior-people-page-header';
@@ -7,21 +8,32 @@ import AddressCard from '@deps/containers/people-data-cards/address-card/address
 import EmailCard from '@deps/containers/people-data-cards/email-card/email-card';
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import PomAgentParty from '@deps/helpers/policy-sor/PomAgentParty';
 import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import styles from './agent-sub-page.module.css';
+import ActivityCard from '../people-data-cards/activity-card/activity-card';
 import AllocationCard from '../people-data-cards/allocation-card/allocation-card';
 import EmptyCard from '../people-data-cards/empty-card/empty-card';
+import { getAgentRoles } from '../person-sub-page/person-sub-page.helpers';
 
 export type AgentSubPage = {
     partyId: string;
+    /** When true, the outer wrapper omits its own box-shadow (embedded in a tabbed parent) */
+    isDualRoleView?: boolean;
 };
 
-export const AgentSubPage = ({ partyId }: AgentSubPage) => {
+export const AgentSubPage = ({
+    partyId,
+    isDualRoleView = false,
+}: AgentSubPage) => {
     const { policy, policyDetails } = useContext(PolicyData);
+    const { featureFlags } = useOptimizely();
 
     const { parties, partyRoles, policyNumber, product } = policy ?? {};
     const { planCode } = product ?? {};
@@ -50,40 +62,67 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                 : undefined,
     });
 
-    // show allocation card if there are any roles NOT endDated
+    // Agent-only roles for AllocationCard and ActivityCard
+    const agentOnlyRoles = useMemo(
+        () => getAgentRoles(selectedPolicyPartyRoles),
+        [selectedPolicyPartyRoles]
+    );
+
+    const newSelectedPolicyParty = policyDetails.getPartyById(partyId);
+
+    // show allocation card if there are any agent roles NOT endDated
     const showAllocationCard = useMemo(() => {
-        return !!selectedPolicyPartyRoles?.some(
-            (role) => !isEndDated(role.endDate)
-        );
-    }, [selectedPolicyPartyRoles]);
+        return !!agentOnlyRoles?.some((role) => !isEndDated(role.endDate));
+    }, [agentOnlyRoles]);
+
+    const { t } = useTranslation();
 
     return (
-        <div className="shadow-elevation-light-04">
+        <div className={isDualRoleView ? undefined : styles.wrapper}>
             {isLoading && (
-                <div className="h-screen text-center mt-16">
+                <div className={styles.loader}>
                     <Loader />
                 </div>
             )}
             {!isLoading && agentData ? (
                 <>
                     <PersonPageHeader
-                        selectedPolicyParty={agentData?.party}
-                        selectedPolicyPartyRoles={selectedPolicyPartyRoles}
+                        icon={
+                            <Icon
+                                type={IconType.BRIEFCASE}
+                                width={24}
+                                height={24}
+                            />
+                        }
+                        selectedPolicyParty={selectedPolicyParty}
+                        selectedPolicyPartyRoles={agentOnlyRoles}
                         editable={false}
                         partyStatus={selectedPolicyParty?.partyStatus}
+                        belowHeaderTextChildren={
+                            <div className={styles.infoBanner}>
+                                <Icon
+                                    type={IconType.CIRCLE_INFO}
+                                    width={16}
+                                    height={16}
+                                    className={styles.infoBannerIcon}
+                                />
+                                <span className={styles.infoBannerText}>
+                                    {t('allFields.roleTabsAgentBanner')}
+                                </span>
+                            </div>
+                        }
                     />
 
-                    <hr className=" h-0.5 border-none bg-gray-100" />
+                    <hr className={styles.sectionDivider} />
 
                     {showAllocationCard && (
                         <>
                             <AllocationCard
                                 deathBenefit={null}
-                                selectedPolicyPartyRoles={
-                                    selectedPolicyPartyRoles
-                                }
+                                hideRoleLabel
+                                selectedPolicyPartyRoles={agentOnlyRoles}
                             />
-                            <hr className=" h-0.5 border-none bg-gray-100" />
+                            <hr className={styles.sectionDivider} />
                         </>
                     )}
 
@@ -92,7 +131,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                         isAnnuity={policyDetails.isAnnuity}
                     />
 
-                    <hr className="h-0.5 border-none bg-gray-100" />
+                    <hr className={styles.sectionDivider} />
                     <PhoneCard
                         editable={false}
                         party={agentData?.party}
@@ -101,7 +140,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                         policyNumber={policyNumber}
                     />
 
-                    <hr className="h-0.5 border-none bg-gray-100" />
+                    <hr className={styles.sectionDivider} />
                     <EmailCard
                         editable={false}
                         party={agentData?.party}
@@ -110,7 +149,7 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                         policyNumber={policyNumber}
                     />
 
-                    <hr className="h-0.5 border-none bg-gray-100" />
+                    <hr className={styles.sectionDivider} />
                     <AddressCard
                         editable={false}
                         party={agentData?.party}
@@ -118,9 +157,20 @@ export const AgentSubPage = ({ partyId }: AgentSubPage) => {
                         planCode={planCode}
                         policyNumber={policyNumber}
                     />
+
+                    {featureFlags?.[FEATURE_FLAGS.REVISED_HISTORY_TABLE] && (
+                        <>
+                            <hr className={styles.sectionDivider} />
+                            <ActivityCard
+                                selectedPolicyPartyRoles={agentOnlyRoles}
+                                newSelectedPolicyParty={newSelectedPolicyParty}
+                                selectedPolicyParty={selectedPolicyParty}
+                            />
+                        </>
+                    )}
                 </>
             ) : (
-                <div className="p-4">
+                <div className={styles.emptyState}>
                     <EmptyCard text={'No Agent data available.'} />
                 </div>
             )}

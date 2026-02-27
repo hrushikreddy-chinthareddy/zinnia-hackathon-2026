@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import { Icon, IconType, TabContent } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
@@ -23,16 +24,23 @@ import {
 import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermissionCheck';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
+    checkAddressChangeEligibilityQuery,
+    checkCommunicationPreferenceChangeEligibilityQuery,
+    checkEmailChangeEligibilityQuery,
     checkManageBankChangeEligibilityQuery,
     checkPhoneChangeEligibilityQuery,
-    checkAddressChangeEligibilityQuery,
-    checkEmailChangeEligibilityQuery,
-    checkCommunicationPreferenceChangeEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
 import { TransactionPermission } from '@deps/utils/auth';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { PartyRole } from '@zinnia/api-types/types/sor';
 
+import PersonRoleTabs from './person-role-tabs';
+import {
+    getAgentRoles,
+    getNonAgentRoles,
+    hasAgentAndNonAgentRoles,
+    PersonRoleTabValues,
+} from './person-sub-page.helpers';
 import styles from './person-sub-page.module.css';
 import AgentSubPage from '../agent-sub-page/agent-sub-page';
 import ActivityCard from '../people-data-cards/activity-card/activity-card';
@@ -40,12 +48,15 @@ import ActivityCard from '../people-data-cards/activity-card/activity-card';
 export type PersonSubPageProps = {
     editable?: boolean;
     partyId: string;
+    /** Tab slug from the URL for dual-role persons (e.g. 'agent-details') */
+    roleTab?: string;
 };
 
 // TODO -- change editable to false once auth is implemented
 export const PersonSubPage = ({
     partyId,
     editable = true,
+    roleTab,
 }: PersonSubPageProps) => {
     const { policy, policyDetails } = useContext(PolicyData);
 
@@ -89,10 +100,6 @@ export const PersonSubPage = ({
     const relationshipToInsured = partyRoles?.find(
         (role) => role.partyId === selectedPolicyParty?.partyId
     )?.relationshipToInsured;
-
-    const selectedPartyRoles = selectedPolicyPartyRoles.map((roleObject) => {
-        return roleObject.partyRole?.toLowerCase();
-    });
 
     const { data: emailChangeEligibility } = useQuery({
         queryKey: ['emailChangeEligibility', planCode, policyNumber],
@@ -153,14 +160,15 @@ export const PersonSubPage = ({
         },
     });
 
-    const isAgent =
-        selectedPartyRoles.includes(
-            PartyRole.PRIMARYWRITINGAGENT.toLowerCase()
-        ) ||
-        selectedPartyRoles.includes(
-            PartyRole.PRIMARYSERVICINGAGENT.toLowerCase()
-        ) ||
-        selectedPartyRoles.includes('ADDITIONALWRITINGAGENT'.toLowerCase());
+    // Trigger condition: person has at least 1 agent role AND at least 1 non-agent role
+    const isDualRole = hasAgentAndNonAgentRoles(selectedPolicyPartyRoles);
+
+    // Pre-filtered role sets for dual-role mode
+    const hasAgentRoles = !!getAgentRoles(selectedPolicyPartyRoles).length;
+    const nonAgentPartyRoles = useMemo(
+        () => getNonAgentRoles(selectedPolicyPartyRoles),
+        [selectedPolicyPartyRoles]
+    );
 
     const { isPermissioned: isUserAllowedToEditCards } =
         useTransactionPermissionCheck(
@@ -212,22 +220,45 @@ export const PersonSubPage = ({
         },
     });
 
-    if (isAgent) {
+    // Agent-only (no non-agent roles) → existing AgentSubPage
+    if (hasAgentRoles && !isDualRole) {
         return <AgentSubPage partyId={partyId} />;
-    } else
-        return (
-            <div className="shadow-elevation-light-04">
-                <PersonPageHeader
-                    selectedPolicyParty={selectedPolicyParty}
-                    selectedPolicyPartyRoles={selectedPolicyPartyRoles}
-                    editable={
-                        editable &&
-                        communicationPreferenceChangeEligibility?.isEligibleCommunicationPreferenceChange
-                    }
-                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
-                    partyStatus={selectedPolicyParty?.partyStatus}
-                />
-                {beneficiaryRole && (
+    }
+
+    // Shared header: dual-role adds a User icon and shows only non-agent role tags
+    const header = (
+        <PersonPageHeader
+            icon={
+                isDualRole ? (
+                    <Icon type={IconType.USER} width={24} height={24} />
+                ) : undefined
+            }
+            selectedPolicyParty={selectedPolicyParty}
+            selectedPolicyPartyRoles={
+                isDualRole ? nonAgentPartyRoles : selectedPolicyPartyRoles
+            }
+            editable={
+                editable &&
+                communicationPreferenceChangeEligibility?.isEligibleCommunicationPreferenceChange
+            }
+            isUserPermissionedToEditCards={isUserAllowedToEditCards}
+            partyStatus={selectedPolicyParty?.partyStatus}
+        />
+    );
+
+    // Policy Details panel content (non-agent sections)
+    const policyDetailsContent = (
+        <>
+            {isDualRole && !!nonAgentPartyRoles.length ? (
+                <>
+                    <hr className={styles.sectionDivider} />
+                    <AllocationCard
+                        deathBenefit={null}
+                        selectedPolicyPartyRoles={nonAgentPartyRoles}
+                    />
+                </>
+            ) : (
+                beneficiaryRole && (
                     <>
                         <hr className={styles.sectionDivider} />
                         <AllocationCard
@@ -241,109 +272,141 @@ export const PersonSubPage = ({
                             selectedPartyType={selectedPolicyParty?.partyType}
                         />
                     </>
-                )}
+                )
+            )}
 
-                <hr className={styles.sectionDivider} />
-                <IdentificationCard
-                    selectedPolicyParty={newSelectedPolicyParty}
-                    isAnnuity={policyDetails.isAnnuity}
-                />
+            <hr className={styles.sectionDivider} />
+            <IdentificationCard
+                selectedPolicyParty={newSelectedPolicyParty}
+                isAnnuity={policyDetails.isAnnuity}
+            />
 
-                <hr className={styles.sectionDivider} />
-                <PhoneCard
-                    editable={
-                        editable &&
-                        phoneChangeEligibility?.isEligiblePhoneChange
-                    }
+            <hr className={styles.sectionDivider} />
+            <PhoneCard
+                editable={
+                    editable && phoneChangeEligibility?.isEligiblePhoneChange
+                }
+                isUserPermissionedToEditCards={isUserAllowedToEditCards}
+                party={selectedPolicyParty}
+                partyRoles={selectedPolicyPartyRoles}
+                planCode={planCode}
+                policyNumber={policyNumber}
+            />
+
+            <hr className={styles.sectionDivider} />
+            <EmailCard
+                editable={
+                    editable && emailChangeEligibility?.isEligibleEmailChange
+                }
+                isUserPermissionedToEditCards={isUserAllowedToEditCards}
+                party={selectedPolicyParty}
+                partyRoles={selectedPolicyPartyRoles}
+                planCode={planCode}
+                policyNumber={policyNumber}
+            />
+
+            <hr className={styles.sectionDivider} />
+            <AddressCard
+                editable={
+                    editable &&
+                    addressChangeEligibility?.isEligibleAddressChange
+                }
+                isUserPermissionedToEditCards={isUserAllowedToEditCards}
+                party={selectedPolicyParty}
+                partyRoles={selectedPolicyPartyRoles}
+                planCode={planCode}
+                policyNumber={policyNumber}
+            />
+
+            <hr className={styles.sectionDivider} />
+            {!hasTPD && (
+                <BankCard
+                    editable={editable}
                     isUserPermissionedToEditCards={isUserAllowedToEditCards}
                     party={selectedPolicyParty}
-                    partyRoles={selectedPolicyPartyRoles}
                     planCode={planCode}
                     policyNumber={policyNumber}
-                />
-
-                <hr className={styles.sectionDivider} />
-                <EmailCard
-                    editable={
-                        editable &&
-                        emailChangeEligibility?.isEligibleEmailChange
+                    isEligible={
+                        manageBankChangeEligibility?.isEligibleBankChange
                     }
-                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
-                    party={selectedPolicyParty}
-                    partyRoles={selectedPolicyPartyRoles}
-                    planCode={planCode}
-                    policyNumber={policyNumber}
                 />
+            )}
 
-                <hr className={styles.sectionDivider} />
-                <AddressCard
-                    editable={
-                        editable &&
-                        addressChangeEligibility?.isEligibleAddressChange
-                    }
-                    isUserPermissionedToEditCards={isUserAllowedToEditCards}
-                    party={selectedPolicyParty}
-                    partyRoles={selectedPolicyPartyRoles}
-                    planCode={planCode}
-                    policyNumber={policyNumber}
-                />
-
-                <hr className={styles.sectionDivider} />
-                {!hasTPD && (
-                    <BankCard
-                        editable={editable}
-                        isUserPermissionedToEditCards={isUserAllowedToEditCards}
-                        party={selectedPolicyParty}
-                        planCode={planCode}
-                        policyNumber={policyNumber}
-                        isEligible={
-                            manageBankChangeEligibility?.isEligibleBankChange
+            {isInsured && (
+                <>
+                    <hr className={styles.sectionDivider} />
+                    <UnderwritingCard
+                        riskClass={getRiskClass(coverageParticipant?.riskClass)}
+                        substandardRating={getSubstandardRating(
+                            coverageParticipant?.substandardRating,
+                            t
+                        )}
+                        disabled={
+                            !!selectedPolicyParty?.insured?.impairmentDetails
+                                ?.disabled
                         }
+                        disabilityStartDate={
+                            selectedPolicyParty?.insured?.impairmentDetails
+                                ?.disabilityStartDate
+                        }
+                        employed={!!selectedPolicyParty?.insured?.employed}
+                        employmentStatus={
+                            selectedPolicyParty?.insured?.employmentStatus
+                        }
+                        sexAtBirth={getSexAtBirth(
+                            selectedPolicyParty?.gender,
+                            t
+                        )}
                     />
-                )}
+                </>
+            )}
+            {featureFlags?.[FEATURE_FLAGS.REVISED_HISTORY_TABLE] && (
+                <>
+                    <hr className={styles.sectionDivider} />
+                    <ActivityCard
+                        selectedPolicyPartyRoles={
+                            isDualRole
+                                ? nonAgentPartyRoles
+                                : selectedPolicyPartyRoles
+                        }
+                        newSelectedPolicyParty={newSelectedPolicyParty}
+                        selectedPolicyParty={selectedPolicyParty}
+                    />
+                </>
+            )}
+        </>
+    );
 
-                {isInsured && (
-                    <>
-                        <hr className={styles.sectionDivider} />
-                        <UnderwritingCard
-                            riskClass={getRiskClass(
-                                coverageParticipant?.riskClass
-                            )}
-                            substandardRating={getSubstandardRating(
-                                coverageParticipant?.substandardRating,
-                                t
-                            )}
-                            disabled={
-                                !!selectedPolicyParty?.insured
-                                    ?.impairmentDetails?.disabled
-                            }
-                            disabilityStartDate={
-                                selectedPolicyParty?.insured?.impairmentDetails
-                                    ?.disabilityStartDate
-                            }
-                            employed={!!selectedPolicyParty?.insured?.employed}
-                            employmentStatus={
-                                selectedPolicyParty?.insured?.employmentStatus
-                            }
-                            sexAtBirth={getSexAtBirth(
-                                selectedPolicyParty?.gender,
-                                t
-                            )}
-                        />
-                    </>
-                )}
-                {featureFlags?.[FEATURE_FLAGS.REVISED_HISTORY_TABLE] && (
-                    <>
-                        <hr className={styles.sectionDivider} />
-                        <ActivityCard
-                            selectedPolicyPartyRoles={selectedPolicyPartyRoles}
-                            newSelectedPolicyParty={newSelectedPolicyParty}
-                            selectedPolicyParty={selectedPolicyParty}
-                        />
-                    </>
-                )}
+    // Dual-role: show tabs with Policy Details and Agent Details panels
+    if (isDualRole) {
+        return (
+            <div className={styles.wrapper}>
+                <PersonRoleTabs activeTab={roleTab}>
+                    <TabContent
+                        className={styles.tabContentFull}
+                        value={PersonRoleTabValues.policyDetails}
+                    >
+                        {header}
+                        {policyDetailsContent}
+                    </TabContent>
+                    <TabContent
+                        className={styles.tabContentFull}
+                        value={PersonRoleTabValues.agentDetails}
+                    >
+                        <AgentSubPage partyId={partyId} isDualRoleView />
+                    </TabContent>
+                </PersonRoleTabs>
             </div>
         );
+    }
+
+    // Non-agent-only: existing behavior without tabs
+    return (
+        <div className={styles.wrapper}>
+            {header}
+            {policyDetailsContent}
+        </div>
+    );
 };
 
 export default PersonSubPage;

@@ -297,6 +297,7 @@ const PolicyDetailsPage: React.FC<PolicyPageProps> = ({
                         <PersonSubPage
                             editable={canEditPolicy}
                             partyId={slug[1]}
+                            roleTab={slug[2]}
                         />
                     )
                 ) : (
