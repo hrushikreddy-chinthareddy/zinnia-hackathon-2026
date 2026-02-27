@@ -25,9 +25,10 @@ import {
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     FlatExtra,
-    SubStandardRating,
+    FlatExtraTypeEnum,
     PartyRole,
     PartyType,
+    SubStandardRating,
 } from '@zinnia/api-types/types/sor';
 
 const TableRating = ({
@@ -100,7 +101,7 @@ const FlatExtras = ({ flatExtras }: { flatExtras?: FlatExtra[] }) => {
                     }
                     variant={ContentVariant.BodySm}
                 />
-                {flatExtraType === FlatExtra.flatExtraType.TEMPORARY && (
+                {flatExtraType === FlatExtraTypeEnum.TEMPORARY && (
                     <Content
                         className="text-gray-600"
                         details={

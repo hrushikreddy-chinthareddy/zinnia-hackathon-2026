@@ -19,6 +19,7 @@ enum Connection {
     ZINNIA_AD = 'Zinnia-AD',
     FNWL_OKTA = 'FNWL-Okta',
     SECURITY_BENEFIT_OKTA = 'Security-Benefit-Okta',
+    SECURITY_BENEFIT_AD = 'Security-Benefit-AD',
 }
 
 // This function is used to derive the role from the connection name.  For now, carrierName === role, but this may not always be granular enough.
@@ -27,6 +28,7 @@ export function getRole(userConnection?: string): string {
         case Connection.FNWL_OKTA:
             return CarrierName.FARMERS;
         case Connection.SECURITY_BENEFIT_OKTA:
+        case Connection.SECURITY_BENEFIT_AD:
             return CarrierName.SECURITY_BENEFIT;
         default:
             return CarrierName.ZINNIA;

@@ -619,6 +619,15 @@ input:-webkit-autofill:active {
     -ms-overflow-style: -ms-autohiding-scrollbar; /* autohiding scrollbar */
 }
 
+/* Fix: When a Select opens inside a side-sheet, react-remove-scroll-bar */
+html[style*='overflow'] body[data-scroll-locked] {
+    overflow: unset !important;
+    overscroll-behavior: unset;
+    position: static !important;
+    margin: 0 !important;
+    padding: 0;
+}
+
 /* Height - 100view height - 80 px (height of the top navbar) */
 .height-adjusted {
     height: calc(100vh - 80px);

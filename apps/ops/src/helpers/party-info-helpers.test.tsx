@@ -9,8 +9,8 @@ import {
     Gender,
     PartyType,
     PolicyCoverage,
-    PolicyPartyRoles,
     PreferredCommunicationType,
+    RelationshipToInsuredEnum,
     RiskClass,
     SubStandardRating,
 } from '@zinnia/api-types/types/sor';
@@ -245,13 +245,13 @@ describe('helpers/party-info-helpers', () => {
         it('maps known relationship enums to t keys', () => {
             expect(
                 getRelationshipToInsured(
-                    PolicyPartyRoles.relationshipToParty.CHILD,
+                    RelationshipToInsuredEnum.CHILD,
                     t as any
                 )
             ).toBe('relationshipToInsured.child');
             expect(
                 getRelationshipToInsured(
-                    PolicyPartyRoles.relationshipToParty.SPOUSE,
+                    RelationshipToInsuredEnum.SPOUSE,
                     t as any
                 )
             ).toBe('relationshipToInsured.spouse');

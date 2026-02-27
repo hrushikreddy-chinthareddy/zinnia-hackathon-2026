@@ -1,4 +1,5 @@
 import { TabKeys } from '@deps/containers/people-data-cards/activity-card/activity-table/party-details-table';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 export enum SCREEN_BREAKPOINTS {
     xs = 320,
@@ -97,3 +98,11 @@ export const NOT_YET_AVAILABLE = 'notYetAvailable';
 export const DEBOUNCE_INTERVAL_200 = 200;
 
 export const PROCESS_WITHOUT_DOCUMENT = 'Proceed without linking case';
+
+export const AGENT_ROLES: string[] = [
+    PartyRole.PRIMARYSERVICINGAGENT,
+    PartyRole.PRIMARYWRITINGAGENT,
+    PartyRole.ADDITIONALWRITINGGAGENT,
+    PartyRole.ADDITIONALSERVICINGAGENT,
+    PartyRole.AGENT,
+];

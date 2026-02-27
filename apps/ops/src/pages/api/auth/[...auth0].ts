@@ -5,6 +5,7 @@ import {
     handleLogout,
 } from '@auth0/nextjs-auth0';
 import { deleteCookie, setCookie } from 'cookies-next';
+import { decodeJwt } from 'jose';
 
 import { PERMISSIONS_COOKIE_NAME } from '@deps/types/permissionsCookie';
 import {
@@ -81,16 +82,6 @@ export default handleAuth({
 
         // If a connectionName is provided, use it to attempt a client-specific login
         if (connectionName) {
-            const roleFromParam = getRole(connectionName);
-
-            setCookie('role', roleFromParam, {
-                req,
-                res,
-                maxAge: 60 * 60 * 24 * 30, // 30 days
-                path: '/',
-                sameSite: 'lax',
-            });
-
             logTrace('Silent login with connection', {
                 ...loggingContext,
                 connection: connectionName,
@@ -106,6 +97,7 @@ export default handleAuth({
         } else {
             // No client connection specified → default Zinnia login flow
             logTrace('Standard login', loggingContext);
+
             await handleLogin(req, res, {
                 returnTo: '/',
                 authorizationParams: {
@@ -132,6 +124,30 @@ export default handleAuth({
                 // Too reduce the size of the Auth0 Cookie, we can just remove these values.
                 // See: https://github.com/auth0/nextjs-auth0/issues/289#issuecomment-778229748
                 afterCallback(req, res, session) {
+                    if (session?.accessToken) {
+                        const claims = decodeJwt(session.accessToken);
+                        if (
+                            typeof claims.sourceConnection === 'string' &&
+                            !!claims.sourceConnection
+                        ) {
+                            logTrace('afterCallback::setting role cookie', {
+                                ...loggingContext,
+                                sourceConnection: claims.sourceConnection,
+                                role: getRole(claims.sourceConnection),
+                            });
+                            setCookie(
+                                'role',
+                                getRole(claims.sourceConnection),
+                                {
+                                    req,
+                                    res,
+                                    maxAge: 60 * 60 * 24 * 30, // 30 days
+                                    path: '/',
+                                    sameSite: 'lax',
+                                }
+                            );
+                        }
+                    }
                     const permissionsKey = `${process.env.NEXT_PUBLIC_SE2_BACKEND_URL}/permissions`;
                     Object.assign(session.user, {
                         [permissionsKey]: undefined,

@@ -21,7 +21,7 @@ module.exports = createJestConfig({
         '^jose': require.resolve('jose'),
         '^@panva/hkdf$': require.resolve('@panva/hkdf'),
     },
-    testRegex: '/.*(\\.test\\.tsx?$)',
+    testRegex: '(^((?!\\.vitest\\.).)*\\.test\\.(ts|tsx)$)',
     collectCoverage: true,
     coverageReporters: ['text', 'json', 'html'],
     coverageDirectory: '<rootDir>/src/jest/coverage',

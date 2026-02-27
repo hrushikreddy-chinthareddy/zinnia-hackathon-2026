@@ -11,7 +11,7 @@ import {
     FeatureFlagVariableType,
 } from '@deps/utils/optimizely/optimizely';
 
-interface OptimizelyData {
+export interface OptimizelyData {
     featureFlags: FeatureFlags;
     featureFlagVariables: FeatureFlagVariableType;
     areFlagsLoading: boolean;
@@ -25,7 +25,7 @@ export enum OptimizelyVariableKey {
     Clients = 'clients',
 }
 
-const OptimizelyDataContext = createContext<OptimizelyData>({
+export const OptimizelyDataContext = createContext<OptimizelyData>({
     featureFlags: {},
     featureFlagVariables: {},
     areFlagsLoading: true,

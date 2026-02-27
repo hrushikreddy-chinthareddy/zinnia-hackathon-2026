@@ -877,7 +877,12 @@
         "searchByFirstNamePlaceholder": "Individual's first name",
         "searchByLastNamePlaceholder": "Individual's last name",
         "searchButtonOwnerName": "Owner name",
-        "searchButtonAgentName": "Agent name"
+        "searchButtonAgentName": "Agent name",
+        "defaultTaskCardTitle": "Oops! Something went wrong while loading the task. Please try again.",
+        "defaultTaskCardSubtitle": "For any further help, ",
+        "helpDesk": "Submit a help desk ticket.",
+        "helpDeskLink": "https://zinnia.atlassian.net/servicedesk/customer/portal/6",
+        "leaveTransaction": "Leave this transaction"
     },
     "enums": {
         "ACCUMULATEDEARNINGS": "Accumulated earnings",
@@ -9388,7 +9393,8 @@
             "addProductAriaLabel": "Add product button",
             "editIllustration": "Edit Illustration",
             "initialDeathBenefitOption": "Initial death benefit option",
-            "archive": "Archive"
+            "archive": "Archive",
+            "exportPDF": "Export PDF"
         },
         "illustrationSelectForApplication": {
             "title": "Select for Application",

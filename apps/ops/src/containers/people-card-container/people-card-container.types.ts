@@ -10,6 +10,7 @@ export interface PeopleCardContainerProps {
     disabled?: boolean;
     cardDisableTooltip?: string;
     type?: BeneficiaryType | AgentType;
+    isAgentDataLoading?: boolean;
 }
 
 export interface PeopleCardData {
