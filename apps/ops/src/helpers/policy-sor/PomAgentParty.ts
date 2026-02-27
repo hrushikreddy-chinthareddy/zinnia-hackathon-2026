@@ -1,4 +1,5 @@
 import { PomAgentData } from '@deps/types/agents';
+import { ProducerType } from '@deps/types/pom';
 import {
     AddressType,
     Country,
@@ -10,7 +11,6 @@ import {
 } from '@zinnia/api-types/types/sor';
 
 import { PolicyParty } from './Parties';
-import { ProducerType } from '@deps/types/pom';
 
 export const transformPomAgentDataToParty = (
     // TODO: replace PomAgentData type with POM_Producer_Models_SearchProducersResult

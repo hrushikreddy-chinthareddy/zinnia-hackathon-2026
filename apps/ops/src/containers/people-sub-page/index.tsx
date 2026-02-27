@@ -294,7 +294,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
             const agent = agentData.find(
                 (agent) => agent?.partyId === tag.partyId
             );
-            if (!!agent) {
+            if (agent) {
                 // NOTE: this is complicated but POM and Zahara partyId for the same agent DO NOT match - MR
                 // Preserve SOR-derived tags/partyRoles so Servicing vs Writing Agent labels are correct
                 return {
