@@ -94,10 +94,10 @@ export const AgentSubPage = ({
                                 height={24}
                             />
                         }
-                        selectedPolicyParty={selectedPolicyParty}
+                        selectedPolicyParty={agentData.party}
                         selectedPolicyPartyRoles={agentOnlyRoles}
                         editable={false}
-                        partyStatus={selectedPolicyParty?.partyStatus}
+                        partyStatus={agentData.party.partyStatus}
                         belowHeaderTextChildren={
                             <div className={styles.infoBanner}>
                                 <Icon
