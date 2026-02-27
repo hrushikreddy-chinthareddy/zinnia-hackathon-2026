@@ -30,8 +30,8 @@ setup('authenticate', async ({ page }) => {
 
     // Alternatively, you can wait until the page reaches a state where all cookies are set.
     await expect(page.getByText('My Tasks')).toBeVisible();
-    // Wait for loader to disappear
-    await page.waitForLoadState('networkidle');
+    // Wait for page to be fully loaded to ensure all cookies are set, especially if there are redirects after login.
+    await page.waitForLoadState('load');
 
     // End of authentication steps.
 
