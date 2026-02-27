@@ -1,4 +1,4 @@
-import { Label, SelectFilter } from '@zinnia/bloom/components';
+import { SelectFilter } from '@zinnia/bloom/components';
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -36,11 +36,6 @@ export const TransactionTypeSelect = () => {
         <SelectFilter
             id="transaction-type"
             className={styles.selectContainer}
-            label={
-                <Label labelFor="transaction-type">
-                    {t('allFields.byTransactionType')}
-                </Label>
-            }
             onValueChange={updateSelections}
             options={typeOptions}
             values={selections}

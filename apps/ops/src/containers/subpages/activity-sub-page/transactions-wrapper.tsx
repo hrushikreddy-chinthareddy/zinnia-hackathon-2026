@@ -1,4 +1,4 @@
-import { Toggle } from '@zinnia/bloom/components';
+import { Label, Toggle } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import {
     useCallback,
@@ -191,6 +191,11 @@ export const TransactionsWrapper = () => {
             />
             <div className={styles.filters}>
                 <div className={styles.filterGroup}>
+                    <div className={styles.transactionTypeFilterLabel}>
+                        <Label labelFor="transaction-type">
+                            {t('allFields.byTransactionType')}
+                        </Label>
+                    </div>
                     <TransactionTypeSelect />
                     <Toggle
                         labelId="hide-daily-interest-toggle"

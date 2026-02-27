@@ -14,8 +14,12 @@
 
     .filterGroup {
         display: flex;
-        align-items: end;
-        gap: var(--measure-dimension-padding-2xl);
+        align-items: anchor-center;
+        gap: 0 var(--measure-dimension-padding-2xl);
+        flex-wrap: wrap;
+    }
+    .transactionTypeFilterLabel {
+        flex: 0 0 100%;
     }
 
     .table {
