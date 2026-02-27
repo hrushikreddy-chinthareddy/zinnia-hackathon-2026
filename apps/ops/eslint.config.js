@@ -164,6 +164,7 @@ module.exports = [
             '**/.next/**',
             '**/.storybook/**',
             '**/storybook-static/**',
+            '**/playwright-report/**',
             '**/e2e/**',
             '**/api-types/**',
             '**/scripts/**',

@@ -8,6 +8,7 @@
         "@headlessui/react": "^1.7.13",
         "@next/third-parties": "^14.2.3",
         "@optimizely/optimizely-sdk": "^5.3.4",
+        "@playwright/test": "^1.58.2",
         "@radix-ui/react-accordion": "^1.2.11",
         "@radix-ui/react-checkbox": "^1.1.4",
         "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -184,8 +185,6 @@
     "scripts": {
         "build": "pnpm run build-api-types-if-needed && next build --no-lint",
         "build-storybook": "pnpm run build-api-types-if-needed && storybook build",
-        "cypress": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh",
-        "cypress:local": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh --local",
         "dev": "pnpm run build-api-types-if-needed && next dev",
         "lint": "pnpm run build-api-types-if-needed && cross-env NODE_OPTIONS=--max-old-space-size=8192 ESLINT_USE_FLAT_CONFIG=true eslint . --max-warnings=0",
         "lint-staged": "pnpm run build-api-types-if-needed && lint-staged",
@@ -207,7 +206,10 @@
         "update-api-spec": "node ./scripts/update-type-definition.mjs",
         "generate-api-types": "node ./scripts/generate-all-types.mjs",
         "clean-api-types": "node ./scripts/clean-api-types.mjs",
-        "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs"
+        "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs",
+        "playwright": "playwright test",
+        "playwright:ui": "playwright test --ui",
+        "playwright:debug": "playwright test --debug"
     },
     "version": "2.30.0"
 }
