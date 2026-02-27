@@ -8,16 +8,13 @@ import AddressCard from '@deps/containers/people-data-cards/address-card/address
 import EmailCard from '@deps/containers/people-data-cards/email-card/email-card';
 import IdentificationCard from '@deps/containers/people-data-cards/identification-card/identification-card';
 import PhoneCard from '@deps/containers/people-data-cards/phone-card/phone-card';
-import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import PomAgentParty from '@deps/helpers/policy-sor/PomAgentParty';
 import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
-import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import styles from './agent-sub-page.module.css';
-import ActivityCard from '../people-data-cards/activity-card/activity-card';
 import AllocationCard from '../people-data-cards/allocation-card/allocation-card';
 import EmptyCard from '../people-data-cards/empty-card/empty-card';
 import { getAgentRoles } from '../person-sub-page/person-sub-page.helpers';
@@ -33,7 +30,6 @@ export const AgentSubPage = ({
     isDualRoleView = false,
 }: AgentSubPage) => {
     const { policy, policyDetails } = useContext(PolicyData);
-    const { featureFlags } = useOptimizely();
 
     const { parties, partyRoles, policyNumber, product } = policy ?? {};
     const { planCode } = product ?? {};
@@ -62,13 +58,11 @@ export const AgentSubPage = ({
                 : undefined,
     });
 
-    // Agent-only roles for AllocationCard and ActivityCard
+    // Agent-only roles for AllocationCard
     const agentOnlyRoles = useMemo(
         () => getAgentRoles(selectedPolicyPartyRoles),
         [selectedPolicyPartyRoles]
     );
-
-    const newSelectedPolicyParty = policyDetails.getPartyById(partyId);
 
     // show allocation card if there are any agent roles NOT endDated
     const showAllocationCard = useMemo(() => {
@@ -119,7 +113,6 @@ export const AgentSubPage = ({
                         <>
                             <AllocationCard
                                 deathBenefit={null}
-                                hideRoleLabel
                                 selectedPolicyPartyRoles={agentOnlyRoles}
                             />
                             <hr className={styles.sectionDivider} />
@@ -157,17 +150,6 @@ export const AgentSubPage = ({
                         planCode={planCode}
                         policyNumber={policyNumber}
                     />
-
-                    {featureFlags?.[FEATURE_FLAGS.REVISED_HISTORY_TABLE] && (
-                        <>
-                            <hr className={styles.sectionDivider} />
-                            <ActivityCard
-                                selectedPolicyPartyRoles={agentOnlyRoles}
-                                newSelectedPolicyParty={newSelectedPolicyParty}
-                                selectedPolicyParty={selectedPolicyParty}
-                            />
-                        </>
-                    )}
                 </>
             ) : (
                 <div className={styles.emptyState}>

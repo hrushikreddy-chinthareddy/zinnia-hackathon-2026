@@ -36,7 +36,6 @@ import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import PersonRoleTabs from './person-role-tabs';
 import {
-    getAgentRoles,
     getNonAgentRoles,
     hasAgentAndNonAgentRoles,
     PersonRoleTabValues,
@@ -163,12 +162,15 @@ export const PersonSubPage = ({
     // Trigger condition: person has at least 1 agent role AND at least 1 non-agent role
     const isDualRole = hasAgentAndNonAgentRoles(selectedPolicyPartyRoles);
 
-    // Pre-filtered role sets for dual-role mode
-    const hasAgentRoles = !!getAgentRoles(selectedPolicyPartyRoles).length;
+    // Pre-filtered non-agent roles for dual-role mode
     const nonAgentPartyRoles = useMemo(
         () => getNonAgentRoles(selectedPolicyPartyRoles),
         [selectedPolicyPartyRoles]
     );
+
+    // Agent-only if all roles are agent roles (i.e. no non-agent roles)
+    const isAgentOnly =
+        !nonAgentPartyRoles.length && !!selectedPolicyPartyRoles.length;
 
     const { isPermissioned: isUserAllowedToEditCards } =
         useTransactionPermissionCheck(
@@ -221,7 +223,7 @@ export const PersonSubPage = ({
     });
 
     // Agent-only (no non-agent roles) → existing AgentSubPage
-    if (hasAgentRoles && !isDualRole) {
+    if (isAgentOnly) {
         return <AgentSubPage partyId={partyId} />;
     }
 
@@ -364,11 +366,7 @@ export const PersonSubPage = ({
                 <>
                     <hr className={styles.sectionDivider} />
                     <ActivityCard
-                        selectedPolicyPartyRoles={
-                            isDualRole
-                                ? nonAgentPartyRoles
-                                : selectedPolicyPartyRoles
-                        }
+                        selectedPolicyPartyRoles={selectedPolicyPartyRoles}
                         newSelectedPolicyParty={newSelectedPolicyParty}
                         selectedPolicyParty={selectedPolicyParty}
                     />
