@@ -193,6 +193,8 @@ export const getPrefCommunicationType = (
     }
 
     if (contactValue) {
+        // TODO: The contact method language doesn't make sense here,
+        // since the actual contact details are displayed, not the method.
         return (
             <div className="mr-8 break-all">
                 <p className="typography-labels-field-label">

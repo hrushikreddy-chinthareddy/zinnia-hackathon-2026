@@ -12,7 +12,6 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import PomAgentParty from '@deps/helpers/policy-sor/PomAgentParty';
 import { getPomAgentData } from '@deps/queries/api/agents';
-import { PomAgentData } from '@deps/types/agents';
 
 import styles from './agent-sub-page.module.css';
 import AllocationCard from '../people-data-cards/allocation-card/allocation-card';
@@ -52,10 +51,7 @@ export const AgentSubPage = ({
         queryKey: ['agentData', agentId, policyNumber, planCode],
         queryFn: () => getPomAgentData({ id: agentId, policyNumber, planCode }),
         enabled: !!policyNumber && !!agentId && !!planCode,
-        select: (data) =>
-            data
-                ? new PomAgentParty(data as PomAgentData, selectedPolicyParty)
-                : undefined,
+        select: (data) => (data ? new PomAgentParty(data) : undefined),
     });
 
     // Agent-only roles for AllocationCard
