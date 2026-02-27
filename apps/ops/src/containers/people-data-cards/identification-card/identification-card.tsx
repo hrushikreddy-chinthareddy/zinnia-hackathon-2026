@@ -204,26 +204,30 @@ const IdentificationCard = ({
                         ))}
                         {isOrganization && (
                             <>
-                                <FieldData
-                                    label={t(
-                                        'people.card.identification.options.orgCode'
-                                    )}
-                                    tooltipBody={t(
-                                        'people.card.identification.options.orgCodeTooltip'
-                                    )}
-                                    tooltipTitle={t(
-                                        'people.card.identification.options.orgCode'
-                                    )}
-                                >
-                                    {safeString(organizationCode)}
-                                </FieldData>
-                                <FieldData
-                                    label={t(
-                                        'people.card.identification.options.entityType'
-                                    )}
-                                >
-                                    {safeString(entityType)}
-                                </FieldData>
+                                {!!organizationCode && (
+                                    <FieldData
+                                        label={t(
+                                            'people.card.identification.options.orgCode'
+                                        )}
+                                        tooltipBody={t(
+                                            'people.card.identification.options.orgCodeTooltip'
+                                        )}
+                                        tooltipTitle={t(
+                                            'people.card.identification.options.orgCode'
+                                        )}
+                                    >
+                                        {safeString(organizationCode)}
+                                    </FieldData>
+                                )}
+                                {!!entityType && (
+                                    <FieldData
+                                        label={t(
+                                            'people.card.identification.options.entityType'
+                                        )}
+                                    >
+                                        {safeString(entityType)}
+                                    </FieldData>
+                                )}
                             </>
                         )}
 
