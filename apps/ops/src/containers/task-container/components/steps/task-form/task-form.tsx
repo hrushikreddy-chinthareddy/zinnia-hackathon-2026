@@ -369,9 +369,9 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     useEffect(() => {
         if (TaskType.Standard_Document_Matching === task.taskType) {
             const matchedCase = task?.data?.potentialMatches?.find(
-                (match: any) =>
-                    match.correlationid === task?.data?.matchingResult
+                (match: any) => match?.value === task?.data?.matchingResult
             );
+
             setTask((ogTask: any) => ({
                 ...ogTask,
                 data: {
@@ -380,8 +380,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         task?.data?.matchingResult === 'ENTERED'
                             ? task?.data?.caseId
                             : matchedCase
-                            ? matchedCase.zlCaseId
-                            : null,
+                            ? matchedCase?.subElement?.value ?? ''
+                            : '',
                 },
             }));
         }
