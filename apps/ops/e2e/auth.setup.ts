@@ -16,11 +16,15 @@ setup('authenticate', async ({ page }) => {
         page.waitForURL(/\/u\/login\/identifier/i),
         signInButton.click(),
     ]);
+    if (!process.env.E2E_USERNAME || !process.env.E2E_PASSWORD) {
+        const missingVars = ['E2E_USERNAME', 'E2E_PASSWORD'].filter((v) => !process.env[v]);
+        throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    }
     const signInField = page.getByLabel('Email address');
     await expect(signInField).toBeVisible({ timeout: TIMEOUT });
-    await signInField.fill(process.env.E2E_USERNAME!);
+    await signInField.fill(process.env.E2E_USERNAME);
     await page.getByRole('button', { name: 'Continue' }).click();
-    await page.getByLabel('Password').fill(process.env.E2E_PASSWORD!);
+    await page.getByLabel('Password').fill(process.env.E2E_PASSWORD);
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // Wait until the page receives the cookies.

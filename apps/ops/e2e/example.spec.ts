@@ -4,7 +4,7 @@ const TIMEOUT = 15_000;
 
 test.describe('Case Page', () => {
     test('Loads properly', async ({ page }) => {
-        await page.goto('http://localhost:3000');
+        await page.goto('/');
         await page.getByRole('link', { name: 'Cases' }).click();
 
         // Wait for navigation to complete
@@ -28,7 +28,7 @@ test.describe('Policy Page', () => {
     test('loads page, opens quick action menu, and navigates to policy details', async ({
         page,
     }) => {
-        await page.goto('http://localhost:3000');
+        await page.goto('/');
 
         await page.getByRole('link', { name: 'Policies' }).click();
 
@@ -84,7 +84,7 @@ test.describe('Policy Page', () => {
 
 test.describe('Transactions Ops Page ', () => {
     test('Loads properly', async ({ page }) => {
-        await page.goto('http://localhost:3000');
+        await page.goto('/');
         await page.getByRole('link', { name: 'TransactionOps Suite' }).click();
         await page.waitForURL('**/create-case');
 
@@ -97,7 +97,7 @@ test.describe('Transactions Ops Page ', () => {
 
 test.describe('Analytics Page ', () => {
     test('Loads properly', async ({ page }) => {
-        await page.goto('http://localhost:3000');
+        await page.goto('/');
         await page.getByRole('link', { name: 'Analytics' }).click();
         await page.waitForURL('**/analytics/cases');
 
