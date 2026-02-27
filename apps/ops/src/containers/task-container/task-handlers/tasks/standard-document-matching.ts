@@ -3,11 +3,11 @@ import { FormMetadata } from '@deps/models/case/task';
 import { BeneficiaryRecord } from '@deps/models/case/task/beneficiary-record';
 import { TransactionData } from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import { getProcessReferenceDataSSR } from '@deps/queries/api/cases';
 import { searchTransactionsSSR } from '@deps/queries/api/transaction-search';
 
 import { applyDocumentMatchingPotentialMatches } from '../../task.helpers';
 import { TaskHandler } from '../types';
+import { processReferenceDataAdapter } from './default-case-data-entry';
 
 const DEFAULT_CASE_TYPE = 'Case Type Not Found';
 
@@ -20,16 +20,16 @@ export const DocumentMatchingHandler: TaskHandler<
 > = {
     api: async (payload, accessToken, logCtx) => {
         const CASE_DATA_TYPE = 'PROCESS';
-        const potentialMatchCriteria = payload?.data?.potentialMatchCriteria;
+        const potentialMatchCriteria =
+            payload?.data?.potentialMatchCriteria ?? {};
         const potentialMatches = await searchTransactionsSSR(
             potentialMatchCriteria,
             accessToken,
             logCtx
         );
 
-        const caseTypes = await getProcessReferenceDataSSR(
+        const caseTypes = await processReferenceDataAdapter(
             CASE_DATA_TYPE,
-            '',
             accessToken,
             logCtx
         );
