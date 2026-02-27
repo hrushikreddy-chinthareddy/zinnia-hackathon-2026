@@ -8,6 +8,7 @@
         "@headlessui/react": "^1.7.13",
         "@next/third-parties": "^14.2.3",
         "@optimizely/optimizely-sdk": "^5.3.4",
+        "@playwright/test": "^1.58.2",
         "@radix-ui/react-accordion": "^1.2.11",
         "@radix-ui/react-checkbox": "^1.1.4",
         "@radix-ui/react-dropdown-menu": "^2.0.6",
@@ -35,6 +36,7 @@
         "@types/react-dom": "^18.3.0",
         "@types/uuid": "^9.0.2",
         "@types/xml2js": "^0.4.14",
+        "@vitest/eslint-plugin": "^1.6.9",
         "@zinnia/bloom": "^7.7.1",
         "@zinnia/form-engine-sdk": "3.1.0",
         "ag-grid-community": "29.2.0",
@@ -113,16 +115,17 @@
         "@swc/core": "^1.3.39",
         "@tanstack/eslint-plugin-query": "^5.62.1",
         "@testing-library/dom": "^9.0.0",
-        "@testing-library/jest-dom": "^6.6.3",
+        "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^14.3.1",
         "@testing-library/user-event": "^14.4.3",
         "@types/file-saver": "^2.0.7",
         "@types/jest": "^29.5.11",
         "@types/jest-axe": "^3.5.5",
         "@types/lodash": "^4.17.20",
-        "@types/node": "18.11.18",
+        "@types/node": "^20.0.0",
         "@typescript-eslint/eslint-plugin": "^6.18.1",
         "@typescript-eslint/parser": "^6.18.1",
+        "@vitejs/plugin-react": "^5.1.4",
         "chromatic": "^11.3.0",
         "cross-env": "^7.0.3",
         "embla-carousel": "^8.5.2",
@@ -149,6 +152,7 @@
         "jest-fail-on-console": "^3.1.2",
         "jsdom": "^21.1.0",
         "lint-staged": "^13.1.0",
+        "msw": "^2.12.10",
         "next-router-mock": "^0.9.2",
         "node-mocks-http": "^1.17.2",
         "postcss": "^8.4.31",
@@ -162,7 +166,10 @@
         "tailwindcss": "^3.2.7",
         "ts-jest": "^29.1.1",
         "tsconfig-paths-webpack-plugin": "^4.0.1",
-        "typescript": "^5.9.2"
+        "typescript": "^5.9.2",
+        "vite-plugin-svgr": "^4.5.0",
+        "vite-tsconfig-paths": "^6.1.1",
+        "vitest": "^4.0.18"
     },
     "lint-staged": {
         "src/**/*.{css,scss}": [
@@ -178,8 +185,6 @@
     "scripts": {
         "build": "pnpm run build-api-types-if-needed && next build --no-lint",
         "build-storybook": "pnpm run build-api-types-if-needed && storybook build",
-        "cypress": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh",
-        "cypress:local": "pnpm run build-api-types-if-needed && bash ./e2e/scripts/cypress-tests.sh --local",
         "dev": "pnpm run build-api-types-if-needed && next dev",
         "lint": "pnpm run build-api-types-if-needed && cross-env NODE_OPTIONS=--max-old-space-size=8192 ESLINT_USE_FLAT_CONFIG=true eslint . --max-warnings=0",
         "lint-staged": "pnpm run build-api-types-if-needed && lint-staged",
@@ -194,13 +199,17 @@
         "storybook": "pnpm run build-api-types-if-needed && storybook dev -p 6006",
         "test": "pnpm run build-api-types-if-needed && jest --verbose=true --maxWorkers=50% --coverage",
         "test-watch": "pnpm run build-api-types-if-needed && pnpm test -- --watch",
+        "test-vitest": "pnpm run build-api-types-if-needed && vitest",
         "tokenize": "style-dictionary build",
         "check-types": "pnpm run build-api-types-if-needed && tsc --project ./tsconfig.json",
         "build-api-types": "node ./scripts/build-types-with-timing.mjs",
         "update-api-spec": "node ./scripts/update-type-definition.mjs",
         "generate-api-types": "node ./scripts/generate-all-types.mjs",
         "clean-api-types": "node ./scripts/clean-api-types.mjs",
-        "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs"
+        "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs",
+        "playwright": "playwright test",
+        "playwright:ui": "playwright test --ui",
+        "playwright:debug": "playwright test --debug"
     },
     "version": "2.30.0"
 }
