@@ -1,6 +1,7 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useMutation } from '@tanstack/react-query';
-import { get } from 'lodash';
+import { AxiosResponse } from 'axios';
+import { get, isObject } from 'lodash';
 import merge from 'lodash/merge';
 import { GetServerSidePropsContext } from 'next';
 import { useSearchParams } from 'next/navigation';
@@ -20,6 +21,7 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
 import { parseClientCase } from '@deps/queries/api/v1/client-case-manager/parse-client-case';
+import { parseClientCaseError } from '@deps/queries/api/v1/client-case-manager/parse-client-case-error';
 import { postIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { SegmentPageName } from '@deps/types/segment-analytics';
@@ -87,7 +89,7 @@ export default function NewClientCase(
         onMutate: () => {
             // add loading logic
         },
-        onError: () => {
+        onError: (_: Error | AxiosResponse) => {
             // add error logic
         },
     });
@@ -136,18 +138,18 @@ export default function NewClientCase(
 
     // Extract error message from axios response if available
     const errorMessage =
-        error instanceof Object && 'data' in error
-            ? ((get(error, 'data.message') || get(error, 'data.title')) as
-                  | undefined
-                  | string)
-            : error?.message;
+        isObject(error) && 'data' in error
+            ? parseClientCaseError(error)
+            : get(error, 'message');
 
     return IllustrationsPage({
         ...props,
-        ...(error && {
-            fetchingErrorMessage: errorMessage,
-            fetchingErrorOrigin: ErrorOrigin.ClientCase,
-        }),
+        ...(error
+            ? {
+                  fetchingErrorMessage: errorMessage,
+                  fetchingErrorOrigin: ErrorOrigin.ClientCase,
+              }
+            : null),
     });
 }
 const getAuthToken = async (

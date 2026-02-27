@@ -1,5 +1,5 @@
 import { AxiosResponse } from 'axios';
-import { get } from 'lodash';
+import { get, isObject } from 'lodash';
 
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
@@ -10,13 +10,15 @@ import {
 } from '@deps/types/illustrations';
 import { LoggingContext } from '@deps/utils/server-logging';
 
+import { parseClientCaseError } from '../../v1/client-case-manager/parse-client-case-error';
+
 export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
 
 const handleError = (error: unknown) => {
     const message =
-        get(error, 'data.message') ??
-        get(error, 'message') ??
-        'Unknown error creating client case';
+        isObject(error) && 'data' in error
+            ? parseClientCaseError(error as AxiosResponse)
+            : get(error, 'message') ?? 'Unknown error creating client case';
     throwTypedError(message, CLIENT_CASE_MANAGER_API_ORIGIN);
 };
 

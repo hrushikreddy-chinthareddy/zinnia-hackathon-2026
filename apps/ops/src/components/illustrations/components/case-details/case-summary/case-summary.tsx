@@ -16,7 +16,7 @@ import {
 } from '@zinnia/bloom/components';
 import { AxiosResponse } from 'axios';
 import clsx from 'clsx';
-import { get } from 'lodash';
+import { get, isObject } from 'lodash';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
 import { useCallback, useEffect, useState } from 'react';
@@ -33,6 +33,7 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
+import { parseClientCaseError } from '@deps/queries/api/v1/client-case-manager/parse-client-case-error';
 import { patchIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import {
     IllustrationsClientCase,
@@ -142,10 +143,9 @@ const IllustrationCaseSumary = ({
         onError: (error: Error | AxiosResponse) => {
             // Extract error message from axios response if available
             const errorMessage =
-                'data' in error
-                    ? ((get(error, 'data.message') ||
-                          get(error, 'data.title')) as undefined | string)
-                    : error?.message;
+                isObject(error) && 'data' in error
+                    ? parseClientCaseError(error)
+                    : get(error, 'message');
 
             setBannerText(errorMessage || '');
         },
