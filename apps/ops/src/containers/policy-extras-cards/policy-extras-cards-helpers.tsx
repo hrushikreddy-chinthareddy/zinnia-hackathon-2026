@@ -19,7 +19,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyExtrasCardProps } from '@deps/components/policy-extras-card/policy-extras-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
-    useGetRiskClass,
+    getRiskClass,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -51,6 +51,7 @@ import {
     FeatureType,
     Rider,
     SubStandardRating,
+    RiskClass,
 } from '@zinnia/api-types/types/sor';
 
 import { RIDER_NOT_ELECTED } from './consts';
@@ -681,7 +682,10 @@ const RiderFormatConfig = {
     insuredAgeAtIssue: convertToString,
     partyId: convertToString,
     partyAgeAtIssue: convertToString,
-    riskClass: useGetRiskClass, //enum
+    riskClass: (value: RiskClass | undefined) => {
+        const { t } = i18n as I18n;
+        return getRiskClass(value, t);
+    }, //enum
     substandardRating: customGetSubstandardRating, //enum
     flatExtraType: getTranslationValues(
         'policy.extras.riders.flatExtraTypeValues'
