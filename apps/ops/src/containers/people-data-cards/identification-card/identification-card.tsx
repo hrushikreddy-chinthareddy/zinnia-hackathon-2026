@@ -196,9 +196,9 @@ const IdentificationCard = ({
                                 )}
                             </FieldData>
                         )}
-                        {mainActiveIdentifications.map((identification) => (
+                        {mainActiveIdentifications.map((identification, i) => (
                             <IdentificationDisplay
-                                key={identification.identificationType}
+                                key={`${identification.identificationType}-main-${i}`}
                                 identification={identification}
                             />
                         ))}
@@ -299,9 +299,9 @@ const IdentificationCard = ({
                             </>
                         )}
                         {additionalActiveIdentifications.map(
-                            (identification) => (
+                            (identification, i) => (
                                 <IdentificationDisplay
-                                    key={identification.identificationType}
+                                    key={`${identification.identificationType}-additional-${i}`}
                                     identification={identification}
                                 />
                             )
