@@ -73,7 +73,7 @@ import {
     getRelationshipToInsured,
     getBankAccountType,
     findCoverageParticipant,
-    useGetRiskClass,
+    getRiskClass,
     getSubstandardRating,
     getSexAtBirth,
     getEmploymentStatus,
@@ -303,11 +303,11 @@ describe('helpers/party-info-helpers', () => {
 
     describe('getRiskClass', () => {
         it('maps enums to i18n labels via global i18n', () => {
-            const label = useGetRiskClass(RiskClass.ELITENONTOBACCO);
+            const label = getRiskClass(RiskClass.ELITENONTOBACCO, t as any);
             expect(label).toBe(
                 'people.card.underwritingInfo.riskClassOptions.eliteNonTobacco'
             );
-            expect(useGetRiskClass(undefined)).toBeUndefined();
+            expect(getRiskClass(undefined, t as any)).toBeUndefined();
         });
     });
 

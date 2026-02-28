@@ -30,7 +30,7 @@ import {
     getHeaderText,
     getPrefCommunicationType,
     getRelationshipToInsured,
-    useGetRiskClass,
+    getRiskClass,
     getSexAtBirth,
     getSubstandardRating,
     getAddressType,
@@ -243,7 +243,7 @@ describe('getRiskClass', () => {
             partyInfo.partyId
         );
         if (coverageParticipant) {
-            riskClass = useGetRiskClass(coverageParticipant.riskClass);
+            riskClass = getRiskClass(coverageParticipant.riskClass, t);
         }
         expect(riskClass).toBe(
             t('people.card.underwritingInfo.riskClassOptions.standardTobacco')
