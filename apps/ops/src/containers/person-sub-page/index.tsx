@@ -326,7 +326,10 @@ export const PersonSubPage = ({
                 <>
                     <hr className={styles.sectionDivider} />
                     <UnderwritingCard
-                        riskClass={getRiskClass(coverageParticipant?.riskClass)}
+                        riskClass={getRiskClass(
+                            coverageParticipant?.riskClass,
+                            t
+                        )}
                         substandardRating={getSubstandardRating(
                             coverageParticipant?.substandardRating,
                             t

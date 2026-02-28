@@ -159,7 +159,7 @@ export const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
                     <Content
                         details={
                             riskClass
-                                ? (getRiskClass(riskClass) as string)
+                                ? getRiskClass(riskClass, t)
                                 : DEFAULT_ERROR_STRING
                         }
                         variant={ContentVariant.BodySm}

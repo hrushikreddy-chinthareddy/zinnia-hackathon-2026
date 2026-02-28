@@ -4,7 +4,7 @@ import { useTranslation } from 'next-i18next';
 import {
     findCoverageParticipant,
     getEmploymentStatus,
-    getRiskClass,
+    useGetRiskClass,
     getSexAtBirth,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
@@ -56,7 +56,9 @@ export const UnderwritingCardContainer = () => {
     return (
         <div className="p-6">
             <UnderwritingCard
-                riskClass={getRiskClass(coverageParticipant?.riskClass) || '-'}
+                riskClass={
+                    useGetRiskClass(coverageParticipant?.riskClass) || '-'
+                }
                 substandardRating={
                     getSubstandardRating(
                         coverageParticipant?.substandardRating,

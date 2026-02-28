@@ -19,7 +19,7 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { PolicyExtrasCardProps } from '@deps/components/policy-extras-card/policy-extras-card';
 import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import {
-    getRiskClass,
+    useGetRiskClass,
     getSubstandardRating,
 } from '@deps/helpers/party-info-helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
@@ -681,7 +681,7 @@ const RiderFormatConfig = {
     insuredAgeAtIssue: convertToString,
     partyId: convertToString,
     partyAgeAtIssue: convertToString,
-    riskClass: getRiskClass, //enum
+    riskClass: useGetRiskClass, //enum
     substandardRating: customGetSubstandardRating, //enum
     flatExtraType: getTranslationValues(
         'policy.extras.riders.flatExtraTypeValues'

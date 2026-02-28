@@ -1,4 +1,4 @@
-import { TFunction, useTranslation } from 'next-i18next';
+import { TFunction } from 'next-i18next';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -311,9 +311,9 @@ export const findCoverageParticipant = (
 };
 
 export const getRiskClass = (
-    riskClass: RiskClass | undefined
+    riskClass: RiskClass | undefined,
+    t: TFunction
 ): string | undefined => {
-    const { t } = useTranslation();
     switch (riskClass) {
         case RiskClass.ULTRANONTOBACCO:
             return t(
