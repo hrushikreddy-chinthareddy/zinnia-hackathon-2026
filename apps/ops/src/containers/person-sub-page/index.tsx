@@ -251,30 +251,18 @@ export const PersonSubPage = ({
     // Policy Details panel content (non-agent sections)
     const policyDetailsContent = (
         <>
-            {isDualRole && !!nonAgentPartyRoles.length ? (
+            {beneficiaryRole && (
                 <>
                     <hr className={styles.sectionDivider} />
                     <AllocationCard
-                        deathBenefit={null}
-                        selectedPolicyPartyRoles={nonAgentPartyRoles}
+                        allocation={selectedPolicyParty?.beneficiaryPercentage}
+                        editable={editable}
+                        deathBenefit={null} // deathBenefit is needed for estimated amount, which is currently out of scope
+                        relationshipToInsured={relationshipToInsured}
+                        selectedPartyId={selectedPolicyParty?.partyId}
+                        selectedPartyType={selectedPolicyParty?.partyType}
                     />
                 </>
-            ) : (
-                beneficiaryRole && (
-                    <>
-                        <hr className={styles.sectionDivider} />
-                        <AllocationCard
-                            allocation={
-                                selectedPolicyParty?.beneficiaryPercentage
-                            }
-                            editable={editable}
-                            deathBenefit={null} // deathBenefit is needed for estimated amount, which is currently out of scope
-                            relationshipToInsured={relationshipToInsured}
-                            selectedPartyId={selectedPolicyParty?.partyId}
-                            selectedPartyType={selectedPolicyParty?.partyType}
-                        />
-                    </>
-                )
             )}
 
             <hr className={styles.sectionDivider} />
