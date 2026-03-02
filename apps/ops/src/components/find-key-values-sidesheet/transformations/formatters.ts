@@ -4,6 +4,7 @@ import {
     numberFormatify,
     percentFormatify,
 } from '@deps/helpers/numbers.helpers';
+import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { DEFAULT_ERROR_STRING, toSentenceCase } from '@deps/utils/strings';
 
@@ -325,6 +326,42 @@ export const addLinkToPartyId = ({
     };
 
     return partialPartyField;
+};
+
+/**
+ * Adds a link to party pages for a rider's insureds and covered individuals
+ * @param node The node to add the link to
+ * @param policyDetails the policyDetails class
+ */
+export const addPartyLink = ({
+    node,
+    policyDetails,
+}: {
+    node: DataNode;
+    policyDetails: PolicyDetails;
+}) => {
+    if (
+        node.type !== FieldType.field ||
+        !policyDetails?.planCode ||
+        !policyDetails?.policyNumber ||
+        !['insuredId', 'partyId'].includes(node.label)
+    ) {
+        return node;
+    }
+    const party = policyDetails?.getPartyById(node.value);
+    // escape early, there isn't a party tied to the value
+    if (!party || !party?.partyId) {
+        return node;
+    }
+    return {
+        ...node,
+        value: party.fullName ?? party?.partyId ?? node.value,
+        link: formatPartyLink({
+            planCode: policyDetails.planCode,
+            policyNumber: policyDetails.policyNumber,
+            partyId: party.partyId,
+        }),
+    };
 };
 
 /**

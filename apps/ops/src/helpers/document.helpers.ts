@@ -1,6 +1,6 @@
 import { mimeToExt, nameToExt } from '@deps/models/case/document';
 
-export const getFileSubtype = (blob: Blob) => {
+export const getFileSubtype = (blob: Blob & { name?: string }) => {
     if (!blob) return '';
 
     const { type, name } = blob;

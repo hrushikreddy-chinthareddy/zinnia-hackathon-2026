@@ -126,6 +126,10 @@ module.exports = [
                             group: 'internal',
                         },
                         {
+                            pattern: '@vitest/**',
+                            group: 'internal',
+                        },
+                        {
                             pattern: 'next-i18next.config',
                             group: 'internal',
                         },
@@ -160,6 +164,7 @@ module.exports = [
             '**/.next/**',
             '**/.storybook/**',
             '**/storybook-static/**',
+            '**/playwright-report/**',
             '**/e2e/**',
             '**/api-types/**',
             '**/scripts/**',
@@ -204,6 +209,16 @@ module.exports = [
             '@next/next/no-html-link-for-pages': 'off',
         },
     },
+    // Scope Vitest lint rules to only Vitest test files and the Vitest directory
+    ...compat
+        .config({
+            extends: ['plugin:@vitest/legacy-recommended'],
+        })
+        .flatMap((config) => fixupConfigRules(config))
+        .map((config) => ({
+            ...config,
+            files: ['vitest/**/*.{ts,tsx}', '**/*.vitest.*.{ts,tsx}'],
+        })),
     {
         files: [
             'src/components/button-group/button-group.stories.tsx',
