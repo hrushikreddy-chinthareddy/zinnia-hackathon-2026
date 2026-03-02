@@ -35,6 +35,9 @@ const identifySelectedSendCheckOption = (
     return SendCheckOption.OwnerAddress;
 };
 
+const SEND_CHECK_LABEL_KEY =
+    'caseWithdrawal.request.amountDetails.partialWithdrawal.pleaseChooseOne';
+
 const SendCheckSelect = ({
     fieldName,
     classNames,
@@ -56,6 +59,8 @@ const SendCheckSelect = ({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.distributionMethod',
     });
+    const { t: tCommon } = useTranslation();
+    const sendCheckLabel = tCommon(SEND_CHECK_LABEL_KEY) ?? '';
 
     const sendCheckOptions = selectOptions ?? defaultSendCheckOptions(t);
 
@@ -141,7 +146,7 @@ const SendCheckSelect = ({
             <SelectSimple
                 disabled={isFormStateReadOnly}
                 className={classNames}
-                label={'Please Choose One'}
+                label={sendCheckLabel}
                 options={sendCheckOptions}
                 onChange={handleChange}
                 size={FieldSize.Small}

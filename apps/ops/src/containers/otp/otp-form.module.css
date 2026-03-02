@@ -1,0 +1,15 @@
+/* Shared OTP form layout styles (withdrawal, SSW, RMD). */
+/* gap-8 in Tailwind = 2rem (32px); using design token for 32px. */
+
+.dlicDisburseToAnnuitantField {
+    grid-column: 1 / span 3;
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--measure-dimension-gap-2xl, 2rem);
+}
+
+@media (max-width: 768px) {
+    .dlicDisburseToAnnuitantField {
+        flex-direction: column;
+    }
+}

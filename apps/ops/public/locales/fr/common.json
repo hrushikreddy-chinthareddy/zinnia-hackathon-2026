@@ -1,6 +1,5 @@
 {
     "default": "Aucune traduction fournie",
-    "caseWithdrawal.request.distributionMethod.disburseToAnnuitantDlic": "Verser au rentier (Quand le titulaire est une fiducie révocable)",
     "caseStatsLoading": "Chargement des statistiques du dossier...",
     "createdVsCompleted": "Création vs Confirmation (aujourd'hui)",
     "caseVolume": "Volume du dossier",

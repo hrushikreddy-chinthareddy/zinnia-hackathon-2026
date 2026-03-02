@@ -85,7 +85,28 @@ jest.mock(
     })
 );
 
+import enTranslations from 'public/locales/en/common.json';
+
 import useDlicConfig from './dlic-withdrawal-form-helpers';
+
+describe('DLIC distribution method locale key', () => {
+    const EXPECTED_LABEL =
+        'Disburse to Annuitant (When owner is a Revocable Trust)';
+
+    it('resolves disburseToAnnuitantDlic from nested caseWithdrawal.request.distributionMethod', () => {
+        const nested = (enTranslations as Record<string, unknown>)
+            ?.caseWithdrawal as Record<string, unknown> | undefined;
+        const distributionMethod = nested?.request as
+            | Record<string, unknown>
+            | undefined;
+        const value = (
+            distributionMethod?.distributionMethod as Record<string, unknown>
+        )?.disburseToAnnuitantDlic as string | undefined;
+
+        expect(value).toBe(EXPECTED_LABEL);
+        expect(value).toBeDefined();
+    });
+});
 
 describe('Dlic withdrawal form config', () => {
     const t: TFunction = (key: string | string[]) =>

@@ -23,11 +23,9 @@ import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-progr
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
 import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
-import { getStateCode } from '@deps/helpers/states.helpers';
 import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
-    Address,
     AddressTypes,
     AmountType,
     FormParts,
@@ -57,12 +55,13 @@ import {
     PaymentMethodOption,
     SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
-import {
-    Address as SorAddress,
-    Party,
-    PolicyPartyRoles,
-} from '@zinnia/api-types/types/sor';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
+import styles from '../../otp-form.module.css';
+import {
+    getAnnuitantPreferredAddressFromParties,
+    mapSorPreferredAddressToAddress,
+} from '../../utils/address.helpers';
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../utils/form-validator.helpers';
 
@@ -605,44 +604,13 @@ export default function useDlicConfig(
         )?.addresses?.[0];
 
         if (!annuitantAddress && !isLC) {
-            const annuitantPartyId = partyRoles.find(
-                (role) => String(role.partyRole) === PartyRoles.ANNUITANT
-            )?.partyId;
-            const annuitantParty = parties.find(
-                (party) => party.partyId === annuitantPartyId
-            ) as { addresses?: SorAddress[] } | undefined;
-            const preferredAddressFromParty: SorAddress | undefined =
-                annuitantParty?.addresses?.filter(
-                    (address: SorAddress) =>
-                        (address as SorAddress & { preferredAddress?: boolean })
-                            .preferredAddress
-                )[0];
+            const preferredAddressFromParty =
+                getAnnuitantPreferredAddressFromParties(parties, partyRoles);
 
             if (preferredAddressFromParty) {
-                const addressWithLine4 =
-                    preferredAddressFromParty as SorAddress & {
-                        addressLine4?: string | null;
-                    };
-                annuitantAddress = {
-                    addressLine1: preferredAddressFromParty.addressLine1 ?? '',
-                    addressLine2:
-                        preferredAddressFromParty.addressLine2 ?? null,
-                    addressLine3:
-                        preferredAddressFromParty.addressLine3 ?? null,
-                    addressLine4: addressWithLine4.addressLine4 ?? null,
-                    addressType:
-                        (preferredAddressFromParty.addressType as
-                            | AddressTypes
-                            | undefined) ?? AddressTypes.DEFAULT,
-                    city: preferredAddressFromParty.city ?? null,
-                    country: preferredAddressFromParty.country ?? null,
-                    state: getStateCode(
-                        String(preferredAddressFromParty.state ?? '')
-                    ),
-                    zip: preferredAddressFromParty.zipCode ?? '',
-                    zipPlusFour:
-                        preferredAddressFromParty.zipCodeExtension ?? null,
-                } satisfies Address;
+                annuitantAddress = mapSorPreferredAddressToAddress(
+                    preferredAddressFromParty
+                );
             }
         }
 
@@ -661,8 +629,7 @@ export default function useDlicConfig(
                             'distributionMethod.disburseToAnnuitantDlic'
                         ),
                         component: DisbursementFields.BankCheckboxField,
-                        classNames:
-                            'col-start-1 col-span-3 flex flex-wrap gap-8 max-md:flex-col',
+                        classNames: styles.dlicDisburseToAnnuitantField,
                         shouldDisplay: () =>
                             !!isDlic3pDisbursementChangesEnabled,
                     },

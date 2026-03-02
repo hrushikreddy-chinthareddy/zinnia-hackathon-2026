@@ -1,6 +1,5 @@
 {
     "default": "No translation provided",
-    "caseWithdrawal.request.distributionMethod.disburseToAnnuitantDlic": "Disburse to Annuitant (When owner is a Revocable Trust)",
     "caseStatsLoading": "Loading case stats...",
     "createdVsCompleted": "Created vs Completed (same day)",
     "caseVolume": "Case Volume",

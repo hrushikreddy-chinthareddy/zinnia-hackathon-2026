@@ -42,6 +42,7 @@ import {
     SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
+import styles from '../../otp-form.module.css';
 import { createValidator } from '../../utils/helper-utils';
 import {
     validateQcdDetails,
@@ -322,8 +323,7 @@ export default function getDlicRmdWithdrawalConfig(
                             'distributionMethod.disburseToAnnuitantDlic'
                         ),
                         component: DisbursementFields.BankCheckboxField,
-                        classNames:
-                            'col-start-1 col-span-3 flex flex-wrap gap-8 max-md:flex-col',
+                        classNames: styles.dlicDisburseToAnnuitantField,
                         shouldDisplay: () =>
                             !!isDlic3pDisbursementChangesEnabled,
                     },
