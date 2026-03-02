@@ -6,8 +6,8 @@
     /* Safari doesn't support height definitions for table rows, so height 100%
      * takes up the entire height of the window. To mitigate this, we set a
      * max-height of 5.5rem. The subsequent table rows will stack on top of the
-     * previous rows, taking care of the overlaps; the only artifact is the last
-     * table row, which may have a clickable area extending past the visible row.
+     * previous rows, taking care of the overlaps; the artifact outside of the
+     * table is handled by the table's clip-path.
      */
     max-height: 5.5rem;
     border: none !important;
