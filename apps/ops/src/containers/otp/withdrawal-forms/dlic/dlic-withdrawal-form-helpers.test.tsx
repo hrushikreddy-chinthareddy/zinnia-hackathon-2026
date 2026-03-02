@@ -24,6 +24,7 @@ import {
     Party as SorParty,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
+import enTranslations from 'public/locales/en/common.json';
 
 // Helper type for disbursementOptions parties arg (LifeCadParty[] | Party[] from API)
 type PartiesArg = LifeCadParty[] | SorParty[];
@@ -84,8 +85,6 @@ jest.mock(
         shouldDisplayAddress: jest.fn(),
     })
 );
-
-import enTranslations from 'public/locales/en/common.json';
 
 import useDlicConfig from './dlic-withdrawal-form-helpers';
 
