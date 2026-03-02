@@ -3,10 +3,10 @@ import { QueryClient, queryOptions, skipToken } from '@tanstack/react-query';
 import { buildGetProducerBySellingCodeQueryOptions } from 'components/illustrations/helpers/hooks/pom';
 
 import { AGENT_SEARCH_QUERY_PREFIXES } from './constants';
-import { buildAgentsFromProducer, hasPartialFullName } from './helpers';
+import { buildAgentFromProducer, hasPartialFullName } from './helpers';
 
 /*
- * Query Options to fetch a single AgentOption for a sellingCode
+ * Fetches a producer and returns the corresponding agent
  */
 const buildAgentFromProducerQuery = ({
     sellingCode,
@@ -35,13 +35,16 @@ const buildAgentFromProducerQuery = ({
                       return null;
                   }
 
-                  return buildAgentsFromProducer(producer, {
+                  return buildAgentFromProducer(producer, {
                       sellingCode,
                       carrierShortName,
                   });
               },
     });
 
+/**
+ * Returns an agent given an specific selling code
+ */
 export const fetchSelfAssignAgent = async (
     client: QueryClient,
     {

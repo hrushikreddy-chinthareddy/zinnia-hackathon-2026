@@ -33,7 +33,6 @@ import {
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
 import { convertToCamelCase } from '@deps/utils/strings';
-import { TaskMetadataHelper } from '@deps/utils/tasks/task-metadata-helpers';
 import nextI18nextConfig from 'next-i18next.config';
 
 type TaskPageProps = {
@@ -231,15 +230,6 @@ export const getServerSideProps = withPageAuthAndLogging(
                     taskMetadata?.schemaContent?.tabSchemas ||
                     ([] as FormMetadata[]);
 
-                if (!currentTaskMetadata.length) {
-                    const fallbackMetadata: FormMetadata = {
-                        title: '',
-                        formSchema: taskMetadata?.formSchema ?? {},
-                        uiSchema: taskMetadata?.uiSchema ?? {},
-                    };
-                    currentTaskMetadata.push(fallbackMetadata ?? {});
-                }
-
                 const { nigoExceptions, nigoSubExceptions } =
                     nigoExceptionResponse;
 
@@ -258,17 +248,11 @@ export const getServerSideProps = withPageAuthAndLogging(
                     currentTaskMetadata,
                     loggingContext
                 );
-                const updatedTaskMetadata = await TaskMetadataHelper(
-                    task,
-                    currentTaskMetadata,
-                    accessToken as string,
-                    loggingContext
-                );
 
                 return {
                     props: {
                         ...translations,
-                        taskMetadata: updatedTaskMetadata,
+                        taskMetadata: currentTaskMetadata,
                         task,
                         correlationId,
                         taskInfoLink,

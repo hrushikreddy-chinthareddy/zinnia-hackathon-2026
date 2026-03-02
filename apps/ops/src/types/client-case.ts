@@ -30,3 +30,8 @@ export interface Illustration {
     status: string;
     name: string;
 }
+
+export type SellingCodeWithCarrier = {
+    sellingCode: string;
+    carrierShortName: string;
+};

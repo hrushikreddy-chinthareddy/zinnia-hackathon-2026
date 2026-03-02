@@ -2,7 +2,7 @@ import { AxiosResponse } from 'axios';
 
 import { browserLogError } from '@deps/utils/browser-logging';
 import {
-    HTTPValidationError,
+    HttpValidationError,
     UserTransactionInput,
     UserTransactionOutput,
 } from '@zinnia/api-types/types/analytics';
@@ -16,7 +16,7 @@ export const getUserTransactionCounts = async (
     try {
         const { data: response } = await client.post<
             UserTransactionInput,
-            AxiosResponse<UserTransactionOutput, HTTPValidationError>
+            AxiosResponse<UserTransactionOutput, HttpValidationError>
         >(`${baseAppUrl}/api/dashboard/user-transaction-count`, query);
         return {
             data: response.data,

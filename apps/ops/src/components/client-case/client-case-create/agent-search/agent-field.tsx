@@ -18,6 +18,9 @@ import { useLegacyAgentSearchResults } from './use-agent-options-from-selling-co
 import { useAgentSearchResults } from './use-agent-search-results';
 import { useAgentSearchResultsForSuperIllustrator } from './use-agent-search-results-for-super-illustrator';
 
+/**
+ * Hook to fetch the agent search result data
+ */
 const useAgentOptions = (
     searchQuery: string
 ): CombinedQueryResult<AgentOption[] | undefined> => {

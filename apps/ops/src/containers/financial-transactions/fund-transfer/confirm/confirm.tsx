@@ -21,7 +21,7 @@ import {
     TransactionSubmittedEventType,
     TransactionSuccessfulEvent,
 } from '@deps/types/segment-analytics';
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import { buildfundTransferRequestBody } from '../fund-transfer.helpers';
 
@@ -63,7 +63,7 @@ const Confirm = ({ policy }: ConfirmProps) => {
             {
                 authSessionId: sessionId,
                 userId: partyId,
-                type: Transaction.transactionType.FUND_TRANSFER,
+                type: TransactionTypeEnum.FUND_TRANSFER,
                 correlationId: body.correlationId,
             }
         );

@@ -7,19 +7,20 @@ import {
 } from '@deps/utils/carriers';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
-    DistributionType,
+    CostBasis,
     DeathBenefitOptionType,
+    DistributionType,
+    FeatureType,
+    LineOfBusiness,
+    LoanValues,
     PartyRole,
     Policy,
     PolicyFeature,
-    FeatureType,
+    PolicyPartyRoles,
     PolicyStatus,
     Product,
     ProductType,
     Rider,
-    LoanValues,
-    CostBasis,
-    PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
 import { Coverage } from './Coverage';
@@ -116,12 +117,10 @@ export class PolicyDetails {
         // 'Annuity Product' seems to be coming to us a lot from the LC Annuities.
         // ToDo: remove once this is fixed
         this.isAnnuity =
+            policy?.product?.lineOfBusiness === LineOfBusiness.ANNUITY ||
             policy?.product?.lineOfBusiness ===
-                Product.lineOfBusiness.ANNUITY ||
-            policy?.product?.lineOfBusiness ===
-                ('Annuity Product' as Product.lineOfBusiness);
-        this.isLife =
-            policy?.product?.lineOfBusiness === Product.lineOfBusiness.LIFE;
+                ('Annuity Product' as LineOfBusiness);
+        this.isLife = policy?.product?.lineOfBusiness === LineOfBusiness.LIFE;
         this.isTerm = policy.product?.productType === ProductType.TERM;
         this.issueDate = policy.policyDates?.issueDate;
         this.issueState = policy.issueState;

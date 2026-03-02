@@ -95,6 +95,8 @@ export default function IllustrationDetailsToolbar({
                 IllustrationsSegmentTrackedEventName.getIllustrationPDF
             );
         }
+
+        const newTab = window.open('', '_blank');
         try {
             const response = await fetch(
                 `/api/illustration-pdf/${illustrationId}`,
@@ -113,13 +115,9 @@ export default function IllustrationDetailsToolbar({
             const blob = await response.blob();
             const url = window.URL.createObjectURL(blob);
 
-            const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', `illustration_${illustrationId}.pdf`);
-
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
+            if (newTab) {
+                newTab.location.href = url;
+            }
 
             window.URL.revokeObjectURL(url);
         } catch (error) {
@@ -173,7 +171,7 @@ export default function IllustrationDetailsToolbar({
             icon={IconType.DOCUMENT_REPORT}
             className={styles.linkButton}
         >
-            Export PDF
+            {t('clientCase.illustrationDetails.exportPDF')}
             <Icon type={IconType.CHEVRON} small />
         </ToolbarButton>
     );

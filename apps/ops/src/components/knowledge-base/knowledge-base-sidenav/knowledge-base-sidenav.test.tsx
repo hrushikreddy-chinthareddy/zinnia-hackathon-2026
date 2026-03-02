@@ -3,7 +3,7 @@ import router from 'next/router';
 
 import KnowledgeBaseContainer from '@deps/containers/knowledge-base/knowledge-base-container';
 import { useScreenSize } from '@deps/hooks/useScreenSize';
-import { MeResponse } from '@zinnia/api-types/types/knowledgebase';
+import { MeResponse, RoleEnum } from '@zinnia/api-types/types/knowledgebase';
 
 jest.mock('next/router', () => ({
     __esModule: true,
@@ -59,7 +59,7 @@ const mockOpsUserData: MeResponse = {
     id: '1234567890',
     name: 'Test User',
     email: 'test@zinnia.com',
-    role: MeResponse.role.ASSOCIATE,
+    role: RoleEnum.ASSOCIATE,
     client: [
         {
             id: 'client-123',

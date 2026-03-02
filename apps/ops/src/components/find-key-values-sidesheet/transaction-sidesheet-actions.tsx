@@ -11,7 +11,11 @@ import { useTransactionPermissionCheck } from '@deps/hooks/useTransactionPermiss
 import { TransactionPermission } from '@deps/utils/auth';
 import { getCarrierNameByClientId } from '@deps/utils/carriers';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
-import { Transaction, TransactionStatus } from '@zinnia/api-types/types/sor';
+import {
+    TransactionTypeEnum,
+    Transaction,
+    TransactionStatus,
+} from '@zinnia/api-types/types/sor';
 
 import {
     TRANSACTION_TYPES_ELIGIBLE_FOR_CANCEL,
@@ -43,12 +47,12 @@ const isTransactionEligibleForCancel = (transaction: Transaction): boolean => {
 
 const getCancelCta = (transaction: Transaction, t: TFunction): string => {
     switch (transaction?.transactionType) {
-        case Transaction.transactionType.FULL_SURRENDER:
+        case TransactionTypeEnum.FULL_SURRENDER:
             return t('policy.history.sidesheet.cancelSurrender');
-        case Transaction.transactionType.NEW_LOAN:
+        case TransactionTypeEnum.NEW_LOAN:
             return t('policy.history.sidesheet.cancelLoan');
-        case Transaction.transactionType.ONE_TIME_PREMIUM:
-        case Transaction.transactionType.PAYMENT_ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.ONE_TIME_PREMIUM:
+        case TransactionTypeEnum.PAYMENT_ONE_TIME_PREMIUM:
             return t('policy.history.sidesheet.cancelPayment');
         default:
             return t('allFields.cancel');

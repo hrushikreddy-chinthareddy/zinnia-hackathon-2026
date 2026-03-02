@@ -6,12 +6,12 @@ import {
     EmailType,
     EmploymentStatus,
     Gender,
-    Identification,
-    Parties,
+    IdentificationTypeEnum,
     PartyType,
     PhoneType,
     PreferredCommunicationType,
     State,
+    SuffixEnum,
 } from '@zinnia/api-types/types/sor';
 
 import { toPolicyOwnerDto } from './policy-owner';
@@ -24,7 +24,7 @@ const partyInfo: Party = {
     middleName: 'KISHOR',
     lastName: 'SINGH-TC03',
     fullName: '',
-    suffix: Parties.suffix.JR,
+    suffix: SuffixEnum.JR,
     gender: Gender.MALE,
     dateOfBirth: '2004-10-05',
     birthCountry: Country.US,
@@ -86,9 +86,9 @@ const partyInfo: Party = {
     identifications: [
         {
             identificationValue: '12345',
-            identificationType: Identification.identificationType.SSN,
-            issueState: Identification.issueState.CA,
-            issueCountry: Identification.issueCountry.US,
+            identificationType: IdentificationTypeEnum.SSN,
+            issueState: State.CA,
+            issueCountry: Country.US,
         },
     ],
 };

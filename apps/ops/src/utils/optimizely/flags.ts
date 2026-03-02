@@ -204,4 +204,5 @@ export enum FEATURE_FLAGS {
     INDEX_AUTOMATION_CASE = 'index_automation_case',
     OPS_MANAGER_AGENT_OWNER_FILTERS = 'ops_manager_agent_owner_filters',
     CASE_MANAGEMENT_SUREIFY_FLOW_UPSERT_IF_EXISTS = 'case_management_sureify_flow_upsert_if_exists',
+    FEATURES_AND_RIDERS_TABLE_VIEW = 'features_and_riders_table_view',
 }
