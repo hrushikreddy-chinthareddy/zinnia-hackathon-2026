@@ -233,7 +233,7 @@ export const ClientCaseTable = () => {
 
     const filteredResults = isResultsFiltered(filters);
     return (
-        <Table>
+        <Table className={styles.tableContainer}>
             <TableHeader>
                 <TableRow>
                     <TableHeaderCell className="sr-only">
