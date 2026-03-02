@@ -408,6 +408,14 @@ export const buildGetProducerForNearestRoleQuery = ({
     });
 };
 
+/**
+ * Fetches the downline of the "nearest" producer with an specific role
+ *
+ * The hierarchy of the selling code if fetched first. If it's role matches, the
+ * downline of the selling code is fetched and returned.
+ *
+ * Otherwise, we instead look for a producer with a matching role in the upline
+ */
 export const buildGetDownlineForNearestRoleQueryOptions = ({
     sellingCode,
     role,

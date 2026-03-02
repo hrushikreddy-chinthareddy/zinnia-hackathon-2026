@@ -1,0 +1,4 @@
+.noResultsTd {
+    padding: var(--measure-dimension-padding-4xl);
+    text-align: center;
+}

@@ -23,6 +23,70 @@
         "uriFormat": "%s",
         "action": "debugWithChrome"
       }
+    },
+    //Allows debugging of the ops app server-side, with most unnecessary files skipped
+    {
+      "name": "Next.js: debug ops server-side",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/ops",
+      "runtimeExecutable": "${workspaceFolder}/apps/ops/node_modules/.bin/next",
+      "runtimeArgs": ["dev"],
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/VM*",
+        "**/node_modules/**",
+        "<eval>/**",
+        "**/.next/**"
+      ],
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "!**/node_modules/**"
+      ],
+      "console": "integratedTerminal",
+      "outputCapture": "std"
+    },
+    //Allows debugging of the ops app full stack, with most unnecessary files skipped
+    {
+      "name": "Next.js: debug ops full stack",
+      "type": "node",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/apps/ops",
+      "program": "${workspaceFolder}/apps/ops/node_modules/next/dist/bin/next",
+      "runtimeArgs": ["--inspect"],
+      "serverReadyAction": {
+        "action": "debugWithChrome",
+        "killOnServerStop": true,
+        "pattern": "- Local:.+(https?://.+)",
+        "uriFormat": "%s",
+        "webRoot": "${workspaceFolder}/apps/ops"
+      }
+    },
+    //Allows debugging of all vitest tests in the ops app, with most unnecessary files skipped
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug All Vitest Tests",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "cwd": "${workspaceFolder}/apps/ops",
+      "program": "${workspaceFolder}/apps/ops/node_modules/vitest/vitest.mjs",
+      "args": ["run", "--test-timeout=0", "--no-file-parallelism"], // "run" command ensures all tests run once and exit
+      "console": "integratedTerminal",
+      "smartStep": true
+    },
+    //Allows debugging of the current test file in vitest, with most unnecessary files skipped
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Debug Current Test File in Vitest",
+      "autoAttachChildProcesses": true,
+      "skipFiles": ["<node_internals>/**", "**/node_modules/**"],
+      "cwd": "${workspaceFolder}/apps/ops",
+      "program": "${workspaceFolder}/apps/ops/node_modules/vitest/vitest.mjs",
+      "args": ["run", "${file}", "--test-timeout=0", "--no-file-parallelism"],
+      "smartStep": true,
+      "console": "integratedTerminal"
     }
   ]
 }

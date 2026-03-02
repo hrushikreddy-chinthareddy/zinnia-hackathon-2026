@@ -9,6 +9,7 @@ import { useCallback } from 'react';
 
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { wrapCombinedQueryResultsData } from '@deps/hooks/combined-query';
+import { SellingCodeWithCarrier } from '@deps/types/client-case';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { buildQueryForAgencyOwner } from './by-role/build-query-for-agency-owner';
@@ -31,16 +32,15 @@ const queryFactoryMap = {
     [IllustratorRole.AGENT]: buildQueryForAgent,
 } satisfies Partial<Record<IllustratorRole, unknown>>;
 
-const getUserRole = async (
+/*
+ * Fetches the selling code hierarchy and infers the Illustrator role from it
+ */
+const getSellingCodeRole = async (
     client: QueryClient,
-    sellingCode: string,
-    carrierShortName: string
+    sellingCode: SellingCodeWithCarrier
 ) => {
     const hierarchy = await client.fetchQuery(
-        buildHierarchyQueryOptions({
-            sellingCode,
-            carrierShortName,
-        })
+        buildHierarchyQueryOptions(sellingCode)
     );
 
     if (!hierarchy) {
@@ -50,6 +50,12 @@ const getUserRole = async (
     return getIllustratorRoleFromHierarchy(hierarchy);
 };
 
+/**
+ * Query to fetch the agent search results for a single selling code
+ *
+ * Fetches the Illustrator role for the selling code and then executes the
+ * fetching logic specific to that role
+ */
 export const buildDelegatedAgentsBySellingCodeQuery = ({
     sellingCode,
     carrierShortName,
@@ -74,11 +80,10 @@ export const buildDelegatedAgentsBySellingCodeQuery = ({
         queryFn: !(sellingCode && carrierShortName)
             ? skipToken
             : async ({ client }) => {
-                  const illustratorRole = await getUserRole(
-                      client,
+                  const illustratorRole = await getSellingCodeRole(client, {
                       sellingCode,
-                      carrierShortName
-                  );
+                      carrierShortName,
+                  });
 
                   if (illustratorRole === IllustratorRole.NO_ROLE) {
                       return [];
@@ -97,16 +102,18 @@ export const buildDelegatedAgentsBySellingCodeQuery = ({
     });
 };
 
-// TODO: Clean signature
+type AgentsBySellingCodeQueryParams<MT> = {
+    partialFullName?: string;
+    combine: (results: UseQueryResult<(DelegatedAgent | null)[]>[]) => MT;
+};
+
+/**
+ * Hook to fetch the agent search results corresponding to multiple selling
+ * codes
+ */
 export const useDelegatedAgentsBySellingCodeListQuery = <MT>(
-    sellingCodes: { sellingCode: string; carrierShortName: string }[],
-    {
-        partialFullName = '',
-        combine,
-    }: {
-        partialFullName?: string;
-        combine: (results: UseQueryResult<(DelegatedAgent | null)[]>[]) => MT;
-    }
+    sellingCodes: SellingCodeWithCarrier[],
+    { partialFullName = '', combine }: AgentsBySellingCodeQueryParams<MT>
 ) => {
     const { featureFlags } = useOptimizely();
     const isImprovedSearchEnabled =

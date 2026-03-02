@@ -302,7 +302,13 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                         agent?.party?.agentExternalId === tag.agentExternalId
                 );
                 // NOTE: this is complicated but POM and Zahara partyId for the same agent DO NOT match - MR
-                return { ...agent?.party, partyId: tag.partyId } as NameTag;
+                // Preserve SOR-derived tags/partyRoles so Servicing vs Writing Agent labels are correct
+                return {
+                    ...agent?.party,
+                    partyId: tag.partyId,
+                    tags: tag.tags,
+                    partyRoles: tag.partyRoles,
+                } as NameTag;
             } else {
                 return tag;
             }

@@ -1,3 +1,11 @@
+import { v4 as uuidv4 } from 'uuid';
+
+import { RadioItem } from '@deps/components/radio/radio';
+import { CaseIdentifierType, FormMetadata } from '@deps/models/case/task';
+import {
+    MatchingCase,
+    TransactionData,
+} from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask, TaskStatus } from '@deps/models/case/task-instance';
 import { updateCaseTask } from '@deps/operations/tasks/task-operations';
 import { browserLogInfo } from '@deps/utils/browser-logging';
@@ -23,6 +31,101 @@ export const updateTask = async (
     }
     return true;
 };
+
+export const generatePotentialMatchesOptions = (
+    potentialMatches: TransactionData[],
+    allowedStatus: string[]
+) => {
+    const getCaseId = (item: TransactionData) =>
+        item.identifiers?.find(
+            (id: { identifier: string }) =>
+                id.identifier === CaseIdentifierType.ZL_CASE_ID
+        )?.value;
+
+    return (
+        potentialMatches
+            ?.filter((item) => {
+                const zlCaseId = getCaseId(item);
+                return (
+                    zlCaseId &&
+                    item.correlationId &&
+                    item.correlationId !== '' &&
+                    (!allowedStatus.length ||
+                        allowedStatus.includes(item.entity?.status || ''))
+                );
+            })
+            ?.map((item: TransactionData) => {
+                const id = uuidv4();
+                const zlCaseId = getCaseId(item);
+                const subElement = {
+                    label: '',
+                    value: zlCaseId ?? '',
+                    title: item?.entityType ?? '',
+                    url: `/cases/${zlCaseId}`,
+                    type: 'link',
+                    disabled: false,
+                };
+                return {
+                    label: item.entityType,
+                    value: item.correlationId,
+                    id,
+                    subElement,
+                };
+            }) || []
+    );
+};
+
+/**
+ * Shared logic for document-matching handlers: compute potential matches,
+ * update task.data, and merge potential matches into schema matchingResult customOptions.
+ */
+export function applyDocumentMatchingPotentialMatches(
+    responsePotentialMatches: TransactionData[] | null | undefined,
+    task: any,
+    schema: FormMetadata
+): void {
+    const allowedStatuses = task?.data?.potentialMatchCriteria?.status || [];
+    const potentialMatches =
+        responsePotentialMatches && responsePotentialMatches.length > 0
+            ? generatePotentialMatchesOptions(
+                  responsePotentialMatches,
+                  allowedStatuses
+              )
+            : [];
+
+    Object.assign(task, {
+        data: {
+            ...task.data,
+            potentialMatches,
+        },
+    });
+
+    if (schema.uiSchema.matchingResult?.['ui:options']?.customOptions) {
+        const existingOptions = schema.uiSchema.matchingResult[
+            'ui:options'
+        ].customOptions
+            .filter((option: RadioItem) => {
+                if (
+                    option.value === MatchingCase.NO_MATCH &&
+                    !task?.data?.isPrimaryDocumentPresent == true
+                ) {
+                    return false;
+                }
+                return true;
+            })
+            .map((option: RadioItem) => {
+                if (option.value === undefined) {
+                    return { ...option, value: null };
+                }
+                return option;
+            });
+
+        schema.uiSchema.matchingResult['ui:options'].customOptions = [
+            ...potentialMatches,
+            ...existingOptions,
+        ];
+    }
+}
 
 export const getFormattedPhoneNumber = (phone: Phone) => {
     if (!phone) return null;

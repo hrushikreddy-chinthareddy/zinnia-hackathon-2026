@@ -3,6 +3,7 @@
         "baseUrl": ".",
         "paths": {
             "@deps/*": ["./src/*"],
+            "@vitest/*": ["./vitest/*"],
             "@zinnia/api-types/types/*": [
                 "./api-types/generated-types/*/index"
             ],

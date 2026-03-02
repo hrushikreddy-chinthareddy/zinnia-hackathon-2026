@@ -7,7 +7,6 @@ import { TaskType } from '@deps/models/case/task';
 import { getTaskFormMetadata } from '@deps/queries/api/v1/task';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
 import { browserLogInfo } from '@deps/utils/browser-logging';
-import { isNonProductionEnvironment } from '@deps/utils/environment.helpers';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 import {
@@ -21,6 +20,10 @@ import {
 import { SelfServeTransaction } from './types';
 
 const removeFirstTabSchema = (metadata: any, taskType: TaskType) => {
+    if (!metadata?.schemaContent?.tabSchemas) {
+        return metadata;
+    }
+
     const benechangeDiscardedTabIndexes = [0, 1, 5];
     return {
         ...metadata,
@@ -40,26 +43,21 @@ const removeFirstTabSchema = (metadata: any, taskType: TaskType) => {
 const getTransactionMetadata = async (
     taskType: TaskType,
     policy: Policy,
-    planCode: string,
-    dynamicImport: () => Promise<any>
+    planCode: string
 ) => {
     const clientId = policy?.carrierId || '';
-    const isProdEnv = !isNonProductionEnvironment();
-    browserLogInfo('getSelfServeTransactionData environment', {
-        isProdEnv,
+    browserLogInfo('getSelfServeTransactionData::', {
         taskType,
         clientId,
         processType: ProcessType.PolicyUpdate,
         planCode,
         policyNumber: policy?.policyNumber,
     });
-    const metaData = isProdEnv
-        ? await getTaskFormMetadata(
-              clientId,
-              taskType,
-              ProcessType.PolicyUpdate
-          )
-        : (await dynamicImport()).default;
+    const metaData = await getTaskFormMetadata(
+        clientId,
+        taskType,
+        ProcessType.PolicyUpdate
+    );
     return removeFirstTabSchema(metaData, taskType);
 };
 
@@ -73,14 +71,10 @@ export const getSelfServeTransactionData = async (
             const metadata = await getTransactionMetadata(
                 TaskType.Initiate_AssigneeChange_Transaction,
                 policy,
-                planCode,
-                () =>
-                    import(
-                        '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json'
-                    )
+                planCode
             );
             return {
-                metaData: JSON.parse(JSON.stringify(metadata)),
+                metaData: JSON.parse(JSON.stringify(metadata ?? {})),
                 initialCustomData: {
                     policyNumber: policy.policyNumber,
                     planCode,
@@ -105,14 +99,10 @@ export const getSelfServeTransactionData = async (
             const metadata = await getTransactionMetadata(
                 TaskType.Initiate_BeneChange_Transaction,
                 policy,
-                planCode,
-                () =>
-                    import(
-                        '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json'
-                    )
+                planCode
             );
             return {
-                metaData: JSON.parse(JSON.stringify(metadata)),
+                metaData: JSON.parse(JSON.stringify(metadata ?? {})),
                 initialCustomData: {
                     policyNumber: policy.policyNumber,
                     planCode,
