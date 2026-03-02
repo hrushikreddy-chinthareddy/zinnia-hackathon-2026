@@ -715,7 +715,7 @@
         "systemProgramStatus": "Status",
         "tableCaptionsCasesTable": "List of all cases, including status, owner, carrier, agent, and creation time",
         "tableCaptionsElectedFunds": "Elected fund allocations, including fund name, type, guarantee period, interest rate, value, and percentage of allocation",
-        "tableCaptionsIllustrationDocuments": "List of all illustrations related to the policy, including name, created, created by, and download options",
+        "tableCaptionsIllustrationDocuments": "List of all illustrations related to the policy, including name, creator date, creator name, and download options",
         "tableCaptionsNotElectedFunds": "Non-elected funds, including fund name, type, guarantee period, interest rate, and value",
         "tableCaptionsPoliciesTable": "List of all policies and contracts, including policy or contract number, status, owner SSN, open cases, and last updated time",
         "tableCaptionsReceivedCaseDocuments": "List of all received case documents, including name, receipt date, file type, and download options",
