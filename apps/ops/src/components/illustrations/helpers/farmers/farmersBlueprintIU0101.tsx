@@ -2547,6 +2547,56 @@ export const farmersBlueprintIU0101 = {
                             isCustom: true,
                             fields: [
                                 {
+                                    id: '451dfe47-da8a-4ba5-9279-135179abf112',
+                                    fieldType: 'custom',
+                                    customName: 'IllustrationScheduler',
+                                    answerNodeId: 'modalPremiumTable',
+                                    outputPath: 'modalPremiumTable',
+                                    validateAs: 'custom',
+                                    defaultValue: [
+                                        {
+                                            id: '2b712368-dba0-4a58-8148-2c46a147902d',
+                                            firstColumn: 0,
+                                            fromYear: 1,
+                                            through: 100,
+                                        },
+                                    ],
+                                    customProperties: {
+                                        firstColumn: {
+                                            type: 'money',
+                                            label: {
+                                                en: 'Modal Premium',
+                                            },
+                                            placeholder: {
+                                                en: '0',
+                                            },
+                                            tooltip: {
+                                                en: 'Modal Premium',
+                                            },
+                                            default: 0,
+                                        },
+                                        fromYear: {
+                                            min: 1,
+                                            label: {
+                                                en: 'From year',
+                                            },
+                                        },
+                                        through: {
+                                            max: 100,
+                                            label: {
+                                                en: 'Through',
+                                            },
+                                        },
+                                        buttons: {
+                                            add: {
+                                                label: {
+                                                    en: 'Add new row',
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                                {
                                     fieldType: 'money',
                                     text: {
                                         en: '',
@@ -2757,72 +2807,6 @@ export const farmersBlueprintIU0101 = {
                                     validateAs: 'decimal',
                                     isCustom: true,
                                     disabled: true,
-                                },
-                                {
-                                    fieldType: 'money',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Modal Premium',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'modal-premium',
-                                    outputPath: 'modalPremiumValue',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: 'eb17d4c7-d6eb-4ccb-8e5c-b0ab5c365895',
-                                    partName:
-                                        'custom-cac050f7-6655-4cdb-a0af-015735f57720',
-                                    validateAs: 'decimal',
-                                    isCustom: true,
-                                },
-                                {
-                                    fieldType: 'number',
-                                    text: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    title: {
-                                        en: 'Number of Years to Pay Premium',
-                                        fr: '',
-                                    },
-                                    answerNodeId: 'payment-duration',
-                                    outputPath: 'premiumDuration',
-                                    renderOn: [],
-                                    platforms: [],
-                                    copyable: 'none',
-                                    optional: false,
-                                    triggerStepNavigation: false,
-                                    layout: {
-                                        size: 6,
-                                        forceNewLine: true,
-                                    },
-                                    displayInCardPreview: false,
-                                    applicationModes: ['digital', 'paper'],
-                                    placeholder: {
-                                        en: '',
-                                        fr: '',
-                                    },
-                                    id: '87ce384e-34f8-42a5-b5c4-3dfd261298b7',
-                                    partName:
-                                        'custom-f2d50d5c-9170-4660-a0f7-9e5aaa5ec21e',
-                                    validateAs: 'integer',
-                                    isCustom: true,
-                                    defaultValue: 100,
                                 },
                                 {
                                     fieldType: 'dropdown',

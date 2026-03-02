@@ -626,13 +626,7 @@ function createIllustrationPayload(
                 premium: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
                     basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                    sequence: [
-                        {
-                            from: FARMERS_HARDCODED_DATA.premiumFrom,
-                            through: premiumDuration,
-                            value: values.modalPremiumValue,
-                        },
-                    ],
+                    sequence: modalPremiumTable,
                 },
                 doli: 'GPT',
                 preventModifiedEndowmentContract: values.preventMec,
