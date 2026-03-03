@@ -7559,7 +7559,8 @@
         "additionalActions": {
             "label": "Acciones adicionales",
             "createAsIsIllustration": "Crear el PDF de la ilustración as-is",
-            "serviceRequestForm": "Soumettre une demande de service"
+            "serviceRequestForm": "Soumettre une demande de service",
+            "downloadingPdf": "Preparando PDF como ilustración..."
         },
         "transactions": {
             "label": "Transacciones",

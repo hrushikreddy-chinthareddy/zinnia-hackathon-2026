@@ -7648,7 +7648,8 @@
         "additionalActions": {
             "label": "Additional Actions",
             "createAsIsIllustration": "Create as-is illustration PDF",
-            "serviceRequestForm": "Raise a Service Request"
+            "serviceRequestForm": "Raise a Service Request",
+            "downloadingPdf": "Preparing as-is illustration PDF..."
         },
         "transactions": {
             "label": "Transactions",

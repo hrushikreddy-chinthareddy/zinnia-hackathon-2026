@@ -5,6 +5,7 @@ import { SortOrder } from '@deps/hooks/dashboard/useTableOptions';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import { getAgentData } from '@deps/queries/api/agents';
 import {
+    downloadAsIsIllustration,
     fetchPolicy,
     getPolicyAccountingEntries,
     searchPolicies,
@@ -106,6 +107,19 @@ export const searchPoliciesQuery = async (
         limit,
         offset
     );
+
+    if (!response) {
+        throw 'policies not found';
+    }
+
+    return response;
+};
+
+export const downloadAsIsIllustrationQuery = async (
+    planCode: string,
+    policyNumber: string
+) => {
+    const response = await downloadAsIsIllustration(policyNumber, planCode);
 
     if (!response) {
         throw 'policies not found';

@@ -1,6 +1,12 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Toast, ToastVariant } from '@zinnia/bloom/components';
+import {
+    Heading,
+    HeadingVariant,
+    Toast,
+    ToastVariant,
+    Loader,
+} from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 import { useTranslation, TFunction } from 'next-i18next';
@@ -10,6 +16,7 @@ import { v4 as uuidV4 } from 'uuid';
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
+import { Modal } from '@deps/components/modal/modal';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import {
     commonPopoverClasses,
@@ -51,7 +58,10 @@ import {
     checkPartialWithdrawalOneTimeEligibilityQuery,
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
-import { searchPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
+import {
+    downloadAsIsIllustrationQuery,
+    searchPoliciesQuery,
+} from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import { Source } from '@deps/types/search';
 import {
@@ -109,9 +119,11 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
 export const PolicyMenuContextualContent = ({
     t,
     policy,
+    setIsLoadingModalOpen,
 }: {
     t: TFunction;
     policy: PolicyDetails;
+    setIsLoadingModalOpen: (isOpen: boolean) => void;
 }) => {
     const limit = 1;
     const offset = 0;
@@ -223,6 +235,18 @@ export const PolicyMenuContextualContent = ({
                 isEligibleManageAutopay:
                     data?.status === TransactionResponseStatus.Success,
             };
+        },
+    });
+
+    const { data: asIsIllustration } = useQuery({
+        queryKey: ['asIsIllustration', policy.planCode, policy.policyNumber],
+        queryFn: () =>
+            downloadAsIsIllustrationQuery(
+                policy.planCode as string,
+                policy.policyNumber as string
+            ),
+        select: (data) => {
+            return { ...data };
         },
     });
 
@@ -361,7 +385,7 @@ export const PolicyMenuContextualContent = ({
         queryKey: ['checkBPMAsIsIllustrationEligibility'],
         queryFn: () => {
             // This is a placeholder variable, should be replaced with a BPM call to check eligibility
-            return false;
+            return true;
         },
     });
 
@@ -567,7 +591,18 @@ export const PolicyMenuContextualContent = ({
             <MenuContextualItem
                 key="createAsIsIllustration"
                 content={t('additionalActions.createAsIsIllustration')}
-                onClick={() => console.log('generate PDF')}
+                onClick={() =>
+                    // downloadAsIsIllustrationQuery(
+                    //     policy.policyNumber as string,
+                    //     policy.planCode as string
+                    // )
+                    {
+                        setIsLoadingModalOpen(true);
+                        setTimeout(() => {
+                            setIsLoadingModalOpen(false);
+                        }, 5000);
+                    }
+                }
             />
         );
     }
@@ -956,6 +991,7 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
     const { t: tAllFields } = useTranslation();
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
+    const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
 
     useEffect(() => {
         if (!toastMessage) return;
@@ -981,6 +1017,7 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                         <PolicyMenuContextualContent
                             policy={props.policy}
                             t={t}
+                            setIsLoadingModalOpen={setIsLoadingModalOpen}
                         />
                     ) : (
                         <CaseMenuContextualContent
@@ -1005,6 +1042,9 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                                 <PolicyMenuContextualContent
                                     policy={props.policy}
                                     t={t}
+                                    setIsLoadingModalOpen={
+                                        setIsLoadingModalOpen
+                                    }
                                 />
                             ) : (
                                 <CaseMenuContextualContent
@@ -1037,6 +1077,24 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                 <div className={styles.toastContainer}>
                     <Toast variant={toastVariant}>{toastMessage}</Toast>
                 </div>
+            )}
+
+            {isLoadingModalOpen && (
+                <Modal
+                    open={isLoadingModalOpen}
+                    closeIcon=""
+                    onCancel={() => {}}
+                    content={
+                        <div className="flex flex-col items-center gap-4">
+                            <Loader />
+                            <Heading as={HeadingVariant.h3}>
+                                {tAllFields(
+                                    'quickActions.additionalActions.downloadingPdf'
+                                )}
+                            </Heading>
+                        </div>
+                    }
+                />
             )}
         </>
     );
