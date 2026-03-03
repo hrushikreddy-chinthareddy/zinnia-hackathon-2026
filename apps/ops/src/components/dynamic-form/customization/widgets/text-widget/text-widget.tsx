@@ -32,6 +32,7 @@ const renderLabelWithFlag = (
                     </span>
                 }
                 triggerClassName={style.flagTrigger}
+                replaceElement
             >
                 {missingValueTooltipText ?? ''}
             </Tooltip>

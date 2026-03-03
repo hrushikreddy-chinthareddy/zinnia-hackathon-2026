@@ -88,6 +88,7 @@ const CaseStatBlock = ({
                                     className="tooltip-primary"
                                 />
                             }
+                            replaceElement
                         >
                             {labelTooltip}
                         </Tooltip>

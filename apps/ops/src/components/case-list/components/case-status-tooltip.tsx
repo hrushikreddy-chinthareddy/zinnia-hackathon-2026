@@ -173,6 +173,7 @@ export const CaseStatusTooltip = ({
             tooltipClassName="!w-auto"
             triggerClassName="!z-10"
             trigger={Trigger}
+            replaceElement
         >
             {statusTooltip}
         </Tooltip>

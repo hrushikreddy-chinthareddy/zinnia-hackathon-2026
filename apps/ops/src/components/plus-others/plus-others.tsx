@@ -64,6 +64,7 @@ const PlusOthers = ({
                 </div>
             }
             triggerClassName="!z-10"
+            replaceElement
         >
             {body}
         </Tooltip>

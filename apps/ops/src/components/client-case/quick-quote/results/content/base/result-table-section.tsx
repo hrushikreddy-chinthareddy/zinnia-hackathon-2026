@@ -49,6 +49,7 @@ export const QuickQuoteResultTableSection = ({
                                 className="tooltip-primary"
                             />
                         }
+                        replaceElement
                     >
                         {hint}
                     </Tooltip>

@@ -18,6 +18,7 @@ export const AgentFieldLabel = () => {
                             className="tooltip-primary"
                         />
                     }
+                    replaceElement
                 >
                     {t('clientCase.clientCaseTable.agentTooltip')}
                 </Tooltip>,

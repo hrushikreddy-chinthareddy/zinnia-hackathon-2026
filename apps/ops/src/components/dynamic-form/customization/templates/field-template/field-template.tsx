@@ -49,6 +49,7 @@ export const helpInformation = (helpText: string) => {
                 />
             }
             placement={TooltipPlacement.TopRight}
+            replaceElement
         >
             {helpText}
         </Tooltip>

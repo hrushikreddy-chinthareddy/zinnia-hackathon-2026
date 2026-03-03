@@ -349,6 +349,7 @@ const CaseDetailsSideNav = ({
                                         />
                                     }
                                     placement={TooltipPlacement.TopRight}
+                                    replaceElement
                                 >
                                     {t('sidenav.estimatedCompletionToolTip')}
                                 </Tooltip>

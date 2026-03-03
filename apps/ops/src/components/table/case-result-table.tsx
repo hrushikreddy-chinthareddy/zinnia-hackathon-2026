@@ -341,6 +341,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                                 </span>
                             </div>
                         }
+                        replaceElement
                     >
                         <div className="flex flex-col">
                             <span>{carrierName}</span>
@@ -385,6 +386,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                         }
                         tooltipClassName="!w-auto"
                         triggerClassName="!z-10"
+                        replaceElement
                     >
                         {formatTimestamp(
                             singleCase.createdAt,

@@ -36,6 +36,7 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
                 />
             }
             placement={TooltipPlacement.TopRight}
+            replaceElement
         >
             {helpText}
         </Tooltip>

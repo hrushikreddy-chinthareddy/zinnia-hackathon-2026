@@ -55,6 +55,7 @@ export default function PopoverOnTruncate({
             trigger={childrenClone}
             placement={placement}
             triggerClassName={triggerClassName}
+            replaceElement
         >
             {title}
         </Tooltip>

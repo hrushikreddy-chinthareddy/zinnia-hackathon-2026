@@ -622,6 +622,7 @@ const FundingSourceItem = ({
                                 />
                             </div>
                         }
+                        replaceElement
                     >
                         {t('caseOverview.tabs.viewDetails')}
                     </Tooltip>

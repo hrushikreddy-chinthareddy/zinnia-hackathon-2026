@@ -399,6 +399,7 @@ const FollowUp = ({
                                     handleStopResponse={handleStopResponse}
                                 />
                             }
+                            replaceElement
                         >
                             {t('chat.send')}
                         </Tooltip>
