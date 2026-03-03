@@ -28,12 +28,14 @@ export function ObjectFieldTemplate(props: ObjectFieldTemplateProps) {
     const helpInformation = helpText && (
         <Tooltip
             trigger={
-                <CircleInfoIcon
-                    onClick={(e) => e.preventDefault()}
-                    height={'16px'}
-                    width={'16px'}
-                    className="tooltip-primary"
-                />
+                <span tabIndex={0}>
+                    <CircleInfoIcon
+                        onClick={(e) => e.preventDefault()}
+                        height={'16px'}
+                        width={'16px'}
+                        className="tooltip-primary"
+                    />
+                </span>
             }
             placement={TooltipPlacement.TopRight}
             triggerClassName="w-fit"

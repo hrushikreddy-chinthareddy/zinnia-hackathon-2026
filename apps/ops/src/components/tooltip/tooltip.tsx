@@ -41,12 +41,15 @@ const Tooltip = ({
     return (
         <ReactTooltip.Provider>
             <ReactTooltip.Root>
-                <ReactTooltip.Trigger
-                    className={clsx(commonTriggerClasses, triggerClassName)}
-                    data-testid={TooltipTest.Tooltip}
-                    tabIndex={isTabbable ? 0 : -1}
-                >
-                    {children}
+                <ReactTooltip.Trigger asChild>
+                    <span
+                        className={clsx(commonTriggerClasses, triggerClassName)}
+                        data-testid={TooltipTest.Tooltip}
+                        tabIndex={isTabbable ? 0 : -1}
+                        role="note"
+                    >
+                        {children}
+                    </span>
                 </ReactTooltip.Trigger>
                 <ReactTooltip.Portal>
                     <ReactTooltip.Content

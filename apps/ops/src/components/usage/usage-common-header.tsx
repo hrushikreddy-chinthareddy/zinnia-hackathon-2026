@@ -48,12 +48,14 @@ const UsageHeaderLayout = ({
                     {titleToolTip && (
                         <Tooltip
                             trigger={
-                                <CircleInfoIcon
-                                    height={'16px'}
-                                    width={'16px'}
-                                    className="tooltip-secondary"
-                                    color="var(--color-links-color-global-link)"
-                                />
+                                <span tabIndex={0}>
+                                    <CircleInfoIcon
+                                        height={'16px'}
+                                        width={'16px'}
+                                        className="tooltip-secondary"
+                                        color="var(--color-links-color-global-link)"
+                                    />
+                                </span>
                             }
                             triggerClassName="w-fit"
                             replaceElement

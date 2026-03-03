@@ -162,7 +162,9 @@ const KnowledgeBaseSidenav = ({
                     <Tooltip
                         placement={TooltipPlacement.CenterLeft}
                         trigger={
-                            <Icon width={24} height={24} type={iconType} />
+                            <span tabIndex={0}>
+                                <Icon width={24} height={24} type={iconType} />
+                            </span>
                         }
                         tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                         triggerClassName="w-fit"
@@ -266,11 +268,15 @@ const KnowledgeBaseSidenav = ({
                                 <Tooltip
                                     placement={TooltipPlacement.TopLeft}
                                     trigger={
-                                        <Icon
-                                            width={24}
-                                            height={24}
-                                            type={IconType.DOCUMENT_DUPLICATE}
-                                        />
+                                        <span tabIndex={0}>
+                                            <Icon
+                                                width={24}
+                                                height={24}
+                                                type={
+                                                    IconType.DOCUMENT_DUPLICATE
+                                                }
+                                            />
+                                        </span>
                                     }
                                     tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                                     triggerClassName="w-fit"
@@ -297,7 +303,11 @@ const KnowledgeBaseSidenav = ({
                                                 placement={
                                                     TooltipPlacement.CenterLeft
                                                 }
-                                                trigger={item.icon}
+                                                trigger={
+                                                    <span tabIndex={0}>
+                                                        {item.icon}
+                                                    </span>
+                                                }
                                                 tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                                                 triggerClassName="w-fit"
                                                 replaceElement
@@ -368,11 +378,13 @@ const KnowledgeBaseSidenav = ({
                         <Tooltip
                             placement={TooltipPlacement.CenterLeft}
                             trigger={
-                                <Icon
-                                    width={24}
-                                    height={24}
-                                    type={IconType.SEARCH}
-                                />
+                                <span tabIndex={0}>
+                                    <Icon
+                                        width={24}
+                                        height={24}
+                                        type={IconType.SEARCH}
+                                    />
+                                </span>
                             }
                             tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                             triggerClassName="w-fit"

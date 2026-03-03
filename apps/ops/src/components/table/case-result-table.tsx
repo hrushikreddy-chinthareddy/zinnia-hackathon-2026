@@ -376,13 +376,15 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <Tooltip
                         placement={TooltipPlacement.TopRight}
                         trigger={
-                            <Typography
-                                variant={TypographyVariant.BodySm}
-                                className={styles.detail}
-                                aria-label={`${getTimeText()}, Date`}
-                            >
-                                {getTimeText()}
-                            </Typography>
+                            <span tabIndex={0}>
+                                <Typography
+                                    variant={TypographyVariant.BodySm}
+                                    className={styles.detail}
+                                    aria-label={`${getTimeText()}, Date`}
+                                >
+                                    {getTimeText()}
+                                </Typography>
+                            </span>
                         }
                         tooltipClassName="!w-auto"
                         triggerClassName="!z-10 w-fit"

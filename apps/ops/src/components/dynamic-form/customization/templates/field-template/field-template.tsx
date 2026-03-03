@@ -41,12 +41,14 @@ export const helpInformation = (helpText: string) => {
     return (
         <Tooltip
             trigger={
-                <CircleInfoIcon
-                    onClick={(e) => e.preventDefault()}
-                    height={'16px'}
-                    width={'16px'}
-                    className="text-primary"
-                />
+                <span tabIndex={0}>
+                    <CircleInfoIcon
+                        onClick={(e) => e.preventDefault()}
+                        height={'16px'}
+                        width={'16px'}
+                        className="text-primary"
+                    />
+                </span>
             }
             placement={TooltipPlacement.TopRight}
             triggerClassName="w-fit"

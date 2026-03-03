@@ -23,7 +23,7 @@ const renderLabelWithFlag = (
             <Tooltip
                 placement={TooltipPlacement.TopRight}
                 trigger={
-                    <span onClick={(e) => e.preventDefault()}>
+                    <span tabIndex={0} onClick={(e) => e.preventDefault()}>
                         <Icon
                             type={IconType.FLAG}
                             className={style.flagIcon}

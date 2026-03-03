@@ -24,9 +24,11 @@ import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { isEndDated } from '@deps/helpers/date.helpers';
+import { getTotalMinRequiredAmount } from '@deps/helpers/global-values';
+import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertToQueryString } from '@deps/helpers/routing.helpers';
-import { formatSSN } from '@deps/helpers/string.helpers';
+import { formatDate, formatSSN } from '@deps/helpers/string.helpers';
 import useNavLink from '@deps/hooks/useNavLink';
 import { UserPermission } from '@deps/models/user-profile';
 import { getCasesQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
@@ -46,7 +48,11 @@ import {
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
 import { DEFAULT_ERROR_STRING, toSentenceCase } from '@deps/utils/strings';
-import { PartyRole, PolicyStatus } from '@zinnia/api-types/types/sor';
+import {
+    FeatureType,
+    PartyRole,
+    PolicyStatus,
+} from '@zinnia/api-types/types/sor';
 
 import { PolicyActionCell } from './policy-action-cell';
 import styles from './policy-row.module.css';
@@ -117,6 +123,60 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
 
     const policyDetails = policyData ? new PolicyDetails(policyData) : null;
 
+    const policyStatus = policyData?.policyStatus as PolicyStatus;
+
+    const pendingLapse = policyDetails?.features?.getFirstFeatureByType(
+        FeatureType.LAPSEASSESSMENT
+    );
+    const showPendingLapse = policyStatus === PolicyStatus.PENDINGLAPSE;
+    const totalMinRequiredAmount = policyDetails
+        ? getTotalMinRequiredAmount(policyDetails)
+        : DEFAULT_ERROR_STRING;
+
+    const getTooltipText = (): string => {
+        switch (policyStatus) {
+            case PolicyStatus.PENDINGLAPSE:
+            case PolicyStatus.LAPSE:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(pendingLapse?.endDate),
+                    tooltipAmount: showPendingLapse
+                        ? numberFormatify(
+                              pendingLapse?.totalMinimumRequiredAmount
+                          )
+                        : numberFormatify(totalMinRequiredAmount),
+                }) as string;
+            case PolicyStatus.TERMINATED:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(
+                        policyDetails?.policyTerminationDate
+                    ),
+                }) as string;
+            case PolicyStatus.MATURED:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(policyDetails?.maturityDate),
+                }) as string;
+            case PolicyStatus.DEATHCLAIMPAID:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    dateOfDeathReported: formatDate(
+                        policyDetails?.dateOfDeathReportedNotification
+                    ),
+                    claimApprovalDate: formatDate(
+                        policyDetails?.claimApprovalDate
+                    ),
+                }) as string;
+            case PolicyStatus.DEATHCLAIMPENDING:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(
+                        policyDetails?.dateOfDeathReportedNotification
+                    ),
+                }) as string;
+            default:
+                return t(getPolicyBadgeStatusTooltip(policyStatus), {
+                    tooltipDate: formatDate(policyDetails?.issueDate),
+                }) as string;
+        }
+    };
+
     const imageSrc = getCarrierLogoByClientId(item.carrierId);
     const carrierName = getCarrierNameByClientId(item.carrierId);
 
@@ -161,7 +221,12 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                     </div>
                 </div>
             </TableCell>
-            <TableCell className={clsx(isPolicyDataLoading && styles.loading)}>
+            <TableCell
+                className={clsx(
+                    styles.statusCell,
+                    isPolicyDataLoading && styles.loading
+                )}
+            >
                 <PolicyBadgeStatus
                     status={
                         (t(
@@ -171,9 +236,7 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                     variant={getBadgeStatusVariant(
                         policyData?.policyStatus as PolicyStatus
                     )}
-                    tooltip={getPolicyBadgeStatusTooltip(
-                        policyData?.policyStatus as PolicyStatus
-                    )}
+                    tooltip={getTooltipText()}
                 />
             </TableCell>
             <TableCell>

@@ -342,11 +342,13 @@ const CaseDetailsSideNav = ({
                                 </Typography>
                                 <Tooltip
                                     trigger={
-                                        <CircleInfoIcon
-                                            height={'16px'}
-                                            width={'16px'}
-                                            className="text-primary"
-                                        />
+                                        <span tabIndex={0}>
+                                            <CircleInfoIcon
+                                                height={'16px'}
+                                                width={'16px'}
+                                                className="text-primary"
+                                            />
+                                        </span>
                                     }
                                     placement={TooltipPlacement.TopRight}
                                     triggerClassName="w-fit"

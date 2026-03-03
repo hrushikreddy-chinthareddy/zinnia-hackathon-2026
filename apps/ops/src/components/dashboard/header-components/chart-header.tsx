@@ -31,11 +31,13 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
                 {titleToolTip && (
                     <Tooltip
                         trigger={
-                            <CircleInfoIcon
-                                height={'16px'}
-                                width={'16px'}
-                                className="tooltip-primary"
-                            />
+                            <span tabIndex={0}>
+                                <CircleInfoIcon
+                                    height={'16px'}
+                                    width={'16px'}
+                                    className="tooltip-primary"
+                                />
+                            </span>
                         }
                         triggerClassName="w-fit"
                         replaceElement
