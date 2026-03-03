@@ -52,7 +52,7 @@ describe('AnalyticsHeader', () => {
 
         render(<AnalyticsHeader {...baseProps} titleToolTip={titleToolTip} />);
 
-        const trigger = screen.getByRole('button');
+        const trigger = document.querySelector('[data-state="closed"]');
         expect(trigger).toBeInTheDocument();
     });
 });
