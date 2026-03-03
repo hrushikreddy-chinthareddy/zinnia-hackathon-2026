@@ -18,6 +18,7 @@ export const AgentFieldLabel = () => {
                             className="tooltip-primary"
                         />
                     }
+                    triggerClassName="w-fit"
                     replaceElement
                 >
                     {t('clientCase.clientCaseTable.agentTooltip')}

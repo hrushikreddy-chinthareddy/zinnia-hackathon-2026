@@ -63,7 +63,7 @@ const PlusOthers = ({
                     {` ${t('tooltip.other')}`}
                 </div>
             }
-            triggerClassName="!z-10"
+            triggerClassName="!z-10 w-fit"
             replaceElement
         >
             {body}

@@ -349,6 +349,7 @@ const CaseDetailsSideNav = ({
                                         />
                                     }
                                     placement={TooltipPlacement.TopRight}
+                                    triggerClassName="w-fit"
                                     replaceElement
                                 >
                                     {t('sidenav.estimatedCompletionToolTip')}

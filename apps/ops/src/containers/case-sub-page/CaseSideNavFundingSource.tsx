@@ -609,7 +609,7 @@ const FundingSourceItem = ({
                         </div>
                     </div>
                     <Tooltip
-                        triggerClassName="h-6 self-center"
+                        triggerClassName="h-6 self-center w-fit"
                         placement={TooltipPlacement.TopLeft}
                         tooltipClassName="!max-w-fit"
                         trigger={

@@ -49,6 +49,7 @@ export const QuickQuoteResultTableSection = ({
                                 className="tooltip-primary"
                             />
                         }
+                        triggerClassName="w-fit"
                         replaceElement
                     >
                         {hint}

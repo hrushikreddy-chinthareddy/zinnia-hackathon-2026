@@ -45,6 +45,7 @@ const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
                 />
             }
             placement={TooltipPlacement.TopRight}
+            triggerClassName="w-fit"
             replaceElement
         >
             {helpText}

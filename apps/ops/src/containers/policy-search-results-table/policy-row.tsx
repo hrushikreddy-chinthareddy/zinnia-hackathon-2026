@@ -136,7 +136,7 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                     <Tooltip
                         placement={TooltipPlacement.TopRight}
                         tooltipClassName="!w-auto"
-                        triggerClassName="!z-10"
+                        triggerClassName="!z-10 w-fit"
                         trigger={
                             <div className={styles.carrierImage}>
                                 <Image

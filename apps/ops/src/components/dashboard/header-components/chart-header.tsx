@@ -37,6 +37,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
                                 className="tooltip-primary"
                             />
                         }
+                        triggerClassName="w-fit"
                         replaceElement
                     >
                         {titleToolTip}

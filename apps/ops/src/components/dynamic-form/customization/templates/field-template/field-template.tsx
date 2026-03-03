@@ -49,6 +49,7 @@ export const helpInformation = (helpText: string) => {
                 />
             }
             placement={TooltipPlacement.TopRight}
+            triggerClassName="w-fit"
             replaceElement
         >
             {helpText}

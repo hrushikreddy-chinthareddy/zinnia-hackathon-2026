@@ -380,7 +380,7 @@ const FollowUp = ({
                         </div>
                         <Tooltip
                             placement={TooltipPlacement.CenterLeft}
-                            triggerClassName="!w-auto"
+                            triggerClassName="!w-auto w-fit"
                             tooltipClassName="!w-auto !p-0 !px-2 z-50"
                             trigger={
                                 <ActionButton

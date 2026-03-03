@@ -88,6 +88,7 @@ const CaseStatBlock = ({
                                     className="tooltip-primary"
                                 />
                             }
+                            triggerClassName="w-fit"
                             replaceElement
                         >
                             {labelTooltip}

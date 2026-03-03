@@ -165,6 +165,7 @@ const KnowledgeBaseSidenav = ({
                             <Icon width={24} height={24} type={iconType} />
                         }
                         tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
+                        triggerClassName="w-fit"
                         replaceElement
                     >
                         {label}
@@ -272,6 +273,7 @@ const KnowledgeBaseSidenav = ({
                                         />
                                     }
                                     tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
+                                    triggerClassName="w-fit"
                                     replaceElement
                                 >
                                     {t('sidenav.sharepointDocuments')}
@@ -297,6 +299,7 @@ const KnowledgeBaseSidenav = ({
                                                 }
                                                 trigger={item.icon}
                                                 tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
+                                                triggerClassName="w-fit"
                                                 replaceElement
                                             >
                                                 {item.label}
@@ -372,6 +375,7 @@ const KnowledgeBaseSidenav = ({
                                 />
                             }
                             tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
+                            triggerClassName="w-fit"
                             replaceElement
                         >
                             {t('sidenav.search')}

@@ -31,7 +31,7 @@ const renderLabelWithFlag = (
                         />
                     </span>
                 }
-                triggerClassName={style.flagTrigger}
+                triggerClassName={`${style.flagTrigger} w-fit`}
                 replaceElement
             >
                 {missingValueTooltipText ?? ''}

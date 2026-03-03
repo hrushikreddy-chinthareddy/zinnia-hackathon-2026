@@ -55,6 +55,7 @@ const UsageHeaderLayout = ({
                                     color="var(--color-links-color-global-link)"
                                 />
                             }
+                            triggerClassName="w-fit"
                             replaceElement
                         >
                             {titleToolTip}
