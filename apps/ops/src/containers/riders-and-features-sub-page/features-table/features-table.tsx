@@ -69,6 +69,7 @@ export default function FeaturesTable({
                         <TableRow key={`${feature.featureId}`}>
                             <TableCell>
                                 <Button
+                                    className={styles.tableButton}
                                     mode="link"
                                     size="small"
                                     onClick={() => {
