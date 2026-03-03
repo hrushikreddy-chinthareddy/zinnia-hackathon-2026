@@ -3,6 +3,7 @@ import { TFunction } from 'next-i18next';
 import { stringifyTrueFalseNull } from '@deps/helpers/string.helpers';
 import {
     AccountType,
+    AddressTypes,
     Carrier,
     FormDisbursement,
 } from '@deps/models/case/withdrawal/case';
@@ -406,3 +407,21 @@ export const defaultSendCheckOptions = (t: TFunction) => [
         value: SendCheckOption.ThirdPartyNotFinancialIns,
     },
 ];
+
+export const getDefaultAddress = () => {
+    return [
+        {
+            addressLine1: '',
+            addressLine2: null,
+            addressLine3: null,
+            addressLine4: null,
+            addressType: 'DEFAULT' as AddressTypes,
+            city: null,
+            country: null,
+            state: '',
+            zip: '',
+            zipPlusFour: null,
+            isAddressChanged: false,
+        },
+    ];
+};

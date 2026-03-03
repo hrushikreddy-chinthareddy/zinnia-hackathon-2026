@@ -63,6 +63,8 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         setFormESignatureData,
         formErrors,
         isLC,
+        parties,
+        partyRoles,
     } = useContext(FormDataContext);
 
     const {
@@ -79,7 +81,7 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
         irsSignatureConfig,
         eSignatureFieldConfig,
         sswUpdateFastOptions,
-    } = getDlicConfig(t, !isDlic3pDisbursementChangesEnabled, isLC ?? false);
+    } = getDlicConfig(t, isDlic3pDisbursementChangesEnabled, isLC ?? false);
 
     useEffect(() => {
         setFormValidator(() => formValidation);
@@ -185,7 +187,12 @@ export function DlicSSWForm({ planCode = '' }: DlicSSWFormProps) {
                 <FormDisbursement
                     isFormStateReadOnly={isFormStateReadOnly}
                     options={
-                        disbursementOptions(formParty) as PaymentMethodOption[]
+                        disbursementOptions(
+                            formParty,
+                            isLC ?? false,
+                            parties ?? [],
+                            partyRoles ?? []
+                        ) as PaymentMethodOption[]
                     }
                 />
             )}

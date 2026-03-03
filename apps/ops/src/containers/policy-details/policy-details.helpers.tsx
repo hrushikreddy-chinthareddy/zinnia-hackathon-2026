@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import { TFunction } from 'next-i18next';
 
 import { ApplicationDetailsCardData } from '@deps/containers/policy-details/cards/application-details/types';
@@ -130,6 +131,7 @@ export const buildTransactionCards = (
             : withdrawalCount || 0,
     };
 
+    const currentYear = dayjs().year();
     const rmdCard = {
         cardTitle: t('rmds'),
         fieldLabel: t('eligibility'),
@@ -138,8 +140,9 @@ export const buildTransactionCards = (
             totalReqMinDistributionAmount === 0 ||
             totalReqMinDistributionAmount == null
                 ? ''
-                : `${reqRemainigDistributionAmountAmount} ${t(
-                      'yearsRemaining'
+                : `${currentYear} ${t('remaining')}: ${numberFormatify(
+                      reqRemainigDistributionAmountAmount,
+                      currencyFormat
                   )}`,
         value:
             totalReqMinDistributionAmount && totalReqMinDistributionAmount > 0

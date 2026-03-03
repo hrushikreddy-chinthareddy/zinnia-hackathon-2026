@@ -17,8 +17,8 @@ const mockT: TFunction = ((key: string) => key) as TFunction;
 
 describe('getDlicRmdWithdrawalConfig', () => {
     describe('sendCheckOptions function', () => {
-        describe('Auto RMD or Calculate RMD', () => {
-            it('should return 6 options for Auto RMD including separate Charity option', () => {
+        describe('Auto RMD', () => {
+            it('should return 4 options for Auto RMD with combined third party label (no separate Charity)', () => {
                 const config = getDlicRmdWithdrawalConfig(mockT, true);
                 const formParty: FormParty = {
                     parties: [
@@ -46,34 +46,26 @@ describe('getDlicRmdWithdrawalConfig', () => {
                 );
                 const options = sendCheckSelectField?.selectOptions;
 
-                expect(options).toHaveLength(6);
+                expect(options).toHaveLength(4);
                 expect(options[0]).toEqual({
-                    label: 'distributionMethod.select',
-                    value: 'select',
-                });
-                expect(options[1]).toEqual({
                     label: 'distributionMethod.disburseToOwnerAddress',
                     value: SendCheckOption.OwnerAddress,
                 });
-                expect(options[2]).toEqual({
+                expect(options[1]).toEqual({
                     label: 'distributionMethod.disburseToFinancialInstitution',
                     value: SendCheckOption.FinancialInstitution,
                 });
-                expect(options[3]).toEqual({
-                    label: 'distributionMethod.disburseToCharity',
-                    value: SendCheckOption.Charity,
-                });
-                expect(options[4]).toEqual({
-                    label: 'distributionMethod.disburseToThirdParty',
+                expect(options[2]).toEqual({
+                    label: 'distributionMethod.disburseToThirdPartyNotCharityNotFinancial',
                     value: SendCheckOption.ThirdPartyNotFinancialIns,
                 });
-                expect(options[5]).toEqual({
+                expect(options[3]).toEqual({
                     label: 'distributionMethod.disburseToDifferentAddress',
                     value: SendCheckOption.DifferentAddress,
                 });
             });
 
-            it('should return 6 options for Calculate RMD including separate Charity option', () => {
+            it('should NOT include separate Charity option for Auto RMD', () => {
                 const config = getDlicRmdWithdrawalConfig(mockT, true);
                 const formParty: FormParty = {
                     parties: [
@@ -85,7 +77,7 @@ describe('getDlicRmdWithdrawalConfig', () => {
                 } as any;
                 const formProgram: FormProgram = {
                     rmd: {
-                        rmdMethod: RMDType.CalculateRMD,
+                        rmdMethod: RMDType.AutoRMD,
                     },
                 } as any;
 
@@ -101,36 +93,15 @@ describe('getDlicRmdWithdrawalConfig', () => {
                 );
                 const options = sendCheckSelectField?.selectOptions;
 
-                expect(options).toHaveLength(6);
-                expect(options[0]).toEqual({
-                    label: 'distributionMethod.select',
-                    value: 'select',
-                });
-                expect(options[1]).toEqual({
-                    label: 'distributionMethod.disburseToOwnerAddress',
-                    value: SendCheckOption.OwnerAddress,
-                });
-                expect(options[2]).toEqual({
-                    label: 'distributionMethod.disburseToFinancialInstitution',
-                    value: SendCheckOption.FinancialInstitution,
-                });
-                expect(options[3]).toEqual({
-                    label: 'distributionMethod.disburseToCharity',
-                    value: SendCheckOption.Charity,
-                });
-                expect(options[4]).toEqual({
-                    label: 'distributionMethod.disburseToThirdParty',
-                    value: SendCheckOption.ThirdPartyNotFinancialIns,
-                });
-                expect(options[5]).toEqual({
-                    label: 'distributionMethod.disburseToDifferentAddress',
-                    value: SendCheckOption.DifferentAddress,
-                });
+                const charityOption = options.find(
+                    (opt: any) => opt.value === SendCheckOption.Charity
+                );
+                expect(charityOption).toBeUndefined();
             });
         });
 
-        describe('One Time RMD', () => {
-            it('should return 5 options for One Time RMD with combined third party/charity option', () => {
+        describe('One Time RMD and Calculate RMD', () => {
+            it('should return 5 options for One Time RMD including separate Charity option', () => {
                 const config = getDlicRmdWithdrawalConfig(mockT, true);
                 const formParty: FormParty = {
                     parties: [
@@ -160,28 +131,79 @@ describe('getDlicRmdWithdrawalConfig', () => {
 
                 expect(options).toHaveLength(5);
                 expect(options[0]).toEqual({
-                    label: 'distributionMethod.select',
-                    value: 'select',
-                });
-                expect(options[1]).toEqual({
-                    label: 'distributionMethod.disburseToThirdPartyNoCharity',
-                    value: SendCheckOption.ThirdPartyNotFinancialIns,
-                });
-                expect(options[2]).toEqual({
-                    label: 'distributionMethod.disburseToFinancialInstitution',
-                    value: SendCheckOption.FinancialInstitution,
-                });
-                expect(options[3]).toEqual({
                     label: 'distributionMethod.disburseToOwnerAddress',
                     value: SendCheckOption.OwnerAddress,
                 });
-                expect(options[4]).toEqual({
+                expect(options[1]).toEqual({
+                    label: 'distributionMethod.disburseToFinancialInstitution',
+                    value: SendCheckOption.FinancialInstitution,
+                });
+                expect(options[2]).toEqual({
+                    label: 'distributionMethod.disburseToCharity',
+                    value: SendCheckOption.Charity,
+                });
+                expect(options[3]).toEqual({
                     label: 'distributionMethod.disburseToDifferentAddress',
                     value: SendCheckOption.DifferentAddress,
                 });
+                expect(options[4]).toEqual({
+                    label: 'distributionMethod.disburseToThirdParty',
+                    value: SendCheckOption.ThirdPartyNotFinancialIns,
+                });
             });
 
-            it('should NOT include separate Charity option for One Time RMD', () => {
+            it('should return 5 options for Calculate RMD including separate Charity option', () => {
+                const config = getDlicRmdWithdrawalConfig(mockT, true);
+                const formParty: FormParty = {
+                    parties: [
+                        {
+                            partyRoleType: PartyRoles.ANNUITANT,
+                            addresses: [DEFAULT_ADDRESS],
+                        },
+                    ],
+                } as any;
+                const formProgram: FormProgram = {
+                    rmd: {
+                        rmdMethod: RMDType.CalculateRMD,
+                    },
+                } as any;
+
+                const disbursementOptions = config.disbursementOptions(
+                    formParty,
+                    formProgram
+                );
+                const checkOption = disbursementOptions.find(
+                    (option: any) => option.value === PaymentMailType.Check
+                );
+                const sendCheckSelectField: any = checkOption?.fields?.find(
+                    (field: any) => field.fieldName === 'SendCheckSelect'
+                );
+                const options = sendCheckSelectField?.selectOptions;
+
+                expect(options).toHaveLength(5);
+                expect(options[0]).toEqual({
+                    label: 'distributionMethod.disburseToOwnerAddress',
+                    value: SendCheckOption.OwnerAddress,
+                });
+                expect(options[1]).toEqual({
+                    label: 'distributionMethod.disburseToFinancialInstitution',
+                    value: SendCheckOption.FinancialInstitution,
+                });
+                expect(options[2]).toEqual({
+                    label: 'distributionMethod.disburseToCharity',
+                    value: SendCheckOption.Charity,
+                });
+                expect(options[3]).toEqual({
+                    label: 'distributionMethod.disburseToDifferentAddress',
+                    value: SendCheckOption.DifferentAddress,
+                });
+                expect(options[4]).toEqual({
+                    label: 'distributionMethod.disburseToThirdParty',
+                    value: SendCheckOption.ThirdPartyNotFinancialIns,
+                });
+            });
+
+            it('should include separate Charity option for One Time RMD', () => {
                 const config = getDlicRmdWithdrawalConfig(mockT, true);
                 const formParty: FormParty = {
                     parties: [
@@ -212,7 +234,49 @@ describe('getDlicRmdWithdrawalConfig', () => {
                 const charityOption = options.find(
                     (opt: any) => opt.value === SendCheckOption.Charity
                 );
-                expect(charityOption).toBeUndefined();
+                expect(charityOption).toBeDefined();
+                expect(charityOption).toEqual({
+                    label: 'distributionMethod.disburseToCharity',
+                    value: SendCheckOption.Charity,
+                });
+            });
+
+            it('should include separate Charity option for Calculate RMD', () => {
+                const config = getDlicRmdWithdrawalConfig(mockT, true);
+                const formParty: FormParty = {
+                    parties: [
+                        {
+                            partyRoleType: PartyRoles.ANNUITANT,
+                            addresses: [DEFAULT_ADDRESS],
+                        },
+                    ],
+                } as any;
+                const formProgram: FormProgram = {
+                    rmd: {
+                        rmdMethod: RMDType.CalculateRMD,
+                    },
+                } as any;
+
+                const disbursementOptions = config.disbursementOptions(
+                    formParty,
+                    formProgram
+                );
+                const checkOption = disbursementOptions.find(
+                    (option: any) => option.value === PaymentMailType.Check
+                );
+                const sendCheckSelectField: any = checkOption?.fields?.find(
+                    (field: any) => field.fieldName === 'SendCheckSelect'
+                );
+                const options = sendCheckSelectField?.selectOptions;
+
+                const charityOption = options.find(
+                    (opt: any) => opt.value === SendCheckOption.Charity
+                );
+                expect(charityOption).toBeDefined();
+                expect(charityOption).toEqual({
+                    label: 'distributionMethod.disburseToCharity',
+                    value: SendCheckOption.Charity,
+                });
             });
         });
 
@@ -679,8 +743,8 @@ describe('getDlicRmdWithdrawalConfig', () => {
                     (field: any) => field.fieldName === 'SendCheckSelect'
                 );
 
-                // Verify it's using Calculate RMD options (6 options with Charity)
-                expect(sendCheckSelectField?.selectOptions).toHaveLength(6);
+                // Verify it's using Calculate RMD options (5 options with separate Charity)
+                expect(sendCheckSelectField?.selectOptions).toHaveLength(5);
             });
 
             it('should handle missing rmdMethod gracefully', () => {
