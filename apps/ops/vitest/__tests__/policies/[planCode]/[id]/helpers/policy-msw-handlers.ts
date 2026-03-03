@@ -1,4 +1,4 @@
-import { http, HttpResponse } from 'msw';
+import { delay, http, HttpResponse } from 'msw';
 
 export const personEligibilityHandlers = [
     http.post(
@@ -76,5 +76,73 @@ export const formMetadataHandler = http.get(
                 ],
             },
         });
+    }
+);
+
+export const agentDataHandler = http.get(
+    '*/api/mcs/:clientCode/salesentity',
+    () =>
+        HttpResponse.json({
+            items: [
+                {
+                    id: 'ceac0a27b0d140988f1c873c66ebc418',
+                    externalId: '154360036',
+                    individuals: [
+                        {
+                            firstName: 'Alice',
+                            lastName: 'Agent',
+                            fullName: 'Alice Agent',
+                            middleName: null,
+                            birthDate: null,
+                            gender: null,
+                            prefix: null,
+                            suffix: null,
+                            businessName: null,
+                            shortName: null,
+                            taxId: null,
+                            taxIdType: null,
+                            taxIdTypeId: null,
+                            id: null,
+                            individualType: null,
+                            individualTypeId: null,
+                            salesEntityId: null,
+                            createDate: null,
+                            createUserId: null,
+                            modifyDate: null,
+                            modifyUserId: null,
+                        },
+                    ],
+                    addresses: [],
+                    emails: [],
+                    phones: [],
+                    appointments: [],
+                    hierarchy: [],
+                    licenses: [],
+                    linesOfBusiness: [],
+                    otherIds: [],
+                    salesDesignations: [],
+                    salesHierarchy: [],
+                    taxId: null,
+                    organizationName: null,
+                },
+            ],
+        })
+);
+
+export const agentDataErrorHandler = http.get(
+    '*/api/mcs/:clientCode/salesentity',
+    () => HttpResponse.error()
+);
+
+export const agentDataEmptyHandler = http.get(
+    '*/api/mcs/:clientCode/salesentity',
+    () => HttpResponse.json({ items: [] })
+);
+
+export const agentDataLoadingHandler = http.get(
+    '*/api/mcs/:clientCode/salesentity',
+    async () => {
+        await delay('infinite');
+        return HttpResponse.json({ items: [] });
     }
 );
