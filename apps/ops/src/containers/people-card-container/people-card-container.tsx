@@ -1,19 +1,21 @@
+import { Skeleton } from '@zinnia/bloom/components';
 import { useContext } from 'react';
 
 import CardPeople from '@deps/components/card/card-people/card-people';
 import { ChipEnterContext } from '@deps/contexts/ChipEnterContext';
 import { goTo } from '@deps/helpers/routing.helpers';
 import { safeString, toTitleCase } from '@deps/helpers/string.helpers';
+import { AGENT_ROLES } from '@deps/types/constants';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
-import { POM_Models_ProducerType } from '@zinnia/api-types/types/pom';
+import { PomModelsProducerType } from '@zinnia/api-types/types/pom';
 import { PartyType } from '@zinnia/api-types/types/sor';
 
 import { tagsToBeneficiaryType } from './people-card-container.helpers';
 import {
+    AgentType,
     BeneficiaryType,
     PeopleCardContainerProps,
     PeopleCardData,
-    AgentType,
 } from './people-card-container.types';
 import { NameTag } from '../people-sub-page/people-sub-page.helpers';
 
@@ -26,6 +28,7 @@ interface MapDataToPeopleProps {
     disabled?: boolean;
     cardDisableTooltip?: string;
     type?: BeneficiaryType | AgentType;
+    isLoading?: boolean;
 }
 const mapDataToPeopleCard = ({
     chipEntered,
@@ -33,6 +36,7 @@ const mapDataToPeopleCard = ({
     party,
     peopleCard,
     isRereg,
+    isLoading,
 }: MapDataToPeopleProps) => {
     const {
         partyType,
@@ -64,10 +68,10 @@ const mapDataToPeopleCard = ({
     let name = '';
     switch (partyType) {
         case PartyType.INDIVIDUAL:
-            if (producerType === POM_Models_ProducerType.INDIVIDUAL) {
+            if (producerType === PomModelsProducerType.INDIVIDUAL) {
                 name = `${toTitleCase(firstName)} ${toTitleCase(lastName)}`;
             } else if (
-                producerType === POM_Models_ProducerType.CORPORATION &&
+                producerType === PomModelsProducerType.CORPORATION &&
                 producerName
             ) {
                 name = toTitleCase(producerName);
@@ -97,7 +101,7 @@ const mapDataToPeopleCard = ({
         text: toTitleCase(tag.text),
     }));
 
-    return (
+    const card = (
         <CardPeople
             key={index}
             index={index}
@@ -124,7 +128,24 @@ const mapDataToPeopleCard = ({
             isIrrevocable={!!isIrrevocable}
         />
     );
+
+    if (isLoading) {
+        return (
+            <div
+                key={index}
+                className="flex flex-col gap-2 rounded border-2 border-gray-100 bg-white p-4"
+            >
+                <Skeleton variant="text" width="30%" height="24px" />
+                <Skeleton variant="text" width="60%" height="20px" />
+            </div>
+        );
+    }
+
+    return card;
 };
+
+const isAgentParty = (party: NameTag): boolean =>
+    party.partyRoles.some((role) => AGENT_ROLES.includes(role));
 
 const PeopleCardContainer = ({
     filteredData,
@@ -132,6 +153,7 @@ const PeopleCardContainer = ({
     classNames,
     isRereg,
     type,
+    isAgentDataLoading,
 }: PeopleCardContainerProps) => {
     const { chipEntered } = useContext(ChipEnterContext);
     return (
@@ -146,6 +168,7 @@ const PeopleCardContainer = ({
                     peopleCard: peopleCardData,
                     isRereg,
                     type,
+                    isLoading: isAgentDataLoading && isAgentParty(nameTag),
                 })
             )}
         </div>

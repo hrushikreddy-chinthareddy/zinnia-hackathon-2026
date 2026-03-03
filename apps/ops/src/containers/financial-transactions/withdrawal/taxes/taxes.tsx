@@ -26,7 +26,7 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { isNullEmptyOrUndefined } from '@deps/helpers/string.helpers';
 import { TransactionStep } from '@deps/types/segment-analytics';
 import { TaxWithholdingType } from '@zinnia/api-types/types/bpm';
-import { Policy, Transaction } from '@zinnia/api-types/types/sor';
+import { Policy, TransactionTypeEnum } from '@zinnia/api-types/types/sor';
 
 import {
     Errors,
@@ -75,8 +75,8 @@ const Taxes = ({ policy }: TaxesProps) => {
 
     const transactionType = useMemo(() => {
         return withdrawal.type === WithdrawalType.Surrender
-            ? Transaction.transactionType.FULL_SURRENDER
-            : Transaction.transactionType.PARTIAL_WITHDRAWAL_ONE_TIME;
+            ? TransactionTypeEnum.FULL_SURRENDER
+            : TransactionTypeEnum.PARTIAL_WITHDRAWAL_ONE_TIME;
     }, [withdrawal.type]);
 
     const handleContinue = () => {

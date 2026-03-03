@@ -2,6 +2,7 @@ import { uniq } from 'lodash';
 import { useMemo } from 'react';
 import { SetRequired } from 'type-fest';
 
+import { SellingCodeWithCarrier } from '@deps/types/client-case';
 import { Brand } from '@deps/utils/types';
 import {
     AliasModel,
@@ -64,9 +65,7 @@ export const getSellingCodesFromAliases = (aliases: AliasModel[] | undefined) =>
         aliases
             ?.map((alias) => getSellingCodeFromAlias(alias))
             ?.filter(
-                (
-                    obj
-                ): obj is { sellingCode: string; carrierShortName: string } =>
+                (obj): obj is SellingCodeWithCarrier =>
                     !!(obj?.sellingCode && obj?.carrierShortName)
             ) ?? []
     );

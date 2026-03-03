@@ -1,7 +1,7 @@
 import {
+    LineOfBusiness,
     Policy as OpsPolicy,
     Policy,
-    Product,
     ProductType,
 } from '@zinnia/api-types/types/sor';
 
@@ -23,7 +23,7 @@ export const generatePolicyAnnuityDetailsDto = (
     policy: OpsPolicy
 ): PolicyViewDetailsDto | AnnuityViewDetailsDto => {
     if (!policy) return {} as PolicyViewDetailsDto;
-    if (policy.product?.lineOfBusiness === Product.lineOfBusiness.LIFE) {
+    if (policy.product?.lineOfBusiness === LineOfBusiness.LIFE) {
         if (isTermLifeProduct(policy)) {
             return toTermLifeViewDetailsDto(policy) as PolicyViewDetailsDto;
         }

@@ -26,7 +26,7 @@ import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import { isFeatureFlagVariableActive } from '@deps/utils/optimizely/utils';
 import { FEATURE_FLAG_VARIABLES } from '@deps/utils/optimizely/variables';
 import { parseErrorInformation } from '@deps/utils/server-logging';
-import { SearchRequest } from '@zinnia/api-types/types/documents-v3';
+import { DocumentClassificationEnum } from '@zinnia/api-types/types/documents-v3';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 import SendDocumentNavigationButtons from './action-components/navigation-buttons';
@@ -289,8 +289,7 @@ function StatementSelection({
                             const searchBody = {
                                 parentCarrierCode: policy?.carrierId || '',
                                 documentClassification:
-                                    SearchRequest.documentClassification
-                                        .OUTBOUND,
+                                    DocumentClassificationEnum.OUTBOUND,
                                 policyNumber: policy?.policyNumber || '',
                                 documentType: optionalParams.documentType,
                                 periods: selectedYearQuarters,

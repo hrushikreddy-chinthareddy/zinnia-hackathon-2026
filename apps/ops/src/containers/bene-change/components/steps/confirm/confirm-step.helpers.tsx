@@ -26,12 +26,12 @@ import {
     ZAHARA_API_DATE_FORMAT,
 } from '@deps/types/constants';
 import {
-    Policy,
-    EmailType,
     Email,
+    EmailType,
+    IdentificationTypeEnum,
     PartyType,
     PhoneType,
-    Identification,
+    Policy,
 } from '@zinnia/api-types/types/sor';
 
 import {
@@ -204,7 +204,7 @@ export const getContractInfo = (ownerInfo: any, policy: Policy) => {
             updatedIdentifications = identifications?.map((identification) => {
                 if (
                     identification.identificationType ===
-                    Identification.identificationType.SSN
+                    IdentificationTypeEnum.SSN
                 ) {
                     return {
                         ...identification,
@@ -276,8 +276,7 @@ const formatActionRecord = (policy: Policy, item: any, parties: any) => {
     );
 
     const identifications = party?.identifications?.find(
-        (ids) =>
-            ids.identificationType === Identification.identificationType.SSN
+        (ids) => ids.identificationType === IdentificationTypeEnum.SSN
     );
     const selectedParty = parties?.find((selectedItem: any) =>
         selectedItem?.partyRoleIds?.includes(item?.partyRole?.partyRoleId)
