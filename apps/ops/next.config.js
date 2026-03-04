@@ -92,6 +92,8 @@ const nextConfig = {
 module.exports = {
     ...nextConfig,
     webpack(config) {
+        // This will allow Bloom to be installed from a workspace without introducing
+        // a conflicting React instance
         config.resolve.alias = {
             ...config.resolve.alias,
             react: path.dirname(require.resolve('react/package.json')),
