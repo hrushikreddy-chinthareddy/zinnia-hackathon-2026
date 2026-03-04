@@ -18,7 +18,7 @@ export const TransactionTypeSelect = () => {
             .map((type) => {
                 return {
                     value: type,
-                    label: t(`enums.${type}`) || type,
+                    label: t(`enums.${type}`, {defaultValue: null}) || type,
                 };
             })
             .sort((a, b) => a.label.localeCompare(b.label));
