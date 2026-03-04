@@ -163,7 +163,8 @@ const CommissionsStatements = ({ user }: CommissionsStatementsProps) => {
                     <div className={styles.carrierSelect}>
                         <FieldDateRange
                             name="commissionStatementsDateRange"
-                            showActionButtons
+                            showApplyButtons
+                            showResetButton={false}
                             onApply={(startDate, endDate) => {
                                 handleRangeChange({
                                     from: dayjs(startDate).format(
