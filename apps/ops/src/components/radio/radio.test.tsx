@@ -28,7 +28,7 @@ describe('Radio Component', () => {
 
     it('calls onChange when a radio button is selected using Enter key', () => {
         const onChangeMock = jest.fn();
-        const { getByLabelText } = render(
+        const { container } = render(
             <Radio
                 label="Radio Options"
                 items={items}
@@ -37,7 +37,10 @@ describe('Radio Component', () => {
             />
         );
 
-        fireEvent.keyDown(getByLabelText('Option 3'), {
+        const radioInput = container.querySelector(
+            'input[value="option3"]'
+        ) as HTMLInputElement;
+        fireEvent.keyDown(radioInput, {
             key: 'Enter',
             keyCode: 13,
         });
@@ -56,7 +59,7 @@ describe('Radio Component', () => {
             />
         );
 
-        fireEvent.click(getByLabelText('Option 2'));
+        fireEvent.click(getByLabelText('Radio Options, Option 2'));
 
         expect(onChangeMock).toBeCalledTimes(1);
     });
