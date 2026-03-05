@@ -1,4 +1,5 @@
 import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-claim.types';
+import { TaskActions } from '@deps/contexts/UpdateNotificationMethodContext';
 import { AddressBase, Phone, PhoneBase } from '@zinnia/api-types/types/sor';
 
 export interface UpdatedBeneficiaryRecord {
@@ -65,7 +66,8 @@ export interface CallLog {
     callSequence: number;
     callDone: boolean;
     callSummary: string;
-    contactEstablished: boolean;
+    contactEstablished?: boolean;
+    taskActions?: TaskActions[];
 }
 
 export interface CallEntry {
@@ -74,7 +76,8 @@ export interface CallEntry {
     name: string;
     phone: Phone;
     callSummary: string;
-    contactEstablished: string;
+    contactEstablished?: string;
+    taskActions?: TaskActions[];
 }
 
 export enum ContactRole {

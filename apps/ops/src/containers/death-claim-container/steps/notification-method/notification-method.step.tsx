@@ -85,7 +85,7 @@ const NotificationMethodStep = ({
 
     const handleNotification = (data: any, index: number) => {
         setBeneficiaries((prevState) => {
-            const newState = prevState;
+            const newState = [...prevState];
             newState[index] = {
                 ...newState[index],
                 ...data,

@@ -1,0 +1,30 @@
+{
+    "taskType": "CLAIMS_IDENTIFY_UNCASHED_TRANSACTIONS",
+    "caseId": "CA0000679351",
+    "carrier": "FLIC",
+    "status": "NEW",
+    "externalId": "ff819645-1be4-4316-b72e-92088a5613bd",
+    "taskName": "Uncashed transactions identification",
+    "process": "Claims",
+    "data": {
+        "taskContext": "IDN",
+        "details": {
+            "dateOfNotification": "2026-02-25"
+        },
+        "uploadRequired": false
+    },
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "9028121322"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "9028121322"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000679351"
+        }
+    ]
+}

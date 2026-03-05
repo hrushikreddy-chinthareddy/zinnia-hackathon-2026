@@ -7,7 +7,6 @@ import AddButton from './button-templates/add-button/add-button';
 import RemoveButton from './button-templates/remove-button/remove-button';
 import SubmitButton from './button-templates/submit-button/submit-button';
 import { CardTemplate } from './card-templates/card-template';
-import { ChangeAddressTemplate } from './change-address-templete/change-address-template';
 import DifferenceTemplate from './difference-template/difference-template';
 import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
@@ -36,7 +35,6 @@ export function generateTemplates() {
         AddressFieldTemplate,
         ObjectRowFieldTemplate,
         DifferenceTemplate,
-        ChangeAddressTemplate,
         TransactionAccordionTemplate,
         PartyCardFieldTemplate,
         PartyInfoListTemplate,

@@ -1,0 +1,81 @@
+{
+    "taskType": "CLAIMS_REVERSE_UNCASHED_TRANSACTIONS",
+    "caseId": "CA0000395559",
+    "carrier": "FLIC",
+    "status": "NEW",
+    "externalId": "b00dcf13-e5d9-4636-b805-ed35f95ba20c",
+    "taskName": "Reverse Transactions",
+    "process": "Claims",
+    "source": "BPM.ClaimProcessing",
+    "data": {
+        "details": {
+            "uncashTransaction": {
+                "uncashTransactionIdentified": true,
+                "uncashTransactionExists": true,
+                "transactions": [
+                    {
+                        "id": "d010f52e-63ba-4d8e-b120-df1d2d227bb2",
+                        "policyNumber": "9033772774",
+                        "transactionDate": "2026-01-30",
+                        "transactionAmount": "12512.56",
+                        "checkNumber": "00098214",
+                        "checkIssueDate": "2025-12-17",
+                        "checkStopDate": "2026-02-05",
+                        "postFund": false,
+                        "stopTransactionStatus": "STOP",
+                        "paymentRefId": "8270044406",
+                        "paymentMethod": "CHK",
+                        "paymentStatus": "P",
+                        "paymentDate": "2026-01-30",
+                        "bankCode": "UMB01",
+                        "bankAccountkey": "5614",
+                        "bankReconcileStatus": "UNR",
+                        "sourceData": {
+                            "setId": "E2GCO",
+                            "paymentRefId": "8270044406",
+                            "paymentMethod": "CHK",
+                            "rolledUpPayment": "N",
+                            "paymentDate": "2026-01-30",
+                            "glBusinessUnit": "827",
+                            "paymentStatus": "P",
+                            "actionRequestStatus": "UNR",
+                            "bankAccountkey": "5614",
+                            "bankCode": "UMB01",
+                            "Details": [
+                                {
+                                    "contractNumber": "9033772774",
+                                    "voucherAmount": "12512.56",
+                                    "voucherId": "00098214",
+                                    "invoiceDate": "2025-12-17",
+                                    "apBusinessUnit": "82700"
+                                }
+                            ]
+                        },
+                        "identifiedManually": false,
+                        "stopManually": false,
+                        "reverseSor": false,
+                        "sendCheckToEstate": true,
+                        "isReverseUncashTxnReviewRequired": false
+                    }
+                ]
+            }
+        },
+        "uploadRequired": false
+    },
+    "mappedExceptions": [],
+    "contextData": {
+        "entityId": "0aec8070-86da-4150-8964-bedfd6f2a663",
+        "entityType": "IDN_CLAIM_BENE_RECORD",
+        "attributes": [
+            {
+                "value": "SAUN",
+                "attribute": "firstName"
+            },
+            {
+                "value": "Bene",
+                "attribute": "lastNme"
+            }
+        ]
+    },
+    "mappedDocuments": []
+}

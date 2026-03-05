@@ -852,6 +852,11 @@
         "searchByLastNamePlaceholder": "Apellido del individuo",
         "searchButtonOwnerName": "Nombre del propietario",
         "searchButtonAgentName": "Nombre del agente",
+        "notifierDetails": "Detalles del notificador",
+        "notifierName": "Nombre del notificador",
+        "notifierPhoneNumber": "Número de teléfono del notificador",
+        "notifierRole": "Rol de notificador",
+        "relationshipToInsured": "Parentesco con el fallecido",
         "illustrationsClientCasesDobDatePickerPopoverTitle": "Fecha de nacimiento",
         "defaultTaskCardTitle": "¡Ups! Algo salió mal al cargar la tarea. Por favor, inténtalo de nuevo.",
         "defaultTaskCardSubtitle": "Para cualquier ayuda adicional, ",
@@ -8601,44 +8606,55 @@
             "title": "Contacto establecido",
             "selectOption": "Seleccione una de las siguientes opciones:",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contacto establecido – Reiniciar proceso",
+                "resendPacket": "Reenviar paquete",
+                "restartFollowupProcess": "Reiniciar el proceso de seguimiento.",
                 "updateNotificationMethod": "Método de notificación de actualización"
+            },
+            "tooltips": {
+                "resendPacket": "Renvoie le paquet sans redémarrer le processus de suivi, en utilisant la méthode de notification présélectionnée.",
+                "restartFollowupProcess": "Reinicia el proceso de seguimiento desde el Seguimiento 1 utilizando el método de notificación preseleccionado.",
+                "updateNotificationMethod": "Actualiza el método de notificación y reinicia el proceso de seguimiento desde el Seguimiento 1 utilizando los nuevos datos proporcionados."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Seleccione una opción para continuar."
+                    "taskActionsIsRequired": "Seleccione una opción para continuar."
                 }
+            },
+            "notificationMethods": {
+                "email": "Correo electrónico",
+                "fax": "Fax",
+                "address": "Dirección de envio"
             }
         },
         "updateNotificationMethodStep": {
-            "title": "Update Notification Method",
-            "subtitle": "Select a preferred notification method for communications related to this claim",
+            "title": "Método de notificación de actualización",
+            "subtitle": "Seleccione el método de notificación que prefiera para las comunicaciones relacionadas con esta reclamación.",
             "notificationMethods": {
-                "email": "Email",
+                "email": "Correo electrónico",
                 "fax": "Fax",
-                "address": "Mailing Address",
-                "change": "change",
-                "updateEmail": "Update Email Address",
-                "updateFax": "Update Fax Number",
+                "address": "Dirección de envio",
+                "change": "Cambiar",
+                "updateEmail": "Actualizar dirección de correo electrónico",
+                "updateFax": "Actualizar número de fax",
                 "formActions": {
-                    "continue": "Continue",
-                    "cancel": "Cancel"
+                    "continue": "Continuar",
+                    "cancel": "Cancelar"
                 },
                 "formErrors": {
                     "formValidation": {
-                        "zipIsRequired": "Zip is required.",
-                        "addressLine1IsRequired": "Address line 1 is required.",
-                        "cityIsRequired": "City is required.",
-                        "stateIsRequired": "State is required."
+                        "zipIsRequired": "Se requiere el código postal.",
+                        "addressLine1IsRequired": "La primera línea de la dirección es obligatoria.",
+                        "cityIsRequired": "Se requiere la ciudad.",
+                        "stateIsRequired": "Se requiere el estado."
                     }
                 },
                 "errors": {
-                    "emailIsRequired": "Email is required",
-                    "inValidDomain": "Only Zinnia emails are allowed",
-                    "inValidEmail": "Please enter valid email address",
-                    "faxIsRequired": "Fax number is required",
-                    "inValidFax": "Please enter valid fax number",
-                    "addressIsRequired": "Address is required."
+                    "emailIsRequired": "Se requiere una dirección de correo electrónico.",
+                    "inValidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+                    "inValidEmail": "Por favor, introduzca una dirección de correo electrónico válida.",
+                    "faxIsRequired": "Se requiere el número de fax.",
+                    "inValidFax": "Por favor, introduzca un número de fax válido.",
+                    "addressIsRequired": "Se requiere la dirección."
                 }
             }
         },
@@ -8879,7 +8895,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "cambiar",
+        "change": "Cambiar",
         "updateAddress": "Actualizar dirección {{type}}"
     },
     "defaultCaseDataEntry": {

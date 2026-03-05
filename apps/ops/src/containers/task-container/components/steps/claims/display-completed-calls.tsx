@@ -1,9 +1,9 @@
 import Content, { ContentVariant } from '@deps/components/content/content';
 import Field, { FieldVariant } from '@deps/components/fields/field';
 import FieldLabel from '@deps/components/fields/field-label';
+import { TaskActions } from '@deps/contexts/UpdateNotificationMethodContext';
 import { formatPhone } from '@deps/helpers/string.helpers';
 import { NOOP } from '@deps/types/constants';
-import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { CallLog, ContactRole, DynamicKey } from './claims.type';
 
@@ -20,6 +20,17 @@ export const DisplayCompletedCalls = ({
         ? DynamicKey.BENE_CALL
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
     const callLogs = task?.data?.details?.[dynamicKey]?.callLogs || [];
+    callLogs.map((log: CallLog) => {
+        if (log?.contactEstablished === false) {
+            log.taskActions = [];
+        }
+        if (log?.contactEstablished === true) {
+            log.taskActions = [];
+            log.taskActions.push(TaskActions.CONTACT_ESTABLISHED);
+        }
+        return log;
+    });
+
     const completedCalls = callLogs.filter(
         (log: CallLog) =>
             log.callDone === true && typeof log.callSequence === 'number'
@@ -143,11 +154,11 @@ export const DisplayCompletedCalls = ({
                                     variant={ContentVariant.BodySm}
                                     className="text-gray-600"
                                     details={
-                                        log.contactEstablished === true
+                                        log?.taskActions?.includes(
+                                            TaskActions.CONTACT_ESTABLISHED
+                                        )
                                             ? 'Yes'
-                                            : log.contactEstablished === false
-                                            ? 'No'
-                                            : DEFAULT_ERROR_STRING
+                                            : 'No'
                                     }
                                     pii={true}
                                 />

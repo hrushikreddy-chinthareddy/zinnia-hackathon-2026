@@ -853,6 +853,11 @@
         "searchByLastNamePlaceholder": "Nom de famille de l'individu",
         "searchButtonOwnerName": "Nom du propriétaire",
         "searchButtonAgentName": "Nom de l'agent",
+        "notifierDetails": "Détails du notificateur",
+        "notifierName": "Nom du notifiant",
+        "notifierPhoneNumber": "Numéro de téléphone du notificateur",
+        "notifierRole": "Rôle de notificateur",
+        "relationshipToDeceased": "Lien de parenté avec le défunt",
         "illustrationsClientCasesDobDatePickerPopoverTitle": "Date de naissance",
         "defaultTaskCardTitle": "Oups ! Une erreur est survenue lors du chargement de la tâche. Veuillez réessayer.",
         "defaultTaskCardSubtitle": "Pour toute aide supplémentaire, ",
@@ -8564,13 +8569,24 @@
             "title": "Contact établi",
             "selectOption": "Sélectionnez l'une des options suivantes :",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contact établi – Processus de redémarrage",
+                "resendPacket": "Renvoyer le paquet",
+                "restartFollowupProcess": "Relancer le processus de suivi",
                 "updateNotificationMethod": "Méthode de notification de mise à jour"
+            },
+            "tooltips": {
+                "resendPacket": "Renvoie le paquet sans redémarrer le processus de suivi, en utilisant la méthode de notification présélectionnée.",
+                "restartFollowupProcess": "Relance le processus de suivi à partir de l'étape de suivi n° 1 en utilisant la méthode de notification présélectionnée.",
+                "updateNotificationMethod": "Cette fonction met à jour la méthode de notification et relance le processus de suivi à partir de l'étape 1 en utilisant les nouvelles informations fournies."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Veuillez sélectionner une option pour continuer."
+                    "taskActionsIsRequired": "Veuillez sélectionner une option pour continuer."
                 }
+            },
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Adresse postale"
             }
         },
         "updateNotificationMethodStep": {
@@ -8846,7 +8862,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "modifier",
+        "change": "Modifier",
         "updateAddress": "Mettre à jour l'adresse {{type}}"
     },
     "defaultCaseDataEntry": {

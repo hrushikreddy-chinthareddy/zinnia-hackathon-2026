@@ -878,6 +878,11 @@
         "searchByLastNamePlaceholder": "Individual's last name",
         "searchButtonOwnerName": "Owner name",
         "searchButtonAgentName": "Agent name",
+        "notifierDetails": "Notifier Details",
+        "notifierName": "Notifier Name",
+        "notifierPhoneNumber": "Notifier Phone Number",
+        "notifierRole": "Notifier Role",
+        "relationshipToInsured": "Relationship to Insured",
         "defaultTaskCardTitle": "Oops! Something went wrong while loading the task. Please try again.",
         "defaultTaskCardSubtitle": "For any further help, ",
         "helpDesk": "Submit a help desk ticket.",
@@ -8680,13 +8685,24 @@
             "title": "Contact Established",
             "selectOption": "Select one of the following options:",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contact Established – Restart Process",
+                "resendPacket": "Resend Packet",
+                "restartFollowupProcess": "Restart Follow-Up Process",
                 "updateNotificationMethod": "Update Notification Method"
+            },
+            "tooltips": {
+                "resendPacket": "Resends the packet without restarting the follow-up process using the preselected notification method.",
+                "restartFollowupProcess": "Restarts the follow-up process from Follow-Up 1 using the preselected notification method.",
+                "updateNotificationMethod": "Updates the notification method and restarts the follow-up process from Follow-Up 1 using the new details provided."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Please select an option to continue."
+                    "taskActionsIsRequired": "Please select an option to continue."
                 }
+            },
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Mailing Address"
             }
         },
         "updateNotificationMethodStep": {
@@ -8696,7 +8712,7 @@
                 "email": "Email",
                 "fax": "Fax",
                 "address": "Mailing Address",
-                "change": "change",
+                "change": "Change",
                 "updateEmail": "Update Email Address",
                 "updateFax": "Update Fax Number",
                 "formActions": {
@@ -9045,7 +9061,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "change",
+        "change": "Change",
         "updateAddress": "Update {{type}} address"
     },
     "defaultCaseDataEntry": {

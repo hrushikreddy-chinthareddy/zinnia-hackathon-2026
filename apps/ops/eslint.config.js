@@ -230,7 +230,6 @@ module.exports = [
             'src/components/dashboard/charts/bar-charts/stacked-column-chart.tsx',
             'src/components/dynamic-form/customization/components/document-metadata/metadata-filter.tsx',
             'src/components/dynamic-form/customization/templates/array-field-template/TransactionsArrayFieldTemplate.tsx',
-            'src/components/dynamic-form/customization/templates/change-address-templete/change-address-template.tsx',
             'src/components/dynamic-form/customization/widgets/agent-summary-widget/agent-summary-widget.tsx',
             'src/components/dynamic-form/customization/widgets/allocation-percentage/allocation-percentage.tsx',
             'src/components/dynamic-form/customization/widgets/arithmetic-operation-widget/arithmetic-operation-widget.tsx',

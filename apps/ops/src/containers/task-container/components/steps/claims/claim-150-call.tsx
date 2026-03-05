@@ -21,6 +21,7 @@ type TaskReviewStepProps = {
     setBeneficiary: React.Dispatch<
         React.SetStateAction<UpdatedBeneficiaryRecord>
     >;
+    prevBeneficiary: UpdatedBeneficiaryRecord;
 };
 
 export const Claims150Call = ({
@@ -28,6 +29,7 @@ export const Claims150Call = ({
     beneficiary,
     readOnly,
     setBeneficiary,
+    prevBeneficiary,
 }: TaskReviewStepProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `${convertToCamelCase(taskType)}.callForInformation`,
@@ -83,6 +85,7 @@ export const Claims150Call = ({
                     beneficiary={beneficiary}
                     setBeneficiary={setBeneficiary}
                     readOnly={readOnly}
+                    prevBeneficiary={prevBeneficiary}
                     t={t}
                 />
             </div>
