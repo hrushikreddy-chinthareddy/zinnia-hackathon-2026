@@ -16,7 +16,7 @@
                 "formSchema": {
                     "type": "object",
                     "liveValidate": false,
-                    "noValidate": true,
+                    "noValidate": false,
                     "properties": {
                         "sectionHeader": {
                             "type": "object",
@@ -36,6 +36,7 @@
                                             "title": "Are there any uncashed transactions against this contract?"
                                         }
                                     },
+                                    "required": ["uncashTransactionExists"],
                                     "allOf": [
                                         {
                                             "if": {
@@ -53,7 +54,6 @@
                                                     "transactions": {
                                                         "type": "array",
                                                         "title": "Uncashed Transactions",
-                                                        "minItems": 1,
                                                         "items": {
                                                             "type": "object",
                                                             "properties": {
@@ -94,27 +94,28 @@
                                                         "type": "string",
                                                         "title": "Additional Notes"
                                                     }
-                                                }
+                                                },
+                                                "required": ["transactions"]
                                             }
                                         }
-                                    ],
-                                    "required": ["uncashTransactionExists"]
-                                },
-                                "required": ["uncashTransaction"]
-                            }
+                                    ]
+                                }
+                            },
+                            "required": ["uncashTransaction"]
                         }
-                    }
+                    },
+                    "required": ["details"]
                 },
                 "uiSchema": {
                     "ui:order": ["sectionHeader", "details"],
                     "ui:submitButtonOptions": {
                         "norender": true,
                         "props": {
-                            "noValidate": true
+                            "noValidate": false
                         }
                     },
                     "ui:options": {
-                        "noValidate": true,
+                        "noValidate": false,
                         "showErrors": false,
                         "liveValidate": false
                     },
@@ -131,7 +132,6 @@
                                 "label": true
                             },
                             "uncashTransactionExists": {
-                                "ui:hideError": true,
                                 "ui:widget": "radio",
                                 "ui:options": {
                                     "enumNames": ["Yes", "No"]
@@ -178,7 +178,6 @@
                                 }
                             },
                             "additionalNote": {
-                                "ui:hideError": true,
                                 "ui:widget": "textarea",
                                 "type": "string"
                             }

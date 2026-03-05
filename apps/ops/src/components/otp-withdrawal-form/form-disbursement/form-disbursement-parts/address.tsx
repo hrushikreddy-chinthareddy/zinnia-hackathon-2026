@@ -25,9 +25,27 @@ const BankAddress = ({
         }));
     };
 
+    // Generate a unique key based on the current disbursement option to reset address fields when switching options.
+    // Only generate a dynamic key when disbursement option flags are being used (at least one is explicitly set to true/false).
+    // This ensures backward compatibility with implementations that don't use these flags.
+    const disbursementFlags = [
+        disbursementInformation?.isAnnuitant,
+        disbursementInformation?.isPayeeFinancialIns,
+        disbursementInformation?.isPayeeCharity,
+        disbursementInformation?.isThirdPartyDisbursement,
+        disbursementInformation?.isAddressDifferent,
+    ];
+    const hasDisbursementFlags = disbursementFlags.some(
+        (flag) => flag !== undefined
+    );
+    const addressEntryKey = hasDisbursementFlags
+        ? disbursementFlags.join('-')
+        : 'default';
+
     return (
         <div key={fieldName} className={classNames || 'col-span-4'}>
             <AddressEntry
+                key={addressEntryKey}
                 isFormStateReadOnly={isFormStateReadOnly}
                 onDataChange={setAddress}
                 initialAddress={address}

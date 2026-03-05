@@ -335,6 +335,7 @@
         "guidelinePremiumTestDate": "Fecha de prueba de prima de directriz",
         "guidelineSinglePremium": "Prima única de directriz",
         "hasBeen": "han sido",
+        "hideDailyInterest": "Ocultar interés diario",
         "holdingForm": "Formulario de tenencia",
         "hour": "hora",
         "home": "Casa",
@@ -855,6 +856,11 @@
         "searchByLastNamePlaceholder": "Apellido del individuo",
         "searchButtonOwnerName": "Nombre del propietario",
         "searchButtonAgentName": "Nombre del agente",
+        "notifierDetails": "Detalles del notificador",
+        "notifierName": "Nombre del notificador",
+        "notifierPhoneNumber": "Número de teléfono del notificador",
+        "notifierRole": "Rol de notificador",
+        "relationshipToInsured": "Parentesco con el fallecido",
         "illustrationsClientCasesDobDatePickerPopoverTitle": "Fecha de nacimiento",
         "defaultTaskCardTitle": "¡Ups! Algo salió mal al cargar la tarea. Por favor, inténtalo de nuevo.",
         "defaultTaskCardSubtitle": "Para cualquier ayuda adicional, ",
@@ -912,6 +918,7 @@
         "BAND3": "Banda 3",
         "BankAccountChange": "Cambio de cuenta bancaria",
         "BANKMARKET": "Mercado bancario",
+        "BASE": "Base",
         "BASEINCREASE": "Incremento base",
         "BASERIDER": "Anexo base",
         "BeneficiaryChange": "Cambio de beneficiario",
@@ -1017,6 +1024,8 @@
         "EDUCATIONEXPENSE": "Gasto educativo",
         "EFT": "Transferencia electrónica",
         "EIN": "EIN",
+        "ELECTED": "Elegido",
+        "ELITENONTOBACCO": "Élite No Tabaco",
         "EmailChange": "Cambio de correo electrónico",
         "EVERYTWOWEEKS": "Cada dos semanas",
         "EXCEPTIONAPPLIES": "Aplica excepción",
@@ -1196,8 +1205,11 @@
         "MODIFIEDEARNINGSONLY": "Solo ganancias modificadas",
         "MONEYPURCHASEPENSIONPLAN": "Plan de pensión de compra de dinero",
         "MONTHLY": "Mensual",
+        "MultipleAgentChange": "Cambio múltiple de agentes",
+        "MultipleAnnuitantChange": "Cambio múltiple de rentistas",
         "MultipleBeneficiaryChange": "Cambio múltiple de beneficiarios",
         "MultipleEmailChange": "Cambio múltiple de correos electrónicos",
+        "MultipleOwnerChange": "Cambio múltiple de propietarios",
         "MultiplePayeeChange": "Cambio múltiple de beneficiarios de pago",
         "MultiplePhoneNumberChange": "Cambio múltiple de números telefónicos",
         "MULTIPLEPOLICYDISCOUNT": "Descuento por pólizas múltiples",
@@ -1219,6 +1231,7 @@
         "NOPREMIUMBANDING": "Sin agrupación de primas",
         "NORMALDISTRIBUTION": "Distribución normal",
         "NOTAPPROVED": "No aprobado",
+        "NOTELECTED": "No elegido",
         "NotificationOfDeathClaim": "Notificación de reclamación por fallecimiento",
         "NotificationOfRiderClaimStart": "Notificación de inicio de reclamación de cláusula adicional",
         "NOTISSUED": "No emitido",
@@ -1267,12 +1280,14 @@
         "PENSIONPLAN": "Plan de pensión",
         "PERCENTAGE": "Porcentaje",
         "PERIODCERTAIN": "Período garantizado",
+        "PERMANENT": "Permanente",
         "PeriodicCharge": "Cargo periódico",
         "PhoneNumberChange": "Cambio de número telefónico",
         "POWEROFATTORNEY": "Poder notarial",
         "PowerOfAttorneyChange": "Cambio de poder notarial",
         "PREFERRED": "Preferente",
         "PreferredMailingAddressChange": "Cambio de dirección postal preferida",
+        "PREFERREDNONTOBACCO": "Preferido No Tabaco",
         "PREMATUREDISTRIBUTION": "Distribución prematura",
         "PREMATUREEXCEPTION": "Distribución prematura con excepción",
         "PREMATURELOANDISTRIBUTION": "Distribución prematura de préstamo",
@@ -1363,8 +1378,13 @@
         "STARTINGPRICE": "Precio inicial",
         "STATEPHOTOID": "ID del estado",
         "STATE": "Estatal",
+        "STANDARDAGGREGATE": "Estándar Agregado",
+        "STANDARDNONTOBACCO": "Estándar No Tabaco",
+        "STANDARDTOBACCO": "Estándar Tabaco",
         "SubsequentPayment": "Pago posterior",
         "SubsequentPremium": "Prima posterior",
+        "SUBSTANDARDNONTOBACCO": "Subestándar No Tabaco",
+        "SUBSTANDARDTOBACCO": "Subestándar Tabaco",
         "SURRENDER": "Surrender",
         "SURRENDERCHARGE": "Cargo por rescate",
         "SURRENDERED": "Rescatado",
@@ -1401,6 +1421,7 @@
         "TENYEARTAXOPTION": "Opción fiscal a diez años",
         "TERM": "Plazo",
         "TERMINATED": "Terminado",
+        "TEMPORARY": "Temporario",
         "TERMWITHCASHVALUE": "Plazo con valor en efectivo",
         "THIRDPARTYDESIGNEE": "Designado tercero",
         "THIRDPARTYDIRECTTOCONSUMER": "Tercero directo al consumidor",
@@ -1413,6 +1434,7 @@
         "TRUSTEETOTRUSTEETRANSFER": "Transferencia de fideicomisario a fideicomisario",
         "U": "No conciliado",
         "UGMA/UTMA": "Cuenta custodial UGMA/UTMA",
+        "ULTRANONTOBACCO": "Ultra No Tabaco",
         "UnitExpenseCharge": "Cargo por gastos unitarios",
         "UNITEXPENSECHARGE": "Cargo unitario por gastos",
         "UNIVERSALLIFE": "Vida universal",
@@ -4142,9 +4164,10 @@
                 "disburseToFinancialInstitution": "Desembolsar a Institución Financiera",
                 "disburseToCharity": "Desembolsar a Organización Benéfica",
                 "disburseToAnnuitant": "Desembolsar al Rentista",
+                "disburseToAnnuitantDlic": "Desembolsar al Rentista (Cuando el titular es un Fideicomiso Revocable)",
                 "disburseToDifferentAddress": "Desembolsar a una Dirección Diferente",
                 "disburseToThirdParty": "Desembolsar a Tercero (No una Institución Financiera / Organización Benéfica)",
-                "disburseToThirdPartyNoCharity": "Desembolsar a Tercero (No una Institución Financiera)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Desembolsar a Tercero (No una Institución Financiera)",
                 "acordFormReceived": "¿Se recibió el formulario ACORD?",
                 "bankName": "Nombre del banco",
                 "bankRoutingNumber": "Número de ruta bancaria",
@@ -5045,6 +5068,7 @@
                 "withdrawalsTaken": "Retiros realizados",
                 "yearsRemaining": "años restantes",
                 "ytd": "Año hasta la fecha",
+                "remaining": "restante",
                 "required": "Requerido",
                 "notRequired": "No requerido"
             },
@@ -8589,44 +8613,55 @@
             "title": "Contacto establecido",
             "selectOption": "Seleccione una de las siguientes opciones:",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contacto establecido – Reiniciar proceso",
+                "resendPacket": "Reenviar paquete",
+                "restartFollowupProcess": "Reiniciar el proceso de seguimiento.",
                 "updateNotificationMethod": "Método de notificación de actualización"
+            },
+            "tooltips": {
+                "resendPacket": "Renvoie le paquet sans redémarrer le processus de suivi, en utilisant la méthode de notification présélectionnée.",
+                "restartFollowupProcess": "Reinicia el proceso de seguimiento desde el Seguimiento 1 utilizando el método de notificación preseleccionado.",
+                "updateNotificationMethod": "Actualiza el método de notificación y reinicia el proceso de seguimiento desde el Seguimiento 1 utilizando los nuevos datos proporcionados."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Seleccione una opción para continuar."
+                    "taskActionsIsRequired": "Seleccione una opción para continuar."
                 }
+            },
+            "notificationMethods": {
+                "email": "Correo electrónico",
+                "fax": "Fax",
+                "address": "Dirección de envio"
             }
         },
         "updateNotificationMethodStep": {
-            "title": "Update Notification Method",
-            "subtitle": "Select a preferred notification method for communications related to this claim",
+            "title": "Método de notificación de actualización",
+            "subtitle": "Seleccione el método de notificación que prefiera para las comunicaciones relacionadas con esta reclamación.",
             "notificationMethods": {
-                "email": "Email",
+                "email": "Correo electrónico",
                 "fax": "Fax",
-                "address": "Mailing Address",
-                "change": "change",
-                "updateEmail": "Update Email Address",
-                "updateFax": "Update Fax Number",
+                "address": "Dirección de envio",
+                "change": "Cambiar",
+                "updateEmail": "Actualizar dirección de correo electrónico",
+                "updateFax": "Actualizar número de fax",
                 "formActions": {
-                    "continue": "Continue",
-                    "cancel": "Cancel"
+                    "continue": "Continuar",
+                    "cancel": "Cancelar"
                 },
                 "formErrors": {
                     "formValidation": {
-                        "zipIsRequired": "Zip is required.",
-                        "addressLine1IsRequired": "Address line 1 is required.",
-                        "cityIsRequired": "City is required.",
-                        "stateIsRequired": "State is required."
+                        "zipIsRequired": "Se requiere el código postal.",
+                        "addressLine1IsRequired": "La primera línea de la dirección es obligatoria.",
+                        "cityIsRequired": "Se requiere la ciudad.",
+                        "stateIsRequired": "Se requiere el estado."
                     }
                 },
                 "errors": {
-                    "emailIsRequired": "Email is required",
-                    "inValidDomain": "Only Zinnia emails are allowed",
-                    "inValidEmail": "Please enter valid email address",
-                    "faxIsRequired": "Fax number is required",
-                    "inValidFax": "Please enter valid fax number",
-                    "addressIsRequired": "Address is required."
+                    "emailIsRequired": "Se requiere una dirección de correo electrónico.",
+                    "inValidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+                    "inValidEmail": "Por favor, introduzca una dirección de correo electrónico válida.",
+                    "faxIsRequired": "Se requiere el número de fax.",
+                    "inValidFax": "Por favor, introduzca un número de fax válido.",
+                    "addressIsRequired": "Se requiere la dirección."
                 }
             }
         },
@@ -8867,7 +8902,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "cambiar",
+        "change": "Cambiar",
         "updateAddress": "Actualizar dirección {{type}}"
     },
     "defaultCaseDataEntry": {

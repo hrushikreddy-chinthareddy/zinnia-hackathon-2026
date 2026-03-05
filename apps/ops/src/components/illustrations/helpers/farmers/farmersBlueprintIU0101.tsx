@@ -6809,7 +6809,7 @@ export const farmersBlueprintIU0101 = {
                                         },
                                     ],
                                     validateAs: 'string',
-                                    defaultValue: 'WITHDRAWAL',
+                                    defaultValue: 'SWITCH_AT_BASIS',
                                     visible: {
                                         booleanOperator: 'and',
                                         conditions: [

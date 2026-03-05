@@ -23,6 +23,7 @@ import { SelectOneOption } from '@deps/components/otp-withdrawal-form/form-progr
 import { getDefaultFormProgramValues } from '@deps/components/otp-withdrawal-form/form-program/form-program.helpers';
 import { SignatureFields } from '@deps/components/otp-withdrawal-form/signature-validation/signature-validation-parts/signature-parts';
 import { OtpWithdrawalFormState } from '@deps/contexts/OtpWithdrawalFormContext';
+import { LifeCadParty } from '@deps/models/case/lifecad-party';
 import { SignatureValidationTypeWithdrawal } from '@deps/models/case/renewal/signature-validation';
 import {
     AddressTypes,
@@ -51,9 +52,16 @@ import {
     DEFAULT_BANK_DETAILS,
     FormDisbursementSelections,
     DisbursementToggleType,
+    PaymentMethodOption,
     SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
+import { Party, PolicyPartyRoles } from '@zinnia/api-types/types/sor';
 
+import styles from '../../otp-form.module.css';
+import {
+    getAnnuitantPreferredAddressFromParties,
+    mapSorPreferredAddressToAddress,
+} from '../../utils/address.helpers';
 import { createValidator } from '../../utils/helper-utils';
 import { validateSignESign } from '../utils/form-validator.helpers';
 
@@ -279,10 +287,6 @@ export default function useDlicConfig(
 
     const sendCheckOptions = [
         {
-            label: t('distributionMethod.select'),
-            value: 'select',
-        },
-        {
             label: t('distributionMethod.disburseToOwnerAddress'),
             value: SendCheckOption.OwnerAddress,
         },
@@ -295,16 +299,16 @@ export default function useDlicConfig(
             value: SendCheckOption.Charity,
         },
         {
-            label: t('distributionMethod.disburseToAnnuitant'),
+            label: t('distributionMethod.disburseToAnnuitantDlic'),
             value: SendCheckOption.Annuitant,
-        },
-        {
-            label: t('distributionMethod.disburseToDifferentAddress'),
-            value: SendCheckOption.DifferentAddress,
         },
         {
             label: t('distributionMethod.disburseToThirdParty'),
             value: SendCheckOption.ThirdPartyNotFinancialIns,
+        },
+        {
+            label: t('distributionMethod.disburseToDifferentAddress'),
+            value: SendCheckOption.DifferentAddress,
         },
     ];
 
@@ -589,10 +593,27 @@ export default function useDlicConfig(
         },
     ];
 
-    const disbursementOptions = (formParty: FormParty) => {
-        const annuitantAddress = formParty?.parties?.find(
+    const disbursementOptions = (
+        formParty: FormParty,
+        isLC: boolean,
+        parties: LifeCadParty[] | Party[],
+        partyRoles: PolicyPartyRoles[]
+    ): PaymentMethodOption[] => {
+        let annuitantAddress = formParty?.parties?.find(
             (party) => party.partyRoleType === PartyRoles.ANNUITANT
         )?.addresses?.[0];
+
+        if (!annuitantAddress && !isLC) {
+            const preferredAddressFromParty =
+                getAnnuitantPreferredAddressFromParties(parties, partyRoles);
+
+            if (preferredAddressFromParty) {
+                annuitantAddress = mapSorPreferredAddressToAddress(
+                    preferredAddressFromParty
+                );
+            }
+        }
+
         return [
             {
                 label: t('distributionMethod.eft'),
@@ -604,9 +625,11 @@ export default function useDlicConfig(
                 fields: [
                     {
                         fieldName: BankingFields.isAnnuitant,
-                        fieldLabel: t('distributionMethod.disburseToAnnuitant'),
+                        fieldLabel: t(
+                            'distributionMethod.disburseToAnnuitantDlic'
+                        ),
                         component: DisbursementFields.BankCheckboxField,
-                        classNames: 'col-start-1 col-span-3',
+                        classNames: styles.dlicDisburseToAnnuitantField,
                         shouldDisplay: () =>
                             !!isDlic3pDisbursementChangesEnabled,
                     },
@@ -949,6 +972,7 @@ export default function useDlicConfig(
                               component: DisbursementFields.SendCheckSelect,
                               classNames: 'col-start-1 col-span-2',
                               selectOptions: sendCheckOptions,
+                              annuitantAddress: annuitantAddress,
                           },
                           {
                               fieldName: BankingFields.PayeeName,
@@ -1118,7 +1142,7 @@ export default function useDlicConfig(
                     };
                 },
             },
-        ];
+        ] as PaymentMethodOption[];
     };
 
     const formPartyConfigs: PartyConfig[] = [

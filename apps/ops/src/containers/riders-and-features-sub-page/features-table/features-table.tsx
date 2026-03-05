@@ -8,7 +8,9 @@ import {
     TableRow,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
+import { useState } from 'react';
 
+import { FindAllKeyValuesFeatureSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-feature-sidesheet';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { convertKebabedDateString } from '@deps/helpers/string.helpers';
 import { PolicyFeature } from '@zinnia/api-types/types/sor';
@@ -26,58 +28,75 @@ export default function FeaturesTable({
 }) {
     const { t } = useTranslation();
     const features = policyDetails.features.all.filter(filterValidFeature);
-    const openSideSheet = (_feature: PolicyFeature) => {};
+    const [open, setOpen] = useState(false);
+    const [selectedFeature, setSelectedFeature] =
+        useState<PolicyFeature | null>(null);
+    const openSideSheet = (feature: PolicyFeature) => {
+        setSelectedFeature(feature);
+        setOpen(true);
+    };
     return (
-        <Table>
-            <TableHeader>
-                <TableRow>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('policy.extras.riders.riderName')}
-                    </TableHeaderCell>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('policy.extras.riders.status')}
-                    </TableHeaderCell>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('allFields.startDate')}
-                    </TableHeaderCell>
-                    <TableHeaderCell className="typography-content-body-sm-bold">
-                        {t('allFields.endDate')}
-                    </TableHeaderCell>
-                </TableRow>
-            </TableHeader>
-            <TableBody>
-                {!features?.length && (
+        <>
+            <Table>
+                <TableHeader>
                     <TableRow>
-                        <TableCell className={styles.noResultsTd} colSpan={4}>
-                            {t('policy.extras.features.empty')}
-                        </TableCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('policy.extras.riders.riderName')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('policy.extras.riders.status')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('allFields.startDate')}
+                        </TableHeaderCell>
+                        <TableHeaderCell className="typography-content-body-sm-bold">
+                            {t('allFields.endDate')}
+                        </TableHeaderCell>
                     </TableRow>
-                )}
-                {features?.map((feature) => (
-                    <TableRow key={`${feature.featureId}`}>
-                        <TableCell>
-                            <Button
-                                mode="link"
-                                size="small"
-                                onClick={() => {
-                                    openSideSheet(feature);
-                                }}
+                </TableHeader>
+                <TableBody>
+                    {!features?.length && (
+                        <TableRow>
+                            <TableCell
+                                className={styles.noResultsTd}
+                                colSpan={4}
                             >
-                                {getFeatureNameText(feature, t)}
-                            </Button>
-                        </TableCell>
-                        <TableCell>
-                            {getFeatureStatusText(feature, t)}
-                        </TableCell>
-                        <TableCell>
-                            {convertKebabedDateString(feature.startDate)}
-                        </TableCell>
-                        <TableCell>
-                            {convertKebabedDateString(feature.endDate)}
-                        </TableCell>
-                    </TableRow>
-                ))}
-            </TableBody>
-        </Table>
+                                {t('policy.extras.features.empty')}
+                            </TableCell>
+                        </TableRow>
+                    )}
+                    {features?.map((feature) => (
+                        <TableRow key={`${feature.featureId}`}>
+                            <TableCell>
+                                <Button
+                                    mode="link"
+                                    size="small"
+                                    onClick={() => {
+                                        openSideSheet(feature);
+                                    }}
+                                >
+                                    {getFeatureNameText(feature, t)}
+                                </Button>
+                            </TableCell>
+                            <TableCell>
+                                {getFeatureStatusText(feature, t)}
+                            </TableCell>
+                            <TableCell>
+                                {convertKebabedDateString(feature.startDate)}
+                            </TableCell>
+                            <TableCell>
+                                {convertKebabedDateString(feature.endDate)}
+                            </TableCell>
+                        </TableRow>
+                    ))}
+                </TableBody>
+            </Table>
+            <FindAllKeyValuesFeatureSidesheet
+                open={open}
+                onOpenChange={setOpen}
+                policyDetails={policyDetails}
+                feature={selectedFeature}
+            />
+        </>
     );
 }

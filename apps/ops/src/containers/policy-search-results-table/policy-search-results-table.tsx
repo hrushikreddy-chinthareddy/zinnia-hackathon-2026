@@ -72,7 +72,7 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
     const errorMessage = getErrorMessage();
 
     return (
-        <Table>
+        <Table className={styles.tableContainer}>
             <TableHeader>
                 <TableRow>
                     <TableHeaderCell scope="col" className="sr-only">

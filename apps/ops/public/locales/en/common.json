@@ -336,6 +336,7 @@
         "guidelinePremiumTestDate": "Guideline premium test date",
         "guidelineSinglePremium": "Guideline single premium",
         "hasBeen": "has been",
+        "hideDailyInterest": "Hide daily interest",
         "holdingForm": "Holding form",
         "hour": "hour",
         "home": "Home",
@@ -881,6 +882,11 @@
         "searchByLastNamePlaceholder": "Individual's last name",
         "searchButtonOwnerName": "Owner name",
         "searchButtonAgentName": "Agent name",
+        "notifierDetails": "Notifier Details",
+        "notifierName": "Notifier Name",
+        "notifierPhoneNumber": "Notifier Phone Number",
+        "notifierRole": "Notifier Role",
+        "relationshipToInsured": "Relationship to Insured",
         "defaultTaskCardTitle": "Oops! Something went wrong while loading the task. Please try again.",
         "defaultTaskCardSubtitle": "For any further help, ",
         "helpDesk": "Submit a help desk ticket.",
@@ -938,6 +944,7 @@
         "BAND3": "Band 3",
         "BankAccountChange": "Bank account change",
         "BANKMARKET": "Bank market",
+        "BASE": "Base",
         "BASEINCREASE": "Base increase",
         "BASERIDER": "Base rider",
         "BeneficiaryChange": "Beneficiary change",
@@ -1043,6 +1050,8 @@
         "EDUCATIONEXPENSE": "Education expense",
         "EFT": "EFT",
         "EIN": "EIN",
+        "ELECTED": "Elected",
+        "ELITENONTOBACCO": "Elite Non-Tobacco",
         "EmailChange": "Email change",
         "EVERYTWOWEEKS": "Every two weeks",
         "EXCEPTIONAPPLIES": "Exception applies",
@@ -1223,8 +1232,11 @@
         "MODIFIEDEARNINGSONLY": "Modified earnings only",
         "MONEYPURCHASEPENSIONPLAN": "Money Purchase Pension Plan",
         "MONTHLY": "Monthly",
+        "MultipleAgentChange": "Multiple agent change",
+        "MultipleAnnuitantChange": "Multiple annuitant change",
         "MultipleBeneficiaryChange": "Multiple beneficiary change",
         "MultipleEmailChange": "Multiple email change",
+        "MultipleOwnerChange": "Multiple owner change",
         "MultiplePayeeChange": "Multiple payee change",
         "MultiplePhoneNumberChange": "Multiple phone number change",
         "MULTIPLEPOLICYDISCOUNT": "Multiple policy discount",
@@ -1246,6 +1258,7 @@
         "NOPREMIUMBANDING": "No premium banding",
         "NORMALDISTRIBUTION": "Normal distribution",
         "NOTAPPROVED": "Not approved",
+        "NOTELECTED": "Not elected",
         "NotificationOfDeathClaim": "Notification of death claim",
         "NotificationOfRiderClaimStart": "Notification of rider claim start",
         "NOTISSUED": "Not issued",
@@ -1295,12 +1308,14 @@
         "PENSIONPLAN": "Pension Plan",
         "PERCENTAGE": "Percentage",
         "PERIODCERTAIN": "Period certain",
+        "PERMANENT": "Permanent",
         "PeriodicCharge": "Periodic charge",
         "PhoneNumberChange": "Phone number change",
         "POWEROFATTORNEY": "Power of attorney",
         "PowerOfAttorneyChange": "Power of attorney change",
         "PREFERRED": "Preferred",
         "PreferredMailingAddressChange": "Preferred mailing address change",
+        "PREFERREDNONTOBACCO": "Preferred Non-Tobacco",
         "PREMATUREDISTRIBUTION": "Premature distribution",
         "PREMATUREEXCEPTION": "Premature distribution with exception",
         "PREMATURELOANDISTRIBUTION": "Premature loan distribution",
@@ -1392,8 +1407,13 @@
         "STARTINGPRICE": "Starting price  ",
         "STATEPHOTOID": "State ID",
         "STATE": "State",
+        "STANDARDAGGREGATE": "Standard Aggregate",
+        "STANDARDNONTOBACCO": "Standard Non-Tobacco",
+        "STANDARDTOBACCO": "Standard Tobacco",
         "SubsequentPayment": "Subsequent payment",
         "SubsequentPremium": "Subsequent premium",
+        "SUBSTANDARDNONTOBACCO": "Substandard Non-Tobacco",
+        "SUBSTANDARDTOBACCO": "Substandard Tobacco",
         "SURRENDER": "Surrender",
         "SURRENDERCHARGE": "Surrender charge",
         "SURRENDERED": "Surrendered",
@@ -1430,6 +1450,7 @@
         "TENYEARTAXOPTION": "Ten-year tax option",
         "TERM": "Term",
         "TERMINATED": "Terminated",
+        "TEMPORARY": "Temporary",
         "TERMWITHCASHVALUE": "Term with cash value",
         "THIRDPARTYDESIGNEE": "Third party designee",
         "THIRDPARTYDIRECTTOCONSUMER": "Third party direct to consumer",
@@ -1442,6 +1463,7 @@
         "TRUSTEETOTRUSTEETRANSFER": "Trustee-to-trustee transfer",
         "U": "Unreconciled",
         "UGMA/UTMA": "UGMA/UTMA Custodial Account",
+        "ULTRANONTOBACCO": "Ultra Non-Tobacco",
         "UnitExpenseCharge": "Unit expense charge",
         "UNITEXPENSECHARGE": "Unit expense charge",
         "UNIVERSALLIFE": "Universal life",
@@ -4163,13 +4185,14 @@
                 "reEnterAccountNumber": "Re-enter account number",
                 "selectIfDifferentPayee": "Select if the check is going to different payee or address",
                 "select": "Select",
-                "disburseToOwnerAddress": "Disburse to owner address",
+                "disburseToOwnerAddress": "Disburse to Owner Address",
                 "disburseToFinancialInstitution": "Disburse to Financial Institution",
                 "disburseToCharity": "Disburse to Charity",
                 "disburseToAnnuitant": "Disburse to Annuitant",
-                "disburseToDifferentAddress": "Disburse to different Address",
-                "disburseToThirdParty": "Disburse to Third Party(Not a Financial Institution / Charity)",
-                "disburseToThirdPartyNoCharity": "Disburse to Third Party(Not a Financial Institution)",
+                "disburseToAnnuitantDlic": "Disburse to Annuitant (When owner is a Revocable Trust)",
+                "disburseToDifferentAddress": "Disburse to Different Address",
+                "disburseToThirdParty": "Disburse to Third Party (Not a Financial Institution / Charity)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Disburse to Third Party or Charity (Not a Financial Institution)",
                 "acordFormReceived": "Is ACORD form received?",
                 "bankName": "Bank name",
                 "bankRoutingNumber": "Bank routing number",
@@ -5068,6 +5091,7 @@
                 "ugma/utma": "UGMA/UTMA Custodial Account",
                 "vulnq": "Non-Qualified Variable Universal Life",
                 "qlacira": "QLAC IRA (Qualified Longevity Annuity Contract)",
+                "remaining": "remaining",
                 "required": "Required",
                 "notRequired": "Not required"
             },
@@ -8668,13 +8692,24 @@
             "title": "Contact Established",
             "selectOption": "Select one of the following options:",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contact Established – Restart Process",
+                "resendPacket": "Resend Packet",
+                "restartFollowupProcess": "Restart Follow-Up Process",
                 "updateNotificationMethod": "Update Notification Method"
+            },
+            "tooltips": {
+                "resendPacket": "Resends the packet without restarting the follow-up process using the preselected notification method.",
+                "restartFollowupProcess": "Restarts the follow-up process from Follow-Up 1 using the preselected notification method.",
+                "updateNotificationMethod": "Updates the notification method and restarts the follow-up process from Follow-Up 1 using the new details provided."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Please select an option to continue."
+                    "taskActionsIsRequired": "Please select an option to continue."
                 }
+            },
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Mailing Address"
             }
         },
         "updateNotificationMethodStep": {
@@ -8684,7 +8719,7 @@
                 "email": "Email",
                 "fax": "Fax",
                 "address": "Mailing Address",
-                "change": "change",
+                "change": "Change",
                 "updateEmail": "Update Email Address",
                 "updateFax": "Update Fax Number",
                 "formActions": {
@@ -9033,7 +9068,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "change",
+        "change": "Change",
         "updateAddress": "Update {{type}} address"
     },
     "defaultCaseDataEntry": {

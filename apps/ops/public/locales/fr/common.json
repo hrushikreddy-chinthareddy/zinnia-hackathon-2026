@@ -336,6 +336,7 @@
         "guidelinePremiumTestDate": "Date du test de prime de référence",
         "guidelineSinglePremium": "Prime unique de référence",
         "hasBeen": "ont été",
+        "hideDailyInterest": "Masquer les intérêts quotidiens",
         "holdingForm": "Forme de détention",
         "hour": "heure",
         "home": "Domicile",
@@ -856,6 +857,11 @@
         "searchByLastNamePlaceholder": "Nom de famille de l'individu",
         "searchButtonOwnerName": "Nom du propriétaire",
         "searchButtonAgentName": "Nom de l'agent",
+        "notifierDetails": "Détails du notificateur",
+        "notifierName": "Nom du notifiant",
+        "notifierPhoneNumber": "Numéro de téléphone du notificateur",
+        "notifierRole": "Rôle de notificateur",
+        "relationshipToDeceased": "Lien de parenté avec le défunt",
         "illustrationsClientCasesDobDatePickerPopoverTitle": "Date de naissance",
         "defaultTaskCardTitle": "Oups ! Une erreur est survenue lors du chargement de la tâche. Veuillez réessayer.",
         "defaultTaskCardSubtitle": "Pour toute aide supplémentaire, ",
@@ -905,6 +911,7 @@
         "BAND3": "Tranche 3",
         "BankAccountChange": "Changement de compte bancaire",
         "BANKMARKET": "Marché bancaire",
+        "BASE": "Base",
         "BASEINCREASE": "Augmentation de base",
         "BASERIDER": "Avenant de base",
         "BeneficiaryChange": "Changement de bénéficiaire",
@@ -1005,6 +1012,8 @@
         "EDUCATIONEXPENSE": "Frais d'éducation",
         "EFT": "Virement électronique",
         "EIN": "EIN",
+        "ELECTED": "Élu",
+        "ELITENONTOBACCO": "Élite Sans Tabac",
         "EmailChange": "Changement d'email",
         "EVERYTWOWEEKS": "Toutes les deux semaines",
         "EXCEPTIONAPPLIES": "Exception applicable",
@@ -1173,8 +1182,11 @@
         "MODIFIEDEARNINGSONLY": "Intérêts modifiés uniquement",
         "MONEYPURCHASEPENSIONPLAN": "Plan de retraite à cotisations définies",
         "MONTHLY": "Mensuel",
+        "MultipleAgentChange": "Changement de plusieurs agents",
+        "MultipleAnnuitantChange": "Changement de plusieurs rentiers",
         "MultipleBeneficiaryChange": "Changement de plusieurs bénéficiaires",
         "MultipleEmailChange": "Changement de plusieurs emails",
+        "MultipleOwnerChange": "Changement de plusieurs propriétaires",
         "MultiplePayeeChange": "Changement de plusieurs bénéficiaires de paiement",
         "MultiplePhoneNumberChange": "Changement de plusieurs numéros de téléphone",
         "MULTIPLEPOLICYDISCOUNT": "Remise multi-polices",
@@ -1195,6 +1207,7 @@
         "NOPREMIUMBANDING": "Pas de tranche de prime",
         "NORMALDISTRIBUTION": "Distribution normale",
         "NOTAPPROVED": "Non approuvé",
+        "NOTELECTED": "Non choisi",
         "NotificationOfDeathClaim": "Notification de réclamation décès",
         "NotificationOfRiderClaimStart": "Notification du début de réclamation d'avenant",
         "NOTISSUED": "Non émis",
@@ -1242,10 +1255,12 @@
         "PENSIONPLAN": "Plan de retraite",
         "PERCENTAGE": "Pourcentage",
         "PERIODCERTAIN": "Période certaine",
+        "PERMANENT": "Permanent",
         "PeriodicCharge": "Frais périodiques",
         "PhoneNumberChange": "Changement de numéro de téléphone",
         "PowerOfAttorneyChange": "Changement de procuration",
         "PreferredMailingAddressChange": "Changement d'adresse postale préférée",
+        "PREFERREDNONTOBACCO": "Non-Tabac Préféré",
         "PREMATUREDISTRIBUTION": "Distribution anticipée",
         "PREMATUREEXCEPTION": "Distribution anticipée avec exception",
         "PREMATURELOANDISTRIBUTION": "Distribution anticipée de prêt",
@@ -1333,8 +1348,13 @@
         "STARTINGPRICE": "Prix de départ",
         "STATEPHOTOID": "ID d'état",
         "STATE": "État",
+        "STANDARDAGGREGATE": "Agrégat Standard",
+        "STANDARDNONTOBACCO": "Standard Sans Tabac",
+        "STANDARDTOBACCO": "Tabac Standard",
         "SubsequentPayment": "Paiement ultérieur",
         "SubsequentPremium": "Prime ultérieure",
+        "SUBSTANDARDNONTOBACCO": "Non-Tabac de Qualité Inférieure",
+        "SUBSTANDARDTOBACCO": "Tabac de Qualité Inférieure",
         "SURRENDER": "Rachat",
         "SURRENDERCHARGE": "Frais de rachat",
         "SURRENDERED": "Racheté",
@@ -1371,6 +1391,7 @@
         "TENYEARTAXOPTION": "Option fiscale sur dix ans",
         "TERM": "Temporaire",
         "TERMINATED": "Terminé",
+        "TEMPORARY": "Temporaire",
         "TERMWITHCASHVALUE": "Temporaire avec valeur de rachat",
         "THIRDPARTYDIRECTTOCONSUMER": "Tiers direct au consommateur",
         "TIN": "TIN",
@@ -1382,6 +1403,7 @@
         "TRUSTEETOTRUSTEETRANSFER": "Transfert fiduciaire à fiduciaire",
         "U": "Non rapproché",
         "UGMA/UTMA": "Compte UGMA/UTMA",
+        "ULTRANONTOBACCO": "Ultra Sans Tabac",
         "UNITEXPENSECHARGE": "Frais par unité",
         "UnitExpenseCharge": "Frais unitaires",
         "UNIVERSALLIFE": "Vie universelle",
@@ -4101,9 +4123,10 @@
                 "disburseToFinancialInstitution": "Verser à l'institution financière",
                 "disburseToCharity": "Verser à un organisme de bienfaisance",
                 "disburseToAnnuitant": "Verser au rentier",
-                "disburseToDifferentAddress": "Verser à une adresse différente",
+                "disburseToAnnuitantDlic": "Verser au rentier (Quand le titulaire est une fiducie révocable)",
+                "disburseToDifferentAddress": "Verser à une Adresse Différente",
                 "disburseToThirdParty": "Verser à un tiers (pas une institution financière / organisme de bienfaisance)",
-                "disburseToThirdPartyNoCharity": "Verser à un tiers (pas une institution financière)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Verser à un tiers (pas une institution financière)",
                 "acordFormReceived": "Le formulaire ACORD a-t-il été reçu ?",
                 "bankName": "Nom de la banque",
                 "bankRoutingNumber": "Numéro de routage de la banque",
@@ -4991,6 +5014,7 @@
                 "withdrawalsTaken": "Retraits effectués",
                 "yearsRemaining": "années restantes",
                 "ytd": "YTD",
+                "remaining": "restant",
                 "required": "Requis",
                 "notRequired": "Non requis"
             },
@@ -8552,13 +8576,24 @@
             "title": "Contact établi",
             "selectOption": "Sélectionnez l'une des options suivantes :",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contact établi – Processus de redémarrage",
+                "resendPacket": "Renvoyer le paquet",
+                "restartFollowupProcess": "Relancer le processus de suivi",
                 "updateNotificationMethod": "Méthode de notification de mise à jour"
+            },
+            "tooltips": {
+                "resendPacket": "Renvoie le paquet sans redémarrer le processus de suivi, en utilisant la méthode de notification présélectionnée.",
+                "restartFollowupProcess": "Relance le processus de suivi à partir de l'étape de suivi n° 1 en utilisant la méthode de notification présélectionnée.",
+                "updateNotificationMethod": "Cette fonction met à jour la méthode de notification et relance le processus de suivi à partir de l'étape 1 en utilisant les nouvelles informations fournies."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Veuillez sélectionner une option pour continuer."
+                    "taskActionsIsRequired": "Veuillez sélectionner une option pour continuer."
                 }
+            },
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Adresse postale"
             }
         },
         "updateNotificationMethodStep": {
@@ -8834,7 +8869,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "modifier",
+        "change": "Modifier",
         "updateAddress": "Mettre à jour l'adresse {{type}}"
     },
     "defaultCaseDataEntry": {

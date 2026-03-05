@@ -42,6 +42,7 @@ import {
     SendCheckOption,
 } from '@deps/models/case/withdrawal/disbursement-types';
 
+import styles from '../../otp-form.module.css';
 import { createValidator } from '../../utils/helper-utils';
 import {
     validateQcdDetails,
@@ -237,17 +238,14 @@ export default function getDlicRmdWithdrawalConfig(
     ];
 
     const sendCheckOptions = (rmdMethod: RMDType) => {
-        const isAutoRmd =
-            rmdMethod === RMDType.AutoRMD || rmdMethod === RMDType.CalculateRMD;
-        const isOneTimeRmd = rmdMethod === RMDType.OneTimeRMD;
+        const isAutoRmd = rmdMethod === RMDType.AutoRMD;
+        const isOneTimeRmd =
+            rmdMethod === RMDType.OneTimeRMD ||
+            rmdMethod === RMDType.CalculateRMD;
 
-        if (isAutoRmd) {
-            // Auto RMD Options: 5 options with separate Charity
+        // One Time RMD: 5 options with combined third party/charity option (no separate Charity)
+        if (isOneTimeRmd) {
             return [
-                {
-                    label: t('distributionMethod.select'),
-                    value: 'select',
-                },
                 {
                     label: t('distributionMethod.disburseToOwnerAddress'),
                     value: SendCheckOption.OwnerAddress,
@@ -263,29 +261,21 @@ export default function getDlicRmdWithdrawalConfig(
                     value: SendCheckOption.Charity,
                 },
                 {
-                    label: t('distributionMethod.disburseToThirdParty'),
-                    value: SendCheckOption.ThirdPartyNotFinancialIns,
-                },
-
-                {
                     label: t('distributionMethod.disburseToDifferentAddress'),
                     value: SendCheckOption.DifferentAddress,
+                },
+                {
+                    label: t('distributionMethod.disburseToThirdParty'),
+                    value: SendCheckOption.ThirdPartyNotFinancialIns,
                 },
             ];
         }
 
-        if (isOneTimeRmd) {
-            // One Time RMD Options: 4 options with combined third party/charity
+        if (isAutoRmd) {
             return [
                 {
-                    label: t('distributionMethod.select'),
-                    value: 'select',
-                },
-                {
-                    label: t(
-                        'distributionMethod.disburseToThirdPartyNoCharity'
-                    ),
-                    value: SendCheckOption.ThirdPartyNotFinancialIns,
+                    label: t('distributionMethod.disburseToOwnerAddress'),
+                    value: SendCheckOption.OwnerAddress,
                 },
                 {
                     label: t(
@@ -294,8 +284,10 @@ export default function getDlicRmdWithdrawalConfig(
                     value: SendCheckOption.FinancialInstitution,
                 },
                 {
-                    label: t('distributionMethod.disburseToOwnerAddress'),
-                    value: SendCheckOption.OwnerAddress,
+                    label: t(
+                        'distributionMethod.disburseToThirdPartyNotCharityNotFinancial'
+                    ),
+                    value: SendCheckOption.ThirdPartyNotFinancialIns,
                 },
                 {
                     label: t('distributionMethod.disburseToDifferentAddress'),
@@ -303,8 +295,6 @@ export default function getDlicRmdWithdrawalConfig(
                 },
             ];
         }
-
-        // Default fallback
         return null;
     };
 
@@ -316,7 +306,6 @@ export default function getDlicRmdWithdrawalConfig(
             (party: any) => party.partyRoleType === PartyRoles.ANNUITANT
         )?.addresses?.[0];
 
-        // Check for Auto Rmd or Calculate Rmd
         const rmdMethod = formProgram?.rmd?.rmdMethod ?? '';
 
         return [
@@ -330,9 +319,11 @@ export default function getDlicRmdWithdrawalConfig(
                 fields: [
                     {
                         fieldName: BankingFields.isAnnuitant,
-                        fieldLabel: t('distributionMethod.isAnnuitant'),
+                        fieldLabel: t(
+                            'distributionMethod.disburseToAnnuitantDlic'
+                        ),
                         component: DisbursementFields.BankCheckboxField,
-                        classNames: 'col-start-1 col-span-3',
+                        classNames: styles.dlicDisburseToAnnuitantField,
                         shouldDisplay: () =>
                             !!isDlic3pDisbursementChangesEnabled,
                     },
@@ -513,6 +504,7 @@ export default function getDlicRmdWithdrawalConfig(
                               selectOptions: sendCheckOptions(
                                   rmdMethod as RMDType
                               ),
+                              annuitantAddress: annuitantAddress,
                           },
                           {
                               fieldName: BankingFields.PayeeName,

@@ -117,3 +117,23 @@ jobs:
           service: ${{ secrets.ECS_CLUSTER_SERVICE_OPS }}
           cluster: ${{ secrets.ECS_CLUSTER_OPS }}
           wait-for-service-stability: true
+
+      - name: Notify Slack on failure
+        if: failure()
+        uses: slackapi/slack-github-action@v2
+        with:
+          webhook: ${{ secrets.SLACK_WEBHOOK_URL }}
+          webhook-type: incoming-webhook
+          payload: |
+            {
+              "text": ":red_circle: Zinnia Live Deploy Failed — ${{ inputs.environment-level }}",
+              "blocks": [
+                {
+                  "type": "section",
+                  "text": {
+                    "type": "mrkdwn",
+                    "text": ":red_circle: *Zinnia Live Deploy Failed — ${{ inputs.environment-level }}*\n*Branch:* `${{ github.ref_name }}`\n*Commit:* `${{ github.sha }}`\n*Run:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Workflow>"
+                  }
+                }
+              ]
+            }
