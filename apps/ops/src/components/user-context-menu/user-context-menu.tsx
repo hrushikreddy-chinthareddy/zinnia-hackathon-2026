@@ -1,12 +1,11 @@
 import { useUser } from '@auth0/nextjs-auth0/client';
-import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
-import { IconType, Icon, CarrierName } from '@zinnia/bloom/components';
+import { CarrierName, Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
+import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
@@ -35,9 +34,8 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
         <MenuContextual
             triggerAsChild
             trigger={
-                <div
+                <button
                     aria-label={t('site.navLinks.userMenu.text') as string}
-                    tabIndex={0}
                     className={clsx(
                         styles.contextTrigger,
                         'typography-content-body color-base-text-secondary'
@@ -45,58 +43,41 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
                 >
                     <Icon className={styles.icon} type={IconType.USER} />
                     <span>{firstNameAndLastInitial(props.name)}</span>
-                </div>
+                </button>
             }
         >
             {role === CarrierName.FARMERS && (
-                <DropdownMenu.Item
-                    onSelect={handleAnalytics}
-                    className="w-full"
-                >
-                    <a
-                        className={
-                            'default-focus flex items-center gap-2 self-stretch rounded-sm px-4 py-2 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10 text-nowrap w-full'
-                        }
-                        href={apexUrl}
-                    >
-                        <Icon type={IconType.REPLY} width={20} height={20} />
-                        {t('auth.apexLink.text')}
-                    </a>
-                </DropdownMenu.Item>
+                <MenuContextualItem
+                    content={t('auth.apexLink.text') as string}
+                    href={apexUrl}
+                    icon={<Icon type={IconType.REPLY} width={20} height={20} />}
+                    onClick={handleAnalytics}
+                />
             )}
 
             {showCommissions && (
-                <DropdownMenu.Item
-                    onSelect={handleAnalytics}
-                    className="w-full"
-                >
-                    <Link
-                        className={
-                            'default-focus flex items-center gap-2 rounded-sm px-4 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10 w-full text-nowrap'
-                        }
-                        href={
-                            t('site.navLinks.commissions.link') ??
-                            '/commissions/statements'
-                        }
-                    >
+                <MenuContextualItem
+                    content={t('site.navLinks.commissions.text') as string}
+                    href={
+                        t('site.navLinks.commissions.link') ??
+                        '/commissions/statements'
+                    }
+                    icon={
                         <Icon
                             type={IconType.DOCUMENT_REPORT}
                             width={20}
                             height={20}
                         />
-                        {t('site.navLinks.commissions.text')}
-                    </Link>
-                </DropdownMenu.Item>
+                    }
+                    onClick={handleAnalytics}
+                />
             )}
-            <DropdownMenu.Item onSelect={handleAnalytics} className="w-full">
-                <a
-                    className="default-focus flex items-center gap-2 rounded-sm px-4 py-2 text-white hover:bg-gray-800 active:bg-white active:text-gray-900 z-10 w-full text-nowrap"
-                    href={t('auth.logout.link') ?? '/api/auth/logout'}
-                >
-                    <Icon type={IconType.LOGOUT} width={20} height={20} />
-                    {t('auth.logout.text')}
-                </a>
-            </DropdownMenu.Item>
+            <MenuContextualItem
+                content={t('auth.logout.text') as string}
+                href={t('auth.logout.link') ?? '/api/auth/logout'}
+                icon={<Icon type={IconType.LOGOUT} width={20} height={20} />}
+                onClick={handleAnalytics}
+            />
         </MenuContextual>
     );
 };
