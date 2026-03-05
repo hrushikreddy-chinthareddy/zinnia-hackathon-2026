@@ -53,9 +53,8 @@ export const activityTransactionsHandler = http.get(
 
 // GET transactions (HistoryEventFeed in legacy ActivitySubPage when REVISED_HISTORY_TABLE flag is off)
 export const activityHandlers = [
-    http.get(
-        '*/api/policy/v1/policies/:planCode/:policyId/transactions',
-        () => HttpResponse.json({ data: [] })
+    http.get('*/api/policy/v1/policies/:planCode/:policyId/transactions', () =>
+        HttpResponse.json({ data: [] })
     ),
 ];
 
