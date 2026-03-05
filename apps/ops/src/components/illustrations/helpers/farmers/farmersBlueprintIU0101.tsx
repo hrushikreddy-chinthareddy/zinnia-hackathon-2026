@@ -5199,7 +5199,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.',
+                                                en: `Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.`,
                                                 fr: '',
                                             },
                                         },
@@ -5317,7 +5317,7 @@ export const farmersBlueprintIU0101 = {
                                                 ],
                                             },
                                             message: {
-                                                en: 'Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.',
+                                                en: `Future Interest Rate can not be higher than the current interest rate of ${ILLUSTRATED_RATE}%.`,
                                                 fr: '',
                                             },
                                         },
