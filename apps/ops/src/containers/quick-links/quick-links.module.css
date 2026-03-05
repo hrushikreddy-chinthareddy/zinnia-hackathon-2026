@@ -1,6 +1,8 @@
 .menuTriggerButton {
     cursor: pointer;
-    display: block;
+    display: flex;
+    align-items: center;
+
     letter-spacing: normal;
     text-decoration: none;
 
