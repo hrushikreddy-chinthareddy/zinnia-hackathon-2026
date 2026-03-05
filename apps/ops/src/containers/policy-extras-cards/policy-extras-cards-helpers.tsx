@@ -684,7 +684,6 @@ const RiderFormatConfig = {
     partyAgeAtIssue: convertToString,
     riskClass: (value: RiskClass | undefined) => {
         const { t } = i18n as I18n;
-        console.log('TFunction.........', t);
         return getRiskClass(value, t);
     }, //enum
     substandardRating: customGetSubstandardRating, //enum
