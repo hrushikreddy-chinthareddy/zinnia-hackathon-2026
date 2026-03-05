@@ -39,6 +39,7 @@ import { CaseAction, ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import {
     checkCaseQualityAuditEligibility,
+    checkEligibilityAsIsInforceIllustration,
     TransactionResponseStatus,
 } from '@deps/queries/api/bpm';
 import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
@@ -358,11 +359,22 @@ export const PolicyMenuContextualContent = ({
     });
 
     const { data: BPMEligibility } = useQuery({
-        queryKey: ['checkBPMAsIsIllustrationEligibility'],
-        queryFn: () => {
-            // This is a placeholder variable, should be replaced with a BPM call to check eligibility
-            return false;
-        },
+        queryKey: [
+            'checkBPMAsIsIllustrationEligibility',
+            policy.planCode,
+            policy.policyNumber,
+            policy.carrierId,
+            policy.policyStatus,
+        ],
+        queryFn: () =>
+            checkEligibilityAsIsInforceIllustration(
+                policy.planCode as string,
+                policy.policyNumber as string,
+                policy.carrierId as string,
+                policy.policyStatus as string
+            ),
+        select: (data) => data?.isEligible ?? false,
+        enabled: asIsIllustrationsEnabled,
     });
 
     const { data: freelookCancellation } = useFreelookCancellation(

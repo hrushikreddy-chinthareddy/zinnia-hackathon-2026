@@ -922,3 +922,49 @@ export const checkCaseQualityAuditEligibility = async (
         return error?.data;
     }
 };
+
+// AsIs Illustration
+export interface AsIsInforceEligibilityRequest {
+    carrierCode: string;
+    policyStatus: string;
+}
+
+export interface AsIsInforceEligibilityResponse {
+    isEligible: boolean;
+}
+
+export const checkEligibilityAsIsInforceIllustration = async (
+    planCode: string | undefined,
+    policyNumber: string | undefined,
+    carrierCode: string,
+    policyStatus: string
+): Promise<AsIsInforceEligibilityResponse> => {
+    try {
+        browserLogInfo(
+            'AsIsInforceIllustration::Initiating eligibility check',
+            {
+                payload: { planCode, policyNumber, carrierCode, policyStatus },
+                url: `${baseUrl}/policies/${planCode}/${policyNumber}/illustrations/as-is-inforce/eligibility-check`,
+                function: 'checkEligibilityAsIsInforceIllustration',
+            }
+        );
+        const { data } = await client.post<
+            AsIsInforceEligibilityRequest,
+            AxiosResponse<AsIsInforceEligibilityResponse>
+        >(
+            `${baseUrl}/policies/${planCode}/${policyNumber}/illustrations/as-is-inforce/eligibility-check`,
+            {
+                carrierCode,
+                policyStatus,
+            }
+        );
+        return data;
+    } catch (error: any) {
+        browserLogError('AsIsInforceIllustration::Eligibility check failed', {
+            ...parseErrorInformation(error),
+            payload: { planCode, policyNumber, carrierCode, policyStatus },
+            function: 'checkEligibilityAsIsInforceIllustration',
+        });
+        return { isEligible: false };
+    }
+};
