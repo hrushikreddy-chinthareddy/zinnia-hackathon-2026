@@ -1,8 +1,8 @@
-
 export type PendoOptions = {
     visitor: {
         id: string; // Required if user is logged in
-        email?: string; // Recommended if using Pendo Feedback, or NPS Email
+        //email?: string; // Recommended if using Pendo Feedback, or NPS Email
+        emailDomain?: string; // 2nd+ level domain for segmentation
         full_name?: string; // Recommended if using Pendo Feedback
         firstLogin?: string; // Optional
         isInternalZinniaUser?: string; // Optional

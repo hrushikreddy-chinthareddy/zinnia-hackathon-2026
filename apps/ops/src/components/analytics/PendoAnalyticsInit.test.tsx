@@ -103,7 +103,7 @@ describe('PendoAnalyticsInit', () => {
         expect(config).toMatchObject({
             visitor: {
                 id: 'party:123',
-                email: 'user@example.com',
+                emailDomain: 'example',
                 firstLogin: '2024-01-01T00:00:00.000Z',
                 // Internal flag comes from isInternalZinniaUser mock
                 isInternalZinniaUser: 'true',
@@ -123,7 +123,7 @@ describe('PendoAnalyticsInit', () => {
         expect(config).toMatchObject({
             visitor: {
                 id: 'party:123',
-                email: 'user@example.com',
+                emailDomain: 'example',
                 firstLogin: '2024-01-01T00:00:00.000Z',
                 // Internal flag comes from isInternalZinniaUser mock
                 isInternalZinniaUser: 'true',
