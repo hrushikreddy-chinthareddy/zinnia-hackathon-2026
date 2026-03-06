@@ -2516,9 +2516,11 @@
                     },
                     "signatureData": {
                         "ui:options": { "label": false },
+
                         "isIrrevocableBene": {
                             "ui:widget": "hidden"
                         },
+
                         "signatures": {
                             "ui:options": {
                                 "ArrayFieldTemplate": "TransactionAccordionTemplate",
