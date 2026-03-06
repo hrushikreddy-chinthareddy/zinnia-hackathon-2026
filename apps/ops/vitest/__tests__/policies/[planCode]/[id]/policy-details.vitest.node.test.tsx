@@ -223,6 +223,100 @@ describe('policy-details route', () => {
                 within(financialsCard).getByText('Policy term')
             ).toBeInTheDocument();
         });
+
+        test('Annuity policy shows Premiums, Withdrawals, RMDs and Funds transaction cards — not Loans', async () => {
+            renderPolicyDetailsPage(annuityPolicyOverrides);
+
+            const financialsCard = await getFinancialsCard();
+
+            expect(
+                await within(financialsCard).findByText('Premiums')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('Withdrawals')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('RMDs')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('Funds')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('Loans')
+            ).not.toBeInTheDocument();
+        });
+
+        test('Life UL policy shows Premiums, Withdrawals, Loans and Funds transaction cards — not RMDs', async () => {
+            renderPolicyDetailsPage(lifePolicyOverrides);
+
+            const financialsCard = await getFinancialsCard();
+
+            expect(
+                await within(financialsCard).findByText('Premiums')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('Withdrawals')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('Loans')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('Funds')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('RMDs')
+            ).not.toBeInTheDocument();
+        });
+
+        test('Non-Zinnia annuity policy (isTPA=false) shows no transaction cards', async () => {
+            renderPolicyDetailsPage({
+                ...annuityPolicyOverrides,
+                thirdPartyAdministratorId: 'Non-Zinnia',
+            });
+
+            const financialsCard = await getFinancialsCard();
+
+            expect(
+                within(financialsCard).queryByText('Premiums')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('Withdrawals')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('RMDs')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('Loans')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('Funds')
+            ).not.toBeInTheDocument();
+        });
+
+        test('Non-Zinnia life UL policy (isTPA=false) shows no transaction cards', async () => {
+            renderPolicyDetailsPage({
+                ...lifePolicyOverrides,
+                thirdPartyAdministratorId: 'Non-Zinnia',
+            });
+
+            const financialsCard = await getFinancialsCard();
+
+            expect(
+                within(financialsCard).queryByText('Premiums')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('Withdrawals')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('RMDs')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('Loans')
+            ).not.toBeInTheDocument();
+            expect(
+                within(financialsCard).queryByText('Funds')
+            ).not.toBeInTheDocument();
+        });
     });
 
     // ─── LifeTimelineCard product type variants ──────────────────────────────
