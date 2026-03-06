@@ -4,7 +4,7 @@ import {
     Loader,
 } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import Radio from '@deps/components/radio/radio';
 import { NotificationsTransactionData } from '@deps/components/side-sheet/side-sheet-case-step-details/tabs/bene-notification-tab/bene-notification-tab.types';
@@ -16,19 +16,18 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import WorkflowCard from '@deps/components/workflows/workflow-card/workflow-card';
 import { TranslationFiles } from '@deps/config/translations';
-import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';
+import {
+    TaskActions,
+    useUpdateNotificationMethod,
+} from '@deps/contexts/UpdateNotificationMethodContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import {
-    deStringifyTrueFalseNull,
-    isNullEmptyOrUndefined,
-    stringifyTrueFalseNull,
-} from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { updateNotificationMethod } from '@deps/queries/api/web-non-financial';
 import { Policy } from '@zinnia/api-types/types/sor';
 
+import { TaskAction } from './task-action';
 import { buildUpdateNotificationMethodPayload } from './update-notification-method-helper';
 
 type ContactEstablishedStepProps = {
@@ -45,14 +44,15 @@ const ContactEstablishedStep = ({
     });
     const [isLoading, setIsLoading] = useState(false);
     const {
-        setContactEstablished,
-        contactEstablished,
+        taskActions,
+        setTaskActions,
         setCaseId,
         setSubmitFailed,
         emailData,
         faxData,
         addressData,
         notificationMethodSelected,
+        setNotificationMethodSelected,
     } = useUpdateNotificationMethod();
     const { goToNext } = useWorkflow();
     const [errors, setErrors] = useState<FormValidationErrors>();
@@ -62,18 +62,30 @@ const ContactEstablishedStep = ({
         CaseIdentifier.ZlCaseId
     );
 
+    useEffect(() => {
+        if (
+            transactionData?.entity?.notificationPreferences?.notificationMethod
+                ?.method
+        ) {
+            setNotificationMethodSelected(
+                transactionData?.entity?.notificationPreferences
+                    ?.notificationMethod?.method
+            );
+        }
+    }, [transactionData, setNotificationMethodSelected]);
+
     const validateForm = useCallback(() => {
-        if (isNullEmptyOrUndefined(contactEstablished)) {
+        if (taskActions?.length === 0) {
             setErrors({
                 ...errors,
-                contactEstablished: t(
-                    `contactEstablishedStep.formErrors.formValidation.contactEstablishedIsRequired`
+                taskActions: t(
+                    `contactEstablishedStep.formErrors.formValidation.taskActionsIsRequired`
                 ),
             });
             return false;
         }
         return true;
-    }, [contactEstablished, errors, t]);
+    }, [taskActions, errors, t]);
 
     const submit = useCallback(async () => {
         setIsLoading(true);
@@ -84,7 +96,7 @@ const ContactEstablishedStep = ({
             faxData,
             addressData,
             notificationMethodSelected,
-            contactEstablished
+            taskActions
         );
 
         const successfulSubmit = await updateNotificationMethod(payload);
@@ -103,42 +115,100 @@ const ContactEstablishedStep = ({
         faxData,
         addressData,
         notificationMethodSelected,
-        contactEstablished,
         setCaseId,
         setSubmitFailed,
+        taskActions,
     ]);
 
     const handleStepContinue = useCallback(async () => {
         const isValid = validateForm();
         if (isValid) {
-            if (contactEstablished) {
+            if (
+                taskActions.length > 0 &&
+                !taskActions.includes(TaskActions.UPDATE_NOTIFICATION_METHOD)
+            ) {
                 await submit();
             }
             goToNext();
         } else {
             return;
         }
-    }, [validateForm, contactEstablished, goToNext, submit]);
+    }, [validateForm, taskActions, goToNext, submit]);
 
     const handleChangeRadio = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setContactEstablished(
-            deStringifyTrueFalseNull(e.target.value) as boolean
-        );
+        const value = e.target.value;
+        setTaskActions([value as TaskActions]);
         setErrors({});
     };
 
     const radioOptions = [
         {
-            label: t(
-                'contactEstablishedStep.contactEstablished.contactEstablishedRestartProcess'
+            label: t('contactEstablishedStep.contactEstablished.resendPacket'),
+            value: TaskActions.RESEND_PACKET,
+            subElement: (
+                <TaskAction
+                    item={{
+                        label: t(
+                            'contactEstablishedStep.contactEstablished.resendPacket'
+                        ),
+                        value: TaskActions.RESEND_PACKET,
+                    }}
+                    disabled={false}
+                    tooltipBody={
+                        t('contactEstablishedStep.tooltips.resendPacket') ?? ''
+                    }
+                    transactionData={transactionData}
+                    taskActions={taskActions}
+                />
             ),
-            value: 'true',
+        },
+        {
+            label: t(
+                'contactEstablishedStep.contactEstablished.restartFollowupProcess'
+            ),
+            value: TaskActions.CONTACT_ESTABLISHED,
+            subElement: (
+                <TaskAction
+                    item={{
+                        label: t(
+                            'contactEstablishedStep.contactEstablished.restartFollowupProcess'
+                        ),
+                        value: TaskActions.CONTACT_ESTABLISHED,
+                    }}
+                    disabled={false}
+                    tooltipBody={
+                        t(
+                            'contactEstablishedStep.tooltips.restartFollowupProcess'
+                        ) ?? ''
+                    }
+                    transactionData={transactionData}
+                    taskActions={taskActions}
+                />
+            ),
         },
         {
             label: t(
                 'contactEstablishedStep.contactEstablished.updateNotificationMethod'
             ),
-            value: 'false',
+            value: TaskActions.UPDATE_NOTIFICATION_METHOD,
+            subElement: (
+                <TaskAction
+                    item={{
+                        label: t(
+                            'contactEstablishedStep.contactEstablished.updateNotificationMethod'
+                        ),
+                        value: TaskActions.UPDATE_NOTIFICATION_METHOD,
+                    }}
+                    disabled={false}
+                    tooltipBody={
+                        t(
+                            'contactEstablishedStep.tooltips.updateNotificationMethod'
+                        ) ?? ''
+                    }
+                    transactionData={transactionData}
+                    taskActions={taskActions}
+                />
+            ),
         },
     ];
 
@@ -169,16 +239,16 @@ const ContactEstablishedStep = ({
                 <div className="mt-4">
                     <Radio
                         items={radioOptions}
-                        value={stringifyTrueFalseNull(contactEstablished)}
+                        value={taskActions?.[0] ?? ''}
                         disabled={false}
                         onChange={handleChangeRadio}
                         className="text-sm"
                         alignItems="items-stretch"
                     />
                 </div>
-                {errors?.contactEstablished ? (
+                {errors?.taskActions ? (
                     <AssistiveText
-                        text={errors.contactEstablished}
+                        text={errors.taskActions}
                         variant={AssistiveTextVariant.Error}
                         className="mt-2"
                     />

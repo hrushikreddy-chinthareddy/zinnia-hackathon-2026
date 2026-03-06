@@ -38,7 +38,7 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
         faxData,
         addressData,
         notificationMethodSelected,
-        contactEstablished,
+        taskActions,
     } = useUpdateNotificationMethod();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -51,7 +51,7 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
             faxData,
             addressData,
             notificationMethodSelected,
-            contactEstablished
+            taskActions
         );
 
         const successfulSubmit = await updateNotificationMethod(payload);
@@ -71,7 +71,7 @@ const ConfirmStep = ({ policy, transactionData }: ConfirmStepProps) => {
         faxData,
         addressData,
         notificationMethodSelected,
-        contactEstablished,
+        taskActions,
         setCaseId,
         setSubmitFailed,
     ]);

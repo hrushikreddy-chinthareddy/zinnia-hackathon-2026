@@ -1,0 +1,62 @@
+.container {
+    @apply bg-white rounded-lg;
+}
+
+.srOnly {
+    display: none;
+}
+
+.contentWrapper {
+    @apply mb-8;
+}
+
+.heading {
+    @apply text-xl font-semibold text-gray-800 mb-4;
+}
+
+.section {
+    @apply mb-6;
+}
+
+.sectionTitle {
+    font: var(--typography-labels-label-md);
+    @apply text-gray-900 mb-3;
+}
+
+.questionLabel {
+    font: var(--typography-labels-label-md);
+    @apply text-gray-900 mb-2;
+}
+
+.answerText {
+    @apply text-sm;
+}
+
+.gridLayout {
+    @apply grid grid-cols-2 gap-6;
+}
+
+.stackLayout {
+    @apply space-y-4;
+}
+
+.reasonLabel {
+    @apply text-sm font-medium mb-2;
+}
+
+.subRefList {
+    @apply space-y-1;
+}
+
+.subRefItem {
+    font: var(--typography-content-body-sm);
+    color: #676767;
+}
+
+.errorBox {
+    @apply mb-6 p-4 bg-red-50 border border-red-200 rounded;
+}
+
+.errorText {
+    @apply text-sm text-red-700;
+}

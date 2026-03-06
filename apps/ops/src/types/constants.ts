@@ -35,6 +35,7 @@ export const PRODUCTION_HOST_NAME = 'open.zinnia.com';
 
 export const CaseDetailsTabValues: { [key: string]: string } = {
     progress: 'progress',
+    activity: 'activity',
     documents: 'documents',
     notes: 'notes',
     'call-logs': 'call-logs',

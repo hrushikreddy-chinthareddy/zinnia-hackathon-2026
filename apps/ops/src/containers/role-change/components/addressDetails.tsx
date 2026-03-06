@@ -28,13 +28,9 @@ import {
     useRoleChange,
 } from '@deps/contexts/RoleChangeContext';
 import { getStateCodes } from '@deps/helpers/states.helpers';
+import { AddressType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as AddIcon } from '@deps/styles/elements/icons/content/add-small.svg';
-import {
-    Address,
-    AddressType,
-    Country,
-    State,
-} from '@zinnia/api-types/types/sor';
+import { Address, Country, State } from '@zinnia/api-types/types/sor';
 
 import { getVariant, getVisibleAddressLines } from '../role-change-helper';
 
@@ -60,7 +56,7 @@ function AddressDetails({
     showPreferredCheckbox = false,
 }: AddressDetailsProps) {
     const INITIAL_ADDRESS: Address = {
-        addressType: AddressType.RESIDENCE,
+        addressType: AddressType.RESIDENCE as Address['addressType'],
         country: Country.US,
     };
 
@@ -114,7 +110,14 @@ function AddressDetails({
                                 event.target.value as AddressType
                             );
                         }}
-                        value={addressType}
+                        value={
+                            addressType &&
+                            addressTypeOptions.some(
+                                (opt) => opt.value === addressType
+                            )
+                                ? addressType
+                                : AddressType.OTHER
+                        }
                         orientation={RadioOrientation.Horizontal}
                         name={`addressType-${index}-${Math.random()}`}
                         disabled={disabled}

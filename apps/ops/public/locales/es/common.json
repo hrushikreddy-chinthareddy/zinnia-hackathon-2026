@@ -52,6 +52,7 @@
         "createdOn": "Creado el",
         "viewDetailsException": "Ver detalles de excepciones",
         "resolvedOn": "Resuelto el",
+        "unableToFetchRelatedCase": "No se pueden obtener casos relacionados.",
         "accountValue": "Valor de la cuenta",
         "technicalExceptions": "Excepciones técnicas",
         "technicalIssuesWarning": "Es posible que el progreso del caso no se actualice debido a un problema técnico. Estamos trabajando para solucionarlo.",
@@ -72,6 +73,12 @@
         "actions": "Acciones",
         "category": "Categoría",
         "caseSubtype": "Subtipo de caso",
+        "caseRequest": "Solicitud de caso",
+        "linkedCasesRequestsCompleted": "Todos los casos relacionados están completos.",
+        "linkedCasesRequestsRaised": "Este {{caseType}} tiene {{numberOfLinkedCases}} casos relacionados.",
+        "raisedOn": "Criado en",
+        "requestForProcessCompleted": "{{caseType}} completado el {{updatedAt}}",
+        "requestForProcessRaised": "Este caso se marcó para {{caseType}} el {{createdAt}}. Ir a ",
         "daily": "Diario",
         "daysLabel": "días",
         "daysActive": "Días activos",
@@ -173,6 +180,7 @@
         "completedTaskTimesTitle": "Mediana del Tiempo de Procesamiento",
         "completedTaskTimesXAxisLabel": "Tiempo de procesamiento",
         "completedTaskTimesYAxisLabel": "Tipo de caso",
+        "completed": "Terminado",
         "confirm": "Confirmar",
         "confirmCancelProgram": "Confirmar antes de cancelar el programa sistemático.",
         "contestabilityEndDate": "Fecha de finalización de contestabilidad",
@@ -335,6 +343,7 @@
         "guidelinePremiumTestDate": "Fecha de prueba de prima de directriz",
         "guidelineSinglePremium": "Prima única de directriz",
         "hasBeen": "han sido",
+        "hideDailyInterest": "Ocultar interés diario",
         "holdingForm": "Formulario de tenencia",
         "hour": "hora",
         "home": "Casa",
@@ -690,6 +699,7 @@
         "ssnSearchError": "Ingrese un número de Seguro Social para mostrar resultados de búsqueda",
         "startDate": "Fecha de inicio",
         "status": "Estado activo",
+        "Status": "Estado",
         "stateMissing": "El estado está vacío.",
         "streetAddressMissing": "La dirección de la calle está vacía.",
         "submit": "Entregar",
@@ -852,6 +862,11 @@
         "searchByLastNamePlaceholder": "Apellido del individuo",
         "searchButtonOwnerName": "Nombre del propietario",
         "searchButtonAgentName": "Nombre del agente",
+        "notifierDetails": "Detalles del notificador",
+        "notifierName": "Nombre del notificador",
+        "notifierPhoneNumber": "Número de teléfono del notificador",
+        "notifierRole": "Rol de notificador",
+        "relationshipToInsured": "Parentesco con el fallecido",
         "illustrationsClientCasesDobDatePickerPopoverTitle": "Fecha de nacimiento",
         "defaultTaskCardTitle": "¡Ups! Algo salió mal al cargar la tarea. Por favor, inténtalo de nuevo.",
         "defaultTaskCardSubtitle": "Para cualquier ayuda adicional, ",
@@ -1196,8 +1211,11 @@
         "MODIFIEDEARNINGSONLY": "Solo ganancias modificadas",
         "MONEYPURCHASEPENSIONPLAN": "Plan de pensión de compra de dinero",
         "MONTHLY": "Mensual",
+        "MultipleAgentChange": "Cambio múltiple de agentes",
+        "MultipleAnnuitantChange": "Cambio múltiple de rentistas",
         "MultipleBeneficiaryChange": "Cambio múltiple de beneficiarios",
         "MultipleEmailChange": "Cambio múltiple de correos electrónicos",
+        "MultipleOwnerChange": "Cambio múltiple de propietarios",
         "MultiplePayeeChange": "Cambio múltiple de beneficiarios de pago",
         "MultiplePhoneNumberChange": "Cambio múltiple de números telefónicos",
         "MULTIPLEPOLICYDISCOUNT": "Descuento por pólizas múltiples",
@@ -4152,9 +4170,10 @@
                 "disburseToFinancialInstitution": "Desembolsar a Institución Financiera",
                 "disburseToCharity": "Desembolsar a Organización Benéfica",
                 "disburseToAnnuitant": "Desembolsar al Rentista",
+                "disburseToAnnuitantDlic": "Desembolsar al Rentista (Cuando el titular es un Fideicomiso Revocable)",
                 "disburseToDifferentAddress": "Desembolsar a una Dirección Diferente",
                 "disburseToThirdParty": "Desembolsar a Tercero (No una Institución Financiera / Organización Benéfica)",
-                "disburseToThirdPartyNoCharity": "Desembolsar a Tercero (No una Institución Financiera)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Desembolsar a Tercero (No una Institución Financiera)",
                 "acordFormReceived": "¿Se recibió el formulario ACORD?",
                 "bankName": "Nombre del banco",
                 "bankRoutingNumber": "Número de ruta bancaria",
@@ -5055,6 +5074,7 @@
                 "withdrawalsTaken": "Retiros realizados",
                 "yearsRemaining": "años restantes",
                 "ytd": "Año hasta la fecha",
+                "remaining": "restante",
                 "required": "Requerido",
                 "notRequired": "No requerido"
             },
@@ -6464,6 +6484,7 @@
                     "residence": "Residencial",
                     "business": "Negocios",
                     "poBox": "Apartado postal",
+                    "other": "Otro",
                     "poBoxLower": "apartado postal",
                     "mailing": "Correo postal"
                 },
@@ -8599,44 +8620,55 @@
             "title": "Contacto establecido",
             "selectOption": "Seleccione una de las siguientes opciones:",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contacto establecido – Reiniciar proceso",
+                "resendPacket": "Reenviar paquete",
+                "restartFollowupProcess": "Reiniciar el proceso de seguimiento.",
                 "updateNotificationMethod": "Método de notificación de actualización"
+            },
+            "tooltips": {
+                "resendPacket": "Renvoie le paquet sans redémarrer le processus de suivi, en utilisant la méthode de notification présélectionnée.",
+                "restartFollowupProcess": "Reinicia el proceso de seguimiento desde el Seguimiento 1 utilizando el método de notificación preseleccionado.",
+                "updateNotificationMethod": "Actualiza el método de notificación y reinicia el proceso de seguimiento desde el Seguimiento 1 utilizando los nuevos datos proporcionados."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Seleccione una opción para continuar."
+                    "taskActionsIsRequired": "Seleccione una opción para continuar."
                 }
+            },
+            "notificationMethods": {
+                "email": "Correo electrónico",
+                "fax": "Fax",
+                "address": "Dirección de envio"
             }
         },
         "updateNotificationMethodStep": {
-            "title": "Update Notification Method",
-            "subtitle": "Select a preferred notification method for communications related to this claim",
+            "title": "Método de notificación de actualización",
+            "subtitle": "Seleccione el método de notificación que prefiera para las comunicaciones relacionadas con esta reclamación.",
             "notificationMethods": {
-                "email": "Email",
+                "email": "Correo electrónico",
                 "fax": "Fax",
-                "address": "Mailing Address",
-                "change": "change",
-                "updateEmail": "Update Email Address",
-                "updateFax": "Update Fax Number",
+                "address": "Dirección de envio",
+                "change": "Cambiar",
+                "updateEmail": "Actualizar dirección de correo electrónico",
+                "updateFax": "Actualizar número de fax",
                 "formActions": {
-                    "continue": "Continue",
-                    "cancel": "Cancel"
+                    "continue": "Continuar",
+                    "cancel": "Cancelar"
                 },
                 "formErrors": {
                     "formValidation": {
-                        "zipIsRequired": "Zip is required.",
-                        "addressLine1IsRequired": "Address line 1 is required.",
-                        "cityIsRequired": "City is required.",
-                        "stateIsRequired": "State is required."
+                        "zipIsRequired": "Se requiere el código postal.",
+                        "addressLine1IsRequired": "La primera línea de la dirección es obligatoria.",
+                        "cityIsRequired": "Se requiere la ciudad.",
+                        "stateIsRequired": "Se requiere el estado."
                     }
                 },
                 "errors": {
-                    "emailIsRequired": "Email is required",
-                    "inValidDomain": "Only Zinnia emails are allowed",
-                    "inValidEmail": "Please enter valid email address",
-                    "faxIsRequired": "Fax number is required",
-                    "inValidFax": "Please enter valid fax number",
-                    "addressIsRequired": "Address is required."
+                    "emailIsRequired": "Se requiere una dirección de correo electrónico.",
+                    "inValidDomain": "Solo se permiten correos electrónicos de Zinnia.",
+                    "inValidEmail": "Por favor, introduzca una dirección de correo electrónico válida.",
+                    "faxIsRequired": "Se requiere el número de fax.",
+                    "inValidFax": "Por favor, introduzca un número de fax válido.",
+                    "addressIsRequired": "Se requiere la dirección."
                 }
             }
         },
@@ -8877,7 +8909,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "cambiar",
+        "change": "Cambiar",
         "updateAddress": "Actualizar dirección {{type}}"
     },
     "defaultCaseDataEntry": {
@@ -9595,6 +9627,13 @@
         "errorTitle": "Error",
         "closeButton": "Cerrar"
     },
+    "nigoSummary": {
+        "noNigoReasons": "No se encontraron motivos NIGO. Por favor, revise la consola para obtener información de depuración.",
+        "heading": "Revisión del formulario",
+        "paperApplicationComplete": "¿La solicitud en papel está completa y lista para su procesamiento?",
+        "missingQuestion": "¿Qué falta o es incorrecto en el formulario?",
+        "selectRole": "Seleccione el rol que tiene información que no coincide."
+    },
     "transactionSummary": {
         "tag": {
             "new": "Agregada",
@@ -9605,6 +9644,10 @@
         "noSummary": "No hay resumen de transacción disponible.",
         "primaryBene": "Beneficiario principal",
         "contingentBene": "Beneficiario contingente",
+        "owner": "Propietario",
+        "jointOwner": "Copropietario",
+        "insured": "Asegurado",
+        "annuitant": "Rentista",
         "loading": "La API de validación se está ejecutando...",
         "successMessage": "¡Se ve bien! Asegúrate de revisar tus participaciones antes de enviarlas.",
         "errorMessage": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",

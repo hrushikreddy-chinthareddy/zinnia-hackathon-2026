@@ -17,7 +17,6 @@ import DiaryNotesWarning from '@deps/components/side-sheet/diary-notes/diary-not
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Carrier } from '@deps/models/case/withdrawal/case';
-import { PaymentMethodOption } from '@deps/models/case/withdrawal/disbursement-types';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { isAllowedState } from '@deps/utils/renderStateW4';
 
@@ -31,8 +30,7 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
     const isDelawareBankSecFeatsEnabled =
         featureFlags[FEATURE_FLAGS.DELAWARE_BANK_SEC_FEATS];
 
-    const isDlic3pDisbursementChangesEnabled =
-        featureFlags[FEATURE_FLAGS.DLIC_3P_DISBURSEMENT_CHANGES];
+    const isDlic3pDisbursementChangesEnabled = true;
 
     const {
         formValidation,
@@ -62,6 +60,9 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
         formESignatureData,
         setFormESignatureData,
         formErrors,
+        isLC,
+        parties,
+        partyRoles,
     } = useContext(FormDataContext);
 
     useEffect(() => {
@@ -147,9 +148,12 @@ export default function DlicWithdrawalForm({ planCode }: { planCode: string }) {
             ) : (
                 <FormDisbursement
                     isFormStateReadOnly={isFormStateReadOnly}
-                    options={
-                        disbursementOptions(formParty) as PaymentMethodOption[]
-                    }
+                    options={disbursementOptions(
+                        formParty,
+                        isLC ?? false,
+                        parties ?? [],
+                        partyRoles ?? []
+                    )}
                 />
             )}
 

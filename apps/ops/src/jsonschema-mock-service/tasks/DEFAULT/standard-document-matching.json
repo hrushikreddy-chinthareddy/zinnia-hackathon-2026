@@ -225,6 +225,7 @@
                         }
                     },
                     "caseType": {
+                        "ui:widget": "SelectWidget",
                         "ui:placeholder": "Select Case Type",
                         "ui:props": {
                             "apiUrl": "case/v1/refdata/PROCESS_SUB_TYPE?",
@@ -303,7 +304,6 @@
                                                 "ui:field": "additionInfo"
                                             }
                                         },
-
                                         "allOf": [
                                             {
                                                 "if": {
@@ -374,7 +374,6 @@
                                                                 }
                                                             }
                                                         },
-
                                                         "else": {
                                                             "if": {
                                                                 "properties": {
@@ -404,7 +403,6 @@
                                                 }
                                             }
                                         ],
-
                                         "dependencies": {
                                             "editDocument": {
                                                 "if": {
@@ -589,7 +587,9 @@
                                             "label": true
                                         },
                                         "ui:hideError": true,
-                                        "ui:emptyValue": { "matchType": "" }
+                                        "ui:emptyValue": {
+                                            "matchType": ""
+                                        }
                                     },
                                     "existingDocument": {
                                         "ui:field": "AutoCompleteField",

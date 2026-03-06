@@ -242,8 +242,7 @@ export const getThirdPartyDetailPayload = (task: ManagementTask) => {
             src.lastName ??
             (src.partyType !== PartyType.INDIVIDUAL
                 ? src.fullName ?? null
-                : null) ??
-            null,
+                : null),
         fullName: toFullName(src),
         identifications: mergeIdentifications(src.identifications),
         relationshipToTheCurrentOwner: getRelationship(src),
@@ -291,8 +290,7 @@ export const getBeneficiaryChangePayload = (task: ManagementTask) => {
                     data.party.lastName ??
                     (data.party.partyType !== PartyType.INDIVIDUAL
                         ? data.party.fullName ?? null
-                        : null) ??
-                    null,
+                        : null),
                 fullName: toFullName(data.party),
                 addresses: cleanAddresses(data.party.addresses),
                 emails: cleanEmails(data.party.emails),
@@ -304,11 +302,26 @@ export const getBeneficiaryChangePayload = (task: ManagementTask) => {
         };
     });
 
+    let issueResolved = task.data?.issueResolved;
+    if (Array.isArray(issueResolved)) {
+        if (issueResolved.includes('yes')) {
+            issueResolved = true;
+        } else if (
+            issueResolved.includes('no_missing') ||
+            issueResolved.includes('no_mismatched')
+        ) {
+            issueResolved = false;
+        } else {
+            issueResolved = undefined;
+        }
+    }
+
     return {
         ...task,
         data: {
             ...task.data,
             actionData: formattedActionData,
+            issueResolved,
         },
     };
 };

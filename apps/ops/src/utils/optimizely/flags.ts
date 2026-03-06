@@ -14,6 +14,8 @@ export enum FEATURE_FLAGS {
     ILLUSTRATIONS_EXPERIENCE = 'illustration-experience',
     READ_ONLY_VIEW_TASK_MANAGEMENT = 'read-only-view-task-management',
     CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS = 'can-view-case-technical-exceptions',
+    CAN_VIEW_ACTIVITY_FEED = 'can_view_activity_feed',
+    CAN_VIEW_RELATED_CASES = 'can-view-related-cases',
     // CMW-14579 - Regulation 60
     REG_60 = 'case-management-otp_feature_regulation-60',
     SSW_MASS = 'case-management-otp_feature_mass_ssw',

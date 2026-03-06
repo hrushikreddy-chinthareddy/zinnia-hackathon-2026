@@ -20,7 +20,6 @@ interface AnnuitizationPageHeaderProps {
 }
 
 export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({
-    policy,
     policyDetails,
 }) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -28,7 +27,6 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({
     });
 
     const { features, policyStatus } = policyDetails;
-    const { deathBenefit } = policy;
     const isPayoutStage = policyStatus === PolicyStatus.PAYOUT;
     const annuitizationFeature = features.getFirstFeatureByType(
         FeatureType.ANNUITIZATION
@@ -76,7 +74,7 @@ export const AnnuitizationPageHeader: FC<AnnuitizationPageHeaderProps> = ({
                         />
                         <Content
                             details={
-                                deathBenefit?.deathBenefitOption ||
+                                annuitizationFeature?.featureOption ||
                                 DEFAULT_ERROR_STRING
                             }
                             variant={ContentVariant.Value}

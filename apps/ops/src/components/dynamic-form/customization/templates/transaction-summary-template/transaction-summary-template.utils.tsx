@@ -38,12 +38,15 @@ import {
 } from '@deps/utils/tasks/role-change-data-entry.utils';
 import { PartyType } from '@zinnia/api-types/types/sor';
 
-export function getPartyMeta(item: SummaryItem) {
+export const formatTypeLabel = (
+    type: string | undefined | null,
+    fallback = 'Address'
+): string => (type ? toTitleCase(type.replace(/_/g, ' ')) : fallback);
+
+export function getPartyMeta(item: SummaryItem, t: (key: string) => string) {
     const party = item.party || {};
-    const address = party.addresses?.[0];
-    const phone = party.phones?.[0];
-    const email = party.emails?.[0];
     const identifications = party.identifications;
+
     return {
         party,
         fullName:
@@ -51,14 +54,16 @@ export function getPartyMeta(item: SummaryItem) {
             [party.firstName, party.middleName, party.lastName]
                 .filter(Boolean)
                 .join(' '),
-        addressStr: formattedAddress(address),
-        phoneStr: phone
-            ? formatPhoneNumberWithCountryCode(phone as EnterprisePhone)
-            : DEFAULT_ERROR_STRING,
-        emailStr: formattedEmail(email),
+        addressStr: formatAllAddresses(party.addresses),
+        addresses: party.addresses ?? [],
+        phoneStr: formatAllPhones(t, party.phones),
+        phones: party.phones ?? [],
+        emailStr: formatAllEmails(t, party.emails),
+        emails: party.emails ?? [],
         ssn: formatIdentification(identifications ?? []),
         gender: party.gender || DEFAULT_ERROR_STRING,
         dob: party.dateOfBirth || DEFAULT_ERROR_STRING,
+        trustDate: party.trustDate || DEFAULT_ERROR_STRING,
         relationshipToParty:
             item.partyRole?.relationshipToParty || DEFAULT_ERROR_STRING,
     };
@@ -485,6 +490,60 @@ export const formattedEmail = (email?: Email): string => {
     return email?.emailAddress || '-';
 };
 
+export const formattedPhone = (phone?: Phone): string => {
+    if (!phone) return '-';
+    return formatPhoneNumberWithCountryCode(phone as EnterprisePhone);
+};
+
+export const formatAllAddresses = (addresses?: Address[]): string => {
+    if (!addresses || addresses.length === 0) return '-';
+
+    return addresses
+        .map((addr) => {
+            const typeLabel = addr.addressType
+                ? toTitleCase(addr.addressType.replace(/_/g, ' '))
+                : 'Address';
+            const formattedAddr = formattedAddress(addr);
+            return `${typeLabel}\n${formattedAddr}`;
+        })
+        .join('\n\n');
+};
+
+export const formatAllPhones = (
+    t: (key: string) => string,
+    phones?: Phone[]
+): string => {
+    if (!phones || phones.length === 0) return DEFAULT_ERROR_STRING;
+
+    return phones
+        .map((phone) => {
+            const typeLabel = phone.phoneType
+                ? toTitleCase(phone.phoneType.replace(/_/g, ' '))
+                : t('allFields.phone');
+            const formattedPhone = formatPhoneNumberWithCountryCode(
+                phone as EnterprisePhone
+            );
+            return `${typeLabel}\n${formattedPhone}`;
+        })
+        .join('\n\n');
+};
+
+export const formatAllEmails = (
+    t: (key: string) => string,
+    emails?: Email[]
+): string => {
+    if (!emails || emails.length === 0) return DEFAULT_ERROR_STRING;
+
+    return emails
+        .map((email) => {
+            const typeLabel = email.emailType
+                ? toTitleCase(email.emailType.replace(/_/g, ' '))
+                : t('allFields.email');
+            return `${typeLabel}\n${email.emailAddress || '-'}`;
+        })
+        .join('\n\n');
+};
+
 export const getRoleLabel = (
     partyRole: PartyRole,
     t: (key: string) => string,
@@ -497,6 +556,10 @@ export const getRoleLabel = (
         INITIATE_BENECHANGE_TRANSACTION: {
             PRIMARYBENEFICIARY: (t) => t('primaryBene'),
             CONTINGENTBENEFICIARY: (t) => t('contingentBene'),
+            OWNER: (t) => t('owner'),
+            JOINTOWNER: (t) => t('jointOwner'),
+            INSURED: (t) => t('insured'),
+            ANNUITANT: (t) => t('annuitant'),
         },
     };
 
@@ -511,4 +574,36 @@ export const getRoleLabel = (
         return label;
     }
     return '';
+};
+
+export type SummaryItemWithRoles = SummaryItem & { roles: string[] };
+
+export const groupPartiesByPartyId = (
+    items: SummaryItem[],
+    t: (key: string) => string,
+    taskType?: string
+): SummaryItemWithRoles[] => {
+    const grouped = items.reduce<Record<string, SummaryItemWithRoles>>(
+        (acc, item) => {
+            const partyId =
+                item.party?.partyId ?? (item.partyRole as any)?.partyId;
+            const key = partyId || `idx-${Object.keys(acc).length}`;
+
+            if (!acc[key]) {
+                acc[key] = { ...item, roles: [] };
+            }
+
+            const role = item.partyRole
+                ? getRoleLabel(item.partyRole, t, taskType)
+                : '';
+            if (role && !acc[key].roles.includes(role)) {
+                acc[key].roles.push(role);
+            }
+
+            return acc;
+        },
+        {}
+    );
+
+    return Object.values(grouped);
 };

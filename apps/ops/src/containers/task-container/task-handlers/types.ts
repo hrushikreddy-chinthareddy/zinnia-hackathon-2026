@@ -5,6 +5,11 @@ import {
     ExtendedPhone,
 } from '@deps/contexts/RoleChangeContext';
 import { FormMetadata } from '@deps/models/case/task';
+import {
+    AddressType as SorAddressType,
+    EmailType,
+    PhoneType,
+} from '@deps/models/policy/sor-policy';
 import { LoggingContext } from '@deps/utils/server-logging';
 export interface ApiFunction<RequestPayload, ResponseData> {
     (
@@ -128,6 +133,8 @@ export enum PartyRoleType {
     PRIMARYSERVICINGAGENT = 'PRIMARYSERVICINGAGENT',
     THIRDPARTYDESIGNEE = 'THIRDPARTYDESIGNEE',
     ASSIGNEE = 'ASSIGNEE',
+    ANNUITANT = 'ANNUITANT',
+    INSURED = 'INSURED',
 }
 
 export enum PartyRoleLabel {
@@ -185,6 +192,50 @@ export interface Email {
     isPreferred?: boolean;
     startDate?: string | null;
 }
+
+export const normalizeTaskPayloadAddressType = (
+    value: string | null | undefined,
+    defaultWhenMissing: AddressType = AddressType.RESIDENCE
+): AddressType | string => {
+    if (value == null) return defaultWhenMissing;
+    const upper = value.toUpperCase();
+    const allowed = Object.values([
+        SorAddressType.RESIDENCE,
+        SorAddressType.BUSINESS,
+        SorAddressType.SEASONAL,
+        SorAddressType.POBOX,
+    ]) as string[];
+    return allowed.includes(upper) ? value : 'OTHER';
+};
+
+export const normalizeTaskPayloadPhoneType = (
+    value: PhoneType | string | null | undefined,
+    defaultWhenMissing: PhoneType = PhoneType.HOME
+): PhoneType => {
+    if (value == null) return defaultWhenMissing;
+    const upper = value.toUpperCase();
+    const allowed = Object.values([
+        PhoneType.MOBILE,
+        PhoneType.HOME,
+        PhoneType.BUSINESS,
+        PhoneType.FAX,
+    ]) as string[];
+    return allowed.includes(upper) ? (value as PhoneType) : PhoneType.OTHER;
+};
+
+/** Normalizes email type for task payloads (bene change, assignee change, third-party detail). Unknown become OTHER. */
+export const normalizeTaskPayloadEmailType = (
+    value: string | null | undefined,
+    defaultWhenMissing: string = EmailType.PERSONAL
+): string => {
+    if (value == null) return defaultWhenMissing;
+    const upper = value.toUpperCase();
+    const allowed = Object.values([
+        EmailType.PERSONAL,
+        EmailType.BUSINESS,
+    ]) as string[];
+    return allowed.includes(upper) ? value : EmailType.OTHER;
+};
 
 export type ActionDataItem = {
     action: Action;

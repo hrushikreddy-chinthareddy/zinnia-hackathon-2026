@@ -67,7 +67,6 @@ function PhoneDetails({
         startDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
         dialNumber: '',
     };
-
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'people.sideSheet.phone',
     });
@@ -134,7 +133,14 @@ function PhoneDetails({
                             )
                         }
                         orientation={RadioOrientation.Horizontal}
-                        value={phone.phoneType}
+                        value={
+                            phone.phoneType &&
+                            phoneTypeOptions.some(
+                                (opt) => opt.value === phone.phoneType
+                            )
+                                ? phone.phoneType
+                                : PhoneType.OTHER
+                        }
                         name={`phoneType-${index}-${Math.random()}`}
                         disabled={disabled}
                         variant={

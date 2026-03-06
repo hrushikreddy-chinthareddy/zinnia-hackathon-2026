@@ -8,6 +8,7 @@ import {
     getCaseTimePredict,
 } from '@deps/queries/api/cases';
 import { getCaseCallLogs } from '@deps/queries/api/contracts';
+import { getActivityFeed } from '@deps/queries/api/v1/activity-feed';
 import { baseAppUrl } from '@deps/queries/api-config';
 import { client } from '@deps/queries/api-utils/client';
 import { CaseSearchQuery, CaseStatsQuery } from '@deps/queries/cases';
@@ -81,6 +82,19 @@ export const getCallLogsQuery = async (
 
     return {
         data: results?.data?.items || [],
+        status: results?.status,
+    };
+};
+
+export const getActivityFeedQuery = async (caseId: string, payload: any) => {
+    if (!caseId) {
+        throw new Error('No caseId provided');
+    }
+
+    const results = await getActivityFeed(caseId, payload);
+
+    return {
+        data: results?.data || {},
         status: results?.status,
     };
 };
