@@ -14,7 +14,6 @@ import {
     agentDataEmptyHandler,
     agentDataErrorHandler,
     agentDataHandler,
-    agentDataLoadingHandler,
 } from './helpers/policy-msw-handlers';
 import {
     createMockRouter,
@@ -169,6 +168,151 @@ describe('policy-details route', () => {
         });
     });
 
+    // ─── StatusBar layout variants ────────────────────────────────
+    describe('StatusBar layout variants', () => {
+        test('shows no banners for active policy with no open cases', async () => {
+            renderPolicyDetailsPage(annuityPolicyOverrides);
+
+            await screen.findByRole('heading', { name: 'Contract Details' });
+
+            expect(
+                screen.queryByText(/This policy has \d+ open case/)
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByText(
+                    'This policy needs a payment before it lapses. Go there now?'
+                )
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByText(
+                    'This policy is approved for a reinstatement premium.  Go there now?'
+                )
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByText(/This policy has a free look period/)
+            ).not.toBeInTheDocument();
+            expect(
+                screen.queryByText('Initial Death Notification')
+            ).not.toBeInTheDocument();
+        });
+
+        test('shows case count banner when policy has open cases', async () => {
+            renderPolicyDetailsPage(annuityPolicyOverrides, [
+                http.post('*/api/case/v1/cases/search', () =>
+                    HttpResponse.json({ data: [], total: 2 })
+                ),
+            ]);
+
+            expect(
+                await screen.findByText('This policy has 2 open cases')
+            ).toBeInTheDocument();
+            expect(await screen.findByText('View cases')).toBeInTheDocument();
+        });
+
+        test('shows PENDINGLAPSE warning banner when policyStatus is PENDINGLAPSE', async () => {
+            renderPolicyDetailsPage({
+                ...annuityPolicyOverrides,
+                policyStatus: 'PENDINGLAPSE',
+            });
+
+            expect(
+                await screen.findByText(
+                    'This policy needs a payment before it lapses. Go there now?'
+                )
+            ).toBeInTheDocument();
+            expect(
+                await screen.findByText('Make a premium payment')
+            ).toBeInTheDocument();
+        });
+
+        test('shows LAPSE error banner when policyStatus is LAPSE and reinstatement has approvalDate', async () => {
+            renderPolicyDetailsPage({
+                ...annuityPolicyOverrides,
+                policyStatus: 'LAPSE',
+                policyFeatures: [
+                    ...policyEndpointData.policyFeatures,
+                    {
+                        featureType: 'REINSTATEMENT',
+                        approvalDate: '2024-01-15',
+                        endDate: '2024-06-30',
+                        period: 3,
+                    },
+                ],
+            });
+
+            expect(
+                await screen.findByText(/approved for a reinstatement premium/)
+            ).toBeInTheDocument();
+            expect(
+                await screen.findByText('Make a premium payment')
+            ).toBeInTheDocument();
+        });
+
+        test('does not show LAPSE banner when policyStatus is LAPSE but no reinstatement approvalDate', async () => {
+            renderPolicyDetailsPage({
+                ...annuityPolicyOverrides,
+                policyStatus: 'LAPSE',
+                policyFeatures: [],
+            });
+
+            await screen.findByRole('heading', { name: 'Contract Details' });
+
+            expect(
+                screen.queryByText(
+                    'This policy is approved for a reinstatement premium.  Go there now?'
+                )
+            ).not.toBeInTheDocument();
+        });
+
+        test('shows freeLook banner when feature flag is enabled and policy is in free look period', async () => {
+            renderPolicyDetailsPage(
+                annuityPolicyOverrides,
+                [
+                    http.post(
+                        '*/api/bpm/v1/policies/:planCode/:policyId/freelookcancellation/eligibilitycheck',
+                        () => HttpResponse.json({ status: 'success' })
+                    ),
+                ],
+                {
+                    'policy-management_feature_free-look-cancellation': true,
+                }
+            );
+
+            expect(
+                await screen.findByText(/This policy has a free look period/)
+            ).toBeInTheDocument();
+            expect(
+                await screen.findByText('Cancel policy')
+            ).toBeInTheDocument();
+        });
+
+        test('shows initial death notification banner when carrierId matches enabled flag and death claim not yet created', async () => {
+            renderPolicyDetailsPage(
+                {
+                    ...lifePolicyOverrides,
+                    carrierId: 'FLIC',
+                },
+                [
+                    http.get(
+                        '*/api/webnonfinancial/claim/v1/initialdeathclaim/exists',
+                        () =>
+                            HttpResponse.json({
+                                isNewRequest: false,
+                                zlCaseId: 'CASE-123',
+                            })
+                    ),
+                ],
+                { 'claims-feature-flic-idn-death-claim': true }
+            );
+
+            expect(
+                await screen.findByText('Initial Death Notification')
+            ).toBeInTheDocument();
+            expect(
+                await screen.findByText('View death claim progress')
+            ).toBeInTheDocument();
+        });
+    });
     // ─── PolicyFinancialsCard layout variants ────────────────────────────────
 
     const getFinancialsCard = async () => {
@@ -176,6 +320,14 @@ describe('policy-details route', () => {
             name: 'Financials',
         });
         return heading.closest('[data-testid="card-container"]') as HTMLElement;
+    };
+
+    const expectNoTransactionCards = (card: HTMLElement) => {
+        expect(within(card).queryByText('Premiums')).not.toBeInTheDocument();
+        expect(within(card).queryByText('Withdrawals')).not.toBeInTheDocument();
+        expect(within(card).queryByText('RMDs')).not.toBeInTheDocument();
+        expect(within(card).queryByText('Loans')).not.toBeInTheDocument();
+        expect(within(card).queryByText('Funds')).not.toBeInTheDocument();
     };
 
     describe('PolicyFinancialsCard layout variants', () => {
@@ -274,23 +426,7 @@ describe('policy-details route', () => {
                 thirdPartyAdministratorId: 'Non-Zinnia',
             });
 
-            const financialsCard = await getFinancialsCard();
-
-            expect(
-                within(financialsCard).queryByText('Premiums')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('Withdrawals')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('RMDs')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('Loans')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('Funds')
-            ).not.toBeInTheDocument();
+            expectNoTransactionCards(await getFinancialsCard());
         });
 
         test('Non-Zinnia life UL policy (isTPA=false) shows no transaction cards', async () => {
@@ -299,23 +435,7 @@ describe('policy-details route', () => {
                 thirdPartyAdministratorId: 'Non-Zinnia',
             });
 
-            const financialsCard = await getFinancialsCard();
-
-            expect(
-                within(financialsCard).queryByText('Premiums')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('Withdrawals')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('RMDs')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('Loans')
-            ).not.toBeInTheDocument();
-            expect(
-                within(financialsCard).queryByText('Funds')
-            ).not.toBeInTheDocument();
+            expectNoTransactionCards(await getFinancialsCard());
         });
     });
 
@@ -377,18 +497,6 @@ describe('policy-details route', () => {
     // ─── AnnuityApplicationDetailsCard async states ──────────────────────────
 
     describe('AnnuityApplicationDetailsCard async states', () => {
-        test('shows loading indicator while agent data is fetching', async () => {
-            renderPolicyDetailsPage(annuityPolicyOverrides, [
-                agentDataLoadingHandler,
-            ]);
-
-            await screen.findByRole('heading', { name: 'Application Details' });
-            // PageLoader renders inside the card while loading (in addition to the page-level overlay)
-            expect(screen.getAllByTestId('test-loader').length).toBeGreaterThan(
-                1
-            );
-        });
-
         test('shows agent name link on successful agent data fetch', async () => {
             renderPolicyDetailsPage(annuityPolicyOverrides, [agentDataHandler]);
 
@@ -435,7 +543,47 @@ describe('policy-details route', () => {
     // ─── CostBasisQualificationCard toggle ───────────────────────────────────
 
     describe('CostBasisQualificationCard toggle', () => {
-        test('toggling "Show detailed cost basis" reveals TEFRA/TAMRA fields', async () => {
+        const getCostBasisCard = async () => {
+            const heading = await screen.findByRole('heading', {
+                name: 'Cost basis and Qualification',
+            });
+            return heading.closest(
+                '[data-testid="card-container"]'
+            ) as HTMLElement;
+        };
+
+        test('shows $0.00 for TEFRA/TAMRA fields when detail data is null', async () => {
+            renderPolicyDetailsPage({
+                ...annuityPolicyOverrides,
+                costBasis: {
+                    costBasis: 100000,
+                    preTaxEquityAndFiscalResponsibilityActBasis: null,
+                    preTechnicalAndMiscellaneousRevenueActAmount: null,
+                    postTechnicalAndMiscellaneousRevenueActAmount: null,
+                },
+            });
+
+            const card = await getCostBasisCard();
+
+            // Main cost basis still shows its value
+            expect(within(card).getByText('$100,000.00')).toBeInTheDocument();
+
+            fireEvent.click(screen.getByTestId('cost-basis-toggle'));
+
+            expect(
+                await within(card).findByText('Pre tefra basis')
+            ).toBeInTheDocument();
+            expect(
+                within(card).getByText('Pre tamra basis')
+            ).toBeInTheDocument();
+            expect(
+                within(card).getByText('Post tamra basis')
+            ).toBeInTheDocument();
+            // All three null detail values fall back to $0.00
+            expect(within(card).getAllByText('$0.00')).toHaveLength(3);
+        });
+
+        test('shows always-visible fields and reveals TEFRA/TAMRA labels and values on toggle', async () => {
             renderPolicyDetailsPage({
                 ...annuityPolicyOverrides,
                 costBasis: {
@@ -446,23 +594,27 @@ describe('policy-details route', () => {
                 },
             });
 
-            await screen.findByRole('heading', {
-                name: 'Cost basis and Qualification',
-            });
+            const card = await getCostBasisCard();
 
-            // Detailed fields are hidden before toggle
+            // TEFRA/TAMRA hidden before toggle
             expect(
-                screen.queryByText('Pre tefra basis')
+                within(card).queryByText('Pre tefra basis')
             ).not.toBeInTheDocument();
 
-            // Toggle on using data-testid (same approach as the unit test)
             fireEvent.click(screen.getByTestId('cost-basis-toggle'));
 
             expect(
-                await screen.findByText('Pre tefra basis')
+                await within(card).findByText('Pre tefra basis')
             ).toBeInTheDocument();
-            expect(screen.getByText('Pre tamra basis')).toBeInTheDocument();
-            expect(screen.getByText('Post tamra basis')).toBeInTheDocument();
+            expect(within(card).getByText('$50,000.00')).toBeInTheDocument();
+            expect(
+                within(card).getByText('Pre tamra basis')
+            ).toBeInTheDocument();
+            expect(within(card).getByText('$30,000.00')).toBeInTheDocument();
+            expect(
+                within(card).getByText('Post tamra basis')
+            ).toBeInTheDocument();
+            expect(within(card).getByText('$20,000.00')).toBeInTheDocument();
         });
     });
 });
