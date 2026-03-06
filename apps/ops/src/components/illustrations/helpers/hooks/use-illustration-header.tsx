@@ -76,7 +76,7 @@ export const useIllustrationHeader = () => {
 
             return eAppHeader;
         },
-        []
+        [featureFlags]
     );
 
     return {
