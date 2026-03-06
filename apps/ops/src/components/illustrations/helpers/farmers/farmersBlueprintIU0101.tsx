@@ -1,4 +1,4 @@
-import { FieldTypes, QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
+import { QuestionnaireBlueprint } from '@zinnia/form-engine-sdk';
 
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
@@ -57,7 +57,7 @@ export const getFarmersBlueprintIU0101 = (
                                 isCustom: true,
                                 fields: [
                                     {
-                                        fieldType: FieldTypes.RADIO,
+                                        fieldType: 'radio',
                                         text: {
                                             en: '',
                                             fr: '',
@@ -6992,7 +6992,7 @@ export const getFarmersBlueprintIU0101 = (
                 partName: 'contract',
             },
         },
-    };
+    } as QuestionnaireBlueprint;
 };
 
 // Backward compatibility: export the default blueprint for existing usages
