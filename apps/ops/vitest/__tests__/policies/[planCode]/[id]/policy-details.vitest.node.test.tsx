@@ -1,5 +1,4 @@
-import { render, screen, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent, within } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
@@ -179,7 +178,9 @@ describe('policy-details route', () => {
             expect(
                 await screen.findByText('Surrender value')
             ).toBeInTheDocument();
-            expect(screen.getAllByText('Qualification type')[0]).toBeInTheDocument();
+            expect(
+                screen.getAllByText('Qualification type')[0]
+            ).toBeInTheDocument();
         });
 
         test('Life UL policy shows Account Value and Net Surrender Value', async () => {
@@ -188,7 +189,9 @@ describe('policy-details route', () => {
             expect(
                 (await screen.findAllByText('Account value'))[0]
             ).toBeInTheDocument();
-            expect(screen.getAllByText('Net surrender value')[0]).toBeInTheDocument();
+            expect(
+                screen.getAllByText('Net surrender value')[0]
+            ).toBeInTheDocument();
             expect(
                 screen.queryByText('Qualification type')
             ).not.toBeInTheDocument();
@@ -217,16 +220,31 @@ describe('policy-details route', () => {
                 fixedCostPeriod: 20,
             });
 
-            await screen.findByRole('heading', { name: 'Policy Timeline' });
-            expect(screen.getAllByText('Fixed cost period')[0]).toBeInTheDocument();
+            const timelineHeading = await screen.findByRole('heading', {
+                name: 'Policy Timeline',
+            });
+            const timelineCard = timelineHeading.closest(
+                '[data-testid="card-container"]'
+            ) as HTMLElement;
+            expect(
+                within(timelineCard).getByText('Fixed cost period')
+            ).toBeInTheDocument();
         });
 
         test('TERM renders TermTimelineDetails without Fixed Cost Period field', async () => {
             renderPolicyDetailsPage(termPolicyOverrides);
 
-            await screen.findByRole('heading', { name: 'Policy Timeline' });
+            const timelineHeading = await screen.findByRole('heading', {
+                name: 'Policy Timeline',
+            });
+            const timelineCard = timelineHeading.closest(
+                '[data-testid="card-container"]'
+            ) as HTMLElement;
             expect(
-                screen.queryByText('Fixed cost period')
+                within(timelineCard).getByText('Policy term')
+            ).toBeInTheDocument();
+            expect(
+                within(timelineCard).queryByText('Fixed cost period')
             ).not.toBeInTheDocument();
         });
     });
@@ -258,7 +276,9 @@ describe('policy-details route', () => {
 
             await screen.findByRole('heading', { name: 'Application Details' });
             // PageLoader renders inside the card while loading (in addition to the page-level overlay)
-            expect(screen.getAllByTestId('test-loader').length).toBeGreaterThan(1);
+            expect(screen.getAllByTestId('test-loader').length).toBeGreaterThan(
+                1
+            );
         });
 
         test('shows agent name link on successful agent data fetch', async () => {
@@ -308,8 +328,6 @@ describe('policy-details route', () => {
 
     describe('CostBasisQualificationCard toggle', () => {
         test('toggling "Show detailed cost basis" reveals TEFRA/TAMRA fields', async () => {
-            const user = userEvent.setup();
-
             renderPolicyDetailsPage({
                 ...annuityPolicyOverrides,
                 costBasis: {
@@ -332,7 +350,9 @@ describe('policy-details route', () => {
             // Toggle on using data-testid (same approach as the unit test)
             fireEvent.click(screen.getByTestId('cost-basis-toggle'));
 
-            expect(screen.getByText('Pre Tefra basis')).toBeInTheDocument();
+            expect(
+                await screen.findByText('Pre Tefra basis')
+            ).toBeInTheDocument();
             expect(screen.getByText('Pre Tamra basis')).toBeInTheDocument();
             expect(screen.getByText('Post Tamra basis')).toBeInTheDocument();
         });

@@ -1,5 +1,8 @@
 import { http, HttpResponse } from 'msw';
 
+import assigneeChangeSchema from '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json';
+import beneChangeSchema from '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json';
+
 import policyEndpointData from './policyPage/policyEndpointData.json';
 
 export const mockPolicyData = {
@@ -172,6 +175,16 @@ export const handlers = [
     http.get('*/api/webnonfinancial/claim/v1/initialdeathclaim/exists', () =>
         HttpResponse.json({ exists: false })
     ),
+
+    http.get('*/api/case/v1/form/metadata', ({ request }) => {
+        const url = new URL(request.url);
+        const taskType = url.searchParams.get('taskType');
+        const schema =
+            taskType === 'INITIATE_BENECHANGE_TRANSACTION'
+                ? beneChangeSchema
+                : assigneeChangeSchema;
+        return HttpResponse.json(schema);
+    }),
 
     // Catch-all: block any request that doesn't have an explicit handler above.
     // This prevents real network calls from escaping during tests.

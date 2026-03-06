@@ -58,26 +58,6 @@ export const activityHandlers = [
     ),
 ];
 
-export const formMetadataHandler = http.get(
-    '*/api/case/v1/form/metadata',
-    () => {
-        return HttpResponse.json({
-            schemaContent: {
-                tabSchemas: [
-                    {
-                        title: 'Initial Tab',
-                        schema: {},
-                    },
-                    {
-                        title: 'Form Tab',
-                        schema: {},
-                    },
-                ],
-            },
-        });
-    }
-);
-
 export const agentDataHandler = http.get(
     '*/api/mcs/:clientCode/salesentity',
     () =>

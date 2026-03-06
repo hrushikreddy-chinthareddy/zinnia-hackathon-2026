@@ -14,7 +14,6 @@ import {
 import {
     activityTransactionsHandler,
     documentsHandlers,
-    formMetadataHandler,
     fundsEligibilityHandlers,
     personEligibilityHandlers,
 } from './helpers/policy-msw-handlers';
@@ -231,10 +230,7 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'assigneechange'],
             });
 
-            renderPolicyPage([
-                formMetadataHandler,
-                ...personEligibilityHandlers,
-            ]);
+            renderPolicyPage(personEligibilityHandlers);
 
             // Verify Beneficiary Details card renders (shows for transaction page)
             const beneficiaryDetailsHeading = await screen.findByRole(
@@ -252,10 +248,7 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'benechange'],
             });
 
-            renderPolicyPage([
-                formMetadataHandler,
-                ...personEligibilityHandlers,
-            ]);
+            renderPolicyPage(personEligibilityHandlers);
 
             // Verify Beneficiary Details card renders (shows for transaction page)
             const beneficiaryDetailsHeading = await screen.findByRole(
@@ -273,10 +266,7 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'c8a283b5d8d540a29fe71aad239c0352'],
             });
 
-            renderPolicyPage([
-                formMetadataHandler,
-                ...personEligibilityHandlers,
-            ]);
+            renderPolicyPage(personEligibilityHandlers);
 
             // Wait for PersonSubPage to load by checking for Identification card
             await screen.findByText('Identification');
