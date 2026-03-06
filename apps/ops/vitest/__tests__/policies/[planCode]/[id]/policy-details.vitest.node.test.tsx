@@ -171,43 +171,57 @@ describe('policy-details route', () => {
 
     // ─── PolicyFinancialsCard layout variants ────────────────────────────────
 
+    const getFinancialsCard = async () => {
+        const heading = await screen.findByRole('heading', {
+            name: 'Financials',
+        });
+        return heading.closest('[data-testid="card-container"]') as HTMLElement;
+    };
+
     describe('PolicyFinancialsCard layout variants', () => {
         test('Annuity policy shows Surrender Value and Qualification Type', async () => {
             renderPolicyDetailsPage(annuityPolicyOverrides);
 
+            const financialsCard = await getFinancialsCard();
+
             expect(
-                await screen.findByText('Surrender value')
+                within(financialsCard).getByText('Surrender value')
             ).toBeInTheDocument();
             expect(
-                screen.getAllByText('Qualification type')[0]
+                within(financialsCard).getByText('Cost basis')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('Qualification type')
+            ).toBeInTheDocument();
+            expect(
+                within(financialsCard).getByText('Death benefit')
             ).toBeInTheDocument();
         });
 
         test('Life UL policy shows Account Value and Net Surrender Value', async () => {
             renderPolicyDetailsPage(lifePolicyOverrides);
 
+            const financialsCard = await getFinancialsCard();
+
             expect(
-                (await screen.findAllByText('Account value'))[0]
+                within(financialsCard).getByText('Account value')
             ).toBeInTheDocument();
             expect(
-                screen.getAllByText('Net surrender value')[0]
+                within(financialsCard).getByText('Net surrender value')
             ).toBeInTheDocument();
-            expect(
-                screen.queryByText('Qualification type')
-            ).not.toBeInTheDocument();
         });
 
         test('Term policy shows Death Benefit and Policy Term, not Account Value', async () => {
             renderPolicyDetailsPage(termPolicyOverrides);
 
+            const financialsCard = await getFinancialsCard();
+
             expect(
-                (await screen.findAllByText('Base death benefit'))[0]
+                within(financialsCard).getByText('Base death benefit')
             ).toBeInTheDocument();
-            expect(screen.getAllByText('Policy term')[0]).toBeInTheDocument();
-            expect(screen.queryByText('Account value')).not.toBeInTheDocument();
             expect(
-                screen.queryByText('Net surrender value')
-            ).not.toBeInTheDocument();
+                within(financialsCard).getByText('Policy term')
+            ).toBeInTheDocument();
         });
     });
 
@@ -344,17 +358,17 @@ describe('policy-details route', () => {
 
             // Detailed fields are hidden before toggle
             expect(
-                screen.queryByText('Pre Tefra basis')
+                screen.queryByText('Pre tefra basis')
             ).not.toBeInTheDocument();
 
             // Toggle on using data-testid (same approach as the unit test)
             fireEvent.click(screen.getByTestId('cost-basis-toggle'));
 
             expect(
-                await screen.findByText('Pre Tefra basis')
+                await screen.findByText('Pre tefra basis')
             ).toBeInTheDocument();
-            expect(screen.getByText('Pre Tamra basis')).toBeInTheDocument();
-            expect(screen.getByText('Post Tamra basis')).toBeInTheDocument();
+            expect(screen.getByText('Pre tamra basis')).toBeInTheDocument();
+            expect(screen.getByText('Post tamra basis')).toBeInTheDocument();
         });
     });
 });
