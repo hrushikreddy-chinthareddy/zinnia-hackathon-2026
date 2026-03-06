@@ -211,7 +211,6 @@ export const PolicyRow: FC<PolicyRowProps> = ({ item }) => {
                                 </span>
                             </div>
                         }
-                        replaceElement
                     >
                         {carrierName}
                     </Tooltip>

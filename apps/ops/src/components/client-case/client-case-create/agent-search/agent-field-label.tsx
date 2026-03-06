@@ -12,16 +12,13 @@ export const AgentFieldLabel = () => {
                 <Tooltip
                     key="agentTooltip"
                     trigger={
-                        <span tabIndex={0}>
-                            <CircleInfoIcon
-                                height={'16px'}
-                                width={'16px'}
-                                className="tooltip-primary"
-                            />
-                        </span>
+                        <CircleInfoIcon
+                            height={'16px'}
+                            width={'16px'}
+                            className="tooltip-primary"
+                        />
                     }
                     triggerClassName="w-fit"
-                    replaceElement
                 >
                     {t('clientCase.clientCaseTable.agentTooltip')}
                 </Tooltip>,

@@ -172,8 +172,7 @@ export const CaseStatusTooltip = ({
             placement={TooltipPlacement.TopRight}
             tooltipClassName="!w-auto"
             triggerClassName="!z-10 w-fit"
-            trigger={<span tabIndex={0}>{Trigger}</span>}
-            replaceElement
+            trigger={Trigger}
         >
             {statusTooltip}
         </Tooltip>

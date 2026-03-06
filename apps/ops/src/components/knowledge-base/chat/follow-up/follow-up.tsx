@@ -383,25 +383,22 @@ const FollowUp = ({
                             triggerClassName="!w-auto w-fit"
                             tooltipClassName="!w-auto !p-0 !px-2 z-50"
                             trigger={
-                                <span tabIndex={0}>
-                                    <ActionButton
-                                        ariaLabel="send-followup"
-                                        message={followUpQuestion}
-                                        disabled={
-                                            totalFollowUps >=
-                                                MAX_FOLLOWUPS_ALLOWED ||
-                                            (!isStreaming &&
-                                                !followUpQuestion.trim())
-                                        }
-                                        isStreaming={isStreaming}
-                                        handleMessageSend={
-                                            handleFollowUpQuestionSend
-                                        }
-                                        handleStopResponse={handleStopResponse}
-                                    />
-                                </span>
+                                <ActionButton
+                                    ariaLabel="send-followup"
+                                    message={followUpQuestion}
+                                    disabled={
+                                        totalFollowUps >=
+                                            MAX_FOLLOWUPS_ALLOWED ||
+                                        (!isStreaming &&
+                                            !followUpQuestion.trim())
+                                    }
+                                    isStreaming={isStreaming}
+                                    handleMessageSend={
+                                        handleFollowUpQuestionSend
+                                    }
+                                    handleStopResponse={handleStopResponse}
+                                />
                             }
-                            replaceElement
                         >
                             {t('chat.send')}
                         </Tooltip>

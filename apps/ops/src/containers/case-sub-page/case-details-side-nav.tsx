@@ -342,17 +342,14 @@ const CaseDetailsSideNav = ({
                                 </Typography>
                                 <Tooltip
                                     trigger={
-                                        <span tabIndex={0}>
-                                            <CircleInfoIcon
-                                                height={'16px'}
-                                                width={'16px'}
-                                                className="text-primary"
-                                            />
-                                        </span>
+                                        <CircleInfoIcon
+                                            height={'16px'}
+                                            width={'16px'}
+                                            className="text-primary"
+                                        />
                                     }
                                     placement={TooltipPlacement.TopRight}
                                     triggerClassName="w-fit"
-                                    replaceElement
                                 >
                                     {t('sidenav.estimatedCompletionToolTip')}
                                 </Tooltip>

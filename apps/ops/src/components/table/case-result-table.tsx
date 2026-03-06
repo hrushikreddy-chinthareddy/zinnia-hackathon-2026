@@ -341,7 +341,6 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                                 </span>
                             </div>
                         }
-                        replaceElement
                     >
                         <div className="flex flex-col">
                             <span>{carrierName}</span>
@@ -376,19 +375,16 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <Tooltip
                         placement={TooltipPlacement.TopRight}
                         trigger={
-                            <span tabIndex={0}>
-                                <Typography
-                                    variant={TypographyVariant.BodySm}
-                                    className={styles.detail}
-                                    aria-label={`${getTimeText()}, Date`}
-                                >
-                                    {getTimeText()}
-                                </Typography>
-                            </span>
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className={styles.detail}
+                                aria-label={`${getTimeText()}, Date`}
+                            >
+                                {getTimeText()}
+                            </Typography>
                         }
                         tooltipClassName="!w-auto"
                         triggerClassName="!z-10 w-fit"
-                        replaceElement
                     >
                         {formatTimestamp(
                             singleCase.createdAt,

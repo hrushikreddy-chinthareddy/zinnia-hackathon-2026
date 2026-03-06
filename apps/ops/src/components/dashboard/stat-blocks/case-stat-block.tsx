@@ -82,16 +82,13 @@ const CaseStatBlock = ({
                     {labelTooltip && (
                         <Tooltip
                             trigger={
-                                <span tabIndex={0}>
-                                    <CircleInfoIcon
-                                        height={'16px'}
-                                        width={'16px'}
-                                        className="tooltip-primary"
-                                    />
-                                </span>
+                                <CircleInfoIcon
+                                    height={'16px'}
+                                    width={'16px'}
+                                    className="tooltip-primary"
+                                />
                             }
                             triggerClassName="w-fit"
-                            replaceElement
                         >
                             {labelTooltip}
                         </Tooltip>

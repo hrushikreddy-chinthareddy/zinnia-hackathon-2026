@@ -37,18 +37,15 @@ const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
     const helpInformation = helpText && (
         <Tooltip
             trigger={
-                <span tabIndex={0}>
-                    <CircleInfoIcon
-                        onClick={(e) => e.preventDefault()}
-                        height={'16px'}
-                        width={'16px'}
-                        className="tooltip-primary"
-                    />
-                </span>
+                <CircleInfoIcon
+                    onClick={(e) => e.preventDefault()}
+                    height={'16px'}
+                    width={'16px'}
+                    className="tooltip-primary"
+                />
             }
             placement={TooltipPlacement.TopRight}
             triggerClassName="w-fit"
-            replaceElement
         >
             {helpText}
         </Tooltip>

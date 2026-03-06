@@ -162,13 +162,10 @@ const KnowledgeBaseSidenav = ({
                     <Tooltip
                         placement={TooltipPlacement.CenterLeft}
                         trigger={
-                            <span tabIndex={0}>
-                                <Icon width={24} height={24} type={iconType} />
-                            </span>
+                            <Icon width={24} height={24} type={iconType} />
                         }
                         tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                         triggerClassName="w-fit"
-                        replaceElement
                     >
                         {label}
                     </Tooltip>
@@ -268,19 +265,14 @@ const KnowledgeBaseSidenav = ({
                                 <Tooltip
                                     placement={TooltipPlacement.TopLeft}
                                     trigger={
-                                        <span tabIndex={0}>
-                                            <Icon
-                                                width={24}
-                                                height={24}
-                                                type={
-                                                    IconType.DOCUMENT_DUPLICATE
-                                                }
-                                            />
-                                        </span>
+                                        <Icon
+                                            width={24}
+                                            height={24}
+                                            type={IconType.DOCUMENT_DUPLICATE}
+                                        />
                                     }
                                     tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                                     triggerClassName="w-fit"
-                                    replaceElement
                                 >
                                     {t('sidenav.sharepointDocuments')}
                                 </Tooltip>
@@ -303,14 +295,9 @@ const KnowledgeBaseSidenav = ({
                                                 placement={
                                                     TooltipPlacement.CenterLeft
                                                 }
-                                                trigger={
-                                                    <span tabIndex={0}>
-                                                        {item.icon}
-                                                    </span>
-                                                }
+                                                trigger={item.icon}
                                                 tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                                                 triggerClassName="w-fit"
-                                                replaceElement
                                             >
                                                 {item.label}
                                             </Tooltip>
@@ -378,17 +365,14 @@ const KnowledgeBaseSidenav = ({
                         <Tooltip
                             placement={TooltipPlacement.CenterLeft}
                             trigger={
-                                <span tabIndex={0}>
-                                    <Icon
-                                        width={24}
-                                        height={24}
-                                        type={IconType.SEARCH}
-                                    />
-                                </span>
+                                <Icon
+                                    width={24}
+                                    height={24}
+                                    type={IconType.SEARCH}
+                                />
                             }
                             tooltipClassName="!w-auto !mr-2 !p-2 !text-sm"
                             triggerClassName="w-fit"
-                            replaceElement
                         >
                             {t('sidenav.search')}
                         </Tooltip>
