@@ -10,6 +10,7 @@ import reg60DefsEn from '@deps/../public/locales/en/reg60Defs.json';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { MockOptimizelyProvider } from './mock-optimizely-provider';
+import defaultFeatureFlags from '../mocks/global/optimizely/featureFlags.json';
 
 export interface CreateTestWrapperOptions {
     featureFlags?: Partial<Record<FEATURE_FLAGS, boolean>>;
@@ -35,6 +36,7 @@ export interface CreateTestWrapperOptions {
  */
 export function createTestWrapper(options: CreateTestWrapperOptions = {}) {
     const { featureFlags = {}, queryClientOptions } = options;
+    const mergedFeatureFlags = { ...defaultFeatureFlags, ...featureFlags };
 
     const i18nInstance = i18next.createInstance();
     i18nInstance.use(initReactI18next).init({
@@ -63,7 +65,7 @@ export function createTestWrapper(options: CreateTestWrapperOptions = {}) {
         return (
             <I18nextProvider i18n={i18nInstance}>
                 <QueryClientProvider client={queryClient}>
-                    <MockOptimizelyProvider featureFlags={featureFlags}>
+                    <MockOptimizelyProvider featureFlags={mergedFeatureFlags}>
                         {children}
                     </MockOptimizelyProvider>
                 </QueryClientProvider>

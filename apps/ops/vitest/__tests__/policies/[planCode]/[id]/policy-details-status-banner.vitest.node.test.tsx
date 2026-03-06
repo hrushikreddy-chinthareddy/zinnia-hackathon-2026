@@ -5,11 +5,12 @@ import { describe, vi, beforeEach, test, expect } from 'vitest';
 import PolicySlug from '@deps/containers/policy-slug/policy-slug';
 import { server } from '@vitest/mocks/node';
 import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
-import {
-    createTestWrapper,
-    CreateTestWrapperOptions,
-} from '@vitest/utils/create-test-wrapper';
+import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
 
+import {
+    annuityPolicyOverrides,
+    lifePolicyOverrides,
+} from './helpers/policy-overrides';
 import {
     createMockRouter,
     createMockPolicyPageProps,
@@ -30,12 +31,9 @@ vi.mock('next/router', () => ({
 
 const defaultProps = createMockPolicyPageProps();
 
-type FeatureFlagOverrides = CreateTestWrapperOptions['featureFlags'];
-
 const renderPolicyDetailsPage = (
     policyOverrides: Record<string, unknown> = {},
-    handlers: Parameters<typeof server.use> = [],
-    featureFlags: FeatureFlagOverrides = {}
+    handlers: Parameters<typeof server.use> = []
 ) => {
     if (handlers.length > 0) {
         server.use(...handlers);
@@ -58,26 +56,8 @@ const renderPolicyDetailsPage = (
     );
 
     return render(<PolicySlug {...defaultProps} />, {
-        wrapper: createTestWrapper({ featureFlags }),
+        wrapper: createTestWrapper(),
     });
-};
-
-// Annuity base data — mirrors what policyEndpointData already has (lineOfBusiness: ANNUITY)
-const annuityPolicyOverrides = {
-    product: {
-        ...policyEndpointData.product,
-        lineOfBusiness: 'ANNUITY',
-        productType: 'FIXEDINDEXEDANNUITY',
-    },
-};
-
-// Life base data — override the default ANNUITY mock to LIFE
-const lifePolicyOverrides = {
-    product: {
-        ...policyEndpointData.product,
-        lineOfBusiness: 'LIFE',
-        productType: 'UNIVERSALLIFE',
-    },
 };
 
 beforeEach(() => {
@@ -92,25 +72,7 @@ describe('policy-details route', () => {
 
             await screen.findByRole('heading', { name: 'Contract Details' });
 
-            expect(
-                screen.queryByText(/This policy has \d+ open case/)
-            ).not.toBeInTheDocument();
-            expect(
-                screen.queryByText(
-                    'This policy needs a payment before it lapses. Go there now?'
-                )
-            ).not.toBeInTheDocument();
-            expect(
-                screen.queryByText(
-                    'This policy is approved for a reinstatement premium.  Go there now?'
-                )
-            ).not.toBeInTheDocument();
-            expect(
-                screen.queryByText(/This policy has a free look period/)
-            ).not.toBeInTheDocument();
-            expect(
-                screen.queryByText('Initial Death Notification')
-            ).not.toBeInTheDocument();
+            expect(screen.queryAllByTestId('banner-alert')).toHaveLength(0);
         });
 
         test('shows case count banner when policy has open cases', async () => {
@@ -182,18 +144,12 @@ describe('policy-details route', () => {
         });
 
         test('shows freeLook banner when feature flag is enabled and policy is in free look period', async () => {
-            renderPolicyDetailsPage(
-                annuityPolicyOverrides,
-                [
-                    http.post(
-                        '*/api/bpm/v1/policies/:planCode/:policyId/freelookcancellation/eligibilitycheck',
-                        () => HttpResponse.json({ status: 'success' })
-                    ),
-                ],
-                {
-                    'policy-management_feature_free-look-cancellation': true,
-                }
-            );
+            renderPolicyDetailsPage(annuityPolicyOverrides, [
+                http.post(
+                    '*/api/bpm/v1/policies/:planCode/:policyId/freelookcancellation/eligibilitycheck',
+                    () => HttpResponse.json({ status: 'success' })
+                ),
+            ]);
 
             expect(
                 await screen.findByText(/This policy has a free look period/)
@@ -218,8 +174,7 @@ describe('policy-details route', () => {
                                 zlCaseId: 'CASE-123',
                             })
                     ),
-                ],
-                { 'claims-feature-flic-idn-death-claim': true }
+                ]
             );
 
             expect(

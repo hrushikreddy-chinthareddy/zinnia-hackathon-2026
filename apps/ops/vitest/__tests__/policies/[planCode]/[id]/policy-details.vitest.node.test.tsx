@@ -16,6 +16,12 @@ import {
     agentDataHandler,
 } from './helpers/policy-msw-handlers';
 import {
+    annuityPolicyOverrides,
+    lifePolicyOverrides,
+    termPolicyOverrides,
+    iulPolicyOverrides,
+} from './helpers/policy-overrides';
+import {
     createMockRouter,
     createMockPolicyPageProps,
 } from './helpers/policy-test-fixtures';
@@ -65,40 +71,6 @@ const renderPolicyDetailsPage = (
     return render(<PolicySlug {...defaultProps} />, {
         wrapper: createTestWrapper({ featureFlags }),
     });
-};
-
-// Annuity base data — mirrors what policyEndpointData already has (lineOfBusiness: ANNUITY)
-const annuityPolicyOverrides = {
-    product: {
-        ...policyEndpointData.product,
-        lineOfBusiness: 'ANNUITY',
-        productType: 'FIXEDINDEXEDANNUITY',
-    },
-};
-
-// Life base data — override the default ANNUITY mock to LIFE
-const lifePolicyOverrides = {
-    product: {
-        ...policyEndpointData.product,
-        lineOfBusiness: 'LIFE',
-        productType: 'UNIVERSALLIFE',
-    },
-};
-
-const termPolicyOverrides = {
-    product: {
-        ...policyEndpointData.product,
-        lineOfBusiness: 'LIFE',
-        productType: 'TERM',
-    },
-};
-
-const iulPolicyOverrides = {
-    product: {
-        ...policyEndpointData.product,
-        lineOfBusiness: 'LIFE',
-        productType: 'INDEXEDUNIVERSALLIFE',
-    },
 };
 
 beforeEach(() => {
