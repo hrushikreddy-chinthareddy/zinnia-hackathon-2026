@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
-import { ReactNode, useState } from 'react';
+import { FC, ReactNode, SVGProps, useState } from 'react';
 
 import { TranslationFiles } from '@deps/config/translations';
 import { ReactComponent as CancelIcon } from '@deps/styles/elements/icons/actions/cancel.svg';
@@ -24,6 +24,7 @@ export interface BannerAlertProps {
         text: string;
     };
     variant?: BannerVariant;
+    icon?: FC<SVGProps<SVGSVGElement>>;
 }
 
 const BannerAlert = ({
@@ -31,6 +32,7 @@ const BannerAlert = ({
     children,
     cta,
     variant = BannerVariant.Default,
+    icon,
 }: BannerAlertProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'bannerAlert',
@@ -62,7 +64,7 @@ const BannerAlert = ({
         [BannerVariant.Success]: AlertIcon,
         [BannerVariant.Warning]: ExclamationAlertIcon,
     };
-    const IconVariant = icons[variant];
+    const IconVariant = icon ?? icons[variant];
 
     const hasCta = cta != null;
 
