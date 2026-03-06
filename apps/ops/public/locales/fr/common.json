@@ -9240,7 +9240,7 @@
             "ariaCancel": "Annuler la soumission"
         },
         "createClientCaseForm": {
-            "clientCaseSideSheetTitle": "Nouveau Client Case",
+            "clientCaseSideSheetTitle": "Nouveau dossier client",
             "editClientCaseSideSheetTitle": "Modifier le dossier client",
             "clientCaseSection": "Détails du dossier client",
             "titleLabel": "Titre",
@@ -9336,6 +9336,10 @@
                 "premiumFreeRiders": "Avenants de politique sans prime",
                 "totalRiderPricing": "Prix ​​total du passager"
             }
+        },
+        "errors": {
+            "createClientCase": "Une erreur est survenue lors de la création du dossier client.",
+            "updateClientCase": "Une erreur est survenue lors de la modification du dossier client."
         }
     },
     "caseStats": {

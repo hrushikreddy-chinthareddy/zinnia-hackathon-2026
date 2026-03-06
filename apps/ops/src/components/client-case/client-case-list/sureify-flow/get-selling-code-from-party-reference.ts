@@ -4,7 +4,7 @@ import { LoggingContext } from '@deps/utils/server-logging';
 const AOR_IDENTIFIER_LABEL = 'AOR';
 const UPN_IDENTIFIER_LABEL = 'UPN';
 const SELLING_CODE_IDENTIFIER_LABEL = 'SELLING_CODE';
-export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
+
 export const getSellingcodeFromPartyReference = async (
     partyId: string,
     loggingContext: LoggingContext

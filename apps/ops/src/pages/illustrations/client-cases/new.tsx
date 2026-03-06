@@ -1,7 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import { useMutation } from '@tanstack/react-query';
-import { AxiosResponse } from 'axios';
-import { get, isObject } from 'lodash';
 import merge from 'lodash/merge';
 import { GetServerSidePropsContext } from 'next';
 import { useSearchParams } from 'next/navigation';
@@ -21,11 +19,9 @@ import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
 import { UserProfile } from '@deps/models/user-profile';
 import { parseClientCase } from '@deps/queries/api/v1/client-case-manager/parse-client-case';
-import { parseClientCaseError } from '@deps/queries/api/v1/client-case-manager/parse-client-case-error';
 import { postIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { SegmentPageName } from '@deps/types/segment-analytics';
-import { browserLogError } from '@deps/utils/browser-logging';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     FeatureFlags,
@@ -41,7 +37,7 @@ import {
 import { toLowerCaseSearchParams } from '@deps/utils/url';
 import nextI18nextConfig from 'next-i18next.config';
 
-import IllustrationsPage, { ErrorOrigin } from './index';
+import IllustrationsPage from './index';
 
 type additionalDataProps = {
     user: UserProfile;
@@ -71,26 +67,16 @@ export default function NewClientCase(
         });
     }, [router, searchParams]);
 
-    const { mutateAsync, error } = useMutation({
+    const { mutateAsync, isError } = useMutation({
         mutationKey: ['createClientCase'],
         mutationFn: (data: Partial<IllustrationsClientCase>) =>
             postIllustrationsClientCase(data),
         onSuccess: (data) => {
-            if (data?.id) {
+            if (data.id) {
                 return router.push(
-                    `/illustrations/client-cases/${data?.id}/illustrate`
+                    `/illustrations/client-cases/${data.id}/illustrate`
                 );
             }
-            browserLogError('ID not found after client case creation', {
-                data,
-            });
-        },
-
-        onMutate: () => {
-            // add loading logic
-        },
-        onError: (_: Error | AxiosResponse) => {
-            // add error logic
         },
     });
 
@@ -107,14 +93,6 @@ export default function NewClientCase(
     }, [closeSideSheet, sideSheet.events]);
 
     useEffect(() => {
-        const params = toLowerCaseSearchParams(searchParams);
-
-        if (
-            (params.has('eappid') && props.fetchingErrorOrigin) ||
-            props.fetchingErrorOrigin === ErrorOrigin.Internal
-        ) {
-            return;
-        }
         const createClientCaseForm = t(
             'clientCase.createClientCaseForm.clientCaseSideSheetTitle'
         );
@@ -136,22 +114,12 @@ export default function NewClientCase(
     }, [searchParams]);
     // We cannot add SideSheet as a dependency because updating the content also changes this reference
 
-    // Extract error message from axios response if available
-    const errorMessage =
-        isObject(error) && 'data' in error
-            ? parseClientCaseError(error)
-            : get(error, 'message');
-
     return IllustrationsPage({
         ...props,
-        ...(error
-            ? {
-                  fetchingErrorMessage: errorMessage,
-                  fetchingErrorOrigin: ErrorOrigin.ClientCase,
-              }
-            : null),
+        hasError: isError,
     });
 }
+
 const getAuthToken = async (
     context: GetServerSidePropsContext,
     loggingContext: LoggingContext

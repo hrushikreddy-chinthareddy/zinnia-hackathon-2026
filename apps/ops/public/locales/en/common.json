@@ -9503,6 +9503,10 @@
             "provideValidAmount": "Please provide a valid amount",
             "faceAmountError": "Face amount must be greater than 0",
             "updating": "Updating quote..."
+        },
+        "errors": {
+            "createClientCase": "An error occurred while creating a client case.",
+            "updateClientCase": "An error occurred while updating a client case."
         }
     },
     "zinniaAiAssistant": {

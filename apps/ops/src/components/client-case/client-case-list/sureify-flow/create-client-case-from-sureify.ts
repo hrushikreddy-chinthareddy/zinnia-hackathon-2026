@@ -6,7 +6,6 @@ import {
     stripNullishValues,
 } from '@deps/helpers/objects.helpers';
 import {
-    CLIENT_CASE_MANAGER_API_ORIGIN,
     createClientCase,
     patchClientCase,
     searchClientCaseByEappId,
@@ -30,6 +29,7 @@ import {
 } from '@deps/utils/server-logging';
 
 import { buildClientCaseFromNewBusiness } from './build-client-case-from-new-business';
+import { CLIENT_CASE_MANAGER_API_ORIGIN } from './constants';
 import { validateConversionPayload } from './conversions';
 
 /**

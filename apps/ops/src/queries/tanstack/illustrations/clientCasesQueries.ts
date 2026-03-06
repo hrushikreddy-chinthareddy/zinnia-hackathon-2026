@@ -88,8 +88,13 @@ export const searchIllustrationsClientCases = async (
 export const postIllustrationsClientCase = async (
     query: Partial<IllustrationsClientCase>
 ) => {
-    const { data } = await createClientCase(query);
-    return data;
+    const response = await createClientCase(query);
+
+    if (response?.error || !response?.data) {
+        throw response;
+    } else {
+        return response.data;
+    }
 };
 
 export const patchIllustrationsClientCase = async (

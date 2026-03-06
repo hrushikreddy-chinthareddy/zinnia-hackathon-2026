@@ -1,6 +1,6 @@
 import { AxiosResponse } from 'axios';
-import { get, isObject } from 'lodash';
 
+import { CLIENT_CASE_MANAGER_API_ORIGIN } from '@deps/components/client-case/client-case-list/sureify-flow/constants';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
@@ -10,22 +10,10 @@ import {
 } from '@deps/types/illustrations';
 import { LoggingContext } from '@deps/utils/server-logging';
 
-import { parseClientCaseError } from '../../v1/client-case-manager/parse-client-case-error';
-
-export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
-
-const handleError = (error: unknown) => {
-    const message =
-        isObject(error) && 'data' in error
-            ? parseClientCaseError(error as AxiosResponse)
-            : get(error, 'message') ?? 'Unknown error creating client case';
-    throwTypedError(message, CLIENT_CASE_MANAGER_API_ORIGIN);
-};
-
 export const searchClientCaseByEappId = async (
     eAppId: string,
     token: string,
-    loggingContext: LoggingContext
+    logCtx: LoggingContext
 ) => {
     try {
         const config = {
@@ -40,11 +28,11 @@ export const searchClientCaseByEappId = async (
         const { data: searchResponse } = await serverApi.get<
             any,
             AxiosResponse<IllustrationsClientCaseSearchResponse>
-        >(searchUrl, config, loggingContext);
+        >(searchUrl, config, logCtx);
 
         return searchResponse.results || [];
-    } catch (error: unknown) {
-        handleError(error);
+    } catch (error: any) {
+        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
     }
 };
 
@@ -68,8 +56,8 @@ export const createClientCase = async (
         );
 
         return data;
-    } catch (error: unknown) {
-        handleError(error);
+    } catch (error: any) {
+        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
     }
 };
 
@@ -93,7 +81,7 @@ export const patchClientCase = async (
         );
 
         return data;
-    } catch (error: unknown) {
-        handleError(error);
+    } catch (error: any) {
+        throwTypedError(error.message, CLIENT_CASE_MANAGER_API_ORIGIN);
     }
 };

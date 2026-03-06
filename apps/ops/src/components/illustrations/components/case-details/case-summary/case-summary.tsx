@@ -14,12 +14,10 @@ import {
     Label,
     Text,
 } from '@zinnia/bloom/components';
-import { AxiosResponse } from 'axios';
 import clsx from 'clsx';
-import { get, isObject } from 'lodash';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
@@ -33,7 +31,6 @@ import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getStateName } from '@deps/helpers/states.helpers';
 import { calculateAge } from '@deps/helpers/string.helpers';
-import { parseClientCaseError } from '@deps/queries/api/v1/client-case-manager/parse-client-case-error';
 import { patchIllustrationsClientCase } from '@deps/queries/tanstack/illustrations/clientCasesQueries';
 import {
     IllustrationsClientCase,
@@ -51,61 +48,35 @@ interface IllustrationCaseSumaryProps {
     clientCase: IllustrationsClientCase;
 }
 
-const IllustrationCaseSumary = ({
+export const IllustrationCaseSumary = ({
     clientCase,
 }: IllustrationCaseSumaryProps) => {
+    const queryClient = useQueryClient();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const { isAllowWriteClientCase, partyReferenceData } =
         usePermissionsContext();
     const [bannerText, setBannerText] = useState('');
+    const sideSheet = useSideSheetContextLegacy();
 
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
     const isAgent = aliases?.length ?? 0 > 0;
-
     const isAllowedToEditCase = isAgent || isAllowWriteClientCase;
-
     const insuranceDetails = `${capitalize(
         clientCase?.insuredDetails?.sexAtBirth
     )}, Age ${calculateAge(
         clientCase?.insuredDetails?.dateOfBirth?.toString(),
         ''
     )}, ${getStateName(clientCase?.insuredDetails?.state)}`;
-    const [insurredFullName, setInsurredFullName] = useState('');
-    const [agentFullName, setAgentFullName] = useState('');
-    const queryClient = useQueryClient();
-    const sideSheet = useSideSheetContextLegacy();
-
-    useEffect(() => {
-        if (
-            !clientCase?.insuredDetails?.firstName &&
-            !clientCase?.insuredDetails?.lastName
-        ) {
-            setInsurredFullName(DEFAULT_ERROR_STRING);
-        } else {
-            setInsurredFullName(
-                `${clientCase?.insuredDetails?.firstName} ${clientCase?.insuredDetails?.lastName}`
-            );
-        }
-    }, [
-        clientCase?.insuredDetails?.firstName,
-        clientCase?.insuredDetails?.lastName,
-    ]);
-
-    useEffect(() => {
-        if (
-            !clientCase?.agentDetails?.firstName &&
-            !clientCase?.agentDetails?.lastName
-        ) {
-            setAgentFullName(DEFAULT_ERROR_STRING);
-        } else {
-            setAgentFullName(
-                `${clientCase?.agentDetails?.firstName} ${clientCase?.agentDetails?.lastName}`
-            );
-        }
-    }, [
-        clientCase?.agentDetails?.firstName,
-        clientCase?.agentDetails?.lastName,
-    ]);
+    const insurredFullName =
+        !clientCase?.insuredDetails?.firstName &&
+        !clientCase?.insuredDetails?.lastName
+            ? DEFAULT_ERROR_STRING
+            : `${clientCase?.insuredDetails?.firstName} ${clientCase?.insuredDetails?.lastName}`;
+    const agentFullName =
+        !clientCase?.agentDetails?.firstName &&
+        !clientCase?.agentDetails?.lastName
+            ? DEFAULT_ERROR_STRING
+            : `${clientCase?.agentDetails?.firstName} ${clientCase?.agentDetails?.lastName}`;
 
     const closeSideSheet = useCallback(() => {
         sideSheet.handleOpen(false);
@@ -137,17 +108,9 @@ const IllustrationCaseSumary = ({
                 queryKey: ['clientCaseData', clientCase.id],
             });
         },
-        onMutate: () => {
-            // add loading logic
-        },
-        onError: (error: Error | AxiosResponse) => {
-            // Extract error message from axios response if available
-            const errorMessage =
-                isObject(error) && 'data' in error
-                    ? parseClientCaseError(error)
-                    : get(error, 'message');
-
-            setBannerText(errorMessage || '');
+        onError: () => {
+            const errorMessage = t('clientCase.errors.updateClientCase');
+            setBannerText(errorMessage);
         },
     });
 
@@ -297,5 +260,3 @@ const IllustrationCaseSumary = ({
         </header>
     );
 };
-
-export default IllustrationCaseSumary;

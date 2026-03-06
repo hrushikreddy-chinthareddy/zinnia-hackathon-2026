@@ -9404,6 +9404,10 @@
                 "premiumFreeRiders": "Adicionales sin prima",
                 "totalRiderPricing": "Precio total de adicionales"
             }
+        },
+        "errors": {
+            "createClientCase": "Error en la creación de caso de cliente.",
+            "updateClientCase": "Error en la actualización de caso de cliente."
         }
     },
     "zinniaAiAssistant": {

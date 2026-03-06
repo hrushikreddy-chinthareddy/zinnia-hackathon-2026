@@ -7,7 +7,7 @@ import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import { useCallback } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
-import IllustrationCaseSumary from '@deps/components/illustrations/components/case-details/case-summary/case-summary';
+import { IllustrationCaseSumary } from '@deps/components/illustrations/components/case-details/case-summary/case-summary';
 import IllustrationProductList from '@deps/components/illustrations/components/case-details/product-list/product-list';
 import IllustrationDetails from '@deps/components/illustrations/components/details/illustration-details';
 import { buildHierarchyQueryOptions } from '@deps/components/illustrations/helpers/hooks/pom';
