@@ -6484,6 +6484,7 @@
                     "residence": "Residencial",
                     "business": "Negocios",
                     "poBox": "Apartado postal",
+                    "other": "Otro",
                     "poBoxLower": "apartado postal",
                     "mailing": "Correo postal"
                 },
@@ -9626,6 +9627,13 @@
         "errorTitle": "Error",
         "closeButton": "Cerrar"
     },
+    "nigoSummary": {
+        "noNigoReasons": "No se encontraron motivos NIGO. Por favor, revise la consola para obtener información de depuración.",
+        "heading": "Revisión del formulario",
+        "paperApplicationComplete": "¿La solicitud en papel está completa y lista para su procesamiento?",
+        "missingQuestion": "¿Qué falta o es incorrecto en el formulario?",
+        "selectRole": "Seleccione el rol que tiene información que no coincide."
+    },
     "transactionSummary": {
         "tag": {
             "new": "Agregada",
@@ -9636,6 +9644,10 @@
         "noSummary": "No hay resumen de transacción disponible.",
         "primaryBene": "Beneficiario principal",
         "contingentBene": "Beneficiario contingente",
+        "owner": "Propietario",
+        "jointOwner": "Copropietario",
+        "insured": "Asegurado",
+        "annuitant": "Rentista",
         "loading": "La API de validación se está ejecutando...",
         "successMessage": "¡Se ve bien! Asegúrate de revisar tus participaciones antes de enviarlas.",
         "errorMessage": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",

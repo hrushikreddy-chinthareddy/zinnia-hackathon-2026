@@ -6449,6 +6449,7 @@
                     "residence": "Résidentiel",
                     "business": "Entreprise",
                     "poBox": "Boîte postale",
+                    "other": "Autre",
                     "poBoxLower": "boîte postale",
                     "mailing": "Courrier postal"
                 },
@@ -9595,6 +9596,13 @@
         "errorTitle": "Erreur",
         "closeButton": "Fermer"
     },
+    "nigoSummary": {
+        "noNigoReasons": "Aucune raison NIGO trouvée. Veuillez vérifier la console pour les informations de débogage.",
+        "heading": "Révision du formulaire",
+        "paperApplicationComplete": "La demande papier est-elle complète et prête à être traitée ?",
+        "missingQuestion": "Qu’est-ce qui manque ou est incorrect dans le formulaire ?",
+        "selectRole": "Sélectionnez le rôle comportant des informations non concordantes."
+    },
     "transactionSummary": {
         "tag": {
             "new": "Ajouté",
@@ -9605,6 +9613,10 @@
         "noSummary": "Aucun récapitulatif de transaction disponible.",
         "primaryBene": "Bénéficiaire principal",
         "contingentBene": "Bénéficiaire conditionnel",
+        "owner": "Titulaire",
+        "jointOwner": "Cotitulaire",
+        "insured": "Assuré",
+        "annuitant": "Rentiér",
         "loading": "L'API de validation est en cours d'exécution...",
         "successMessage": "Ça a l'air bien ! N'oubliez pas de relire vos candidatures avant de les soumettre.",
         "errorMessage": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",

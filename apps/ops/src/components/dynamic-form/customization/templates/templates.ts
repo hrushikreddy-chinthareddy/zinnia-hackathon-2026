@@ -12,6 +12,7 @@ import FieldErrorTemplate from './field-error-template/field-error-template';
 import { FieldTemplate } from './field-template/field-template';
 import { PartyCardFieldTemplate } from './field-template/party-card-field-template';
 import InstructionsTemplate from './instructions-template/instructions-template';
+import { NigoSummaryTemplate } from './nigo-summary-template/nigo-summary-template';
 import { ObjectFieldTemplate } from './object-field-template/object-field-template';
 import ObjectRowFieldTemplate from './object-field-template/object-row-template';
 import PartyInfoListTemplate from './party-info-list-template/party-info-list';
@@ -40,6 +41,7 @@ export function generateTemplates() {
         PartyInfoListTemplate,
         ButtonTemplates: { AddButton, RemoveButton, SubmitButton },
         TransactionSummaryTemplate,
+        NigoSummaryTemplate,
     };
 }
 

@@ -41,7 +41,8 @@ interface NotificationPreferences {
     };
 }
 
-export const displayAddressType: Record<AddressType, string | undefined> = {
+/** Map address type to display label. Uses AddressType from sor-policy. */
+export const displayAddressType: Record<string, string | undefined> = {
     [AddressType.POBOX]: 'PO Box',
     [AddressType.RESIDENCE]: 'Residential',
     [AddressType.BUSINESS]: 'Business',

@@ -6552,6 +6552,7 @@
                     "residence": "Residential",
                     "business": "Business",
                     "poBox": "PO Box",
+                    "other": "Other",
                     "poBoxLower": "PO box",
                     "seasonal": "Seasonal",
                     "mailing": "Mailing"
@@ -9730,6 +9731,13 @@
         "errorTitle": "Error",
         "closeButton": "Close"
     },
+    "nigoSummary": {
+        "noNigoReasons": "No NIGO reasons found. Please check the console for debug information.",
+        "heading": "Form Review",
+        "paperApplicationComplete": " Is the paper application complete and ready for processing?",
+        "missingQuestion": "What is missing or incorrect in the form?",
+        "selectRole": "Select the role that has mismatched information."
+    },
     "transactionSummary": {
         "tag": {
             "new": "Added",
@@ -9740,6 +9748,10 @@
         "noSummary": "No transaction summary available.",
         "primaryBene": "Primary beneficiary",
         "contingentBene": "Contingent beneficiary",
+        "owner": "Owner",
+        "jointOwner": "Joint owner",
+        "insured": "Insured",
+        "annuitant": "Annuitant",
         "loading": "Validation API is Running....",
         "successMessage": "Looking good! Be sure to review your entries before submitting",
         "errorMessage": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
