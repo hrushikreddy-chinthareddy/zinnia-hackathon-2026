@@ -120,7 +120,7 @@ describe('##DeathNotificationSidesheet Component', () => {
         expect(
             screen.getByText('deathNotification.notifierDetails.notifierRole')
         ).toBeInTheDocument();
-        expect(screen.getByText('OTHER')).toBeInTheDocument();
+        expect(screen.getByText('Other')).toBeInTheDocument();
 
         expect(
             screen.getByText('deathNotification.notifierDetails.notifierName')

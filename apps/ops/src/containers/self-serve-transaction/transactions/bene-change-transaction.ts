@@ -1,7 +1,7 @@
 import { buildValidationRequestBody } from '@deps/components/dynamic-form/customization/templates/transaction-summary-template/transaction-summary-template.utils';
 import {
     formatBeneficiaries,
-    formatParties,
+    formatContractInfo,
 } from '@deps/containers/task-container/task-handlers/tasks/initiate-benechange-transaction';
 import { PolicyResponse } from '@deps/containers/task-container/task-handlers/types';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
@@ -62,7 +62,7 @@ export const beneChangeSubmitHandler =
 export const buildInitialBeneChangeFormData = (policy: Policy) => {
     return {
         contractInfo: {
-            parties: formatParties(policy as PolicyResponse),
+            parties: formatContractInfo(policy as PolicyResponse),
         },
         actionData: formatBeneficiaries(policy as PolicyResponse),
     };

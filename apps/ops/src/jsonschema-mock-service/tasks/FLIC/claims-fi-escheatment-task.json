@@ -289,32 +289,12 @@
                                         },
                                         "escheatmentPortalUpdateConfirmed": {
                                             "type": "boolean",
-                                            "title": "I have marked the unclaimed funds as “Abandoned Property” in the applicable state escheatment portal or financial system.",
-                                            "enum": [true]
-                                        },
-                                        "escheatmentOnBase": {
-                                            "type": "boolean",
-                                            "title": "I have manually created an Ops Escheatment case in OnBase to document the escheatment activity and entered the OnBase Case ID below:",
-                                            "enum": [true]
-                                        },
-                                        "escheatmentExternalCaseId": {
-                                            "type": "string",
-                                            "title": "OnBase Case ID:",
-                                            "minLength": 12,
-                                            "pattern": "^[A-Za-z0-9]+$",
-                                            "trim": true
-                                        },
-                                        "escheatmentSorUpdateConfirmed": {
-                                            "type": "boolean",
-                                            "title": "I have confirmed that the Admin System has been updated to reflect the escheatment status.",
+                                            "title": "Abandoned Property has been added for escheatment monitoring.",
                                             "enum": [true]
                                         }
                                     },
                                     "required": [
-                                        "escheatmentPortalUpdateConfirmed",
-                                        "escheatmentOnBase",
-                                        "escheatmentExternalCaseId",
-                                        "escheatmentSorUpdateConfirmed"
+                                        "escheatmentPortalUpdateConfirmed"
                                     ]
                                 }
                             },
@@ -779,26 +759,6 @@
                                 }
                             },
                             "escheatmentPortalUpdateConfirmed": {
-                                "ui:options": {
-                                    "label": true
-                                },
-                                "ui:hideError": true
-                            },
-                            "escheatmentOnBase": {
-                                "ui:options": {
-                                    "label": true
-                                },
-                                "ui:hideError": true
-                            },
-                            "escheatmentExternalCaseId": {
-                                "inline": true,
-                                "ui:placeholder": "eg: CA1234567890",
-                                "ui:options": {
-                                    "label": true
-                                },
-                                "ui:hideError": true
-                            },
-                            "escheatmentSorUpdateConfirmed": {
                                 "ui:options": {
                                     "label": true
                                 },

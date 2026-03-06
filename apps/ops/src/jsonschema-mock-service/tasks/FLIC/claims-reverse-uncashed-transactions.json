@@ -11,7 +11,7 @@
     "schemaContent": {
         "tabSchemas": [
             {
-                "title": "Reverse  Transactions",
+                "title": "Reverse Transactions",
                 "formSchema": {
                     "type": "object",
                     "properties": {
@@ -22,7 +22,6 @@
                         "details": {
                             "type": "object",
                             "title": "",
-
                             "properties": {
                                 "uncashTransaction": {
                                     "type": "object",

@@ -3,7 +3,7 @@
  * - `default`: Standard FKV sidesheets (policy, transaction)
  * - `funds`: Revised Fund Sidesheets with full fund data display
  */
-export type ExcludeFieldsUseCase = 'default' | 'funds' | 'riders';
+export type ExcludeFieldsUseCase = 'default' | 'funds' | 'riders' | 'features';
 
 /**
  * Fields that should not be displayed, keyed by use case.
@@ -36,6 +36,7 @@ export const excludeFieldsConfig: Record<ExcludeFieldsUseCase, Set<string>> = {
     ]),
     funds: new Set<string>(['investmentType', 'modelName', 'modelId']),
     riders: new Set<string>([]),
+    features: new Set<string>([]),
 };
 
 /**

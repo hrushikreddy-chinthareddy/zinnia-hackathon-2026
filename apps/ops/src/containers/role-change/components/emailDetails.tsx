@@ -76,7 +76,12 @@ const EmailDetails = ({
                             event.target.value
                         )
                     }
-                    value={emailType}
+                    value={
+                        emailType &&
+                        emailTypes.some((opt) => opt.value === emailType)
+                            ? emailType
+                            : EmailType.OTHER
+                    }
                     orientation={RadioOrientation.Horizontal}
                     name={`emailType-${index}-${Math.random()}`}
                     disabled={disabled}
