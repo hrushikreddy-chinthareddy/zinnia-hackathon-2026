@@ -248,6 +248,7 @@ describe('policy-details route', () => {
         });
 
         test('Non-Zinnia annuity policy (isTPA=false) shows no transaction cards', async () => {
+            expect.hasAssertions();
             renderPolicyDetailsPage({
                 ...annuityPolicyOverrides,
                 thirdPartyAdministratorId: 'Non-Zinnia',
@@ -257,6 +258,7 @@ describe('policy-details route', () => {
         });
 
         test('Non-Zinnia life UL policy (isTPA=false) shows no transaction cards', async () => {
+            expect.hasAssertions();
             renderPolicyDetailsPage({
                 ...lifePolicyOverrides,
                 thirdPartyAdministratorId: 'Non-Zinnia',
