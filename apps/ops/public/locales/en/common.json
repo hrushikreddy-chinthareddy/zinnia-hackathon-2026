@@ -61,6 +61,7 @@
         "inProgress": "In Progress",
         "resolved": "Resolved",
         "noAssignee": "No Assignee",
+        "activityFeedEmptyTitle": "No related activity feed available.",
         "accountValueByPolicyYear": "Account value by {{policyNomenclature}} year",
         "accountValues": "Account values",
         "accountValueTooltip": "This is the cash value amount held within the owner's life insurance policy. The account value accumulates over time as premiums are paid and interest is earned.",
