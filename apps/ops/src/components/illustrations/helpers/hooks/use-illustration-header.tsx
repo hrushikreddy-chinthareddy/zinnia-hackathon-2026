@@ -9,12 +9,14 @@ import { useCallback } from 'react';
 import Badge from '@deps/components/badge/badge';
 import { BadgeVariant } from '@deps/components/badge/badge.helpers';
 import eAppStyles from '@deps/components/illustrations/components/eapp/eapp.module.css';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypeLabel } from '@deps/types/product';
 
 import { IllustrationHandlerFactory } from '../factory/illustrationsHandlerFactory';
 
 export const useIllustrationHeader = () => {
+    const { featureFlags } = useOptimizely();
     const buildIllustrationHeader = useCallback(
         (
             planCode: string,
@@ -23,7 +25,8 @@ export const useIllustrationHeader = () => {
         ) => {
             const illustrationHandlerFactory = IllustrationHandlerFactory(
                 planCode,
-                clientCase
+                clientCase,
+                featureFlags
             );
 
             if (!illustrationHandlerFactory) {
