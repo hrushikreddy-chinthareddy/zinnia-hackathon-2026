@@ -53,6 +53,7 @@
         "createdOn": "Créer sur",
         "resolvedOn": "Résolu le",
         "technicalExceptions": "Exceptions techniques",
+        "noDocuments": "Aucun document disponible",
         "technicalIssuesWarning": "L’avancement de votre dossier peut ne pas être mis à jour en raison d’un problème technique. Nous travaillons à sa résolution.",
         "technicalIssuesResolved": "Les problèmes techniques liés à ce dossier ont été résolus. L'avancement du dossier sera mis à jour et reprendra normalement.",
         "errorCode": "Code d'erreur",

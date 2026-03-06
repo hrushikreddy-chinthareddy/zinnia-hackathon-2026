@@ -54,6 +54,7 @@
         "resolvedOn": "Resuelto el",
         "unableToFetchRelatedCase": "No se pueden obtener casos relacionados.",
         "accountValue": "Valor de la cuenta",
+        "noDocuments": "No hay documentos disponibles",
         "technicalExceptions": "Excepciones técnicas",
         "technicalIssuesWarning": "Es posible que el progreso del caso no se actualice debido a un problema técnico. Estamos trabajando para solucionarlo.",
         "technicalIssuesResolved": "Los problemas técnicos que afectan a este caso se han resuelto. El progreso del caso se actualizará y se reanudará con normalidad.",
@@ -3660,7 +3661,7 @@
             "additionalData": "Detalles",
             "multiInstance": "Pasos",
             "documentId": "ID del Documento: {{documentId}}",
-            "documentType": "Tipo de Documento: {{documentType}}",
+           "documentType": "Tipo de Documento: {{documentType}}",
             "documents": "Documentos",
             "view": "Ver",
             "viewTask": "Ver tarea"

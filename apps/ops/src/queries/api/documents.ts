@@ -9,7 +9,11 @@ import {
     EDSDocumentResponse,
     EDSDocumentRequestBody,
 } from '@deps/models/case/document';
-import { browserLogInfo, browserLogWarn } from '@deps/utils/browser-logging';
+import {
+    browserLogError,
+    browserLogInfo,
+    browserLogWarn,
+} from '@deps/utils/browser-logging';
 import { pullFromCache, writeToCache } from '@deps/utils/cache';
 import {
     LoggingContext,
@@ -17,6 +21,7 @@ import {
     logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
+import { MetadataByIdResponse } from '@zinnia/api-types/types/documents-v3';
 
 import { apiServerBaseUrl, baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
@@ -24,6 +29,7 @@ import { serverApi } from '../api-utils/serverApiClient';
 
 const ssrBaseUrl = `${apiServerBaseUrl}/document/v2/documents`;
 export const documentBaseUrl = `${baseAppUrl}/api/document/v2/documents`;
+const documentMetadataUrl = `${baseAppUrl}/api/document/v3/documents`;
 
 export const getDocumentV2 = async (
     documentNumber: string,
@@ -221,6 +227,28 @@ export const getPolicyTypeDocsV2 = async (
     }
 };
 
+export const getEDSMetadata = async (
+    documentId: string
+): Promise<MetadataByIdResponse | null> => {
+    try {
+        const url = `${documentMetadataUrl}/${documentId}/metadata`;
+
+        const response = await client.get<MetadataByIdResponse>(url, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
+
+        return response.data || null;
+    } catch (error: any) {
+        browserLogError(
+            'getEDSMetadata::An error occurred while fetching document metadata',
+            error
+        );
+        return error;
+    }
+};
 export const getPolicyTypeDocsSSRV2 = async (
     id: string,
     clientCode: string,

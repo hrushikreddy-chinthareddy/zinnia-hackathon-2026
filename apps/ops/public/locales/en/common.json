@@ -55,6 +55,7 @@
         "technicalExceptionsIndicator": "We’re having trouble updating case progress. An incident ticket has been created and will be resolved shortly.",
         "errorCode": "Error code",
         "summary": "Summary",
+        "noDocuments": "Document details unavailable",
         "viewDetailsException": "View details exceptions",
         "errorDescription": "Error description",
         "sourceSystem": "Source system",
@@ -3690,6 +3691,7 @@
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"
+
         },
         "communicationSentTemplate": {
             "mail": "Mailed to: {{address}}",
@@ -6032,7 +6034,7 @@
             "issueLabel": "Issue",
             "detailsLabel": "Task Description",
             "noDataAvailable": "No data available.",
-            "noDocuments": "No documents available",
+             "noDocuments": "No documents available",
             "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
