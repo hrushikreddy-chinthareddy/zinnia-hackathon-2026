@@ -15,6 +15,7 @@ import {
     Statuses,
 } from '@deps/models/case/case';
 import { PartyInstance } from '@deps/models/case/party-instance';
+import { TransactionIdentifier } from '@deps/models/case/task/beneficiary-record';
 import { EDS_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
 import { CaseTimePredictOutput } from '@zinnia/api-types/types/analytics';
 
@@ -366,4 +367,16 @@ export const getDetailsByDetailType = (
     return caseProcessingDetails?.find(
         (detail) => detail.detailType === detailType
     )?.details;
+};
+
+export const getIdentifierValue = (
+    identfiers: TransactionIdentifier[] | undefined,
+    identifierToSearch: string
+): string | undefined => {
+    const foundIdentifier = Array.isArray(identfiers)
+        ? identfiers.find((i: any) =>
+              identifierToSearch.includes(i?.identifier)
+          )
+        : undefined;
+    return foundIdentifier?.value;
 };

@@ -107,6 +107,9 @@ export function FieldTemplate(props: FieldTemplateProps) {
             rowFormData as Record<string, any>
         );
     }
+    if (isQuoted && formData && typeof formData === 'string') {
+        formData = `"${formData}"`;
+    }
     if (isNullEmptyOrUndefined(formData) && schema.type === 'string') {
         formData = '-';
     }
@@ -134,10 +137,6 @@ export function FieldTemplate(props: FieldTemplateProps) {
     );
 
     const isDataTypeInReadOnly = readonly && uiOptions?.dataType;
-
-    if (isQuoted && formData && typeof formData === 'string') {
-        formData = `"${formData}"`;
-    }
 
     const labelElement = (
         <div className="mb-2 ">

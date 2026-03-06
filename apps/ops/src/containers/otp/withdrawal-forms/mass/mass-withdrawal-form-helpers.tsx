@@ -320,7 +320,7 @@ export default function useMassWithdrawalConfig(t: TFunction) {
         },
         {
             label: t('amountDetails.partialWithdrawal.maximum'),
-            value: ProgramType.Withdrawal,
+            value: ProgramType.WITHDRAWAL,
             generatePayloadFromSelection: () => {
                 return {
                     ...getDefaultFormProgramValues(),

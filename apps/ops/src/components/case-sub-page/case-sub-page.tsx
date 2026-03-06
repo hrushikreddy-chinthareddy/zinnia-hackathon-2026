@@ -26,6 +26,7 @@ import {
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import ActivityFeedTab from './case-tabs/activity-feed';
 import CallLogsTab from './case-tabs/call-logs-tab';
 import DocumentsTab from './case-tabs/documents-tab';
 import EventsTab from './case-tabs/events-tab';
@@ -57,6 +58,8 @@ export default function CaseSubPage({
     const canViewRawData =
         isZinniaInternalViewer && featureFlags[FEATURE_FLAGS.SHOW_RAW_DATA];
     const canViewCaseEvents = featureFlags[FEATURE_FLAGS.SHOW_CASE_EVENTS];
+    const canViewActivityFeed =
+        featureFlags[FEATURE_FLAGS.CAN_VIEW_ACTIVITY_FEED];
 
     const canViewTechnicalExceptions = String(
         featureFlags[FEATURE_FLAGS.CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS]
@@ -108,6 +111,22 @@ export default function CaseSubPage({
                             )}
                         </Typography>
                     </TabTrigger>
+                    {canViewActivityFeed && (
+                        <TabTrigger
+                            value={CaseDetailsTabValues.activity}
+                            onClick={trackTabClick('Activity')}
+                        >
+                            <Icon
+                                type={IconType.SETTINGS}
+                                width={20}
+                                height={20}
+                                className="hidden lg:block"
+                            />
+                            <Typography variant={TypographyVariant.LabelMdAlt}>
+                                {toTitleCase(t('allFields.activity') ?? '')}
+                            </Typography>
+                        </TabTrigger>
+                    )}
                     <TabTrigger
                         value={CaseDetailsTabValues.documents}
                         onClick={trackTabClick('Documents')}
@@ -213,6 +232,14 @@ export default function CaseSubPage({
                 >
                     <ProgressTab caseDetails={caseDetails} />
                 </TabContent>
+                {canViewActivityFeed && (
+                    <TabContent
+                        className="w-full"
+                        value={CaseDetailsTabValues.activity}
+                    >
+                        <ActivityFeedTab caseDetails={caseDetails} />
+                    </TabContent>
+                )}
                 <TabContent
                     className="w-full"
                     value={CaseDetailsTabValues.documents}

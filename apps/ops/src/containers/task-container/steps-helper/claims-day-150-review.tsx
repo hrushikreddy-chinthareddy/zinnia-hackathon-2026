@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { GetStepsProps } from './types';
 import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
@@ -63,10 +63,28 @@ const Claims150CallWithState = ({
             beneDeathDate: null,
         }
     );
+    const [prevBeneficiary, setPrevBeneficiary] =
+        useState<UpdatedBeneficiaryRecord>({} as UpdatedBeneficiaryRecord);
+
+    useEffect(() => {
+        setPrevBeneficiary(
+            task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
+                ?.beneficiaryChangeDetail || {
+                notificationPreferences:
+                    task?.data?.details?.[DynamicKey.BENE_FINAL_CONTACT_ATTEMPT]
+                        ?.beneficiary?.notificationPreferences,
+                changeRequire: null,
+                changeType: null,
+                beneDeceased: false,
+                beneDeathDate: null,
+            }
+        );
+    }, [task?.data?.details]);
 
     return (
         <Claims150Call
             beneficiary={beneficiary}
+            prevBeneficiary={prevBeneficiary}
             setBeneficiary={setBeneficiary}
             taskType={taskType}
             readOnly={readOnly}

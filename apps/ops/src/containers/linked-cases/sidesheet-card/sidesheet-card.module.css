@@ -1,0 +1,48 @@
+.sideSheetContainer {
+    padding: var(--measure-dimension-padding-4xl)
+        var(--measure-dimension-padding-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-md);
+}
+.row {
+    display: flex;
+    padding: var(--measure-dimension-padding-md)
+        var(--measure-dimension-padding-xs);
+}
+
+.label {
+    width: 35%;
+    color: var(--color-grayscale-color-600-gray);
+}
+
+.card {
+    border: 2px solid var(--color-grayscale-color-100-gray);
+    border-radius: 0.25rem;
+    width: 100%;
+    padding: var(--measure-dimension-padding-none)
+        var(--measure-dimension-padding-none)
+        var(--measure-dimension-padding-md);
+}
+
+.cardHeader {
+    padding: var(--measure-dimension-padding-lg)
+        var(--measure-dimension-padding-xl);
+    font-weight: 600;
+}
+
+.cardBody {
+    padding: var(--measure-dimension-padding-none)
+        var(--measure-dimension-padding-xl);
+    font-size: 0.875rem;
+}
+
+.link {
+    color: var(--color-secondary-color-secondary);
+}
+
+.badge {
+    border-radius: 16px;
+    padding: var(--measure-dimension-padding-md)
+        var(--measure-dimension-padding-xl);
+}

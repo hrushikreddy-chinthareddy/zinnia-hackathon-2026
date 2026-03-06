@@ -11,6 +11,7 @@ import { FormattedAddress } from '@deps/containers/people-data-cards/address-car
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { Address } from '@zinnia/api-types/types/sor';
 
+import styles from './update-notification.module.css';
 import EditAddress from '../steps/notification-method/edit-address';
 
 type AddressCardProps = {
@@ -18,6 +19,7 @@ type AddressCardProps = {
     setAddress: (val: any) => void;
     carrierId: string;
     partyData: any;
+    isEditable?: boolean;
 };
 
 const AddressCard = ({
@@ -25,12 +27,16 @@ const AddressCard = ({
     setAddress,
     carrierId,
     partyData,
+    isEditable = true,
 }: AddressCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix:
             'updateNotificationMethodForBeneficiary.updateNotificationMethodStep.notificationMethods',
     });
     const sidesheet = useSideSheetContextLegacy();
+    const changeLinkClasses = isEditable
+        ? styles.changeLinkEnabled
+        : styles.changeLinkDisabled;
 
     const updatedPartyData = {
         ...partyData,
@@ -89,7 +95,8 @@ const AddressCard = ({
                 <Button
                     size={ButtonSize.Small}
                     mode="link"
-                    onClick={handleChangeAddress}
+                    onClick={isEditable ? handleChangeAddress : undefined}
+                    className={changeLinkClasses}
                 >
                     {t('change')}
                 </Button>

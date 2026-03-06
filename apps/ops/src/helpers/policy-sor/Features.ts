@@ -1,3 +1,4 @@
+import { isEndDated } from '@deps/helpers/date.helpers';
 import { PolicyFeature, FeatureType } from '@zinnia/api-types/types/sor';
 
 export class Features {
@@ -31,7 +32,9 @@ export class Features {
         if (!featureType) {
             return undefined;
         }
-        return this.getFeaturesByType(featureType)?.[0];
+        const features = this.getFeaturesByType(featureType);
+        const active = features.filter((f) => !isEndDated(f.endDate));
+        return active?.[0] ?? features?.[0] ?? undefined;
     }
 
     public get all(): PolicyFeature[] {

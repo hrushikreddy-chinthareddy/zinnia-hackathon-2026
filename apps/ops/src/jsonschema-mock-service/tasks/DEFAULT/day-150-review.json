@@ -147,11 +147,11 @@
                                     },
                                     "address": {
                                         "type": "object",
+                                        "ui:field": "ChangeAddressField",
                                         "ui:options": {
                                             "cardType": "changeAddress",
                                             "title": "Address",
-                                            "label": true,
-                                            "ObjectFieldTemplate": "ChangeAddressTemplate"
+                                            "label": true
                                         },
                                         "properties": {
                                             "action": {

@@ -1,3 +1,7 @@
 .statusHeader {
     min-width: 205px;
 }
+
+.tableContainer {
+    clip-path: inset(0);
+}

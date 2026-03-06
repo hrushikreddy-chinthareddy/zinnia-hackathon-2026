@@ -1,4 +1,4 @@
-import { ObjectFieldTemplateProps } from '@rjsf/utils';
+import { FieldProps } from '@rjsf/utils';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -8,16 +8,13 @@ import {
     ClaimActionTypes,
     ClaimCommunicationTypes,
 } from '@deps/containers/death-claim-container/death-claim.types';
+import { lowerCaseJson } from '@deps/containers/death-claim-container/update-notification-method/update-notification-method-helper';
 import { DynamicKey } from '@deps/containers/task-container/components/steps/claims/claims.type';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { DataFormattingTypes } from '@deps/models/case/task';
 import { AddressType } from '@zinnia/api-types/types/sor';
 
-import { formatValueByDataType } from '../card-templates/card-template';
-
-interface ChangeAddressTemplateProps extends ObjectFieldTemplateProps {
-    formContext: any;
-}
+import { formatValueByDataType } from '../../templates/card-templates/card-template';
 
 interface NotificationPreferences {
     address: {
@@ -29,6 +26,7 @@ interface NotificationPreferences {
         state?: string;
         country?: string;
         zipCode?: string;
+        zipCodeExtension?: string;
     };
     notificationMethod: {
         method: ClaimCommunicationTypes;
@@ -43,7 +41,8 @@ interface NotificationPreferences {
     };
 }
 
-export const displayAddressType: Record<AddressType, string | undefined> = {
+/** Map address type to display label. Uses AddressType from sor-policy. */
+export const displayAddressType: Record<string, string | undefined> = {
     [AddressType.POBOX]: 'PO Box',
     [AddressType.RESIDENCE]: 'Residential',
     [AddressType.BUSINESS]: 'Business',
@@ -52,14 +51,13 @@ export const displayAddressType: Record<AddressType, string | undefined> = {
     [AddressType.MAILING]: 'Mailing',
 };
 
-export function ChangeAddressTemplate({
-    formContext,
-}: ChangeAddressTemplateProps) {
+function ChangeAddressField(props: FieldProps) {
+    const { formContext, onChange: onFieldChange } = props;
     const { customData, setCustomData } = formContext;
     const { t } = useTranslation();
     const sideSheet = useSideSheetContextLegacy();
 
-    const dynamicKey = customData.details.beneAddress
+    const dynamicKey = customData.details?.beneAddress
         ? DynamicKey.BENE_ADDRESS
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
 
@@ -95,7 +93,7 @@ export function ChangeAddressTemplate({
         }
         const details = { details: { ...updatedCustomData.details } };
         setCustomData(details);
-    }, []);
+    }, [customData, dynamicKey, setCustomData]);
 
     const handleCardClick = () => {
         // Initialize beneficiary and notificationPreferences if they don't exist
@@ -161,6 +159,7 @@ export function ChangeAddressTemplate({
             country: addr.country || 'USA',
             state: addr.state?.trim() || '',
             zipCode: addr.zipCode?.trim() || '',
+            zipCodeExtension: addr.zipCodeExtension?.trim() || '',
             addressType: addr.addressType || AddressType.RESIDENCE,
             action: ClaimActionTypes.NONE,
         });
@@ -173,6 +172,7 @@ export function ChangeAddressTemplate({
             country: addr.country || 'USA',
             state: addr.state?.trim() || '',
             zipCode: addr.zipCode?.trim() || '',
+            zipCodeExtension: addr.zipCodeExtension?.trim() || '',
         });
 
         const updatedAddress = normalizeAddress(addressData);
@@ -182,8 +182,8 @@ export function ChangeAddressTemplate({
                 ?.notificationPreferences?.address || {};
 
         const isEqual =
-            JSON.stringify(stripAddressForComparison(currentAddressInfo)) ===
-            JSON.stringify(stripAddressForComparison(addressData));
+            lowerCaseJson(stripAddressForComparison(currentAddressInfo)) ===
+            lowerCaseJson(stripAddressForComparison(addressData));
 
         updatedAddress.action = isEqual
             ? ClaimActionTypes.NONE
@@ -242,6 +242,7 @@ export function ChangeAddressTemplate({
 
         const details = { details: { ...updatedCustomData.details } };
         setCustomData(details);
+        onFieldChange(updatedAddress);
         sideSheet.handleOpen(false);
         sideSheet.onClose();
     };
@@ -310,3 +311,5 @@ export function ChangeAddressTemplate({
         </>
     );
 }
+
+export default ChangeAddressField;

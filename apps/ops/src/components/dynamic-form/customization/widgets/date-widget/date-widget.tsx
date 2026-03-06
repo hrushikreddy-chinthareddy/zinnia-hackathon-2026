@@ -46,6 +46,9 @@ export default function DateWidget<
         if (date) {
             const formatted = formatDate(date);
             formatted && onChange(formatted);
+        } else {
+            // When user clears the date, notify form to run required validation
+            onChange(undefined);
         }
     };
 

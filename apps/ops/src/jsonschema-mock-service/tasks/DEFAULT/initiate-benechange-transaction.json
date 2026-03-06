@@ -228,13 +228,14 @@
                             }
                         },
                         "issueResolved": {
-                            "type": "array",
-                            "items": {
-                                "type": "string",
-                                "enum": ["yes", "no_missing", "no_mismatched"]
-                            },
-                            "uniqueItems": true,
-                            "title": "Is the paper application complete and ready for processing?"
+                            "type": "boolean",
+                            "enum": [true, false],
+                            "enumNames": [
+                                "Yes",
+                                "No, the document has some issue(s)"
+                            ],
+                            "title": "Is the paper application complete and ready for processing?",
+                            "default": true
                         }
                     },
                     "dependencies": {
@@ -243,33 +244,18 @@
                                 {
                                     "properties": {
                                         "issueResolved": {
-                                            "contains": {
-                                                "const": "yes"
-                                            }
+                                            "const": true
                                         }
                                     }
                                 },
                                 {
                                     "properties": {
                                         "issueResolved": {
-                                            "allOf": [
-                                                {
-                                                    "contains": {
-                                                        "const": "no_missing"
-                                                    }
-                                                },
-                                                {
-                                                    "not": {
-                                                        "contains": {
-                                                            "const": "no_mismatched"
-                                                        }
-                                                    }
-                                                }
-                                            ]
+                                            "const": false
                                         },
                                         "declineReason": {
                                             "type": "array",
-                                            "title": "What is missing or incorrect in the form?",
+                                            "title": "What is the issue with the form?",
                                             "items": {
                                                 "type": "object",
                                                 "properties": {
@@ -291,103 +277,6 @@
                                                     "value",
                                                     "exceptionSubRefs"
                                                 ]
-                                            },
-                                            "minItems": 1
-                                        }
-                                    },
-                                    "required": [
-                                        "issueResolved",
-                                        "declineReason"
-                                    ]
-                                },
-                                {
-                                    "properties": {
-                                        "issueResolved": {
-                                            "allOf": [
-                                                {
-                                                    "contains": {
-                                                        "const": "no_mismatched"
-                                                    }
-                                                },
-                                                {
-                                                    "not": {
-                                                        "contains": {
-                                                            "const": "no_missing"
-                                                        }
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        "declineReason": {
-                                            "type": "array",
-                                            "title": "Select the role that has mismatched information?",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "value": {
-                                                        "type": "string"
-                                                    },
-                                                    "exceptionSubRefs": {
-                                                        "type": "array",
-                                                        "minItems": 1,
-                                                        "items": {
-                                                            "type": "object",
-                                                            "additionalProperties": {
-                                                                "type": "string"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "required": [
-                                                    "value",
-                                                    "exceptionSubRefs"
-                                                ]
-                                            },
-                                            "minItems": 1
-                                        }
-                                    },
-                                    "required": [
-                                        "issueResolved",
-                                        "declineReason"
-                                    ]
-                                },
-                                {
-                                    "properties": {
-                                        "issueResolved": {
-                                            "allOf": [
-                                                {
-                                                    "contains": {
-                                                        "const": "no_missing"
-                                                    }
-                                                },
-                                                {
-                                                    "contains": {
-                                                        "const": "no_mismatched"
-                                                    }
-                                                }
-                                            ]
-                                        },
-                                        "declineReason": {
-                                            "type": "array",
-                                            "title": "",
-                                            "items": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "value": {
-                                                        "type": "string"
-                                                    },
-                                                    "exceptionSubRefs": {
-                                                        "type": "array",
-                                                        "minItems": 0,
-                                                        "items": {
-                                                            "type": "object",
-                                                            "additionalProperties": {
-                                                                "type": "string"
-                                                            }
-                                                        }
-                                                    }
-                                                },
-                                                "required": ["value"]
                                             },
                                             "minItems": 1
                                         }
@@ -438,20 +327,9 @@
                         "ui:readonly": true
                     },
                     "issueResolved": {
-                        "ui:widget": "IssueResolvedRadioWidget",
+                        "ui:widget": "radio",
                         "ui:options": {
-                            "label": true,
-                            "enumOptions": [
-                                { "value": "yes", "label": "Yes" },
-                                {
-                                    "value": "no_missing",
-                                    "label": "No, it has missing information"
-                                },
-                                {
-                                    "value": "no_mismatched",
-                                    "label": "No, it has mismatched information"
-                                }
-                            ]
+                            "label": true
                         },
                         "ui:dataPath": ["issueResolved"],
                         "ui:hideError": true
@@ -495,8 +373,8 @@
                     "ownerDetails": {
                         "ui:options": {
                             "label": false,
-                            "title": "People",
-                            "dataKey": "actionData",
+                            "title": "Form Review",
+                            "dataKey": "partyData",
                             "templateType": "summaryCard",
                             "ObjectFieldTemplate": "TransactionSummaryTemplate",
                             "titleVariant": "Label",
@@ -507,16 +385,23 @@
                                         { "key": "ssn", "label": "SSN" },
                                         {
                                             "key": "trustDate",
-                                            "label": "Trust date"
+                                            "label": "Trust date",
+                                            "visibleWhen": {
+                                                "partyType": "TRUST"
+                                            }
                                         },
                                         {
                                             "key": "dateOfBirth",
-                                            "label": "Birth date"
+                                            "label": "Birth date",
+                                            "visibleWhen": {
+                                                "partyType": "INDIVIDUAL"
+                                            }
                                         }
                                     ]
                                 },
                                 {
                                     "label": "Communication Details",
+                                    "layout": "vertical",
                                     "fields": [
                                         {
                                             "key": "address",
@@ -1177,6 +1062,7 @@
                     }
                 }
             },
+
             {
                 "title": "Beneficiary Details",
                 "formSchema": {
@@ -1315,7 +1201,8 @@
                                                                 "RESIDENCE",
                                                                 "BUSINESS",
                                                                 "SEASONAL",
-                                                                "POBOX"
+                                                                "POBOX",
+                                                                "OTHER"
                                                             ]
                                                         },
                                                         "addressLine1": {
@@ -1449,7 +1336,8 @@
                                                                 "MOBILE",
                                                                 "HOME",
                                                                 "BUSINESS",
-                                                                "FAX"
+                                                                "FAX",
+                                                                "OTHER"
                                                             ]
                                                         },
                                                         "dialNumber": {
@@ -2170,7 +2058,8 @@
                                                     "Residential",
                                                     "Business",
                                                     "Seasonal",
-                                                    "PO Box"
+                                                    "PO Box",
+                                                    "Other"
                                                 ]
                                             }
                                         },
@@ -2284,7 +2173,8 @@
                                                     "Mobile",
                                                     "Home",
                                                     "Business",
-                                                    "Fax"
+                                                    "Fax",
+                                                    "Other"
                                                 ]
                                             }
                                         },
@@ -2516,9 +2406,11 @@
                     },
                     "signatureData": {
                         "ui:options": { "label": false },
+
                         "isIrrevocableBene": {
                             "ui:widget": "hidden"
                         },
+
                         "signatures": {
                             "ui:options": {
                                 "ArrayFieldTemplate": "TransactionAccordionTemplate",
@@ -2598,7 +2490,7 @@
                             "type": "object"
                         },
                         "issueResolved": {
-                            "type": "array"
+                            "type": "boolean"
                         },
                         "declineReason": {
                             "type": "array",
@@ -2697,8 +2589,18 @@
                                         { "key": "gender", "label": "Gender" },
                                         { "key": "ssn", "label": "SSN" },
                                         {
+                                            "key": "trustDate",
+                                            "label": "Trust date",
+                                            "visibleWhen": {
+                                                "partyType": "TRUST"
+                                            }
+                                        },
+                                        {
                                             "key": "dateOfBirth",
-                                            "label": "Date of birth"
+                                            "label": "Date of birth",
+                                            "visibleWhen": {
+                                                "partyType": "INDIVIDUAL"
+                                            }
                                         }
                                     ]
                                 },
