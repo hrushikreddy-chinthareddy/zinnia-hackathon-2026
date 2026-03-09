@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 import {
+    formatDate,
     formatTaskTime,
     isValidDate,
     startOfTomorrowLocalIso,
@@ -136,6 +137,21 @@ describe('startOfTomorrowLocalIso', () => {
 
     it('returns DEFAULT_ERROR_STRING for invalid input', () => {
         expect(startOfTomorrowLocalIso('')).toBe(DEFAULT_ERROR_STRING);
+    });
+});
+
+describe('##formatDate', () => {
+    it('#returns empty string for undefined', () => {
+        expect(formatDate(undefined)).toBe('');
+    });
+
+    it('#returns empty string for null', () => {
+        expect(formatDate(null as unknown as undefined)).toBe('');
+    });
+
+    it('#returns YYYY-MM-DD for a valid Date', () => {
+        const date = new Date('2024-02-26T09:00:00');
+        expect(formatDate(date)).toBe('2024-02-26');
     });
 });
 
