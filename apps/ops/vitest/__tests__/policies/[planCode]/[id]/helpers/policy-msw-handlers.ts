@@ -117,11 +117,3 @@ export const agentDataEmptyHandler = http.get(
     '*/api/mcs/:clientCode/salesentity',
     () => HttpResponse.json({ items: [] })
 );
-
-export const agentDataLoadingHandler = http.get(
-    '*/api/mcs/:clientCode/salesentity',
-    async () => {
-        await delay('infinite');
-        return HttpResponse.json({ items: [] });
-    }
-);
