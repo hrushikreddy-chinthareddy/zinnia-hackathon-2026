@@ -3,6 +3,7 @@ import { TFunction } from 'i18next';
 
 import { FieldDate } from '@deps/components/field/date/FieldDate';
 import { TranslationFiles } from '@deps/config/translations';
+import { formatDate } from '@deps/utils/dates';
 
 import { UpdatedBeneficiaryRecord } from './claims.type';
 
@@ -14,6 +15,7 @@ interface BeneficiaryDeceasedProps {
     t: TFunction<TranslationFiles.COMMON, { keyPrefix: string }>;
     readOnly?: boolean;
 }
+
 function BeneficiaryDeceased({
     beneficiary,
     setBeneficiary,
@@ -21,15 +23,16 @@ function BeneficiaryDeceased({
     readOnly,
 }: BeneficiaryDeceasedProps) {
     const handleDateSelect = (date: Date | undefined) => {
-        if (date && date.toString() === 'Invalid Date') {
+        if (date) {
+            const formatted = formatDate(date);
             setBeneficiary({
                 ...beneficiary,
-                beneDeathDate: null,
+                beneDeathDate: formatted || null,
             });
         } else {
             setBeneficiary({
                 ...beneficiary,
-                beneDeathDate: date?.toLocaleDateString() || null,
+                beneDeathDate: null,
             });
         }
     };
