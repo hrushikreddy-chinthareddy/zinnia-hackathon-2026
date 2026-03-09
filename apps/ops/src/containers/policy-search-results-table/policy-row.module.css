@@ -84,7 +84,6 @@
 
 .infoIcon {
     margin-right: var(--measure-dimension-padding-xs, 0.125rem);
-    padding-bottom: var(--measure-dimension-padding-xs, 0.125rem);
 }
 
 .noCases {
