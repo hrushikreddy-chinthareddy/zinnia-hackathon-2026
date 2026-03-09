@@ -51,8 +51,14 @@ export const displayAddressType: Record<string, string | undefined> = {
     [AddressType.MAILING]: 'Mailing',
 };
 
+// TODO: Refactor so both task types use a single state-update path.
+
+// This ChangeAddressField component supports two task types with divergent state handling:
+// - BENE_ADDRESS: Persists via RJSF onChange so values stay in sync with the form schema and other fields.
+// - BENE_FINAL_CONTACT_ATTEMPT: Persists via setCustomData only, since the task has no other RJSF-controlled fields.
+
 function ChangeAddressField(props: FieldProps) {
-    const { formContext, onChange: onFieldChange } = props;
+    const { formContext, onChange } = props;
     const { customData, setCustomData } = formContext;
     const { t } = useTranslation();
     const sideSheet = useSideSheetContextLegacy();
@@ -62,38 +68,38 @@ function ChangeAddressField(props: FieldProps) {
         : DynamicKey.BENE_FINAL_CONTACT_ATTEMPT;
 
     useEffect(() => {
-        const updatedCustomData = customData;
-        if (
-            !updatedCustomData.task.data.details[dynamicKey]
-                .beneficiaryChangeDetail
-        ) {
-            updatedCustomData.task.data.details[
-                dynamicKey
-            ].beneficiaryChangeDetail = {};
-        }
-        if (
-            dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT &&
-            !updatedCustomData.task.data.details[dynamicKey]
-                .subTaskBeneAddressChangeRequire
-        ) {
-            updatedCustomData.task.data.details[
-                dynamicKey
-            ].subTaskBeneAddressChangeRequire = false;
-        }
-        if (
-            !updatedCustomData.task.data.details[dynamicKey]
-                .beneficiaryChangeDetail.notificationPreferences
-        ) {
-            updatedCustomData.task.data.details[
-                dynamicKey
-            ].beneficiaryChangeDetail.notificationPreferences =
-                updatedCustomData.task.data.details[
+        if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
+            const updatedCustomData = customData;
+            if (
+                !updatedCustomData.details[dynamicKey].beneficiaryChangeDetail
+            ) {
+                updatedCustomData.details[dynamicKey].beneficiaryChangeDetail =
+                    {};
+            }
+            if (
+                !updatedCustomData.details[dynamicKey]
+                    .subTaskBeneAddressChangeRequire
+            ) {
+                updatedCustomData.details[
                     dynamicKey
-                ]?.beneficiary?.notificationPreferences;
+                ].subTaskBeneAddressChangeRequire = false;
+            }
+            if (
+                !updatedCustomData.details[dynamicKey].beneficiaryChangeDetail
+                    .notificationPreferences
+            ) {
+                updatedCustomData.details[
+                    dynamicKey
+                ].beneficiaryChangeDetail.notificationPreferences =
+                    updatedCustomData.details[
+                        dynamicKey
+                    ]?.beneficiary?.notificationPreferences;
+            }
+            const details = { details: { ...updatedCustomData.details } };
+            setCustomData(details);
         }
-        const details = { details: { ...updatedCustomData.details } };
-        setCustomData(details);
-    }, [customData, dynamicKey, setCustomData]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const handleCardClick = () => {
         // Initialize beneficiary and notificationPreferences if they don't exist
@@ -128,12 +134,10 @@ function ChangeAddressField(props: FieldProps) {
         const updatedCustomData = customData;
 
         if (
-            !updatedCustomData.task.data.details[dynamicKey]
-                .beneficiaryChangeDetail
+            dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT &&
+            !updatedCustomData.details[dynamicKey].beneficiaryChangeDetail
         ) {
-            updatedCustomData.task.data.details[
-                dynamicKey
-            ].beneficiaryChangeDetail = {
+            updatedCustomData.details[dynamicKey].beneficiaryChangeDetail = {
                 notificationPreferences: {
                     address: {
                         addressType: AddressType.RESIDENCE,
@@ -178,7 +182,7 @@ function ChangeAddressField(props: FieldProps) {
         const updatedAddress = normalizeAddress(addressData);
 
         const currentAddressInfo =
-            updatedCustomData.task.data.details[dynamicKey]?.beneficiary
+            updatedCustomData.details[dynamicKey]?.beneficiary
                 ?.notificationPreferences?.address || {};
 
         const isEqual =
@@ -212,7 +216,7 @@ function ChangeAddressField(props: FieldProps) {
                 },
             } as NotificationPreferences);
 
-        if (!isEqual) {
+        if (!isEqual && dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
             updatedCustomData.task.data.details[
                 dynamicKey
             ].beneficiaryChangeDetail.notificationPreferences = {
@@ -226,23 +230,26 @@ function ChangeAddressField(props: FieldProps) {
                 },
             };
 
-            if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
-                updatedCustomData.task.data.details[
-                    dynamicKey
-                ].subTaskBeneAddressChangeRequire = true;
-                updatedCustomData.task.data.details[
-                    dynamicKey
-                ].beneficiaryChangeDetail.changeType =
-                    'BENEFICIARY_ADDRESS_CHANGE';
-                updatedCustomData.task.data.details[
-                    dynamicKey
-                ].beneficiaryChangeDetail.changeRequire = true;
-            }
+            updatedCustomData.details[
+                dynamicKey
+            ].subTaskBeneAddressChangeRequire = true;
+            updatedCustomData.details[
+                dynamicKey
+            ].beneficiaryChangeDetail.changeType = 'BENEFICIARY_ADDRESS_CHANGE';
+            updatedCustomData.details[
+                dynamicKey
+            ].beneficiaryChangeDetail.changeRequire = true;
         }
 
-        const details = { details: { ...updatedCustomData.details } };
-        setCustomData(details);
-        onFieldChange(updatedAddress);
+        if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
+            setCustomData({
+                details: {
+                    ...updatedCustomData.details,
+                },
+            });
+        } else {
+            onChange(updatedAddress);
+        }
         sideSheet.handleOpen(false);
         sideSheet.onClose();
     };
