@@ -4,7 +4,6 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useEffect, useState } from 'react';
 import { Jsonify } from 'type-fest';
 
 import { ClientCasePaginator } from '@deps/components/client-case/client-case-list/paginator/client-case-paginator';
@@ -45,35 +44,20 @@ type additionalDataProps = {
     user: UserProfile;
 };
 
-export enum ErrorOrigin {
-    ClientCase = 'client-case-manager-api',
-    NewBusiness = 'new-business-api',
-    partyReference = 'party-reference-api',
-    producers = 'producers-api',
-    Internal = 'internal-error',
-}
-
 interface IllustrationsPageProps extends SegmentTrackedPageProps {
     featureFlagDecisions: FeatureFlags;
     additionalData: additionalDataProps;
-    fetchingErrorMessage: string;
-    fetchingErrorOrigin: ErrorOrigin;
     clientCase?: Jsonify<IllustrationsClientCase>;
+    hasError?: boolean;
 }
 
 const NEW_CLIENT_CASE_URL = '/illustrations/client-cases/new';
 const NEW_QUICK_QUOTE_URL = '/illustrations/client-cases/quick-quote';
-const INTERNAL_ERROR_LABEL = 'We were unable to create this client case.';
-const EXTERNAL_ERROR_LABEL =
-    'We were unable to create the required client case due to external issues';
 
 export default function Illustrations({
-    fetchingErrorMessage,
-    fetchingErrorOrigin,
+    hasError = false,
     additionalData,
 }: IllustrationsPageProps) {
-    const [bannerText, setBannerText] = useState('');
-
     const { featureFlags } = useOptimizely();
     const searchParams = useSearchParams();
     const isClientCaseFetching = useIsFetching({
@@ -101,40 +85,6 @@ export default function Illustrations({
         (isAgent && isAllowReadIllustrations && isAllowWriteClientCase) ||
         isAllowReadIllustrations;
 
-    const bannerBodyText = (
-        <Typography
-            variant={TypographyVariant.BodySm}
-            className={styles.bannerText}
-        >
-            {bannerText}
-        </Typography>
-    );
-
-    useEffect(() => {
-        switch (fetchingErrorOrigin) {
-            case ErrorOrigin.NewBusiness:
-            case ErrorOrigin.partyReference:
-            case ErrorOrigin.producers:
-                if (fetchingErrorMessage) {
-                    setBannerText(
-                        `${EXTERNAL_ERROR_LABEL} - ${fetchingErrorMessage}`
-                    );
-                } else {
-                    setBannerText(EXTERNAL_ERROR_LABEL);
-                }
-                break;
-            case ErrorOrigin.ClientCase:
-                setBannerText(INTERNAL_ERROR_LABEL);
-                break;
-            case ErrorOrigin.Internal:
-                setBannerText(fetchingErrorMessage ?? INTERNAL_ERROR_LABEL);
-                break;
-
-            default:
-                break;
-        }
-    }, [fetchingErrorMessage, fetchingErrorOrigin]);
-
     const createClientCaseSearchParams = toLowerCaseSearchParams(searchParams);
     createClientCaseSearchParams.delete('eappid');
     const renderQuickQuote = () => {
@@ -151,11 +101,6 @@ export default function Illustrations({
                         passHref
                         className="flex items-center gap-2"
                     >
-                        {/* <Icon
-                                    width={24}
-                                    height={24}
-                                    type={IconType.AUTOPAY}
-                                /> */}
                         <Button
                             mode="link"
                             data-testid="quick-quote-btn"
@@ -191,12 +136,18 @@ export default function Illustrations({
         <>
             <PageHead titleKey="clientCases" />
             <IllustrationsClientCaseProvider>
-                {bannerText !== '' && (
+                {!!hasError && (
                     <BannerAlert
-                        bodyText={bannerBodyText}
+                        bodyText={
+                            <Typography
+                                variant={TypographyVariant.BodySm}
+                                className={styles.bannerText}
+                            >
+                                {t('clientCase.errors.createClientCase')}
+                            </Typography>
+                        }
                         variant={BannerVariant.Error}
                         canDismiss
-                        onDismiss={() => setBannerText('')}
                         className={styles.bannerWrapper}
                     />
                 )}

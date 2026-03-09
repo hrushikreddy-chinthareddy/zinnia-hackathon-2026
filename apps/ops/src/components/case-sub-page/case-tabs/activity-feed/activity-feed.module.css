@@ -1,0 +1,128 @@
+.activityFeedContainer {
+    padding: var(--measure-dimension-padding-2xl)
+        var(--measure-dimension-padding-4xl);
+}
+
+.activityHeaderRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--measure-dimension-margin-xs);
+}
+
+.sortIcon {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.sortIcon svg {
+    color: var(--color-secondary-color-secondary);
+}
+
+.filterContainer {
+    display: flex;
+    gap: var(--measure-dimension-gap-md);
+    margin-bottom: var(--measure-dimension-margin-xs);
+    padding: var(--measure-dimension-padding-md);
+    border-radius: 8px;
+    background: var(--color-grayscale-color-50-gray);
+    width: fit-content;
+}
+
+.filterItem {
+    padding: var(--measure-dimension-padding-md)
+        var(--measure-dimension-padding-xl);
+    border-radius: 12px;
+    border: none;
+    background: transparent;
+    font-size: var(--measure-dimension-font-size-font-size-x-small);
+    color: var(--color-grayscale-color-600-gray);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.filterItemActive {
+    background-color: var(--color-grayscale-color-white);
+    color: var(--color-grayscale-color-600-gray);
+    box-shadow: 0 1px 2px var(--color-grayscale-color-100-gray);
+}
+
+/* Each item */
+.timelineItem {
+    display: flex;
+    gap: var(--measure-dimension-gap-lg);
+    align-items: stretch;
+}
+
+.timelineLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 20px;
+}
+
+.timelineConnector {
+    width: 2px;
+    flex: 1;
+    background-color: #d9d9d9;
+    margin-top: 2px;
+    border-radius: 4px;
+}
+
+/* Icon circle */
+.timelineIcon {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+}
+
+/* Right side content */
+.timelineContent {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: var(--measure-dimension-gap-lg);
+    padding-bottom: var(--measure-dimension-padding-2xl);
+}
+
+.timelineTime {
+    color: #6b7280;
+    white-space: nowrap;
+}
+
+.svgIconWrapper {
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dateGroup:not(:last-child) {
+    margin-bottom: var(--measure-dimension-margin-sm);
+}
+
+.dateHeader {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+    margin-bottom: var(--measure-dimension-margin-xs);
+}
+
+.dateDivider {
+    flex: 1;
+    height: 2px;
+    background-color: #e5e7eb;
+}
+
+/* Empty state */
+.emptyState {
+    display: flex;
+    justify-content: center;
+    margin: var(-- --measure-dimension-margin-md);
+}

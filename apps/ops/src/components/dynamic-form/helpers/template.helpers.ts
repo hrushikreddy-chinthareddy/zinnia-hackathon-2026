@@ -9,6 +9,7 @@ import DifferenceTemplate from '../customization/templates/difference-template/d
 import { PartyCardFieldTemplate } from '../customization/templates/field-template/party-card-field-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 import TransactionInstructionTemplate from '../customization/templates/instructions-template/transaction-instruction-template';
+import { NigoSummaryTemplate } from '../customization/templates/nigo-summary-template/nigo-summary-template';
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import PartyInfoListTemplate from '../customization/templates/party-info-list-template/party-info-list';
 import TextListTemplate from '../customization/templates/text-list-template';
@@ -38,6 +39,7 @@ export const UIObjectTemplateMap: Record<
     ['ObjectRowFieldTemplate']: ObjectRowFieldTemplate,
     ['DifferenceTemplate']: DifferenceTemplate,
     ['PartyCardFieldTemplate']: PartyCardFieldTemplate,
+    ['NigoSummaryTemplate']: NigoSummaryTemplate,
 };
 
 export const UIfieldTemplateMap: Record<

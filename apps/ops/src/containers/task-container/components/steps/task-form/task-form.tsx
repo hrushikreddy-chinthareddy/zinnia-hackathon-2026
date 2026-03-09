@@ -13,12 +13,18 @@ import React, {
 
 import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
+import { getIdentifierValue } from '@deps/containers/case-sub-page/case-helpers';
+import {
+    ClaimActionTypes,
+    ClaimCommunicationTypes,
+} from '@deps/containers/death-claim-container/death-claim.types';
 import {
     getUpdatedTaskFromFormData,
     extractFormData,
 } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
+import { CaseIdentifier } from '@deps/models/case/case';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import {
     EntityTypes,
@@ -63,6 +69,11 @@ const getPaymentCards = (
                 task?.data?.details?.payerDetails?.lastName ||
                 DEFAULT_ERROR_STRING,
             title: transaction?.entity?.payment?.companyName,
+            policyNumber:
+                getIdentifierValue(
+                    transaction?.identifiers,
+                    CaseIdentifier.PolicyNumber
+                ) || '',
         },
     }));
 };
@@ -154,8 +165,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                             data: {
                                 ...previousTask.data,
                                 policyNumber:
-                                    matchedCase?.additionalData?.policyNumber ||
-                                    '',
+                                    getIdentifierValue(
+                                        matchedCase?.identifiers,
+                                        CaseIdentifier.PolicyNumber
+                                    ) || '',
                             },
                         }));
                         return true;
@@ -185,7 +198,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                             transactionOptions: paymentCards,
                             zlCaseId: matchedCase.id,
                             policyNumber:
-                                matchedCase?.additionalData?.policyNumber || '',
+                                getIdentifierValue(
+                                    matchedCase?.identifiers,
+                                    CaseIdentifier.PolicyNumber
+                                ) || '',
                             matchingResult: matchedCase.correlationId,
                             isDuplicate: MatchingCase.MATCH_FOUND,
                         },
@@ -288,6 +304,52 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     .escheatmentDetail.beneficiary.beneficiaryDueAmount;
             }
             prevFormDataRef.current = updatedFormData;
+            return updatedFormData;
+        },
+        [TaskType.Bene_Address_Verification]: (formData: any) => {
+            let updatedFormData = formData;
+
+            if (
+                !formData.details?.beneAddress?.beneficiaryChangeDetail
+                    ?.notificationPreferences
+            ) {
+                updatedFormData.details.beneAddress.beneficiaryChangeDetail =
+                    formData.details.beneAddress?.beneficiary
+                        ?.notificationPreferences || {};
+            }
+
+            if (
+                formData.details.beneAddress?.beneficiary
+                    ?.notificationPreferences?.address?.action ===
+                ClaimActionTypes.UPDATE
+            ) {
+                updatedFormData = {
+                    ...formData,
+                    details: {
+                        ...formData.details,
+                        beneAddress: {
+                            ...formData.details.beneAddress,
+                            beneficiaryChangeDetail: {
+                                ...formData.details.beneAddress
+                                    .beneficiaryChangeDetail,
+                                notificationPreferences: {
+                                    ...formData.details.beneAddress
+                                        .beneficiaryChangeDetail
+                                        .notificationPreferences,
+                                    address: {
+                                        ...formData.details.beneAddress
+                                            .beneficiary.notificationPreferences
+                                            .address,
+                                    },
+                                    notificationMethod: {
+                                        method: ClaimCommunicationTypes.Mail,
+                                    },
+                                },
+                            },
+                        },
+                    },
+                };
+            }
             return updatedFormData;
         },
     };

@@ -35,6 +35,16 @@ import {
 export interface DocumentView extends DocumentInstance {
     previewDocProps: DocumentPreviewerProps;
 }
+export interface DocumentViewStep {
+    id: string;
+    name: string;
+    documentNumber?: string; // BPB - added to the spec example, but not the schema
+    documentUploadDate?: string; // BPB - added to spec example, but not the schema
+    source: string;
+    url: string; //
+    fileType?: string | null;
+    previewDocProps: DocumentPreviewerProps;
+}
 
 // Needed to properly ingest the Zahara datetime format
 dayjs.extend(customParseFormat);

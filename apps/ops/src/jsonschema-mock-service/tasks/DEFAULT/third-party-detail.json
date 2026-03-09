@@ -298,7 +298,8 @@
                                                                 "RESIDENCE",
                                                                 "BUSINESS",
                                                                 "SEASONAL",
-                                                                "POBOX"
+                                                                "POBOX",
+                                                                "OTHER"
                                                             ]
                                                         },
                                                         "addressLine1": {
@@ -404,7 +405,8 @@
                                                                 "MOBILE",
                                                                 "HOME",
                                                                 "BUSINESS",
-                                                                "FAX"
+                                                                "FAX",
+                                                                "OTHER"
                                                             ]
                                                         },
                                                         "dialNumber": {
@@ -1025,7 +1027,8 @@
                                                     "Residential",
                                                     "Business",
                                                     "Seasonal",
-                                                    "PO Box"
+                                                    "PO Box",
+                                                    "Other"
                                                 ]
                                             }
                                         },
@@ -1133,7 +1136,8 @@
                                                     "Mobile",
                                                     "Home",
                                                     "Business",
-                                                    "Fax"
+                                                    "Fax",
+                                                    "Other"
                                                 ]
                                             }
                                         },

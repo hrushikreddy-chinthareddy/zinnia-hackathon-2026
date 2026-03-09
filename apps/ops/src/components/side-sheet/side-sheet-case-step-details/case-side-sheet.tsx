@@ -125,7 +125,7 @@ export default function StepSideSheetContent({
                     className="w-full p-8"
                     value={StepSideSheetViews.Documents}
                 >
-                    <DocumentsTab step={step} />
+                    <DocumentsTab documentMetadata={step.documents} />
                 </TabContent>
                 <TabContent
                     className="w-full p-8"
