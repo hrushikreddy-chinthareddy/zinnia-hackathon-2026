@@ -64,7 +64,7 @@ beforeEach(() => {
     mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
 });
 
-describe('policy-details route', () => {
+describe('policy-details route — status banners', () => {
     // ─── StatusBar layout variants ────────────────────────────────
     describe('StatusBar layout variants', () => {
         test('shows no banners for active policy with no open cases', async () => {
