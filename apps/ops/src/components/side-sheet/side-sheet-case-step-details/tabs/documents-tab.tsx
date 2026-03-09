@@ -99,10 +99,10 @@ export default function DocumentsTab({
                 ...originalDoc,
                 id: metadata?.documentId ?? '',
                 name: metadata?.displayName ?? metadata?.documentType ?? '',
+                fileType: metadata?.fileType || '',
                 previewDocProps: {
                     ...originalDoc?.previewDocProps,
-                    documentSource: originalDoc?.previewDocProps?.activeDocType,
-                    fileType: originalDoc?.fileType || '',
+                    activeDocType: metadata?.documentType,
                 },
             } as DocumentView;
         });

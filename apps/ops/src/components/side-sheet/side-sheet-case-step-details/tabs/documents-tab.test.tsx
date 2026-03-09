@@ -128,6 +128,7 @@ describe('DocumentsTab', () => {
                             ? 'Test Document'
                             : 'Download Document',
                     documentType: 'pdf',
+                    fileType: documentId === 'doc-123' ? 'pdf' : undefined,
                 },
             } as Awaited<ReturnType<typeof getEDSMetadata>>)
         );
