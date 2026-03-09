@@ -82,18 +82,28 @@ export default function DocumentsTab({
 
     const isLoading = queryResults.some((result) => result.isPending);
     const documents = queryResults
+        .map((result, index) => ({
+            result,
+            originalDoc: documentMetadata[index],
+        }))
         .filter(
-            (result) =>
+            ({ result }) =>
                 result.status === 'success' && result.data?.metadata?.documentId
         )
-        .map((result) => {
+        .map(({ result, originalDoc }) => {
             const { metadata } = result.data!;
 
             browserLogInfo('Processing document metadata', metadata ?? {});
 
             return {
+                ...originalDoc,
                 id: metadata?.documentId ?? '',
                 name: metadata?.displayName ?? metadata?.documentType ?? '',
+                previewDocProps: {
+                    ...originalDoc?.previewDocProps,
+                    documentSource: originalDoc?.previewDocProps?.activeDocType,
+                    fileType: originalDoc?.fileType || '',
+                },
             } as DocumentView;
         });
 
