@@ -14,6 +14,7 @@ import Typography, {
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import useCaseInsightsPermission from '@deps/hooks/useCaseInsights';
 import { Case, Processes, Statuses } from '@deps/models/case/case';
 import { getCaseInsights } from '@deps/queries/api/openai';
@@ -24,6 +25,7 @@ import {
     getCarrierLogoByClientId,
     getCarrierNameByClientId,
 } from '@deps/utils/carriers';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { LineOfBusiness } from '@zinnia/api-types/types/sor';
 
@@ -33,6 +35,8 @@ import CaseSideNavFinancialTransaction from './case-side-nav-financial-transacti
 import { PartiesProps } from './CaseSideNavParties';
 import CaseSideNavTabs from './CaseSideNavTabs';
 import Transactions from './CaseSideNavTransactions';
+import styles from './styles.module.css';
+import LinkedCases from '../linked-cases/linked-cases';
 export interface CaseSideNavProps {
     data: {
         carrier: string;
@@ -45,11 +49,13 @@ export interface CaseSideNavProps {
         updatedDate: string;
         estimatedCompletionAt?: string | null;
     };
+    caseId?: string | undefined;
 }
 
 // #region Process Timestamp
-const ProcessingTimeStamp = ({ data }: CaseSideNavProps) => {
+const ProcessingTimeStamp = ({ data, caseId }: CaseSideNavProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
+    const { featureFlags } = useOptimizely();
 
     const updatedDate = data.updatedDate;
     const createdDate = data.createdDate.toLowerCase();
@@ -75,11 +81,18 @@ const ProcessingTimeStamp = ({ data }: CaseSideNavProps) => {
     }
 
     return (
-        <div className="flex w-full flex-row items-center gap-2 rounded bg-white p-4 border-1 border-gray-200">
-            <TimeIcon height={20} width={20} role="presentation" />
-            <Typography variant={TypographyVariant.Body}>
-                {statusText}
-            </Typography>
+        <div className={styles.caseStatuscontainer}>
+            <div className={styles.caseStatusRow}>
+                <TimeIcon height={20} width={20} role="presentation" />
+                <Typography variant={TypographyVariant.Body}>
+                    {statusText}
+                </Typography>
+            </div>
+
+            {data.status === Statuses.Completed &&
+                featureFlags[FEATURE_FLAGS.CAN_VIEW_RELATED_CASES] && (
+                    <LinkedCases caseId={caseId} />
+                )}
         </div>
     );
 };
@@ -275,7 +288,7 @@ const CaseSideNav = ({
     return (
         <div className="flex-column flex w-full gap-2 lg:w-[456px]">
             <div className="flex w-full flex-col gap-2 rounded">
-                <ProcessingTimeStamp data={data} />
+                <ProcessingTimeStamp data={data} caseId={caseDetails.id} />
                 <div className="flex w-full flex-col rounded bg-white border-gray-200 border-1">
                     <ContractDetails data={data} />
                     <CaseDetailsSideNav

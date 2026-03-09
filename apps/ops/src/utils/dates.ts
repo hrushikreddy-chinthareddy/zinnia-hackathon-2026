@@ -5,6 +5,8 @@ import timezone from 'dayjs/plugin/timezone';
 import utc from 'dayjs/plugin/utc';
 import { TFunction } from 'next-i18next';
 
+import { DEFAULT_DATE_DISPLAY_FORMAT } from '@deps/types/constants';
+
 import { DEFAULT_ERROR_STRING } from './strings';
 
 export const DEFAULT_DATE_FORMAT = 'M/D/YYYY';
@@ -253,4 +255,12 @@ export const formatTaskTime = (
 
     const totalDays = dur.asDays();
     return format(totalDays, t('allFields.day'));
+};
+
+export const formatFeedTime = (isoString: string) => {
+    return dayjs.utc(isoString).format('hh:mm a');
+};
+
+export const formatFeedDate = (isoString: string) => {
+    return dayjs.utc(isoString).format(DEFAULT_DATE_DISPLAY_FORMAT);
 };

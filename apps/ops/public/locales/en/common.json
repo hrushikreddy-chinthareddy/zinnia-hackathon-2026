@@ -55,12 +55,14 @@
         "technicalExceptionsIndicator": "We’re having trouble updating case progress. An incident ticket has been created and will be resolved shortly.",
         "errorCode": "Error code",
         "summary": "Summary",
+        "noDocuments": "Document details unavailable",
         "viewDetailsException": "View details exceptions",
         "errorDescription": "Error description",
         "sourceSystem": "Source system",
         "inProgress": "In Progress",
         "resolved": "Resolved",
         "noAssignee": "No Assignee",
+        "activityFeedEmptyTitle": "No related activity feed available.",
         "accountValueByPolicyYear": "Account value by {{policyNomenclature}} year",
         "accountValues": "Account values",
         "accountValueTooltip": "This is the cash value amount held within the owner's life insurance policy. The account value accumulates over time as premiums are paid and interest is earned.",
@@ -126,6 +128,7 @@
         "baseDeathBenefit": "Base death benefit",
         "baseDeathBenefitTooltip": "This is the death benefit amount related to the owner's base coverage. It reflects the current figure, so it accounts for any changes to the death benefit that have occurred due to withdrawals or loans.  (Note: This figure may differ from total gross death benefit if there are additional lines of coverage or riders that add to the death benefit.)",
         "beginningAccountValue": "Beginning account value",
+        "caseRequest": "Case Request",
         "bonusRate": "Bonus rate",
         "bonusPeriodFrequency": "Bonus period frequency",
         "business": "Business",
@@ -165,6 +168,7 @@
         "collapseAll": "Collapse all",
         "combinedFunds": "Funds",
         "commissionOption": "Commission option",
+        "completed": "Completed",
         "completedTaskTimesDescription": "Median processing times for tasks over a selected time range.",
         "completedTaskTimesErrorState": "Data not available. Refresh the page to try again.",
         "completedTaskTimesEmptyState": "There is no data for this selection.",
@@ -336,6 +340,7 @@
         "guidelinePremiumTestDate": "Guideline premium test date",
         "guidelineSinglePremium": "Guideline single premium",
         "hasBeen": "has been",
+        "hideDailyInterest": "Hide daily interest",
         "holdingForm": "Holding form",
         "hour": "hour",
         "home": "Home",
@@ -361,6 +366,7 @@
         "initialPaymentExpiryDate": "Initial payment expiry date",
         "initialPremiumAppliedAmount": "Initial premium applied amount",
         "initialPremiumRequestAmount": "Initial premium request amount",
+        "inProgress": "In Progress",
         "interestEarned": "Interest earned",
         "interestGuaranteedPeriod": "Interest guaranteed period",
         "interestRate": "Interest rate",
@@ -381,6 +387,8 @@
         "lastNameSearchError": "Enter a last name to return search results",
         "lastPaymentDate": "Last payment date",
         "lineOfBusiness": "Line of business",
+        "linkedCasesRequestsCompleted": "All related cases are complete",
+        "linkedCasesRequestsRaised": "This {{caseType}} has {{numberOfLinkedCases}} related cases.",
         "linkOrUploadDocument": "Link or upload document",
         "loadingTransactionDetails": "Loading transaction details...",
         "loadingTransactions": "Loading transactions...",
@@ -612,6 +620,7 @@
         "proofOfDeathReceived": "Proof of death received",
         "qualificationType": "Qualification type",
         "qualifiedAdditionalBenefit": "Qualified additional benefit",
+        "raisedOn": "Raised on",
         "quickActions": "Quick actions",
         "reason": "Reason",
         "recipientRequiredToContinue": "Recipient is required to continue.",
@@ -633,6 +642,8 @@
         "requestDate": "Request date",
         "requestedAmount": "Requested amount",
         "requestedDate": "Requested date",
+        "requestForProcessCompleted": "{{caseType}} completed on {{updatedAt}}",
+        "requestForProcessRaised": "This case was flagged for {{caseType}} on {{createdAt}}. Go to ",
         "requiredMinimumDistribution": "Required minimum distribution",
         "requiredMinimumDistributionCalculationOption": "RMD calculation option",
         "requiredMinimumDistributionRecalculationDate": "RMD recalculation date",
@@ -696,6 +707,7 @@
         "ssnSearchError": "Enter a Social Security number to return search results",
         "startDate": "Start date",
         "status": "Active status",
+        "Status": "Status",
         "stateMissing": "State is missing.",
         "streetAddressMissing": "Street address is missing.",
         "submit": "Submit",
@@ -790,6 +802,7 @@
         "transactionReason": "Transaction reason",
         "transactionType": "Transaction type",
         "type": "Type",
+        "unableToFetchRelatedCase": "Unable to fetch related cases.",
         "unbornChildIndicator": "Future children covered",
         "uncollectedCharges": "Uncollected charges",
         "uncollectedPerCharge": "Uncollected per charge",
@@ -879,6 +892,11 @@
         "searchByLastNamePlaceholder": "Individual's last name",
         "searchButtonOwnerName": "Owner name",
         "searchButtonAgentName": "Agent name",
+        "notifierDetails": "Notifier Details",
+        "notifierName": "Notifier Name",
+        "notifierPhoneNumber": "Notifier Phone Number",
+        "notifierRole": "Notifier Role",
+        "relationshipToInsured": "Relationship to Insured",
         "defaultTaskCardTitle": "Oops! Something went wrong while loading the task. Please try again.",
         "defaultTaskCardSubtitle": "For any further help, ",
         "helpDesk": "Submit a help desk ticket.",
@@ -1224,8 +1242,11 @@
         "MODIFIEDEARNINGSONLY": "Modified earnings only",
         "MONEYPURCHASEPENSIONPLAN": "Money Purchase Pension Plan",
         "MONTHLY": "Monthly",
+        "MultipleAgentChange": "Multiple agent change",
+        "MultipleAnnuitantChange": "Multiple annuitant change",
         "MultipleBeneficiaryChange": "Multiple beneficiary change",
         "MultipleEmailChange": "Multiple email change",
+        "MultipleOwnerChange": "Multiple owner change",
         "MultiplePayeeChange": "Multiple payee change",
         "MultiplePhoneNumberChange": "Multiple phone number change",
         "MULTIPLEPOLICYDISCOUNT": "Multiple policy discount",
@@ -3671,6 +3692,7 @@
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"
+
         },
         "communicationSentTemplate": {
             "mail": "Mailed to: {{address}}",
@@ -4174,13 +4196,14 @@
                 "reEnterAccountNumber": "Re-enter account number",
                 "selectIfDifferentPayee": "Select if the check is going to different payee or address",
                 "select": "Select",
-                "disburseToOwnerAddress": "Disburse to owner address",
+                "disburseToOwnerAddress": "Disburse to Owner Address",
                 "disburseToFinancialInstitution": "Disburse to Financial Institution",
                 "disburseToCharity": "Disburse to Charity",
                 "disburseToAnnuitant": "Disburse to Annuitant",
-                "disburseToDifferentAddress": "Disburse to different Address",
-                "disburseToThirdParty": "Disburse to Third Party(Not a Financial Institution / Charity)",
-                "disburseToThirdPartyNoCharity": "Disburse to Third Party(Not a Financial Institution)",
+                "disburseToAnnuitantDlic": "Disburse to Annuitant (When owner is a Revocable Trust)",
+                "disburseToDifferentAddress": "Disburse to Different Address",
+                "disburseToThirdParty": "Disburse to Third Party (Not a Financial Institution / Charity)",
+                "disburseToThirdPartyNotCharityNotFinancial": "Disburse to Third Party or Charity (Not a Financial Institution)",
                 "acordFormReceived": "Is ACORD form received?",
                 "bankName": "Bank name",
                 "bankRoutingNumber": "Bank routing number",
@@ -5079,6 +5102,7 @@
                 "ugma/utma": "UGMA/UTMA Custodial Account",
                 "vulnq": "Non-Qualified Variable Universal Life",
                 "qlacira": "QLAC IRA (Qualified Longevity Annuity Contract)",
+                "remaining": "remaining",
                 "required": "Required",
                 "notRequired": "Not required"
             },
@@ -6014,7 +6038,7 @@
             "issueLabel": "Issue",
             "detailsLabel": "Task Description",
             "noDataAvailable": "No data available.",
-            "noDocuments": "No documents available",
+             "noDocuments": "No documents available",
             "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
@@ -6535,6 +6559,7 @@
                     "residence": "Residential",
                     "business": "Business",
                     "poBox": "PO Box",
+                    "other": "Other",
                     "poBoxLower": "PO box",
                     "seasonal": "Seasonal",
                     "mailing": "Mailing"
@@ -8682,13 +8707,24 @@
             "title": "Contact Established",
             "selectOption": "Select one of the following options:",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contact Established – Restart Process",
+                "resendPacket": "Resend Packet",
+                "restartFollowupProcess": "Restart Follow-Up Process",
                 "updateNotificationMethod": "Update Notification Method"
+            },
+            "tooltips": {
+                "resendPacket": "Resends the packet without restarting the follow-up process using the preselected notification method.",
+                "restartFollowupProcess": "Restarts the follow-up process from Follow-Up 1 using the preselected notification method.",
+                "updateNotificationMethod": "Updates the notification method and restarts the follow-up process from Follow-Up 1 using the new details provided."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Please select an option to continue."
+                    "taskActionsIsRequired": "Please select an option to continue."
                 }
+            },
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Mailing Address"
             }
         },
         "updateNotificationMethodStep": {
@@ -8698,7 +8734,7 @@
                 "email": "Email",
                 "fax": "Fax",
                 "address": "Mailing Address",
-                "change": "change",
+                "change": "Change",
                 "updateEmail": "Update Email Address",
                 "updateFax": "Update Fax Number",
                 "formActions": {
@@ -9047,7 +9083,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "change",
+        "change": "Change",
         "updateAddress": "Update {{type}} address"
     },
     "defaultCaseDataEntry": {
@@ -9702,6 +9738,13 @@
         "errorTitle": "Error",
         "closeButton": "Close"
     },
+    "nigoSummary": {
+        "noNigoReasons": "No NIGO reasons found. Please check the console for debug information.",
+        "heading": "Form Review",
+        "paperApplicationComplete": " Is the paper application complete and ready for processing?",
+        "missingQuestion": "What is missing or incorrect in the form?",
+        "selectRole": "Select the role that has mismatched information."
+    },
     "transactionSummary": {
         "tag": {
             "new": "Added",
@@ -9712,6 +9755,10 @@
         "noSummary": "No transaction summary available.",
         "primaryBene": "Primary beneficiary",
         "contingentBene": "Contingent beneficiary",
+        "owner": "Owner",
+        "jointOwner": "Joint owner",
+        "insured": "Insured",
+        "annuitant": "Annuitant",
         "loading": "Validation API is Running....",
         "successMessage": "Looking good! Be sure to review your entries before submitting",
         "errorMessage": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",

@@ -1,0 +1,94 @@
+name: 'Link Ticket to TAS on PR Merge'
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [dev]
+
+jobs:
+  link-to-tas:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract tickets from PR
+        id: extract_tickets
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          # Extract all unique JIRA ticket IDs (excluding TAS-*) from PR body
+          TICKETS=$(echo "$PR_BODY" | grep -oE '[A-Z]{2,10}-[0-9]+' | grep -v '^TAS-' | sort -u || true)
+
+          # Extract all unique TAS ticket IDs from PR body
+          TAS_KEYS=$(echo "$PR_BODY" | grep -oE 'TAS-[0-9]+' | sort -u || true)
+
+          if [ -z "$TICKETS" ]; then
+            echo "No JIRA tickets found in PR"
+            echo "tickets_found=false" >> $GITHUB_OUTPUT
+          else
+            echo "Found tickets: $TICKETS"
+            echo "tickets_found=true" >> $GITHUB_OUTPUT
+            # Store as newline-delimited multiline output
+            {
+              echo "tickets<<EOF"
+              echo "$TICKETS"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          fi
+
+          if [ -z "$TAS_KEYS" ]; then
+            echo "No TAS tickets found in PR"
+            echo "tas_found=false" >> $GITHUB_OUTPUT
+          else
+            echo "Found TAS tickets: $TAS_KEYS"
+            echo "tas_found=true" >> $GITHUB_OUTPUT
+            {
+              echo "tas_keys<<EOF"
+              echo "$TAS_KEYS"
+              echo "EOF"
+            } >> $GITHUB_OUTPUT
+          fi
+
+      - name: Link tickets to TAS
+        if: steps.extract_tickets.outputs.tickets_found == 'true' && steps.extract_tickets.outputs.tas_found == 'true'
+        env:
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+          JIRA_EMAIL: ${{ secrets.JIRA_EMAIL }}
+        run: |
+          TICKETS="${{ steps.extract_tickets.outputs.tickets }}"
+          TAS_KEYS="${{ steps.extract_tickets.outputs.tas_keys }}"
+
+          # Link every JIRA ticket to every TAS ticket
+          echo "$TICKETS" | while IFS= read -r TICKET; do
+            [ -z "$TICKET" ] && continue
+            echo "$TAS_KEYS" | while IFS= read -r TAS_KEY; do
+              [ -z "$TAS_KEY" ] && continue
+
+              echo "Linking $TICKET to $TAS_KEY..."
+
+              RESPONSE=$(curl -s -w "\n%{http_code}" --request POST \
+                --url 'https://zinnia.atlassian.net/rest/api/3/issueLink' \
+                --user "$JIRA_EMAIL:$JIRA_API_TOKEN" \
+                --header 'Accept: application/json' \
+                --header 'Content-Type: application/json' \
+                --data "{
+                  \"type\": {
+                    \"name\": \"Relates\"
+                  },
+                  \"inwardIssue\": {
+                    \"key\": \"$TAS_KEY\"
+                  },
+                  \"outwardIssue\": {
+                    \"key\": \"$TICKET\"
+                  }
+                }")
+
+              HTTP_CODE=$(echo "$RESPONSE" | tail -n 1)
+
+              if [ "$HTTP_CODE" = "201" ] || [ "$HTTP_CODE" = "200" ]; then
+                echo "Successfully linked $TICKET to $TAS_KEY"
+              else
+                echo "Failed to link $TICKET to $TAS_KEY. HTTP code: $HTTP_CODE"
+                echo "Response: $RESPONSE"
+              fi
+            done
+          done

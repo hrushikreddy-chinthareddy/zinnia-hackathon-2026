@@ -42,7 +42,7 @@ describe('readTuples', () => {
     });
 
     describe('readUserTuples', () => {
-        it('returns a 400 error response when accessToken is missing', async () => {
+        it('returns  400 error response when accessToken is missing', async () => {
             const res = await readTuplesModule.readUserTuples(
                 '',
                 'a=b',

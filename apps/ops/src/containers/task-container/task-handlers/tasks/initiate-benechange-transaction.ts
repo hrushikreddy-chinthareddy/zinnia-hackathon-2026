@@ -24,6 +24,9 @@ import {
     PartyRole,
     Party,
     PolicyResponse,
+    normalizeTaskPayloadAddressType,
+    normalizeTaskPayloadEmailType,
+    normalizeTaskPayloadPhoneType,
 } from '../types';
 
 type Identification = {
@@ -51,7 +54,6 @@ const getIdentifications = (identifications: Identification[] = []) => {
               },
           ];
 };
-
 const getPrefix = (prefix: string | null) => {
     switch (prefix) {
         case 'MR':
@@ -67,7 +69,7 @@ const getPrefix = (prefix: string | null) => {
     }
 };
 
-export const formatParties = (policyResponse: PolicyResponse) => {
+export const formatContractInfo = (policyResponse: PolicyResponse) => {
     const partyRoleMap = policyResponse.partyRoles.reduce(
         (acc: Record<string, string>, role: PartyRole) => {
             acc[role.partyRole] = role.partyId;
@@ -139,7 +141,7 @@ export const formatParties = (policyResponse: PolicyResponse) => {
             party.emails.length > 0
                 ? party.emails.map((email: any) => ({
                       emailAddress: email.emailAddress ?? null,
-                      emailType: email.emailType ?? EmailType.PERSONAL,
+                      emailType: normalizeTaskPayloadEmailType(email.emailType),
                   }))
                 : [
                       {
@@ -174,7 +176,9 @@ export const formatParties = (policyResponse: PolicyResponse) => {
                           extension: phone?.extension ?? null,
                           isPreferred: phone?.isPreferred ?? false,
                           phoneId: phone?.phoneId ?? null,
-                          phoneType: phone?.phoneType ?? PhoneType.HOME,
+                          phoneType: normalizeTaskPayloadPhoneType(
+                              phone?.phoneType
+                          ),
                           startDate: phone?.startDate ?? null,
                           timezone: phone?.timezone ?? null,
                       };
@@ -216,6 +220,7 @@ export const formatParties = (policyResponse: PolicyResponse) => {
             return party ? formatParty(party, roleLabel) : null;
         })
         .filter(Boolean);
+    console.log('parties', parties || 'no parties');
 
     return parties;
 };
@@ -249,10 +254,7 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         bene.preferredCommunicationType ?? null,
                     partyRole: {
                         partyRoleId: role?.partyRoleId ?? '',
-                        partyRole:
-                            roleType === PartyRoleType.PRIMARYBENEFICIARY
-                                ? PartyRoleType.PRIMARYBENEFICIARY
-                                : PartyRoleType.CONTINGENTBENEFICIARY,
+                        partyRole: roleType,
                         partyId: bene.partyId ?? '',
                         relationshipToParty:
                             role?.relationshipToParty ??
@@ -294,8 +296,9 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                 ? bene.emails.map((email: any) => ({
                                       emailAddress: email.emailAddress ?? null,
                                       emailId: email.emailId ?? null,
-                                      emailType:
-                                          email.emailType ?? EmailType.PERSONAL,
+                                      emailType: normalizeTaskPayloadEmailType(
+                                          email.emailType
+                                      ),
                                       endDate: email.endDate ?? null,
                                       isPreferred: email.isPreferred ?? false,
                                       startDate: email.startDate ?? null,
@@ -313,6 +316,209 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                         phones:
                             bene.phones.length > 0
                                 ? [bene.phones[0]].map((phone: any) => {
+                                      const dialNumber =
+                                          phone?.dialNumber ?? '';
+                                      return {
+                                          areaCode:
+                                              phone?.areaCode ??
+                                              (dialNumber.length >= 10
+                                                  ? dialNumber.slice(
+                                                        dialNumber.length - 10,
+                                                        dialNumber.length - 7
+                                                    )
+                                                  : null),
+                                          bestTime: phone.bestTime ?? null,
+                                          countryCode:
+                                              phone?.countryCode ??
+                                              (dialNumber.length > 10
+                                                  ? dialNumber.slice(
+                                                        0,
+                                                        dialNumber.length - 10
+                                                    )
+                                                  : '1'),
+                                          dialNumber:
+                                              dialNumber.length > 0
+                                                  ? getFormattedPhoneNumber(
+                                                        phone
+                                                    ) ?? null
+                                                  : null,
+                                          endDate: phone.endDate ?? null,
+                                          extension: phone.extension ?? null,
+                                          isPreferred:
+                                              phone.isPreferred ?? false,
+                                          phoneId: phone.phoneId ?? null,
+                                          phoneType:
+                                              normalizeTaskPayloadPhoneType(
+                                                  phone.phoneType
+                                              ),
+                                          startDate: phone.startDate ?? null,
+                                          timezone: phone.timezone ?? null,
+                                      };
+                                  })
+                                : [
+                                      {
+                                          phoneType: PhoneType.HOME,
+                                          areaCode: null,
+                                          bestTime: null,
+                                          countryCode: '1',
+                                          dialNumber: null,
+                                          endDate: null,
+                                          extension: null,
+                                          isPreferred: false,
+                                          phoneId: null,
+                                          startDate: null,
+                                          timezone: null,
+                                      },
+                                  ],
+                        identifications: getIdentifications(
+                            bene.identifications
+                        ),
+                        addresses:
+                            bene.addresses.length > 0
+                                ? bene.addresses.map(
+                                      (address: ExtendedAddress) => ({
+                                          addressId: address.addressId ?? null,
+                                          addressType:
+                                              normalizeTaskPayloadAddressType(
+                                                  address?.addressType
+                                              ),
+                                          addressLine1:
+                                              address?.addressLine1 ?? null,
+                                          addressLine2:
+                                              address?.addressLine2 ?? null,
+                                          addressLine3:
+                                              address?.addressLine3 ?? null,
+                                          city: address?.city ?? null,
+                                          state: address?.state ?? null,
+                                          zipCode: address?.zipCode ?? null,
+                                          zipCodeExtension:
+                                              address?.zipCodeExtension ?? null,
+                                          country: address?.country ?? 'USA',
+                                          endDate: address?.endDate ?? null,
+                                          isPreferred:
+                                              address?.isPreferred ?? false,
+                                          startDate: address?.startDate ?? null,
+                                      })
+                                  )
+                                : [
+                                      {
+                                          addressType: AddressType.RESIDENCE,
+                                          addressLine1: '',
+                                          addressLine2: null,
+                                          city: '',
+                                          state: null,
+                                          zipCode: '',
+                                          zipCodeExtension: null,
+                                      },
+                                  ],
+                        beneficiaryPercentage: bene.beneficiaryPercentage ?? 0,
+                    },
+                };
+            });
+
+        return beneData;
+    };
+
+    const primaryBeneficiaries = getBeneficiariesByRole(
+        PartyRoleType.PRIMARYBENEFICIARY
+    );
+    const contingentBeneficiaries = getBeneficiariesByRole(
+        PartyRoleType.CONTINGENTBENEFICIARY
+    );
+
+    return [...primaryBeneficiaries, ...contingentBeneficiaries];
+};
+
+export const formatParties = (policyResponse: PolicyResponse) => {
+    const getPartiesByRole = (roleType: string) => {
+        const partyIds = policyResponse.partyRoles
+            .filter(
+                (role: PartyRole) =>
+                    role.partyRole === roleType &&
+                    (!role?.endDate || !isEndDated(role?.endDate))
+            )
+            .map((role: PartyRole) => role.partyId);
+
+        const partiesData = policyResponse.parties
+            .filter((party: any) => partyIds.includes(party.partyId))
+            .map((party: any) => {
+                const role = policyResponse.partyRoles.find(
+                    (r: PartyRole) =>
+                        r.partyId === party.partyId && r.partyRole === roleType
+                );
+
+                return {
+                    isPerStirpes: party.isPerStirpes ?? false,
+                    isIrrevocable: party.isIrrevocable ?? false,
+                    action: party.action ?? Action.NONE,
+                    actionType: 'BENE_CHANGE',
+                    isRestrictedBeneficiary:
+                        party.isRestrictedBeneficiary ?? false,
+                    preferredCommunicationType:
+                        party.preferredCommunicationType ?? null,
+                    partyRole: {
+                        partyRoleId: role?.partyRoleId ?? '',
+                        partyRole: roleType,
+                        partyId: party.partyId ?? '',
+                        relationshipToParty:
+                            role?.relationshipToParty ??
+                            RelationshipToInsured.OTHER,
+                    },
+                    party: {
+                        partyId: party.partyId ?? null,
+                        partyType: party.partyType,
+                        prefix: getPrefix(party.prefix),
+                        firstName: party.firstName ?? null,
+                        middleName: party.middleName ?? null,
+                        lastName:
+                            party.lastName ||
+                            (party.partyType !== PartyType.INDIVIDUAL
+                                ? party.fullName
+                                : null) ||
+                            null,
+                        suffix: party.suffix ?? null,
+                        trustType: party.trustType ?? null,
+                        trustDate: party.trustDate ?? null,
+                        entityType: party.entityType ?? EntityTypeValue.Other,
+                        gender: party.gender ?? null,
+                        dateOfBirth: party.dateOfBirth ?? null,
+                        documents: party.documents ?? [],
+                        endDate: party.endDate ?? null,
+                        fullName: toTitleCase(
+                            [
+                                party.prefix,
+                                party.firstName,
+                                party.middleName,
+                                party.lastName,
+                                party.suffix,
+                            ]
+                                .filter(Boolean)
+                                .join(' ')
+                        ),
+                        emails:
+                            party.emails.length > 0
+                                ? party.emails.map((email: any) => ({
+                                      emailAddress: email.emailAddress ?? null,
+                                      emailId: email.emailId ?? null,
+                                      emailType:
+                                          email.emailType ?? EmailType.PERSONAL,
+                                      endDate: email.endDate ?? null,
+                                      isPreferred: email.isPreferred ?? false,
+                                      startDate: email.startDate ?? null,
+                                  }))
+                                : [
+                                      {
+                                          emailAddress: null,
+                                          emailId: null,
+                                          emailType: EmailType.PERSONAL,
+                                          endDate: null,
+                                          isPreferred: false,
+                                          startDate: null,
+                                      },
+                                  ],
+                        phones:
+                            party.phones.length > 0
+                                ? party.phones.map((phone: any) => {
                                       const dialNumber =
                                           phone?.dialNumber ?? '';
                                       return {
@@ -366,11 +572,11 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                       },
                                   ],
                         identifications: getIdentifications(
-                            bene.identifications
+                            party.identifications
                         ),
                         addresses:
-                            bene.addresses.length > 0
-                                ? bene.addresses.map(
+                            party.addresses.length > 0
+                                ? party.addresses.map(
                                       (address: ExtendedAddress) => ({
                                           addressId: address.addressId ?? null,
                                           addressType:
@@ -405,22 +611,25 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                           zipCodeExtension: null,
                                       },
                                   ],
-                        beneficiaryPercentage: bene.beneficiaryPercentage ?? 0,
+                        beneficiaryPercentage: party.beneficiaryPercentage ?? 0,
                     },
                 };
             });
 
-        return beneData;
+        return partiesData;
     };
 
-    const primaryBeneficiaries = getBeneficiariesByRole(
-        PartyRoleType.PRIMARYBENEFICIARY
-    );
-    const contingentBeneficiaries = getBeneficiariesByRole(
-        PartyRoleType.CONTINGENTBENEFICIARY
-    );
+    const ownerParties = getPartiesByRole(PartyRoleType.OWNER);
+    const jointOwnerParties = getPartiesByRole(PartyRoleType.JOINTOWNER);
+    const insuredParties = getPartiesByRole(PartyRoleType.INSURED);
+    const annuitantParties = getPartiesByRole(PartyRoleType.ANNUITANT);
 
-    return [...primaryBeneficiaries, ...contingentBeneficiaries];
+    return [
+        ...ownerParties,
+        ...jointOwnerParties,
+        ...insuredParties,
+        ...annuitantParties,
+    ];
 };
 
 const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
@@ -460,14 +669,18 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
         };
     },
 
-    getPayload: (task: any, logCtx?: LoggingContext) => ({
-        category: ['Beneficiary Change'],
-        businessProcess: task?.process,
-        carrier: task?.carrier,
-        policyNumber: task?.data?.policyNumber,
-        planCode: task?.data?.planCode,
-        logCtx,
-    }),
+    getPayload: (task: any, logCtx?: LoggingContext) => {
+        const categories = task?.data?.categories || [];
+
+        return {
+            category: categories,
+            businessProcess: task?.process,
+            carrier: task?.carrier,
+            policyNumber: task?.data?.policyNumber,
+            planCode: task?.data?.planCode,
+            logCtx,
+        };
+    },
 
     transformResponse: async (response, metadata, task) => {
         if (!response || response.length === 0) return;
@@ -542,9 +755,10 @@ const beneChangeHandler: TaskHandler<BeneficiaryTaskPayload, any> = {
                 data: {
                     ...task.data,
                     contractInfo: {
-                        parties: formatParties(policyResponse),
+                        parties: formatContractInfo(policyResponse),
                     },
                     actionData: formatBeneficiaries(policyResponse),
+                    partyData: formatParties(policyResponse),
                 },
             });
         }

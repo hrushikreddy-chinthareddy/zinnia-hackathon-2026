@@ -1,5 +1,5 @@
-import { FieldTemplateProps } from '@rjsf/utils';
-import { Tag, TagVariant } from '@zinnia/bloom/components';
+import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
+import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
 import React, {
     useCallback,
@@ -28,15 +28,26 @@ import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { TransactionResponse } from '@zinnia/api-types/types/bpm';
 
+import styles from './transaction-summary-template.module.css';
 import {
-    getRoleLabel,
     fetchValidationSummary,
     getTransactionPartyDisplayValue,
     formatAgentType,
+    formatTypeLabel,
     getPartyMeta,
+    formattedAddress,
+    formattedPhone,
+    formattedEmail,
+    groupPartiesByPartyId,
 } from './transaction-summary-template.utils';
+import { TabTitle } from '../transaction-accordion/types';
 
-import type { SummaryItem } from './transaction-summary-template.utils';
+import type {
+    SummaryItem,
+    Address,
+    Phone,
+    Email,
+} from './transaction-summary-template.utils';
 
 interface ValidationResult {
     error: string;
@@ -52,17 +63,22 @@ interface ValidationResponse {
 interface SummaryField {
     key: string;
     label: string;
+    visibleWhen?: Record<string, string | string[]>;
 }
 
 interface SummarySection {
     label?: string;
+    layout?: 'vertical' | 'horizontal';
     fields: SummaryField[];
 }
 
 export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
+    const tabTitle = props.uiSchema?.['ui:options']?.title;
+    const isFormReviewTab = tabTitle === TabTitle.FormReview;
+
     function renderValidationErrors() {
         return (
-            <div className="mt-10 flex flex-col gap-6">
+            <div className={styles.validationErrors}>
                 {validationResponse?.validationResult ? (
                     validationResponse.validationResult.map(
                         (validationResult: ValidationResult) => {
@@ -87,7 +103,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                         <b>{t('internalServerError')}</b>
                     </BannerAlert>
                 )}
-                <div className="flex flex-wrap gap-8 max-md:flex-col">
+                <div className={styles.validationCheckbox}>
                     <CheckboxText
                         label={t('submitWithErrorsText')}
                         checked={isChecked}
@@ -101,10 +117,17 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'transactionSummary',
     });
-    const { formContext = {}, uiSchema = {}, readonly } = props;
+    const { formContext = {}, uiSchema = {}, schema = {}, readonly } = props;
     const url = formContext?.customData?.validationUrl;
     const { issueResolved } = formContext?.customData || {};
     const customData = formContext?.customData;
+
+    const [expandedCardIndex, setExpandedCardIndex] = useState<number>(0); // First card expanded by default
+
+    const toggleCard = (index: number) => {
+        setExpandedCardIndex((prevIndex) => (prevIndex === index ? -1 : index));
+    };
+
     const [validationResponse, setValidationResponse] =
         useState<ValidationResponse | null>(null);
     const [_validationError, setValidationError] = useState<string | null>(
@@ -161,7 +184,14 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     );
 
     useEffect(() => {
-        if (!url || !stableCustomData || !issueResolved || readonly) return;
+        if (
+            readonly ||
+            !url ||
+            !stableCustomData ||
+            !issueResolved ||
+            isFormReviewTab
+        )
+            return;
         setLoading(true);
         setValidationError(null);
 
@@ -177,10 +207,11 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                 setValidationSummary(null);
             });
     }, [
+        readonly,
         url,
         stableCustomData,
         issueResolved,
-        readonly,
+        isFormReviewTab,
         invokeNewBeneChangeApi,
         setValidationSummary,
         t,
@@ -195,121 +226,170 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
         uiSchema?.['ui:options']?.dataKey ||
         formContext.customData?.dataKey ||
         'actionData';
-    const dataSource =
-        formContext.customData?.[dataKey] || formContext[dataKey] || [];
+
+    const resolveNestedKey = (obj: any, path: string) =>
+        path.split('.').reduce((acc: any, key: string) => acc?.[key], obj);
+
+    const taskType = formContext.customData?.taskType;
+    const { label: showLabel, title: titleText = schema?.title } =
+        getUiOptions(uiSchema);
+
+    const displayItems = useMemo(() => {
+        const data =
+            resolveNestedKey(formContext.customData, dataKey) ||
+            resolveNestedKey(formContext, dataKey) ||
+            [];
+        return Array.isArray(data) && data.length > 0
+            ? groupPartiesByPartyId(data as SummaryItem[], t, taskType)
+            : [];
+    }, [formContext, dataKey, t, taskType]);
 
     if (loading) {
         return <div>{t('loading')}</div>;
     }
 
-    if (!Array.isArray(dataSource) || dataSource.length === 0) {
+    if (displayItems.length === 0) {
         return <div>{t('noSummary')}</div>;
     }
 
-    const taskType = formContext.customData?.taskType;
     return (
-        <div id={'id'} className="space-y-8">
-            {!readonly && (
-                <p className="mb-3 font-primary text-sm">
+        <div id={'id'} className={styles.container}>
+            {showLabel && titleText && (
+                <Typography
+                    variant={TypographyVariant.H2}
+                    className={styles.title}
+                >
+                    {titleText}
+                </Typography>
+            )}
+            {!readonly && !isFormReviewTab && (
+                <p className={styles.validationMessage}>
                     {validationSucceeded
                         ? t('successMessage')
                         : t('errorMessage')}
                 </p>
             )}
-            {(dataSource as SummaryItem[]).map(
-                (item: SummaryItem, idx: number) => {
-                    const {
-                        party,
-                        fullName,
-                        addressStr,
-                        phoneStr,
-                        emailStr,
-                        ssn,
-                        gender,
-                        dob,
-                        relationshipToParty,
-                    } = getPartyMeta(item);
-                    let allocation = '-';
-                    if (taskType === TaskType.Initiate_BeneChange_Transaction) {
+            {displayItems.map((item, idx) => {
+                const {
+                    party,
+                    fullName,
+                    addressStr,
+                    addresses,
+                    phoneStr,
+                    phones,
+                    emailStr,
+                    emails,
+                    ssn,
+                    gender,
+                    dob,
+                    trustDate,
+                    relationshipToParty,
+                } = getPartyMeta(item, t);
+                let allocation = '-';
+                if (taskType === TaskType.Initiate_BeneChange_Transaction) {
+                    allocation =
+                        party.beneficiaryPercentage != null
+                            ? `${party.beneficiaryPercentage}%`
+                            : '-';
+                } else if (taskType === TaskType.Agent_Change_Detail) {
+                    if (item.action === 'UPDATE' || item.action === 'ADD') {
                         allocation =
-                            party.beneficiaryPercentage != null
-                                ? `${party.beneficiaryPercentage}%`
+                            party.partyPercentage != null
+                                ? `${party.partyPercentage}%`
                                 : '-';
-                    } else if (taskType === TaskType.Agent_Change_Detail) {
-                        if (item.action === 'UPDATE' || item.action === 'ADD') {
-                            allocation =
-                                party.partyPercentage != null
-                                    ? `${party.partyPercentage}%`
-                                    : '-';
-                        } else {
-                            allocation =
-                                party.agentPercentage != null
-                                    ? `${party.agentPercentage}%`
-                                    : '-';
-                        }
+                    } else {
+                        allocation =
+                            party.agentPercentage != null
+                                ? `${party.agentPercentage}%`
+                                : '-';
                     }
-                    const isPerStirpes =
-                        item.isPerStirpes === true ? 'Yes' : 'No';
-                    const isIrrevocable =
-                        item.isIrrevocable === true ? 'Yes' : 'No';
-                    const { tagVariant, tagText } = getTagVariant(
-                        customData?.requestType ?? item.action ?? 'NONE',
-                        t
+                }
+                const isPerStirpes = item.isPerStirpes === true ? 'Yes' : 'No';
+                const isIrrevocable =
+                    item.isIrrevocable === true ? 'Yes' : 'No';
+                const { tagVariant, tagText } = getTagVariant(
+                    customData?.requestType ?? item.action ?? 'NONE',
+                    t
+                );
+                const { roles } = item;
+
+                const sectionsRaw = uiSchema?.['ui:options']?.sections;
+                const sections = Array.isArray(sectionsRaw) ? sectionsRaw : [];
+
+                const isFieldVisible = (field: SummaryField) => {
+                    if (!field.visibleWhen) return true;
+
+                    return Object.entries(field.visibleWhen).every(
+                        ([key, expected]) => {
+                            const actual = String(
+                                item.party?.[key] ?? item[key] ?? ''
+                            ).toUpperCase();
+                            const allowedValues = Array.isArray(expected)
+                                ? expected
+                                : [expected];
+
+                            return allowedValues.some(
+                                (val) => val.toUpperCase() === actual
+                            );
+                        }
                     );
-                    const role = item.partyRole
-                        ? getRoleLabel(item.partyRole, t, taskType)
-                        : '';
+                };
 
-                    const sectionsRaw = uiSchema?.['ui:options']?.sections;
-                    const sections = Array.isArray(sectionsRaw)
-                        ? sectionsRaw
-                        : [];
+                const getFieldValue = (fieldKey: string) => {
+                    if (fieldKey in item) return item[fieldKey];
+                    if (item.party && fieldKey in item.party)
+                        return item.party[fieldKey];
+                    return '-';
+                };
 
-                    const getFieldValue = (fieldKey: string) => {
-                        if (fieldKey in item) return item[fieldKey];
-                        if (item.party && fieldKey in item.party)
-                            return item.party[fieldKey];
-                        return '-';
-                    };
+                const fieldValueExtractors: Record<
+                    string,
+                    (args: { field: SummaryField; item: SummaryItem }) => string
+                > = {
+                    agentType: ({ item }) => formatAgentType(item),
+                    address: () => addressStr,
+                    phone: () => phoneStr,
+                    email: () => emailStr,
+                    ssn: () => ssn,
+                    gender: () => gender,
+                    dateOfBirth: () => dob,
+                    trustDate: () => trustDate,
+                    beneficiaryPercentage: () => allocation,
+                    allocation: () => allocation,
+                    relationshipToParty: () => relationshipToParty,
+                    isPerStirpes: () => isPerStirpes,
+                    isIrrevocable: () => isIrrevocable,
+                };
 
-                    const fieldValueExtractors: Record<
-                        string,
-                        (args: {
-                            field: SummaryField;
-                            item: SummaryItem;
-                        }) => string
-                    > = {
-                        agentType: ({ item }) => formatAgentType(item),
-                        address: () => addressStr,
-                        phone: () => phoneStr,
-                        email: () => emailStr,
-                        ssn: () => ssn,
-                        gender: () => gender,
-                        dateOfBirth: () => dob,
-                        beneficiaryPercentage: () => allocation,
-                        allocation: () => allocation,
-                        relationshipToParty: () => relationshipToParty,
-                        isPerStirpes: () => isPerStirpes,
-                        isIrrevocable: () => isIrrevocable,
-                    };
-
-                    function getSummaryFieldValue(
-                        field: SummaryField,
-                        item: SummaryItem
-                    ) {
-                        const extractor = fieldValueExtractors[field.key];
-                        if (extractor) {
-                            return extractor({ field, item });
-                        }
-                        return getFieldValue(field.key);
+                function getSummaryFieldValue(
+                    field: SummaryField,
+                    item: SummaryItem
+                ) {
+                    const extractor = fieldValueExtractors[field.key];
+                    if (extractor) {
+                        return extractor({ field, item });
                     }
-                    return (
+                    return getFieldValue(field.key);
+                }
+                const isExpanded = expandedCardIndex === idx;
+
+                return (
+                    <div key={idx} className={styles.card}>
+                        {/* Clickable header */}
                         <div
-                            key={idx}
-                            className="border border-gray-200 rounded-lg p-8 bg-white shadow-sm mb-8"
+                            className={styles.cardHeader}
+                            onClick={() => toggleCard(idx)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    toggleCard(idx);
+                                }
+                            }}
                         >
-                            <div className="mb-2">
-                                <div className="flex items-center gap-4">
+                            <div className={styles.headerRow}>
+                                <div className={styles.headerLeft}>
                                     <Typography variant={TypographyVariant.H2}>
                                         {getTransactionPartyDisplayValue({
                                             taskType,
@@ -317,79 +397,283 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                                             item,
                                         })}
                                     </Typography>
-                                    {tagText && (
+                                    {tagText && !isFormReviewTab && (
                                         <Tag
                                             text={tagText}
-                                            className="m-1 mx-3 h-6"
+                                            className={styles.actionTag}
                                             variant={tagVariant as TagVariant}
                                         />
                                     )}
                                 </div>
-                                {role && (
-                                    <div className="mt-1">
-                                        <Tag text={role} className="my-1" />
-                                    </div>
-                                )}
+                                {/* Chevron icon */}
+                                <Icon
+                                    type={IconType.CHEVRON}
+                                    className={
+                                        isExpanded
+                                            ? styles.chevronExpanded
+                                            : styles.chevron
+                                    }
+                                />
                             </div>
-                            {(sections as SummarySection[]).map(
+                            {roles.length > 0 && (
+                                <div className={styles.roleTags}>
+                                    {roles.map((r: string) => (
+                                        <Tag
+                                            key={r}
+                                            text={r}
+                                            className={styles.roleTag}
+                                        />
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Collapsible content */}
+                        {isExpanded &&
+                            (sections as SummarySection[]).map(
                                 (section: SummarySection, sIdx: number) => (
                                     <React.Fragment key={sIdx}>
                                         {section.label && (
                                             <Typography
                                                 variant={TypographyVariant.H2}
-                                                className="mb-2"
+                                                className={styles.sectionTitle}
                                             >
                                                 {section.label}
                                             </Typography>
                                         )}
-                                        <div className="flex flex-row gap-x-16 mb-2">
-                                            {(
-                                                section.fields as SummaryField[]
-                                            ).map((field: SummaryField) => {
-                                                const value =
-                                                    getSummaryFieldValue(
-                                                        field,
-                                                        item
-                                                    );
-                                                return (
-                                                    <div key={field.key}>
-                                                        <Label
-                                                            className="h-6 leading-4.5"
-                                                            label={field.label}
-                                                            variant={
-                                                                LabelVariant.FieldLabel
+                                        <div
+                                            className={
+                                                section.layout === 'vertical'
+                                                    ? styles.sectionVertical
+                                                    : styles.sectionHorizontal
+                                            }
+                                        >
+                                            {(section.fields as SummaryField[])
+                                                .filter(isFieldVisible)
+                                                .map((field: SummaryField) => {
+                                                    const value =
+                                                        getSummaryFieldValue(
+                                                            field,
+                                                            item
+                                                        );
+                                                    const isAddressField =
+                                                        field.key === 'address';
+                                                    const isPhoneField =
+                                                        field.key === 'phone';
+                                                    const isEmailField =
+                                                        field.key === 'email';
+                                                    const showAddressesHorizontal =
+                                                        section.layout ===
+                                                            'vertical' &&
+                                                        isAddressField &&
+                                                        Array.isArray(
+                                                            addresses
+                                                        ) &&
+                                                        addresses.length > 0;
+                                                    const showPhonesHorizontal =
+                                                        section.layout ===
+                                                            'vertical' &&
+                                                        isPhoneField &&
+                                                        Array.isArray(phones) &&
+                                                        phones.length > 0;
+                                                    const showEmailsHorizontal =
+                                                        section.layout ===
+                                                            'vertical' &&
+                                                        isEmailField &&
+                                                        Array.isArray(emails) &&
+                                                        emails.length > 0;
+
+                                                    const showList =
+                                                        showAddressesHorizontal ||
+                                                        showPhonesHorizontal ||
+                                                        showEmailsHorizontal;
+
+                                                    return (
+                                                        <div
+                                                            key={field.key}
+                                                            className={
+                                                                showList
+                                                                    ? styles.addressFieldWrapper
+                                                                    : undefined
                                                             }
-                                                        />
-                                                        <div className="text-sm whitespace-pre-line font-semibold">
-                                                            {value ?? '-'}
+                                                        >
+                                                            <Label
+                                                                className={
+                                                                    styles.fieldLabel
+                                                                }
+                                                                label={
+                                                                    field.label
+                                                                }
+                                                                variant={
+                                                                    LabelVariant.FieldLabel
+                                                                }
+                                                            />
+                                                            {showAddressesHorizontal ? (
+                                                                <div
+                                                                    className={
+                                                                        styles.addressList
+                                                                    }
+                                                                >
+                                                                    {(
+                                                                        addresses as Address[]
+                                                                    ).map(
+                                                                        (
+                                                                            addr,
+                                                                            aIdx
+                                                                        ) => {
+                                                                            const typeLabel =
+                                                                                formatTypeLabel(
+                                                                                    addr.addressType
+                                                                                );
+                                                                            return (
+                                                                                <div
+                                                                                    key={
+                                                                                        aIdx
+                                                                                    }
+                                                                                    className={
+                                                                                        styles.addressItem
+                                                                                    }
+                                                                                >
+                                                                                    <span
+                                                                                        className={
+                                                                                            styles.addressTypeLabel
+                                                                                        }
+                                                                                    >
+                                                                                        {
+                                                                                            typeLabel
+                                                                                        }
+                                                                                    </span>
+                                                                                    <br />
+                                                                                    {formattedAddress(
+                                                                                        addr
+                                                                                    ) ||
+                                                                                        '-'}
+                                                                                </div>
+                                                                            );
+                                                                        }
+                                                                    )}
+                                                                </div>
+                                                            ) : showPhonesHorizontal ? (
+                                                                <div
+                                                                    className={
+                                                                        styles.addressList
+                                                                    }
+                                                                >
+                                                                    {(
+                                                                        phones as Phone[]
+                                                                    ).map(
+                                                                        (
+                                                                            ph,
+                                                                            pIdx
+                                                                        ) => (
+                                                                            <div
+                                                                                key={
+                                                                                    pIdx
+                                                                                }
+                                                                                className={
+                                                                                    styles.addressItem
+                                                                                }
+                                                                            >
+                                                                                <span
+                                                                                    className={
+                                                                                        styles.addressTypeLabel
+                                                                                    }
+                                                                                >
+                                                                                    {formatTypeLabel(
+                                                                                        ph.phoneType,
+                                                                                        'Phone'
+                                                                                    )}
+                                                                                </span>
+                                                                                <br />
+                                                                                {formattedPhone(
+                                                                                    ph
+                                                                                )}
+                                                                            </div>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                            ) : showEmailsHorizontal ? (
+                                                                <div
+                                                                    className={
+                                                                        styles.addressList
+                                                                    }
+                                                                >
+                                                                    {(
+                                                                        emails as Email[]
+                                                                    ).map(
+                                                                        (
+                                                                            em,
+                                                                            eIdx
+                                                                        ) => (
+                                                                            <div
+                                                                                key={
+                                                                                    eIdx
+                                                                                }
+                                                                                className={
+                                                                                    styles.addressItem
+                                                                                }
+                                                                            >
+                                                                                <span
+                                                                                    className={
+                                                                                        styles.addressTypeLabel
+                                                                                    }
+                                                                                >
+                                                                                    {formatTypeLabel(
+                                                                                        em.emailType,
+                                                                                        'Email'
+                                                                                    )}
+                                                                                </span>
+                                                                                <br />
+                                                                                {formattedEmail(
+                                                                                    em
+                                                                                )}
+                                                                            </div>
+                                                                        )
+                                                                    )}
+                                                                </div>
+                                                            ) : (
+                                                                <div
+                                                                    className={
+                                                                        styles.fieldValue
+                                                                    }
+                                                                >
+                                                                    {value ??
+                                                                        '-'}
+                                                                </div>
+                                                            )}
                                                         </div>
-                                                    </div>
-                                                );
-                                            })}
+                                                    );
+                                                })}
                                         </div>
                                         {sIdx !== sections.length - 1 && (
-                                            <hr className="my-6 border-gray-200" />
+                                            <hr
+                                                className={
+                                                    styles.sectionDivider
+                                                }
+                                            />
                                         )}
                                     </React.Fragment>
                                 )
                             )}
-                        </div>
-                    );
-                }
-            )}
+                    </div>
+                );
+            })}
 
             {showSelectionError && !isChecked && (
                 <AssistiveText
-                    className="mt-2"
+                    className={styles.assistiveText}
                     variant={AssistiveTextVariant.Error}
                     text={t('missingCheckToConfirm')}
                 />
             )}
 
-            {!readonly && !validationSucceeded && renderValidationErrors()}
+            {!readonly &&
+                !isFormReviewTab &&
+                !validationSucceeded &&
+                renderValidationErrors()}
             {showSelectionError && !isChecked && (
                 <AssistiveText
-                    className="mt-2"
+                    className={styles.assistiveText}
                     variant={AssistiveTextVariant.Error}
                     text={t('missingCheckToConfirm')}
                 />

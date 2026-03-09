@@ -5,7 +5,8 @@ import {
 } from '@zinnia/bloom/components';
 import { countries } from 'countries-list';
 import { TFunction } from 'i18next';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Button, {
     ButtonSize,
@@ -19,26 +20,39 @@ import Field, {
     FieldType,
     FieldVariant,
 } from '@deps/components/fields/field';
+import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
 import Radio from '@deps/components/radio/radio';
 import SelectComponent from '@deps/components/select/select';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import PhoneNumber from '@deps/containers/address-change-container/components/contact-details/phone-number';
-import { ClaimActionTypes } from '@deps/containers/death-claim-container/death-claim.types';
+import {
+    NotifierParty,
+    RoleType,
+} from '@deps/containers/death-claim-container/death-claim.types';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
+import { TaskActions } from '@deps/contexts/UpdateNotificationMethodContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
 import {
-    deStringifyTrueFalseNull,
     formatPhone,
+    formatPhoneWithAreacode,
+    isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { NOOP } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING, toTitleCase } from '@deps/utils/strings';
 import { Phone } from '@zinnia/api-types/types/sor';
 
 import BeneficiaryDeceased from './beneficiary-deceased';
 import BeneficiaryNotificationChange from './beneficiary-notification-change';
-import { CallForInformationFunctions } from './call-for-information.helper';
+import {
+    CallForInformationFunctions,
+    getAction,
+} from './call-for-information.helper';
 import {
     CallEntry,
     CallLog,
@@ -49,19 +63,82 @@ import {
 } from './claims.type';
 import { DisplayCompletedCalls } from './display-completed-calls';
 
-function CallForInformation({
-    task,
-    setTask,
-    onContinueReady,
-    correlationId,
-    setSubmitFailed,
-    formErrors,
-    setFormErrors,
-    beneficiary,
-    setBeneficiary,
-    readOnly,
-    t,
-}: {
+function NotifierDetails({ notifier }: { notifier: NotifierParty }) {
+    const { t: defaultT } = useTranslation();
+    const notifierRole =
+        notifier.notifierRole === RoleType.Beneficiary &&
+        isNullEmptyOrUndefined(notifier.party?.partyId)
+            ? RoleType.Other
+            : notifier.notifierRole;
+
+    return (
+        <div className="flex flex-col w-full mb-2">
+            <label className="font-primary text-lg mt-2 mb-4">
+                {defaultT('allFields.notifierDetails')}
+            </label>
+            <div className="grid grid-cols-5 gap-2 text-md align-center mb-4">
+                <div className="col-span-1 text-[--color-base-text-secondary]">
+                    {defaultT('allFields.notifierName')}
+                </div>
+                <Typography
+                    variant={TypographyVariant.BodySm}
+                    className="col-span-4"
+                >
+                    <PiiWrapper>
+                        {notifier.party?.fullName || DEFAULT_ERROR_STRING}
+                    </PiiWrapper>
+                </Typography>
+                <div className="col-span-1 text-[--color-base-text-secondary]">
+                    {defaultT('allFields.notifierRole')}
+                </div>
+                <Typography
+                    variant={TypographyVariant.BodySm}
+                    className="col-span-4"
+                >
+                    {toTitleCase(notifierRole) || DEFAULT_ERROR_STRING}
+                </Typography>
+                <div className="col-span-1 text-[--color-base-text-secondary]">
+                    {defaultT('allFields.notifierPhoneNumber')}
+                </div>
+                <Typography
+                    variant={TypographyVariant.BodySm}
+                    className="col-span-4"
+                >
+                    <PiiWrapper>
+                        {notifier.party?.phone?.dialNumber
+                            ? formatPhoneWithAreacode(notifier?.party?.phone)
+                            : DEFAULT_ERROR_STRING}
+                    </PiiWrapper>
+                </Typography>
+                {notifier.notifierRole === RoleType.Other && (
+                    <>
+                        <div className="col-span-1 text-[--color-base-text-secondary]">
+                            {defaultT('allFields.relationshipToInsured')}
+                        </div>
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className="col-span-4"
+                        >
+                            {notifier.party?.relationshipToInsured ||
+                                DEFAULT_ERROR_STRING}
+                        </Typography>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+
+const INITIAL_CALL_ENTRY: CallEntry = {
+    id: 1,
+    contactRole: '',
+    name: '',
+    phone: {} as Phone,
+    callSummary: '',
+    taskActions: [],
+};
+
+export interface CallForInformationProps {
     task: any;
     readOnly: boolean;
     setTask: React.Dispatch<React.SetStateAction<any>>;
@@ -75,16 +152,25 @@ function CallForInformation({
         React.SetStateAction<UpdatedBeneficiaryRecord>
     >;
     t: TFunction<TranslationFiles.COMMON, { keyPrefix: string }>;
-}) {
+    prevBeneficiary?: UpdatedBeneficiaryRecord;
+}
+
+function CallForInformation({
+    task,
+    setTask,
+    onContinueReady,
+    correlationId,
+    setSubmitFailed,
+    formErrors,
+    setFormErrors,
+    beneficiary,
+    setBeneficiary,
+    readOnly,
+    prevBeneficiary,
+    t,
+}: CallForInformationProps) {
     const [callEntries, setCallEntries] = useState<CallEntry[]>([
-        {
-            id: 1,
-            contactRole: '',
-            name: '',
-            phone: {} as Phone,
-            callSummary: '',
-            contactEstablished: '',
-        },
+        { ...INITIAL_CALL_ENTRY },
     ]);
 
     const dynamicKey = task?.data?.details?.beneCall
@@ -100,7 +186,7 @@ function CallForInformation({
     const [relationshipToOwner, setRelationshipToOwner] = useState('');
     const [addressSelected, setAddressSelected] = useState(false);
     const [callSummary, setCallSummary] = useState('');
-    const [contactEstablished, setContactEstablished] = useState<string>('');
+    const [taskActions, setTaskActions] = useState<TaskActions[]>([]);
 
     const { goToNext } = useWorkflow();
 
@@ -134,8 +220,8 @@ function CallForInformation({
         addressSelected,
         callSummary,
         setCallSummary,
-        contactEstablished,
-        setContactEstablished,
+        taskActions,
+        setTaskActions,
     });
 
     const contractNumber =
@@ -143,6 +229,24 @@ function CallForInformation({
             task.identifiers,
             CaseIdentifier.contractNumber
         ) || '';
+
+    const action = useMemo(
+        () => getAction(prevBeneficiary, beneficiary),
+        [prevBeneficiary, beneficiary]
+    );
+
+    useEffect(() => {
+        setBeneficiary((prev) => ({
+            ...prev,
+            notificationPreferences: {
+                ...prev.notificationPreferences,
+                notificationMethod: {
+                    ...prev.notificationPreferences.notificationMethod,
+                    action,
+                },
+            },
+        }));
+    }, [action]);
 
     useEffect(() => {
         if (readOnly) {
@@ -175,7 +279,7 @@ function CallForInformation({
                 country,
                 relationshipToOwner,
                 callSummary,
-                contactEstablished
+                taskActions
             );
 
             if (dynamicKey === DynamicKey.BENE_FINAL_CONTACT_ATTEMPT) {
@@ -183,7 +287,10 @@ function CallForInformation({
                     dynamicKey
                 ].subTaskBeneCallChangeRequire =
                     task?.data?.details?.benefinalcontactattempt?.callLogs?.some(
-                        (log: CallLog) => log.contactEstablished === true
+                        (log: CallLog) =>
+                            log?.taskActions?.includes(
+                                TaskActions.CONTACT_ESTABLISHED
+                            )
                     );
             }
             setTask(updatedTask);
@@ -208,24 +315,23 @@ function CallForInformation({
         goToNext,
         country,
         dynamicKey,
-        contactEstablished,
+        taskActions,
     ]);
 
     useEffect(() => {
         if (
-            name &&
-            filteredCallLogs.length > 0 &&
-            contactRole !== ContactRole.OTHER
+            !name ||
+            filteredCallLogs.length === 0 ||
+            contactRole === ContactRole.OTHER
         ) {
-            const selectedLog = filteredCallLogs.find(
-                (log) => log.fullName + log.id === name
-            );
-            if (selectedLog?.phone) {
-                setPhone(selectedLog.phone as Phone);
-            } else {
-                setPhone({} as Phone);
-            }
+            return;
         }
+        const selectedLog = filteredCallLogs.find(
+            (log) => log.fullName + log.id === name
+        );
+        setPhone(
+            selectedLog?.phone ? (selectedLog.phone as Phone) : ({} as Phone)
+        );
     }, [name, filteredCallLogs, contactRole]);
 
     useEffect(() => {
@@ -237,30 +343,34 @@ function CallForInformation({
         name,
         phone,
         callSummary,
-        contactEstablished,
+        taskActions,
         updateCurrentCallEntry,
     ]);
 
     useEffect(() => {
-        if (!contactRole || !task?.data?.details?.[dynamicKey]?.callLogs)
+        if (!contactRole || !task?.data?.details?.[dynamicKey]?.callLogs) {
             return;
-        const callLogs = task.data.details[dynamicKey].callLogs;
-        const updatedCallLogs = callLogs.map((log: CallLog, index: number) => ({
-            ...log,
-            id: index,
-        }));
-
-        const filtered = updatedCallLogs.filter((log: CallLog) => {
-            if (
-                contactRole === ContactRole.AGENT &&
-                log.partyRoleCategory === ContactRole.AGENT
-            ) {
-                return true;
-            } else if (contactRole === log.partyRole) {
-                return true;
-            }
-            return false;
+        }
+        const callLogs = task.data.details[dynamicKey].callLogs as CallLog[];
+        const updatedCallLogs = callLogs.map((log: CallLog, index: number) => {
+            const taskActions =
+                log?.contactEstablished === true
+                    ? [TaskActions.CONTACT_ESTABLISHED]
+                    : [];
+            return { ...log, taskActions, id: String(index) };
         });
+
+        const filtered = updatedCallLogs.filter(
+            (log: CallLog & { id: string }) => {
+                if (
+                    contactRole === ContactRole.AGENT &&
+                    log.partyRoleCategory === ContactRole.AGENT
+                ) {
+                    return true;
+                }
+                return contactRole === log.partyRole;
+            }
+        );
 
         setFilteredCallLogs(filtered);
     }, [contactRole, task, dynamicKey]);
@@ -285,8 +395,26 @@ function CallForInformation({
         addressSelected,
         relationshipToOwner,
         callSummary,
-        contactEstablished,
+        taskActions,
     ]);
+
+    const handleTaskActions = (value: string) => {
+        if (isNullEmptyOrUndefined(value)) {
+            setTaskActions([]);
+        } else {
+            setTaskActions([value as TaskActions]);
+        }
+    };
+
+    const notifier = task.data.details[dynamicKey]?.notifiers ?? null;
+    const showChangeTypeSection =
+        (beneficiary.changeRequire &&
+            taskActions.includes(TaskActions.CONTACT_ESTABLISHED) &&
+            contactRole &&
+            name &&
+            phone.dialNumber &&
+            callSummary) ||
+        (readOnly && beneficiary.changeRequire);
 
     return (
         <div>
@@ -298,7 +426,7 @@ function CallForInformation({
                     pii={true}
                 />
             </div>
-
+            {notifier ? <NotifierDetails notifier={notifier} /> : null}
             <DisplayCompletedCalls
                 task={task}
                 t={t}
@@ -466,17 +594,20 @@ function CallForInformation({
                             <Radio
                                 label={t('wasContactEstablished') as string}
                                 items={[
-                                    { label: t('yes'), value: 'true' },
+                                    {
+                                        label: t('yes'),
+                                        value: TaskActions.CONTACT_ESTABLISHED,
+                                    },
                                     {
                                         label: t('no'),
-                                        value: 'false',
+                                        value: '',
                                     },
                                 ]}
                                 readonly={readOnly}
                                 disabled={readOnly}
-                                value={contactEstablished}
+                                value={taskActions?.[0] ?? ''}
                                 onChange={(event) => {
-                                    setContactEstablished(event.target.value);
+                                    handleTaskActions(event.target.value);
                                 }}
                                 required={true}
                             />
@@ -529,7 +660,7 @@ function CallForInformation({
                 )}
 
                 {(beneficiary.changeRequire === false ||
-                    contactEstablished === 'false') &&
+                    !taskActions.includes(TaskActions.CONTACT_ESTABLISHED)) &&
                     contactRole &&
                     name &&
                     callSummary && (
@@ -545,13 +676,7 @@ function CallForInformation({
                         </div>
                     )}
 
-                {(beneficiary.changeRequire &&
-                    deStringifyTrueFalseNull(contactEstablished) &&
-                    contactRole &&
-                    name &&
-                    phone.dialNumber &&
-                    callSummary) ||
-                (readOnly && beneficiary.changeRequire) ? (
+                {showChangeTypeSection ? (
                     <>
                         <div className="mt-4 col-span-4">
                             <SelectComponent
@@ -564,7 +689,10 @@ function CallForInformation({
                                         const isNotificationChange =
                                             newValue ===
                                             ChangeTypeEnum.BENEFICIARY_DECEASED;
-
+                                        const newAction = getAction(
+                                            prevBeneficiary,
+                                            beneficiary
+                                        );
                                         setBeneficiary((prev) => ({
                                             ...prev,
                                             changeType:
@@ -579,9 +707,7 @@ function CallForInformation({
                                                         ?.notificationPreferences
                                                         ?.notificationMethod
                                                         ?.method,
-                                                    action: isNotificationChange
-                                                        ? ClaimActionTypes.NONE
-                                                        : ClaimActionTypes.UPDATE,
+                                                    action: newAction,
                                                 },
                                             },
                                         }));

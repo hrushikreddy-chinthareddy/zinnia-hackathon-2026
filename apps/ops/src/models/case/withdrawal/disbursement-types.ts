@@ -244,6 +244,6 @@ export enum SendCheckOption {
     FinancialInstitution = 'Disburse to Financial Institution',
     Charity = 'Disburse to Charity',
     Annuitant = 'Disburse to Annuitant',
-    DifferentAddress = 'Disburse to different Address',
+    DifferentAddress = 'Disburse to Different Address',
     ThirdPartyNotFinancialIns = 'Disburse to Third Party(Not a Financial Institution / Charity)',
 }

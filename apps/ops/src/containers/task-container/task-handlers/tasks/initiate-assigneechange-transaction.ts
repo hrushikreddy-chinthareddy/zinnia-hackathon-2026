@@ -8,11 +8,7 @@ import {
 } from '@deps/helpers/string.helpers';
 import { FormMetadata } from '@deps/models/case/task';
 import { ManagementTask } from '@deps/models/case/task-instance';
-import {
-    EmailType,
-    PartyType,
-    PhoneType,
-} from '@deps/models/policy/sor-policy';
+import { PartyType, PhoneType } from '@deps/models/policy/sor-policy';
 import { NigoSearch } from '@deps/queries/api/nigo-search';
 import { getPolicyDetailsSsr } from '@deps/queries/api/policies';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
@@ -27,13 +23,15 @@ import {
     Party,
     PolicyResponse,
     PartyRoleType,
-    AddressType,
     Identification,
     Email,
     Phone,
     ApiResponse,
     Address,
     ActionDataItem,
+    normalizeTaskPayloadAddressType,
+    normalizeTaskPayloadEmailType,
+    normalizeTaskPayloadPhoneType,
 } from '../types';
 
 const ensureArray = <T>(value?: T[] | null): T[] =>
@@ -46,7 +44,7 @@ const normalizeNullableString = (v?: string | null): string | null =>
     isNullEmptyOrUndefined(v) ? null : String(v);
 
 const formatAddress = (address?: Partial<Address>): Address => ({
-    addressType: address?.addressType ?? AddressType.RESIDENCE,
+    addressType: normalizeTaskPayloadAddressType(address?.addressType),
     addressLine1: address?.addressLine1 ?? '',
     city: address?.city ?? '',
     state:
@@ -72,7 +70,10 @@ const formatPhone = (phone?: Partial<Phone>): Phone => {
     const dialNumber = phone?.dialNumber ?? '';
 
     return {
-        phoneType: (phone?.phoneType as string) ?? PhoneType.MOBILE,
+        phoneType: normalizeTaskPayloadPhoneType(
+            phone?.phoneType,
+            PhoneType.MOBILE
+        ),
         dialNumber:
             dialNumber.length > 0
                 ? getFormattedPhoneNumber(phone as Phone) ?? null
@@ -104,7 +105,7 @@ const getPhones = (phones?: Party['phones']): Phone[] => {
 
 const formatEmail = (email?: Partial<Email>): Email => ({
     emailAddress: email?.emailAddress ?? null,
-    emailType: (email?.emailType as string) ?? EmailType.PERSONAL,
+    emailType: normalizeTaskPayloadEmailType(email?.emailType),
     endDate: (email?.endDate as string) ?? null,
     isPreferred: Boolean(email?.isPreferred),
     startDate: (email?.startDate as string) ?? null,
