@@ -75,6 +75,8 @@
 }
 
 .casesCount {
+    display: flex;
+    align-items: center;
     color: var(--color-semantics-color-semantic-information);
     /* necessary for WCAG minimum touch target of 44x44 */
     padding: var(--measure-dimension-padding-xl);
