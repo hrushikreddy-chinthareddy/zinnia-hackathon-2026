@@ -35,7 +35,11 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
             triggerAsChild
             trigger={
                 <button
-                    aria-label={t('site.navLinks.userMenu.text') as string}
+                    aria-label={
+                        t('allFields.navLinksUserMenuFor', {
+                            name: props.name,
+                        }) as string
+                    }
                     className={clsx(
                         styles.contextTrigger,
                         'typography-content-body color-base-text-secondary'

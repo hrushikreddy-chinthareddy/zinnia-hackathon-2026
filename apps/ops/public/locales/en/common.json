@@ -487,6 +487,7 @@
         "modifiedEndowmentContractTestDate": "MEC test date",
         "monthOfYear": "Month of year",
         "nameOnAccount": "Name on account",
+        "navLinksUserMenuFor": "User menu for {{name}}",
         "netAmountAtRisk": "Net amount at risk",
         "netBenefitAmount": "Net benefit amount",
         "netDeathBenefit": "Estimated net death benefit",
