@@ -151,7 +151,7 @@ export const handlers = [
         return HttpResponse.json(schema);
     }),
 
-    http.post('*/api/enterprise-search/v1/search', ({ request }) => {
+    http.post('*/api/enterprise-search/v1/search', () => {
         return HttpResponse.json({
             caseId: 'CASE123',
             status: 'OPEN',
