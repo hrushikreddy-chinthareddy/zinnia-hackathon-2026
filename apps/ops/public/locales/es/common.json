@@ -1430,6 +1430,8 @@
         "indexAutomationRequestReceivedSource": "Fuente",
         "indexAutomationDocumentIdentificationDocTypeGroup": "Tipo de documento",
         "indexAutomationDocumentIdentificationDocType": "Tipo de documento",
+        "indexAutomationDocumentIdentificationClassificationMethod": "Método de clasificación",
+        "indexAutomationDocumentIdentificationClassificationStatus": "Estado de clasificación",
         "indexAutomationDocumentExtractionContractNumber": "Número de contrato",
         "indexAutomationDocumentExtractionSsn": "SSN",
         "indexAutomationDocumentExtractionOwnerName": "Nombre del propietario",

@@ -855,6 +855,8 @@
         "indexAutomationRequestReceivedSource": "Source",
         "indexAutomationDocumentIdentificationDocTypeGroup": "Doc Type Group",
         "indexAutomationDocumentIdentificationDocType": "Doc Type",
+        "indexAutomationDocumentIdentificationClassificationMethod": "Classification Method",
+        "indexAutomationDocumentIdentificationClassificationStatus": "Classification Status",
         "indexAutomationDocumentExtractionContractNumber": "Contract Number",
         "indexAutomationDocumentExtractionSsn": "SSN",
         "indexAutomationDocumentExtractionOwnerName": "Owner Name",

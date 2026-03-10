@@ -22,6 +22,42 @@
     grid-column: span 3 / span 3;
 }
 
+.methodResultsContainer {
+    grid-column: span 5 / span 5;
+    width: 100%;
+    background-color: var(--color-base-surface-surface-secondary, #f9fafb);
+    border: 1px solid var(--color-base-border-border-primary, #e5e7eb);
+    border-radius: 0.375rem;
+    padding: 0.75rem;
+    margin-top: 0.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.methodResultRow {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.5rem;
+    align-items: baseline;
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.25rem;
+    background-color: var(--color-base-surface-surface-primary, #ffffff);
+}
+
+.methodName {
+    font-weight: 600;
+    font-size: 0.75rem;
+    color: var(--color-base-text-text-secondary, #6b7280);
+    white-space: nowrap;
+    min-width: 8rem;
+}
+
+.methodMessage {
+    font-size: 0.875rem;
+    color: var(--color-base-text-text-primary, #374151);
+}
+
 .customIconStyle {
     flex-shrink: 0;
     color: #4b5563;

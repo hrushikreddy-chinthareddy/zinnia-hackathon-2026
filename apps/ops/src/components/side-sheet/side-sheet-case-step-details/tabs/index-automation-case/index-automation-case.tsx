@@ -17,13 +17,19 @@ import styles from './index-automation-case.module.css';
 import {
     DataType,
     IndexAutomationCaseProps,
-    // eslint-disable-next-line import/no-unresolved
 } from './index-automation-case.types';
 
 type FieldConfig = {
     labelKey: string;
     field: string;
     variant?: TypographyVariant;
+};
+
+type ClassificationMethodResult = {
+    method: string;
+    status: string;
+    reasonCode: string;
+    message: string;
 };
 
 const DATA_TYPE_FIELDS: Record<string, FieldConfig[]> = {
@@ -154,9 +160,94 @@ const IndexAutomationCase = ({
         );
     };
 
+    const renderClassificationDetails = (entity: Record<string, any>) => {
+        const classificationResponse = entity?.classificationResponse;
+        if (!classificationResponse) return null;
+
+        const {
+            classificationStatus,
+            classificationMethod,
+            classificationMethodResults,
+        } = classificationResponse;
+
+        const showClassificationMethod =
+            classificationMethod && classificationMethod !== 'NONE';
+
+        if (classificationStatus === 'SUCCESS') {
+            return showClassificationMethod ? (
+                <React.Fragment>
+                    <div className={styles.customColSpan2}>
+                        {t(
+                            'allFields.indexAutomationDocumentIdentificationClassificationMethod'
+                        )}
+                    </div>
+                    <Typography
+                        variant={TypographyVariant.BodySmBold}
+                        className={styles.customColSpan3}
+                    >
+                        {classificationMethod}
+                    </Typography>
+                </React.Fragment>
+            ) : null;
+        }
+
+        return (
+            <React.Fragment>
+                {showClassificationMethod && (
+                    <>
+                        <div className={styles.customColSpan2}>
+                            {t(
+                                'allFields.indexAutomationDocumentIdentificationClassificationMethod'
+                            )}
+                        </div>
+                        <Typography
+                            variant={TypographyVariant.BodySmBold}
+                            className={styles.customColSpan3}
+                        >
+                            {classificationMethod}
+                        </Typography>
+                    </>
+                )}
+                <div className={styles.customColSpan2}>
+                    {t(
+                        'allFields.indexAutomationDocumentIdentificationClassificationStatus'
+                    )}
+                </div>
+                <Typography
+                    variant={TypographyVariant.BodySmBold}
+                    className={styles.customColSpan3}
+                >
+                    {classificationStatus || DEFAULT_ERROR_STRING}
+                </Typography>
+                {classificationMethodResults?.length > 0 && (
+                    <div className={styles.methodResultsContainer}>
+                        {classificationMethodResults.map(
+                            (result: ClassificationMethodResult) => (
+                                <div
+                                    key={result.method}
+                                    className={styles.methodResultRow}
+                                >
+                                    <div className={styles.methodResultLabel}>
+                                        {result.method}
+                                    </div>
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                    >
+                                        {result.message}
+                                    </Typography>
+                                </div>
+                            )
+                        )}
+                    </div>
+                )}
+            </React.Fragment>
+        );
+    };
+
     const renderFields = (fields: FieldConfig[]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const entity = transactionEntity?.entity as Record<string, any>;
+        const entity = transactionEntity?.entity as Record<string, string>;
+
+        console.log(entity);
 
         return (
             <div className={styles.flexFullCol}>
@@ -176,6 +267,8 @@ const IndexAutomationCase = ({
                             </Typography>
                         </React.Fragment>
                     ))}
+                    {dataType === DataType.DOCUMENT_IDENTIFICATION_DATA &&
+                        renderClassificationDetails(entity)}
                 </div>
             </div>
         );
