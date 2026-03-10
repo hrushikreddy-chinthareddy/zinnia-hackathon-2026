@@ -1,20 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
-
-import PolicySlug from '@deps/containers/policy-slug/policy-slug';
-import { server } from '@vitest/mocks/node';
-import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
-import { createTestWrapper } from '@vitest/utils/create-test-wrapper';
 
 import {
     annuityPolicyOverrides,
     lifePolicyOverrides,
 } from './helpers/policy-overrides';
-import {
-    createMockRouter,
-    createMockPolicyPageProps,
-} from './helpers/policy-test-fixtures';
+import { createMockRouter } from './helpers/policy-test-fixtures';
+import { renderPolicyDetailsPage } from './helpers/render-policy-page';
 
 let mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
 
@@ -28,37 +21,6 @@ vi.mock('next/router', () => ({
         back: () => {},
     },
 }));
-
-const defaultProps = createMockPolicyPageProps();
-
-const renderPolicyDetailsPage = (
-    policyOverrides: Record<string, unknown> = {},
-    handlers: Parameters<typeof server.use> = []
-) => {
-    if (handlers.length > 0) {
-        server.use(...handlers);
-    }
-
-    server.use(
-        http.get('*/api/policies/:planCode/:policyId', ({ params }) =>
-            HttpResponse.json({
-                data: {
-                    ...policyEndpointData,
-                    policyNumber: String(params.policyId ?? 'POL123'),
-                    product: {
-                        ...policyEndpointData.product,
-                        planCode: String(params.planCode ?? 'PLAN1'),
-                    },
-                    ...policyOverrides,
-                },
-            })
-        )
-    );
-
-    return render(<PolicySlug {...defaultProps} />, {
-        wrapper: createTestWrapper(),
-    });
-};
 
 beforeEach(() => {
     mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
