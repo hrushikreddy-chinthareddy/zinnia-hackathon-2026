@@ -20,14 +20,25 @@ export interface CreateTestWrapperOptions {
 /**
  * Creates a test wrapper component with i18n, React Query, and Optimizely providers.
  *
+ * **Feature flags:** All flags defined in `vitest/mocks/global/optimizely/featureFlags.json`
+ * are enabled by default. The optional `featureFlags` parameter is merged on top of those
+ * defaults, so tests that need to disable a specific flag must explicitly pass `false`:
+ *
+ * ```tsx
+ * createTestWrapper({
+ *   featureFlags: { [FEATURE_FLAGS.SOME_FLAG]: false },
+ * });
+ * ```
+ *
  * @example
  * ```tsx
  * import { createTestWrapper } from '../../vitest/utils/create-test-wrapper';
  * import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
  *
+ * // All production flags are enabled; override only what the test needs to change.
  * const wrapper = createTestWrapper({
  *   featureFlags: {
- *     [FEATURE_FLAGS.CASE_STATS_COUNT]: true,
+ *     [FEATURE_FLAGS.CASE_STATS_COUNT]: false,
  *   },
  * });
  *
