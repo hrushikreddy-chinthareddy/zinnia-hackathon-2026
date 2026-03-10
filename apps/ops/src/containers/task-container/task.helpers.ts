@@ -1,6 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { RadioItem } from '@deps/components/radio/radio';
+import { CaseIdentifier } from '@deps/models/case/case';
 import { CaseIdentifierType, FormMetadata } from '@deps/models/case/task';
 import {
     MatchingCase,
@@ -39,7 +40,8 @@ export const generatePotentialMatchesOptions = (
     const getCaseId = (item: TransactionData) =>
         item.identifiers?.find(
             (id: { identifier: string }) =>
-                id.identifier === CaseIdentifierType.ZL_CASE_ID
+                id.identifier === CaseIdentifierType.ZL_CASE_ID ||
+                id.identifier === CaseIdentifier.CaseId
         )?.value;
 
     return (
@@ -85,12 +87,30 @@ export function applyDocumentMatchingPotentialMatches(
     schema: FormMetadata
 ): void {
     const allowedStatuses = task?.data?.potentialMatchCriteria?.status || [];
-    const potentialMatches =
+    const potentialMatchesOptions =
         responsePotentialMatches && responsePotentialMatches.length > 0
             ? generatePotentialMatchesOptions(
                   responsePotentialMatches,
                   allowedStatuses
               )
+            : [];
+
+    const potentialMatches =
+        responsePotentialMatches && responsePotentialMatches.length > 0
+            ? responsePotentialMatches.map((item) => ({
+                  zlCaseId: item.identifiers?.find(
+                      (id: { identifier: string }) =>
+                          id.identifier === CaseIdentifierType.ZL_CASE_ID ||
+                          id.identifier === CaseIdentifier.CaseId
+                  )?.value,
+                  policyNumber: item.identifiers?.find(
+                      (id: { identifier: string }) =>
+                          id.identifier === CaseIdentifier.PolicyNumber
+                  )?.value,
+                  correlationId: item.correlationId,
+                  entityType: item.entityType,
+                  recordId: item.recordId,
+              }))
             : [];
 
     Object.assign(task, {
@@ -121,7 +141,7 @@ export function applyDocumentMatchingPotentialMatches(
             });
 
         schema.uiSchema.matchingResult['ui:options'].customOptions = [
-            ...potentialMatches,
+            ...potentialMatchesOptions,
             ...existingOptions,
         ];
     }
