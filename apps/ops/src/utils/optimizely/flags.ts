@@ -207,4 +207,5 @@ export enum FEATURE_FLAGS {
     OPS_MANAGER_AGENT_OWNER_FILTERS = 'ops_manager_agent_owner_filters',
     CASE_MANAGEMENT_SUREIFY_FLOW_UPSERT_IF_EXISTS = 'case_management_sureify_flow_upsert_if_exists',
     FEATURES_AND_RIDERS_TABLE_VIEW = 'features_and_riders_table_view',
+    SHOULD_USE_UPDATED_RATES_FOR_FIUL_SP = 'should_use_updated_rates_for_fiul_sp',
 }

@@ -1,6 +1,7 @@
 import { Timezone } from '@zinnia/form-engine-sdk';
 import { FC } from 'react';
 
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 
 import { Eapp } from './Eapp';
@@ -21,6 +22,7 @@ const EappContainer: FC<EappContainer> = ({
     isEdit,
     illustrationId,
 }) => {
+    const { featureFlags } = useOptimizely();
     const timezoneResult = Timezone.from(DEFAULT_TIMEZONE_NAME);
     if (!timezoneResult.success) {
         // TODO: better error handling if that happens. We will need to retrieve the timezone from the user and validate
@@ -29,7 +31,8 @@ const EappContainer: FC<EappContainer> = ({
 
     const illustrationHandlerFactory = IllustrationHandlerFactory(
         planCode,
-        clientCase
+        clientCase,
+        featureFlags
     );
 
     if (!illustrationHandlerFactory) {

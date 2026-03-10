@@ -2,6 +2,7 @@ import { VersionedAnswers, Language, Timezone } from '@zinnia/form-engine-sdk';
 import { FC, PropsWithChildren } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { ReactComponent as ErrorIcon } from '@deps/styles/elements/icons/icons_outlined/exclamation-alert.svg';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 
@@ -28,6 +29,7 @@ export const EAppProviders: FC<PropsWithChildren<EAppProvidersProps>> = ({
     submitCallback,
     children,
 }) => {
+    const { featureFlags } = useOptimizely();
     const timezoneResult = Timezone.from(DEFAULT_TIMEZONE_NAME);
     if (!timezoneResult.success) {
         // TODO: better error handling if that happens. We will need to retrieve the timezone from the user and validate
@@ -36,7 +38,8 @@ export const EAppProviders: FC<PropsWithChildren<EAppProvidersProps>> = ({
 
     const illustrationHandlerFactory = IllustrationHandlerFactory(
         planCode,
-        clientCase
+        clientCase,
+        featureFlags
     );
 
     if (!illustrationHandlerFactory) {
