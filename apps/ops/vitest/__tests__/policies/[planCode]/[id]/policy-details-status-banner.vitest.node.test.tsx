@@ -2,6 +2,8 @@ import { screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
+import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
+
 import {
     annuityPolicyOverrides,
     lifePolicyOverrides,
