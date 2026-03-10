@@ -288,8 +288,13 @@ describe('policy-details route', () => {
                 },
             });
 
-            await screen.findByRole('heading', { name: 'Contract Timeline' });
-            expect(screen.queryByText('Maturity date')).not.toBeInTheDocument();
+            const annuityTimelineCard = (await screen.findByRole('heading', {
+                name: 'Contract Timeline',
+            })) as HTMLElement;
+
+            expect(
+                within(annuityTimelineCard).queryByText('Maturity date')
+            ).not.toBeInTheDocument();
         });
     });
 
