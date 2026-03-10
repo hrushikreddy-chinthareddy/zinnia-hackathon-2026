@@ -185,7 +185,7 @@ interface TermQuickQuoteAvailableDataItem extends TermQuickQuoteBaseDataItem {
     error: undefined;
 }
 
-interface TermQuickQuoteNotAvailableItem extends TermQuickQuoteBaseDataItem {
+interface TermQuickQuoteIneligibleItem extends TermQuickQuoteBaseDataItem {
     range: number | NumberOrRange | undefined;
     inegilibilityReasonField: IneligibleReasonByClass[] | undefined;
     error: undefined;
@@ -199,17 +199,17 @@ interface TermQuickQuoteErrorItem extends TermQuickQuoteBaseDataItem {
 
 type TermQuickQuoteDataItem =
     | TermQuickQuoteAvailableDataItem
-    | TermQuickQuoteNotAvailableItem
+    | TermQuickQuoteIneligibleItem
     | TermQuickQuoteErrorItem;
 
-export type TermQuickQuoteRiderNotAvailableItem = {
+export type TermQuickQuoteRiderIneligibleItem = {
     termLengths: number[];
     reasons?: IneligibilityReason[] | undefined;
 };
 
 export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;
-    inegilibilityReasonField?: TermQuickQuoteRiderNotAvailableItem[];
+    inegilibilityReasonField?: TermQuickQuoteRiderIneligibleItem[];
 };
 
 export interface TermQuickQuoteResultData {
@@ -223,8 +223,3 @@ export type QuickQuoteResult = TermQuickQuoteResult;
 export const isTermResult = (
     result: QuickQuoteResult
 ): result is TermQuickQuoteResult => result.productType === ProductTypes.TERM;
-
-export type PlainTermQuickQuoteRiderNotAvailableItem = {
-    termLength: number;
-    reason: IneligibilityReason;
-};

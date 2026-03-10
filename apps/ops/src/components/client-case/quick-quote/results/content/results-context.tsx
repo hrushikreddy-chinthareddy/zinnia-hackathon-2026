@@ -21,7 +21,7 @@ import {
     QuickQuoteParams,
     TermQuickQuoteRiderDataItem,
     RIDER_CODE_MAP,
-    TermQuickQuoteRiderNotAvailableItem,
+    TermQuickQuoteRiderIneligibleItem,
 } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
@@ -199,8 +199,8 @@ export const QuickQuoteResultsProvider = ({
 
     const groupRiderErrors = useCallback(
         (
-            reasons: TermQuickQuoteRiderNotAvailableItem[]
-        ): TermQuickQuoteRiderNotAvailableItem[] => {
+            reasons: TermQuickQuoteRiderIneligibleItem[]
+        ): TermQuickQuoteRiderIneligibleItem[] => {
             // Group reasons to their corresponding termLengths
             const reasonMap: Map<
                 string,
@@ -519,7 +519,7 @@ export const QuickQuoteResultsProvider = ({
                                                                             riderName
                                                                         ]
                                                                     ),
-                                                            } as TermQuickQuoteRiderNotAvailableItem;
+                                                            } as TermQuickQuoteRiderIneligibleItem;
                                                         }
                                                     )
                                                 ).sort((a, b) => {
