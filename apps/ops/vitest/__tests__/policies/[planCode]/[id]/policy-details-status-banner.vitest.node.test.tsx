@@ -77,8 +77,32 @@ describe('policy-details route — status banners', () => {
 
         test('shows case count banner when policy has open cases', async () => {
             renderPolicyDetailsPage(annuityPolicyOverrides, [
-                http.post('*/api/case/v1/cases/search', () =>
-                    HttpResponse.json({ data: [], total: 2 })
+                http.post('*/api/enterprise-search/v1/search', () =>
+                    HttpResponse.json({
+                        data: [
+                            {
+                                id: 'CASE-001',
+                                policyNumber: 'POL123',
+                                caseStatus: 'Open',
+                                process: 'OFT',
+                                carrier: 'GILICO',
+                                productName: 'Guidepath 7',
+                                createdAt: '2025-01-01T00:00:00Z',
+                                updatedAt: '2025-01-02T00:00:00Z',
+                            },
+                            {
+                                id: 'CASE-002',
+                                policyNumber: 'POL123',
+                                caseStatus: 'Open',
+                                process: 'Renewal',
+                                carrier: 'GILICO',
+                                productName: 'Guidepath 7',
+                                createdAt: '2025-02-01T00:00:00Z',
+                                updatedAt: '2025-02-02T00:00:00Z',
+                            },
+                        ],
+                        total: 2,
+                    })
                 ),
             ]);
 

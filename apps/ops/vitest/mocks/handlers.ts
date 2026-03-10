@@ -186,11 +186,18 @@ export const handlers = [
         return HttpResponse.json(schema);
     }),
 
+    http.post('*/api/enterprise-search/v1/search', ({ request }) => {
+        return HttpResponse.json({
+            caseId: 'CASE123',
+            status: 'OPEN',
+        });
+    }),
+
     // Catch-all: block any request that doesn't have an explicit handler above.
     // This prevents real network calls from escaping during tests.
     http.all('*', ({ request }) => {
         throw new Error(
-            `[MSW] No handler found for: ${request.method} ${request.url}\nAdd a handler to vitest/mocks/handlers.ts`
+            `[MSW] No handler found for: ${request.method} ${request.url}. Add a handler to vitest/mocks/handlers.ts`
         );
     }),
 ];

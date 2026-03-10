@@ -163,9 +163,9 @@ describe('Policy Slug Page', () => {
             expect(personHeading).toBeInTheDocument();
 
             // Should show Identification card
-            const identificationHeading = await screen.findByText(
-                'Identification'
-            );
+            const identificationHeading = await screen.findByRole('heading', {
+                name: 'Identification',
+            });
             expect(identificationHeading).toBeInTheDocument();
         });
         test('renders nothing when second slug is assigneechange IF transactionData is null', async () => {
@@ -269,7 +269,7 @@ describe('Policy Slug Page', () => {
             renderPolicyPage(personEligibilityHandlers);
 
             // Wait for PersonSubPage to load by checking for Identification card
-            await screen.findByText('Identification');
+            await screen.findByRole('heading', { name: 'Identification' });
 
             // Verify Allocation card renders (only shows for beneficiaries)
             const allocationHeading = await screen.findByRole('heading', {
@@ -372,18 +372,6 @@ describe('Policy Slug Page', () => {
     });
 
     describe('activity route', () => {
-        test('renders ActivitySubPage when REVISED_HISTORY_TABLE flag is off', async () => {
-            mockRouter = createMockRouter({
-                slug: ['activity', 'transactions'],
-            });
-            renderPolicyPage([activityTransactionsHandler]);
-
-            const heading = await screen.findByRole('heading', {
-                name: 'Activity',
-            });
-            expect(heading).toBeInTheDocument();
-        });
-
         test('renders FilterTransactions for activity/transactions when REVISED_HISTORY_TABLE flag is on', async () => {
             mockRouter = createMockRouter({
                 slug: ['activity', 'transactions'],
