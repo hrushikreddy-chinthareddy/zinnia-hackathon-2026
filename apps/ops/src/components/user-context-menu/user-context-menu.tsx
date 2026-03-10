@@ -32,6 +32,7 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
 
     return (
         <MenuContextual
+            role=""
             triggerAsChild
             trigger={
                 <button
