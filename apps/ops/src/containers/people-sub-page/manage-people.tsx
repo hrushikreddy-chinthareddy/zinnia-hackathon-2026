@@ -25,6 +25,8 @@ import {
 } from '@deps/types/segment-analytics';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
+import styles from './manage-people.module.css';
+
 const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -212,13 +214,15 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
                     variant={TypographyVariant.NavLinks}
                     data-testid="manage-people"
                 >
-                    {t('people.managePeople')}
-                    <Icon
-                        type={IconType.CHEVRON}
-                        height={16}
-                        width={16}
-                        className="ml-1"
-                    />
+                    <span className={styles.managePeopleLink}>
+                        {t('people.managePeople')}
+                        <Icon
+                            type={IconType.CHEVRON}
+                            height={16}
+                            width={16}
+                            className="ml-1"
+                        />
+                    </span>
                 </Typography>
             }
         >
