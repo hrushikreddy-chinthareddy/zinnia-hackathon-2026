@@ -77,42 +77,7 @@ export const handlers = [
     ),
 
     http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/phonenumber/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/emailaddress/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/freelookcancellation/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/parties/:partyRole/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/onetimepremium/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/systematicprograms/*/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/partialwithdrawalonetime/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/fullsurrender/eligibilitycheck',
+        '*/api/bpm/v1/policies/:planCode/:policyId/*/eligibilitycheck',
         () => HttpResponse.json({ status: 'Success' })
     ),
 
