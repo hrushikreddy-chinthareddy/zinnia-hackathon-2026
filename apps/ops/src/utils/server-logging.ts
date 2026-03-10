@@ -7,7 +7,7 @@ import {
     withApiAuthRequired,
     withPageAuthRequired,
 } from '@auth0/nextjs-auth0';
-import { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse, HttpStatusCode } from 'axios';
 import {
     GetServerSideProps,
     GetServerSidePropsContext,
@@ -175,6 +175,27 @@ export const parseErrorInformation = (
     } catch (e) {
         return { error: 'error parsing error information' };
     }
+};
+
+/**
+ * Returns true when the given error represents an HTTP 403 (Forbidden) response.
+ *
+ * Use this when you need to treat 403 differently from other errors (e.g. in catch
+ * blocks). For example, 403 often indicates a permission/authorization outcome rather
+ * than a server or network failure, so you may want to log it as a warning instead of
+ * an error, or skip error logging entirely.
+ *
+ * Handles both Axios error shapes (error.response.status) and raw response objects
+ * (error.status), plus any error that parseErrorInformation can map to a requestStatus.
+ */
+export const isForbiddenError = (error?: any): boolean => {
+    if (!error) return false;
+    const status =
+        (error as AxiosError)?.response?.status ??
+        (error as AxiosResponse)?.status;
+    if (status === HttpStatusCode.Forbidden) return true;
+    const parsed = parseErrorInformation(error) as APIErrorInformation;
+    return Number(parsed?.requestStatus) === HttpStatusCode.Forbidden;
 };
 
 const getContextFromRequest = (

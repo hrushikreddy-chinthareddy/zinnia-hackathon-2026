@@ -98,15 +98,17 @@ export const PolicySearchResultsTable: FC<PolicySearchResultsTableProps> = ({
                         sortable
                         onClick={() => handleSort(PolicySortBy.LAST_UPDATED)}
                     >
-                        {t('dashboard.search.results.table.lastUpdated')}
-                        <Icon
-                            type={
-                                sortOrder === SortOrder.ASC
-                                    ? IconType.ARROW_UP
-                                    : IconType.ARROW_DOWN
-                            }
-                            color="#00628B"
-                        />
+                        <span className={styles.sortableHeader}>
+                            {t('dashboard.search.results.table.lastUpdated')}
+                            <Icon
+                                type={
+                                    sortOrder === SortOrder.ASC
+                                        ? IconType.ARROW_UP
+                                        : IconType.ARROW_DOWN
+                                }
+                                color="#00628B"
+                            />
+                        </span>
                     </TableHeaderCell>
                     <TableHeaderCell scope="col"></TableHeaderCell>
                 </TableRow>
