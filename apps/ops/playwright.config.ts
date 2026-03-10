@@ -5,6 +5,8 @@ import { defineConfig, devices } from '@playwright/test';
  */
 import dotenv from 'dotenv';
 import path from 'path';
+
+import { localBaseUrl } from './e2e/helpers/constants';
 dotenv.config({ path: path.resolve(__dirname, '.env.development.local') });
 
 /**
@@ -88,7 +90,7 @@ export default defineConfig({
     /* Run your local dev server before starting the tests */
     webServer: {
         command: 'npm run dev',
-        url: 'http://localhost:3000',
+        url: localBaseUrl,
         reuseExistingServer: !process.env.CI,
     },
 });
