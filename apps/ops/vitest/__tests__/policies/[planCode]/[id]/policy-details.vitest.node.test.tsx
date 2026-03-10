@@ -1,14 +1,7 @@
-import { render, screen, fireEvent, within } from '@testing-library/react';
-import { http, HttpResponse } from 'msw';
+import { screen, fireEvent, within } from '@testing-library/react';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
-import PolicySlug from '@deps/containers/policy-slug/policy-slug';
-import { server } from '@vitest/mocks/node';
 import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
-import {
-    createTestWrapper,
-    CreateTestWrapperOptions,
-} from '@vitest/utils/create-test-wrapper';
 
 import {
     agentDataEmptyHandler,
@@ -21,10 +14,8 @@ import {
     termPolicyOverrides,
     iulPolicyOverrides,
 } from './helpers/policy-overrides';
-import {
-    createMockRouter,
-    createMockPolicyPageProps,
-} from './helpers/policy-test-fixtures';
+import { createMockRouter } from './helpers/policy-test-fixtures';
+import { renderPolicyDetailsPage } from './helpers/render-policy-page';
 
 let mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
 
@@ -38,40 +29,6 @@ vi.mock('next/router', () => ({
         back: () => {},
     },
 }));
-
-const defaultProps = createMockPolicyPageProps();
-
-type FeatureFlagOverrides = CreateTestWrapperOptions['featureFlags'];
-
-const renderPolicyDetailsPage = (
-    policyOverrides: Record<string, unknown> = {},
-    handlers: Parameters<typeof server.use> = [],
-    featureFlags: FeatureFlagOverrides = {}
-) => {
-    if (handlers.length > 0) {
-        server.use(...handlers);
-    }
-
-    server.use(
-        http.get('*/api/policies/:planCode/:policyId', ({ params }) =>
-            HttpResponse.json({
-                data: {
-                    ...policyEndpointData,
-                    policyNumber: String(params.policyId ?? 'POL123'),
-                    product: {
-                        ...policyEndpointData.product,
-                        planCode: String(params.planCode ?? 'PLAN1'),
-                    },
-                    ...policyOverrides,
-                },
-            })
-        )
-    );
-
-    return render(<PolicySlug {...defaultProps} />, {
-        wrapper: createTestWrapper({ featureFlags }),
-    });
-};
 
 beforeEach(() => {
     mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
@@ -320,6 +277,24 @@ describe('policy-details route', () => {
 
             await screen.findByRole('heading', { name: 'Contract Timeline' });
             expect(screen.getAllByText('Maturity date')[0]).toBeInTheDocument();
+        });
+
+        test('does NOT render Maturity Date field when maturityDate is null', async () => {
+            renderPolicyDetailsPage({
+                ...annuityPolicyOverrides,
+                policyDates: {
+                    ...policyEndpointData.policyDates,
+                    maturityDate: null,
+                },
+            });
+
+            const annuityTimelineCard = (await screen.findByRole('heading', {
+                name: 'Contract Timeline',
+            })) as HTMLElement;
+
+            expect(
+                within(annuityTimelineCard).queryByText('Maturity date')
+            ).not.toBeInTheDocument();
         });
     });
 
