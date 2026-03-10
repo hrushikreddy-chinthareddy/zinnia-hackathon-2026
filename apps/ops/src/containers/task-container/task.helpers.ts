@@ -12,6 +12,7 @@ import { updateCaseTask } from '@deps/operations/tasks/task-operations';
 import { browserLogInfo } from '@deps/utils/browser-logging';
 
 import { Phone } from './task-handlers/types';
+import { getIdentifierValue } from '../case-sub-page/case-helpers';
 
 export const updateTask = async (
     task: ManagementTask,
@@ -98,15 +99,14 @@ export function applyDocumentMatchingPotentialMatches(
     const potentialMatches =
         responsePotentialMatches && responsePotentialMatches.length > 0
             ? responsePotentialMatches.map((item) => ({
-                  zlCaseId: item.identifiers?.find(
-                      (id: { identifier: string }) =>
-                          id.identifier === CaseIdentifierType.ZL_CASE_ID ||
-                          id.identifier === CaseIdentifier.CaseId
-                  )?.value,
-                  policyNumber: item.identifiers?.find(
-                      (id: { identifier: string }) =>
-                          id.identifier === CaseIdentifier.PolicyNumber
-                  )?.value,
+                  zlCaseId: getIdentifierValue(
+                      item.identifiers,
+                      CaseIdentifier.ZlCaseId || CaseIdentifier.CaseId
+                  ),
+                  policyNumber: getIdentifierValue(
+                      item.identifiers,
+                      CaseIdentifier.PolicyNumber
+                  ),
                   correlationId: item.correlationId,
                   entityType: item.entityType,
                   recordId: item.recordId,
