@@ -31,6 +31,8 @@
     flex-grow: 1;
 }
 .highlightText {
+    display: flex;
+    align-items: center;
     color: #155e75;
     font-weight: 700;
 }

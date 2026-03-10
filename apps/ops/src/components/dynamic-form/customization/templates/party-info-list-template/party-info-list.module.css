@@ -46,3 +46,25 @@
     flex: 1;
     min-width: 70%;
 }
+
+.highlightText {
+    display: flex;
+    align-items: center;
+    color: var(--color-secondary-color-primary-dark);
+    font-weight: var(--font-weight-labels-field-label-font-weight);
+    font-size: var(
+        --measure-dimension-core-typography-font-size-font-size-small
+    );
+    line-height: var(
+        --measure-dimension-core-typography-font-size-line-height-small
+    );
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    gap: var(--measure-dimension-z-space-1);
+}
+
+.highlightText:hover {
+    color: var(--color-secondary-color-primary-darker);
+}
