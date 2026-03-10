@@ -25,9 +25,11 @@ import {
 } from '@deps/types/search';
 import { browserLogError, browserLogInfo } from '@deps/utils/browser-logging';
 import {
+    isForbiddenError,
     logError,
     LoggingContext,
     logInfo,
+    logWarn,
     parseErrorInformation,
 } from '@deps/utils/server-logging';
 
@@ -79,10 +81,21 @@ export const getCaseTaskByIdSSR = async (
         });
         return data?.data;
     } catch (error: any) {
-        logError('getCaseTaskByIdSSR::Failed to retrieve task by id', {
+        const logPayload = {
             ...parseErrorInformation(error),
             ...logCtx,
-        });
+        };
+        if (isForbiddenError(error)) {
+            logWarn(
+                'getCaseTaskByIdSSR::Forbidden to retrieve task by id',
+                logPayload
+            );
+        } else {
+            logError(
+                'getCaseTaskByIdSSR::Failed to retrieve task by id',
+                logPayload
+            );
+        }
         return null;
     }
 };

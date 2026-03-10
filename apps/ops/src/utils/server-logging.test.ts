@@ -7,6 +7,7 @@ import { ParsedUrlQuery } from 'querystring';
 
 import logger from './pino-server';
 import {
+    isForbiddenError,
     logError,
     logWarn,
     logInfo,
@@ -113,6 +114,43 @@ describe('server-logging', () => {
             expect(logger.error).toHaveBeenCalledWith(
                 mockLoggingContext,
                 'error'
+            );
+        });
+    });
+
+    describe('isForbiddenError', () => {
+        it('returns false when error is undefined', () => {
+            expect(isForbiddenError(undefined)).toBe(false);
+        });
+
+        it('returns false when error is null', () => {
+            expect(isForbiddenError(null)).toBe(false);
+        });
+
+        it('returns true when error is AxiosError with response.status 403', () => {
+            const error = { response: { status: 403 } };
+            expect(isForbiddenError(error)).toBe(true);
+        });
+
+        it('returns true when error is AxiosResponse with status 403', () => {
+            const error = { status: 403 };
+            expect(isForbiddenError(error)).toBe(true);
+        });
+
+        it('returns true when parsed requestStatus is 403', () => {
+            const error = { status: 403, request: {} };
+            expect(isForbiddenError(error)).toBe(true);
+        });
+
+        it('returns false when error has non-403 status', () => {
+            expect(isForbiddenError({ response: { status: 404 } })).toBe(false);
+            expect(isForbiddenError({ response: { status: 500 } })).toBe(false);
+            expect(isForbiddenError({ status: 401 })).toBe(false);
+        });
+
+        it('returns false when error has no status (plain Error)', () => {
+            expect(isForbiddenError(new Error('something went wrong'))).toBe(
+                false
             );
         });
     });
