@@ -6,7 +6,7 @@ import { RIDER_NAMES, RiderName } from '@deps/types/illustrations';
 import { Product, ProductTypes } from '@deps/types/product';
 import {
     IneligibilityReason,
-    nonEligibleReasonByClass,
+    IneligibleReasonByClass,
     RiderCode,
 } from '@deps/utils/quick-quotes-rules/types';
 
@@ -181,19 +181,19 @@ interface TermQuickQuoteBaseDataItem {
 
 interface TermQuickQuoteAvailableDataItem extends TermQuickQuoteBaseDataItem {
     range: NumberOrRange;
-    notAvailabilityReasonField: undefined;
+    inegilibilityReasonField: undefined;
     error: undefined;
 }
 
 interface TermQuickQuoteNotAvailableItem extends TermQuickQuoteBaseDataItem {
     range: number | NumberOrRange | undefined;
-    notAvailabilityReasonField: nonEligibleReasonByClass[] | undefined;
+    inegilibilityReasonField: IneligibleReasonByClass[] | undefined;
     error: undefined;
 }
 
 interface TermQuickQuoteErrorItem extends TermQuickQuoteBaseDataItem {
     range: undefined;
-    notAvailabilityReasonField: undefined;
+    inegilibilityReasonField: undefined;
     error: Error;
 }
 
@@ -209,7 +209,7 @@ export type TermQuickQuoteRiderNotAvailableItem = {
 
 export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;
-    notAvailabilityReasonField?: TermQuickQuoteRiderNotAvailableItem[];
+    inegilibilityReasonField?: TermQuickQuoteRiderNotAvailableItem[];
 };
 
 export interface TermQuickQuoteResultData {

@@ -3691,7 +3691,6 @@
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"
-
         },
         "communicationSentTemplate": {
             "mail": "Mailed to: {{address}}",
@@ -6034,7 +6033,7 @@
             "issueLabel": "Issue",
             "detailsLabel": "Task Description",
             "noDataAvailable": "No data available.",
-             "noDocuments": "No documents available",
+            "noDocuments": "No documents available",
             "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
@@ -9461,7 +9460,7 @@
                 "hint": "",
                 "nYearTerm": "{{years}} year term"
             },
-            "notAvailableReason": {
+            "ineligibilityReason": {
                 "maxAge": "Max issue age: {{age}}",
                 "minAge": "Min issue age: {{age}}",
                 "state": "Not available in this state",

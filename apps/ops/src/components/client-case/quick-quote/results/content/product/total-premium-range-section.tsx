@@ -54,10 +54,10 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                     (totalPremiumRange) =>
                         totalPremiumRange.termLength === termLength
                 );
-                const notAvailabilityReasons = filterIneligibilityReasons(
+                const inegilibilityReasons = filterIneligibilityReasons(
                     (item &&
                         item.range == null &&
-                        item.notAvailabilityReasonField) ||
+                        item.inegilibilityReasonField) ||
                         []
                 );
 
@@ -68,9 +68,9 @@ export const QuickQuoteTotalPremiumRangeSection = () => {
                     value: item?.range,
                     period: 'mo.',
                     hasApiError: item?.error != null,
-                    notAvailabilityReasons: !notAvailabilityReasons.length
+                    inegilibilityReasons: !inegilibilityReasons.length
                         ? undefined
-                        : notAvailabilityReasons,
+                        : inegilibilityReasons,
                     hasRiderErrors: hasRiderErrorsByTermLength(
                         result.data.riders,
                         termLength

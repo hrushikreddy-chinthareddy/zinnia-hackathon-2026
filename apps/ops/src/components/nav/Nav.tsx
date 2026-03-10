@@ -69,6 +69,7 @@ export const Nav = ({
     displaySearch = true,
     onNavigationToggle,
 }: NavProps) => {
+    console.log(navGroups);
     const [isExpanded, setExpanded] = useState(true);
     const { carrierName } = useTheme();
     const windowWidth = useWindowResize();

@@ -101,7 +101,7 @@
 
 .contentErrorCell,
 .contentDataCell,
-.notAvailableReasonCell {
+.ineligibilityReasonCell {
     display: flex;
 
     padding: var(--measure-dimension-padding-lg, 8px)
@@ -109,7 +109,7 @@
 }
 
 .contentDataCell,
-.notAvailableReasonCell {
+.ineligibilityReasonCell {
     flex-direction: column;
     align-items: start;
 

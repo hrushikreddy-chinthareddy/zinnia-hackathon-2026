@@ -3661,7 +3661,7 @@
             "additionalData": "Detalles",
             "multiInstance": "Pasos",
             "documentId": "ID del Documento: {{documentId}}",
-           "documentType": "Tipo de Documento: {{documentType}}",
+            "documentType": "Tipo de Documento: {{documentType}}",
             "documents": "Documentos",
             "view": "Ver",
             "viewTask": "Ver tarea"
@@ -9421,7 +9421,7 @@
                 "nYearTerm": "{{years}} año plazo",
                 "title": "Cobertura y resumen"
             },
-            "notAvailableReason": {
+            "ineligibilityReason": {
                 "maxAge": "Edad máxima de emisión: {{age}}",
                 "minAge": "Edad mínima de emisión: {{age}}",
                 "maxFaceAm": "Monto nominal máximo: {{amount}}",

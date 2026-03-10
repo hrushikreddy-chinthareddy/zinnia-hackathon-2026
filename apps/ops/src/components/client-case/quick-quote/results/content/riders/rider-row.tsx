@@ -36,8 +36,8 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
         (result): RiderDataItem => ({
             period: 'mo.',
             value: result.data.riders?.[riderName]?.range as NumberOrRange,
-            notAvailabilityReasons:
-                result.data.riders?.[riderName]?.notAvailabilityReasonField,
+            inegilibilityReasons:
+                result.data.riders?.[riderName]?.inegilibilityReasonField,
         })
     );
 
@@ -55,7 +55,7 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
             data={isActive ? data : []}
         >
             {!isActive && (
-                <div className={styles.notAvailableReasonCell}>
+                <div className={styles.ineligibilityReasonCell}>
                     <Typography
                         className={styles.notAvailableText}
                         variant={TypographyVariant.BodySm}

@@ -9353,7 +9353,7 @@
                 "nYearTerm": "Durée de {{years}} année",
                 "title": "Couverture"
             },
-            "notAvailableReason": {
+            "ineligibilityReason": {
                 "maxAge": "Âge maximal d'émission: {{age}}",
                 "minAge": "Âge minimum d'émission: {{age}}",
                 "maxFaceAm": "Montant maximum de la police: {{amount}}",

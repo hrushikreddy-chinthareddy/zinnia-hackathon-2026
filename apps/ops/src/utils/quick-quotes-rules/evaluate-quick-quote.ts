@@ -75,28 +75,30 @@ export class QuickQuoteProducts {
                 // Use the first and last eligible indexes as min/max class.
                 const minClass = product.classes[minIdx].classCode;
                 const maxClass = product.classes[maxIdx].classCode;
-                const nonEligibleReasonByClass =
-                    this.getNonEligibleReasonByClass(eligibleClassByPosition);
+                const ineligibleReasonByClass = this.getIneligibleReasonByClass(
+                    eligibleClassByPosition
+                );
 
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [minClass, maxClass],
-                    notAvailabilityReasonField: nonEligibleReasonByClass,
+                    inegilibilityReasonField: ineligibleReasonByClass,
                     riders: {
                         ...resultRiders,
                     },
                 });
             } else {
                 // If no eligible classes; propagate the rejection reason field
-                const nonEligibleReasonByClass =
-                    this.getNonEligibleReasonByClass(eligibleClassByPosition);
+                const ineligibleReasonByClass = this.getIneligibleReasonByClass(
+                    eligibleClassByPosition
+                );
 
                 result.push({
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [],
-                    notAvailabilityReasonField: nonEligibleReasonByClass,
+                    inegilibilityReasonField: ineligibleReasonByClass,
                     riders: {
                         ...resultRiders,
                     },
@@ -125,7 +127,7 @@ export class QuickQuoteProducts {
     /**
      * Retrieve all non eligible reasons for each product class.
      */
-    private getNonEligibleReasonByClass = (
+    private getIneligibleReasonByClass = (
         eligibleClasses: ClassEligibilityResult[]
     ) => {
         return eligibleClasses.filter(
