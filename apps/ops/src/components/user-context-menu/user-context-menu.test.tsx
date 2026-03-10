@@ -50,7 +50,7 @@ describe('UserContextMenu', () => {
         render(<UserContextMenu name="Doe, John" />);
 
         const trigger = screen.getByRole('button', {
-            name: 'site.navLinks.userMenu.text',
+            name: 'allFields.navLinksUserMenuFor',
         });
         expect(trigger).toBeInTheDocument();
         expect(trigger.tagName).toBe('BUTTON');
@@ -60,7 +60,7 @@ describe('UserContextMenu', () => {
         render(<UserContextMenu name="Doe, John" />);
 
         const trigger = screen.getByRole('button', {
-            name: 'site.navLinks.userMenu.text',
+            name: 'allFields.navLinksUserMenuFor',
         });
         // Radix DropdownMenu.Trigger handles focus; no manual tabIndex needed
         expect(trigger).not.toHaveAttribute('tabindex', '0');
@@ -71,13 +71,11 @@ describe('UserContextMenu', () => {
         render(<UserContextMenu name="Doe, John" />);
 
         const trigger = screen.getByRole('button', {
-            name: 'site.navLinks.userMenu.text',
+            name: 'allFields.navLinksUserMenuFor',
         });
         await user.click(trigger);
 
-        const signOutLink = await screen.findByRole('menuitem', {
-            name: /auth\.logout\.text/,
-        });
+        const signOutLink = await screen.findByTestId('sign-out-link');
         expect(signOutLink).toBeInTheDocument();
     });
 });

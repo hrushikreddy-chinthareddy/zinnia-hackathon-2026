@@ -79,6 +79,7 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
             )}
             <MenuContextualItem
                 content={t('auth.logout.text') as string}
+                data-testid="sign-out-link"
                 href={t('auth.logout.link') ?? '/api/auth/logout'}
                 icon={<Icon type={IconType.LOGOUT} width={20} height={20} />}
                 onClick={handleAnalytics}
