@@ -206,7 +206,8 @@ export const TransactionsWrapper = () => {
                 <div className={styles.filterItem}>
                     <FieldDateRange
                         name="transactionsDateRange"
-                        showActionButtons
+                        showApplyButtons
+                        showResetButton={false}
                         onApply={(startDate, endDate) =>
                             setHistoryFilters((prevState) => ({
                                 ...prevState,
