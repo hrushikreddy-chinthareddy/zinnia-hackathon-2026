@@ -1,17 +1,17 @@
-import { type ReactNode } from 'react';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { type ReactNode } from 'react';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import {
     createSpyPolicySearchHandler,
     errorPolicySearchHandler,
-} from './helpers/policy-index-helpers/policy-index-msw-handlers';
+} from '@vitest/helpers/policy/containers/policy-search-results-table/policy-index-msw-handlers';
 import {
     createMockRouter,
     mockPolicySearchResults,
-} from './helpers/policy-index-helpers/policy-index-test-fixtures';
-import { renderPolicyIndexPage } from './helpers/policy-index-helpers/render-policy-index';
+} from '@vitest/helpers/policy/containers/policy-search-results-table/policy-index-test-fixtures';
+import { renderPolicyIndexPage } from '@vitest/helpers/policy/containers/policy-search-results-table/render-policy-index-view';
 
 // ─── Router mock ────────────────────────────────────────────────────────────
 let mockRouter = createMockRouter();

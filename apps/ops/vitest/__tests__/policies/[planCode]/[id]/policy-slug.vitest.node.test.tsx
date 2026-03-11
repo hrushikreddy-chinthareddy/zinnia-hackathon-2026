@@ -4,23 +4,22 @@ import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import PolicySlug from '@deps/containers/policy-slug/policy-slug';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    activityTransactionsHandler,
+    documentsHandlers,
+    fundsEligibilityHandlers,
+    personEligibilityHandlers,
+} from '@vitest/helpers/policy/shared/policy-msw-handlers';
+import {
+    createMockRouter,
+    createMockPolicyPageProps,
+} from '@vitest/helpers/policy/shared/policy-test-fixtures';
 import { server } from '@vitest/mocks/node';
 import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 import {
     createTestWrapper,
     CreateTestWrapperOptions,
 } from '@vitest/utils/create-test-wrapper';
-
-import {
-    activityTransactionsHandler,
-    documentsHandlers,
-    fundsEligibilityHandlers,
-    personEligibilityHandlers,
-} from '@vitest/helpers/policy-msw-handlers';
-import {
-    createMockRouter,
-    createMockPolicyPageProps,
-} from '@vitest/helpers/policy-test-fixtures';
 
 let mockRouter = createMockRouter();
 
