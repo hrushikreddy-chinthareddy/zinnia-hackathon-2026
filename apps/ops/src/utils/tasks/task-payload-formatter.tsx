@@ -325,3 +325,38 @@ export const getBeneficiaryChangePayload = (task: ManagementTask) => {
         },
     };
 };
+
+export const getBeneAddressVerificationPayload = (task: ManagementTask) => {
+    if (
+        task.data?.details?.beneAddress?.beneficiaryChangeDetail
+            ?.notificationPreferences
+    ) {
+        return task;
+    }
+
+    const beneAddress = task.data.details.beneAddress;
+    const hasNotificationPrefs =
+        beneAddress.beneficiaryChangeDetail?.notificationPreferences;
+    const notificationPreferences =
+        hasNotificationPrefs ??
+        beneAddress?.beneficiary?.notificationPreferences;
+
+    return {
+        ...task,
+        data: {
+            ...task.data,
+            details: {
+                ...task.data.details,
+                beneAddress: {
+                    ...beneAddress,
+                    beneficiaryChangeDetail: {
+                        ...beneAddress.beneficiaryChangeDetail,
+                        ...(notificationPreferences !== undefined && {
+                            notificationPreferences,
+                        }),
+                    },
+                },
+            },
+        },
+    };
+};

@@ -309,11 +309,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         [TaskType.Bene_Address_Verification]: (formData: any) => {
             let updatedFormData = formData;
 
+            if (!formData.details?.beneAddress?.beneficiaryChangeDetail) {
+                updatedFormData.details.beneAddress.beneficiaryChangeDetail =
+                    {};
+            }
+
             if (
-                !formData.details?.beneAddress?.beneficiaryChangeDetail
+                formData.details.beneAddress?.beneficiary
                     ?.notificationPreferences
             ) {
-                updatedFormData.details.beneAddress.beneficiaryChangeDetail =
+                updatedFormData.details.beneAddress.beneficiaryChangeDetail.notificationPreferences =
                     formData.details.beneAddress?.beneficiary
                         ?.notificationPreferences || {};
             }
