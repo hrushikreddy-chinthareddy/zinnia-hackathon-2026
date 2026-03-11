@@ -109,7 +109,9 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
 
             const minDate = dayjs(
                 policy?.policyContractState?.currentLifecycleDate
-            ).format(NUMERIC_DATE_FORMAT);
+            )
+                .add(1, 'day')
+                .format(NUMERIC_DATE_FORMAT);
             const min = dayjs(minDate, NUMERIC_DATE_FORMAT, true).startOf(
                 'day'
             );
@@ -229,6 +231,19 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
             return;
         goToNext();
     };
+
+    useEffect(() => {
+        if (isUseCurrentLifeCycleDate) {
+            setPremium((oldPremium) => ({
+                ...oldPremium,
+                effectiveDate: dayjs(
+                    policy?.policyContractState?.currentLifecycleDate
+                )
+                    .add(1, 'day')
+                    .format(NUMERIC_DATE_FORMAT),
+            }));
+        }
+    }, [isUseCurrentLifeCycleDate, policy]);
 
     useEffect(() => {
         if (customFarmerCheck) {
