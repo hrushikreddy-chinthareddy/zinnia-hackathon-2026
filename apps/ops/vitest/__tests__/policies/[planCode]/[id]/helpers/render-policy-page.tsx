@@ -19,8 +19,8 @@ type FeatureFlagOverrides = CreateTestWrapperOptions['featureFlags'];
  * Renders the full PolicySlug container (policy-details route) with mock API responses.
  *
  * @param policyOverrides - Partial overrides merged onto `policyEndpointData` for the policy API response.
- * @param handlers - Additional MSW handlers registered **before** the default policy handler.
- *   Use these to override specific API endpoints (e.g. agent data, free-look eligibility).
+ * @param handlers - Additional MSW handlers registered first; the default policy handler is registered after them.
+ *   Use these to override specific API endpoints (e.g. agent data, free-look eligibility) that are not handled by the default policy handler.
  * @param featureFlags - Per-test Optimizely flag overrides. All flags are enabled by default;
  *   pass `{ [FEATURE_FLAGS.SOME_FLAG]: false }` to disable a specific flag.
  */
