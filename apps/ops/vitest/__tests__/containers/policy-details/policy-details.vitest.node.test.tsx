@@ -7,15 +7,15 @@ import {
     agentDataEmptyHandler,
     agentDataErrorHandler,
     agentDataHandler,
-} from './helpers/policy-msw-handlers';
+} from '@vitest/helpers/policy-msw-handlers';
 import {
     annuityPolicyOverrides,
     lifePolicyOverrides,
     termPolicyOverrides,
     iulPolicyOverrides,
-} from './helpers/policy-overrides';
-import { createMockRouter } from './helpers/policy-test-fixtures';
-import { renderPolicyDetailsPage } from './helpers/render-policy-page';
+} from '@vitest/helpers/policy-overrides';
+import { createMockRouter } from '@vitest/helpers/policy-test-fixtures';
+import { renderPolicyDetailsPage } from '@vitest/helpers/render-policy-page';
 
 let mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
 
