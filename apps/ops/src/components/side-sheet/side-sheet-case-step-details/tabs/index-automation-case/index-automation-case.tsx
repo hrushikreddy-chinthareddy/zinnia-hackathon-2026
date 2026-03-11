@@ -220,30 +220,27 @@ const IndexAutomationCase = ({
                     {classificationStatus || DEFAULT_ERROR_STRING}
                 </Typography>
                 {classificationMethodResults?.length > 0 && (
-                    <div className={styles.methodResultsContainer}>
-                        {classificationMethodResults.map(
-                            (result: ClassificationMethodResult) => (
-                                <div
-                                    key={result.method}
-                                    className={styles.methodResultRow}
-                                >
-                                    <div className={styles.methodResultLabel}>
-                                        {result.method}
-                                    </div>
-                                    <span
-                                        className={styles.methodResultSeparator}
-                                    >
-                                        -
-                                    </span>
+                    <>
+                        <div
+                            className={`${styles.customColSpan2} ${styles.alignTop}`}
+                        >
+                            {t(
+                                'allFields.indexAutomationDocumentIdentificationFailureReasons'
+                            )}
+                        </div>
+                        <div className={styles.failureReasons}>
+                            {classificationMethodResults.map(
+                                (result: ClassificationMethodResult) => (
                                     <Typography
-                                        variant={TypographyVariant.BodySm}
+                                        key={result.method}
+                                        variant={TypographyVariant.BodySmBold}
                                     >
                                         {result.message}
                                     </Typography>
-                                </div>
-                            )
-                        )}
-                    </div>
+                                )
+                            )}
+                        </div>
+                    </>
                 )}
             </React.Fragment>
         );

@@ -22,33 +22,16 @@
     grid-column: span 3 / span 3;
 }
 
-.methodResultsContainer {
-    grid-column: span 5 / span 5;
-    width: 100%;
-    border: 1px solid var(--color-base-border-border-primary, #e5e7eb);
-    border-radius: 0.25rem;
-    padding: 0.5rem;
-    margin-top: 0.25rem;
+.failureReasons {
+    grid-column: span 3 / span 3;
     display: flex;
     flex-direction: column;
-    gap: 0.25rem;
-}
-
-.methodResultRow {
-    display: flex;
-    align-items: baseline;
     gap: 0.5rem;
+    align-self: start;
 }
 
-.methodResultLabel {
-    color: var(--color-base-text-text-secondary);
-    white-space: nowrap;
-    min-width: 10rem;
-}
-
-.methodResultSeparator {
-    color: var(--color-base-text-text-secondary);
-    flex-shrink: 0;
+.alignTop {
+    align-self: start;
 }
 
 .customIconStyle {
