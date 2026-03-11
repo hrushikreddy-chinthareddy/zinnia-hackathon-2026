@@ -493,6 +493,7 @@
         "modifiedEndowmentContractTestDate": "Fecha de prueba de MEC",
         "monthOfYear": "Mes del año",
         "nameOnAccount": "Nombre en la cuenta",
+        "navLinksUserMenuFor": "Menú de usuario para {{name}}",
         "netAmountAtRisk": "Monto neto en riesgo",
         "netBenefitAmount": "Montant net de l'avantage",
         "netDeathBenefit": "Beneficio neto estimado por fallecimiento",
