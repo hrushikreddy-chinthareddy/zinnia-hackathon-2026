@@ -22,12 +22,10 @@ const defaultUser = createMockUser();
  *
  * @param searchData     – Custom policy-search response data.  Defaults to the
  *                         standard mock results from the fixtures file.
- * @param handlers       – Additional MSW request handlers registered **before**
- *                         the default policy-search handler.
+ * @param handlers       – Additional MSW request handlers registered **after**
+ *                         the default policy-search handler so they take
+ *                         precedence.
  * @param featureFlags   – Per-test Optimizely flag overrides.
- * @param routerQuery    – Query params passed to the mock Next.js router (e.g.
- *                         `{ policyNumber: 'POL123' }` to simulate a URL-driven
- *                         search).
  */
 export const renderPolicyIndexPage = (
     searchData?: PolicyReferenceSearchResponse,

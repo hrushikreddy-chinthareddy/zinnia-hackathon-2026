@@ -144,17 +144,29 @@ export const handlers = [
     http.get('*/api/case/v1/form/metadata', ({ request }) => {
         const url = new URL(request.url);
         const taskType = url.searchParams.get('taskType');
-        const schema =
-            taskType === 'INITIATE_BENECHANGE_TRANSACTION'
-                ? beneChangeSchema
-                : assigneeChangeSchema;
-        return HttpResponse.json(schema);
+
+        if (taskType === 'INITIATE_BENECHANGE_TRANSACTION') {
+            return HttpResponse.json(beneChangeSchema);
+        }
+
+        if (taskType === 'INITIATE_ASSIGNEECHANGE_TRANSACTION') {
+            return HttpResponse.json(assigneeChangeSchema);
+        }
+
+        // For unknown or missing task types, return a minimal default payload
+        // rather than erroneously using a specific task's schema.
+        return HttpResponse.json({});
     }),
 
     http.post('*/api/enterprise-search/v1/search', () => {
         return HttpResponse.json({
-            caseId: 'CASE123',
-            status: 'OPEN',
+            data: [],
+            total: 0,
+            count: 0,
+            limit: 10,
+            offset: 0,
+            status: 200,
+            message: '',
         });
     }),
 
