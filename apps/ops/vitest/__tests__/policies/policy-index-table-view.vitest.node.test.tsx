@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
@@ -30,7 +31,7 @@ vi.mock('next/router', () => ({
 // <PageHead> renders without error.
 vi.mock('next/head', () => ({
     __esModule: true,
-    default: ({ children }: { children: React.ReactNode }) => <>{children}</>,
+    default: ({ children }: { children: ReactNode }) => <>{children}</>,
 }));
 
 beforeEach(() => {
