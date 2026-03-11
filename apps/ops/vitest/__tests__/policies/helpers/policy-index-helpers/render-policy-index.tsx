@@ -3,6 +3,7 @@ import { render } from '@testing-library/react';
 import { PolicyIndexTableView } from '@deps/components/policy-index/policy-index-table-view';
 import { PolicySearchFiltersProvider } from '@deps/contexts/PolicySearchFilters';
 import { SearchBarProvider } from '@deps/contexts/SearchBarContext';
+import type { PolicyReferenceSearchResponse } from '@deps/types/search';
 import { server } from '@vitest/mocks/node';
 import {
     createTestWrapper,
@@ -11,8 +12,6 @@ import {
 
 import { policySearchHandler } from './policy-index-msw-handlers';
 import { createMockUser } from './policy-index-test-fixtures';
-
-import type { PolicyReferenceSearchResponse } from '@deps/types/search';
 
 type FeatureFlagOverrides = CreateTestWrapperOptions['featureFlags'];
 

@@ -87,8 +87,8 @@ describe('PolicyIndexTableView', () => {
         test('displays no-results message when search returns 0 results and no filter is active', async () => {
             renderPolicyIndexPage({
                 count: 0,
-                next: null,
-                previous: null,
+                next: '',
+                previous: '',
                 results: [],
                 total: 0,
             });
@@ -132,8 +132,8 @@ describe('PolicyIndexTableView', () => {
         test('does NOT show pagination when there are no results', async () => {
             renderPolicyIndexPage({
                 count: 0,
-                next: null,
-                previous: null,
+                next: '',
+                previous: '',
                 results: [],
                 total: 0,
             });
@@ -158,8 +158,8 @@ describe('PolicyIndexTableView', () => {
 
             renderPolicyIndexPage({
                 count: pageResults.length,
-                next: null,
-                previous: null,
+                next: '',
+                previous: '',
                 results: pageResults,
                 total,
             });

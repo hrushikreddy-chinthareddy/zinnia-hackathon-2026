@@ -1,8 +1,8 @@
+import { PolicySearchResult } from '@deps/types/search';
 import { createMockRouter as createGenericMockRouter } from '@vitest/utils/create-mock-router';
 
 import type { NextRouter } from 'next/router';
 
-import { PolicySearchResult } from '@deps/types/search';
 
 /**
  * Default query parameters for policy index page tests

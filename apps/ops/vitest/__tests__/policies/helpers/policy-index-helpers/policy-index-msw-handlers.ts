@@ -6,8 +6,8 @@ import { mockPolicySearchResults } from './policy-index-test-fixtures';
 
 const defaultSearchResponse: PolicyReferenceSearchResponse = {
     count: mockPolicySearchResults.length,
-    next: null,
-    previous: null,
+    next: '',
+    previous: '',
     results: mockPolicySearchResults,
     total: mockPolicySearchResults.length,
 };
@@ -63,8 +63,8 @@ export const createSpyPolicySearchHandler = (
  */
 export const emptyPolicySearchHandler = policySearchHandler({
     count: 0,
-    next: null,
-    previous: null,
+    next: '',
+    previous: '',
     results: [],
     total: 0,
 });
