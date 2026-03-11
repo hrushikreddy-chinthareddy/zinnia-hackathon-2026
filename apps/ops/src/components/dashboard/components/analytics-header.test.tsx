@@ -50,11 +50,9 @@ describe('AnalyticsHeader', () => {
             </>
         );
 
-        const { container } = render(
-            <AnalyticsHeader {...baseProps} titleToolTip={titleToolTip} />
-        );
+        render(<AnalyticsHeader {...baseProps} titleToolTip={titleToolTip} />);
 
-        const trigger = container.querySelector('.tooltip-primary');
+        const trigger = screen.getByTestId('chart-header-tooltip-icon');
         expect(trigger).toBeInTheDocument();
     });
 });
