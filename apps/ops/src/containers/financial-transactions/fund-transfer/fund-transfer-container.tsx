@@ -47,7 +47,6 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
     });
     const hasCases =
         Array.isArray(casesResponse?.data) && casesResponse.data.length > 0;
-    console.log('hasCases', hasCases);
 
     const validateCall = useCallback(
         () =>
