@@ -50,9 +50,11 @@ describe('AnalyticsHeader', () => {
             </>
         );
 
-        render(<AnalyticsHeader {...baseProps} titleToolTip={titleToolTip} />);
+        const { container } = render(
+            <AnalyticsHeader {...baseProps} titleToolTip={titleToolTip} />
+        );
 
-        const trigger = screen.getByRole('button');
+        const trigger = container.querySelector('.tooltip-primary');
         expect(trigger).toBeInTheDocument();
     });
 });
