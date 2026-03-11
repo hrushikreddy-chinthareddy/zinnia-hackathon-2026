@@ -49,24 +49,36 @@ describe('PolicyIndexTableView', () => {
 
     // ─── Search results rendering ────────────────────────────────────────────
     describe('search results', () => {
-        test('renders policy rows with product names', async () => {
+        test('renders all expected column data for a result row', async () => {
             renderPolicyIndexPage();
 
-            for (const result of mockPolicySearchResults) {
-                expect(
-                    await screen.findByText(result.productName)
-                ).toBeInTheDocument();
-            }
-        });
+            const result = mockPolicySearchResults[0];
+            await screen.findByText(result.productName);
 
-        test('renders policy numbers for each result', async () => {
-            renderPolicyIndexPage();
+            // Scope to the first data row (skip header)
+            const row = within(screen.getAllByRole('row')[1]);
 
-            for (const result of mockPolicySearchResults) {
-                expect(
-                    await screen.findByText(result.policyNumber)
-                ).toBeInTheDocument();
-            }
+            // Policy/Contract column
+            expect(row.getByText(result.productName)).toBeInTheDocument();
+            expect(row.getByText(result.policyNumber)).toBeInTheDocument();
+
+            // Status (mock policy endpoint returns ACTIVE → "Active")
+            expect(await row.findByText('Active')).toBeInTheDocument();
+
+            // Owner / SSN
+            const expectedOwner = `${result.firstName} ${result.lastName}`;
+            expect(await row.findByText(expectedOwner)).toBeInTheDocument();
+            const last4 = result.ssn!.replace(/\D/g, '').slice(-4);
+            expect(row.getByText(`***-**-${last4}`)).toBeInTheDocument();
+
+            // Open Cases (mock returns 0 → "--")
+            expect(row.getByText('--')).toBeInTheDocument();
+
+            // Last Updated (M/D/YYYY)
+            const d = new Date(result.lastUpdated);
+            expect(
+                row.getByText(`${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`)
+            ).toBeInTheDocument();
         });
     });
 
