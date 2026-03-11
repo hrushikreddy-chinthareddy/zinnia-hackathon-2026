@@ -254,9 +254,11 @@ Stage.displayName;
 const Stages = ({
     stages,
     stepFilter = () => true,
+    carrier,
 }: {
     stages: TransformedStage[];
     stepFilter?: (step: TransformedStep) => boolean;
+    carrier: string;
 }) => {
     const searchParams = useSearchParams();
     const taskIdFromUrl = searchParams.get('taskId');
@@ -317,6 +319,7 @@ const Stages = ({
                                     steps={stage.steps}
                                     stepFilter={stepFilter}
                                     isAccordionOpen={isAccordionOpen}
+                                    carrier={carrier}
                                 />
                             </AccordionContent>
                         </AccordionItem>
@@ -498,7 +501,10 @@ export default function ProgressTab({ caseDetails }: { caseDetails: Case }) {
                     />
                 )}
                 <div className="mt-6 flex flex-col gap-2">
-                    <Stages stages={transformedCase.stages} />
+                    <Stages
+                        stages={transformedCase.stages}
+                        carrier={caseDetails.carrier}
+                    />
                 </div>
                 {(!!transformedCase.unmappedExceptions.length ||
                     !!transformedCase.unmappedTasks.length) && (

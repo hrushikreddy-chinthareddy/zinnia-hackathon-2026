@@ -53,6 +53,7 @@
         "createdOn": "Créer sur",
         "resolvedOn": "Résolu le",
         "technicalExceptions": "Exceptions techniques",
+        "noDocuments": "Aucun document disponible",
         "technicalIssuesWarning": "L’avancement de votre dossier peut ne pas être mis à jour en raison d’un problème technique. Nous travaillons à sa résolution.",
         "technicalIssuesResolved": "Les problèmes techniques liés à ce dossier ont été résolus. L'avancement du dossier sera mis à jour et reprendra normalement.",
         "errorCode": "Code d'erreur",
@@ -60,7 +61,15 @@
         "errorDescription": "Description",
         "sourceSystem": "Système source",
         "inProgress": "En cours",
+        "linkedCasesRequestsCompleted": "Tous les dossiers connexes sont clos.",
+        "linkedCasesRequestsRaised": "Ce {{caseType}} a {{numberOfLinkedCases}} cas liés.",
+        "raisedOn": "Élevé le",
+        "requestForProcessCompleted": "{{caseType}} terminé le {{updatedAt}}",
+        "requestForProcessRaised": "Ce dossier a été signalé pour {{caseType}} le {{createdAt}}. Accédez à ",
+        "Status": "Statut",
+        "unableToFetchRelatedCase": "Impossible de récupérer les dossiers associés.",
         "resolved": "Résolu",
+        "caseRequest": "Demande de cas",
         "technicalExceptionsIndicator": "Nous rencontrons des difficultés pour mettre à jour l'état d'avancement de votre dossier. Un ticket d'incident a été créé et sera résolu prochainement.",
         "accountValueByPolicyYear": "Valeur du compte par année {{policyNomenclature}}",
         "accountValues": "Valeurs du compte",
@@ -173,6 +182,7 @@
         "completedTaskTimesTitle": "Temps de traitement médian",
         "completedTaskTimesXAxisLabel": "Temps de traitement",
         "completedTaskTimesYAxisLabel": "Type de dossier",
+        "completed": "Complété",
         "confirm": "Confirmer",
         "confirmCancelProgram": "Confirmer avant d'annuler le programme systématique.",
         "contestabilityEndDate": "Date de fin de contestabilité",
@@ -336,6 +346,7 @@
         "guidelinePremiumTestDate": "Date du test de prime de référence",
         "guidelineSinglePremium": "Prime unique de référence",
         "hasBeen": "ont été",
+        "hideDailyInterest": "Masquer les intérêts quotidiens",
         "holdingForm": "Forme de détention",
         "hour": "heure",
         "home": "Domicile",
@@ -853,6 +864,11 @@
         "searchByLastNamePlaceholder": "Nom de famille de l'individu",
         "searchButtonOwnerName": "Nom du propriétaire",
         "searchButtonAgentName": "Nom de l'agent",
+        "notifierDetails": "Détails du notificateur",
+        "notifierName": "Nom du notifiant",
+        "notifierPhoneNumber": "Numéro de téléphone du notificateur",
+        "notifierRole": "Rôle de notificateur",
+        "relationshipToDeceased": "Lien de parenté avec le défunt",
         "illustrationsClientCasesDobDatePickerPopoverTitle": "Date de naissance",
         "defaultTaskCardTitle": "Oups ! Une erreur est survenue lors du chargement de la tâche. Veuillez réessayer.",
         "defaultTaskCardSubtitle": "Pour toute aide supplémentaire, ",
@@ -1173,8 +1189,11 @@
         "MODIFIEDEARNINGSONLY": "Intérêts modifiés uniquement",
         "MONEYPURCHASEPENSIONPLAN": "Plan de retraite à cotisations définies",
         "MONTHLY": "Mensuel",
+        "MultipleAgentChange": "Changement de plusieurs agents",
+        "MultipleAnnuitantChange": "Changement de plusieurs rentiers",
         "MultipleBeneficiaryChange": "Changement de plusieurs bénéficiaires",
         "MultipleEmailChange": "Changement de plusieurs emails",
+        "MultipleOwnerChange": "Changement de plusieurs propriétaires",
         "MultiplePayeeChange": "Changement de plusieurs bénéficiaires de paiement",
         "MultiplePhoneNumberChange": "Changement de plusieurs numéros de téléphone",
         "MULTIPLEPOLICYDISCOUNT": "Remise multi-polices",
@@ -6431,6 +6450,7 @@
                     "residence": "Résidentiel",
                     "business": "Entreprise",
                     "poBox": "Boîte postale",
+                    "other": "Autre",
                     "poBoxLower": "boîte postale",
                     "mailing": "Courrier postal"
                 },
@@ -8565,13 +8585,24 @@
             "title": "Contact établi",
             "selectOption": "Sélectionnez l'une des options suivantes :",
             "contactEstablished": {
-                "contactEstablishedRestartProcess": "Contact établi – Processus de redémarrage",
+                "resendPacket": "Renvoyer le paquet",
+                "restartFollowupProcess": "Relancer le processus de suivi",
                 "updateNotificationMethod": "Méthode de notification de mise à jour"
+            },
+            "tooltips": {
+                "resendPacket": "Renvoie le paquet sans redémarrer le processus de suivi, en utilisant la méthode de notification présélectionnée.",
+                "restartFollowupProcess": "Relance le processus de suivi à partir de l'étape de suivi n° 1 en utilisant la méthode de notification présélectionnée.",
+                "updateNotificationMethod": "Cette fonction met à jour la méthode de notification et relance le processus de suivi à partir de l'étape 1 en utilisant les nouvelles informations fournies."
             },
             "formErrors": {
                 "formValidation": {
-                    "contactEstablishedIsRequired": "Veuillez sélectionner une option pour continuer."
+                    "taskActionsIsRequired": "Veuillez sélectionner une option pour continuer."
                 }
+            },
+            "notificationMethods": {
+                "email": "Email",
+                "fax": "Fax",
+                "address": "Adresse postale"
             }
         },
         "updateNotificationMethodStep": {
@@ -8847,7 +8878,7 @@
         }
     },
     "claimsAddressChange": {
-        "change": "modifier",
+        "change": "Modifier",
         "updateAddress": "Mettre à jour l'adresse {{type}}"
     },
     "defaultCaseDataEntry": {
@@ -9243,7 +9274,7 @@
             "ariaCancel": "Annuler la soumission"
         },
         "createClientCaseForm": {
-            "clientCaseSideSheetTitle": "Nouveau Client Case",
+            "clientCaseSideSheetTitle": "Nouveau dossier client",
             "editClientCaseSideSheetTitle": "Modifier le dossier client",
             "clientCaseSection": "Détails du dossier client",
             "titleLabel": "Titre",
@@ -9339,6 +9370,10 @@
                 "premiumFreeRiders": "Avenants de politique sans prime",
                 "totalRiderPricing": "Prix ​​total du passager"
             }
+        },
+        "errors": {
+            "createClientCase": "Une erreur est survenue lors de la création du dossier client.",
+            "updateClientCase": "Une erreur est survenue lors de la modification du dossier client."
         }
     },
     "caseStats": {
@@ -9567,6 +9602,13 @@
         "errorTitle": "Erreur",
         "closeButton": "Fermer"
     },
+    "nigoSummary": {
+        "noNigoReasons": "Aucune raison NIGO trouvée. Veuillez vérifier la console pour les informations de débogage.",
+        "heading": "Révision du formulaire",
+        "paperApplicationComplete": "La demande papier est-elle complète et prête à être traitée ?",
+        "missingQuestion": "Qu’est-ce qui manque ou est incorrect dans le formulaire ?",
+        "selectRole": "Sélectionnez le rôle comportant des informations non concordantes."
+    },
     "transactionSummary": {
         "tag": {
             "new": "Ajouté",
@@ -9577,6 +9619,10 @@
         "noSummary": "Aucun récapitulatif de transaction disponible.",
         "primaryBene": "Bénéficiaire principal",
         "contingentBene": "Bénéficiaire conditionnel",
+        "owner": "Titulaire",
+        "jointOwner": "Cotitulaire",
+        "insured": "Assuré",
+        "annuitant": "Rentiér",
         "loading": "L'API de validation est en cours d'exécution...",
         "successMessage": "Ça a l'air bien ! N'oubliez pas de relire vos candidatures avant de les soumettre.",
         "errorMessage": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",

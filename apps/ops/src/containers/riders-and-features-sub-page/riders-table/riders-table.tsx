@@ -75,6 +75,7 @@ export default function RidersTable({
                         <TableRow key={`${rider.riderName}-${rider.riderCode}`}>
                             <TableCell>
                                 <Button
+                                    className={styles.tableButton}
                                     mode="link"
                                     size="small"
                                     onClick={() => {
@@ -103,6 +104,9 @@ export default function RidersTable({
                                         <PiiWrapper key={insured.partyId}>
                                             {insured.href ? (
                                                 <NavElement
+                                                    className={
+                                                        styles.tableButton
+                                                    }
                                                     href={insured.href}
                                                     size={NavElementSize.Small}
                                                     type={NavElementType.Link}

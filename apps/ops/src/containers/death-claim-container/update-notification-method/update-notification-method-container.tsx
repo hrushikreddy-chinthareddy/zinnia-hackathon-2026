@@ -5,7 +5,10 @@ import { NotificationsTransactionData } from '@deps/components/side-sheet/side-s
 import { TranslationFiles } from '@deps/config/translations';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import TabGroupContainer from '@deps/containers/tab-group-container/tab-group';
-import { useUpdateNotificationMethod } from '@deps/contexts/UpdateNotificationMethodContext';
+import {
+    TaskActions,
+    useUpdateNotificationMethod,
+} from '@deps/contexts/UpdateNotificationMethodContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { Policy } from '@zinnia/api-types/types/sor';
 
@@ -26,7 +29,7 @@ const UpdateNotificationMethodContainer = ({
         keyPrefix: 'updateNotificationMethodForBeneficiary',
     });
 
-    const { contactEstablished } = useUpdateNotificationMethod();
+    const { taskActions } = useUpdateNotificationMethod();
 
     const steps = useMemo(
         () => [
@@ -45,7 +48,11 @@ const UpdateNotificationMethodContainer = ({
             },
             {
                 ariaLabel: t('tabs.updateNotificationMethod'),
-                isVisible: () => !contactEstablished,
+                isVisible: () =>
+                    taskActions.length > 0 &&
+                    taskActions.includes(
+                        TaskActions.UPDATE_NOTIFICATION_METHOD
+                    ),
                 screenReaderLabel: t('tabs.updateNotificationMethod'),
                 component: (
                     <UpdateNotificationMethodStep
@@ -70,7 +77,7 @@ const UpdateNotificationMethodContainer = ({
                 text: t('tabs.confirm'),
             },
         ],
-        [contactEstablished, policy, t, transactionData]
+        [taskActions, policy, t, transactionData]
     );
 
     const filteredSteps: Step[] = useMemo(

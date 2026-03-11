@@ -8,6 +8,7 @@ export interface DeathNotificationSidesheetProps {
 }
 
 export interface Party {
+    partyId?: string;
     fullName: string;
     phone?: Phone;
     relationshipToInsured?: string;

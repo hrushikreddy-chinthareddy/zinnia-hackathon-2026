@@ -3,6 +3,7 @@ import { Icon, IconType, Tag, TagVariant } from '@zinnia/bloom/components';
 import { TFunction, useTranslation } from 'next-i18next';
 import React, { ReactNode } from 'react';
 
+import { TransformedStep } from '@deps/components/case-sub-page/case-tabs/progress/progress-tab-helpers';
 import Content, { ContentVariant } from '@deps/components/content/content';
 import NavElement, {
     NavElementSize,
@@ -31,8 +32,8 @@ import { formatTimestamp } from '@deps/utils/dates';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
+// Local imports
 import Exceptions from './exceptions';
-import { TransformedStep } from './progress-tab-helpers';
 import Tasks from './tasks';
 
 enum StepResults {
@@ -103,6 +104,7 @@ const StepResultTag = ({ step }: { step: TransformedStep }) => {
     }
     return null;
 };
+
 const getStepStatusIconTooltip = (
     step: TransformedStep,
     t: TFunction
@@ -188,14 +190,18 @@ const getStepStatusIconTooltip = (
     }
 };
 
+interface StepProps {
+    step: TransformedStep;
+    isAccordionOpen?: boolean;
+    carrier: string;
+}
+
 const Step = ({
     step,
     isAccordionOpen = false,
+    carrier,
     ...rest
-}: {
-    step: TransformedStep;
-    isAccordionOpen?: boolean;
-} & React.HTMLAttributes<HTMLLIElement>) => {
+}: StepProps & React.HTMLAttributes<HTMLLIElement>) => {
     const { t } = useTranslation();
     const sideSheet = useSideSheetContextLegacy();
     const { featureFlags } = useOptimizely();
@@ -235,7 +241,7 @@ const Step = ({
     const openSidesheet = () => {
         sideSheet.changeSideSheetContent(
             <Typography variant={TypographyVariant.H3}>{step.name}</Typography>,
-            <StepSideSheetContent step={step}></StepSideSheetContent>
+            <StepSideSheetContent step={step} />
         );
         sideSheet.handleOpen(true);
     };
@@ -330,11 +336,13 @@ export default function Steps({
     steps,
     stepFilter = () => true,
     isAccordionOpen = false,
+    carrier,
     ...rest
 }: {
     steps: TransformedStep[];
     stepFilter?: (step: TransformedStep) => boolean;
     isAccordionOpen?: boolean;
+    carrier: string;
 } & React.HTMLAttributes<HTMLUListElement>) {
     return (
         <ul {...rest}>
@@ -343,6 +351,7 @@ export default function Steps({
                     key={index}
                     step={step}
                     isAccordionOpen={isAccordionOpen}
+                    carrier={carrier}
                 />
             ))}
         </ul>

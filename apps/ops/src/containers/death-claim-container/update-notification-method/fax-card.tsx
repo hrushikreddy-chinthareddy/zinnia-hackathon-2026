@@ -20,21 +20,27 @@ import Typography, {
 import { TranslationFiles } from '@deps/config/translations';
 import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
+import { formatFaxNumber } from '@deps/helpers/string.helpers';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
+import styles from './update-notification.module.css';
 import { validateFax } from '../steps/notification-method/notification-method.helpers';
 
 type FaxCardProps = {
     fax: string;
     setFax: (val: string) => void;
+    isEditable?: boolean;
 };
 
-const FaxCard = ({ fax, setFax }: FaxCardProps) => {
+const FaxCard = ({ fax, setFax, isEditable = true }: FaxCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix:
             'updateNotificationMethodForBeneficiary.updateNotificationMethodStep.notificationMethods',
     });
     const sidesheet = useSideSheetContextLegacy();
+    const changeLinkClasses = isEditable
+        ? styles.changeLinkEnabled
+        : styles.changeLinkDisabled;
 
     const handleClose = (fax: any) => {
         setFax(fax);
@@ -60,14 +66,15 @@ const FaxCard = ({ fax, setFax }: FaxCardProps) => {
                     {t('fax')}
                 </Typography>
                 <span>
-                    <PiiWrapper>{fax}</PiiWrapper>
+                    <PiiWrapper>{formatFaxNumber(fax)}</PiiWrapper>
                 </span>
             </div>
             <div>
                 <Button
                     size={ButtonSize.Small}
                     mode="link"
-                    onClick={handleChangeFax}
+                    onClick={isEditable ? handleChangeFax : undefined}
+                    className={changeLinkClasses}
                 >
                     {t('change')}
                 </Button>
@@ -140,7 +147,7 @@ const UpdateFaxNumber = ({
                     />
                 )}
 
-                <div className="mt-6 flex ">
+                <div className="mt-6 flex">
                     <Button
                         className="mr-4"
                         onClick={handleContinue}

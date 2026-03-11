@@ -5441,6 +5441,7 @@ export const AddressType = {
     BUSINESS: 'BUSINESS',
     POBOX: 'POBOX',
     SEASONAL: 'SEASONAL',
+    OTHER: 'OTHER',
 } as const;
 
 /**

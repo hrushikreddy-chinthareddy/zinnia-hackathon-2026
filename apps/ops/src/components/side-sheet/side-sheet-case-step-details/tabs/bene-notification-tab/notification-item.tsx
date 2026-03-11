@@ -24,6 +24,7 @@ import {
 import { StatusBadge } from '@deps/components/status-badge/status-badge';
 import Title, { TitleVariant } from '@deps/components/title/title';
 import DocumentCard from '@deps/components/workflows/document/document-card';
+import { lowerCaseJson } from '@deps/containers/death-claim-container/update-notification-method/update-notification-method-helper';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import {
     formatFaxNumber,
@@ -105,6 +106,37 @@ function DeliveryMethodDetails({
         }
     };
     return displayNotification(notification);
+}
+
+function isChangeInDeliveryMethodDetails({
+    notification,
+    nextResetNotification,
+}: {
+    notification: INotification;
+    nextResetNotification: INotification;
+}) {
+    const compareNotification = (notification: INotification) => {
+        let isDifferent;
+        switch (notification.deliveryMethod) {
+            case DeliveryMethods.Mail:
+                isDifferent =
+                    lowerCaseJson(notification?.address ?? {}) !==
+                    lowerCaseJson(nextResetNotification?.address ?? {});
+                break;
+            case DeliveryMethods.Email:
+                isDifferent =
+                    (notification?.email ?? '').toLowerCase() !==
+                    (nextResetNotification?.email ?? '').toLowerCase();
+                break;
+            case DeliveryMethods.Faxnumber:
+                isDifferent =
+                    (notification?.faxNumber ?? '') !==
+                    (nextResetNotification?.faxNumber ?? '');
+                break;
+        }
+        return isDifferent;
+    };
+    return compareNotification(notification);
 }
 
 interface SentNotificationStatusProps {
@@ -302,6 +334,14 @@ const getResetNotificationStatusText = (
     nextResetNotification: INotification | null,
     t: TFunction
 ) => {
+    // To check notification difference
+    const isDifferent =
+        nextResetNotification &&
+        isChangeInDeliveryMethodDetails({
+            notification,
+            nextResetNotification,
+        });
+
     const contentText = nextResetNotification
         ? notification.deliveryMethod.toLowerCase() ===
           nextResetNotification.deliveryMethod.toLowerCase()
@@ -343,16 +383,17 @@ const getResetNotificationStatusText = (
                 {nextResetNotification && (
                     <div className="flex gap-2 items-center mt-1 overflow-hidden">
                         {notification.deliveryMethod.toLowerCase() ===
-                            nextResetNotification.deliveryMethod.toLowerCase() && (
-                            <>
-                                <div className="bg-red-100 text-red-700 line-through p-1 break-all rounded-sm">
-                                    <DeliveryMethodDetails
-                                        notification={notification}
-                                    />
-                                </div>
-                                <ArrowRightLarge width={20} height={20} />
-                            </>
-                        )}
+                            nextResetNotification.deliveryMethod.toLowerCase() &&
+                            isDifferent && (
+                                <>
+                                    <div className="bg-red-100 text-red-700 line-through p-1 break-all rounded-sm">
+                                        <DeliveryMethodDetails
+                                            notification={notification}
+                                        />
+                                    </div>
+                                    <ArrowRightLarge width={20} height={20} />
+                                </>
+                            )}
                         <div className="bg-green-100 font-semibold text-green-700 p-1 break-all rounded-sm">
                             <DeliveryMethodDetails
                                 notification={nextResetNotification}

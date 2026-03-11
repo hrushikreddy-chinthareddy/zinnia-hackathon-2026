@@ -7,6 +7,10 @@
     margin-right: var(--measure-dimension-gap-md);
 }
 
+.tableContainer {
+    clip-path: inset(0);
+}
+
 .tableEmptyStateRow {
     height: 60px;
 }
@@ -19,6 +23,14 @@
         position: absolute;
         width: 100%;
         height: 100%;
+        /* Safari doesn't support height definitions for table rows, so height 100%
+        * takes up the entire height of the window. To mitigate this, we set a
+        * max-height of 5.5rem. The subsequent table rows will stack on top of the
+        * previous rows, taking care of the overlaps; the artifact outside of the
+        * table is handled by the table's clip-path.
+        */
+        max-height: 5.5rem;
+        border: none !important;
         padding: 0;
     }
 

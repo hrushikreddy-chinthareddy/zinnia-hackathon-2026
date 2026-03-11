@@ -13,8 +13,9 @@ import IconButton from '@deps/components/icon-button/icon-button';
 import Label, { LabelVariant } from '@deps/components/label/label';
 import { FormattedAddress } from '@deps/containers/people-data-cards/address-card/address-card.helpers';
 import { toTitleCase } from '@deps/helpers/string.helpers';
+import { AddressType } from '@deps/models/policy/sor-policy';
 import { ReactComponent as TrashIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
-import { Address, AddressType } from '@zinnia/api-types/types/sor';
+import { Address } from '@zinnia/api-types/types/sor';
 
 import styles from './side-sheet-address.helpers.module.css';
 
@@ -163,6 +164,10 @@ export const getNewAddressTypeOptions = ({ t }: GetAddressTypeOptions) => {
         {
             label: t('people.card.address.addressOptions.poBox') as string,
             value: AddressType.POBOX,
+        },
+        {
+            label: t('people.card.address.addressOptions.other') as string,
+            value: AddressType.OTHER,
         },
     ];
 };

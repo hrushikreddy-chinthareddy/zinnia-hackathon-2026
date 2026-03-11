@@ -1,0 +1,89 @@
+.documentsTabLoading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--measure-dimension-padding-2xl, 32px) 0;
+}
+
+.documentList {
+    margin-top: var(--measure-dimension-z-space-4, 16px);
+    list-style: none;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.documentItem {
+    margin-top: 0.5rem;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0.125rem;
+    border: 2px solid rgb(var(--color-100-gray) / var(--tw-border-opacity, 1));
+    padding: 0.75rem 1rem;
+}
+
+.documentItemContent {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: var(--measure-dimension-gap-md, 8px);
+}
+
+.documentItemIcon {
+    flex-shrink: 0;
+}
+
+.documentItemText {
+    display: flex;
+    flex-direction: column;
+}
+
+.documentId {
+    color: var(--color-base-text-secondary, #4b5563);
+}
+
+.nodocumentsTab {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding-left: var(--measure-dimension-z-space-10);
+    padding-right: var(--measure-dimension-z-space-10);
+    gap: var(--measure-dimension-gap-2xl);
+}
+
+.emptyState {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding-left: var(--measure-dimension-z-space-10);
+    padding-right: var(--measure-dimension-z-space-10);
+    gap: var(--measure-dimension-gap-2xl);
+}
+
+/* flex w-full flex-col + gap */
+.emptyStateInner {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: var(--measure-dimension-gap-md);
+}
+
+/* marginTop: var(--measure-dimension-z-space-8) */
+.emptyStateTitle {
+    margin-top: var(--measure-dimension-z-space-8);
+}
+
+/* w-full rounded border-2 border-gray-100 bg-gray-50 + boxSizing, padding */
+.emptyStateBox {
+    width: 100%;
+    border-radius: 0.25rem;
+    border: 2px solid rgb(var(--color-100-gray) / var(--tw-border-opacity, 1));
+    background: #f9fafb;
+    box-sizing: border-box;
+    padding: var(--measure-dimension-padding-5xl);
+}

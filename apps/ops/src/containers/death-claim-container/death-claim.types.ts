@@ -58,8 +58,8 @@ export interface NotifierPhone {
     action: ClaimActionTypes;
     phoneType: PhoneType;
     countryCode: string;
-    dialNumber: string | null;
-    areaCode: string | null;
+    dialNumber?: string;
+    areaCode?: string;
 }
 
 export interface NotifierParty {

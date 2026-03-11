@@ -14,6 +14,8 @@ export enum FEATURE_FLAGS {
     ILLUSTRATIONS_EXPERIENCE = 'illustration-experience',
     READ_ONLY_VIEW_TASK_MANAGEMENT = 'read-only-view-task-management',
     CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS = 'can-view-case-technical-exceptions',
+    CAN_VIEW_ACTIVITY_FEED = 'can_view_activity_feed',
+    CAN_VIEW_RELATED_CASES = 'can-view-related-cases',
     // CMW-14579 - Regulation 60
     REG_60 = 'case-management-otp_feature_regulation-60',
     SSW_MASS = 'case-management-otp_feature_mass_ssw',
@@ -205,4 +207,5 @@ export enum FEATURE_FLAGS {
     OPS_MANAGER_AGENT_OWNER_FILTERS = 'ops_manager_agent_owner_filters',
     CASE_MANAGEMENT_SUREIFY_FLOW_UPSERT_IF_EXISTS = 'case_management_sureify_flow_upsert_if_exists',
     FEATURES_AND_RIDERS_TABLE_VIEW = 'features_and_riders_table_view',
+    SHOULD_USE_UPDATED_RATES_FOR_FIUL_SP = 'should_use_updated_rates_for_fiul_sp',
 }

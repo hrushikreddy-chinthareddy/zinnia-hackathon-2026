@@ -14,6 +14,9 @@ import EmailWidget from './email-widget/email-widget';
 import AttachmentWidget from './file-widget/attachment-widget';
 import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
+import IssueResolvedRadioWidget, {
+    IssueResolvedDisplayWidget,
+} from './issue-resolved-widget/issue-resolved-widget';
 import NotesWidget from './notes-widget/notes-widget';
 import NumbersWidget from './numbers/numbers';
 import RadioWidget from './radio-widget/radio-widget';
@@ -47,6 +50,8 @@ export function generateWidgets(): RegistryWidgetsType {
         NumbersWidget,
         DateWidgetV2,
         TitleWidget,
+        IssueResolvedDisplayWidget,
+        IssueResolvedRadioWidget,
     };
 }
 

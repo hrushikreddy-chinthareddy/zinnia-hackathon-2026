@@ -22,6 +22,7 @@ import {
     formatPhoneWithAreacode,
     toTitleCase,
     formatFaxNumber,
+    isNullEmptyOrUndefined,
 } from '@deps/helpers/string.helpers';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
@@ -61,6 +62,7 @@ const DeathNotificationSidesheet = ({
                 ),
                 notifierRole: entity.notifiers?.notifierRole,
                 party: {
+                    partyId: entity.notifiers?.party?.partyId,
                     fullName:
                         entity.notifiers?.party?.fullName ||
                         getName(entity.notifiers?.party),
@@ -225,6 +227,12 @@ const DeathNotificationSidesheet = ({
         return displayNoData();
     }
 
+    const notifierRole =
+        data.notifiers.notifierRole === RoleType.Beneficiary &&
+        isNullEmptyOrUndefined(data.notifiers.party?.partyId)
+            ? RoleType.Other
+            : data.notifiers.notifierRole;
+
     return (
         <div className="flex w-full flex-col">
             <Typography variant={TypographyVariant.H3} className="mb-2">
@@ -255,7 +263,7 @@ const DeathNotificationSidesheet = ({
                         variant={TypographyVariant.BodySm}
                         className="col-span-3"
                     >
-                        {data.notifiers.notifierRole || DEFAULT_ERROR_STRING}
+                        {toTitleCase(notifierRole) || DEFAULT_ERROR_STRING}
                     </Typography>
                     <div className="col-span-2 text-[--color-base-text-secondary]">
                         {t('deathNotification.notifierDetails.notifierName')}

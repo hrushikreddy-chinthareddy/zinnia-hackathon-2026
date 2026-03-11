@@ -48,4 +48,10 @@ describe('ProgressBarStepsItem', () => {
         fireEvent.click(clickableItem);
         expect(mockProps.onClick).not.toHaveBeenCalled();
     });
+
+    it('disables the button when the step is active', () => {
+        render(<ProgressBarStepsItem {...mockProps} isActive />);
+        const button = screen.getByTestId(ProgressBarStepsTest.StepsContainer);
+        expect(button).toBeDisabled();
+    });
 });
