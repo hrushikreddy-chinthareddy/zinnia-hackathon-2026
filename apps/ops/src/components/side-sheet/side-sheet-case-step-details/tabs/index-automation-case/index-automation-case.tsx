@@ -230,6 +230,11 @@ const IndexAutomationCase = ({
                                     <div className={styles.methodResultLabel}>
                                         {result.method}
                                     </div>
+                                    <span
+                                        className={styles.methodResultSeparator}
+                                    >
+                                        -
+                                    </span>
                                     <Typography
                                         variant={TypographyVariant.BodySm}
                                     >
@@ -246,9 +251,6 @@ const IndexAutomationCase = ({
 
     const renderFields = (fields: FieldConfig[]) => {
         const entity = transactionEntity?.entity as Record<string, string>;
-
-        console.log(entity);
-
         return (
             <div className={styles.flexFullCol}>
                 <div className={styles.gridContainer}>
