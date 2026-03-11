@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 
 import AssistiveText, {
@@ -116,6 +116,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
     const [effectiveDateError, setEffectiveDateError] = useState(false);
     const [stopLoading, setStopLoading] = useState(true);
     const [successCaseId, setSuccessCaseId] = useState('');
+    const hasCases = useMemo(() => caseOptions.length > 1, [caseOptions]);
 
     useEffect(() => {
         async function populateCaseSelect() {
@@ -372,7 +373,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
                       ZAHARA_API_DATE_FORMAT
                   )
                 : '';
-        if (!selectedOption) {
+        if (hasCases && !selectedOption) {
             setShowSelectionError(true);
             return;
         }
@@ -400,7 +401,7 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
     return (
         <div className="flex flex-col p-8 h-full">
             <div className="flex flex-col">
-                {caseOptions.length > 1 && (
+                {hasCases && (
                     <>
                         <Label
                             className="mb-4"
