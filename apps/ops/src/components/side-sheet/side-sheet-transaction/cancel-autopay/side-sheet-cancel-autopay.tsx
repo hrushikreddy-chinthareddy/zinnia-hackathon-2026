@@ -126,7 +126,9 @@ const SideSheetCancelAutopay = ({
     >([]);
     const [body, setBody] = useState(INITIAL_BODY);
     const [newCaseId, setNewCaseId] = useState<string>();
-    const defaultDate = dayjs(policy.policyDates?.nextMonthiversaryDate);
+    const defaultDate = isUseCurrentLifeCycleDate
+        ? dayjs(policy?.policyContractState?.currentLifecycleDate).add(1, 'day')
+        : dayjs(policy.policyDates?.nextMonthiversaryDate);
     const [effectiveDate, setEffectiveDate] = useState<string | undefined>(
         defaultDate.format(NUMERIC_DATE_FORMAT)
     );
@@ -434,8 +436,10 @@ const SideSheetCancelAutopay = ({
                             ? dayjs(
                                   policy?.policyContractState
                                       ?.currentLifecycleDate
-                              ).toDate()
-                            : dayjs().toDate()
+                              )
+                                  .add(1, 'day')
+                                  .toDate()
+                            : dayjs().add(1, 'day').toDate()
                     }
                     defaultDate={defaultDate.toDate()}
                     onDateSelect={(date: Date | undefined) =>

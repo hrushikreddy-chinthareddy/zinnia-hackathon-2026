@@ -87,6 +87,7 @@ import {
     parseErrorInformation,
     withPageAuthAndLogging,
 } from '@deps/utils/server-logging';
+import { Policy } from '@zinnia/api-types/types/sor';
 
 import { ERROR_CODES } from '../../error';
 
@@ -101,6 +102,8 @@ interface RmdCaseProps extends SegmentTrackedPageProps {
     planCode: string;
     isLC?: boolean;
     nigoExceptions: NigoExceptionResponse[];
+    /** Policy from Account Info / policy details API (requiredMinimumDistribution.remainingRequiredMinimumDistributionAmount prepopulates RMD Amount for One-Time RMD) */
+    policy?: Policy | null;
 }
 
 const DefaultSidebarContent = {
@@ -157,6 +160,7 @@ export default function RmdCase({
     planCode = '',
     isLC = false,
     nigoExceptions,
+    policy,
 }: RmdCaseProps) {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request',
@@ -179,6 +183,10 @@ export default function RmdCase({
         isLC
     );
     const { issueState, qualType, issueDate } = contractAccountInfo;
+
+    const prefillRmdAmountEnabled = Boolean(
+        featureFlagDecisions?.[FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]
+    );
 
     useSegmentPageTracker(user, SegmentPageName.RmdCase, {
         clientForFormDetermination,
@@ -314,6 +322,13 @@ export default function RmdCase({
                                         parties={parties}
                                         systematicPrograms={systematicPrograms}
                                         isLC={isLC}
+                                        remainingRmdAmount={
+                                            !isLC && prefillRmdAmountEnabled
+                                                ? policy
+                                                      ?.requiredMinimumDistribution
+                                                      ?.remainingRequiredMinimumDistributionAmount
+                                                : undefined
+                                        }
                                     >
                                         {
                                             <>

@@ -17,7 +17,6 @@ import styles from './index-automation-case.module.css';
 import {
     DataType,
     IndexAutomationCaseProps,
-    // eslint-disable-next-line import/no-unresolved
 } from './index-automation-case.types';
 
 type FieldConfig = {
@@ -155,8 +154,7 @@ const IndexAutomationCase = ({
     };
 
     const renderFields = (fields: FieldConfig[]) => {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const entity = transactionEntity?.entity as Record<string, any>;
+        const entity = transactionEntity?.entity as Record<string, string>;
 
         return (
             <div className={styles.flexFullCol}>

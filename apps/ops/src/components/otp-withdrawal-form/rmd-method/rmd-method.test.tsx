@@ -3,12 +3,14 @@ import userEvent from '@testing-library/user-event';
 import { useTranslation } from 'next-i18next';
 import React from 'react';
 
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import {
     AmountType,
     Frequency,
     RMDType,
 } from '@deps/models/case/withdrawal/case';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { findOverlaps } from './rmd-calculator';
 import RMDMethod, {
@@ -16,6 +18,11 @@ import RMDMethod, {
     DEFAULT_RMD,
     frequencyToValue,
 } from './rmd-method';
+
+// Mock Optimizely for feature flag (prefill_rmd_amount_for_fast_dlic)
+jest.mock('@deps/contexts/OptimizelyContext', () => ({
+    useOptimizely: jest.fn(),
+}));
 
 // Mock dependencies
 jest.mock('next-i18next', () => ({
@@ -138,6 +145,11 @@ describe('RMDMethod Component', () => {
             t: mockT,
         });
         (findOverlaps as jest.Mock).mockReturnValue([]);
+        (useOptimizely as jest.Mock).mockReturnValue({
+            featureFlags: {
+                [FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]: false,
+            },
+        });
     });
 
     describe('Component Rendering', () => {
@@ -600,6 +612,208 @@ describe('RMDMethod Component', () => {
                     expect.any(Function)
                 );
             });
+        });
+    });
+
+    describe('One-Time RMD amount prepopulation (FAST only)', () => {
+        const REMAINING_RMD_AMOUNT = 1017.62;
+
+        it('should prepopulate first row amount when FAST (!isLC), flag on, OneTimeRMD, and remainingRmdAmount set', async () => {
+            (useOptimizely as jest.Mock).mockReturnValue({
+                featureFlags: {
+                    [FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]: true,
+                },
+            });
+            const contextWithRemainingRmd = {
+                ...defaultContextValue,
+                remainingRmdAmount: REMAINING_RMD_AMOUNT,
+                formProgram: {
+                    ...defaultFormProgram,
+                    rmd: {
+                        ...defaultFormProgram.rmd,
+                        rmdMethod: RMDType.OneTimeRMD,
+                        rmdPrograms: [
+                            {
+                                ...DEFAULT_RMD_PROGRAM,
+                                amount: {
+                                    text: '',
+                                    amountType: AmountType.Dollar,
+                                },
+                            },
+                        ],
+                    },
+                },
+            };
+
+            renderWithContext(
+                <RMDMethod isFormStateReadOnly={false} isLC={false} />,
+                contextWithRemainingRmd
+            );
+
+            await waitFor(() => {
+                expect(mockSetFormProgram).toHaveBeenCalled();
+            });
+
+            const callsWithPrepopulatedAmount =
+                mockSetFormProgram.mock.calls.filter((call) => {
+                    const updater = call[0];
+                    if (typeof updater !== 'function') return false;
+                    const next = updater(contextWithRemainingRmd.formProgram);
+                    return (
+                        next?.rmd?.rmdPrograms?.[0]?.amount?.text === '1017.62'
+                    );
+                });
+            expect(callsWithPrepopulatedAmount.length).toBeGreaterThan(0);
+        });
+
+        it('should not prepopulate when isLC is true even with remainingRmdAmount and flag on', async () => {
+            (useOptimizely as jest.Mock).mockReturnValue({
+                featureFlags: {
+                    [FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]: true,
+                },
+            });
+            const contextWithRemainingRmd = {
+                ...defaultContextValue,
+                remainingRmdAmount: REMAINING_RMD_AMOUNT,
+                formProgram: {
+                    ...defaultFormProgram,
+                    rmd: {
+                        ...defaultFormProgram.rmd,
+                        rmdMethod: RMDType.OneTimeRMD,
+                        rmdPrograms: [
+                            {
+                                ...DEFAULT_RMD_PROGRAM,
+                                amount: {
+                                    text: '',
+                                    amountType: AmountType.Dollar,
+                                },
+                            },
+                        ],
+                    },
+                },
+            };
+
+            mockSetFormProgram.mockClear();
+            renderWithContext(
+                <RMDMethod isFormStateReadOnly={false} isLC={true} />,
+                contextWithRemainingRmd
+            );
+
+            await waitFor(() => {
+                expect(mockSetFormProgram).toHaveBeenCalled();
+            });
+
+            const callsWithAmount = mockSetFormProgram.mock.calls.filter(
+                (call) => {
+                    const updater = call[0];
+                    if (typeof updater !== 'function') return false;
+                    const next = updater(contextWithRemainingRmd.formProgram);
+                    return (
+                        next?.rmd?.rmdPrograms?.[0]?.amount?.text === '1017.62'
+                    );
+                }
+            );
+            expect(callsWithAmount.length).toBe(0);
+        });
+
+        it('should not prepopulate when feature flag is off (FAST, remainingRmdAmount set)', async () => {
+            (useOptimizely as jest.Mock).mockReturnValue({
+                featureFlags: {
+                    [FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]: false,
+                },
+            });
+            const contextWithRemainingRmd = {
+                ...defaultContextValue,
+                remainingRmdAmount: REMAINING_RMD_AMOUNT,
+                formProgram: {
+                    ...defaultFormProgram,
+                    rmd: {
+                        ...defaultFormProgram.rmd,
+                        rmdMethod: RMDType.OneTimeRMD,
+                        rmdPrograms: [
+                            {
+                                ...DEFAULT_RMD_PROGRAM,
+                                amount: {
+                                    text: '',
+                                    amountType: AmountType.Dollar,
+                                },
+                            },
+                        ],
+                    },
+                },
+            };
+
+            mockSetFormProgram.mockClear();
+            renderWithContext(
+                <RMDMethod isFormStateReadOnly={false} isLC={false} />,
+                contextWithRemainingRmd
+            );
+
+            await waitFor(() => {
+                expect(mockSetFormProgram).toHaveBeenCalled();
+            });
+
+            const callsWithAmount = mockSetFormProgram.mock.calls.filter(
+                (call) => {
+                    const updater = call[0];
+                    if (typeof updater !== 'function') return false;
+                    const next = updater(contextWithRemainingRmd.formProgram);
+                    return (
+                        next?.rmd?.rmdPrograms?.[0]?.amount?.text === '1017.62'
+                    );
+                }
+            );
+            expect(callsWithAmount.length).toBe(0);
+        });
+
+        it('should not prepopulate when remainingRmdAmount is null', async () => {
+            (useOptimizely as jest.Mock).mockReturnValue({
+                featureFlags: {
+                    [FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]: true,
+                },
+            });
+            const contextWithNullRemaining = {
+                ...defaultContextValue,
+                remainingRmdAmount: null,
+                formProgram: {
+                    ...defaultFormProgram,
+                    rmd: {
+                        ...defaultFormProgram.rmd,
+                        rmdMethod: RMDType.OneTimeRMD,
+                        rmdPrograms: [
+                            {
+                                ...DEFAULT_RMD_PROGRAM,
+                                amount: {
+                                    text: '',
+                                    amountType: AmountType.Dollar,
+                                },
+                            },
+                        ],
+                    },
+                },
+            };
+
+            mockSetFormProgram.mockClear();
+            renderWithContext(
+                <RMDMethod isFormStateReadOnly={false} isLC={false} />,
+                contextWithNullRemaining
+            );
+
+            await waitFor(() => {
+                expect(mockSetFormProgram).toHaveBeenCalled();
+            });
+
+            const callsWithAmount = mockSetFormProgram.mock.calls.filter(
+                (call) => {
+                    const updater = call[0];
+                    if (typeof updater !== 'function') return false;
+                    const next = updater(contextWithNullRemaining.formProgram);
+                    return (
+                        next?.rmd?.rmdPrograms?.[0]?.amount?.text === '1017.62'
+                    );
+                }
+            );
+            expect(callsWithAmount.length).toBe(0);
         });
     });
 

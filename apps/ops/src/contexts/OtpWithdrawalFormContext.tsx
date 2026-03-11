@@ -81,6 +81,8 @@ export interface OtpWithdrawalFormState {
     formESignatureData?: FormEsignatureData | any;
     policySystematicPrograms: SystematicSpecialPrograms[] | [];
     isLC?: boolean;
+    /** Remaining RMD amount from Account Info / policy (for One-Time RMD prepopulation) */
+    remainingRmdAmount?: number | null;
     bankDetails?: BankingDetails;
     setBankDetails?: React.Dispatch<React.SetStateAction<BankingDetails>>;
     setFormESignatureData: React.Dispatch<React.SetStateAction<any>>;
@@ -181,6 +183,7 @@ export const defaultFormDataContext = {
     formPeriodicPension: {} as PeriodicPensionFormType,
     formEsignatureData: {} as FormEsignatureData,
     policySystematicPrograms: [] as SystematicSpecialPrograms[],
+    remainingRmdAmount: undefined as number | null | undefined,
     BankDetails: {} as BankingDetails,
     setBankDetails: noop,
     setFormPeriodicPension: noop,
