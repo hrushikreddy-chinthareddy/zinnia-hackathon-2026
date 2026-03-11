@@ -50,7 +50,7 @@ describe('DislikeReasons', () => {
     });
 
     it('renders all radio options', () => {
-        const { getByLabelText } = render(
+        const { getByRole } = render(
             <DislikeReasons
                 dislikeReason={defaultDislikeReason}
                 onDislikeReasonChange={onDislikeReasonChange}
@@ -58,32 +58,38 @@ describe('DislikeReasons', () => {
         );
 
         expect(
-            getByLabelText('chat.feedback.dislikeReasons.incorrectResponse')
+            getByRole('radio', {
+                name: 'chat.feedback.dislikeReasons.incorrectResponse',
+            })
         ).toBeInTheDocument();
         expect(
-            getByLabelText('chat.feedback.dislikeReasons.languageIssue')
+            getByRole('radio', {
+                name: 'chat.feedback.dislikeReasons.languageIssue',
+            })
         ).toBeInTheDocument();
         expect(
-            getByLabelText(
-                'chat.feedback.dislikeReasons.relevantDocumentMissing'
-            )
+            getByRole('radio', {
+                name: 'chat.feedback.dislikeReasons.relevantDocumentMissing',
+            })
         ).toBeInTheDocument();
         expect(
-            getByLabelText('chat.feedback.dislikeReasons.infoMissing')
+            getByRole('radio', {
+                name: 'chat.feedback.dislikeReasons.infoMissing',
+            })
         ).toBeInTheDocument();
     });
 
     it('selects a radio option and calls onDislikeReasonChange', async () => {
-        const { getByLabelText } = render(
+        const { getByRole } = render(
             <DislikeReasons
                 dislikeReason={defaultDislikeReason}
                 onDislikeReasonChange={onDislikeReasonChange}
             />
         );
 
-        const firstRadio = getByLabelText(
-            'chat.feedback.dislikeReasons.incorrectResponse'
-        );
+        const firstRadio = getByRole('radio', {
+            name: 'chat.feedback.dislikeReasons.incorrectResponse',
+        });
         fireEvent.click(firstRadio);
 
         await waitFor(() => {
@@ -94,16 +100,16 @@ describe('DislikeReasons', () => {
     });
 
     it('renders links input when incorrectResponse is selected and updates payload', async () => {
-        const { getByLabelText } = render(
+        const { getByRole, getByLabelText } = render(
             <DislikeReasons
                 dislikeReason={defaultDislikeReason}
                 onDislikeReasonChange={onDislikeReasonChange}
             />
         );
 
-        const radio = getByLabelText(
-            'chat.feedback.dislikeReasons.incorrectResponse'
-        );
+        const radio = getByRole('radio', {
+            name: 'chat.feedback.dislikeReasons.incorrectResponse',
+        });
         fireEvent.click(radio);
 
         const linksInput = getByLabelText(
@@ -124,16 +130,16 @@ describe('DislikeReasons', () => {
     });
 
     it('renders links input when relevantDocumentMissing is selected', async () => {
-        const { getByLabelText } = render(
+        const { getByRole, getByLabelText } = render(
             <DislikeReasons
                 dislikeReason={defaultDislikeReason}
                 onDislikeReasonChange={onDislikeReasonChange}
             />
         );
 
-        const radio = getByLabelText(
-            'chat.feedback.dislikeReasons.relevantDocumentMissing'
-        );
+        const radio = getByRole('radio', {
+            name: 'chat.feedback.dislikeReasons.relevantDocumentMissing',
+        });
         fireEvent.click(radio);
 
         const linksInput = getByLabelText(
@@ -143,16 +149,16 @@ describe('DislikeReasons', () => {
     });
 
     it('opens OpsIntakeForm when infoMissing radio is selected and button is clicked', async () => {
-        const { getByLabelText } = render(
+        const { getByRole, getByLabelText } = render(
             <DislikeReasons
                 dislikeReason={defaultDislikeReason}
                 onDislikeReasonChange={onDislikeReasonChange}
             />
         );
 
-        const radio = getByLabelText(
-            'chat.feedback.dislikeReasons.infoMissing'
-        );
+        const radio = getByRole('radio', {
+            name: 'chat.feedback.dislikeReasons.infoMissing',
+        });
         fireEvent.click(radio);
 
         const opsFormButton = getByLabelText('ops-intake-form-btn');

@@ -262,6 +262,7 @@
         "edit": "Éditer",
         "editName": "Modifier le nom",
         "effectiveDate": "Date d'effet",
+        "effectiveDates": "Dates d'effet",
         "email": "E-mail",
         "emailAddress": "Adresse e-mail",
         "emailRequired": "L'e-mail est requis.",
@@ -493,6 +494,7 @@
         "modifiedEndowmentContractTestDate": "Date du test MEC",
         "monthOfYear": "Mois de l'année",
         "nameOnAccount": "Nom sur le compte",
+        "navLinksUserMenuFor": "Menu utilisateur pour {{name}}",
         "netAmountAtRisk": "Montant net à risque",
         "netBenefitAmount": "Monto neto del beneficio",
         "netDeathBenefit": "Prestation décès nette estimée",
@@ -9273,7 +9275,7 @@
             "ariaCancel": "Annuler la soumission"
         },
         "createClientCaseForm": {
-            "clientCaseSideSheetTitle": "Nouveau Client Case",
+            "clientCaseSideSheetTitle": "Nouveau dossier client",
             "editClientCaseSideSheetTitle": "Modifier le dossier client",
             "clientCaseSection": "Détails du dossier client",
             "titleLabel": "Titre",
@@ -9369,6 +9371,10 @@
                 "premiumFreeRiders": "Avenants de politique sans prime",
                 "totalRiderPricing": "Prix ​​total du passager"
             }
+        },
+        "errors": {
+            "createClientCase": "Une erreur est survenue lors de la création du dossier client.",
+            "updateClientCase": "Une erreur est survenue lors de la modification du dossier client."
         }
     },
     "caseStats": {

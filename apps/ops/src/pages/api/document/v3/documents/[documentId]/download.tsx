@@ -14,6 +14,8 @@ import {
     logError,
     parseErrorInformation,
     withAuthAndLogging,
+    isForbiddenError,
+    logWarn,
 } from '@deps/utils/server-logging';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
@@ -84,10 +86,21 @@ export default withAuthAndLogging(
             );
             res.json({ ...data, mimeType });
         } catch (error) {
-            logError('documents/download:: error', {
-                ...parseErrorInformation(error),
-                ...loggingContext,
-            });
+            if (isForbiddenError(error)) {
+                logWarn(
+                    'documents/download:: forbidden to download the document',
+                    {
+                        ...parseErrorInformation(error),
+                        ...loggingContext,
+                    }
+                );
+            } else {
+                logError('documents/download:: error', {
+                    ...parseErrorInformation(error),
+                    ...loggingContext,
+                });
+            }
+
             res.status(500).json(null);
         }
     },

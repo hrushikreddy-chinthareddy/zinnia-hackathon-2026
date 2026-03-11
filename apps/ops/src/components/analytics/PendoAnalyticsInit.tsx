@@ -48,7 +48,9 @@ const PendoAnalyticsInit = () => {
             return {
                 visitor: {
                     id: user.partyId, // Indicates the unique visitor ID
-                    email: user.email ?? undefined,
+                    emailDomain: user.email
+                        ? user.email.replace(/(.*)@(.*)\.(.*)/, '$2') // extract 2nd+ level domain
+                        : undefined,
                     firstLogin: user.updated_at ?? undefined,
                     isInternalZinniaUser: String(isInternalUser ?? false),
                     /*

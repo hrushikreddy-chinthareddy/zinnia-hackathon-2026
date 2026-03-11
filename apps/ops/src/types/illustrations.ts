@@ -4,10 +4,10 @@ import { UnderwritingClass } from '@deps/components/illustrations/helpers/illust
 
 import { ProductTypes } from './product';
 
-export interface IllustraionsClientCaseSearchResponse {
+export interface IllustrationsClientCaseSearchResponse {
     limit: number;
     offset: number;
-    results: IllustrationsClientCase[];
+    results: IllustrationsClientCaseSearchResult[];
     total: number;
     count: number;
 }
@@ -35,6 +35,11 @@ export interface IllustrationsClientCase {
     isMec?: boolean;
     transactionType?: TransactionType;
 }
+
+export type IllustrationsClientCaseSearchResult = Omit<
+    IllustrationsClientCase,
+    'caseManagementCaseId' | 'eAppId' | 'illustrations' | 'originalFaceAmount'
+>;
 
 export interface IllustrationSummary {
     id: string;

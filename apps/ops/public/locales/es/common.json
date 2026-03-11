@@ -260,6 +260,7 @@
         "edit": "Editar",
         "editName": "Editar nombre",
         "effectiveDate": "Fecha de vigencia",
+        "effectiveDates": "Fechas de vigencia",
         "email": "Correo electrónico",
         "emailAddress": "Dirección de correo electrónico",
         "emailRequired": "Se requiere correo electrónico.",
@@ -493,6 +494,7 @@
         "modifiedEndowmentContractTestDate": "Fecha de prueba de MEC",
         "monthOfYear": "Mes del año",
         "nameOnAccount": "Nombre en la cuenta",
+        "navLinksUserMenuFor": "Menú de usuario para {{name}}",
         "netAmountAtRisk": "Monto neto en riesgo",
         "netBenefitAmount": "Montant net de l'avantage",
         "netDeathBenefit": "Beneficio neto estimado por fallecimiento",
@@ -9437,6 +9439,10 @@
                 "premiumFreeRiders": "Adicionales sin prima",
                 "totalRiderPricing": "Precio total de adicionales"
             }
+        },
+        "errors": {
+            "createClientCase": "Error en la creación de caso de cliente.",
+            "updateClientCase": "Error en la actualización de caso de cliente."
         }
     },
     "zinniaAiAssistant": {
