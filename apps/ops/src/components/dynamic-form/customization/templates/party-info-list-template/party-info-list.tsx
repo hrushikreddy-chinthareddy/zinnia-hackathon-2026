@@ -126,7 +126,7 @@ export default function PartyInfoListTemplate(
                             <Icon type={IconType.ADD} small />
                             <>{addButtonCTA}</>
                         </button>
-                    }
+                    )}
                 </div>
             </div>
 
