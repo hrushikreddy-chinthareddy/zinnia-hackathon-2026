@@ -203,21 +203,24 @@ export const TransactionsWrapper = () => {
                         onClick={() => setHideDailyInterest((prev) => !prev)}
                     />
                 </div>
-                <FieldDateRange
-                    name="transactionsDateRange"
-                    showActionButtons
-                    onApply={(startDate, endDate) =>
-                        setHistoryFilters((prevState) => ({
-                            ...prevState,
-                            datesFilter: {
-                                from: dayjs(startDate).utc(),
-                                to: dayjs(endDate).utc(),
-                            },
-                        }))
-                    }
-                    defaultStartDate={selectedDateRange.from}
-                    defaultEndDate={selectedDateRange.to}
-                />
+                <div className={styles.filterItem}>
+                    <FieldDateRange
+                        name="transactionsDateRange"
+                        showActionButtons
+                        onApply={(startDate, endDate) =>
+                            setHistoryFilters((prevState) => ({
+                                ...prevState,
+                                datesFilter: {
+                                    from: dayjs(startDate).utc(),
+                                    to: dayjs(endDate).utc(),
+                                },
+                            }))
+                        }
+                        defaultStartDate={selectedDateRange.from}
+                        defaultEndDate={selectedDateRange.to}
+                        label={<Label>{t('allFields.effectiveDates')}</Label>}
+                    />
+                </div>
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">
                 {liveResultsMessage}
