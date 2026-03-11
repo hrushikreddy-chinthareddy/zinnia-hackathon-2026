@@ -7,9 +7,9 @@ import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json
 import {
     annuityPolicyOverrides,
     lifePolicyOverrides,
-} from './helpers/policy-overrides';
-import { createMockRouter } from './helpers/policy-test-fixtures';
-import { renderPolicyDetailsPage } from './helpers/render-policy-page';
+} from '@vitest/helpers/policy-overrides';
+import { createMockRouter } from '@vitest/helpers/policy-test-fixtures';
+import { renderPolicyDetailsPage } from '@vitest/helpers/render-policy-page';
 
 let mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
 

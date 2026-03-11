@@ -16,11 +16,11 @@ import {
     documentsHandlers,
     fundsEligibilityHandlers,
     personEligibilityHandlers,
-} from './helpers/policy-msw-handlers';
+} from '@vitest/helpers/policy-msw-handlers';
 import {
     createMockRouter,
     createMockPolicyPageProps,
-} from './helpers/policy-test-fixtures';
+} from '@vitest/helpers/policy-test-fixtures';
 
 let mockRouter = createMockRouter();
 
