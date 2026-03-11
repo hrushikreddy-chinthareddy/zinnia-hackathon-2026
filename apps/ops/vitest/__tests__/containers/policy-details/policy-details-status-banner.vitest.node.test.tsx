@@ -2,13 +2,12 @@ import { screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
-
 import {
     annuityPolicyOverrides,
     lifePolicyOverrides,
-} from '@vitest/helpers/policy-overrides';
-import { createMockRouter } from '@vitest/helpers/policy-test-fixtures';
-import { renderPolicyDetailsPage } from '@vitest/helpers/render-policy-page';
+} from '@vitest/helpers/policy/containers/policy-details/policy-overrides';
+import { renderPolicyDetailsPage } from '@vitest/helpers/policy/containers/policy-details/render-policy-page';
+import { createMockRouter } from '@vitest/helpers/policy/shared/policy-test-fixtures';
 import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 
 let mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });

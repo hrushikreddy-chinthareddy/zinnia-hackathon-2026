@@ -9,11 +9,11 @@ import {
     documentsHandlers,
     fundsEligibilityHandlers,
     personEligibilityHandlers,
-} from '@vitest/helpers/policy-msw-handlers';
+} from '@vitest/helpers/policy/shared/policy-msw-handlers';
 import {
     createMockRouter,
     createMockPolicyPageProps,
-} from '@vitest/helpers/policy-test-fixtures';
+} from '@vitest/helpers/policy/shared/policy-test-fixtures';
 import { server } from '@vitest/mocks/node';
 import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 import {

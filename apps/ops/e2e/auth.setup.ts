@@ -16,9 +16,6 @@ setup('authenticate', async ({ page }) => {
         (v) => !process.env[v]
     );
     if (missingVars.length) {
-        const missingVars = ['E2E_USERNAME', 'E2E_PASSWORD'].filter(
-            (v) => !process.env[v]
-        );
         throw new Error(
             `Missing required environment variables: ${missingVars.join(', ')}`
         );

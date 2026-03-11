@@ -9,7 +9,7 @@ import {
     CreateTestWrapperOptions,
 } from '@vitest/utils/create-test-wrapper';
 
-import { createMockPolicyPageProps } from './policy-test-fixtures';
+import { createMockPolicyPageProps } from '../../shared/policy-test-fixtures';
 
 const defaultProps = createMockPolicyPageProps();
 
@@ -19,7 +19,7 @@ type FeatureFlagOverrides = CreateTestWrapperOptions['featureFlags'];
  * Renders the full PolicySlug container (policy-details route) with mock API responses.
  *
  * @param policyOverrides - Partial overrides merged onto `policyEndpointData` for the policy API response.
- * @param handlers - Additional MSW handlers registered **before** the default policy handler.
+ * @param handlers - Additional MSW handlers registered **after** the default policy handler.
  *   Use these to override specific API endpoints (e.g. agent data, free-look eligibility).
  * @param featureFlags - Per-test Optimizely flag overrides. All flags are enabled by default;
  *   pass `{ [FEATURE_FLAGS.SOME_FLAG]: false }` to disable a specific flag.
@@ -29,10 +29,7 @@ export const renderPolicyDetailsPage = (
     handlers: Parameters<typeof server.use> = [],
     featureFlags: FeatureFlagOverrides = {}
 ) => {
-    if (handlers.length > 0) {
-        server.use(...handlers);
-    }
-
+    // Register the default policy handler first
     server.use(
         http.get('*/api/policies/:planCode/:policyId', ({ params }) =>
             HttpResponse.json({
@@ -48,6 +45,11 @@ export const renderPolicyDetailsPage = (
             })
         )
     );
+
+    // Register extra handlers AFTER so they take precedence (MSW prepends)
+    if (handlers.length > 0) {
+        server.use(...handlers);
+    }
 
     return render(<PolicySlug {...defaultProps} />, {
         wrapper: createTestWrapper({ featureFlags }),
