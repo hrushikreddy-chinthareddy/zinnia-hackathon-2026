@@ -1,7 +1,9 @@
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import {
+    createSpyPolicySearchHandler,
     errorPolicySearchHandler,
 } from './helpers/policy-index-helpers/policy-index-msw-handlers';
 import {
@@ -33,42 +35,17 @@ vi.mock('next/head', () => ({
 
 beforeEach(() => {
     mockRouter = createMockRouter();
+    // PolicySearchFiltersProvider persists filters to sessionStorage.
+    // Clear it so stale toggle / search values don't leak between tests.
+    window.sessionStorage.clear();
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Tests
 // ─────────────────────────────────────────────────────────────────────────────
 describe('PolicyIndexTableView', () => {
-    // ─── Page heading ────────────────────────────────────────────────────────
-    describe('page heading', () => {
-        test('renders the "Policies & Contracts" heading', async () => {
-            renderPolicyIndexPage();
 
-            expect(
-                await screen.findByRole('heading', {
-                    name: 'Policies & Contracts',
-                })
-            ).toBeInTheDocument();
-        });
-    });
 
-    // ─── Table column headers ────────────────────────────────────────────────
-    describe('table column headers', () => {
-        test('renders all expected column headers', async () => {
-            renderPolicyIndexPage();
-
-            // Wait for data to load
-            await screen.findByText(mockPolicySearchResults[0].productName);
-
-            expect(
-                screen.getByText('Policy/Contract')
-            ).toBeInTheDocument();
-            expect(screen.getByText('Status')).toBeInTheDocument();
-            expect(screen.getByText('Owner/SSN')).toBeInTheDocument();
-            expect(screen.getByText('Open Cases')).toBeInTheDocument();
-            expect(screen.getByText('Last Updated')).toBeInTheDocument();
-        });
-    });
 
     // ─── Search results rendering ────────────────────────────────────────────
     describe('search results', () => {
@@ -178,41 +155,289 @@ describe('PolicyIndexTableView', () => {
             expect(
                 await screen.findByText(`Results: 1-${pageSize} of ${total}`)
             ).toBeInTheDocument();
+
+            // Pagination nav and controls
+            const paginationNav = screen.getByRole('navigation', {
+                name: 'Pagination',
+            });
+            expect(paginationNav).toBeInTheDocument();
+
+            // Page number buttons (25 total / 10 per page = 3 pages)
+            // Two sets are rendered (md and sm breakpoints), so use getAllByRole
+            expect(
+                screen.getAllByRole('button', { name: 'Page 1' }).length
+            ).toBeGreaterThanOrEqual(1);
+            expect(
+                screen.getAllByRole('button', { name: 'Page 2' }).length
+            ).toBeGreaterThanOrEqual(1);
+            expect(
+                screen.getAllByRole('button', { name: 'Page 3' }).length
+            ).toBeGreaterThanOrEqual(1);
+
+            // Arrow navigation (arrows have role="navigation" on the button element)
+            expect(
+                screen.getByTestId('arrow-left')
+            ).toBeInTheDocument();
+            expect(
+                screen.getByTestId('arrow-right')
+            ).toBeInTheDocument();
+
+            // Page 1 is the current page
+            expect(
+                screen.getAllByRole('button', { name: 'Page 1' })[0]
+            ).toHaveAttribute('aria-current', 'page');
+
+
         });
     });
 
-    // ─── URL-driven policyNumber ─────────────────────────────────────────────
-    describe('URL-driven policyNumber', () => {
-        test('picks up policyNumber from the router query', async () => {
-            mockRouter = createMockRouter({ policyNumber: 'POL100001' });
+    // ─── Search functionality ────────────────────────────────────────────────
+    describe('search functionality', () => {
+        test('submitting a policy number search sends the value to the API', async () => {
+            const user = userEvent.setup();
+            const { handler, calls } = createSpyPolicySearchHandler();
+
+            renderPolicyIndexPage(undefined, [handler]);
+
+            // Wait for initial load
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // The default toggle is "policyNumber" – type into the input and submit
+            const input = screen.getByPlaceholderText(
+                'Policy or contract number'
+            );
+            await user.clear(input);
+            await user.type(input, 'POL999');
+            await user.click(screen.getByTestId('search-btn'));
+
+            // The most recent API call should contain the policy number in the body
+            const lastCall = calls.at(-1);
+            expect(lastCall).toBeDefined();
+            expect(lastCall!.body).toMatchObject({
+                policyNumber: 'POL999',
+            });
+        });
+
+
+
+        test('submitting an empty search shows a field error message', async () => {
+            const user = userEvent.setup();
 
             renderPolicyIndexPage();
 
-            // The page should still render — it will set the search context from the URL param
+            // Wait for initial load
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // Clear the input (should already be empty) and click search
+            const input = screen.getByPlaceholderText(
+                'Policy or contract number'
+            );
+            await user.clear(input);
+            await user.click(screen.getByTestId('search-btn'));
+
+            // The SearchBarContext's validateValueToSearch sets showFieldErrorMessage
+            // which causes the SearchField to render an error AssistiveText
             expect(
-                await screen.findByRole('heading', {
-                    name: 'Policies & Contracts',
-                })
+                await screen.findByText(
+                    /enter a policy\/contract number to return search results/i
+                )
+            ).toBeInTheDocument();
+        });
+
+        test('search resets pagination offset to 0', async () => {
+            const user = userEvent.setup();
+            const { handler, calls } = createSpyPolicySearchHandler();
+
+            renderPolicyIndexPage(undefined, [handler]);
+
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            const input = screen.getByPlaceholderText(
+                'Policy or contract number'
+            );
+            await user.clear(input);
+            await user.type(input, 'POL123');
+            await user.click(screen.getByTestId('search-btn'));
+
+            const lastCall = calls.at(-1);
+            expect(lastCall).toBeDefined();
+            expect(lastCall!.searchParams.get('offset')).toBe('0');
+        });
+    });
+
+    // ─── SSN search ──────────────────────────────────────────────────────────
+    describe('SSN search', () => {
+        test('switching to SSN and searching sends ssn to the API with dashes stripped', async () => {
+            const user = userEvent.setup();
+            const { handler, calls } = createSpyPolicySearchHandler();
+
+            renderPolicyIndexPage(undefined, [handler]);
+
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // Open the "Search by" dropdown and select "SSN"
+            const dropdown = screen.getByRole('combobox');
+            await user.click(dropdown);
+            const ssnOption = await screen.findByText('SSN');
+            await user.click(ssnOption);
+
+            // The input should now show the SSN placeholder
+            const ssnInput =
+                await screen.findByPlaceholderText('###-##-####');
+            await user.type(ssnInput, '123-45-6789');
+            await user.click(screen.getByTestId('search-btn'));
+
+            // getPoliciesQuery strips dashes before sending to the API
+            const lastCall = calls.at(-1);
+            expect(lastCall).toBeDefined();
+            expect(lastCall!.body).toMatchObject({ ssn: '123456789' });
+        });
+
+        test('submitting an empty SSN search shows an SSN error message', async () => {
+            const user = userEvent.setup();
+
+            renderPolicyIndexPage();
+
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // Switch to SSN
+            const dropdown = screen.getByRole('combobox');
+            await user.click(dropdown);
+            const ssnOption = await screen.findByText('SSN');
+            await user.click(ssnOption);
+
+            // Wait for the SSN input to appear, then submit empty
+            await screen.findByPlaceholderText('###-##-####');
+            await user.click(screen.getByTestId('search-btn'));
+
+            expect(
+                await screen.findByText(
+                    /enter a social security number to return search results/i
+                )
             ).toBeInTheDocument();
         });
     });
 
-    // ─── Search form ─────────────────────────────────────────────────────────
-    describe('search form', () => {
-        test('renders the search button', async () => {
-            renderPolicyIndexPage();
+    // ─── Owner search ────────────────────────────────────────────────────────
+    describe('Owner search', () => {
+        test('switching to Owner and searching sends firstName and lastName to the API', async () => {
+            const user = userEvent.setup();
+            const { handler, calls } = createSpyPolicySearchHandler();
 
-            expect(
-                await screen.findByTestId('search-btn')
-            ).toBeInTheDocument();
+            renderPolicyIndexPage(undefined, [handler]);
+
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // Open the "Search by" dropdown and select "Owner"
+            const dropdown = screen.getByRole('combobox');
+            await user.click(dropdown);
+            const ownerOption = await screen.findByText('Owner');
+            await user.click(ownerOption);
+
+            // The Owner toggle renders two inputs (first name and last name)
+            const firstNameInput = await screen.findByPlaceholderText(
+                "Individual's first name"
+            );
+            const lastNameInput = screen.getByPlaceholderText(
+                "Individual's last name"
+            );
+
+            await user.type(firstNameInput, 'John');
+            await user.type(lastNameInput, 'Doe');
+            await user.click(screen.getByTestId('search-btn'));
+
+            const lastCall = calls.at(-1);
+            expect(lastCall).toBeDefined();
+            expect(lastCall!.body).toMatchObject({
+                firstName: 'John',
+                lastName: 'Doe',
+            });
         });
 
-        test('renders the search-by dropdown', async () => {
+        test('submitting an empty Owner search shows name error messages', async () => {
+            const user = userEvent.setup();
+
             renderPolicyIndexPage();
 
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // Switch to Owner
+            const dropdown = screen.getByRole('combobox');
+            await user.click(dropdown);
+            const ownerOption = await screen.findByText('Owner');
+            await user.click(ownerOption);
+
+            // Wait for the name fields to appear, then submit empty
+            await screen.findByPlaceholderText("Individual's first name");
+            await user.click(screen.getByTestId('search-btn'));
+
             expect(
-                await screen.findByRole('combobox')
+                await screen.findByText(
+                    /enter a first name to return search results/i
+                )
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText(
+                    /enter a last name to return search results/i
+                )
             ).toBeInTheDocument();
         });
     });
+
+    // ─── Sort functionality ──────────────────────────────────────────────────
+    describe('sort functionality', () => {
+        test('clicking "Last Updated" header toggles sort order from desc to asc', async () => {
+            const user = userEvent.setup();
+            const { handler, calls } = createSpyPolicySearchHandler();
+
+            renderPolicyIndexPage(undefined, [handler]);
+
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // The initial sort is lastUpdated DESC (the default).
+            // Find the sortable header button inside the "Last Updated" column.
+            const lastUpdatedHeader = screen.getByRole('button', {
+                name: /last updated/i,
+            });
+
+            // Click once → should toggle to ASC (same column, so order flips)
+            await user.click(lastUpdatedHeader);
+
+            // Wait for the re-fetch after sort change
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            // The most recent call should have sortOrder=asc
+            const ascCall = calls.at(-1);
+            expect(ascCall).toBeDefined();
+            expect(ascCall!.searchParams.get('sortOrder')).toBe('asc');
+            expect(ascCall!.searchParams.get('sortBy')).toBe('lastUpdated');
+        });
+
+        test('clicking "Last Updated" header twice returns to desc', async () => {
+            const user = userEvent.setup();
+            const { handler, calls } = createSpyPolicySearchHandler();
+
+            renderPolicyIndexPage(undefined, [handler]);
+
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            const lastUpdatedHeader = screen.getByRole('button', {
+                name: /last updated/i,
+            });
+
+            // Click once (desc → asc), click again (asc → desc)
+            await user.click(lastUpdatedHeader);
+            await screen.findByText(mockPolicySearchResults[0].productName);
+            await user.click(lastUpdatedHeader);
+            await screen.findByText(mockPolicySearchResults[0].productName);
+
+            const descCall = calls.at(-1);
+            expect(descCall).toBeDefined();
+            expect(descCall!.searchParams.get('sortOrder')).toBe('desc');
+            expect(descCall!.searchParams.get('sortBy')).toBe('lastUpdated');
+        });
+    });
+
+
+  
 });
