@@ -109,36 +109,30 @@ const NotificationCard = ({
             }
 
             let action = ClaimActionTypes.NONE;
+            const currentEmail = party?.email;
+            const policyEmail = policyBeneficiaries[index]?.email;
             if (!isNullEmptyOrUndefined(email)) {
                 if (
-                    policyBeneficiaries[index]['email']['emailAddress'] !==
-                        email ||
-                    !isNullEmptyOrUndefined(email)
+                    (policyEmail?.emailAddress ?? '')?.toLowerCase() !==
+                    email?.toLowerCase()
                 ) {
-                    if (
-                        isNullEmptyOrUndefined(
-                            policyBeneficiaries[index]['email']['emailId']
-                        )
-                    ) {
-                        action = ClaimActionTypes.ADD;
-                    } else {
-                        action = ClaimActionTypes.UPDATE;
-                    }
+                    action = isNullEmptyOrUndefined(policyEmail?.emailId)
+                        ? ClaimActionTypes.ADD
+                        : ClaimActionTypes.UPDATE;
                 }
             }
-
             updatedNotification = {
                 notificationMethod: communicationType,
                 email: {
-                    ...policyBeneficiaries[index]['email'],
+                    ...currentEmail,
                     action,
                     emailAddress: email,
                 },
                 address: {
-                    ...policyBeneficiaries[index]['address'],
+                    ...party?.address,
                     action: ClaimActionTypes.NONE,
                 },
-                faxNumber: '',
+                faxNumber: party?.faxNumber,
             };
         }
 
@@ -156,11 +150,11 @@ const NotificationCard = ({
                 notificationMethod: communicationType,
                 faxNumber: fax,
                 address: {
-                    ...policyBeneficiaries[index]['address'],
+                    ...party?.address,
                     action: ClaimActionTypes.NONE,
                 },
                 email: {
-                    ...policyBeneficiaries[index]['email'],
+                    ...party?.email,
                     action: ClaimActionTypes.NONE,
                 },
             };
@@ -176,38 +170,29 @@ const NotificationCard = ({
                 return;
             }
 
+            const policyAddress = policyBeneficiaries[index]?.address;
             let action = ClaimActionTypes.NONE;
-            if (
-                address?.addressId !==
-                policyBeneficiaries[index]['address']?.addressId
-            ) {
+            if (address?.addressId !== policyAddress?.addressId) {
                 action = ClaimActionTypes.ADD;
-            } else if (
-                address?.addressId ===
-                policyBeneficiaries[index]['address']?.addressId
-            ) {
-                const isEqual = isEqualObjects(
-                    address,
-                    policyBeneficiaries[index]['address']
-                );
+            } else if (address?.addressId === policyAddress?.addressId) {
+                const isEqual = isEqualObjects(address, policyAddress);
                 action = isEqual
                     ? ClaimActionTypes.NONE
                     : ClaimActionTypes.UPDATE;
             }
-            address.action = action;
             updatedNotification = {
                 notificationMethod: communicationType,
-                address: address,
+                address: { ...address, action },
                 email: {
-                    ...policyBeneficiaries[index]['email'],
+                    ...party?.email,
                     action: ClaimActionTypes.NONE,
                 },
-                faxNumber: '',
+                faxNumber: party?.faxNumber,
             };
         }
 
         handleNotification(updatedNotification, index);
-    }, [email, fax, address, communicationType, index, t]);
+    }, [email, fax, address, communicationType, policyBeneficiaries, index, t]);
 
     return (
         <div className="p-7 border-1 rounded-md border-gray-200 mt-2">

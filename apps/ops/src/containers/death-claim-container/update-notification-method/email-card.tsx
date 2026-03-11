@@ -22,19 +22,23 @@ import CardContainer from '@deps/containers/card-container/card-container';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 
+import styles from './update-notification.module.css';
 import { validateEmail } from '../steps/notification-method/notification-method.helpers';
-
 type EmailCardProps = {
     email: string;
     setEmail: (val: string) => void;
+    isEditable?: boolean;
 };
 
-const EmailCard = ({ email, setEmail }: EmailCardProps) => {
+const EmailCard = ({ email, setEmail, isEditable = true }: EmailCardProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix:
             'updateNotificationMethodForBeneficiary.updateNotificationMethodStep.notificationMethods',
     });
     const sidesheet = useSideSheetContextLegacy();
+    const changeLinkClasses = isEditable
+        ? styles.changeLinkEnabled
+        : styles.changeLinkDisabled;
 
     const handleClose = (email: string) => {
         setEmail(email);
@@ -67,7 +71,8 @@ const EmailCard = ({ email, setEmail }: EmailCardProps) => {
                 <Button
                     size={ButtonSize.Small}
                     mode="link"
-                    onClick={handleChangeEmail}
+                    onClick={isEditable ? handleChangeEmail : undefined}
+                    className={changeLinkClasses}
                 >
                     {t('change')}
                 </Button>

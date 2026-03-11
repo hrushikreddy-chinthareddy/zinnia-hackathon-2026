@@ -2,3 +2,7 @@
     padding: var(--measure-dimension-padding-4xl);
     text-align: center;
 }
+
+.tableButton {
+    text-align: left;
+}

@@ -164,6 +164,10 @@ export const getPhoneTypeOptions = ({ t }: GetPhoneTypeOptions) => [
         value: PhoneType.BUSINESS,
     },
     { label: t('people.card.phone.phoneOptions.fax'), value: PhoneType.FAX },
+    {
+        label: t('people.card.phone.phoneOptions.other'),
+        value: PhoneType.OTHER,
+    },
 ];
 
 export const getTimeZoneOptions = ({ t }: GetTimeZoneOptions) => [

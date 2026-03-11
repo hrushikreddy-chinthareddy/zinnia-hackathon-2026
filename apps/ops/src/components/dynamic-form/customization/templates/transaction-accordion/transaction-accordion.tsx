@@ -76,12 +76,12 @@ export const TransactionAccordionTemplate = (
               );
     }
 
-    const isIrrevocable = formContext?.customData?.contractInfo?.parties?.some(
-        (party: any) => party.isIrrevocable === true
+    const isIrrevocable = formContext?.customData?.actionData?.some(
+        (item: any) =>
+            item.isIrrevocable === true && item.action !== Action.DELETE
     );
-    const isIrrevocableBene =
-        formContext?.customData?.signatureData?.isIrrevocableBene ?? false;
-    const shouldShowIrrevocableSignature = isIrrevocable || isIrrevocableBene;
+
+    const shouldShowIrrevocableSignature = isIrrevocable;
 
     const irrevocableBeneSignature = {
         isSignedPresent: false,

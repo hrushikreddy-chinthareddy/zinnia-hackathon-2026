@@ -66,8 +66,8 @@ const UpdateNotificationMethodStep = ({
         setCaseId,
         setSubmitFailed,
         notificationMethodSelected,
-        contactEstablished,
         setNotificationMethodSelected,
+        taskActions,
     } = useUpdateNotificationMethod();
     const [address, setAddress] = useState<
         AddressNotificationMethod | undefined
@@ -77,7 +77,6 @@ const UpdateNotificationMethodStep = ({
     const { goToNext } = useWorkflow();
     const [isLoading, setIsLoading] = useState(false);
     const [errors, setErrors] = useState<FormValidationErrors>();
-
     const partyData = { ...transactionData?.entity?.party };
     const caseId = getCaseIdentifierValue(
         transactionData?.identifiers || [],
@@ -137,7 +136,7 @@ const UpdateNotificationMethodStep = ({
             faxData,
             addressData,
             notificationMethodSelected,
-            contactEstablished
+            taskActions
         );
 
         const successfulSubmit = await updateNotificationMethod(payload);
@@ -157,9 +156,9 @@ const UpdateNotificationMethodStep = ({
         faxData,
         addressData,
         notificationMethodSelected,
-        contactEstablished,
         setCaseId,
         setSubmitFailed,
+        taskActions,
     ]);
 
     const handleStepContinue = useCallback(async () => {
@@ -223,6 +222,10 @@ const UpdateNotificationMethodStep = ({
                     <EmailCard
                         email={email || ''}
                         setEmail={handleChangeEmail}
+                        isEditable={
+                            notificationMethodSelected ===
+                            ClaimCommunicationTypes.Email
+                        }
                     />
                     {errors?.email && (
                         <AssistiveText
@@ -240,7 +243,14 @@ const UpdateNotificationMethodStep = ({
             disabled: false,
             subElement: (
                 <div className="w-full">
-                    <FaxCard fax={fax || ''} setFax={handleChangeFax} />
+                    <FaxCard
+                        fax={fax || ''}
+                        setFax={handleChangeFax}
+                        isEditable={
+                            notificationMethodSelected ===
+                            ClaimCommunicationTypes.Fax
+                        }
+                    />
                     {errors?.fax && (
                         <AssistiveText
                             text={errors?.fax}
@@ -264,6 +274,10 @@ const UpdateNotificationMethodStep = ({
                         setAddress={handleChangeAddress}
                         carrierId={policy?.carrierId ?? ''}
                         partyData={partyData}
+                        isEditable={
+                            notificationMethodSelected ===
+                            ClaimCommunicationTypes.Mail
+                        }
                     />
                     {errors?.address && (
                         <AssistiveText

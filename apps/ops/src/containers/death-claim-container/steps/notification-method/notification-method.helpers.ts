@@ -105,13 +105,16 @@ export const getBeneficiariesByRole = (
 };
 
 export const isEqualObjects = (obj1: any, obj2: any) => {
-    const diffInFields = Object.entries(obj2).filter(
-        ([field, obj2Value]) => obj1[field] !== obj2Value
-    );
+    const diffInFields = Object.entries(obj2).filter(([field, obj2Value]) => {
+        const obj1Val = obj1[field];
+        const obj2Val = obj2Value;
+        if (typeof obj1Val === 'string' && typeof obj2Val === 'string') {
+            return obj1Val.toLowerCase() !== obj2Val.toLowerCase();
+        }
+    });
     return diffInFields.length > 0 ? false : true;
 };
 
-//export const domainValidation = /^[a-zA-Z0-9](\.?[a-zA-Z0-9]){3,}@zinnia\.com$/;
 export const domainValidation = /^[A-Za-z0-9._%+-]+@zinnia\.com$/i;
 export const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 const faxRegex = /^\d{10}$/;

@@ -10,12 +10,18 @@
     "status": "NEW",
     "data": {
         "process": "Policy Update",
-        "policyNumber": "FNWLIUL0171",
+        "policyNumber": "909132270433",
         "correlationId": "c7947002-fbb2-4f24-82a4-554e47e41e00",
         "taskName": "Beneficiary Change Data Entry",
         "processSubType": "Beneficiary Change",
-        "planCode": "IU0101",
+        "planCode": "SBFIA909",
         "policyStatus": "ACTIVE",
+        "categories": [
+            "Beneficiary Change",
+            "Owner Mismatch",
+            "Insured Mismatch"
+        ],
+        "issueResolved": true,
         "details": {
             "documents": [
                 {
@@ -253,9 +259,19 @@
                     "trustType": "CORPORATETRUST",
                     "addresses": [
                         {
-                            "addressLine1": "2110 West Walnut Street",
+                            "addressLine1": "West Walnut Street",
                             "addressLine2": "",
                             "addressType": "RESIDENCE",
+                            "city": "Rogers",
+                            "country": "USA",
+                            "endDate": "",
+                            "state": "AR",
+                            "zipCode": "72756"
+                        },
+                        {
+                            "addressLine1": "21100 West Walnut Street",
+                            "addressLine2": "",
+                            "addressType": "DEFAULT",
                             "city": "Rogers",
                             "country": "USA",
                             "endDate": "",

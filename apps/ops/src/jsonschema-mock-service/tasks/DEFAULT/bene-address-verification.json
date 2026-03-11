@@ -86,10 +86,60 @@
                                                                 "zipCode": {
                                                                     "type": "string",
                                                                     "title": "Zip Code"
+                                                                },
+                                                                "zipCodeExtension": {
+                                                                    "type": "string",
+                                                                    "title": "Zip+4"
                                                                 }
                                                             }
                                                         }
                                                     }
+                                                }
+                                            }
+                                        },
+                                        "beneficiaryChangeDetail": {
+                                            "type": "object",
+                                            "title": "",
+                                            "properties": {
+                                                "changeType": {
+                                                    "type": ["string", "null"],
+                                                    "title": "Beneficiary is deceased",
+                                                    "enum": [
+                                                        "BENEFICIARY_DECEASED",
+                                                        null
+                                                    ],
+                                                    "enumNames": ["Yes", "No"],
+                                                    "default": null
+                                                }
+                                            },
+                                            "dependencies": {
+                                                "changeType": {
+                                                    "allOf": [
+                                                        {
+                                                            "if": {
+                                                                "properties": {
+                                                                    "changeType": {
+                                                                        "enum": [
+                                                                            "BENEFICIARY_DECEASED"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            },
+                                                            "then": {
+                                                                "properties": {
+                                                                    "beneDeathDate": {
+                                                                        "type": [
+                                                                            "string",
+                                                                            "null"
+                                                                        ],
+                                                                        "title": "Date of death",
+                                                                        "format": "date",
+                                                                        "default": null
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    ]
                                                 }
                                             }
                                         }
@@ -147,11 +197,11 @@
                                     },
                                     "address": {
                                         "type": "object",
+                                        "ui:field": "ChangeAddressField",
                                         "ui:options": {
                                             "cardType": "changeAddress",
                                             "title": "Address",
-                                            "label": true,
-                                            "ObjectFieldTemplate": "ChangeAddressTemplate"
+                                            "label": true
                                         },
                                         "properties": {
                                             "action": {
@@ -175,10 +225,19 @@
                                             },
                                             "zipCode": {
                                                 "ui:hideError": true
+                                            },
+                                            "zipCodeExtension": {
+                                                "ui:hideError": true
                                             }
                                         },
                                         "ui:hideError": true
                                     }
+                                }
+                            },
+                            "beneficiaryChangeDetail": {
+                                "changeType": {
+                                    "ui:widget": "RadioWidget",
+                                    "ui:emptyValue": null
                                 }
                             }
                         }

@@ -17,7 +17,7 @@ export type UpdateNotificationFormState = {
     faxData: FaxNotificationMethod;
     addressData: AddressNotificationMethod;
     notificationMethodSelected: ClaimCommunicationTypes | string;
-    contactEstablished: boolean | null;
+    taskActions: TaskActions[];
     setFormData: React.Dispatch<React.SetStateAction<any>>;
     setFormErrors: React.Dispatch<React.SetStateAction<FormValidationErrors>>;
     setSubmitFailed: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,7 +30,7 @@ export type UpdateNotificationFormState = {
     setNotificationMethodSelected: React.Dispatch<
         React.SetStateAction<ClaimCommunicationTypes | ''>
     >;
-    setContactEstablished: React.Dispatch<React.SetStateAction<boolean | null>>;
+    setTaskActions: React.Dispatch<React.SetStateAction<TaskActions[]>>;
 };
 
 const noop = (() => {}) as React.Dispatch<React.SetStateAction<any>>;
@@ -44,7 +44,7 @@ export const UpdateNotificationMethodDefaultValues = {
     faxData: {} as FaxNotificationMethod,
     addressData: {} as AddressNotificationMethod,
     notificationMethodSelected: '' as string,
-    contactEstablished: null,
+    taskActions: [] as TaskActions[],
     setFormData: noop,
     setFormErrors: noop,
     setSubmitFailed: noop,
@@ -54,6 +54,7 @@ export const UpdateNotificationMethodDefaultValues = {
     setAddressData: noop,
     setNotificationMethodSelected: noop,
     setContactEstablished: noop,
+    setTaskActions: noop,
 };
 
 export const UpdateNotificationMethodContext =
@@ -66,6 +67,12 @@ type UpdateNotificationMethodProviderProps = {
 };
 
 const INITIAL_FORM_DATA: any = {};
+
+export enum TaskActions {
+    RESEND_PACKET = 'RESEND_PACKET',
+    CONTACT_ESTABLISHED = 'CONTACT_ESTABLISHED',
+    UPDATE_NOTIFICATION_METHOD = 'UPDATE_NOTIFICATION_METHOD',
+}
 
 export const UpdateNotificationMethodProvider = ({
     children,
@@ -85,9 +92,7 @@ export const UpdateNotificationMethodProvider = ({
     );
     const [notificationMethodSelected, setNotificationMethodSelected] =
         useState<ClaimCommunicationTypes | ''>('');
-    const [contactEstablished, setContactEstablished] = useState<
-        boolean | null
-    >(null);
+    const [taskActions, setTaskActions] = useState<TaskActions[]>([]);
 
     return (
         <UpdateNotificationMethodContext.Provider
@@ -100,7 +105,7 @@ export const UpdateNotificationMethodProvider = ({
                 faxData,
                 addressData,
                 notificationMethodSelected,
-                contactEstablished,
+                taskActions,
                 setFormData,
                 setFormErrors,
                 setSubmitFailed,
@@ -109,7 +114,7 @@ export const UpdateNotificationMethodProvider = ({
                 setFaxData,
                 setAddressData,
                 setNotificationMethodSelected,
-                setContactEstablished,
+                setTaskActions,
             }}
         >
             {children}

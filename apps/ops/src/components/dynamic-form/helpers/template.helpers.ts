@@ -5,11 +5,11 @@ import ArrayFieldTableTemplate from '../customization/templates/array-field-temp
 import ArrayFieldTemplate from '../customization/templates/array-field-template/array-field-template';
 import { TransactionsArrayFieldTemplate } from '../customization/templates/array-field-template/TransactionsArrayFieldTemplate';
 import { CardTemplate } from '../customization/templates/card-templates/card-template';
-import { ChangeAddressTemplate } from '../customization/templates/change-address-templete/change-address-template';
 import DifferenceTemplate from '../customization/templates/difference-template/difference-template';
 import { PartyCardFieldTemplate } from '../customization/templates/field-template/party-card-field-template';
 import InstructionsTemplate from '../customization/templates/instructions-template/instructions-template';
 import TransactionInstructionTemplate from '../customization/templates/instructions-template/transaction-instruction-template';
+import { NigoSummaryTemplate } from '../customization/templates/nigo-summary-template/nigo-summary-template';
 import ObjectRowFieldTemplate from '../customization/templates/object-field-template/object-row-template';
 import PartyInfoListTemplate from '../customization/templates/party-info-list-template/party-info-list';
 import TextListTemplate from '../customization/templates/text-list-template';
@@ -38,8 +38,8 @@ export const UIObjectTemplateMap: Record<
     ['AddressFieldTemplate']: AddressFieldTemplate,
     ['ObjectRowFieldTemplate']: ObjectRowFieldTemplate,
     ['DifferenceTemplate']: DifferenceTemplate,
-    ['ChangeAddressTemplate']: ChangeAddressTemplate,
     ['PartyCardFieldTemplate']: PartyCardFieldTemplate,
+    ['NigoSummaryTemplate']: NigoSummaryTemplate,
 };
 
 export const UIfieldTemplateMap: Record<

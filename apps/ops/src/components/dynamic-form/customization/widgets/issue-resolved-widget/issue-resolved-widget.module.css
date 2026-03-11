@@ -1,0 +1,6 @@
+.checkboxWrapper :global(input[type='checkbox']),
+.checkboxWrapper :global(input[type='radio']) {
+    border-radius: 50% !important;
+    appearance: none;
+    -webkit-appearance: none;
+}

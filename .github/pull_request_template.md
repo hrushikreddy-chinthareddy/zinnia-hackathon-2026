@@ -17,7 +17,11 @@
 
 ### What are the relevant tickets?
 
-https://zinnia.atlassian.net/browse/CUI-TICKETNUMBER
+https://zinnia.atlassian.net/browse/DEPU-TICKETNUMBER
+
+### What is the TAS ticket for this PR?
+
+TAS-TICKETNUMBER
 
 ### Screenshots (if appropriate)
 

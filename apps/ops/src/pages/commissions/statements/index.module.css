@@ -9,13 +9,26 @@
 
 .filters {
     display: flex;
+    flex-direction: column;
     margin-top: var(--measure-dimension-gap-lg);
-    align-items: end;
+    align-items: start;
     justify-content: space-between;
+
+    @media (min-width: 768px) {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: end;
+    }
 }
 
 .carrierSelect {
-    max-width: 250px;
+    min-width: 325px;
+    max-width: 400px;
+
+    @media (max-width: 768px) {
+        margin-top: var(--measure-dimension-gap-md);
+        min-width: 400px;
+    }
 }
 
 .carrierCell {
