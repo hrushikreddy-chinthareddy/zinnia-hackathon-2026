@@ -1,5 +1,8 @@
 import { http, HttpResponse } from 'msw';
 
+import assigneeChangeSchema from '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-assigneechange-transaction.json';
+import beneChangeSchema from '@deps/jsonschema-mock-service/tasks/DEFAULT/initiate-benechange-transaction.json';
+
 import policyEndpointData from './policyPage/policyEndpointData.json';
 
 export const mockPolicyData = {
@@ -74,42 +77,7 @@ export const handlers = [
     ),
 
     http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/phonenumber/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/emailaddress/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/freelookcancellation/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/parties/:partyRole/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/onetimepremium/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/systematicprograms/*/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/partialwithdrawalonetime/eligibilitycheck',
-        () => HttpResponse.json({ status: 'Success' })
-    ),
-
-    http.post(
-        '*/api/bpm/v1/policies/:planCode/:policyId/fullsurrender/eligibilitycheck',
+        '*/api/bpm/v1/policies/:planCode/:policyId/*/eligibilitycheck',
         () => HttpResponse.json({ status: 'Success' })
     ),
 
@@ -173,11 +141,28 @@ export const handlers = [
         HttpResponse.json({ exists: false })
     ),
 
+    http.get('*/api/case/v1/form/metadata', ({ request }) => {
+        const url = new URL(request.url);
+        const taskType = url.searchParams.get('taskType');
+        const schema =
+            taskType === 'INITIATE_BENECHANGE_TRANSACTION'
+                ? beneChangeSchema
+                : assigneeChangeSchema;
+        return HttpResponse.json(schema);
+    }),
+
+    http.post('*/api/enterprise-search/v1/search', () => {
+        return HttpResponse.json({
+            caseId: 'CASE123',
+            status: 'OPEN',
+        });
+    }),
+
     // Catch-all: block any request that doesn't have an explicit handler above.
     // This prevents real network calls from escaping during tests.
     http.all('*', ({ request }) => {
         throw new Error(
-            `[MSW] No handler found for: ${request.method} ${request.url}\nAdd a handler to vitest/mocks/handlers.ts`
+            `[MSW] No handler found for: ${request.method} ${request.url}. Add a handler to vitest/mocks/handlers.ts`
         );
     }),
 ];

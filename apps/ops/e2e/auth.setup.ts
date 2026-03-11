@@ -1,8 +1,7 @@
 import { test as setup, expect } from '@playwright/test';
 import path from 'path';
-
+import { loginUrlPattern } from './helpers/constants';
 const TIMEOUT = 15_000;
-
 const authFile = path.join(__dirname, '../playwright/.auth/user.json');
 
 setup('authenticate', async ({ page }) => {
@@ -12,19 +11,23 @@ setup('authenticate', async ({ page }) => {
         name: 'Continue to sign in',
     });
     await expect(signInButton).toBeVisible({ timeout: TIMEOUT });
-    await Promise.all([
-        page.waitForURL(/\/u\/login\/identifier/i),
-        signInButton.click(),
-    ]);
-    if (!process.env.E2E_USERNAME || !process.env.E2E_PASSWORD) {
-        const missingVars = ['E2E_USERNAME', 'E2E_PASSWORD'].filter((v) => !process.env[v]);
-        throw new Error(`Missing required environment variables: ${missingVars.join(', ')}`);
+    await Promise.all([page.waitForURL(loginUrlPattern), signInButton.click()]);
+    const missingVars = ['E2E_USERNAME', 'E2E_PASSWORD'].filter(
+        (v) => !process.env[v]
+    );
+    if (missingVars.length) {
+        const missingVars = ['E2E_USERNAME', 'E2E_PASSWORD'].filter(
+            (v) => !process.env[v]
+        );
+        throw new Error(
+            `Missing required environment variables: ${missingVars.join(', ')}`
+        );
     }
     const signInField = page.getByLabel('Email address');
     await expect(signInField).toBeVisible({ timeout: TIMEOUT });
-    await signInField.fill(process.env.E2E_USERNAME);
+    await signInField.fill(process.env.E2E_USERNAME as string);
     await page.getByRole('button', { name: 'Continue' }).click();
-    await page.getByLabel('Password').fill(process.env.E2E_PASSWORD);
+    await page.getByLabel('Password').fill(process.env.E2E_PASSWORD as string);
     await page.getByRole('button', { name: 'Sign in' }).click();
 
     // Wait until the page receives the cookies.
