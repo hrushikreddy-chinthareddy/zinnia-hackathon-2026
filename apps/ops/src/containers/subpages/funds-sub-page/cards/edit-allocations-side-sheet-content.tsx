@@ -35,7 +35,7 @@ import { SideSheetContextLegacyProps } from '@deps/contexts/SideSheetContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { buildNonFinancialTransactionsSubmittedEvent } from '@deps/helpers/analytics/submit-transaction-event';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
-import { CaseIdentifier, Statuses } from '@deps/models/case/case';
+import { CaseIdentifier, Processes, Statuses } from '@deps/models/case/case';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import { getCases } from '@deps/queries/api/cases';
 import {
@@ -129,7 +129,8 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
                     limit: 25,
                     notInCaseStatus: [Statuses.Canceled, Statuses.Completed],
                     policyNumber: policyNumber,
-                    process: ['Systematic Program Update'],
+                    process: [Processes.FundManagement],
+                    requestSubType: [Processes.FundAllocation],
                 },
                 featureFlags
             );
@@ -399,35 +400,41 @@ export const EditAllocationsContent: React.FC<IEditAllocationsContent> = ({
     return (
         <div className="flex flex-col p-8 h-full">
             <div className="flex flex-col">
-                <Label
-                    className="mb-4"
-                    label={t('workflows.start.documentSelectionLabel')}
-                    sentenceCase={false}
-                    variant={LabelVariant.LabelLg}
-                />
+                {caseOptions.length > 1 && (
+                    <>
+                        <Label
+                            className="mb-4"
+                            label={t('workflows.start.documentSelectionLabel')}
+                            sentenceCase={false}
+                            variant={LabelVariant.LabelLg}
+                        />
 
-                <div className="grid max-w-[436px] gap-2">
-                    {caseOptions
-                        .sort((a, b) =>
-                            (a.documentNumber ?? '').localeCompare(
-                                b.documentNumber ?? ''
-                            )
-                        )
-                        .map((option) => (
-                            <CardCaseDocument
-                                caseDocumentOption={option}
-                                index={0}
-                                isSelected={
-                                    selectedCaseId ===
-                                    PROCESS_WITHOUT_CASE_DOCUMENT
-                                }
-                                key={option.value}
-                                onChange={() =>
-                                    handleSelection(option.value as string)
-                                }
-                            />
-                        ))}
-                </div>
+                        <div className="grid max-w-[436px] gap-2">
+                            {caseOptions
+                                .sort((a, b) =>
+                                    (a.documentNumber ?? '').localeCompare(
+                                        b.documentNumber ?? ''
+                                    )
+                                )
+                                .map((option) => (
+                                    <CardCaseDocument
+                                        caseDocumentOption={option}
+                                        index={0}
+                                        isSelected={
+                                            selectedCaseId ===
+                                            PROCESS_WITHOUT_CASE_DOCUMENT
+                                        }
+                                        key={option.value}
+                                        onChange={() =>
+                                            handleSelection(
+                                                option.value as string
+                                            )
+                                        }
+                                    />
+                                ))}
+                        </div>
+                    </>
+                )}
                 {(selectedCaseId === PROCESS_WITHOUT_CASE_DOCUMENT ||
                     showSelectionError) && (
                     <div className="flex flex-col gap-2 mt-2">
