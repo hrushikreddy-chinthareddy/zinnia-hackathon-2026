@@ -1,8 +1,6 @@
 import { screen, fireEvent, within } from '@testing-library/react';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
-import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
-
 import {
     agentDataEmptyHandler,
     agentDataErrorHandler,
@@ -16,6 +14,7 @@ import {
 } from '@vitest/helpers/policy-overrides';
 import { createMockRouter } from '@vitest/helpers/policy-test-fixtures';
 import { renderPolicyDetailsPage } from '@vitest/helpers/render-policy-page';
+import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 
 let mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
 

@@ -2,7 +2,6 @@ import { screen } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { describe, vi, beforeEach, test, expect } from 'vitest';
 
-import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 
 import {
     annuityPolicyOverrides,
@@ -10,6 +9,7 @@ import {
 } from '@vitest/helpers/policy-overrides';
 import { createMockRouter } from '@vitest/helpers/policy-test-fixtures';
 import { renderPolicyDetailsPage } from '@vitest/helpers/render-policy-page';
+import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 
 let mockRouter = createMockRouter({ slug: ['policy', 'policy-details'] });
 
