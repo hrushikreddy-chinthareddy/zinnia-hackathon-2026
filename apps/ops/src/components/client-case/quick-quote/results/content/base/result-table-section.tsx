@@ -1,5 +1,6 @@
 import { Tooltip } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useTranslation } from 'next-i18next';
 import { ReactNode } from 'react';
 
 import Typography, {
@@ -24,6 +25,7 @@ export const QuickQuoteResultTableSection = ({
     children,
     headingClass,
 }: QuickQuoteResultTableSectionProps) => {
+    const { t } = useTranslation();
     return (
         <div className={styles.contentTableSection} role="rowgroup">
             <div
@@ -50,6 +52,7 @@ export const QuickQuoteResultTableSection = ({
                             />
                         }
                         triggerClassName="w-fit"
+                        triggerAriaLabel={t('allFields.moreInformation')}
                     >
                         {hint}
                     </Tooltip>

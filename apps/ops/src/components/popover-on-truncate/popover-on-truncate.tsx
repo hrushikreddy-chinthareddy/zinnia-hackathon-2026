@@ -8,6 +8,7 @@ export type PopoverOnTruncateProps = {
     popoverBody?: string | JSX.Element;
     popoverClassName?: string;
     triggerClassName?: string;
+    triggerAriaLabel?: string;
 };
 
 export default function PopoverOnTruncate({
@@ -16,6 +17,7 @@ export default function PopoverOnTruncate({
     placement = TooltipPlacement.TopRight,
     popoverClassName,
     triggerClassName,
+    triggerAriaLabel,
 }: PopoverOnTruncateProps) {
     const ref = useRef<HTMLElement>(null);
     const [isOverflown, setIsOverflown] = useState(false);
@@ -55,6 +57,7 @@ export default function PopoverOnTruncate({
             trigger={childrenClone}
             placement={placement}
             triggerClassName={`w-fit ${triggerClassName ?? ''}`}
+            triggerAriaLabel={triggerAriaLabel}
         >
             {title}
         </Tooltip>

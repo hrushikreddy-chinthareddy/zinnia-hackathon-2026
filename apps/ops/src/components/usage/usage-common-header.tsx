@@ -56,6 +56,7 @@ const UsageHeaderLayout = ({
                                 />
                             }
                             triggerClassName="w-fit"
+                            triggerAriaLabel={t('allFields.moreInformation')}
                         >
                             {titleToolTip}
                         </Tooltip>

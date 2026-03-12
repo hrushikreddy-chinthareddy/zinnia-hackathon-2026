@@ -382,6 +382,7 @@ const FollowUp = ({
                             placement={TooltipPlacement.CenterLeft}
                             triggerClassName="!w-auto w-fit"
                             tooltipClassName="!w-auto !p-0 !px-2 z-50"
+                            triggerAriaLabel={t('chat.send') || 'Send'}
                             trigger={
                                 <ActionButton
                                     ariaLabel="send-followup"

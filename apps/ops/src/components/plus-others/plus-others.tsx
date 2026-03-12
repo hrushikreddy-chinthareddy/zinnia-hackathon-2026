@@ -64,6 +64,7 @@ const PlusOthers = ({
                 </div>
             }
             triggerClassName="!z-10 w-fit"
+            triggerAriaLabel={`+${entities.length} ${t('tooltip.other')}`}
         >
             {body}
         </Tooltip>

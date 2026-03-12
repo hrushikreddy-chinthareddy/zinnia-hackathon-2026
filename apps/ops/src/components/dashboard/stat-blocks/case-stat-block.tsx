@@ -1,5 +1,6 @@
 import { Tooltip } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useTranslation } from 'next-i18next';
 import { ReactNode, useEffect, useState } from 'react';
 
 import Content, { ContentVariant } from '@deps/components/content/content';
@@ -57,6 +58,7 @@ const CaseStatBlock = ({
     showStatDetails = true,
     showInsights = true,
 }: Props) => {
+    const { t } = useTranslation();
     const [aiSummary, setAiSummary] = useState<string | null>(null);
     const shouldShowCaseInsights = useCaseInsightsPermission() && showInsights;
 
@@ -89,6 +91,7 @@ const CaseStatBlock = ({
                                 />
                             }
                             triggerClassName="w-fit"
+                            triggerAriaLabel={t('allFields.moreInformation')}
                         >
                             {labelTooltip}
                         </Tooltip>

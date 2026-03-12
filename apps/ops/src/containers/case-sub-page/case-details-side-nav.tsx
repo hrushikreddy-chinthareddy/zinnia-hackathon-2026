@@ -350,6 +350,9 @@ const CaseDetailsSideNav = ({
                                     }
                                     placement={TooltipPlacement.TopRight}
                                     triggerClassName="w-fit"
+                                    triggerAriaLabel={t(
+                                        'allFields.moreInformation'
+                                    )}
                                 >
                                     {t('sidenav.estimatedCompletionToolTip')}
                                 </Tooltip>

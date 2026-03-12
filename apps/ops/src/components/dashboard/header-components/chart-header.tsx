@@ -1,4 +1,5 @@
 import { Tooltip } from '@zinnia/bloom/components';
+import { useTranslation } from 'next-i18next';
 import { FC, ReactNode } from 'react';
 
 import Typography, {
@@ -19,6 +20,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
     titleToolTip,
     description,
 }) => {
+    const { t } = useTranslation();
     return (
         <div>
             <div className="flex items-center gap-2">
@@ -39,6 +41,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
                             />
                         }
                         triggerClassName="w-fit"
+                        triggerAriaLabel={t('allFields.moreInformation')}
                     >
                         {titleToolTip}
                     </Tooltip>

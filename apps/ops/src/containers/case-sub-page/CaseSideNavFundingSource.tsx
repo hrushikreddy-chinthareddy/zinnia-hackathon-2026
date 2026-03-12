@@ -612,6 +612,7 @@ const FundingSourceItem = ({
                         triggerClassName="h-6 self-center w-fit"
                         placement={TooltipPlacement.TopLeft}
                         tooltipClassName="!max-w-fit"
+                        triggerAriaLabel={t('allFields.moreInformation')}
                         trigger={
                             <div className="shrink-0 flex items-center justify-center w-6 h-6 self-center">
                                 <ChevronRightIcon

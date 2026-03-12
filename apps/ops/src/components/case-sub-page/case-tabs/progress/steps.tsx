@@ -111,6 +111,9 @@ const getStepStatusIconTooltip = (
 ): ReactNode => {
     let icon = null;
     let tooltipTitle = null;
+    const statusLabel = t(`enums.${step.status}`, {
+        defaultValue: step.status,
+    }) as string;
 
     switch (step.status) {
         case Statuses.Completed:
@@ -181,7 +184,11 @@ const getStepStatusIconTooltip = (
             </>
         );
         return (
-            <Tooltip body={tooltipBody} placement={PopoverPlacement.TopRight}>
+            <Tooltip
+                body={tooltipBody}
+                placement={PopoverPlacement.TopRight}
+                triggerAriaLabel={statusLabel}
+            >
                 {icon}
             </Tooltip>
         );

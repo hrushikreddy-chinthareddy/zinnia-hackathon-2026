@@ -19,6 +19,7 @@ export const AgentFieldLabel = () => {
                         />
                     }
                     triggerClassName="w-fit"
+                    triggerAriaLabel={t('allFields.moreInformation')}
                 >
                     {t('clientCase.clientCaseTable.agentTooltip')}
                 </Tooltip>,
