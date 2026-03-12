@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { Tag, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import { Icon, IconType, Tag } from '@zinnia/bloom/components';
 import * as changeCase from 'change-case';
 import dayjs from 'dayjs';
 import { TFunction, useTranslation } from 'next-i18next';
 import { HTMLAttributes } from 'react';
 
 import ClickWrapper from '@deps/components/click-container/click-wrapper';
+import Tooltip, { PopoverPlacement } from '@deps/components/tooltip/tooltip';
 import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
@@ -15,12 +16,12 @@ import { CaseAdditionalData } from '@deps/models/case/case';
 import { getTransactionEntityQuery } from '@deps/queries/tanstack/transactions/transactionsQueries';
 import { ReactComponent as InProgressIcon } from '@deps/styles/elements/icons/alert/in-progress.svg';
 import { ReactComponent as CashIcon } from '@deps/styles/elements/icons/icons_outlined/cash.svg';
-import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 import { DEFAULT_DATE_FORMAT } from '@deps/utils/dates';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { Address, Country, State } from '@zinnia/api-types/types/sor';
 import { TransactionModelResponse } from '@zinnia/api-types/types/transaction-store';
 
+import styles from './styles.module.css';
 import { FormattedAddress } from '../people-data-cards/address-card/address-card.helpers';
 
 type FundingSource = CaseAdditionalData;
@@ -609,24 +610,16 @@ const FundingSourceItem = ({
                         </div>
                     </div>
                     <Tooltip
-                        triggerClassName="h-6 self-center w-fit"
-                        placement={TooltipPlacement.TopLeft}
-                        tooltipClassName="!max-w-fit"
-                        triggerAriaLabel={
-                            t('allFields.moreInformation') as string
-                        }
-                        trigger={
-                            <div className="shrink-0 flex items-center justify-center w-6 h-6 self-center">
-                                <ChevronRightIcon
-                                    data-testid="chevron"
-                                    height={16}
-                                    width={16}
-                                    className="text-secondary hover:cursor-pointer hover:text-secondary-dark self-center shrink-0"
-                                />
-                            </div>
-                        }
+                        triggerClassName={styles.linkIcon}
+                        placement={PopoverPlacement.TopLeft}
+                        isTabbable={false}
+                        body={t('caseOverview.tabs.viewDetails')}
                     >
-                        {t('caseOverview.tabs.viewDetails')}
+                        <Icon
+                            type={IconType.CHEVRON_RIGHT}
+                            width={16}
+                            height={16}
+                        />
                     </Tooltip>
                 </div>
             </ClickWrapper>

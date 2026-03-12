@@ -1,4 +1,5 @@
 import { Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
+import clsx from 'clsx';
 import { cloneElement, useEffect, useRef, useState } from 'react';
 
 export type PopoverOnTruncateProps = {
@@ -56,7 +57,7 @@ export default function PopoverOnTruncate({
             tooltipClassName={popoverClassName}
             trigger={childrenClone}
             placement={placement}
-            triggerClassName={`w-fit ${triggerClassName ?? ''}`}
+            triggerClassName={clsx('w-fit', triggerClassName)}
             triggerAriaLabel={triggerAriaLabel}
         >
             {title}
