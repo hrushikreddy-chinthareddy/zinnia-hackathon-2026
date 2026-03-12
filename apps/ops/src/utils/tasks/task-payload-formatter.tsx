@@ -4,7 +4,7 @@ import { Action, PolicyRole } from '@deps/constants/policy';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
     MatchingCase,
-    PotentialMatches,
+    TransactionData,
 } from '@deps/models/case/task/doc-matching-payment';
 import { ManagementTask } from '@deps/models/case/task-instance';
 import { PartyType } from '@deps/models/policy/sor-policy';
@@ -40,7 +40,7 @@ export const getPurchaseDocumentPayload = (
         matchingResult = duplicateCase;
 
         const potentialMatch = initialTask.data.potentialMatches?.find(
-            (item: PotentialMatches) => item.correlationid === correlationId
+            (item: TransactionData) => item.correlationId === correlationId
         );
 
         const matchData =
@@ -159,7 +159,7 @@ export const getStandardDocumentPayload = (
         )
     ) {
         const potentialMatch = initialTask.data.potentialMatches?.find(
-            (item: PotentialMatches) => item.correlationid === correlationId
+            (item: TransactionData) => item.correlationId === correlationId
         );
 
         if (correlationId === MatchingCase.ENTERED) {
@@ -168,24 +168,7 @@ export const getStandardDocumentPayload = (
                 policyNumber: task.data?.policyNumber ?? '',
             };
         } else {
-            const {
-                entityType,
-                recordId,
-                zlCaseId,
-                policyNumber,
-                taskId,
-                firstName,
-                lastName,
-            } = potentialMatch;
-            matchedData = {
-                entityType,
-                recordId,
-                zlCaseId,
-                policyNumber,
-                taskId,
-                firstName,
-                lastName,
-            };
+            matchedData = { ...potentialMatch };
         }
 
         matchingResult = MatchingCase.MATCH_FOUND;
