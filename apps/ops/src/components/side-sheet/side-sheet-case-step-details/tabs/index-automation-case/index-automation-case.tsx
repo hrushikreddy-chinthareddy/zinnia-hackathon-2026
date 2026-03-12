@@ -32,6 +32,17 @@ type ClassificationMethodResult = {
     message: string;
 };
 
+type ClassificationResponse = {
+    classificationStatus: string;
+    classificationMethod: string;
+    classificationMethodResults: ClassificationMethodResult[];
+};
+
+interface IndexAutomationEntity {
+    classificationResponse?: ClassificationResponse | null;
+    [key: string]: string | ClassificationResponse | null | undefined;
+}
+
 const DATA_TYPE_FIELDS: Record<string, FieldConfig[]> = {
     [DataType.REQUEST_RECEIVED_DATA]: [
         {
@@ -160,7 +171,7 @@ const IndexAutomationCase = ({
         );
     };
 
-    const renderClassificationDetails = (entity: Record<string, any>) => {
+    const renderClassificationDetails = (entity: IndexAutomationEntity) => {
         const classificationResponse = entity?.classificationResponse;
         if (!classificationResponse) return null;
 
@@ -247,7 +258,7 @@ const IndexAutomationCase = ({
     };
 
     const renderFields = (fields: FieldConfig[]) => {
-        const entity = transactionEntity?.entity as Record<string, string>;
+        const entity = transactionEntity?.entity as IndexAutomationEntity;
         return (
             <div className={styles.flexFullCol}>
                 <div className={styles.gridContainer}>
@@ -262,7 +273,8 @@ const IndexAutomationCase = ({
                                 }
                                 className={styles.customColSpan3}
                             >
-                                {entity?.[field] || DEFAULT_ERROR_STRING}
+                                {(entity?.[field] as string) ||
+                                    DEFAULT_ERROR_STRING}
                             </Typography>
                         </React.Fragment>
                     ))}
