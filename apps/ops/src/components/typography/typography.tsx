@@ -80,6 +80,9 @@ const typographyMapping: Record<TypographyVariant, TypographyData> = {
     },
     [TypographyVariant.BodySm]: {
         styles: 'typography-content-body-sm',
+
+        // FIXME: this causes invalid DOM.
+        // p tags can only contain text, so either disallow nesting or use div
         tag: 'p',
     },
     [TypographyVariant.BodyBold]: {

@@ -119,10 +119,11 @@ const CaseDetailsSideNav = ({
     const appTypeLowerCase = (
         submissionDetails?.applicationType || applicationType
     )?.toLocaleLowerCase();
-    const submissionType =
-        appTypeLowerCase === 'digital' || appTypeLowerCase === 'electronic'
+    const submissionType = appTypeLowerCase
+        ? appTypeLowerCase === 'digital' || appTypeLowerCase === 'electronic'
             ? t('sidenav.electronic')
-            : t(`sidenav.${appTypeLowerCase}`);
+            : t(`sidenav.${appTypeLowerCase}`)
+        : '';
     const formattedEstimatedCompletion = estimatedCompletionAt
         ? formatTimestamp(estimatedCompletionAt, 'dateTimeWithTZ')
         : null;

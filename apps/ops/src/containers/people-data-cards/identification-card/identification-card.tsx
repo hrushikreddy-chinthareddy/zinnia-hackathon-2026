@@ -196,34 +196,38 @@ const IdentificationCard = ({
                                 )}
                             </FieldData>
                         )}
-                        {mainActiveIdentifications.map((identification) => (
+                        {mainActiveIdentifications.map((identification, i) => (
                             <IdentificationDisplay
-                                key={identification.identificationType}
+                                key={`${identification.identificationType}-main-${i}`}
                                 identification={identification}
                             />
                         ))}
                         {isOrganization && (
                             <>
-                                <FieldData
-                                    label={t(
-                                        'people.card.identification.options.orgCode'
-                                    )}
-                                    tooltipBody={t(
-                                        'people.card.identification.options.orgCodeTooltip'
-                                    )}
-                                    tooltipTitle={t(
-                                        'people.card.identification.options.orgCode'
-                                    )}
-                                >
-                                    {safeString(organizationCode)}
-                                </FieldData>
-                                <FieldData
-                                    label={t(
-                                        'people.card.identification.options.entityType'
-                                    )}
-                                >
-                                    {safeString(entityType)}
-                                </FieldData>
+                                {!!organizationCode && (
+                                    <FieldData
+                                        label={t(
+                                            'people.card.identification.options.orgCode'
+                                        )}
+                                        tooltipBody={t(
+                                            'people.card.identification.options.orgCodeTooltip'
+                                        )}
+                                        tooltipTitle={t(
+                                            'people.card.identification.options.orgCode'
+                                        )}
+                                    >
+                                        {safeString(organizationCode)}
+                                    </FieldData>
+                                )}
+                                {!!entityType && (
+                                    <FieldData
+                                        label={t(
+                                            'people.card.identification.options.entityType'
+                                        )}
+                                    >
+                                        {safeString(entityType)}
+                                    </FieldData>
+                                )}
                             </>
                         )}
 
@@ -295,9 +299,9 @@ const IdentificationCard = ({
                             </>
                         )}
                         {additionalActiveIdentifications.map(
-                            (identification) => (
+                            (identification, i) => (
                                 <IdentificationDisplay
-                                    key={identification.identificationType}
+                                    key={`${identification.identificationType}-additional-${i}`}
                                     identification={identification}
                                 />
                             )
