@@ -203,7 +203,7 @@
                                                     "type": "number",
                                                     "title": "current contribution amount",
                                                     "minimum": 0,
-                                                     "default": 0
+                                                    "default": 0
                                                 },
                                                 "priorContributionAmount": {
                                                     "type": "number",
@@ -447,4 +447,4 @@
             }
         ]
     }
-  }
+}
