@@ -436,7 +436,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     useEffect(() => {
         if (TaskType.Standard_Document_Matching === task.taskType) {
             const matchedCase = task?.data?.potentialMatches?.find(
-                (match: any) => match?.value === task?.data?.matchingResult
+                (match: any) =>
+                    match?.correlationId === task?.data?.matchingResult
             );
 
             setTask((ogTask: any) => ({
@@ -447,7 +448,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         task?.data?.matchingResult === 'ENTERED'
                             ? task?.data?.caseId
                             : matchedCase
-                            ? matchedCase?.subElement?.value ?? ''
+                            ? matchedCase?.zlCaseId ?? ''
                             : '',
                 },
             }));

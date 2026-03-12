@@ -52,7 +52,7 @@ describe('AnalyticsHeader', () => {
 
         render(<AnalyticsHeader {...baseProps} titleToolTip={titleToolTip} />);
 
-        const trigger = screen.getByRole('button');
+        const trigger = screen.getByTestId('chart-header-tooltip-icon');
         expect(trigger).toBeInTheDocument();
     });
 });

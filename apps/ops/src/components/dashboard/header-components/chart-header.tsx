@@ -35,6 +35,7 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
                                 height={'16px'}
                                 width={'16px'}
                                 className="tooltip-primary"
+                                data-testid="chart-header-tooltip-icon"
                             />
                         }
                     >

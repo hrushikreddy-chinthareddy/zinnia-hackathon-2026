@@ -10,6 +10,7 @@ import reg60DefsEn from '@deps/../public/locales/en/reg60Defs.json';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { MockOptimizelyProvider } from './mock-optimizely-provider';
+import defaultFeatureFlags from '../mocks/global/optimizely/featureFlags.json';
 
 export interface CreateTestWrapperOptions {
     featureFlags?: Partial<Record<FEATURE_FLAGS, boolean>>;
@@ -19,14 +20,25 @@ export interface CreateTestWrapperOptions {
 /**
  * Creates a test wrapper component with i18n, React Query, and Optimizely providers.
  *
+ * **Feature flags:** All flags defined in `vitest/mocks/global/optimizely/featureFlags.json`
+ * are enabled by default. The optional `featureFlags` parameter is merged on top of those
+ * defaults, so tests that need to disable a specific flag must explicitly pass `false`:
+ *
+ * ```tsx
+ * createTestWrapper({
+ *   featureFlags: { [FEATURE_FLAGS.SOME_FLAG]: false },
+ * });
+ * ```
+ *
  * @example
  * ```tsx
  * import { createTestWrapper } from '../../vitest/utils/create-test-wrapper';
  * import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
  *
+ * // All production flags are enabled; override only what the test needs to change.
  * const wrapper = createTestWrapper({
  *   featureFlags: {
- *     [FEATURE_FLAGS.CASE_STATS_COUNT]: true,
+ *     [FEATURE_FLAGS.CASE_STATS_COUNT]: false,
  *   },
  * });
  *
@@ -35,6 +47,7 @@ export interface CreateTestWrapperOptions {
  */
 export function createTestWrapper(options: CreateTestWrapperOptions = {}) {
     const { featureFlags = {}, queryClientOptions } = options;
+    const mergedFeatureFlags = { ...defaultFeatureFlags, ...featureFlags };
 
     const i18nInstance = i18next.createInstance();
     i18nInstance.use(initReactI18next).init({
@@ -63,7 +76,7 @@ export function createTestWrapper(options: CreateTestWrapperOptions = {}) {
         return (
             <I18nextProvider i18n={i18nInstance}>
                 <QueryClientProvider client={queryClient}>
-                    <MockOptimizelyProvider featureFlags={featureFlags}>
+                    <MockOptimizelyProvider featureFlags={mergedFeatureFlags}>
                         {children}
                     </MockOptimizelyProvider>
                 </QueryClientProvider>
