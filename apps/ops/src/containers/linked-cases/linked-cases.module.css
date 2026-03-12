@@ -1,0 +1,24 @@
+.button {
+    border: 2px solid var(--color-grayscale-color-black);
+    border-radius: 1.5rem;
+    padding: var(--measure-dimension-padding-none)
+        var(--measure-dimension-padding-2xl);
+    margin: var(--measure-dimension-margin-xxs)
+        var(--measure-dimension-margin-none);
+}
+
+.toast {
+    position: fixed;
+    bottom: 1rem;
+    right: 5rem;
+    z-index: 50;
+}
+
+.link {
+    color: var(--color-secondary-color-secondary);
+    text-decoration: underline solid;
+}
+
+.text {
+    display: block;
+}

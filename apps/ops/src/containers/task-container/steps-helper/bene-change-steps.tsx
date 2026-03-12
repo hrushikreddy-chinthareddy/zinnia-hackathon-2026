@@ -6,12 +6,6 @@ import { Step } from '../../progress-bar-steps/progress-bar-steps-item/progress-
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
-enum IssueResolution {
-    Yes = 'yes',
-    NoMissing = 'no_missing',
-    NoMismatched = 'no_mismatched',
-}
-
 export const getBeneChangeSteps = ({
     taskInfoLink,
     task,
@@ -30,17 +24,8 @@ export const getBeneChangeSteps = ({
     const isOwnerMismatchEnabled =
         featureFlags[FEATURE_FLAGS.BENE_CHANGE_OWNER_MISMATCH];
 
-    const issueResolvedArray = Array.isArray(isIssueResolved)
-        ? isIssueResolved
-        : [];
-    const isNigoCase =
-        issueResolvedArray.includes(IssueResolution.NoMissing) ||
-        issueResolvedArray.includes(IssueResolution.NoMismatched) ||
-        !isIssueResolved;
-
-    const isSuccessCase = isOwnerMismatchEnabled
-        ? issueResolvedArray.includes(IssueResolution.Yes)
-        : !!isIssueResolved;
+    const isNigoCase = isIssueResolved === false;
+    const isSuccessCase = isIssueResolved === true;
 
     const baseMetadata = isOwnerMismatchEnabled
         ? taskMetadata.filter((item) => item.title !== TabTitle.ReviewFormData)

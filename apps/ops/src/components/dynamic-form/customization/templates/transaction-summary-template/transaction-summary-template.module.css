@@ -1,0 +1,99 @@
+.container {
+    @apply space-y-8 mb-4;
+}
+
+.title {
+    @apply mb-4;
+}
+
+.validationMessage {
+    @apply mb-3 font-primary text-sm;
+}
+
+.card {
+    @apply border border-gray-200 rounded-lg p-8 bg-white shadow-sm mb-8;
+}
+
+.cardHeader {
+    @apply mb-2 cursor-pointer;
+}
+
+.headerRow {
+    @apply flex items-center justify-between;
+}
+
+.headerLeft {
+    @apply flex items-center gap-4;
+}
+
+.actionTag {
+    @apply m-1 mx-3 h-6;
+}
+
+.chevron {
+    @apply w-6 h-6 transition-transform;
+}
+
+.chevronExpanded {
+    @apply w-6 h-6 transition-transform rotate-180;
+}
+
+.roleTags {
+    @apply mt-1 flex flex-wrap gap-1;
+}
+
+.roleTag {
+    @apply my-1;
+}
+
+.sectionTitle {
+    @apply mb-2;
+}
+
+.sectionVertical {
+    @apply flex flex-col gap-6 mb-2;
+}
+
+.sectionHorizontal {
+    @apply flex flex-row gap-x-16 mb-2;
+}
+
+.addressFieldWrapper {
+    @apply flex flex-col gap-2;
+}
+
+.fieldLabel {
+    @apply h-6 leading-4.5;
+}
+
+.addressList {
+    @apply flex flex-row gap-6 flex-wrap;
+}
+
+.addressItem {
+    @apply text-sm whitespace-pre-line font-semibold min-w-[180px];
+}
+
+.addressTypeLabel {
+    @apply text-gray-600 font-normal;
+}
+
+.fieldValue {
+    @apply text-sm whitespace-pre-line font-semibold;
+}
+
+.sectionDivider {
+    @apply my-6 border-gray-200;
+}
+
+.assistiveText {
+    @apply mt-2;
+}
+
+.validationErrors {
+    @apply mt-10 flex flex-col gap-6;
+}
+
+.validationCheckbox {
+    @apply flex flex-wrap gap-8 max-md:flex-col;
+}

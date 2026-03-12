@@ -93,7 +93,11 @@ const useUniquePolicyGetter = (
             caseDetails?.planCode,
             caseDetails?.additionalData?.planCode,
         ],
-        queryFn: () => searchPolicy({ policyNumber: caseDetails.policyNumber }),
+        queryFn: () =>
+            searchPolicy({
+                policyNumber: caseDetails.policyNumber,
+                planCode: caseDetails.planCode,
+            }),
         enabled:
             !!caseDetails.policyNumber &&
             !caseDetails.planCode &&

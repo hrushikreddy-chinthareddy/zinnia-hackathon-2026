@@ -8,6 +8,7 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { IllustrationsClientCase } from '@deps/types/illustrations';
 import { ProductTypes } from '@deps/types/product';
 import { browserLogInfo } from '@deps/utils/browser-logging';
+import { FeatureFlags } from '@deps/utils/optimizely/optimizely';
 import { parseErrorInformation } from '@deps/utils/server-logging';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import { getRiderNames } from 'components/illustrations/helpers/get-rider-names';
@@ -16,7 +17,7 @@ import {
     IllustrationHandler,
     OutputDataParsingError,
 } from './illustrationsHandlerAbstractClass';
-import { farmersBlueprintIU0101 } from '../farmers/farmersBlueprintIU0101';
+import { getFarmersBlueprintIU0101 } from '../farmers/farmersBlueprintIU0101';
 import {
     ConversionType,
     CreateIllustrationPayload,
@@ -626,13 +627,7 @@ function createIllustrationPayload(
                 premium: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
                     basis: FARMERS_HARDCODED_DATA.premiumBasis,
-                    sequence: [
-                        {
-                            from: FARMERS_HARDCODED_DATA.premiumFrom,
-                            through: premiumDuration,
-                            value: values.modalPremiumValue,
-                        },
-                    ],
+                    sequence: modalPremiumTable,
                 },
                 doli: 'GPT',
                 preventModifiedEndowmentContract: values.preventMec,
@@ -888,8 +883,14 @@ function getIllustrationDataFromResponse(data: any) {
 }
 
 export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities> {
-    constructor(clientCase: IllustrationsClientCase) {
+    private featureFlags?: FeatureFlags;
+
+    constructor(
+        clientCase: IllustrationsClientCase,
+        featureFlags?: FeatureFlags
+    ) {
         super(clientCase);
+        this.featureFlags = featureFlags;
     }
 
     createIllustrationPayloadFromAnswerOutput(
@@ -917,7 +918,7 @@ export class PlanIU0101Handler extends IllustrationHandler<FarmersIU0101Entities
 
     getBlueprint(): QuestionnaireBlueprint {
         // need an API request to get the correct risk class mappings for this plan
-        return farmersBlueprintIU0101;
+        return getFarmersBlueprintIU0101(this.featureFlags);
     }
 
     getLabel(): string {

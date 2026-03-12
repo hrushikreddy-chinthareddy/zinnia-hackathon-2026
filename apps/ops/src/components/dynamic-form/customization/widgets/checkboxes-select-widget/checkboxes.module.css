@@ -3,3 +3,11 @@
     flex-direction: column;
     gap: var(--measure-dimension-gap-lg, 1rem);
 }
+
+.sectionLabel {
+    font: var(--typography-labels-label-md);
+}
+
+.requiredAsterisk {
+    color: #ff3300;
+}

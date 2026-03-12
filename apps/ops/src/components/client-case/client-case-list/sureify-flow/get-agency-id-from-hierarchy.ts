@@ -3,7 +3,6 @@ import sortBy from 'lodash/sortBy';
 import { getHierarchyBySellingCode } from '@deps/queries/api/server/v1/producers';
 import { LoggingContext } from '@deps/utils/server-logging';
 
-export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
 const MAIN_AGENCY_ROLE = 'GeneralAgency';
 
 /**

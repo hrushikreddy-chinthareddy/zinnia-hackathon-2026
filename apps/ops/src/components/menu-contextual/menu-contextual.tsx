@@ -11,6 +11,7 @@ export interface MenuContextualProps {
     triggerAsChild?: boolean;
     onOpenChange?: (open: boolean) => void;
     'data-testid'?: string;
+    role?: string;
 }
 
 export const MenuContextual = ({
@@ -19,6 +20,7 @@ export const MenuContextual = ({
     triggerAsChild = false,
     onOpenChange = () => {},
     'data-testid': dataTestId,
+    role,
 }: MenuContextualProps) => {
     const [align, setAlign] =
         useState<DropdownMenu.DropdownMenuContentProps['align']>('end');
@@ -106,6 +108,7 @@ export const MenuContextual = ({
                     onClick={() => setOpen(false)}
                     onEscapeKeyDown={() => setOpen(false)}
                     onInteractOutside={() => setOpen(false)}
+                    role={role ?? 'menu'}
                 >
                     <div className="flex flex-col items-start gap-4 rounded-md py-4">
                         {children}

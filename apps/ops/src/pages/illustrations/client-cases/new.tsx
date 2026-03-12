@@ -37,7 +37,7 @@ import {
 import { toLowerCaseSearchParams } from '@deps/utils/url';
 import nextI18nextConfig from 'next-i18next.config';
 
-import IllustrationsPage, { ErrorOrigin } from './index';
+import IllustrationsPage from './index';
 
 type additionalDataProps = {
     user: UserProfile;
@@ -67,24 +67,16 @@ export default function NewClientCase(
         });
     }, [router, searchParams]);
 
-    const { mutateAsync } = useMutation({
+    const { mutateAsync, isError } = useMutation({
         mutationKey: ['createClientCase'],
         mutationFn: (data: Partial<IllustrationsClientCase>) =>
             postIllustrationsClientCase(data),
         onSuccess: (data) => {
-            if (data?.id) {
+            if (data.id) {
                 return router.push(
-                    `/illustrations/client-cases/${data?.id}/illustrate`
+                    `/illustrations/client-cases/${data.id}/illustrate`
                 );
             }
-            console.log('ID not found after client case creation');
-        },
-
-        onMutate: () => {
-            // add loading logic
-        },
-        onError: () => {
-            // add error logic
         },
     });
 
@@ -101,14 +93,6 @@ export default function NewClientCase(
     }, [closeSideSheet, sideSheet.events]);
 
     useEffect(() => {
-        const params = toLowerCaseSearchParams(searchParams);
-
-        if (
-            (params.has('eappid') && props.fetchingErrorOrigin) ||
-            props.fetchingErrorOrigin === ErrorOrigin.Internal
-        ) {
-            return;
-        }
         const createClientCaseForm = t(
             'clientCase.createClientCaseForm.clientCaseSideSheetTitle'
         );
@@ -130,8 +114,12 @@ export default function NewClientCase(
     }, [searchParams]);
     // We cannot add SideSheet as a dependency because updating the content also changes this reference
 
-    return IllustrationsPage(props);
+    return IllustrationsPage({
+        ...props,
+        hasError: isError,
+    });
 }
+
 const getAuthToken = async (
     context: GetServerSidePropsContext,
     loggingContext: LoggingContext
@@ -251,12 +239,11 @@ export const getServerSideProps = withPageAuthAndLogging(
 
                 return merge(
                     { props: commonProps },
-                    await createClientCaseFromSureify(
-                        eAppId,
+                    await createClientCaseFromSureify(eAppId, {
                         accessToken,
                         loggingContext,
-                        upsertIfExists
-                    )
+                        upsertIfExists,
+                    })
                 );
             }
             return {

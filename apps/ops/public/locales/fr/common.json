@@ -53,6 +53,7 @@
         "createdOn": "Créer sur",
         "resolvedOn": "Résolu le",
         "technicalExceptions": "Exceptions techniques",
+        "noDocuments": "Aucun document disponible",
         "technicalIssuesWarning": "L’avancement de votre dossier peut ne pas être mis à jour en raison d’un problème technique. Nous travaillons à sa résolution.",
         "technicalIssuesResolved": "Les problèmes techniques liés à ce dossier ont été résolus. L'avancement du dossier sera mis à jour et reprendra normalement.",
         "errorCode": "Code d'erreur",
@@ -60,7 +61,15 @@
         "errorDescription": "Description",
         "sourceSystem": "Système source",
         "inProgress": "En cours",
+        "linkedCasesRequestsCompleted": "Tous les dossiers connexes sont clos.",
+        "linkedCasesRequestsRaised": "Ce {{caseType}} a {{numberOfLinkedCases}} cas liés.",
+        "raisedOn": "Élevé le",
+        "requestForProcessCompleted": "{{caseType}} terminé le {{updatedAt}}",
+        "requestForProcessRaised": "Ce dossier a été signalé pour {{caseType}} le {{createdAt}}. Accédez à ",
+        "Status": "Statut",
+        "unableToFetchRelatedCase": "Impossible de récupérer les dossiers associés.",
         "resolved": "Résolu",
+        "caseRequest": "Demande de cas",
         "technicalExceptionsIndicator": "Nous rencontrons des difficultés pour mettre à jour l'état d'avancement de votre dossier. Un ticket d'incident a été créé et sera résolu prochainement.",
         "accountValueByPolicyYear": "Valeur du compte par année {{policyNomenclature}}",
         "accountValues": "Valeurs du compte",
@@ -173,6 +182,7 @@
         "completedTaskTimesTitle": "Temps de traitement médian",
         "completedTaskTimesXAxisLabel": "Temps de traitement",
         "completedTaskTimesYAxisLabel": "Type de dossier",
+        "completed": "Complété",
         "confirm": "Confirmer",
         "confirmCancelProgram": "Confirmer avant d'annuler le programme systématique.",
         "contestabilityEndDate": "Date de fin de contestabilité",
@@ -252,6 +262,7 @@
         "edit": "Éditer",
         "editName": "Modifier le nom",
         "effectiveDate": "Date d'effet",
+        "effectiveDates": "Dates d'effet",
         "email": "E-mail",
         "emailAddress": "Adresse e-mail",
         "emailRequired": "L'e-mail est requis.",
@@ -483,6 +494,7 @@
         "modifiedEndowmentContractTestDate": "Date du test MEC",
         "monthOfYear": "Mois de l'année",
         "nameOnAccount": "Nom sur le compte",
+        "navLinksUserMenuFor": "Menu utilisateur pour {{name}}",
         "netAmountAtRisk": "Montant net à risque",
         "netBenefitAmount": "Monto neto del beneficio",
         "netDeathBenefit": "Prestation décès nette estimée",
@@ -1427,8 +1439,11 @@
         "YearEndGain": "Gain de fin d'année",
         "indexAutomationRequestReceivedReceivedOn": "Reçu le",
         "indexAutomationRequestReceivedSource": "Source",
-        "indexAutomationDocumentIdentificationDocTypeGroup": "Type de document",
-        "indexAutomationDocumentIdentificationDocType": "Type de document",
+        "documentTypeGroup": "Groupe de type de document",
+        "documentType": "Type de document",
+        "classificationMethod": "Méthode de classification",
+        "classificationStatus": "Statut de classification",
+        "classificationFailureReasons": "Raison(s) d'échec",
         "indexAutomationDocumentExtractionContractNumber": "Numéro de contrat",
         "indexAutomationDocumentExtractionSsn": "SSN",
         "indexAutomationDocumentExtractionOwnerName": "Nom du propriétaire",
@@ -6443,6 +6458,7 @@
                     "residence": "Résidentiel",
                     "business": "Entreprise",
                     "poBox": "Boîte postale",
+                    "other": "Autre",
                     "poBoxLower": "boîte postale",
                     "mailing": "Courrier postal"
                 },
@@ -9265,7 +9281,7 @@
             "ariaCancel": "Annuler la soumission"
         },
         "createClientCaseForm": {
-            "clientCaseSideSheetTitle": "Nouveau Client Case",
+            "clientCaseSideSheetTitle": "Nouveau dossier client",
             "editClientCaseSideSheetTitle": "Modifier le dossier client",
             "clientCaseSection": "Détails du dossier client",
             "titleLabel": "Titre",
@@ -9361,6 +9377,10 @@
                 "premiumFreeRiders": "Avenants de politique sans prime",
                 "totalRiderPricing": "Prix ​​total du passager"
             }
+        },
+        "errors": {
+            "createClientCase": "Une erreur est survenue lors de la création du dossier client.",
+            "updateClientCase": "Une erreur est survenue lors de la modification du dossier client."
         }
     },
     "caseStats": {
@@ -9589,6 +9609,13 @@
         "errorTitle": "Erreur",
         "closeButton": "Fermer"
     },
+    "nigoSummary": {
+        "noNigoReasons": "Aucune raison NIGO trouvée. Veuillez vérifier la console pour les informations de débogage.",
+        "heading": "Révision du formulaire",
+        "paperApplicationComplete": "La demande papier est-elle complète et prête à être traitée ?",
+        "missingQuestion": "Qu’est-ce qui manque ou est incorrect dans le formulaire ?",
+        "selectRole": "Sélectionnez le rôle comportant des informations non concordantes."
+    },
     "transactionSummary": {
         "tag": {
             "new": "Ajouté",
@@ -9599,6 +9626,10 @@
         "noSummary": "Aucun récapitulatif de transaction disponible.",
         "primaryBene": "Bénéficiaire principal",
         "contingentBene": "Bénéficiaire conditionnel",
+        "owner": "Titulaire",
+        "jointOwner": "Cotitulaire",
+        "insured": "Assuré",
+        "annuitant": "Rentiér",
         "loading": "L'API de validation est en cours d'exécution...",
         "successMessage": "Ça a l'air bien ! N'oubliez pas de relire vos candidatures avant de les soumettre.",
         "errorMessage": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",

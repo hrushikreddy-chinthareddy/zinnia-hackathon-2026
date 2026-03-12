@@ -80,6 +80,7 @@ export default function SignatureValidations({
     const formDataContext = useContext(FormDataContext);
 
     const [displaySignatures, setDisplaySignatures] = useState(config);
+
     const setSignature =
         (signatureType: SignatureValidationTypeWithdrawal) =>
         (val: SignatureWithdrawal) => {
@@ -191,7 +192,12 @@ export default function SignatureValidations({
                                 formDataContext.formSignature?.signatures.find(
                                     (val) =>
                                         val.signType?.text === signatureType
-                                ) || getDefaultSignature(signatureType)
+                                ) ||
+                                formDataContext.initialForm?.data?.formRequest?.formSignature?.signatures?.find(
+                                    (val) =>
+                                        val.signType?.text === signatureType
+                                ) ||
+                                getDefaultSignature(signatureType)
                             }
                             isFormStateReadOnly={isFormStateReadOnly}
                             preSelectedValues={{

@@ -16,6 +16,7 @@ export interface MenuContextualItemProps {
     type?: NavElementType;
     disabled?: boolean;
     openInNewTab?: boolean;
+    'data-testid'?: string;
 }
 
 const MenuContextualItem = ({
@@ -25,6 +26,7 @@ const MenuContextualItem = ({
     onClick,
     disabled,
     openInNewTab,
+    'data-testid': dataTestId,
 }: MenuContextualItemProps) => {
     const router = useRouter();
     const handleSelect = () => {
@@ -36,7 +38,11 @@ const MenuContextualItem = ({
     };
 
     return (
-        <DropdownMenu.Item onSelect={handleSelect} disabled={disabled}>
+        <DropdownMenu.Item
+            onSelect={handleSelect}
+            disabled={disabled}
+            data-testid={dataTestId}
+        >
             <NavElement
                 className={clsx(
                     styles.menuContextualItem,
