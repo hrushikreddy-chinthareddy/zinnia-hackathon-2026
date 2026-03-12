@@ -1,4 +1,4 @@
-import { I18n, i18n, TFunction } from 'next-i18next';
+import { TFunction } from 'next-i18next';
 
 import AssistiveText, {
     AssistiveTextVariant,
@@ -193,6 +193,8 @@ export const getPrefCommunicationType = (
     }
 
     if (contactValue) {
+        // TODO: The contact method language doesn't make sense here,
+        // since the actual contact details are displayed, not the method.
         return (
             <div className="mr-8 break-all">
                 <p className="typography-labels-field-label">
@@ -309,9 +311,9 @@ export const findCoverageParticipant = (
 };
 
 export const getRiskClass = (
-    riskClass: RiskClass | undefined
+    riskClass: RiskClass | undefined,
+    t: TFunction
 ): string | undefined => {
-    const { t } = i18n as I18n;
     switch (riskClass) {
         case RiskClass.ULTRANONTOBACCO:
             return t(

@@ -122,6 +122,7 @@ export const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'policy.detailCards.coveredParty',
     });
+    const { t: defaultT } = useTranslation();
     const {
         ageInYears,
         fullName = DEFAULT_ERROR_STRING,
@@ -159,7 +160,7 @@ export const InsuredCard = ({ policy }: { policy: PolicyDetails }) => {
                     <Content
                         details={
                             riskClass
-                                ? (getRiskClass(riskClass) as string)
+                                ? getRiskClass(riskClass, defaultT)
                                 : DEFAULT_ERROR_STRING
                         }
                         variant={ContentVariant.BodySm}

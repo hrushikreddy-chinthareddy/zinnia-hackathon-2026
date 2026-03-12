@@ -1,0 +1,19 @@
+.tabList {
+    margin-bottom: 0;
+    padding: var(--measure-dimension-padding-2xl)
+        var(--measure-dimension-padding-2xl) 0;
+}
+
+@media (min-width: 768px) {
+    .tabList {
+        padding-left: var(--measure-dimension-padding-3xl);
+        padding-right: var(--measure-dimension-padding-3xl);
+    }
+}
+
+@media (min-width: 1024px) {
+    .tabList {
+        padding-left: var(--measure-dimension-padding-4xl);
+        padding-right: var(--measure-dimension-padding-4xl);
+    }
+}
