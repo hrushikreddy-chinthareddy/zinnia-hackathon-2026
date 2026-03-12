@@ -15,11 +15,11 @@ export const getMatchDocumentPaymentReviewSteps = ({
     task,
     readOnly,
 }: GetStepsProps) => {
-    let isSubmit = task.data.matchingResult === MatchingCase.REINDEX;
+    let isSubmit = task.data?.matchingResult === MatchingCase.REINDEX;
 
     if (
         [MatchingCase.NO_MATCH, MatchingCase.NOT_APPLICABLE].includes(
-            task.data.matchingResult
+            task.data?.matchingResult
         ) &&
         task.taskType === TaskType.Standard_Document_Matching
     ) {
