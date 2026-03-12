@@ -1,5 +1,5 @@
 import { Button } from '@zinnia/bloom/components';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Props {
     open: boolean;
@@ -9,6 +9,7 @@ interface Props {
     modalTitle?: string;
     onCancel: () => void;
     bigSize?: boolean;
+    delayCloseIconMs?: number;
 }
 
 export const Modal: React.FC<Props> = (props) => {
@@ -20,9 +21,28 @@ export const Modal: React.FC<Props> = (props) => {
         modalTitle = '',
         onCancel,
         bigSize = false,
+        delayCloseIconMs = 0,
     } = props;
 
+    const [showCloseIcon, setShowCloseIcon] = useState(false);
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setShowCloseIcon(true);
+        }, delayCloseIconMs * 1000);
+
+        return () => clearTimeout(timer);
+    }, [delayCloseIconMs]);
+
     if (!open) return null;
+
+    const closeIconElement = (
+        <div className="absolute top-4 right-4">
+            <Button mode="link" onClick={onCancel}>
+                {closeIcon}
+            </Button>
+        </div>
+    );
 
     return (
         <div className="fixed inset-0 z-[999] flex items-center justify-center bg-black bg-opacity-60">
@@ -31,11 +51,7 @@ export const Modal: React.FC<Props> = (props) => {
                     bigSize ? 'w-4/5 max-w-[70%] h-[95vh]' : 'w-2/5 max-w-[40%]'
                 } min-w-[40%] rounded-lg bg-white ${className} `}
             >
-                <div className="absolute top-4 right-4">
-                    <Button mode="link" onClick={onCancel}>
-                        {closeIcon}
-                    </Button>
-                </div>
+                {showCloseIcon && closeIconElement}
                 {modalTitle && (
                     <div className="pb-4 text-xl font-medium text-slate-800 border-b border-slate-200">
                         {modalTitle}

@@ -1,13 +1,16 @@
 import { useQuery } from '@tanstack/react-query';
+import { Heading, HeadingVariant, Loader } from '@zinnia/bloom/components';
 import { NextRouter, useRouter } from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
 import { createContext, useContext, useEffect } from 'react';
 
+import { Modal } from '@deps/components/modal/modal';
 import { PageHead } from '@deps/components/page-title';
 import SearchBar, {
     SearchBarInitialValues,
 } from '@deps/components/search/search-bar';
 import { PolicySearchResultsTable } from '@deps/containers/policy-search-results-table/policy-search-results-table';
+import { useModalContext } from '@deps/contexts/ModalContext';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import {
     PolicySearchFilters,
@@ -126,6 +129,7 @@ export const PolicyIndexTableView = ({
 }: PolicyManagementDashboardProps) => {
     const { t } = useTranslation();
     const router = useRouter();
+    const { isModalOpen, setIsModalOpen } = useModalContext();
 
     useSegmentPageTracker(user, SegmentPageName.PolicyManagementDashboard);
 
@@ -337,6 +341,26 @@ export const PolicyIndexTableView = ({
                             total={policyData?.total || 0}
                         />
                     </div>
+                )}
+                {isModalOpen && (
+                    <Modal
+                        open={isModalOpen}
+                        closeIcon="X"
+                        delayCloseIconMs={5}
+                        onCancel={() => {
+                            setIsModalOpen(false);
+                        }}
+                        content={
+                            <div className="flex flex-col items-center gap-4">
+                                <Loader />
+                                <Heading as={HeadingVariant.h3}>
+                                    {t(
+                                        'quickActions.additionalActions.downloadingPdf'
+                                    )}
+                                </Heading>
+                            </div>
+                        }
+                    />
                 )}
             </div>
         </DashboardContext.Provider>

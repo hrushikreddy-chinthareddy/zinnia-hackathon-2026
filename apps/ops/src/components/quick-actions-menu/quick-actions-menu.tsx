@@ -1,12 +1,6 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
-import {
-    Heading,
-    HeadingVariant,
-    Toast,
-    ToastVariant,
-    Loader,
-} from '@zinnia/bloom/components';
+import { Toast, ToastVariant } from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 import { useTranslation, TFunction } from 'next-i18next';
@@ -16,7 +10,6 @@ import { v4 as uuidV4 } from 'uuid';
 import MenuContextual from '@deps/components/menu-contextual/menu-contextual';
 import MenuContextualItem from '@deps/components/menu-contextual/menu-contextual-item/menu-contextual-item';
 import MenuContextualLabel from '@deps/components/menu-contextual/menu-contextual-label/menu-contextual-label';
-import { Modal } from '@deps/components/modal/modal';
 import { PopoverPlacement } from '@deps/components/popover/popover';
 import {
     commonPopoverClasses,
@@ -27,6 +20,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import CaseActionSideSheet from '@deps/containers/case-sub-page/caseActionsSideSheet';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { useModalContext } from '@deps/contexts/ModalContext';
 import {
     useOptimizely,
     OptimizelyVariableKey,
@@ -119,15 +113,14 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
 export const PolicyMenuContextualContent = ({
     t,
     policy,
-    setIsLoadingModalOpen,
 }: {
     t: TFunction;
     policy: PolicyDetails;
-    setIsLoadingModalOpen: (isOpen: boolean) => void;
 }) => {
     const limit = 1;
     const offset = 0;
     const { sessionId, partyId: userPartyId } = usePermissionsContext();
+    const { setIsModalOpen } = useModalContext();
 
     const { featureFlags } = useOptimizely();
 
@@ -597,10 +590,10 @@ export const PolicyMenuContextualContent = ({
                     //     policy.planCode as string
                     // )
                     {
-                        setIsLoadingModalOpen(true);
+                        setIsModalOpen(true);
                         setTimeout(() => {
-                            setIsLoadingModalOpen(false);
-                        }, 5000);
+                            setIsModalOpen(false);
+                        }, 9000);
                     }
                 }
             />
@@ -991,7 +984,6 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
     const { t: tAllFields } = useTranslation();
     const [toastMessage, setToastMessage] = useState<string | null>(null);
     const [toastVariant, setToastVariant] = useState<ToastVariant | null>(null);
-    const [isLoadingModalOpen, setIsLoadingModalOpen] = useState(false);
 
     useEffect(() => {
         if (!toastMessage) return;
@@ -1017,7 +1009,6 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                         <PolicyMenuContextualContent
                             policy={props.policy}
                             t={t}
-                            setIsLoadingModalOpen={setIsLoadingModalOpen}
                         />
                     ) : (
                         <CaseMenuContextualContent
@@ -1042,9 +1033,6 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                                 <PolicyMenuContextualContent
                                     policy={props.policy}
                                     t={t}
-                                    setIsLoadingModalOpen={
-                                        setIsLoadingModalOpen
-                                    }
                                 />
                             ) : (
                                 <CaseMenuContextualContent
@@ -1077,24 +1065,6 @@ const QuickActionsMenu = (props: QuickActionsMenuProps) => {
                 <div className={styles.toastContainer}>
                     <Toast variant={toastVariant}>{toastMessage}</Toast>
                 </div>
-            )}
-
-            {isLoadingModalOpen && (
-                <Modal
-                    open={isLoadingModalOpen}
-                    closeIcon=""
-                    onCancel={() => {}}
-                    content={
-                        <div className="flex flex-col items-center gap-4">
-                            <Loader />
-                            <Heading as={HeadingVariant.h3}>
-                                {tAllFields(
-                                    'quickActions.additionalActions.downloadingPdf'
-                                )}
-                            </Heading>
-                        </div>
-                    }
-                />
             )}
         </>
     );

@@ -1,5 +1,8 @@
+import { Heading, HeadingVariant, Loader } from '@zinnia/bloom/components';
 import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 
+import { Modal } from '@deps/components/modal/modal';
 import PolicyDetailsHeaderCard from '@deps/containers/page-header/policy-details-header';
 import { AnnuityApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card';
 import { PolicyApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/policy-application-details-card';
@@ -13,6 +16,7 @@ import {
     AnnuitantCard,
     InsuredCard,
 } from '@deps/containers/shared-cards/covered-parties/covered-parties-card';
+import { useModalContext } from '@deps/contexts/ModalContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
 import { PolicyFinancialsCard } from './cards/policy-financials-card';
@@ -20,6 +24,8 @@ import { PolicyDetailsCard } from '../policy-summary-card/policy-details-card';
 
 const AnnuityPolicyDetailsContainer = () => {
     const { policy, policyDetails } = useContext(PolicyData);
+    const { t } = useTranslation();
+    const { isModalOpen, setIsModalOpen } = useModalContext();
 
     return (
         <>
@@ -39,12 +45,35 @@ const AnnuityPolicyDetailsContainer = () => {
             <AnnuityTimelineCard policy={policyDetails} />
             <AnnuityApplicationDetailsCard policy={policy} />
             <ProductDetailsCard policy={policyDetails} />
+
+            {isModalOpen && (
+                <Modal
+                    open={isModalOpen}
+                    closeIcon="X"
+                    delayCloseIconMs={5}
+                    onCancel={() => {
+                        setIsModalOpen(false);
+                    }}
+                    content={
+                        <div className="flex flex-col items-center gap-4">
+                            <Loader />
+                            <Heading as={HeadingVariant.h3}>
+                                {t(
+                                    'quickActions.additionalActions.downloadingPdf'
+                                )}
+                            </Heading>
+                        </div>
+                    }
+                />
+            )}
         </>
     );
 };
 
 const LifePolicyDetailsContainer = () => {
     const { policyDetails } = useContext(PolicyData);
+    const { t } = useTranslation();
+    const { isModalOpen, setIsModalOpen } = useModalContext();
 
     return (
         <>
@@ -63,12 +92,34 @@ const LifePolicyDetailsContainer = () => {
             <LifeTimelineCard policy={policyDetails} />
             <PolicyApplicationDetailsCard policy={policyDetails} />
             <ProductDetailsCard policy={policyDetails} />
+
+            {isModalOpen && (
+                <Modal
+                    open={isModalOpen}
+                    closeIcon="X"
+                    delayCloseIconMs={5}
+                    onCancel={() => {
+                        setIsModalOpen(false);
+                    }}
+                    content={
+                        <div className="flex flex-col items-center gap-4">
+                            <Loader />
+                            <Heading as={HeadingVariant.h3}>
+                                {t(
+                                    'quickActions.additionalActions.downloadingPdf'
+                                )}
+                            </Heading>
+                        </div>
+                    }
+                />
+            )}
         </>
     );
 };
 
 const PolicyDetailsSubPage = () => {
     const { policyDetails } = useContext(PolicyData);
+
     if (policyDetails.isAnnuity) {
         return <AnnuityPolicyDetailsContainer />;
     }
