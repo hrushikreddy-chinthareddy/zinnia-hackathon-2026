@@ -58,12 +58,11 @@ const DATA_TYPE_FIELDS: Record<string, FieldConfig[]> = {
     ],
     [DataType.DOCUMENT_IDENTIFICATION_DATA]: [
         {
-            labelKey:
-                'allFields.indexAutomationDocumentIdentificationDocTypeGroup',
+            labelKey: 'allFields.documentTypeGroup',
             field: 'docTypeGroup',
         },
         {
-            labelKey: 'allFields.indexAutomationDocumentIdentificationDocType',
+            labelKey: 'allFields.documentType',
             field: 'docType',
         },
     ],
@@ -188,9 +187,7 @@ const IndexAutomationCase = ({
             return showClassificationMethod ? (
                 <React.Fragment>
                     <div className={styles.customColSpan2}>
-                        {t(
-                            'allFields.indexAutomationDocumentIdentificationClassificationMethod'
-                        )}
+                        {t('allFields.classificationMethod')}
                     </div>
                     <Typography
                         variant={TypographyVariant.BodySmBold}
@@ -207,9 +204,7 @@ const IndexAutomationCase = ({
                 {showClassificationMethod && (
                     <>
                         <div className={styles.customColSpan2}>
-                            {t(
-                                'allFields.indexAutomationDocumentIdentificationClassificationMethod'
-                            )}
+                            {t('allFields.classificationMethod')}
                         </div>
                         <Typography
                             variant={TypographyVariant.BodySmBold}
@@ -220,9 +215,7 @@ const IndexAutomationCase = ({
                     </>
                 )}
                 <div className={styles.customColSpan2}>
-                    {t(
-                        'allFields.indexAutomationDocumentIdentificationClassificationStatus'
-                    )}
+                    {t('allFields.classificationStatus')}
                 </div>
                 <Typography
                     variant={TypographyVariant.BodySmBold}
@@ -235,9 +228,7 @@ const IndexAutomationCase = ({
                         <div
                             className={`${styles.customColSpan2} ${styles.alignTop}`}
                         >
-                            {t(
-                                'allFields.indexAutomationDocumentIdentificationFailureReasons'
-                            )}
+                            {t('allFields.classificationFailureReasons')}
                         </div>
                         <div className={styles.failureReasons}>
                             {classificationMethodResults.map(
