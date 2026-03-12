@@ -229,10 +229,10 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
             errors = {
                 ...errors,
                 paymentAmount: `${t(
-                    `${translationKeyPrefix}.amount.${
+                    `allFields.${translationKeyPrefix}${
                         systematicProgramTablesEnabled
-                            ? 'missingAmountErrorSP'
-                            : 'missingAmountError'
+                            ? 'SystematicProgramMissingAmountError'
+                            : 'MissingAmountError'
                     }`
                 )}`,
             };
@@ -240,10 +240,10 @@ const WithdrawalAmount = ({ policy }: AmountProps) => {
             errors = {
                 ...errors,
                 paymentAmount: `${t(
-                    `${translationKeyPrefix}.amount.${
+                    `allFields.${translationKeyPrefix}${
                         systematicProgramTablesEnabled
-                            ? 'invalidAmountErrorSP'
-                            : 'invalidAmountError'
+                            ? 'SystematicProgramInvalidAmountError'
+                            : 'InvalidAmountError'
                     }`
                 )}`,
             };
