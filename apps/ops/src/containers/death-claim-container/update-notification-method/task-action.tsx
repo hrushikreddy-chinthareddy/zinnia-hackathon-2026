@@ -118,7 +118,9 @@ export const TaskAction = ({
                             className="tooltip-primary"
                         />
                     }
-                    triggerAriaLabel={tCommon('allFields.moreInformation')}
+                    triggerAriaLabel={
+                        tCommon('allFields.moreInformation') as string
+                    }
                 >
                     {tooltipBody}
                 </Tooltip>

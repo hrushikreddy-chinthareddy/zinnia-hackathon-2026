@@ -52,7 +52,9 @@ export const QuickQuoteResultTableSection = ({
                             />
                         }
                         triggerClassName="w-fit"
-                        triggerAriaLabel={t('allFields.moreInformation')}
+                        triggerAriaLabel={
+                            t('allFields.moreInformation') as string
+                        }
                     >
                         {hint}
                     </Tooltip>

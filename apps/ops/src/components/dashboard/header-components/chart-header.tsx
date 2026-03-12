@@ -41,7 +41,9 @@ export const ChartHeader: FC<ChartHeaderProps> = ({
                             />
                         }
                         triggerClassName="w-fit"
-                        triggerAriaLabel={t('allFields.moreInformation')}
+                        triggerAriaLabel={
+                            t('allFields.moreInformation') as string
+                        }
                     >
                         {titleToolTip}
                     </Tooltip>
