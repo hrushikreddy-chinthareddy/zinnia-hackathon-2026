@@ -64,7 +64,7 @@ const ContactDetailsComponent = ({
         useRoleChange();
 
     const contactOptions = ContactOptions(t, role);
-    const keysToValidate = ['areaCode', 'dialNumber'];
+    const keysToValidate = ['areaCode', 'dialNumber', 'emailAddress'];
 
     const handleRolePartyChange = <
         T extends keyof typeof roleData.party,
