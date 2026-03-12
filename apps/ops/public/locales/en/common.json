@@ -672,8 +672,8 @@
         "roles": "Roles",
         "role": "Role",
         "roleTabsAgentBanner": "This information is provided by an external system and can't be updated in Zinnia Live",
-        "roleTabsAgentDetails": "Agent Details",
-        "roleTabsPolicyDetails": "Policy Details",
+        "roleTabsAgentDetails": "Agent Profile",
+        "roleTabsPolicyDetails": "Policy Profile",
         "rates": "rates",
         "rateEffectiveDate": "Rate effective date",
         "routingNumber": "Routing number",
@@ -3699,7 +3699,6 @@
             "documents": "Documents",
             "view": "View",
             "viewTask": "View task"
-
         },
         "communicationSentTemplate": {
             "mail": "Mailed to: {{address}}",
@@ -6042,7 +6041,7 @@
             "issueLabel": "Issue",
             "detailsLabel": "Task Description",
             "noDataAvailable": "No data available.",
-             "noDocuments": "No documents available",
+            "noDocuments": "No documents available",
             "errorAdditionalDocuments": "Error fetching additional documents.",
             "commonTaskIssues": "One or more {{taskType}} issues found.",
             "reasonLabel": "Status reason",
