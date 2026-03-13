@@ -10,6 +10,7 @@ import { toSentenceCase } from '@deps/helpers/string.helpers';
 import { ReactComponent as LeftArrow } from '@deps/styles/elements/icons/arrow/direction-left-3.svg';
 import { Parties } from '@zinnia/api-types/types/sor';
 
+import styles from './page-header.module.css';
 import NavElement, {
     NavElementSize,
     NavElementType,
@@ -78,7 +79,7 @@ export const Breadcrumb = ({
                     type={NavElementType.Link}
                     size={NavElementSize.Small}
                     onClick={onClick}
-                    className="flex h-5 w-fit items-center"
+                    className={styles.breadcrumbLink}
                     startIcon={<LeftArrow height={16} width={16} />}
                     aria-labelledby="breadcrumb-text"
                 >
@@ -92,7 +93,7 @@ export const Breadcrumb = ({
 const HeaderText = ({ headerText }: Pick<PageHeaderProps, 'headerText'>) => {
     return (
         <Typography
-            className="flex items-center"
+            className={styles.headerTypography}
             variant={TypographyVariant.H1}
             data-testid="header-text"
         >
@@ -105,10 +106,7 @@ const Icon = ({ icon }: Pick<PageHeaderProps, 'icon'>) => {
     return (
         <>
             {icon && (
-                <div
-                    data-testid="icon"
-                    className={`mr-2 flex text-gray-900 xs:hidden lg:flex`}
-                >
+                <div data-testid="icon" className={styles.iconWrapper}>
                     {icon}
                 </div>
             )}
@@ -130,17 +128,19 @@ export const PageHeader = ({
     groupOneFlexClassNames,
     headerRowFlexClassNames,
 }: PageHeaderProps) => {
-    const headerRowClassNames = `flex justify-between ${headerRowFlexClassNames}`;
+    const headerRowClassNames = `${styles.headerRow} ${
+        headerRowFlexClassNames ?? ''
+    }`;
 
     return (
         <CardContainer
             data-testid="page-header"
-            containerClassNames="rounded-t"
-            classNames="flex w-full flex-col justify-center"
+            containerClassNames={styles.cardContainer}
+            classNames={styles.cardContent}
         >
             {/* breadcrumb and breadcrumb siblings -- elements above header text row */}
             {(breadcrumbText || breadcrumbSiblings) && (
-                <div className="mb-4 flex justify-between">
+                <div className={styles.breadcrumbRow}>
                     <Breadcrumb
                         breadcrumbText={breadcrumbText}
                         breadcrumbUrl={breadcrumbUrl}
@@ -156,8 +156,8 @@ export const PageHeader = ({
                     data-testid="group-one-siblings"
                     className={groupOneFlexClassNames}
                 >
-                    <div className={`flex flex-col`}>
-                        <div className="flex">
+                    <div className={styles.groupOneColumn}>
+                        <div className={styles.iconAndHeaderText}>
                             <Icon icon={icon} />
                             <HeaderText headerText={headerText} />
                         </div>
@@ -172,7 +172,10 @@ export const PageHeader = ({
 
                 {/* header text siblings - group two -- elements justified on the right side within the header text row */}
                 {headerTextSiblingsGroupTwo && (
-                    <div data-testid="group-two-siblings" className="flex">
+                    <div
+                        data-testid="group-two-siblings"
+                        className={styles.groupTwoSiblings}
+                    >
                         {headerTextSiblingsGroupTwo}
                     </div>
                 )}

@@ -303,11 +303,11 @@ describe('helpers/party-info-helpers', () => {
 
     describe('getRiskClass', () => {
         it('maps enums to i18n labels via global i18n', () => {
-            const label = getRiskClass(RiskClass.ELITENONTOBACCO);
+            const label = getRiskClass(RiskClass.ELITENONTOBACCO, t as any);
             expect(label).toBe(
                 'people.card.underwritingInfo.riskClassOptions.eliteNonTobacco'
             );
-            expect(getRiskClass(undefined)).toBeUndefined();
+            expect(getRiskClass(undefined, t as any)).toBeUndefined();
         });
     });
 

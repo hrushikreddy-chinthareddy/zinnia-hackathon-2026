@@ -24,17 +24,20 @@ import { ReactComponent as EditIcon } from '@deps/styles/elements/icons/icons_ou
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import {
     Parties,
-    PartyRole,
     PartyStatus,
     PartyType,
     PolicyPartyRoles,
 } from '@zinnia/api-types/types/sor';
 
+import styles from './interior-people-page-header.module.css';
 import { HeaderInfoCard } from '../people-data-cards/header-info-card/header-info-card';
 import { NameCard } from '../people-data-cards/name-card/name-card';
 import { convertToChipText } from '../people-sub-page/people-sub-page.helpers';
+import { isAgentRole } from '../person-sub-page/person-sub-page.helpers';
 
 interface InteriorPeoplePageHeaderContainerProps {
+    /** Optional Bloom Icon element to display before the person's name */
+    icon?: JSX.Element;
     selectedPolicyParty?: Parties & {
         producerName?: string;
         producerType?: string;
@@ -43,29 +46,27 @@ interface InteriorPeoplePageHeaderContainerProps {
     editable?: boolean;
     partyStatus?: PartyStatus;
     isUserPermissionedToEditCards?: boolean;
+    /** Content rendered below the entire header row (e.g., info banners) */
+    belowHeaderTextChildren?: React.ReactNode;
 }
 
 const InteriorPeoplePageHeaderContainer = ({
+    icon,
     selectedPolicyParty,
     selectedPolicyPartyRoles,
     editable = false,
     isUserPermissionedToEditCards,
     partyStatus,
+    belowHeaderTextChildren,
 }: InteriorPeoplePageHeaderContainerProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
     const shouldShowEditCommunicationsPreferences =
         featureFlags[FEATURE_FLAGS.COMMUNICATION_PREFERENCES] && editable;
-    const selectedPartyRoles = selectedPolicyPartyRoles?.map((roleObject) => {
-        return roleObject.partyRole?.toLowerCase();
-    });
-    const isAgent =
-        selectedPartyRoles?.includes(
-            PartyRole.PRIMARYWRITINGAGENT.toLowerCase()
-        ) ||
-        selectedPartyRoles?.includes(
-            PartyRole.PRIMARYSERVICINGAGENT.toLowerCase()
-        );
+    // Determine if every passed-in role is an agent role (hides DOB section)
+    const isAgent = selectedPolicyPartyRoles?.every(
+        (r) => !!r.partyRole && isAgentRole(r.partyRole)
+    );
 
     const { policy } = useContext(PolicyData);
 
@@ -104,13 +105,13 @@ const InteriorPeoplePageHeaderContainer = ({
         }
 
         return (
-            <div className="flex h-6 items-center gap-2 xs:mt-2 md:ml-4">
-                <p className="font-primary text-sm font-bold">{pronouns}</p>
+            <div className={styles.pronounsRow}>
+                <p className={styles.pronounsText}>{pronouns}</p>
                 <NavElement
                     type={NavElementType.Button}
                     size={NavElementSize.Small}
                     tabIndex={0}
-                    className=" h-4"
+                    className={styles.editButton}
                 >
                     <EditIcon height={16} />
                 </NavElement>
@@ -131,7 +132,7 @@ const InteriorPeoplePageHeaderContainer = ({
             );
             return (
                 <div>
-                    <span className="flex items-center gap-2 align-middle">
+                    <span className={styles.dobLabel}>
                         <p
                             className="typography-labels-field-label"
                             id="people-birth-date"
@@ -183,11 +184,12 @@ const InteriorPeoplePageHeaderContainer = ({
         [selectedPolicyPartyRoles, t]
     );
 
+    // When an icon is shown, offset role tags to align with the person's name
     const partyRoleTags = (
-        <div className="mt-1 flex xs:flex-col md:flex-row md:items-center md:align-middle">
-            <div className="flex flex-wrap gap-1">
+        <div className={icon ? styles.roleTagsWithIcon : styles.roleTagsRow}>
+            <div className={styles.tagsList}>
                 {tags?.map((tag: { text: string }) => (
-                    <span key={tag.text} className="pointer-events-none">
+                    <span key={tag.text} className={styles.tagItem}>
                         <PartyTag partyStatus={partyStatus} text={tag.text} />
                     </span>
                 ))}
@@ -222,21 +224,23 @@ const InteriorPeoplePageHeaderContainer = ({
                 {getDateOfBirth(selectedPolicyParty?.partyType)}
             </HeaderInfoCard>
         ) : (
-            <div className="flex items-start align-baseline">
+            <div className={styles.groupTwoFallback}>
                 {getPrefCommunicationType(selectedPolicyParty ?? null, t)}
                 {getDateOfBirth(selectedPolicyParty?.partyType)}
             </div>
         );
-    const belowHeaderTextChildren = partyRoleTags;
-    const headerRowFlexClassNames = 'xs:flex-col lg:flex-row xs:gap-4 lg:gap-0';
-    const groupOneFlexClassNames = 'flex xs:flex-col lg:flex-row';
+    const subHeaderChildren = partyRoleTags;
+    const headerRowFlexClassNames = styles.headerRowFlex;
+    const groupOneFlexClassNames = styles.groupOneFlex;
 
     return (
         <PageHeader
+            icon={icon}
             headerText={headerText}
             headerTextSiblingsGroupOne={headerTextSiblingsGroupOne}
             headerTextSiblingsGroupTwo={headerTextSiblingsGroupTwo}
-            subHeaderTextChildren={belowHeaderTextChildren}
+            subHeaderTextChildren={subHeaderChildren}
+            belowHeaderTextChildren={belowHeaderTextChildren}
             headerRowFlexClassNames={headerRowFlexClassNames}
             groupOneFlexClassNames={groupOneFlexClassNames}
         />
