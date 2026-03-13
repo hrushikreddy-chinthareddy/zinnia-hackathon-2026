@@ -52,10 +52,7 @@ import {
     checkPartialWithdrawalOneTimeEligibilityQuery,
     checkSystematicProgramsEligibilityQuery,
 } from '@deps/queries/tanstack/checkEligibilityQueries/checkEligibilityQueries';
-import {
-    downloadAsIsIllustrationQuery,
-    searchPoliciesQuery,
-} from '@deps/queries/tanstack/policyQueries/policyQueries';
+import { searchPoliciesQuery } from '@deps/queries/tanstack/policyQueries/policyQueries';
 import { ReactComponent as MenuHorizontal } from '@deps/styles/elements/icons/icons_outlined/menu-horizontal.svg';
 import { Source } from '@deps/types/search';
 import {
@@ -231,18 +228,6 @@ export const PolicyMenuContextualContent = ({
         },
     });
 
-    const { data: asIsIllustration } = useQuery({
-        queryKey: ['asIsIllustration', policy.planCode, policy.policyNumber],
-        queryFn: () =>
-            downloadAsIsIllustrationQuery(
-                policy.planCode as string,
-                policy.policyNumber as string
-            ),
-        select: (data) => {
-            return { ...data };
-        },
-    });
-
     const { data: oneTimePremiumEligibility } = useQuery({
         queryKey: [
             'checkOneTimePremiumEligibility',
@@ -381,6 +366,45 @@ export const PolicyMenuContextualContent = ({
             return true;
         },
     });
+
+    const downloadAsIsIllustrationPdf = async (
+        planCode: string,
+        policyNumber: string,
+        carrierId: string,
+        policyStatus: string
+    ) => {
+        try {
+            const response = await fetch(
+                `/api/policies/${planCode}/${policyNumber}/illustrations`,
+                {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        carrierCode: carrierId,
+                        policyStatus: policyStatus,
+                    }),
+                    headers: {
+                        'Content-Type': 'application/pdf',
+                    },
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch PDF: ${response.statusText}`);
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            const newTab = window.open('', '_blank');
+            if (newTab) {
+                newTab.location.href = url;
+            }
+
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error('Error downloading PDF:', err);
+        }
+    };
 
     const { data: freelookCancellation } = useFreelookCancellation(
         policy.product?.planCode,
@@ -584,18 +608,15 @@ export const PolicyMenuContextualContent = ({
             <MenuContextualItem
                 key="createAsIsIllustration"
                 content={t('additionalActions.createAsIsIllustration')}
-                onClick={() =>
-                    // downloadAsIsIllustrationQuery(
-                    //     policy.policyNumber as string,
-                    //     policy.planCode as string
-                    // )
-                    {
-                        setIsModalOpen(true);
-                        setTimeout(() => {
-                            setIsModalOpen(false);
-                        }, 9000);
-                    }
-                }
+                onClick={() => {
+                    setIsModalOpen(true);
+                    downloadAsIsIllustrationPdf(
+                        policy.planCode as string,
+                        policy.policyNumber as string,
+                        policy.carrierId as string,
+                        policy.policyStatus as string
+                    );
+                }}
             />
         );
     }
