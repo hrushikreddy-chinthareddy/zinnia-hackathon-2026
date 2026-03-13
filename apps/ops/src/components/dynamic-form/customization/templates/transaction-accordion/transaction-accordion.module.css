@@ -31,10 +31,11 @@
     flex-grow: 1;
 }
 .highlightText {
+    color: var(--cyan-11);
+    font-weight: var(--string-font-weight-font-weight-bold);
     display: flex;
     align-items: center;
-    color: #155e75;
-    font-weight: 700;
+    gap: var(--measure-dimension-gap-xs);
 }
 .container {
     background-color: #f9fafb;

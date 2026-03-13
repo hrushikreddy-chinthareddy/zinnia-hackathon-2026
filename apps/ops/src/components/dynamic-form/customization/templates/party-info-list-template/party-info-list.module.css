@@ -19,7 +19,7 @@
 
 @keyframes highlightFlash {
     0% {
-        box-shadow: 0 0 0px 3px rgba(0, 150, 255, 0.45);
+        box-shadow: 0 0 0px 3px rgba(149, 208, 250, 0.45);
     }
     100% {
         box-shadow: none;
@@ -47,24 +47,15 @@
     min-width: 70%;
 }
 
-.highlightText {
+.ctaButton {
+    color: var(--cyan-11);
+    font-size: var(--measure-dimension-font-size-font-size-x-small);
+    font-weight: var(--string-font-weight-font-weight-bold);
     display: flex;
     align-items: center;
-    color: var(--color-secondary-color-primary-dark);
-    font-weight: var(--font-weight-labels-field-label-font-weight);
-    font-size: var(
-        --measure-dimension-core-typography-font-size-font-size-small
-    );
-    line-height: var(
-        --measure-dimension-core-typography-font-size-line-height-small
-    );
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    gap: var(--measure-dimension-z-space-1);
+    gap: var(--measure-dimension-gap-xs);
 }
 
-.highlightText:hover {
-    color: var(--color-secondary-color-primary-darker);
+.ctaButton:hover {
+    color: var(--cyan-12);
 }
