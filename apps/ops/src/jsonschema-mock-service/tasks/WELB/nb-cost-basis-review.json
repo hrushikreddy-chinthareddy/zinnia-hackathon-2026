@@ -194,32 +194,32 @@
                                                 },
                                                 "taxYear": {
                                                     "type": "string",
-                                                    "title": "tax year",
+                                                    "title": "Tax year",
                                                     "maxLength": 4,
                                                     "pattern": "^[A-Za-z0-9]*$",
                                                     "trim": true
                                                 },
                                                 "currentContributionAmount": {
                                                     "type": "number",
-                                                    "title": "current contribution amount",
+                                                    "title": "Current contribution amount",
                                                     "minimum": 0,
                                                     "default": 0
                                                 },
                                                 "priorContributionAmount": {
                                                     "type": "number",
-                                                    "title": "prior contribution amount",
+                                                    "title": "Prior contribution amount",
                                                     "minimum": 0,
                                                     "default": 0
                                                 },
                                                 "totalBasis": {
                                                     "type": "number",
-                                                    "title": "total basis",
+                                                    "title": "Total basis",
                                                     "minimum": 0,
                                                     "default": 0
                                                 },
                                                 "post88Amount": {
                                                     "type": "number",
-                                                    "title": "post 88 amount",
+                                                    "title": "Post 88 amount",
                                                     "minimum": 0,
                                                     "default": 0
                                                 }

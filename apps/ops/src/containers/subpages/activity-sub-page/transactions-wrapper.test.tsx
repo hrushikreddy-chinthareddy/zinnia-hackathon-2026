@@ -1,6 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, within } from '@testing-library/react';
-import React from 'react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import {
     HistoryFiltersContext,
@@ -23,160 +22,6 @@ jest.mock('react-i18next', () => ({
     useTranslation: () => ({
         t: (key: string) => key,
     }),
-}));
-
-jest.mock('@zinnia/bloom/components', () => ({
-    Label: ({
-        children,
-        labelFor,
-        ...props
-    }: {
-        children?: React.ReactNode;
-        labelFor?: string;
-    }) => (
-        <label htmlFor={labelFor} {...props}>
-            {children}
-        </label>
-    ),
-    Toggle: ({
-        labelId,
-        text,
-        pressed,
-        onClick,
-    }: {
-        labelId: string;
-        text: string;
-        pressed: boolean;
-        onClick: () => void;
-    }) => (
-        <button
-            type="button"
-            aria-pressed={pressed}
-            id={labelId}
-            onClick={onClick}
-        >
-            {text}
-        </button>
-    ),
-    FieldDateRange: ({
-        defaultStartDate,
-        defaultEndDate,
-        onApply: _onApply,
-        label,
-    }: {
-        defaultStartDate: string;
-        defaultEndDate: string;
-        onApply: (start: string, end: string) => void;
-        label: React.ReactNode;
-    }) => (
-        <div data-testid="field-date-range">
-            {label}
-            <span>{defaultStartDate}</span>
-            <span>{defaultEndDate}</span>
-        </div>
-    ),
-    SelectFilter: ({
-        onValueChange,
-        options,
-        values,
-        placeHolder,
-    }: {
-        onValueChange: (value: string[]) => void;
-        options: Array<{ value: string; label: string }>;
-        values: string[];
-        placeHolder: string;
-    }) => (
-        <div data-testid="select-filter">
-            <span>{placeHolder}</span>
-            {options.map((opt) => (
-                <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() =>
-                        onValueChange(
-                            values.includes(opt.value)
-                                ? values.filter((v) => v !== opt.value)
-                                : [...values, opt.value]
-                        )
-                    }
-                >
-                    {opt.label}
-                </button>
-            ))}
-        </div>
-    ),
-    TabGroup: ({
-        defaultValue: _defaultValue,
-        value: _value,
-        onValueChange: _onValueChange,
-        children,
-        className,
-    }: {
-        defaultValue: string;
-        value: string;
-        onValueChange: (tab: string) => void;
-        children: React.ReactNode;
-        className?: string;
-    }) => (
-        <div data-testid="tab-group" className={className}>
-            {children}
-        </div>
-    ),
-    TabList: ({ children }: { children: React.ReactNode }) => (
-        <div role="tablist" data-testid="tab-list">
-            {children}
-        </div>
-    ),
-    TabTrigger: ({
-        children,
-        value,
-    }: {
-        children: React.ReactNode;
-        value: string;
-    }) => (
-        <button
-            type="button"
-            role="tab"
-            data-value={value}
-            data-testid={`tab-trigger-${value}`}
-        >
-            {children}
-        </button>
-    ),
-    Table: ({ children }: { children: React.ReactNode }) => (
-        <table>{children}</table>
-    ),
-    TableBody: ({ children }: { children: React.ReactNode }) => (
-        <tbody>{children}</tbody>
-    ),
-    TableCell: ({ children }: { children: React.ReactNode }) => (
-        <td>{children}</td>
-    ),
-    TableHeader: ({ children }: { children: React.ReactNode }) => (
-        <thead>{children}</thead>
-    ),
-    TableHeaderCell: ({
-        children,
-        className,
-    }: {
-        children: React.ReactNode;
-        className?: string;
-    }) => <th className={className}>{children}</th>,
-    TableRow: ({
-        children,
-        onClick,
-        tabIndex,
-        onKeyDown,
-    }: {
-        children: React.ReactNode;
-        onClick?: () => void;
-        tabIndex?: number;
-        onKeyDown?: (e: React.KeyboardEvent) => void;
-    }) => (
-        <tr onClick={onClick} tabIndex={tabIndex} onKeyDown={onKeyDown}>
-            {children}
-        </tr>
-    ),
 }));
 
 jest.mock('@deps/hooks/useTransactions', () => ({
@@ -290,16 +135,13 @@ describe('TransactionsWrapper – Hide daily interest toggle', () => {
 
     it('filters out InterestCredit transactions when the toggle is pressed', () => {
         renderComponent();
-        const table = screen.getByRole('table');
 
-        // Both transaction types should be visible in the table initially
+        // Both transaction types should be visible initially
         expect(
-            within(table).getByText(`enums.${INTEREST_CREDIT_TYPE}`)
+            screen.getByText(`enums.${INTEREST_CREDIT_TYPE}`)
         ).toBeInTheDocument();
         expect(
-            within(table).getByText(
-                `enums.${TransactionTypeEnum.SUBSEQUENT_PREMIUM}`
-            )
+            screen.getByText(`enums.${TransactionTypeEnum.SUBSEQUENT_PREMIUM}`)
         ).toBeInTheDocument();
 
         // Press the toggle
@@ -308,21 +150,19 @@ describe('TransactionsWrapper – Hide daily interest toggle', () => {
         });
         fireEvent.click(toggle);
 
-        // InterestCredit should be filtered out from the table
+        // InterestCredit should be filtered out
         expect(
-            within(table).queryByText(`enums.${INTEREST_CREDIT_TYPE}`)
+            screen.queryByText(`enums.${INTEREST_CREDIT_TYPE}`)
         ).not.toBeInTheDocument();
         // Other transactions remain
         expect(
-            within(table).getByText(
-                `enums.${TransactionTypeEnum.SUBSEQUENT_PREMIUM}`
-            )
+            screen.getByText(`enums.${TransactionTypeEnum.SUBSEQUENT_PREMIUM}`)
         ).toBeInTheDocument();
     });
 
     it('shows all transactions again when the toggle is turned off', () => {
         renderComponent();
-        const table = screen.getByRole('table');
+
         const toggle = screen.getByRole('button', {
             name: 'allFields.hideDailyInterest',
         });
@@ -330,13 +170,13 @@ describe('TransactionsWrapper – Hide daily interest toggle', () => {
         // Toggle on
         fireEvent.click(toggle);
         expect(
-            within(table).queryByText(`enums.${INTEREST_CREDIT_TYPE}`)
+            screen.queryByText(`enums.${INTEREST_CREDIT_TYPE}`)
         ).not.toBeInTheDocument();
 
         // Toggle off
         fireEvent.click(toggle);
         expect(
-            within(table).getByText(`enums.${INTEREST_CREDIT_TYPE}`)
+            screen.getByText(`enums.${INTEREST_CREDIT_TYPE}`)
         ).toBeInTheDocument();
     });
 });
