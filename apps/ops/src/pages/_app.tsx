@@ -48,6 +48,14 @@ if (process.env.NODE_ENV === NODE_ENV_PRODUCTION) {
         trackLongTasks: true,
         version: process.env.NEXT_PUBLIC_GIT_SHA || '',
         defaultPrivacyLevel: 'mask',
+        allowedTracingUrls: [
+            {
+                match: (_url: string) => {
+                    return true;
+                },
+                propagatorTypes: ['datadog', 'tracecontext'],
+            },
+        ],
     });
 
     datadogRum.startSessionReplayRecording();
