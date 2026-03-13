@@ -28,7 +28,7 @@ import { getPomAgentData } from '@deps/queries/api/agents';
 import { PomAgentData } from '@deps/types/agents';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { toTitleCase } from '@deps/utils/strings';
-import { Parties, PartyRole } from '@zinnia/api-types/types/sor';
+import { PartyRole } from '@zinnia/api-types/types/sor';
 
 import ManagePeople from './manage-people';
 import {
@@ -254,10 +254,7 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                 !!policy.policyNumber &&
                 !!policy.product?.planCode,
             select: (data) =>
-                data
-                    ? // FIXME: party is NameTag but PomAgentParty expects Parties
-                      new PomAgentParty(data as PomAgentData, party as Parties) // [PomAgentParty] => { ...party: data }
-                    : undefined,
+                data ? new PomAgentParty(data as PomAgentData) : undefined,
         })),
 
         combine: (results) => ({
@@ -290,17 +287,14 @@ export const PeopleSubPage: React.FC<{ isEligibleBeneficiary?: boolean }> = ({
                   'fullName',
                   'fullName'
               );
+
     // Add agent data if there is any
     if (agentData && agentData.length > 0) {
         filteredNameTags = filteredNameTags.map((tag) => {
-            const isAgent = agentData.some((agent) => {
-                return agent?.party?.agentExternalId === tag.agentExternalId;
-            });
-            if (isAgent) {
-                const agent = agentData.find(
-                    (agent) =>
-                        agent?.party?.agentExternalId === tag.agentExternalId
-                );
+            const agent = agentData.find(
+                (agent) => agent?.partyId === tag.partyId
+            );
+            if (agent) {
                 // NOTE: this is complicated but POM and Zahara partyId for the same agent DO NOT match - MR
                 // Preserve SOR-derived tags/partyRoles so Servicing vs Writing Agent labels are correct
                 return {

@@ -2,3 +2,11 @@
     border-top: var(--measure-dimension-stroke-sm) solid
         var(--color-base-border-light);
 }
+
+.wrapper {
+    box-shadow: var(--shadow-elevation-light-04);
+}
+
+.tabContentFull {
+    width: 100%;
+}
