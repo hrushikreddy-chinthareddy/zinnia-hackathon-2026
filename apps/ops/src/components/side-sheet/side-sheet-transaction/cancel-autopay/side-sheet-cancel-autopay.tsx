@@ -1,8 +1,4 @@
-import {
-    AssistiveTextVariant,
-    FieldDateSingle,
-    Label,
-} from '@zinnia/bloom/components';
+import { AssistiveTextVariant } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
 import { useMemo, useRef, useState } from 'react';
@@ -13,6 +9,12 @@ import CaseDocumentSelect, {
     SetStateCaseId,
 } from '@deps/components/case-document-select/case-document-select';
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
+import {
+    FieldSize,
+    FieldType,
+    FieldVariant,
+} from '@deps/components/fields/field';
+import FieldDateSelect from '@deps/components/fields/field-date-select/field-date-select';
 import TransactionCta from '@deps/components/transaction-cta/transaction-cta';
 import {
     OptimizelyVariableKey,
@@ -149,10 +151,23 @@ const SideSheetCancelAutopay = ({
     });
     const hasAnyCaseResult = hasAnyCase(casesResponse);
 
-    const handleDateChange = (date?: Date) => {
-        setEffectiveDate(
-            date ? dayjs(date).format(NUMERIC_DATE_FORMAT) : undefined
-        );
+    const handleDateChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const dateValue = event.target.value;
+        const { effectiveDate, ...remainingErrors } = errors;
+
+        setEffectiveDate(String(dateValue));
+        setErrors(remainingErrors);
+    };
+
+    const handleIsDateAllowed = (d: dayjs.Dayjs) => {
+        const minDate = dayjs(policy?.policyContractState?.currentLifecycleDate)
+            .add(1, 'day')
+            .format(NUMERIC_DATE_FORMAT);
+        const min = dayjs(minDate, NUMERIC_DATE_FORMAT, true).startOf('day');
+
+        if (!min.isValid()) return true;
+
+        return !d.isBefore(min, 'day');
     };
 
     const validateFields = (
@@ -424,34 +439,28 @@ const SideSheetCancelAutopay = ({
                         setViewState={setViewState}
                     />
                 )}
-                <FieldDateSingle
-                    name="effective-date"
-                    label={
-                        <Label labelFor="effective-date">
-                            {t('transactions.cancelAutopay.effectiveDate')}
-                        </Label>
+                <FieldDateSelect
+                    data-testid={
+                        t('transactions.cancelAutopay.effectiveDate') ?? ''
                     }
-                    disableBeforeDate={
+                    label={t('transactions.cancelAutopay.effectiveDate') ?? ''}
+                    value={String(effectiveDate)}
+                    onChange={handleDateChange}
+                    size={FieldSize.Small}
+                    type={FieldType.BaseActive}
+                    isFutureDateDisabled={false}
+                    isPastDateDisabled={!isUseCurrentLifeCycleDate}
+                    variant={
+                        errors.effectiveDate
+                            ? FieldVariant.Error
+                            : FieldVariant.Default
+                    }
+                    message={errors.effectiveDate || ''}
+                    isDateAllowed={
                         isUseCurrentLifeCycleDate
-                            ? dayjs(
-                                  policy?.policyContractState
-                                      ?.currentLifecycleDate
-                              )
-                                  .add(1, 'day')
-                                  .toDate()
-                            : dayjs().add(1, 'day').toDate()
+                            ? handleIsDateAllowed
+                            : undefined
                     }
-                    defaultDate={defaultDate.toDate()}
-                    onDateSelect={(date: Date | undefined) =>
-                        handleDateChange(date)
-                    }
-                    formatErrorMsg={`${t(
-                        'transactions.cancelAutopay.invalidEffectiveDate'
-                    )}`}
-                    rangeErrorMsg={`${t(
-                        'transactions.cancelAutopay.invalidEffectiveDate'
-                    )}`}
-                    container={containerRef.current}
                 />
                 <CheckboxText
                     assistiveText={
