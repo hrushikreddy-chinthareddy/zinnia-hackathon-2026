@@ -1,5 +1,9 @@
 import { useTranslation } from 'next-i18next';
+import { useCallback, useMemo } from 'react';
 
+import PageLoader, {
+    PageLoaderVariant,
+} from '@deps/components/page-loader/page-loader';
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import StartStep, {
     StartStepSetState,
@@ -9,6 +13,7 @@ import Confirm from '@deps/containers/financial-transactions/fund-transfer/confi
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
 import WorkflowContainer from '@deps/containers/workflow-container/workflow-container';
 import { useFundTransfer } from '@deps/contexts/transactions/FundTransferContext';
+import { useCasesQuery } from '@deps/hooks/useCasesQuery';
 import { Processes } from '@deps/models/case/case';
 import { validateFundTransfer } from '@deps/queries/api/fund-transfer';
 import { FUND_TRANSFER_STEP_WIDTH } from '@deps/types/constants';
@@ -34,71 +39,112 @@ const FundTransferContainer = ({ policy }: FundTransferProps) => {
     const summaryLabel = t('summary.label');
     const confirmLabel = t('confirm.label');
 
-    const validateCall = () =>
-        validateFundTransfer(
-            policy.product?.planCode,
-            policy.policyNumber,
-            buildfundTransferRequestBody(fundTransfer)
-        );
+    const { data: casesResponse, isLoading } = useCasesQuery({
+        policyNumber: policy.policyNumber,
+        process: [Processes.FundManagement],
+        requestSubType: [Processes.FundTransfer],
+        enabled: !!policy.policyNumber,
+    });
+    const hasCases =
+        Array.isArray(casesResponse?.data) && casesResponse.data.length > 0;
 
-    const steps: Step[] = [
-        {
-            component: (
-                <StartStep
-                    parentPage={ParentPage.Funds}
-                    processType={Processes.FundTransfer}
-                    policy={policy}
-                    setState={setFundTransfer as StartStepSetState}
-                    state={fundTransfer}
-                    title={t('start.title') as string}
-                    subtitle={t('start.subtitle') as string}
-                    trackEventProps={{
-                        type: TransactionTypeEnum.FUND_TRANSFER,
-                        step: TransactionStep.Start,
-                    }}
-                />
+    const validateCall = useCallback(
+        () =>
+            validateFundTransfer(
+                policy.product?.planCode,
+                policy.policyNumber,
+                buildfundTransferRequestBody(fundTransfer)
             ),
-            screenReaderLabel: startLabel,
-            index: 0,
-            text: startLabel,
-        },
-        {
-            component: (
-                <Transfer
-                    policy={policy}
-                    validateTransaction={validateCall}
-                    title={t('transfer.title') as string}
-                    subtitle={t('transfer.subtitle') as string}
-                />
-            ),
-            screenReaderLabel: transferLabel,
-            index: 1,
-            text: transferLabel,
-        },
-        {
-            component: (
-                <Summary
-                    policy={policy}
-                    title={t('summary.title') as string}
-                    subtitle={t('summary.subtitle') as string}
-                />
-            ),
-            screenReaderLabel: summaryLabel,
-            index: 2,
-            text: summaryLabel,
-        },
-        {
-            component: <Confirm policy={policy} />,
-            screenReaderLabel: confirmLabel,
-            index: 3,
-            text: confirmLabel,
-        },
-    ];
+        [policy.product?.planCode, policy.policyNumber, fundTransfer]
+    );
 
-    return (
+    const steps: Step[] = useMemo(
+        () => [
+            {
+                component: (
+                    <StartStep
+                        parentPage={ParentPage.Funds}
+                        processType={Processes.FundManagement}
+                        processSubType={[Processes.FundTransfer]}
+                        policy={policy}
+                        setState={setFundTransfer as StartStepSetState}
+                        state={fundTransfer}
+                        title={t('start.title') as string}
+                        subtitle={t('start.subtitle') as string}
+                        trackEventProps={{
+                            type: TransactionTypeEnum.FUND_TRANSFER,
+                            step: TransactionStep.Start,
+                        }}
+                    />
+                ),
+                screenReaderLabel: startLabel,
+                index: 0,
+                text: startLabel,
+                isVisible: () => hasCases,
+            },
+            {
+                component: (
+                    <Transfer
+                        policy={policy}
+                        validateTransaction={validateCall}
+                        title={t('transfer.title') as string}
+                        subtitle={t('transfer.subtitle') as string}
+                    />
+                ),
+                screenReaderLabel: transferLabel,
+                index: 1,
+                text: transferLabel,
+                isVisible: () => true,
+            },
+            {
+                component: (
+                    <Summary
+                        policy={policy}
+                        title={t('summary.title') as string}
+                        subtitle={t('summary.subtitle') as string}
+                    />
+                ),
+                screenReaderLabel: summaryLabel,
+                index: 2,
+                text: summaryLabel,
+                isVisible: () => true,
+            },
+            {
+                component: <Confirm policy={policy} />,
+                screenReaderLabel: confirmLabel,
+                index: 3,
+                text: confirmLabel,
+                isVisible: () => true,
+            },
+        ],
+        [
+            policy,
+            setFundTransfer,
+            fundTransfer,
+            hasCases,
+            validateCall,
+            startLabel,
+            transferLabel,
+            summaryLabel,
+            confirmLabel,
+            t,
+        ]
+    );
+
+    const filteredSteps: Step[] = useMemo(
+        () =>
+            steps
+                .filter((item) => item.isVisible?.())
+                .map((item, index) => ({ ...item, index })),
+        [steps]
+    );
+
+    return isLoading ? (
+        <PageLoader variant={PageLoaderVariant.Center} />
+    ) : (
         <WorkflowContainer
             policy={policy}
-            steps={steps}
+            steps={filteredSteps}
             stepWidth={FUND_TRANSFER_STEP_WIDTH}
         />
     );
