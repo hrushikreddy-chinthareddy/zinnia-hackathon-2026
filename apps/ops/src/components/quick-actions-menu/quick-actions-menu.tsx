@@ -379,7 +379,7 @@ export const PolicyMenuContextualContent = ({
                 {
                     method: 'POST',
                     body: JSON.stringify({
-                        carrierCode: carrierId,
+                        carrierId: carrierId,
                         policyStatus: policyStatus,
                     }),
                     headers: {
@@ -612,6 +612,7 @@ export const PolicyMenuContextualContent = ({
                 key="createAsIsIllustration"
                 content={t('additionalActions.createAsIsIllustration')}
                 onClick={async () => {
+                    console.log('POLICY> ', policy);
                     setIsModalOpen(true);
                     const blob = await downloadAsIsIllustrationPdf(
                         policy.planCode as string,
