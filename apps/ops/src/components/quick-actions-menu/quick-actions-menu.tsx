@@ -392,18 +392,21 @@ export const PolicyMenuContextualContent = ({
                 throw new Error(`Failed to fetch PDF: ${response.statusText}`);
             }
 
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-
-            const newTab = window.open('', '_blank');
-            if (newTab) {
-                newTab.location.href = url;
-            }
-
-            window.URL.revokeObjectURL(url);
+            return await response.blob();
         } catch (err) {
             console.error('Error downloading PDF:', err);
         }
+    };
+
+    const openBlobInNewTab = (blob: Blob) => {
+        const newTab = window.open('', '_blank');
+        const url = window.URL.createObjectURL(blob);
+
+        if (newTab) {
+            newTab.location.href = url;
+        }
+
+        window.URL.revokeObjectURL(url);
     };
 
     const { data: freelookCancellation } = useFreelookCancellation(
@@ -608,14 +611,20 @@ export const PolicyMenuContextualContent = ({
             <MenuContextualItem
                 key="createAsIsIllustration"
                 content={t('additionalActions.createAsIsIllustration')}
-                onClick={() => {
+                onClick={async () => {
                     setIsModalOpen(true);
-                    downloadAsIsIllustrationPdf(
+                    const blob = await downloadAsIsIllustrationPdf(
                         policy.planCode as string,
                         policy.policyNumber as string,
                         policy.carrierId as string,
                         policy.policyStatus as string
                     );
+                    setIsModalOpen(false);
+                    if (blob) {
+                        openBlobInNewTab(blob);
+                    } else {
+                        //showErrorToast
+                    }
                 }}
             />
         );

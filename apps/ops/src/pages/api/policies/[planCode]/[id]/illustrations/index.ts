@@ -13,16 +13,18 @@ export default async function handler(
     const accessToken = (await getAccessToken(req, res)).accessToken;
 
     try {
+        console.log(planCode, policyNumber, carrierId, policyStatus);
         const response = await fetch(
             `${apiServerBaseUrl}/inforce-illustration/v1/policies/${planCode}/${policyNumber}/illustrations/as-is-inforce/pdf`,
             {
                 method: 'POST',
                 body: JSON.stringify({
-                    carrierCode: carrierId,
-                    policyStatus: policyStatus,
+                    carrierCode: 'ELIC',
+                    policyStatus: 'ACTIVE',
                 }),
                 headers: {
-                    'Content-Type': 'application/pdf',
+                    'Content-Type': 'application/json',
+                    Accept: 'application/pdf',
                     Authorization: `Bearer ${accessToken}`,
                 },
             }
