@@ -25,6 +25,7 @@ import {
 } from '@zinnia/api-types/types/sor';
 
 const baseUrl = `${baseAppUrl}/api/bpm/v1`;
+const inforceIllustrationBaseUrl = `${baseAppUrl}/api/inforce-illustration/v1`;
 
 export interface NewLoanRequestQuery extends NewLoanRequest {
     caseId: string;
@@ -944,7 +945,7 @@ export const checkEligibilityAsIsInforceIllustration = async (
             'AsIsInforceIllustration::Initiating eligibility check',
             {
                 payload: { planCode, policyNumber, carrierCode, policyStatus },
-                url: `${baseUrl}/policies/${planCode}/${policyNumber}/illustrations/as-is-inforce/eligibility-check`,
+                url: `${inforceIllustrationBaseUrl}/policies/${planCode}/${policyNumber}/illustrations/as-is-inforce/eligibility-check`,
                 function: 'checkEligibilityAsIsInforceIllustration',
             }
         );
@@ -952,7 +953,7 @@ export const checkEligibilityAsIsInforceIllustration = async (
             AsIsInforceEligibilityRequest,
             AxiosResponse<AsIsInforceEligibilityResponse>
         >(
-            `${baseUrl}/policies/${planCode}/${policyNumber}/illustrations/as-is-inforce/eligibility-check`,
+            `${inforceIllustrationBaseUrl}/policies/${planCode}/${policyNumber}/illustrations/as-is-inforce/eligibility-check`,
             {
                 carrierCode,
                 policyStatus,
