@@ -275,13 +275,3 @@ export const formatFeedTime = (isoString: string) => {
 export const formatFeedDate = (isoString: string) => {
     return dayjs.utc(isoString).format(DEFAULT_DATE_DISPLAY_FORMAT);
 };
-
-export const formatDate = (date?: Date) => {
-    if (!date) {
-        return '';
-    }
-    const yyyy = pad(date.getFullYear(), 4);
-    const MM = pad(date.getMonth() + 1, 2);
-    const dd = pad(date.getDate(), 2);
-    return `${yyyy}-${MM}-${dd}`;
-};
