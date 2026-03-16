@@ -8,11 +8,14 @@ import { baseAppUrl } from '../api-config';
 import { client } from '../api-utils/client';
 
 const baseUrl = baseAppUrl + '/api/validation/v1';
+const newbaseUrl = baseAppUrl + '/api/communication/v1';
 
 export const validateAddress = async (
     clientCode: string,
-    address: Address
+    address: Address,
+    useSpectrumApi: boolean
 ): Promise<any> => {
+    let url;
     try {
         if (!clientCode) {
             throw new Error('no client provided');
@@ -20,7 +23,13 @@ export const validateAddress = async (
         if (isEmptyObject(address)) {
             throw new Error('no address provided');
         }
-        const url = `${baseUrl}/${clientCode.toLowerCase()}/addressvalidation`;
+
+        if (useSpectrumApi) {
+            url = `${newbaseUrl}/${clientCode.toLowerCase()}/addressvalidation`;
+        } else {
+            url = `${baseUrl}/${clientCode.toLowerCase()}/addressvalidation`;
+        }
+
         const { data } = await client.post<any, AxiosResponse>(url, address);
         if (!data.AddressValidationResponse) {
             throw new Error('Address validation API error');
@@ -28,6 +37,8 @@ export const validateAddress = async (
         browserLogInfo('Successfully validated address', {
             file: 'queries/api/validateAddress',
             function: 'validateAddress',
+            useSpectrumApi,
+            url,
         });
         return data.AddressValidationResponse;
     } catch (e) {
@@ -36,6 +47,8 @@ export const validateAddress = async (
             function: 'validateAddress',
             clientCode,
             address,
+            useSpectrumApi,
+            url,
         });
         return null;
     }

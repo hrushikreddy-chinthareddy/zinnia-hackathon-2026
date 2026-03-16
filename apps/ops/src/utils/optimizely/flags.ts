@@ -212,4 +212,5 @@ export enum FEATURE_FLAGS {
     USE_ANALYTICS_DASHBOARD_PACKAGE = 'use_analytics_dashboard_package',
     USE_ANALYTICS_DASHBOARD_EMBEDDABLE = 'use_analytics_dashboard_embeddable',
     SHOULD_USE_UPDATED_RATES_FOR_FIUL_SP = 'should_use_updated_rates_for_fiul_sp',
+    SPECTRUM_ADDRESS_VALIDATION_API = 'spectrum-address-validation-api',
 }
