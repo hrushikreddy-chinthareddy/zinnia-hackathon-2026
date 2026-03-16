@@ -122,9 +122,9 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
     );
 
     const handleIsDateAllowed = (d: dayjs.Dayjs) => {
-        const minDate = dayjs(
-            policy?.policyContractState?.currentLifecycleDate
-        ).format(NUMERIC_DATE_FORMAT);
+        const minDate = dayjs(policy?.policyContractState?.currentLifecycleDate)
+            .add(1, 'day')
+            .format(NUMERIC_DATE_FORMAT);
         const min = dayjs(minDate, NUMERIC_DATE_FORMAT, true).startOf('day');
 
         if (!min.isValid()) return true;
@@ -140,27 +140,23 @@ const Amount = ({ policy, customFarmerCheck = false }: AmountProps) => {
         const isEverly =
             policy.carrierId === 'SBUL' || policy.carrierId === 'ELIC';
 
-        let effectiveDate: dayjs.Dayjs | null = dayjs();
+        const dateSource = isUseCurrentLifeCycleDate
+            ? policy?.policyContractState?.currentLifecycleDate
+            : isSetUp && isEverly
+            ? policyDates?.nextMonthiversaryDate
+            : systematicProgramData?.nextProgramDate;
 
-        if (isUseCurrentLifeCycleDate) {
-            effectiveDate = dayjs(
-                policy?.policyContractState?.currentLifecycleDate
-            );
-        } else if (isSetUp && isEverly) {
-            effectiveDate = policyDates?.nextMonthiversaryDate
-                ? dayjs(policyDates.nextMonthiversaryDate)
-                : null;
-        } else {
-            effectiveDate = systematicProgramData?.nextProgramDate
-                ? dayjs(systematicProgramData.nextProgramDate)
-                : null;
-        }
+        const effectiveDate = dateSource
+            ? isUseCurrentLifeCycleDate
+                ? dayjs(dateSource).add(1, 'day')
+                : dayjs(dateSource)
+            : dayjs();
 
         setAutopay(() => ({
             ...autopay,
-            effectiveDate: String(
-                dayjs(effectiveDate).format(NUMERIC_DATE_FORMAT)
-            ),
+            effectiveDate: effectiveDate.isValid()
+                ? effectiveDate.format(NUMERIC_DATE_FORMAT)
+                : '',
             frequency: customFarmerCheck
                 ? (frequency as Frequency)
                 : (systematicProgramData?.frequency as Frequency),

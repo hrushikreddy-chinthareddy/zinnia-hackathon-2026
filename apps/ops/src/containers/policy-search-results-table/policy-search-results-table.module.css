@@ -5,3 +5,8 @@
 .tableContainer {
     clip-path: inset(0);
 }
+
+.sortableHeader {
+    display: flex;
+    align-items: center;
+}

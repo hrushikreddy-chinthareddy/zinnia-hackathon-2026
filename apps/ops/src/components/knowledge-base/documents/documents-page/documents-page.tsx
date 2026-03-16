@@ -37,6 +37,7 @@ import { browserLogError } from '@deps/utils/browser-logging';
 import { formatDateTime } from '@deps/utils/dates';
 import { ClientDocumentDto } from '@zinnia/api-types/types/knowledgebase';
 
+import style from './documents-page.module.css';
 import CommonHeader from '../../common-header/common-header';
 import DocumentPreview from '../document-preview/document-preview';
 
@@ -240,9 +241,12 @@ const DocumentsPage = ({ docs }: DocumentsPageProps) => {
         return (
             <span className="text-gray-500">
                 {sortConfig?.direction === SortDirection.Desc ? (
-                    <Icon type={IconType.ARROW_DOWN} />
+                    <Icon
+                        className={style.sortIcon}
+                        type={IconType.ARROW_DOWN}
+                    />
                 ) : (
-                    <Icon type={IconType.ARROW_UP} />
+                    <Icon className={style.sortIcon} type={IconType.ARROW_UP} />
                 )}
             </span>
         );

@@ -1,8 +1,16 @@
 /* eslint-disable no-undef */
 // @ts-check
+const fs = require('fs');
 const path = require('path');
 const webpackLib = require('webpack');
 
+// TODO: Remove this when we switch to fully embedded dashboard instead of package
+const dashboardPkgPath = path.resolve(
+    './node_modules/@zinnia/xd-analytics-dashboard'
+);
+const isDashboardSymlinked =
+    fs.existsSync(dashboardPkgPath) &&
+    fs.lstatSync(dashboardPkgPath).isSymbolicLink();
 /** @type {import('next').NextConfig} */
 // eslint-disable-next-line @typescript-eslint/no-var-requires, no-undef
 const { i18n } = require('./next-i18next.config');
@@ -126,6 +134,19 @@ module.exports = {
                 })
             );
         }
+        config.resolve.alias = {
+            ...config.resolve.alias,
+            react: path.resolve('./node_modules/react'),
+            'react-dom': path.resolve('./node_modules/react-dom'),
+            // Only alias @tanstack/react-query when xd-analytics-dashboard is symlinked.
+            // Symlinks cause webpack to resolve peer deps from the real (source) path
+            // instead of the host's node_modules, resulting in duplicate packages.
+            ...(isDashboardSymlinked && {
+                '@tanstack/react-query': path.resolve(
+                    './node_modules/@tanstack/react-query'
+                ),
+            }),
+        };
 
         return config;
     },

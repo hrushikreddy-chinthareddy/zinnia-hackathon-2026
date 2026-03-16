@@ -250,6 +250,7 @@ const IndexAutomationCase = ({
 
     const renderFields = (fields: FieldConfig[]) => {
         const entity = transactionEntity?.entity as IndexAutomationEntity;
+
         return (
             <div className={styles.flexFullCol}>
                 <div className={styles.gridContainer}>
