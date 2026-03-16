@@ -121,7 +121,7 @@ export default function PartyInfoListTemplate(
                         <button
                             type="button"
                             onClick={onAddClick}
-                            className="text-cyan-800 text-sm font-bold hover:text-cyan-900"
+                            className={styles.ctaButton}
                         >
                             <Icon type={IconType.ADD} small />
                             <>{addButtonCTA}</>

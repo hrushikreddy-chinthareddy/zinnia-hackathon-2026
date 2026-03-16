@@ -118,7 +118,7 @@ const CaseDetailsSideNav = ({
 
     const appTypeLowerCase = (
         submissionDetails?.applicationType || applicationType
-    )?.toLocaleLowerCase();
+    )?.toLowerCase();
     const submissionType = appTypeLowerCase
         ? appTypeLowerCase === 'digital' || appTypeLowerCase === 'electronic'
             ? t('sidenav.electronic')
@@ -350,6 +350,10 @@ const CaseDetailsSideNav = ({
                                         />
                                     }
                                     placement={TooltipPlacement.TopRight}
+                                    triggerClassName="w-fit"
+                                    triggerAriaLabel={
+                                        t('allFields.moreInformation') as string
+                                    }
                                 >
                                     {t('sidenav.estimatedCompletionToolTip')}
                                 </Tooltip>

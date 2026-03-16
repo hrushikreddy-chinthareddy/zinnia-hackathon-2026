@@ -71,6 +71,11 @@
     border: 1px solid var(--color-grayscale-color-200-gray);
 }
 
+.linkIcon {
+    align-self: center;
+    color: var(--color-base-icon-action-text-link);
+}
+
 .caseStatusRow {
     display: flex;
     flex-direction: row;

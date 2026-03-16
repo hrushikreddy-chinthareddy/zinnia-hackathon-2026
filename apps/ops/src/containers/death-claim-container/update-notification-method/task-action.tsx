@@ -85,6 +85,7 @@ export const TaskAction = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'updateNotificationMethodForBeneficiary',
     });
+    const { t: tCommon } = useTranslation(TranslationFiles.COMMON);
     const labelClasses = clsx('body-sm', {
         'pointer-events-none': disabled,
     });
@@ -116,6 +117,9 @@ export const TaskAction = ({
                             width={'16px'}
                             className="tooltip-primary"
                         />
+                    }
+                    triggerAriaLabel={
+                        tCommon('allFields.moreInformation') as string
                     }
                 >
                     {tooltipBody}

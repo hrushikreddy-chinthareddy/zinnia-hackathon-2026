@@ -3,6 +3,7 @@
 }
 
 .iconTableAlignment {
+    display: inline;
     vertical-align: text-top;
     margin-right: var(--measure-dimension-gap-md);
 }

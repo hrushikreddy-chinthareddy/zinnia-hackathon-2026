@@ -23,15 +23,13 @@ const renderLabelWithFlag = (
             <Tooltip
                 placement={TooltipPlacement.TopRight}
                 trigger={
-                    <span onClick={(e) => e.preventDefault()}>
-                        <Icon
-                            type={IconType.FLAG}
-                            className={style.flagIcon}
-                            color="#ff3300"
-                        />
-                    </span>
+                    <Icon
+                        type={IconType.FLAG}
+                        className={style.flagIcon}
+                        color="#ff3300"
+                    />
                 }
-                triggerClassName={style.flagTrigger}
+                triggerClassName={`${style.flagTrigger} w-fit`}
             >
                 {missingValueTooltipText ?? ''}
             </Tooltip>

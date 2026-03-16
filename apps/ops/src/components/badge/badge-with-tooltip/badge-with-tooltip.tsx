@@ -20,7 +20,11 @@ const BadgeWithTooltip = ({
 }: BadgeWithTooltipProps) => {
     return (
         <div className={className}>
-            <Tooltip body={tooltip} placement={tooltipPlacement}>
+            <Tooltip
+                body={tooltip}
+                placement={tooltipPlacement}
+                triggerAriaLabel={label}
+            >
                 <Badge
                     icon={icon}
                     label={label}

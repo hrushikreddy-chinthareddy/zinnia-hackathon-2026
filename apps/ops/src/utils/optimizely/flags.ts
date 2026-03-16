@@ -140,6 +140,8 @@ export enum FEATURE_FLAGS {
     DEFAULT_CASE_DATA_ENTRY = 'contact-center-default-case-data-entry',
     SYSTEMATIC_WITHDRAWAL_TRANSACTION = 'systematic_withdrawal_transaction',
     SYSTEMATIC_RMD_TRANSACTION = 'systematic_rmd_transaction',
+    /** Prefill RMD Amount from API (remainingRequiredMinimumDistributionAmount) for One-Time RMD on Delaware FAST */
+    PREFILL_RMD_AMOUNT_FOR_FAST_DLIC = 'prefill_rmd_amount_for_fast_dlic',
     SYSTEMATIC_PROGRAMS_TABLE = 'systematic_programs_table',
     FAST_WITHDRAWAL = 'fast-withdrawal',
     FAST_OFT = 'fast-oft',
@@ -207,5 +209,8 @@ export enum FEATURE_FLAGS {
     OPS_MANAGER_AGENT_OWNER_FILTERS = 'ops_manager_agent_owner_filters',
     CASE_MANAGEMENT_SUREIFY_FLOW_UPSERT_IF_EXISTS = 'case_management_sureify_flow_upsert_if_exists',
     FEATURES_AND_RIDERS_TABLE_VIEW = 'features_and_riders_table_view',
+    USE_ANALYTICS_DASHBOARD_PACKAGE = 'use_analytics_dashboard_package',
+    USE_ANALYTICS_DASHBOARD_EMBEDDABLE = 'use_analytics_dashboard_embeddable',
     SHOULD_USE_UPDATED_RATES_FOR_FIUL_SP = 'should_use_updated_rates_for_fiul_sp',
+    SPECTRUM_ADDRESS_VALIDATION_API = 'spectrum-address-validation-api',
 }

@@ -364,6 +364,11 @@ export default function DocumentsResultsTable({
                                                 placement={
                                                     PopoverPlacement.TopRight
                                                 }
+                                                triggerAriaLabel={
+                                                    t(
+                                                        `${pd}.linkedDocument`
+                                                    ) as string
+                                                }
                                             >
                                                 <LinkIcon
                                                     className="-mt-0.5 mr-1.5 inline text-gray-600"
