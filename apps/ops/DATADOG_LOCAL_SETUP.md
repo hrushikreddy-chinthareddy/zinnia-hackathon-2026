@@ -34,7 +34,7 @@ docker build -f Dockerfile.datadog -t datadog-agent-local .
 ### 2. Run the Datadog Agent
 
 ```bash
-docker run -d \
+docker run \
   --name datadog-agent \
   -e DD_API_KEY=<YOUR_DATADOG_API_KEY> \
   -p 8126:8126 \
@@ -126,7 +126,15 @@ docker logs datadog-agent
 
 ## Stopping the Agent
 
-### If running with docker run:
+### If running in foreground (without -d flag):
+
+Press `Ctrl+C` in the terminal where the agent is running. Then remove the container:
+
+```bash
+docker rm datadog-agent
+```
+
+### If running in background (with -d flag):
 
 ```bash
 docker stop datadog-agent
