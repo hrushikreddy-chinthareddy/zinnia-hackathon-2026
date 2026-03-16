@@ -84,6 +84,7 @@
         "daysLabel": "jours",
         "daysActive": "Jours actifs",
         "monthly": "Mensuelle",
+        "moreInformation": "Plus d'informations",
         "groupBy": "Grouper par",
         "periodAverage": "Moyenne {{period}}",
         "hoursLabel": "heures",
@@ -262,6 +263,7 @@
         "edit": "Éditer",
         "editName": "Modifier le nom",
         "effectiveDate": "Date d'effet",
+        "effectiveDates": "Dates d'effet",
         "email": "E-mail",
         "emailAddress": "Adresse e-mail",
         "emailRequired": "L'e-mail est requis.",
@@ -493,6 +495,7 @@
         "modifiedEndowmentContractTestDate": "Date du test MEC",
         "monthOfYear": "Mois de l'année",
         "nameOnAccount": "Nom sur le compte",
+        "navLinksUserMenuFor": "Menu utilisateur pour {{name}}",
         "netAmountAtRisk": "Montant net à risque",
         "netBenefitAmount": "Monto neto del beneficio",
         "netDeathBenefit": "Prestation décès nette estimée",
@@ -663,6 +666,9 @@
         "riderStoredIncomeBalance": "Solde de revenu stocké de l'avenant",
         "roles": "Rôles",
         "role": "Rôle",
+        "roleTabsAgentBanner": "Ces informations proviennent d'un système externe et ne peuvent pas être mises à jour dans Zinnia Live",
+        "roleTabsAgentDetails": "Détails de l'Agent",
+        "roleTabsPolicyDetails": "Détails de la Police",
         "rates": "taux",
         "rateEffectiveDate": "Date d'entrée en vigueur du taux",
         "routingNumber": "Numéro de routage",
@@ -949,6 +955,7 @@
         "CommunicationPreferenceChange": "Changement des préférences de communication",
         "Commutation": "Commutation",
         "Completed": "Terminé",
+        "COMPLETED": "Terminé",
         "COMPLIANCE": "Conformité",
         "CONTINGENTBENEFICIARY": "Bénéficiaire secondaire",
         "CONVERSION": "Conversion",
@@ -1023,6 +1030,7 @@
         "ELITENONTOBACCO": "Élite Sans Tabac",
         "EmailChange": "Changement d'email",
         "EVERYTWOWEEKS": "Toutes les deux semaines",
+        "EXCEPTION": "Exception",
         "EXCEPTIONAPPLIES": "Exception applicable",
         "EXCESSCONTRIBUTION1YEARPRIORTAX": "Contribution excédentaire - 1 an avant",
         "EXCESSCONTRIBUTIONS2YEARPRIORTAX": "Contributions excédentaires - 2 ans avant",
@@ -1110,6 +1118,7 @@
         "IdentifierChange": "Changement d'identifiant",
         "INCREASING": "Croissant",
         "INDEPENDENTAGENCY": "Agence indépendante",
+        "IN_PROGRESS": "En cours",
         "INDEXED": "Indexé",
         "INDEXEDUNIVERSALLIFE": "Vie universelle indexée",
         "INDIVIDUAL": "Individuel",
@@ -1218,6 +1227,7 @@
         "NotificationOfDeathClaim": "Notification de réclamation décès",
         "NotificationOfRiderClaimStart": "Notification du début de réclamation d'avenant",
         "NOTISSUED": "Non émis",
+        "NOT_STARTED": "Non débuté",
         "NOTTAKEN": "Non pris",
         "NOWITHHOLDINGALLOWED": "Pas de retenue - autorisé",
         "NOWITHHOLDINGELECTED": "Pas de retenue - élu",
@@ -1320,6 +1330,7 @@
         "REPORTABLEDEATHBENEFITSUNDERSECTION6050Y": "Prestations décès déclarables (section 6050y)",
         "REQUIREDMINIMUMDISTRIBUTION": "RMD",
         "RequiredMinimumDistributionOneTime": "Distribution minimale requise unique",
+        "RESOLVED": "Résolu",
         "Rescission": "Résiliation",
         "ResetBenefitAmounts": "Réinitialisation des montants des prestations",
         "Reversed": "Annulé",
@@ -5162,6 +5173,7 @@
             "filter": "Filtrer par année :",
             "filterByCategory": "Filtrer par catégorie",
             "formId": "ID du formulaire",
+            "linkedDocument": "Document lié",
             "linkedTo": "Ce document est lié à ce blah {{type}}.",
             "loadingDocuments": "Chargement des documents...",
             "name": "Nom",
@@ -9276,7 +9288,7 @@
             "ariaCancel": "Annuler la soumission"
         },
         "createClientCaseForm": {
-            "clientCaseSideSheetTitle": "Nouveau Client Case",
+            "clientCaseSideSheetTitle": "Nouveau dossier client",
             "editClientCaseSideSheetTitle": "Modifier le dossier client",
             "clientCaseSection": "Détails du dossier client",
             "titleLabel": "Titre",
@@ -9372,6 +9384,10 @@
                 "premiumFreeRiders": "Avenants de politique sans prime",
                 "totalRiderPricing": "Prix ​​total du passager"
             }
+        },
+        "errors": {
+            "createClientCase": "Une erreur est survenue lors de la création du dossier client.",
+            "updateClientCase": "Une erreur est survenue lors de la modification du dossier client."
         }
     },
     "caseStats": {

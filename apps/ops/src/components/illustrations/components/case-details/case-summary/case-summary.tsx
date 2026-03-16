@@ -2,6 +2,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import {
     AssistiveText,
     AssistiveTextVariant,
+    BannerAlert,
+    BannerVariant,
     BodyVariant,
     Breadcrumb,
     Button,
@@ -15,12 +17,15 @@ import {
 import clsx from 'clsx';
 import Link from 'next/link';
 import { useTranslation } from 'next-i18next';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import CreateClientCaseForm from '@deps/components/client-case/client-case-create/create-client-case-form';
 import { useAllAliasesWithSellingCode } from '@deps/components/illustrations/helpers/hooks/user-identity';
 import TempNavInactive from '@deps/components/nav-element/temp-nav-inactive/temp-nav-inactive';
 import { PiiWrapper } from '@deps/components/pii/PiiWrapper';
+import Typography, {
+    TypographyVariant,
+} from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
@@ -43,60 +48,35 @@ interface IllustrationCaseSumaryProps {
     clientCase: IllustrationsClientCase;
 }
 
-const IllustrationCaseSumary = ({
+export const IllustrationCaseSumary = ({
     clientCase,
 }: IllustrationCaseSumaryProps) => {
+    const queryClient = useQueryClient();
     const { t } = useTranslation(TranslationFiles.COMMON, {});
     const { isAllowWriteClientCase, partyReferenceData } =
         usePermissionsContext();
+    const [bannerText, setBannerText] = useState('');
+    const sideSheet = useSideSheetContextLegacy();
 
     const aliases = useAllAliasesWithSellingCode(partyReferenceData);
     const isAgent = aliases?.length ?? 0 > 0;
-
     const isAllowedToEditCase = isAgent || isAllowWriteClientCase;
-
     const insuranceDetails = `${capitalize(
         clientCase?.insuredDetails?.sexAtBirth
     )}, Age ${calculateAge(
         clientCase?.insuredDetails?.dateOfBirth?.toString(),
         ''
     )}, ${getStateName(clientCase?.insuredDetails?.state)}`;
-    const [insurredFullName, setInsurredFullName] = useState('');
-    const [agentFullName, setAgentFullName] = useState('');
-    const queryClient = useQueryClient();
-    const sideSheet = useSideSheetContextLegacy();
-
-    useEffect(() => {
-        if (
-            !clientCase?.insuredDetails?.firstName &&
-            !clientCase?.insuredDetails?.lastName
-        ) {
-            setInsurredFullName(DEFAULT_ERROR_STRING);
-        } else {
-            setInsurredFullName(
-                `${clientCase?.insuredDetails?.firstName} ${clientCase?.insuredDetails?.lastName}`
-            );
-        }
-    }, [
-        clientCase?.insuredDetails?.firstName,
-        clientCase?.insuredDetails?.lastName,
-    ]);
-
-    useEffect(() => {
-        if (
-            !clientCase?.agentDetails?.firstName &&
-            !clientCase?.agentDetails?.lastName
-        ) {
-            setAgentFullName(DEFAULT_ERROR_STRING);
-        } else {
-            setAgentFullName(
-                `${clientCase?.agentDetails?.firstName} ${clientCase?.agentDetails?.lastName}`
-            );
-        }
-    }, [
-        clientCase?.agentDetails?.firstName,
-        clientCase?.agentDetails?.lastName,
-    ]);
+    const insurredFullName =
+        !clientCase?.insuredDetails?.firstName &&
+        !clientCase?.insuredDetails?.lastName
+            ? DEFAULT_ERROR_STRING
+            : `${clientCase?.insuredDetails?.firstName} ${clientCase?.insuredDetails?.lastName}`;
+    const agentFullName =
+        !clientCase?.agentDetails?.firstName &&
+        !clientCase?.agentDetails?.lastName
+            ? DEFAULT_ERROR_STRING
+            : `${clientCase?.agentDetails?.firstName} ${clientCase?.agentDetails?.lastName}`;
 
     const closeSideSheet = useCallback(() => {
         sideSheet.handleOpen(false);
@@ -118,7 +98,7 @@ const IllustrationCaseSumary = ({
         sideSheet.handleOpen(true, 500);
     };
 
-    const { mutate } = useMutation({
+    const { mutateAsync } = useMutation({
         mutationKey: ['clientCase', clientCase?.id],
         mutationFn: (data: Partial<IllustrationsClientCase>) =>
             patchIllustrationsClientCase(data),
@@ -128,18 +108,14 @@ const IllustrationCaseSumary = ({
                 queryKey: ['clientCaseData', clientCase.id],
             });
         },
-        onMutate: () => {
-            // add loading logic
-        },
         onError: () => {
-            // add error logic
+            const errorMessage = t('clientCase.errors.updateClientCase');
+            setBannerText(errorMessage);
         },
     });
 
-    const onSubmitForm = (clientCaseData: Partial<IllustrationsClientCase>) => {
-        mutate(clientCaseData);
-        closeSideSheet();
-    };
+    const onSubmitForm = (clientCaseData: Partial<IllustrationsClientCase>) =>
+        mutateAsync(clientCaseData).then(closeSideSheet);
 
     const isConversion =
         clientCase?.transactionType === TransactionType.CONVERSION;
@@ -153,6 +129,22 @@ const IllustrationCaseSumary = ({
 
     return (
         <header className={clsx(styles.header)}>
+            {!!bannerText && (
+                <BannerAlert
+                    bodyText={
+                        <Typography
+                            variant={TypographyVariant.BodySm}
+                            className={styles.bannerText}
+                        >
+                            {bannerText}
+                        </Typography>
+                    }
+                    variant={BannerVariant.Error}
+                    canDismiss
+                    onDismiss={() => setBannerText('')}
+                    className={styles.bannerWrapper}
+                />
+            )}
             <section>
                 <div className={clsx(styles.breadcrumb)}>
                     <Breadcrumb
@@ -268,5 +260,3 @@ const IllustrationCaseSumary = ({
         </header>
     );
 };
-
-export default IllustrationCaseSumary;

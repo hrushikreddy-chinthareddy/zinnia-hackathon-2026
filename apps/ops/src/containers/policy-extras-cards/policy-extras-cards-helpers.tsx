@@ -51,6 +51,7 @@ import {
     FeatureType,
     Rider,
     SubStandardRating,
+    RiskClass,
 } from '@zinnia/api-types/types/sor';
 
 import { RIDER_NOT_ELECTED } from './consts';
@@ -681,7 +682,10 @@ const RiderFormatConfig = {
     insuredAgeAtIssue: convertToString,
     partyId: convertToString,
     partyAgeAtIssue: convertToString,
-    riskClass: getRiskClass, //enum
+    riskClass: (value: RiskClass | undefined) => {
+        const { t } = i18n as I18n;
+        return getRiskClass(value, t);
+    }, //enum
     substandardRating: customGetSubstandardRating, //enum
     flatExtraType: getTranslationValues(
         'policy.extras.riders.flatExtraTypeValues'

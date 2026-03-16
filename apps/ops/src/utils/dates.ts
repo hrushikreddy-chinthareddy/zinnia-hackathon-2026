@@ -258,6 +258,16 @@ export const formatTaskTime = (
     return format(totalDays, t('allFields.day'));
 };
 
+export const formatDate = (date?: Date) => {
+    if (!date) {
+        return '';
+    }
+    const yyyy = pad(date.getFullYear(), 4);
+    const MM = pad(date.getMonth() + 1, 2);
+    const dd = pad(date.getDate(), 2);
+    return `${yyyy}-${MM}-${dd}`;
+};
+
 export const formatFeedTime = (isoString: string) => {
     return dayjs.utc(isoString).format('hh:mm a');
 };

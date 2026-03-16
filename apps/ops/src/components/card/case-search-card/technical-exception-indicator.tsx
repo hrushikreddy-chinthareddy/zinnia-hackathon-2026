@@ -28,10 +28,10 @@ const TechnicalDetailsIndicator: React.FC<TechnicalDetailsIndicatorProps> = ({
             <Tooltip
                 body={technicalExceptionMessage}
                 placement={PopoverPlacement.TopRight}
+                triggerAriaLabel={technicalExceptionMessage as string}
             >
                 <AlertExclamationIcon
-                    aria-label="Technical Exception"
-                    role="presentation"
+                    aria-hidden="true"
                     data-testid={'alert-exclamation-icon'}
                     width={16}
                     height={16}

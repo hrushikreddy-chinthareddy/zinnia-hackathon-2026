@@ -1,0 +1,107 @@
+.pronounsRow {
+    display: flex;
+    height: 1.5rem;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+}
+
+@media (min-width: 768px) {
+    .pronounsRow {
+        margin-left: 1rem;
+    }
+}
+
+@media (max-width: 767px) {
+    .pronounsRow {
+        margin-top: 0.5rem;
+    }
+}
+
+.pronounsText {
+    font: var(--typography-content-body-sm);
+    font-weight: var(--font-weight-content-value-font-weight);
+}
+
+.editButton {
+    height: 1rem;
+}
+
+.dobLabel {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+    vertical-align: middle;
+}
+
+.groupTwoFallback {
+    display: flex;
+    align-items: flex-start;
+    vertical-align: baseline;
+}
+
+.roleTagsRow {
+    margin-top: 0.25rem;
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 768px) {
+    .roleTagsRow {
+        flex-direction: row;
+        align-items: center;
+        vertical-align: middle;
+    }
+}
+
+.roleTagsWithIcon {
+    composes: roleTagsRow;
+}
+
+@media (min-width: 1024px) {
+    .roleTagsWithIcon {
+        padding-left: var(--measure-dimension-padding-4xl);
+    }
+}
+
+.tagsList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+.tagItem {
+    pointer-events: none;
+}
+
+.headerRowFlex {
+    flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+    .headerRowFlex {
+        flex-direction: row;
+    }
+}
+
+@media (max-width: 1023px) {
+    .headerRowFlex {
+        gap: 1rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .headerRowFlex {
+        gap: 0;
+    }
+}
+
+.groupOneFlex {
+    display: flex;
+    flex-direction: column;
+}
+
+@media (min-width: 1024px) {
+    .groupOneFlex {
+        flex-direction: row;
+    }
+}

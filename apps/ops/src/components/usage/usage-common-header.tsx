@@ -55,6 +55,10 @@ const UsageHeaderLayout = ({
                                     color="var(--color-links-color-global-link)"
                                 />
                             }
+                            triggerClassName="w-fit"
+                            triggerAriaLabel={
+                                t('allFields.moreInformation') as string
+                            }
                         >
                             {titleToolTip}
                         </Tooltip>

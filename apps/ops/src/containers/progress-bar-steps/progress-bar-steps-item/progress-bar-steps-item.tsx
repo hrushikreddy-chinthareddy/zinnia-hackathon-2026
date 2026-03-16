@@ -51,7 +51,8 @@ const ProgressBarStepsItem = ({
                 isActive && styles.active,
                 isDisabled && styles.disabled
             )}
-            disabled={isDisabled}
+            // accessibility: active tabs are not clickable
+            disabled={isDisabled || isActive}
             data-testid={ProgressBarStepsTest.StepsContainer}
             style={{ minWidth: `${stepWidth}px` }}
         >

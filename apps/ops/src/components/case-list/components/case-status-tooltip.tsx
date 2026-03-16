@@ -153,7 +153,7 @@ export const CaseStatusTooltip = ({
     singleCase,
 }: CaseStatusTooltipProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const statusTooltip = getStatusDetails({ singleCase, t }).statusTooltip;
+    const { statusTooltip, statusText } = getStatusDetails({ singleCase, t });
 
     const caseIdValue =
         singleCase.id ??
@@ -171,7 +171,8 @@ export const CaseStatusTooltip = ({
         <Tooltip
             placement={TooltipPlacement.TopRight}
             tooltipClassName="!w-auto"
-            triggerClassName="!z-10"
+            triggerClassName="!z-10 w-fit"
+            triggerAriaLabel={statusText}
             trigger={Trigger}
         >
             {statusTooltip}

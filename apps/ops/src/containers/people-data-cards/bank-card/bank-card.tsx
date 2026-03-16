@@ -118,17 +118,8 @@ export const BankCard = ({
                                     'general.permissionDeniedTooltip'
                                 )}
                             >
-                                <NavElement
-                                    size={NavElementSize.Small}
-                                    startIcon={
-                                        <AddIcon height={20} width={20} />
-                                    }
-                                    type={NavElementType.Button}
-                                    variant={NavElementVariant.Default}
-                                    disabled={!isEligible}
-                                >
-                                    {t('general.add')}
-                                </NavElement>
+                                <AddIcon height={20} width={20} />
+                                {t('general.add')}
                             </TempNavInactive>
                         ) : null}
                     </>

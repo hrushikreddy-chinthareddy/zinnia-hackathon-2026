@@ -86,6 +86,11 @@
     margin-right: var(--measure-dimension-padding-xs, 0.125rem);
 }
 
+.statusCell {
+    position: relative;
+    z-index: 2;
+}
+
 .noCases {
     padding: var(--measure-dimension-padding-3xl);
 }
