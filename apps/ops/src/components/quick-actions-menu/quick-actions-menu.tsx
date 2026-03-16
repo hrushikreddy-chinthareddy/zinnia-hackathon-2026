@@ -623,8 +623,6 @@ export const PolicyMenuContextualContent = ({
                     setIsModalOpen(false);
                     if (blob) {
                         openBlobInNewTab(blob);
-                    } else {
-                        //showErrorToast
                     }
                 }}
             />
