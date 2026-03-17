@@ -117,6 +117,46 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
     }
 );
 
+const downloadAsIsIllustrationPdf = async (
+    planCode: string,
+    policyNumber: string,
+    carrierId: string,
+    policyStatus: string
+) => {
+    try {
+        const response = await fetch(
+            `/api/policies/${planCode}/${policyNumber}/illustrations`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    carrierId: carrierId,
+                    policyStatus: policyStatus,
+                }),
+                headers: {
+                    'Content-Type': 'application/pdf',
+                },
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch PDF: ${response.statusText}`);
+        }
+
+        return await response.blob();
+    } catch (err) {
+        console.error('Error downloading PDF:', err);
+    }
+};
+
+const openBlobInNewTab = (blob: Blob) => {
+    const newTab = window.open('', '_blank');
+    const url = window.URL.createObjectURL(blob);
+
+    if (newTab) {
+        newTab.location.href = url;
+    }
+};
+
 export const PolicyMenuContextualContent = ({
     t,
     policy,
@@ -387,46 +427,6 @@ export const PolicyMenuContextualContent = ({
         select: (data) => data?.isEligible ?? false,
         enabled: asIsIllustrationsEnabled,
     });
-
-    const downloadAsIsIllustrationPdf = async (
-        planCode: string,
-        policyNumber: string,
-        carrierId: string,
-        policyStatus: string
-    ) => {
-        try {
-            const response = await fetch(
-                `/api/policies/${planCode}/${policyNumber}/illustrations`,
-                {
-                    method: 'POST',
-                    body: JSON.stringify({
-                        carrierId: carrierId,
-                        policyStatus: policyStatus,
-                    }),
-                    headers: {
-                        'Content-Type': 'application/pdf',
-                    },
-                }
-            );
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch PDF: ${response.statusText}`);
-            }
-
-            return await response.blob();
-        } catch (err) {
-            console.error('Error downloading PDF:', err);
-        }
-    };
-
-    const openBlobInNewTab = (blob: Blob) => {
-        const newTab = window.open('', '_blank');
-        const url = window.URL.createObjectURL(blob);
-
-        if (newTab) {
-            newTab.location.href = url;
-        }
-    };
 
     const handleIllustrationPdfDownload = async () => {
         setModalContent(modalLoadingContent);
