@@ -1,6 +1,12 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Toast, ToastVariant } from '@zinnia/bloom/components';
+import {
+    Heading,
+    HeadingVariant,
+    Loader,
+    Toast,
+    ToastVariant,
+} from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 import { useTranslation, TFunction } from 'next-i18next';
@@ -117,7 +123,7 @@ export const PolicyMenuContextualContent = ({
     const limit = 1;
     const offset = 0;
     const { sessionId, partyId: userPartyId } = usePermissionsContext();
-    const { setIsModalOpen } = useModalContext();
+    const { setIsModalOpen, setModalContent } = useModalContext();
 
     const { featureFlags } = useOptimizely();
 
@@ -409,6 +415,17 @@ export const PolicyMenuContextualContent = ({
         window.URL.revokeObjectURL(url);
     };
 
+    const modalLoadingContent = (
+        <div className="flex flex-col items-center gap-4">
+            <Loader />
+            <Heading as={HeadingVariant.h3}>
+                {t('additionalActions.downloadingPdf')}
+            </Heading>
+        </div>
+    );
+
+    const modalErrorContent = <span>Erroooorrr</span>;
+
     const { data: freelookCancellation } = useFreelookCancellation(
         policy.product?.planCode,
         policy.policyNumber
@@ -612,7 +629,7 @@ export const PolicyMenuContextualContent = ({
                 key="createAsIsIllustration"
                 content={t('additionalActions.createAsIsIllustration')}
                 onClick={async () => {
-                    console.log('POLICY> ', policy);
+                    setModalContent(modalLoadingContent);
                     setIsModalOpen(true);
                     const blob = await downloadAsIsIllustrationPdf(
                         policy.planCode as string,
@@ -623,6 +640,9 @@ export const PolicyMenuContextualContent = ({
                     setIsModalOpen(false);
                     if (blob) {
                         openBlobInNewTab(blob);
+                        setModalContent(null);
+                    } else {
+                        setModalContent(modalErrorContent);
                     }
                 }}
             />

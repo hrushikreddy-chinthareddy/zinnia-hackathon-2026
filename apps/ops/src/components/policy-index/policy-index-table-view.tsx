@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query';
-import { Heading, HeadingVariant, Loader } from '@zinnia/bloom/components';
 import { NextRouter, useRouter } from 'next/router';
 import { TFunction, useTranslation } from 'next-i18next';
 import { createContext, useContext, useEffect } from 'react';
@@ -129,7 +128,7 @@ export const PolicyIndexTableView = ({
 }: PolicyManagementDashboardProps) => {
     const { t } = useTranslation();
     const router = useRouter();
-    const { isModalOpen, setIsModalOpen } = useModalContext();
+    const { isModalOpen, setIsModalOpen, modalContent } = useModalContext();
 
     useSegmentPageTracker(user, SegmentPageName.PolicyManagementDashboard);
 
@@ -350,16 +349,7 @@ export const PolicyIndexTableView = ({
                         onCancel={() => {
                             setIsModalOpen(false);
                         }}
-                        content={
-                            <div className="flex flex-col items-center gap-4">
-                                <Loader />
-                                <Heading as={HeadingVariant.h3}>
-                                    {t(
-                                        'quickActions.additionalActions.downloadingPdf'
-                                    )}
-                                </Heading>
-                            </div>
-                        }
+                        content={modalContent}
                     />
                 )}
             </div>

@@ -1,4 +1,3 @@
-import { Heading, HeadingVariant, Loader } from '@zinnia/bloom/components';
 import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -25,7 +24,7 @@ import { PolicyDetailsCard } from '../policy-summary-card/policy-details-card';
 const AnnuityPolicyDetailsContainer = () => {
     const { policy, policyDetails } = useContext(PolicyData);
     const { t } = useTranslation();
-    const { isModalOpen, setIsModalOpen } = useModalContext();
+    const { isModalOpen, setIsModalOpen, modalContent } = useModalContext();
 
     return (
         <>
@@ -54,16 +53,7 @@ const AnnuityPolicyDetailsContainer = () => {
                     onCancel={() => {
                         setIsModalOpen(false);
                     }}
-                    content={
-                        <div className="flex flex-col items-center gap-4">
-                            <Loader />
-                            <Heading as={HeadingVariant.h3}>
-                                {t(
-                                    'quickActions.additionalActions.downloadingPdf'
-                                )}
-                            </Heading>
-                        </div>
-                    }
+                    content={modalContent}
                 />
             )}
         </>
@@ -73,7 +63,7 @@ const AnnuityPolicyDetailsContainer = () => {
 const LifePolicyDetailsContainer = () => {
     const { policyDetails } = useContext(PolicyData);
     const { t } = useTranslation();
-    const { isModalOpen, setIsModalOpen } = useModalContext();
+    const { isModalOpen, setIsModalOpen, modalContent } = useModalContext();
 
     return (
         <>
@@ -101,16 +91,7 @@ const LifePolicyDetailsContainer = () => {
                     onCancel={() => {
                         setIsModalOpen(false);
                     }}
-                    content={
-                        <div className="flex flex-col items-center gap-4">
-                            <Loader />
-                            <Heading as={HeadingVariant.h3}>
-                                {t(
-                                    'quickActions.additionalActions.downloadingPdf'
-                                )}
-                            </Heading>
-                        </div>
-                    }
+                    content={modalContent}
                 />
             )}
         </>
