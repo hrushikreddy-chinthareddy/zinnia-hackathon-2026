@@ -10,6 +10,8 @@ import {
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 
+import { convertKebabedDateString } from '@deps/helpers/string.helpers';
+import { V3DocumentWithSource } from '@deps/types/documents-v3';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 import { createViewDownloadAction } from './documents-results-table';
@@ -17,7 +19,7 @@ import styles from './documents-results-table.module.css';
 
 type IllustrationDocumentsTableProps = {
     carrierCode: string;
-    results: any; // TODO: fix type
+    results: V3DocumentWithSource[];
 };
 
 export default function IllustrationDocumentsTable({
@@ -62,16 +64,20 @@ export default function IllustrationDocumentsTable({
                         <TableRow key={`document-${document.documentId}`}>
                             <TableCell>
                                 <span className="flex flex-col items-start">
-                                    {document.name || DEFAULT_ERROR_STRING}
+                                    {document.displayName ||
+                                        DEFAULT_ERROR_STRING}
                                 </span>
                             </TableCell>
                             <TableCell>
                                 <span>
-                                    {document.created || DEFAULT_ERROR_STRING}
+                                    {convertKebabedDateString(
+                                        document.createDate
+                                    ) || DEFAULT_ERROR_STRING}
                                 </span>
                             </TableCell>
                             <TableCell>
                                 <span>
+                                    {/* // TODO: use the identifiers to get creator name */}
                                     {document.createdBy || DEFAULT_ERROR_STRING}
                                 </span>
                             </TableCell>

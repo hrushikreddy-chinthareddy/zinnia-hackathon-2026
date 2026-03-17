@@ -22,6 +22,7 @@ import {
     includeDocumentTypesInbound,
 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
+import { checkEligibilityAsIsInforceIllustration } from '@deps/queries/api/bpm';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
@@ -105,7 +106,8 @@ const NormalDocs = ({
         }
 
         const documentClassification =
-            documentType === DocumentTypeView.Policy
+            documentType === DocumentTypeView.Policy ||
+            documentType === DocumentTypeView.AsIsInforceIllustration
                 ? DocumentClassificationEnum.INBOUND
                 : DocumentClassificationEnum.OUTBOUND;
 
@@ -176,23 +178,32 @@ const NormalDocs = ({
         );
     }
 
+    const filteredPolicyDocuments =
+        documentType === DocumentTypeView.AsIsInforceIllustration
+            ? policyDocuments?.filter(
+                  (doc) => doc.documentType === 'AS-IS IN-FORCE ILLUSTRATION'
+              ) ?? []
+            : policyDocuments?.filter(
+                  (doc) => doc.documentType !== 'AS-IS IN-FORCE ILLUSTRATION'
+              ) ?? [];
+
     return (
         <>
             {isLoading ? (
                 <EventsLoader
                     message={t('policy.documents.loadingDocuments')}
                 />
-            ) : documentType === 'illustrations' ? (
+            ) : documentType === DocumentTypeView.AsIsInforceIllustration ? (
                 <IllustrationDocumentsTable
                     carrierCode={policy.carrierId ?? ''}
-                    results={policyDocuments ?? []}
+                    results={filteredPolicyDocuments}
                 />
             ) : (
                 <DocumentsResultsTable
                     carrierCode={policy.carrierId ?? ''}
                     documentType={documentType as DocumentTypeView}
                     policyNumber={policy.policyNumber ?? ''}
-                    results={policyDocuments ?? []}
+                    results={filteredPolicyDocuments}
                     planCode={policy.product?.planCode}
                     policyDeliveryDate={policy.policyDates?.policyDeliveryDate}
                     context="policy"
@@ -329,11 +340,22 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
         featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_AS_IS_ILLUSTRATIONS];
 
     const { data: BPMEligibility } = useQuery({
-        queryKey: ['checkBPMAsIsIllustrationEligibility'],
-        queryFn: () => {
-            // This is a placeholder variable, should be replaced with a BPM call to check eligibility
-            return true;
-        },
+        queryKey: [
+            'checkBPMAsIsIllustrationEligibility',
+            policy.product?.planCode,
+            policy.policyNumber,
+            policy.carrierId,
+            policy.policyStatus,
+        ],
+        queryFn: () =>
+            checkEligibilityAsIsInforceIllustration(
+                policy.product?.planCode as string,
+                policy.policyNumber as string,
+                policy.carrierId as string,
+                policy.policyStatus as string
+            ),
+        select: (data) => data?.isEligible ?? false,
+        enabled: asIsIllustrationsEnabled,
     });
 
     return (
@@ -382,7 +404,7 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         {asIsIllustrationsEnabled && BPMEligibility && (
                             <RadioGroup.Item
                                 className="chip"
-                                value={'illustrations'}
+                                value={DocumentTypeView.AsIsInforceIllustration}
                             >
                                 {t('policy.documents.illustrations') as string}
                             </RadioGroup.Item>
