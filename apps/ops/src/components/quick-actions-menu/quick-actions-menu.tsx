@@ -1,8 +1,11 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
+    Button,
     Heading,
     HeadingVariant,
+    Icon,
+    IconType,
     Loader,
     Toast,
     ToastVariant,
@@ -427,16 +430,66 @@ export const PolicyMenuContextualContent = ({
         window.URL.revokeObjectURL(url);
     };
 
+    const handleIllustrationPdfDownload = async () => {
+        setModalContent(modalLoadingContent);
+        setIsModalOpen(true);
+
+        const blob = await downloadAsIsIllustrationPdf(
+            policy.planCode as string,
+            policy.policyNumber as string,
+            policy.carrierId as string,
+            policy.policyStatus as string
+        );
+        if (blob) {
+            openBlobInNewTab(blob);
+            setIsModalOpen(false);
+            setModalContent(null);
+        } else {
+            setModalContent(modalErrorContent);
+        }
+    };
+
     const modalLoadingContent = (
         <div className="flex flex-col items-center gap-4">
             <Loader />
             <Heading as={HeadingVariant.h3}>
-                {t('additionalActions.downloadingPdf')}
+                {t('additionalActions.downloadIllustrationPdf')}
             </Heading>
         </div>
     );
 
-    const modalErrorContent = <span>Erroooorrr</span>;
+    const modalErrorContent = (
+        <div className="flex flex-col items-center gap-4">
+            <Icon
+                type={IconType.HEX_EXCLAMATION}
+                height={48}
+                width={48}
+                className={styles.exclamationMark}
+            />
+            <Heading as={HeadingVariant.h3}>
+                {t('additionalActions.downloadIllustrationPdfError')}
+            </Heading>
+            <Button
+                mode="primary"
+                type="button"
+                size="small"
+                onClick={handleIllustrationPdfDownload}
+            >
+                {t('additionalActions.retryIllustrationPdf')}
+            </Button>
+            <Button
+                mode="link"
+                type="button"
+                size="small"
+                onClick={() => {
+                    setIsModalOpen(false);
+                    setModalContent(null);
+                }}
+            >
+                {t('additionalActions.close')}
+            </Button>
+        </div>
+    );
 
     const { data: freelookCancellation } = useFreelookCancellation(
         policy.product?.planCode,
@@ -640,23 +693,7 @@ export const PolicyMenuContextualContent = ({
             <MenuContextualItem
                 key="createAsIsIllustration"
                 content={t('additionalActions.createAsIsIllustration')}
-                onClick={async () => {
-                    setModalContent(modalLoadingContent);
-                    setIsModalOpen(true);
-                    const blob = await downloadAsIsIllustrationPdf(
-                        policy.planCode as string,
-                        policy.policyNumber as string,
-                        policy.carrierId as string,
-                        policy.policyStatus as string
-                    );
-                    setIsModalOpen(false);
-                    if (blob) {
-                        openBlobInNewTab(blob);
-                        setModalContent(null);
-                    } else {
-                        setModalContent(modalErrorContent);
-                    }
-                }}
+                onClick={handleIllustrationPdfDownload}
             />
         );
     }

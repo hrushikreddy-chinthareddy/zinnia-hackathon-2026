@@ -49,7 +49,7 @@ const AnnuityPolicyDetailsContainer = () => {
                 <Modal
                     open={isModalOpen}
                     closeIcon="X"
-                    delayCloseIconMs={5}
+                    delayCloseIconMs={10}
                     onCancel={() => {
                         setIsModalOpen(false);
                     }}
@@ -87,7 +87,7 @@ const LifePolicyDetailsContainer = () => {
                 <Modal
                     open={isModalOpen}
                     closeIcon="X"
-                    delayCloseIconMs={5}
+                    delayCloseIconMs={10}
                     onCancel={() => {
                         setIsModalOpen(false);
                     }}

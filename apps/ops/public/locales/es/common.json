@@ -7618,7 +7618,10 @@
             "label": "Acciones adicionales",
             "createAsIsIllustration": "Crear el PDF de la ilustración as-is",
             "serviceRequestForm": "Soumettre une demande de service",
-            "downloadingPdf": "Preparando PDF como ilustración..."
+            "downloadIllustrationPdf": "Preparando PDF como ilustración...",
+            "downloadIllustrationPdfError": "Ocurrió un error al crear el PDF de Iustración",
+            "close": "Cerrar",
+            "retryIllustrationPdf": "Reintentar ilustración"
         },
         "transactions": {
             "label": "Transacciones",
