@@ -101,7 +101,7 @@ const generateTableContent = (
                 }`.trim() || DEFAULT_ERROR_STRING;
             const insuredDetailsLine = [
                 capitalize(insuredDetails?.sexAtBirth),
-                calculateAge(insuredDetails?.dateOfBirth?.toString(), ''),
+                calculateAge(insuredDetails?.dateOfBirth, ''),
                 insuredDetails?.state,
             ]
                 .filter(Boolean)
