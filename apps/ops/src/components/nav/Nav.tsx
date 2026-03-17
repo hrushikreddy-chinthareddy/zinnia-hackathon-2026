@@ -31,7 +31,6 @@ export interface NavProps {
 export interface NavGroup {
     heading?: string;
     items: NavItem[];
-    alignEnd?: boolean;
 }
 
 export type NavItem =
@@ -152,7 +151,7 @@ export const Nav = ({
                         tabIndex={isExpanded ? undefined : -1}
                     >
                         <Icon
-                            type={IconType.CHEVRON_DOUBLE}
+                            type={IconType.NAV_DISPLAY_CONTROL}
                             height={16}
                             width={16}
                             color="#676767"
@@ -193,8 +192,8 @@ export const Nav = ({
                             return (
                                 <div
                                     className={clsx(
-                                        styles.navSection,
-                                        group.alignEnd && styles.alignEnd
+                                        styles.navSection
+                                        // isExpanded && styles.expanded
                                     )}
                                     key={`navSection-${index}`}
                                 >
@@ -229,6 +228,7 @@ export const Nav = ({
                                                     triggerClassName={
                                                         styles.tooltipTrigger
                                                     }
+                                                    tabIndex={-1}
                                                     trigger={
                                                         // NavLink is not an actual element so we have to wrap it in this li
                                                         // so that the tooltip will have an element to attach to for proper location.
@@ -239,6 +239,7 @@ export const Nav = ({
                                                                 styles.listItem
                                                             )}
                                                             key={navItem.id}
+                                                            tabIndex={-1}
                                                         >
                                                             <NavLink
                                                                 renderComponent={
@@ -263,6 +264,7 @@ export const Nav = ({
                                                                     styles.listItem__link,
                                                                     'typography-content-body color-base-text-secondary'
                                                                 )}
+                                                                tabIndex={0}
                                                             >
                                                                 <>
                                                                     {navItem?.icon && (
@@ -284,7 +286,12 @@ export const Nav = ({
                                                                             />
                                                                         </div>
                                                                     )}
-                                                                    <span>
+
+                                                                    <span
+                                                                        className={
+                                                                            styles.listItem__text
+                                                                        }
+                                                                    >
                                                                         {
                                                                             navItem.display
                                                                         }

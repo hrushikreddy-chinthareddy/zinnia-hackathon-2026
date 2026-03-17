@@ -141,14 +141,14 @@ importers:
         specifier: ^1.6.9
         version: 1.6.9(eslint@8.57.1)(typescript@5.9.3)(vitest@4.0.18)
       '@zinnia/bloom':
-        specifier: ^9.0.2
-        version: 9.0.3(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1))
+        specifier: ^9.1.0
+        version: 9.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1))
       '@zinnia/form-engine-sdk':
         specifier: 3.1.0
         version: 3.1.0(@babel/core@7.29.0)(@jest/transform@29.7.0)(@jest/types@29.6.3)(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@20.19.35)(babel-jest@29.7.0(@babel/core@7.29.0))(babel-plugin-macros@3.1.0)(esbuild@0.18.20)(jest-util@29.7.0)(ts-node@10.9.2(@swc/core@1.15.1(@swc/helpers@0.5.17))(@types/node@20.19.35)(typescript@5.9.3))
       '@zinnia/xd-analytics-dashboard':
         specifier: 1.10.0
-        version: 1.10.0(@tanstack/react-query@5.90.7(react@18.3.1))(@zinnia/bloom@9.0.3(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1)))(@zinnia/xd-core@1.6.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zustand@4.5.7(@types/react@18.3.26)(immer@9.0.21)(react@18.3.1))
+        version: 1.10.0(@tanstack/react-query@5.90.7(react@18.3.1))(@zinnia/bloom@9.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1)))(@zinnia/xd-core@1.6.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zustand@4.5.7(@types/react@18.3.26)(immer@9.0.21)(react@18.3.1))
       ag-grid-community:
         specifier: 29.2.0
         version: 29.2.0
@@ -6293,8 +6293,8 @@ packages:
     resolution: {integrity: sha512-6xm38yGVIa6mKm/DUCF2zFFJhERh/QWp1ufm4cNUvxsONBmfPg8uZ9pZBdOmF6qFGr/HlT6ABBkCSx/dlEtvWg==}
     engines: {node: '>=12 <14 || 14.2 - 14.9 || >14.10.0'}
 
-  '@zinnia/bloom@9.0.3':
-    resolution: {integrity: sha512-jYEEbr8/tn/pNCkdRsJKr/+AGsMibigd6oiob/4KBWboZpFudu++PT0BVNIIk5hZxaNJfe9TwwwaKcdC5/zKzQ==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/9.0.3/150333872f1bb7447b10feabf87f360176084fee}
+  '@zinnia/bloom@9.1.1':
+    resolution: {integrity: sha512-P2tbdzm4bADKTRtfZ2Pc4E9cFB++EI2G7Ods+7DgpiWV2+JQ55vgXMyGz8516Zro89ABlpy94lIahD9BA8UXCQ==, tarball: https://npm.pkg.github.com/download/@zinnia/bloom/9.1.1/2ca3b2fef4f7a1971dba21a024ee78dffe381202}
     peerDependencies:
       react: ^18.2.0 || ^19.0.0
       react-dom: ^18.2.0 || ^19.0.0
@@ -6748,6 +6748,7 @@ packages:
   basic-ftp@5.1.0:
     resolution: {integrity: sha512-RkaJzeJKDbaDWTIPiJwubyljaEPwpVWkm9Rt5h9Nd6h7tEXTJ3VB4qxdZBioV7JO5yLUaOKwz7vDOzlncUsegw==}
     engines: {node: '>=10.0.0'}
+    deprecated: Security vulnerability fixed in 5.2.0, please upgrade
 
   bcrypt-pbkdf@1.0.2:
     resolution: {integrity: sha512-qeFIXtP4MSoi6NLqO12WfqARWWuCKi2Rn/9hJLEmtB5yTNr9DqFWkJRCf2qShWzPeAMRnOgCrq0sg/KLv5ES9w==}
@@ -10812,6 +10813,7 @@ packages:
   prebuild-install@7.1.3:
     resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
     engines: {node: '>=10'}
+    deprecated: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
     hasBin: true
 
   prelude-ls@1.2.1:
@@ -18851,9 +18853,9 @@ snapshots:
   '@react-stately/grid@3.11.6(react@18.3.1)':
     dependencies:
       '@react-stately/collections': 3.12.8(react@18.3.1)
-      '@react-stately/selection': 3.20.6(react@18.3.1)
-      '@react-types/grid': 3.3.6(react@18.3.1)
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-stately/selection': 3.20.8(react@18.3.1)
+      '@react-types/grid': 3.3.7(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       '@swc/helpers': 0.5.17
       react: 18.3.1
 
@@ -19169,8 +19171,8 @@ snapshots:
 
   '@react-types/calendar@3.8.0(react@18.3.1)':
     dependencies:
-      '@internationalized/date': 3.10.0
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@internationalized/date': 3.11.0
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/calendar@3.8.2(react@18.3.1)':
@@ -19181,7 +19183,7 @@ snapshots:
 
   '@react-types/checkbox@3.10.2(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/checkbox@3.10.3(react@18.3.1)':
@@ -19191,7 +19193,7 @@ snapshots:
 
   '@react-types/color@3.1.2(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       '@react-types/slider': 3.8.2(react@18.3.1)
       react: 18.3.1
 
@@ -19208,15 +19210,15 @@ snapshots:
 
   '@react-types/combobox@3.13.9(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/datepicker@3.13.2(react@18.3.1)':
     dependencies:
-      '@internationalized/date': 3.10.0
+      '@internationalized/date': 3.11.0
       '@react-types/calendar': 3.8.0(react@18.3.1)
       '@react-types/overlays': 3.9.2(react@18.3.1)
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/datepicker@3.13.4(react@18.3.1)':
@@ -19240,7 +19242,7 @@ snapshots:
 
   '@react-types/grid@3.3.6(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/grid@3.3.7(react@18.3.1)':
@@ -19261,7 +19263,7 @@ snapshots:
   '@react-types/menu@3.10.5(react@18.3.1)':
     dependencies:
       '@react-types/overlays': 3.9.2(react@18.3.1)
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/menu@3.10.6(react@18.3.1)':
@@ -19277,7 +19279,7 @@ snapshots:
 
   '@react-types/numberfield@3.8.15(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/numberfield@3.8.17(react@18.3.1)':
@@ -19287,7 +19289,7 @@ snapshots:
 
   '@react-types/overlays@3.9.2(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/overlays@3.9.3(react@18.3.1)':
@@ -19302,7 +19304,7 @@ snapshots:
 
   '@react-types/radio@3.9.2(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/radio@3.9.3(react@18.3.1)':
@@ -19312,7 +19314,7 @@ snapshots:
 
   '@react-types/searchfield@3.6.6(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       '@react-types/textfield': 3.12.6(react@18.3.1)
       react: 18.3.1
 
@@ -19324,7 +19326,7 @@ snapshots:
 
   '@react-types/select@3.11.0(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/select@3.12.1(react@18.3.1)':
@@ -19342,7 +19344,7 @@ snapshots:
 
   '@react-types/slider@3.8.2(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/slider@3.8.3(react@18.3.1)':
@@ -19357,8 +19359,8 @@ snapshots:
 
   '@react-types/table@3.13.4(react@18.3.1)':
     dependencies:
-      '@react-types/grid': 3.3.6(react@18.3.1)
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/grid': 3.3.7(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/table@3.13.5(react@18.3.1)':
@@ -19369,7 +19371,7 @@ snapshots:
 
   '@react-types/tabs@3.3.19(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/tabs@3.3.21(react@18.3.1)':
@@ -19379,7 +19381,7 @@ snapshots:
 
   '@react-types/textfield@3.12.6(react@18.3.1)':
     dependencies:
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/textfield@3.12.7(react@18.3.1)':
@@ -19390,7 +19392,7 @@ snapshots:
   '@react-types/tooltip@3.4.21(react@18.3.1)':
     dependencies:
       '@react-types/overlays': 3.9.2(react@18.3.1)
-      '@react-types/shared': 3.32.1(react@18.3.1)
+      '@react-types/shared': 3.33.0(react@18.3.1)
       react: 18.3.1
 
   '@react-types/tooltip@3.5.1(react@18.3.1)':
@@ -21905,7 +21907,7 @@ snapshots:
       '@types/emscripten': 1.41.5
       tslib: 1.14.1
 
-  '@zinnia/bloom@9.0.3(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1))':
+  '@zinnia/bloom@9.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1))':
     dependencies:
       '@ariakit/react': 0.4.19(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-accordion': 1.2.12(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -21977,10 +21979,10 @@ snapshots:
       - supports-color
       - ts-node
 
-  '@zinnia/xd-analytics-dashboard@1.10.0(@tanstack/react-query@5.90.7(react@18.3.1))(@zinnia/bloom@9.0.3(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1)))(@zinnia/xd-core@1.6.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zustand@4.5.7(@types/react@18.3.26)(immer@9.0.21)(react@18.3.1))':
+  '@zinnia/xd-analytics-dashboard@1.10.0(@tanstack/react-query@5.90.7(react@18.3.1))(@zinnia/bloom@9.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1)))(@zinnia/xd-core@1.6.0(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zustand@4.5.7(@types/react@18.3.26)(immer@9.0.21)(react@18.3.1))':
     dependencies:
       '@tanstack/react-query': 5.90.7(react@18.3.1)
-      '@zinnia/bloom': 9.0.3(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1))
+      '@zinnia/bloom': 9.1.1(@types/react-dom@18.3.7(@types/react@18.3.26))(@types/react@18.3.26)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@20.19.35)(jiti@1.21.7)(less@4.4.2)(terser@5.46.0)(yaml@2.8.1))
       '@zinnia/xd-core': 1.6.0(react@18.3.1)
       clsx: 2.1.1
       dayjs: 1.11.19

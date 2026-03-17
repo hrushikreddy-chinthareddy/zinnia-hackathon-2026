@@ -37,7 +37,7 @@
 
 .toggleButton {
     justify-content: flex-end;
-    transform: rotate(90deg);
+    transform: rotate(180deg);
     &:hover:not(:disabled):after {
         content: none;
     }
@@ -137,14 +137,14 @@ div:has(> .searchInput)::before {
         padding-block-end: var(--measure-dimension-z-space-2);
     }
 
-    &.alignEnd {
+    &:last-of-type {
         margin-top: auto;
     }
-}
 
-/* remove the separation border from the second to last nav section if the last one is aligned to the end */
-.navList:has(.alignEnd) .navSection:nth-last-child(2) {
-    border-bottom: none;
+    /* &:not(.expanded) {
+        display: inline-flex;
+        justify-content: center;
+    } */
 }
 
 .navSection__heading {
@@ -154,6 +154,10 @@ div:has(> .searchInput)::before {
 
 .listItem {
     list-style: none;
+    width: 100%; /* Fallback for unsupported browsers */
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: stretch; /* Standard value */
 }
 
 .navSection__heading {
@@ -185,6 +189,7 @@ div:has(> .searchInput)::before {
 
 .listItem__link {
     display: flex;
+    container-type: inline-size;
     align-items: center;
     border: var(--measure-dimension-stroke-xs) solid transparent;
     gap: var(--measure-dimension-z-space-2);
@@ -217,9 +222,25 @@ div:has(> .searchInput)::before {
     padding-left: 1px; /* This aligns the icon correctly in collapsed state */
 }
 
+.listItem__text {
+    @container (max-width: 32px) {
+        display: none;
+    }
+}
+
 /* Since we're using max width it needs to be the change value (1024px) minus 1 */
 @media (max-width: 1023px) {
     .toggleTarget {
         display: none;
+    }
+}
+
+.zinniaLogo {
+    display: grid;
+    place-items: center;
+
+    &:hover {
+        background-color: var(--color-grayscale-color-white);
+        border-radius: var(--measure-dimension-z-space-1);
     }
 }

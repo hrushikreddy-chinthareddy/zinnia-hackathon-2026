@@ -47,7 +47,9 @@ export const UserContextMenu: FC<{ name: string }> = (props) => {
                     )}
                 >
                     <Icon className={styles.icon} type={IconType.USER} />
-                    <span>{firstNameAndLastInitial(props.name)}</span>
+                    <span className={styles.name}>
+                        {firstNameAndLastInitial(props.name)}
+                    </span>
                 </button>
             }
         >
