@@ -1,19 +1,19 @@
 import { AxiosResponse } from 'axios';
 
+import { CLIENT_CASE_MANAGER_API_ORIGIN } from '@deps/components/client-case/client-case-list/sureify-flow/constants';
 import { apiServerBaseUrl } from '@deps/queries/api-config';
 import { serverApi } from '@deps/queries/api-utils/serverApiClient';
 import { throwTypedError } from '@deps/queries/api-utils/throwTypedError';
 import {
-    IllustraionsClientCaseSearchResponse,
+    IllustrationsClientCaseSearchResponse,
     IllustrationsClientCase,
 } from '@deps/types/illustrations';
 import { LoggingContext } from '@deps/utils/server-logging';
 
-export const CLIENT_CASE_MANAGER_API_ORIGIN = 'client-case-manager-api';
 export const searchClientCaseByEappId = async (
     eAppId: string,
     token: string,
-    loggingContext: LoggingContext
+    logCtx: LoggingContext
 ) => {
     try {
         const config = {
@@ -27,8 +27,8 @@ export const searchClientCaseByEappId = async (
         const searchUrl = `${apiServerBaseUrl}/client-case-manager/v1/client-case/search?eAppId=${eAppId}`;
         const { data: searchResponse } = await serverApi.get<
             any,
-            AxiosResponse<IllustraionsClientCaseSearchResponse>
-        >(searchUrl, config, loggingContext);
+            AxiosResponse<IllustrationsClientCaseSearchResponse>
+        >(searchUrl, config, logCtx);
 
         return searchResponse.results || [];
     } catch (error: any) {

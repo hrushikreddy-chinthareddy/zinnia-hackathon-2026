@@ -72,6 +72,9 @@ const getStageStatusIconTooltip = (
     let icon = null;
     let tooltipBody = null;
     let contentBody = null;
+    const statusLabel = t(`enums.${stage.status}`, {
+        defaultValue: stage.status,
+    }) as string;
 
     switch (stage.status) {
         case Statuses.Completed:
@@ -152,10 +155,12 @@ const getStageStatusIconTooltip = (
                 <Tooltip
                     body={tooltipBody}
                     placement={PopoverPlacement.TopLeft}
+                    isTabbable={false}
                 >
                     <Typography
                         className="text-gray-600"
                         variant={TypographyVariant.BodySm}
+                        aria-hidden="true"
                     >
                         {contentBody}
                     </Typography>
@@ -163,9 +168,13 @@ const getStageStatusIconTooltip = (
                 <Tooltip
                     body={tooltipBody}
                     placement={PopoverPlacement.TopLeft}
+                    isTabbable={false}
                 >
-                    {icon}
+                    <span aria-hidden="true">{icon}</span>
                 </Tooltip>
+                <span className="sr-only">
+                    {statusLabel}, {tooltipBody}
+                </span>
             </>
         );
     } else {

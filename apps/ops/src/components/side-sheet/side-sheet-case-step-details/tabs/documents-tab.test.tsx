@@ -128,6 +128,7 @@ describe('DocumentsTab', () => {
                             ? 'Test Document'
                             : 'Download Document',
                     documentType: 'pdf',
+                    fileType: 'pdf',
                 },
             } as Awaited<ReturnType<typeof getEDSMetadata>>)
         );
@@ -209,9 +210,9 @@ describe('DocumentsTab', () => {
         });
 
         await waitFor(() => {
-            expect(
-                screen.getAllByTestId('download-document-button')
-            ).toHaveLength(1);
+            expect(screen.getAllByTestId('view-document-button')).toHaveLength(
+                1
+            );
         });
     });
 
@@ -231,11 +232,10 @@ describe('DocumentsTab', () => {
             wrapper: createWrapper(),
         });
 
-        // Component displays documents from EDS metadata (id, name only), so
-        // createViewDownloadAction receives empty fileType and shows download button
+        // mockDocument has fileType 'pdf', so createViewDownloadAction shows View button
         await waitFor(() => {
             expect(
-                screen.getByTestId('download-document-button')
+                screen.getByTestId('view-document-button')
             ).toBeInTheDocument();
         });
     });
@@ -247,6 +247,7 @@ describe('DocumentsTab', () => {
                 documentId: downloadDocument.id,
                 displayName: 'Download Document',
                 documentType: 'docx',
+                fileType: 'docx',
             },
         } as Awaited<ReturnType<typeof getEDSMetadata>>);
 

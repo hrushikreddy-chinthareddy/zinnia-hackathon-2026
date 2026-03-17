@@ -20,6 +20,7 @@ interface Props {
     triggerClassName?: string;
     popoverClassName?: string;
     isTabbable?: boolean;
+    triggerAriaLabel?: string;
 }
 
 const Tooltip = ({
@@ -29,6 +30,7 @@ const Tooltip = ({
     triggerClassName,
     popoverClassName,
     isTabbable = true,
+    triggerAriaLabel,
 }: Props) => {
     const { side, align } = getPlacementProps(placement);
 
@@ -41,12 +43,15 @@ const Tooltip = ({
     return (
         <ReactTooltip.Provider>
             <ReactTooltip.Root>
-                <ReactTooltip.Trigger
-                    className={clsx(commonTriggerClasses, triggerClassName)}
-                    data-testid={TooltipTest.Tooltip}
-                    tabIndex={isTabbable ? 0 : -1}
-                >
-                    {children}
+                <ReactTooltip.Trigger asChild>
+                    <span
+                        className={clsx(commonTriggerClasses, triggerClassName)}
+                        data-testid={TooltipTest.Tooltip}
+                        tabIndex={isTabbable ? 0 : -1}
+                        aria-label={triggerAriaLabel}
+                    >
+                        {children}
+                    </span>
                 </ReactTooltip.Trigger>
                 <ReactTooltip.Portal>
                     <ReactTooltip.Content

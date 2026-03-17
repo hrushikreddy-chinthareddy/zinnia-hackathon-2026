@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import { useTranslation } from 'next-i18next';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import xss from 'xss';
 
 import AssistiveText, {
@@ -15,6 +15,8 @@ import FieldDateSelect, {
     DATE_PICKER_FORMAT,
 } from '@deps/components/fields/field-date-select/field-date-select';
 import SelectSimple from '@deps/components/select/select';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import {
     getFormattedDate,
     getFormattedZaharaDate,
@@ -24,6 +26,7 @@ import {
     Frequency,
     RMDProgram,
 } from '@deps/models/case/withdrawal/case';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { RmdOptionsFieldsConfig } from './rmd-method';
 
@@ -44,6 +47,10 @@ export default function RMDOptions({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.rmdMethod',
     });
+    const { featureFlags } = useOptimizely();
+    const { isLC } = useContext(FormDataContext);
+    const prefillRmdAmountEnabled =
+        !isLC && featureFlags?.[FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC];
     const today = dayjs().format(DATE_PICKER_FORMAT);
 
     const formStartDate = getFormattedDate(
@@ -66,11 +73,28 @@ export default function RMDOptions({
             setShowAmount(!showAmount);
         }
     };
+    // Show amount field when value exists (prefill on → whenever there's an amount; off → only in read-only). Sync parent amount into local state when prepopulated.
     useEffect(() => {
-        if (isFormStateReadOnly && rmdData?.amount?.text != null) {
+        const hasAmount =
+            rmdData?.amount?.text != null &&
+            String(rmdData.amount.text).trim() !== '';
+        const amountValueFromParent =
+            rmdData?.amount?.text != null &&
+            String(rmdData.amount.text).trim() !== ''
+                ? String(rmdData.amount.text).trim()
+                : '';
+
+        const shouldShowAmount = prefillRmdAmountEnabled
+            ? hasAmount
+            : isFormStateReadOnly && hasAmount;
+        if (shouldShowAmount) {
             setShowAmount(true);
         }
-    }, [rmdData?.amount?.text, isFormStateReadOnly]);
+
+        if (prefillRmdAmountEnabled && amountValueFromParent !== '') {
+            setAmount((prev) => (prev === '' ? amountValueFromParent : prev));
+        }
+    }, [rmdData?.amount?.text, prefillRmdAmountEnabled, isFormStateReadOnly]);
 
     useEffect(() => {
         onDataChange({

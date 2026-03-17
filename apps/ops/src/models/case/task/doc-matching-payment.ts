@@ -1,16 +1,3 @@
-export type PotentialMatches = {
-    id?: string;
-    entityType: string;
-    applicationId: string;
-    zlCaseId: string;
-    policyNumber: string;
-    taxId: string;
-    firstName: string;
-    lastName: string;
-    processSubtype: string;
-    correlationid: string;
-};
-
 export enum MatchingCaseTypes {
     NB_APPLICATION_DATA = 'Incoming Transfer',
     RMD_APP_DATA = 'RMD Application',

@@ -326,7 +326,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                     <Tooltip
                         placement={TooltipPlacement.TopRight}
                         tooltipClassName="!w-auto"
-                        triggerClassName="!z-10"
+                        triggerClassName="!z-10 w-fit"
                         trigger={
                             <div className="flex items-center justify-center rounded border-2 border-gray-100 bg-white h-6 w-6">
                                 <Image
@@ -384,7 +384,7 @@ const CaseTableRow = ({ singleCase, searchValues }: CaseTableRowProps) => {
                             </Typography>
                         }
                         tooltipClassName="!w-auto"
-                        triggerClassName="!z-10"
+                        triggerClassName="!z-10 w-fit"
                     >
                         {formatTimestamp(
                             singleCase.createdAt,

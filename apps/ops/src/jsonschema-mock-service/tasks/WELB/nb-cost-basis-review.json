@@ -191,6 +191,37 @@
                                                     "type": "number",
                                                     "title": "Post tefra",
                                                     "minimum": 0
+                                                },
+                                                "taxYear": {
+                                                    "type": "string",
+                                                    "title": "Tax year",
+                                                    "maxLength": 4,
+                                                    "pattern": "^[A-Za-z0-9]*$",
+                                                    "trim": true
+                                                },
+                                                "currentContributionAmount": {
+                                                    "type": "number",
+                                                    "title": "Current contribution amount",
+                                                    "minimum": 0,
+                                                    "default": 0
+                                                },
+                                                "priorContributionAmount": {
+                                                    "type": "number",
+                                                    "title": "Prior contribution amount",
+                                                    "minimum": 0,
+                                                    "default": 0
+                                                },
+                                                "totalBasis": {
+                                                    "type": "number",
+                                                    "title": "Total basis",
+                                                    "minimum": 0,
+                                                    "default": 0
+                                                },
+                                                "post88Amount": {
+                                                    "type": "number",
+                                                    "title": "Post 88 amount",
+                                                    "minimum": 0,
+                                                    "default": 0
                                                 }
                                             }
                                         }
@@ -364,6 +395,46 @@
                             }
                         },
                         "postTefra": {
+                            "ui:options": {
+                                "label": true,
+                                "inline": true,
+                                "widget": "ValueWidget",
+                                "dataType": "amount"
+                            }
+                        },
+                        "taxYear": {
+                            "inline": true,
+                            "ui:placeholder": "eg: 2025",
+                            "ui:options": {
+                                "label": true
+                            },
+                            "ui:hideError": true
+                        },
+                        "currentContributionAmount": {
+                            "ui:options": {
+                                "label": true,
+                                "inline": true,
+                                "widget": "ValueWidget",
+                                "dataType": "amount"
+                            }
+                        },
+                        "priorContributionAmount": {
+                            "ui:options": {
+                                "label": true,
+                                "inline": true,
+                                "widget": "ValueWidget",
+                                "dataType": "amount"
+                            }
+                        },
+                        "totalBasis": {
+                            "ui:options": {
+                                "label": true,
+                                "inline": true,
+                                "widget": "ValueWidget",
+                                "dataType": "amount"
+                            }
+                        },
+                        "post88Amount": {
                             "ui:options": {
                                 "label": true,
                                 "inline": true,

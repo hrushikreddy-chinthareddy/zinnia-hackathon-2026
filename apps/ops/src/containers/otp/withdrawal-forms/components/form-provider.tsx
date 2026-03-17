@@ -46,6 +46,8 @@ type FormProviderProps = {
     partyRoles?: PolicyPartyRoles[];
     systematicPrograms?: SystematicSpecialPrograms[] | [];
     isLC?: boolean;
+    /** Remaining RMD amount from policy (for One-Time RMD prepopulation) */
+    remainingRmdAmount?: number | null;
 };
 
 const getFundWithdrawnMethod = (form: ActiveWithdrawalCase) => {
@@ -102,6 +104,7 @@ export const FormProvider = ({
     partyRoles,
     systematicPrograms,
     isLC = false,
+    remainingRmdAmount,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
     const [formData, setFormData] = useState(form?.data?.formRequest?.formData);
@@ -286,6 +289,7 @@ export const FormProvider = ({
                 formPeriodicPension,
                 policySystematicPrograms,
                 isLC,
+                remainingRmdAmount,
                 bankDetails,
                 setBankDetails,
                 setFormPeriodicPension,

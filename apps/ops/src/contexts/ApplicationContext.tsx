@@ -11,6 +11,7 @@ import ErrorBoundary from '@deps/components/error-boundary/error-boundary';
 import { LayoutWrapper } from '@deps/containers/layout-wrapper/layout-wrapper';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
 
+import ModalProvider from './ModalContext';
 import { OptimizelyProvider } from './OptimizelyContext';
 import { PermissionsProvider } from './PermissionsContext';
 import { PolicySearchFiltersProvider } from './PolicySearchFilters';
@@ -128,11 +129,13 @@ export const ApplicationDataProvider: React.FC<
                         <SideSheetProviderLegacy>
                             <SearchBarProvider>
                                 <PolicySearchFiltersProvider>
-                                    <ApplicationComponentWrapper>
-                                        <LayoutWrapper>
-                                            {children}
-                                        </LayoutWrapper>
-                                    </ApplicationComponentWrapper>
+                                    <ModalProvider>
+                                        <ApplicationComponentWrapper>
+                                            <LayoutWrapper>
+                                                {children}
+                                            </LayoutWrapper>
+                                        </ApplicationComponentWrapper>
+                                    </ModalProvider>
                                 </PolicySearchFiltersProvider>
                             </SearchBarProvider>
                         </SideSheetProviderLegacy>

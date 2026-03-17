@@ -118,8 +118,6 @@ export default function IllustrationDetailsToolbar({
             if (newTab) {
                 newTab.location.href = url;
             }
-
-            window.URL.revokeObjectURL(url);
         } catch (error) {
             console.error('Error downloading PDF:', error);
         }

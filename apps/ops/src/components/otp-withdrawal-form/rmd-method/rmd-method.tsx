@@ -16,6 +16,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import CardContainer from '@deps/containers/card-container/card-container';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { CaseType, Processes } from '@deps/models/case/case';
 import {
@@ -28,6 +29,7 @@ import {
 } from '@deps/models/case/withdrawal/case';
 import { ReactComponent as RemoveIcon } from '@deps/styles/elements/icons/icons_outlined/trash.svg';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import ExistingPrograms from './existing-programs';
 import RMDCalculator, { findOverlaps } from './rmd-calculator';
@@ -105,7 +107,10 @@ export default function RMDMethod({
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.rmdMethod',
     });
-    const { formProgram, setFormProgram, formErrors } =
+    const { featureFlags } = useOptimizely();
+    const prefillRmdAmountEnabled =
+        featureFlags?.[FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC];
+    const { formProgram, setFormProgram, formErrors, remainingRmdAmount } =
         useContext(FormDataContext);
 
     const [rmdRows, setrmdRows] = useState<RMDMethodId[]>(
@@ -177,6 +182,43 @@ export default function RMDMethod({
     const removeRmdRow = (i: number) => {
         setrmdRows((val) => val.filter((x, index) => i !== index));
     };
+
+    // One-Time RMD: prepopulate RMD Amount from API (FAST only; behind prefill_rmd_amount_for_fast_dlic)
+    useEffect(() => {
+        if (
+            !isLC &&
+            prefillRmdAmountEnabled &&
+            rmdMethod === RMDType.OneTimeRMD &&
+            Number(remainingRmdAmount) > 0 &&
+            rmdRows.length > 0
+        ) {
+            const firstRow = rmdRows[0];
+            const currentAmount = firstRow?.amount?.text?.trim();
+            if (!currentAmount) {
+                const amountText = Number(remainingRmdAmount).toFixed(2);
+                setrmdRows((prev) =>
+                    prev.map((row, i) =>
+                        i === 0
+                            ? {
+                                  ...row,
+                                  amount: {
+                                      ...row.amount,
+                                      text: amountText,
+                                      amountType: AmountType.Dollar,
+                                  },
+                              }
+                            : row
+                    )
+                );
+            }
+        }
+    }, [
+        isLC,
+        prefillRmdAmountEnabled,
+        rmdMethod,
+        remainingRmdAmount,
+        rmdRows.length,
+    ]);
 
     useEffect(() => {
         const programs = rmdRows.map((method) => {

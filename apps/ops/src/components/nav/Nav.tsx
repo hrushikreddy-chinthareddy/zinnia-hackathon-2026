@@ -226,7 +226,6 @@ export const Nav = ({
                                                         !isExpanded &&
                                                             styles.visible
                                                     )}
-                                                    replaceElement
                                                     triggerClassName={
                                                         styles.tooltipTrigger
                                                     }

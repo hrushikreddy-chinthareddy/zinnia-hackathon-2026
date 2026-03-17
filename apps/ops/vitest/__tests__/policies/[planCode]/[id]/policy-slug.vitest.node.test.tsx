@@ -4,24 +4,22 @@ import { describe, vi, beforeEach, test, expect } from 'vitest';
 
 import PolicySlug from '@deps/containers/policy-slug/policy-slug';
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
+import {
+    activityTransactionsHandler,
+    documentsHandlers,
+    fundsEligibilityHandlers,
+    personEligibilityHandlers,
+} from '@vitest/helpers/policy/shared/policy-msw-handlers';
+import {
+    createMockRouter,
+    createMockPolicyPageProps,
+} from '@vitest/helpers/policy/shared/policy-test-fixtures';
 import { server } from '@vitest/mocks/node';
 import policyEndpointData from '@vitest/mocks/policyPage/policyEndpointData.json';
 import {
     createTestWrapper,
     CreateTestWrapperOptions,
 } from '@vitest/utils/create-test-wrapper';
-
-import {
-    activityTransactionsHandler,
-    documentsHandlers,
-    formMetadataHandler,
-    fundsEligibilityHandlers,
-    personEligibilityHandlers,
-} from './helpers/policy-msw-handlers';
-import {
-    createMockRouter,
-    createMockPolicyPageProps,
-} from './helpers/policy-test-fixtures';
 
 let mockRouter = createMockRouter();
 
@@ -164,9 +162,9 @@ describe('Policy Slug Page', () => {
             expect(personHeading).toBeInTheDocument();
 
             // Should show Identification card
-            const identificationHeading = await screen.findByText(
-                'Identification'
-            );
+            const identificationHeading = await screen.findByRole('heading', {
+                name: 'Identification',
+            });
             expect(identificationHeading).toBeInTheDocument();
         });
         test('renders nothing when second slug is assigneechange IF transactionData is null', async () => {
@@ -231,10 +229,7 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'assigneechange'],
             });
 
-            renderPolicyPage([
-                formMetadataHandler,
-                ...personEligibilityHandlers,
-            ]);
+            renderPolicyPage(personEligibilityHandlers);
 
             // Verify Beneficiary Details card renders (shows for transaction page)
             const beneficiaryDetailsHeading = await screen.findByRole(
@@ -252,10 +247,7 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'benechange'],
             });
 
-            renderPolicyPage([
-                formMetadataHandler,
-                ...personEligibilityHandlers,
-            ]);
+            renderPolicyPage(personEligibilityHandlers);
 
             // Verify Beneficiary Details card renders (shows for transaction page)
             const beneficiaryDetailsHeading = await screen.findByRole(
@@ -273,13 +265,10 @@ describe('Policy Slug Page', () => {
                 slug: ['people', 'c8a283b5d8d540a29fe71aad239c0352'],
             });
 
-            renderPolicyPage([
-                formMetadataHandler,
-                ...personEligibilityHandlers,
-            ]);
+            renderPolicyPage(personEligibilityHandlers);
 
             // Wait for PersonSubPage to load by checking for Identification card
-            await screen.findByText('Identification');
+            await screen.findByRole('heading', { name: 'Identification' });
 
             // Verify Allocation card renders (only shows for beneficiaries)
             const allocationHeading = await screen.findByRole('heading', {
@@ -382,18 +371,6 @@ describe('Policy Slug Page', () => {
     });
 
     describe('activity route', () => {
-        test('renders ActivitySubPage when REVISED_HISTORY_TABLE flag is off', async () => {
-            mockRouter = createMockRouter({
-                slug: ['activity', 'transactions'],
-            });
-            renderPolicyPage([activityTransactionsHandler]);
-
-            const heading = await screen.findByRole('heading', {
-                name: 'Activity',
-            });
-            expect(heading).toBeInTheDocument();
-        });
-
         test('renders FilterTransactions for activity/transactions when REVISED_HISTORY_TABLE flag is on', async () => {
             mockRouter = createMockRouter({
                 slug: ['activity', 'transactions'],

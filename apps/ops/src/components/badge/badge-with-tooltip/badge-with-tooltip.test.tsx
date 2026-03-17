@@ -37,6 +37,18 @@ describe('BadgeWithTooltip Component', () => {
         });
     });
 
+    it('has aria-label on the trigger matching the badge label for screen readers', () => {
+        render(
+            <BadgeWithTooltip
+                label="Active"
+                tooltip="Tooltip Text"
+                variant={BadgeVariant.Default}
+            />
+        );
+
+        expect(screen.getByLabelText('Active')).toBeInTheDocument();
+    });
+
     it('does not display the tooltip with the provided text when unhovered', async () => {
         const user = userEvent.setup();
         render(

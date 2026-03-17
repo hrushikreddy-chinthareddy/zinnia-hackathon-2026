@@ -66,6 +66,80 @@ import nextI18nextConfig from 'next-i18next.config';
 
 import { ERROR_CODES } from '../create-case/error';
 
+/** Policy shape needed for RMD prefill (subset of Policy from API) */
+interface PolicyWithRmd {
+    requiredMinimumDistribution?: {
+        remainingRequiredMinimumDistributionAmount?: number | string;
+    };
+}
+
+/** Form/task data shape where RMD amount can live (nigo-entry form) */
+interface FormDataWithRmd {
+    data?: {
+        details?: {
+            remainingRequiredMinimumDistributionAmount?: number | string;
+        };
+        remainingRequiredMinimumDistributionAmount?: number | string;
+        formRequest?: {
+            formProgram?: {
+                rmd?: {
+                    remainingRequiredMinimumDistributionAmount?:
+                        | number
+                        | string;
+                };
+            };
+        };
+    };
+}
+
+/**
+ * Computes remainingRmdAmountFromPolicyNumber for nigo-entry getServerSideProps.
+ * Used when FF PREFILL_RMD_AMOUNT_FOR_FAST_DLIC is on and caseType is not Renewal (FAST only).
+ */
+function getRemainingRmdAmountFromPolicyNumber(
+    featureFlagDecisions: Record<string, boolean> | undefined,
+    caseType: CaseType,
+    policy: PolicyWithRmd | null | undefined
+): number | undefined {
+    const featureFlagOn = Boolean(
+        featureFlagDecisions?.[FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]
+    );
+    const remainingRmdAmountFromPolicy =
+        featureFlagOn && caseType !== CaseType.Renewal
+            ? policy?.requiredMinimumDistribution
+                  ?.remainingRequiredMinimumDistributionAmount
+            : undefined;
+    const value = remainingRmdAmountFromPolicy;
+    return value != null && Number(value) > 0 ? Number(value) : undefined;
+}
+
+/**
+ * Computes the single remaining RMD amount used by nigo-entry FormProvider.
+ * Prefers task/form payload (fromTask), then falls back to remainingRmdAmountFromPolicy from SSR.
+ */
+function getRemainingRmdAmountNumber(
+    prefillRmdAmountEnabled: boolean,
+    caseType: CaseType,
+    isLC: boolean,
+    form: FormDataWithRmd | null | undefined,
+    remainingRmdAmountFromPolicy: number | null | undefined
+): number | undefined {
+    const fromTask =
+        caseType !== CaseType.Renewal &&
+        form?.data &&
+        !isLC &&
+        prefillRmdAmountEnabled
+            ? form.data.details?.remainingRequiredMinimumDistributionAmount ??
+              form.data.remainingRequiredMinimumDistributionAmount ??
+              form.data.formRequest?.formProgram?.rmd
+                  ?.remainingRequiredMinimumDistributionAmount
+            : undefined;
+    const remainingRmdAmount =
+        fromTask ?? remainingRmdAmountFromPolicy ?? undefined;
+    const value = remainingRmdAmount;
+    return value != null && Number(value) > 0 ? Number(value) : undefined;
+}
+
 interface NigoEntryProps extends SegmentTrackedPageProps {
     documentNumber: string;
     policyNumber: string;
@@ -86,6 +160,7 @@ interface NigoEntryProps extends SegmentTrackedPageProps {
     relatedDoc: PolicyDocument[];
     systematicPrograms: SystematicSpecialPrograms[] | [];
     isLC?: boolean;
+    remainingRmdAmountFromPolicy?: number | null;
 }
 
 const isNigoEntryEnabled = (
@@ -123,6 +198,7 @@ const NigoEntry = ({
     relatedDoc,
     systematicPrograms,
     isLC = false,
+    remainingRmdAmountFromPolicy,
 }: NigoEntryProps) => {
     useSegmentPageTracker(user, SegmentPageName.NigoEntry, {
         policyNumber,
@@ -141,6 +217,20 @@ const NigoEntry = ({
         isLC
     );
     const { issueState } = contractAccountInfo;
+
+    const prefillRmdAmountEnabled = Boolean(
+        featureFlagDecisions?.[FEATURE_FLAGS.PREFILL_RMD_AMOUNT_FOR_FAST_DLIC]
+    );
+
+    // RMD prepopulation (same flag + FAST-only as create-case): pass remainingRmdAmount into FormProvider so RMDMethod can prefill.
+    // Prefer task payload; fallback to policy API (remainingRmdAmountFromPolicy from SSR).
+    const remainingRmdAmountNumber = getRemainingRmdAmountNumber(
+        prefillRmdAmountEnabled,
+        caseType,
+        isLC,
+        form,
+        remainingRmdAmountFromPolicy ?? undefined
+    );
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10">
@@ -189,6 +279,7 @@ const NigoEntry = ({
                     partyRoles={partyRoles}
                     systematicPrograms={systematicPrograms}
                     isLC={isLC}
+                    remainingRmdAmount={remainingRmdAmountNumber}
                 >
                     <NigoEntryProvider
                         relatedDocCount={relatedDoc?.length}
@@ -565,6 +656,14 @@ export const getServerSideProps = withPageAuthAndLogging(
                         systematicPrograms = [],
                     } = policy ?? {};
 
+                    // RMD prefill: policy API has requiredMinimumDistribution.remainingRequiredMinimumDistributionAmount (same as create-case RMD)
+                    const remainingRmdAmountFromPolicyNumber =
+                        getRemainingRmdAmountFromPolicyNumber(
+                            featureFlagDecisions,
+                            caseType,
+                            policy
+                        );
+
                     return {
                         props: {
                             ...translations,
@@ -590,6 +689,8 @@ export const getServerSideProps = withPageAuthAndLogging(
                             relatedDoc,
                             systematicPrograms,
                             isLC,
+                            remainingRmdAmountFromPolicy:
+                                remainingRmdAmountFromPolicyNumber,
                         },
                     };
                 } else {

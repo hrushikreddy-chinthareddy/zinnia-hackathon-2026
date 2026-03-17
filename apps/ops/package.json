@@ -37,8 +37,9 @@
         "@types/uuid": "^9.0.2",
         "@types/xml2js": "^0.4.14",
         "@vitest/eslint-plugin": "^1.6.9",
-        "@zinnia/bloom": "^8.1.2",
+        "@zinnia/bloom": "^9.0.2",
         "@zinnia/form-engine-sdk": "3.1.0",
+        "@zinnia/xd-analytics-dashboard": "1.10.0",
         "ag-grid-community": "29.2.0",
         "ag-grid-react": "29.2.0",
         "autoprefixer": "^10.4.14",
@@ -211,5 +212,5 @@
         "playwright:ui": "playwright test --ui",
         "playwright:debug": "playwright test --debug"
     },
-    "version": "2.30.0"
+    "version": "2.32.1"
 }

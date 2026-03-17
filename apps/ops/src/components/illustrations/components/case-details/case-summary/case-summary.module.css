@@ -44,3 +44,11 @@
         }
     }
 }
+
+.bannerWrapper {
+    position: fixed;
+    top: var(--measure-dimension-z-space-4);
+    right: var(--measure-dimension-z-space-4);
+    width: 265px;
+    z-index: 50;
+}
