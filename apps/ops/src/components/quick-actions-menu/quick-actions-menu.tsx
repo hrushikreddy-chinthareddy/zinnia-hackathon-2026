@@ -426,8 +426,6 @@ export const PolicyMenuContextualContent = ({
         if (newTab) {
             newTab.location.href = url;
         }
-
-        window.URL.revokeObjectURL(url);
     };
 
     const handleIllustrationPdfDownload = async () => {
