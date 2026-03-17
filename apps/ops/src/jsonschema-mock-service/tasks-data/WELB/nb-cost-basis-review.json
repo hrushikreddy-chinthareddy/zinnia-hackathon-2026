@@ -10,6 +10,24 @@
     "taskDetails": "As part of the process, a review is required to ensure accuracy and completeness before proceeding with the next steps due to the inability to complete systematic validation and processing",
     "status": "INPROGRESS",
     "data": {
+        "attachments": [],
+        "issuesList": [
+            {
+                "processingInstruction": "Original cost basis is not set for this payment. Please review the record and provide the correct cost basis.",
+                "resolved": false
+            }
+        ],
+        "issueResolved": false,
+        "costBasisAmount": {
+            "originalCost": null,
+            "preTefra": 0,
+            "postTefra": 0,
+            "taxYear": "",
+            "currentContributionAmount": 0,
+            "priorContributionAmount": 0,
+            "totalBasis": 0,
+            "post88Amount": 0
+        },
         "details": {
             "paymentRecord": {
                 "entityId": "entity.1",
