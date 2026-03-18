@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 
+import { Modal } from '@deps/components/modal/modal';
 import PolicyDetailsHeaderCard from '@deps/containers/page-header/policy-details-header';
 import { AnnuityApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/annuity-application-details-card';
 import { PolicyApplicationDetailsCard } from '@deps/containers/policy-details/cards/application-details/policy-application-details-card';
@@ -13,6 +14,7 @@ import {
     AnnuitantCard,
     InsuredCard,
 } from '@deps/containers/shared-cards/covered-parties/covered-parties-card';
+import { useModalContext } from '@deps/contexts/ModalContext';
 import { PolicyData } from '@deps/contexts/PolicyDataContext';
 
 import { PolicyFinancialsCard } from './cards/policy-financials-card';
@@ -20,6 +22,7 @@ import { PolicyDetailsCard } from '../policy-summary-card/policy-details-card';
 
 const AnnuityPolicyDetailsContainer = () => {
     const { policy, policyDetails } = useContext(PolicyData);
+    const { isModalOpen, setIsModalOpen, modalContent } = useModalContext();
 
     return (
         <>
@@ -39,12 +42,25 @@ const AnnuityPolicyDetailsContainer = () => {
             <AnnuityTimelineCard policy={policyDetails} />
             <AnnuityApplicationDetailsCard policy={policy} />
             <ProductDetailsCard policy={policyDetails} />
+
+            {isModalOpen && (
+                <Modal
+                    open={isModalOpen}
+                    closeIcon="X"
+                    delayCloseIconMs={10}
+                    onCancel={() => {
+                        setIsModalOpen(false);
+                    }}
+                    content={modalContent}
+                />
+            )}
         </>
     );
 };
 
 const LifePolicyDetailsContainer = () => {
     const { policyDetails } = useContext(PolicyData);
+    const { isModalOpen, setIsModalOpen, modalContent } = useModalContext();
 
     return (
         <>
@@ -63,12 +79,25 @@ const LifePolicyDetailsContainer = () => {
             <LifeTimelineCard policy={policyDetails} />
             <PolicyApplicationDetailsCard policy={policyDetails} />
             <ProductDetailsCard policy={policyDetails} />
+
+            {isModalOpen && (
+                <Modal
+                    open={isModalOpen}
+                    closeIcon="X"
+                    delayCloseIconMs={10}
+                    onCancel={() => {
+                        setIsModalOpen(false);
+                    }}
+                    content={modalContent}
+                />
+            )}
         </>
     );
 };
 
 const PolicyDetailsSubPage = () => {
     const { policyDetails } = useContext(PolicyData);
+
     if (policyDetails.isAnnuity) {
         return <AnnuityPolicyDetailsContainer />;
     }

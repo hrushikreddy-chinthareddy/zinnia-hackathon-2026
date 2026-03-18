@@ -7708,7 +7708,11 @@
         "additionalActions": {
             "label": "Additional Actions",
             "createAsIsIllustration": "Create as-is illustration PDF",
-            "serviceRequestForm": "Raise a Service Request"
+            "serviceRequestForm": "Raise a Service Request",
+            "downloadIllustrationPdf": "Preparing as-is illustration PDF...",
+            "downloadIllustrationPdfError": "Something went wrong while creating the illustration PDF",
+            "close": "Close",
+            "retryIllustrationPdf": "Retry illustration PDF"
         },
         "transactions": {
             "label": "Transactions",
