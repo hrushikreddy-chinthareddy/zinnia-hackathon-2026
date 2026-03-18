@@ -7621,7 +7621,7 @@
             "downloadIllustrationPdf": "Preparando PDF como ilustración...",
             "downloadIllustrationPdfError": "Ocurrió un error al crear el PDF de Iustración",
             "close": "Cerrar",
-            "retryIllustrationPdf": "Reintentar ilustración"
+            "retryIllustrationPdf": "Reintentar el PDF de ilustración"
         },
         "transactions": {
             "label": "Transacciones",
