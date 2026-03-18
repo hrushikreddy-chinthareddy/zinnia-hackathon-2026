@@ -3403,25 +3403,122 @@ export const getFarmersBlueprintIU0101 = (
                                         defaultValue: 'ACH',
                                     },
                                     {
+                                        fieldType: 'dropdown',
+                                        id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
+                                        partName:
+                                            'custom-ed6f5349-bb0f-451c-b762-e0bc7aa7a385',
+                                        text: {
+                                            en: '',
+                                            fr: '',
+                                        },
+                                        title: {
+                                            en: 'Solve for Age or Years to pay Premium',
+                                            fr: '',
+                                        },
+                                        platforms: [],
+                                        renderOn: [],
+                                        copyable: 'none',
+                                        answerNodeId:
+                                            'payment-duration-age-or-years',
+                                        outputPath: 'premiumDurationOption',
+                                        optional: false,
+                                        placeholder: {
+                                            en: '',
+                                            fr: '',
+                                        },
+                                        triggerStepNavigation: false,
+                                        layout: {
+                                            size: 6,
+                                            forceNewLine: true,
+                                        },
+                                        displayInCardPreview: false,
+                                        applicationModes: ['digital', 'paper'],
+                                        selectOptions: [
+                                            {
+                                                value: 'AGE',
+                                                text: {
+                                                    en: 'Age',
+                                                },
+                                                isCustom: true,
+                                                orderingIndex: 1,
+                                            },
+                                            {
+                                                value: 'YEARS',
+                                                text: {
+                                                    en: 'Years',
+                                                },
+                                                isCustom: true,
+                                                orderingIndex: 2,
+                                            },
+                                        ],
+                                        validateAs: 'string',
+                                        isCustom: true,
+                                        defaultValue: 'YEARS',
+                                    },
+                                    {
                                         fieldType: 'number',
                                         text: {
                                             en: '',
                                             fr: '',
                                         },
                                         title: {
-                                            en: 'Number of Years to Pay Premium',
+                                            en: 'Pay until age',
                                             fr: '',
                                         },
-                                        answerNodeId: 'payment-duration',
-                                        outputPath: 'premiumDuration',
+                                        answerNodeId: 'payment-duration-age',
+                                        outputPath: 'premiumDurationAge',
                                         renderOn: [],
                                         platforms: [],
                                         copyable: 'none',
                                         optional: false,
                                         triggerStepNavigation: false,
                                         layout: {
-                                            size: 6,
-                                            forceNewLine: true,
+                                            size: 3,
+                                        },
+                                        displayInCardPreview: false,
+                                        applicationModes: ['digital', 'paper'],
+                                        placeholder: {
+                                            en: '',
+                                            fr: '',
+                                        },
+                                        id: 'b2c3d4e5-f6a7-8901-bcde-f23456789012',
+                                        partName:
+                                            'custom-ed6f5349-bb0f-451c-b762-e0bc7aa7a386',
+                                        validateAs: 'integer',
+                                        visible: {
+                                            booleanOperator: 'and',
+                                            conditions: [
+                                                {
+                                                    type: 'equalityCondition',
+                                                    value: 'AGE',
+                                                    isEqual: true,
+                                                    targetNodeId:
+                                                        'payment-duration-age-or-years',
+                                                },
+                                            ],
+                                        },
+                                        isCustom: true,
+                                        defaultValue: 100,
+                                    },
+                                    {
+                                        fieldType: 'number',
+                                        text: {
+                                            en: '',
+                                            fr: '',
+                                        },
+                                        title: {
+                                            en: 'Pay for number of years',
+                                            fr: '',
+                                        },
+                                        answerNodeId: 'payment-duration-years',
+                                        outputPath: 'premiumDurationYears',
+                                        renderOn: [],
+                                        platforms: [],
+                                        copyable: 'none',
+                                        optional: false,
+                                        triggerStepNavigation: false,
+                                        layout: {
+                                            size: 3,
                                         },
                                         displayInCardPreview: false,
                                         applicationModes: ['digital', 'paper'],
@@ -3433,6 +3530,18 @@ export const getFarmersBlueprintIU0101 = (
                                         partName:
                                             'custom-ed6f5349-bb0f-451c-b762-e0bc7aa7a384',
                                         validateAs: 'integer',
+                                        visible: {
+                                            booleanOperator: 'and',
+                                            conditions: [
+                                                {
+                                                    type: 'equalityCondition',
+                                                    value: 'YEARS',
+                                                    isEqual: true,
+                                                    targetNodeId:
+                                                        'payment-duration-age-or-years',
+                                                },
+                                            ],
+                                        },
                                         isCustom: true,
                                         defaultValue: 100,
                                     },
