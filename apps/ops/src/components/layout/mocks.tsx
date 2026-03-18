@@ -33,6 +33,5 @@ export const mockNavGroups: NavGroup[] = [
             },
             { id: 'user', display: 'Jane Doe', icon: IconType.BANK, href: '' },
         ],
-        alignEnd: true,
     },
 ];
