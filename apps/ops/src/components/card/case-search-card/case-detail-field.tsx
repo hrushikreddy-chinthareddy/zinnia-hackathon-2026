@@ -86,6 +86,9 @@ const CaseDetailField = ({
                     placement={PopoverPlacement.TopRight}
                     body={t('taskManagementQueue.prioritized')}
                     isTabbable={false}
+                    triggerAriaLabel={
+                        t('taskManagementQueue.prioritized') as string
+                    }
                 >
                     <Warning height={16} width={16} className="ml-1" />
                 </Tooltip>

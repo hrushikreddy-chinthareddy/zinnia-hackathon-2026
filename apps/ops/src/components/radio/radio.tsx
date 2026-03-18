@@ -153,7 +153,11 @@ export default function Radio({
                             {item.subElement}
                             <label
                                 className={labelClasses}
-                                aria-label={`Select ${item.value}`}
+                                aria-label={
+                                    label
+                                        ? `${label}, ${item.label}`
+                                        : `${item.label}`
+                                }
                                 htmlFor={`radio-${label}-${index}-${id}`}
                                 {...(disabled && {
                                     'aria-disabled': 'true',

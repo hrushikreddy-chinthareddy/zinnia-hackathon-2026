@@ -150,6 +150,7 @@ export interface PomAgentData {
     firstName: string | undefined;
     lastName: string | undefined;
     middleName: string | undefined;
+    fullName: string | undefined;
     nationalProducerNumber: string | undefined;
     partyId: string | undefined;
     producerType: ProducerType;

@@ -18,14 +18,16 @@ import { determineRange } from '@deps/helpers/numbers.helpers';
 import {
     PolicyDocument,
     excludeDocumentTypes,
-    includeDocumentTypesInbound,
     includeDocumentTypeForInboundSearch,
+    includeDocumentTypesInbound,
 } from '@deps/models/case/document';
 import { SearchTaxFormRequestBody } from '@deps/models/case/send-tax-forms';
+import { checkEligibilityAsIsInforceIllustration } from '@deps/queries/api/bpm';
 import { searchTaxForms } from '@deps/queries/api/tax-forms';
 import { StatusCode } from '@deps/queries/api-utils/baseAPIClient';
 import { getDocumentSearchResultsQuery } from '@deps/queries/tanstack/documentQueries/document-queries';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 import {
     DocumentClassificationEnum,
@@ -37,6 +39,7 @@ import { Policy } from '@zinnia/api-types/types/sor';
 
 import DocumentResultsPagination from './documents-results-pagination';
 import DocumentsResultsTable from './documents-results-table';
+import IllustrationDocumentsTable from './illustration-documents-table';
 import TaxDocumentsTable from './tax-documents-table';
 
 type DocumentsSubPageProps = {
@@ -103,7 +106,8 @@ const NormalDocs = ({
         }
 
         const documentClassification =
-            documentType === DocumentTypeView.Policy
+            documentType === DocumentTypeView.Policy ||
+            documentType === DocumentTypeView.AsIsInforceIllustration
                 ? DocumentClassificationEnum.INBOUND
                 : DocumentClassificationEnum.OUTBOUND;
 
@@ -174,18 +178,32 @@ const NormalDocs = ({
         );
     }
 
+    const filteredPolicyDocuments =
+        documentType === DocumentTypeView.AsIsInforceIllustration
+            ? policyDocuments?.filter(
+                  (doc) => doc.documentType === 'AS-IS IN-FORCE ILLUSTRATION'
+              ) ?? []
+            : policyDocuments?.filter(
+                  (doc) => doc.documentType !== 'AS-IS IN-FORCE ILLUSTRATION'
+              ) ?? [];
+
     return (
         <>
             {isLoading ? (
                 <EventsLoader
                     message={t('policy.documents.loadingDocuments')}
                 />
+            ) : documentType === DocumentTypeView.AsIsInforceIllustration ? (
+                <IllustrationDocumentsTable
+                    carrierCode={policy.carrierId ?? ''}
+                    results={filteredPolicyDocuments}
+                />
             ) : (
                 <DocumentsResultsTable
                     carrierCode={policy.carrierId ?? ''}
                     documentType={documentType as DocumentTypeView}
                     policyNumber={policy.policyNumber ?? ''}
-                    results={policyDocuments ?? []}
+                    results={filteredPolicyDocuments}
                     planCode={policy.product?.planCode}
                     policyDeliveryDate={policy.policyDates?.policyDeliveryDate}
                     context="policy"
@@ -298,6 +316,8 @@ const TaxDocs = ({
 export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
     const { t } = useTranslation();
 
+    const { featureFlags } = useOptimizely();
+
     const [documentType, setDocumentType] = useState(
         DocumentTypeView.Policy as string
     );
@@ -315,6 +335,28 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
         if (val === yearSelection) return;
         setYearSelection(val);
     };
+
+    const asIsIllustrationsEnabled =
+        featureFlags[FEATURE_FLAGS.ILLUSTRATIONS_AS_IS_ILLUSTRATIONS];
+
+    const { data: BPMEligibility } = useQuery({
+        queryKey: [
+            'checkBPMAsIsIllustrationEligibility',
+            policy.product?.planCode,
+            policy.policyNumber,
+            policy.carrierId,
+            policy.policyStatus,
+        ],
+        queryFn: () =>
+            checkEligibilityAsIsInforceIllustration(
+                policy.product?.planCode as string,
+                policy.policyNumber as string,
+                policy.carrierId as string,
+                policy.policyStatus as string
+            ),
+        select: (data) => data?.isEligible ?? false,
+        enabled: asIsIllustrationsEnabled,
+    });
 
     return (
         <>
@@ -359,18 +401,26 @@ export default function DocumentsSubPage({ policy }: DocumentsSubPageProps) {
                         <RadioGroup.Item className="chip" value={'tax-forms'}>
                             {t('policy.documents.taxDocuments') as string}
                         </RadioGroup.Item>
+                        {asIsIllustrationsEnabled && BPMEligibility && (
+                            <RadioGroup.Item
+                                className="chip"
+                                value={DocumentTypeView.AsIsInforceIllustration}
+                            >
+                                {t('policy.documents.illustrations') as string}
+                            </RadioGroup.Item>
+                        )}
                     </RadioGroup.Root>
                 </div>
-                {documentType !== 'tax-forms' ? (
-                    <NormalDocs
+                {documentType === 'tax-forms' ? (
+                    <TaxDocs
                         yearSelection={yearSelection}
-                        documentType={documentType}
                         policy={policy}
                         isFirstYearSelected={isFirstYearSelected}
                     />
                 ) : (
-                    <TaxDocs
+                    <NormalDocs
                         yearSelection={yearSelection}
+                        documentType={documentType}
                         policy={policy}
                         isFirstYearSelected={isFirstYearSelected}
                     />

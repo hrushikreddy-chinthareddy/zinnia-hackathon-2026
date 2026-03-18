@@ -1,25 +1,35 @@
 import { TFunction } from 'i18next';
 import { useCallback, useState } from 'react';
 
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { FormValidationErrors } from '@deps/models/case/withdrawal/case';
 import { validateAddress } from '@deps/queries/api/validation';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 import { Address, AddressType, State } from '@zinnia/api-types/types/sor';
 
 import { PolicyAddress } from './contact-details.types';
-
 export const useVerifyAddress = (
     clientCode: string,
     address: Address
 ): [boolean, () => void, any] => {
     const [loading, setLoading] = useState(false);
     const [verifiedAddress, setVerifiedAddress] = useState<null>(null);
+    const { featureFlags } = useOptimizely();
+
+    const useSpectrumApi =
+        featureFlags[FEATURE_FLAGS.SPECTRUM_ADDRESS_VALIDATION_API];
+
     const getVerifiedAddress = useCallback(async () => {
         if (loading) return;
 
         try {
             setLoading(true);
 
-            const response = await validateAddress(clientCode, address);
+            const response = await validateAddress(
+                clientCode,
+                address,
+                useSpectrumApi
+            );
             if (response?.[0]) {
                 setVerifiedAddress(response?.[0]);
             }

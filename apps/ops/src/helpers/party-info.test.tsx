@@ -243,7 +243,7 @@ describe('getRiskClass', () => {
             partyInfo.partyId
         );
         if (coverageParticipant) {
-            riskClass = getRiskClass(coverageParticipant.riskClass);
+            riskClass = getRiskClass(coverageParticipant.riskClass, t);
         }
         expect(riskClass).toBe(
             t('people.card.underwritingInfo.riskClassOptions.standardTobacco')

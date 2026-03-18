@@ -1,6 +1,15 @@
 import * as ReactTooltip from '@radix-ui/react-tooltip';
 import { skipToken, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Toast, ToastVariant } from '@zinnia/bloom/components';
+import {
+    Button,
+    Heading,
+    HeadingVariant,
+    Icon,
+    IconType,
+    Loader,
+    Toast,
+    ToastVariant,
+} from '@zinnia/bloom/components';
 import { HttpStatusCode } from 'axios';
 import clsx from 'clsx';
 import { useTranslation, TFunction } from 'next-i18next';
@@ -20,6 +29,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import CaseActionSideSheet from '@deps/containers/case-sub-page/caseActionsSideSheet';
 import { deathClaimApplicableStatuses } from '@deps/containers/policy-summary-card/policy-summary-card.helpers';
 import { useCaseActivityContext } from '@deps/contexts/CaseActivityContext';
+import { useModalContext } from '@deps/contexts/ModalContext';
 import {
     useOptimizely,
     OptimizelyVariableKey,
@@ -39,6 +49,7 @@ import { CaseAction, ProcessType } from '@deps/models/case/enums';
 import { Carrier } from '@deps/models/case/withdrawal/case';
 import {
     checkCaseQualityAuditEligibility,
+    checkEligibilityAsIsInforceIllustration,
     TransactionResponseStatus,
 } from '@deps/queries/api/bpm';
 import { createQualityAuditForCaseIdQuery } from '@deps/queries/tanstack/caseQueries/caseQueries';
@@ -106,6 +117,46 @@ const IconButton = React.forwardRef<HTMLButtonElement, TranslateProps>(
     }
 );
 
+const downloadAsIsIllustrationPdf = async (
+    planCode: string,
+    policyNumber: string,
+    carrierId: string,
+    policyStatus: string
+) => {
+    try {
+        const response = await fetch(
+            `/api/policies/${planCode}/${policyNumber}/illustrations`,
+            {
+                method: 'POST',
+                body: JSON.stringify({
+                    carrierId: carrierId,
+                    policyStatus: policyStatus,
+                }),
+                headers: {
+                    'Content-Type': 'application/pdf',
+                },
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error(`Failed to fetch PDF: ${response.statusText}`);
+        }
+
+        return await response.blob();
+    } catch (err) {
+        console.error('Error downloading PDF:', err);
+    }
+};
+
+const openBlobInNewTab = (blob: Blob) => {
+    const newTab = window.open('', '_blank');
+    const url = window.URL.createObjectURL(blob);
+
+    if (newTab) {
+        newTab.location.href = url;
+    }
+};
+
 export const PolicyMenuContextualContent = ({
     t,
     policy,
@@ -116,6 +167,7 @@ export const PolicyMenuContextualContent = ({
     const limit = 1;
     const offset = 0;
     const { sessionId, partyId: userPartyId } = usePermissionsContext();
+    const { setIsModalOpen, setModalContent } = useModalContext();
 
     const { featureFlags } = useOptimizely();
 
@@ -358,12 +410,84 @@ export const PolicyMenuContextualContent = ({
     });
 
     const { data: BPMEligibility } = useQuery({
-        queryKey: ['checkBPMAsIsIllustrationEligibility'],
-        queryFn: () => {
-            // This is a placeholder variable, should be replaced with a BPM call to check eligibility
-            return false;
-        },
+        queryKey: [
+            'checkBPMAsIsIllustrationEligibility',
+            policy.planCode,
+            policy.policyNumber,
+            policy.carrierId,
+            policy.policyStatus,
+        ],
+        queryFn: () =>
+            checkEligibilityAsIsInforceIllustration(
+                policy.planCode as string,
+                policy.policyNumber as string,
+                policy.carrierId as string,
+                policy.policyStatus as string
+            ),
+        select: (data) => data?.isEligible ?? false,
+        enabled: asIsIllustrationsEnabled,
     });
+
+    const handleIllustrationPdfDownload = async () => {
+        setModalContent(modalLoadingContent);
+        setIsModalOpen(true);
+
+        const blob = await downloadAsIsIllustrationPdf(
+            policy.planCode as string,
+            policy.policyNumber as string,
+            policy.carrierId as string,
+            policy.policyStatus as string
+        );
+        if (blob) {
+            openBlobInNewTab(blob);
+            setIsModalOpen(false);
+            setModalContent(null);
+        } else {
+            setModalContent(modalErrorContent);
+        }
+    };
+
+    const modalLoadingContent = (
+        <div className="flex flex-col items-center gap-4">
+            <Loader />
+            <Heading as={HeadingVariant.h3}>
+                {t('additionalActions.downloadIllustrationPdf')}
+            </Heading>
+        </div>
+    );
+
+    const modalErrorContent = (
+        <div className="flex flex-col items-center gap-4">
+            <Icon
+                type={IconType.HEX_EXCLAMATION}
+                height={48}
+                width={48}
+                className={styles.exclamationMark}
+            />
+            <Heading as={HeadingVariant.h3}>
+                {t('additionalActions.downloadIllustrationPdfError')}
+            </Heading>
+            <Button
+                mode="primary"
+                type="button"
+                size="small"
+                onClick={handleIllustrationPdfDownload}
+            >
+                {t('additionalActions.retryIllustrationPdf')}
+            </Button>
+            <Button
+                mode="link"
+                type="button"
+                size="small"
+                onClick={() => {
+                    setIsModalOpen(false);
+                    setModalContent(null);
+                }}
+            >
+                {t('additionalActions.close')}
+            </Button>
+        </div>
+    );
 
     const { data: freelookCancellation } = useFreelookCancellation(
         policy.product?.planCode,
@@ -567,7 +691,7 @@ export const PolicyMenuContextualContent = ({
             <MenuContextualItem
                 key="createAsIsIllustration"
                 content={t('additionalActions.createAsIsIllustration')}
-                onClick={() => console.log('generate PDF')}
+                onClick={handleIllustrationPdfDownload}
             />
         );
     }

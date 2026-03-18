@@ -1,6 +1,7 @@
 import { FieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Label, Tooltip, TooltipPlacement } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useTranslation } from 'next-i18next';
 
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
@@ -17,6 +18,7 @@ type FormContextOptions = {
 };
 
 const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
+    const { t } = useTranslation();
     const {
         schema,
         required,
@@ -45,6 +47,8 @@ const DifferenceTemplate = (props: FieldTemplateProps): JSX.Element => {
                 />
             }
             placement={TooltipPlacement.TopRight}
+            triggerClassName="w-fit"
+            triggerAriaLabel={t('allFields.moreInformation') as string}
         >
             {helpText}
         </Tooltip>

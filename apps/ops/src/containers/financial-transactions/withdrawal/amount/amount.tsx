@@ -96,9 +96,9 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
     };
 
     const handleIsDateAllowed = (d: dayjs.Dayjs) => {
-        const minDate = dayjs(
-            policy?.policyContractState?.currentLifecycleDate
-        ).format(NUMERIC_DATE_FORMAT);
+        const minDate = dayjs(policy?.policyContractState?.currentLifecycleDate)
+            .add(1, 'day')
+            .format(NUMERIC_DATE_FORMAT);
         const min = dayjs(minDate, NUMERIC_DATE_FORMAT, true).startOf('day');
 
         if (!min.isValid()) return true;
@@ -111,7 +111,9 @@ const Amount = ({ policy }: WithdrawalContainerProps) => {
             ...withdrawal,
             effectiveDate: dayjs(
                 policy?.policyContractState?.currentLifecycleDate
-            ).format(NUMERIC_DATE_FORMAT),
+            )
+                .add(1, 'day')
+                .format(NUMERIC_DATE_FORMAT),
         });
     }, [policy]);
 

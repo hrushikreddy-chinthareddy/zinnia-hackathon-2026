@@ -1,0 +1,35 @@
+.infoBanner {
+    display: flex;
+    align-items: center;
+    gap: var(--measure-dimension-gap-md);
+    padding-top: var(--measure-dimension-padding-2xl);
+    color: var(--color-base-text-primary);
+}
+
+.infoBannerIcon {
+    flex-shrink: 0;
+}
+
+.infoBannerText {
+    font: var(--typography-content-body-sm);
+}
+
+.wrapper {
+    box-shadow: var(--shadow-elevation-light-04);
+}
+
+.sectionDivider {
+    height: 2px;
+    border: none;
+    background-color: var(--color-base-border-light);
+}
+
+.loader {
+    height: 100vh;
+    text-align: center;
+    margin-top: 4rem;
+}
+
+.emptyState {
+    padding: var(--measure-dimension-padding-2xl);
+}

@@ -32,6 +32,8 @@ export interface AllocationCardProps {
     allocation?: number;
     deathBenefit: number | null;
     editable?: boolean;
+    /** When true, hides the role name label below each allocation percentage */
+    hideRoleLabel?: boolean;
     relationshipToInsured?: string;
     selectedPartyId?: string;
     selectedPartyType?: string;
@@ -124,6 +126,7 @@ const AllocationCard = ({
     allocation,
     deathBenefit,
     editable = false,
+    hideRoleLabel = false,
     relationshipToInsured,
     selectedPartyId,
     selectedPartyType,
@@ -202,12 +205,16 @@ const AllocationCard = ({
                                         isInteger: true,
                                     })}
                                 </Typography>
-                                <Typography
-                                    variant={TypographyVariant.BodySm}
-                                    className="text-gray-300"
-                                >
-                                    {getPartyRoleText(role.partyRole as string)}
-                                </Typography>
+                                {!hideRoleLabel && (
+                                    <Typography
+                                        variant={TypographyVariant.BodySm}
+                                        className="text-gray-300"
+                                    >
+                                        {getPartyRoleText(
+                                            role.partyRole as string
+                                        )}
+                                    </Typography>
+                                )}
                                 {isIndividual && (
                                     <RelationshipToInsuredInfo
                                         relationshipToInsured={

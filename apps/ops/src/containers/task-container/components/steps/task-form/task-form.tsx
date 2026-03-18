@@ -309,11 +309,16 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
         [TaskType.Bene_Address_Verification]: (formData: any) => {
             let updatedFormData = formData;
 
+            if (!formData.details?.beneAddress?.beneficiaryChangeDetail) {
+                updatedFormData.details.beneAddress.beneficiaryChangeDetail =
+                    {};
+            }
+
             if (
-                !formData.details?.beneAddress?.beneficiaryChangeDetail
+                formData.details.beneAddress?.beneficiary
                     ?.notificationPreferences
             ) {
-                updatedFormData.details.beneAddress.beneficiaryChangeDetail =
+                updatedFormData.details.beneAddress.beneficiaryChangeDetail.notificationPreferences =
                     formData.details.beneAddress?.beneficiary
                         ?.notificationPreferences || {};
             }
@@ -431,7 +436,8 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
     useEffect(() => {
         if (TaskType.Standard_Document_Matching === task.taskType) {
             const matchedCase = task?.data?.potentialMatches?.find(
-                (match: any) => match?.value === task?.data?.matchingResult
+                (match: any) =>
+                    match?.correlationId === task?.data?.matchingResult
             );
 
             setTask((ogTask: any) => ({
@@ -442,7 +448,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                         task?.data?.matchingResult === 'ENTERED'
                             ? task?.data?.caseId
                             : matchedCase
-                            ? matchedCase?.subElement?.value ?? ''
+                            ? matchedCase?.zlCaseId ?? ''
                             : '',
                 },
             }));

@@ -56,7 +56,9 @@ export const UnderwritingCardContainer = () => {
     return (
         <div className="p-6">
             <UnderwritingCard
-                riskClass={getRiskClass(coverageParticipant?.riskClass) || '-'}
+                riskClass={
+                    getRiskClass(coverageParticipant?.riskClass, t) || '-'
+                }
                 substandardRating={
                     getSubstandardRating(
                         coverageParticipant?.substandardRating,

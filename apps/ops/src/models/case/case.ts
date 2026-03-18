@@ -17,6 +17,8 @@ export enum CaseIdentifier {
     TransactionId = 'transactionId',
     PolicyNumber = 'policyNumber',
     ZlCaseId = 'zlCaseId',
+    //need to remove after migration from caseId to zlCaseId
+    CaseId = 'caseID',
 }
 
 // CaseAdditionalData doesn't exist on the spec yet, typing based off QA response
@@ -123,7 +125,9 @@ export enum Processes {
     Suitability = 'Suitability',
     SuitabilityReview = 'Suitability Review',
     QCD = 'Qualified Charitable Distribution',
-    FundTransfer = 'Fund Management',
+    FundManagement = 'Fund Management',
+    FundTransfer = 'Fund Transfer',
+    FundAllocation = 'Fund Allocation',
     CancelAutoPay = 'CancelAutoPay',
     BeneficiaryUpdate = 'Beneficiary Update',
     AgentOnboarding = 'Agent Onboarding',

@@ -47,6 +47,20 @@ const manifests: Config[] = [
             },
         },
     },
+    {
+        manifest: {
+            module: 'analytics-dashboard',
+            version: '1.0.0',
+            assets: {
+                css: [
+                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/AnalyticsDashboard/v1/AnalyticsDashboard.css`,
+                ],
+                js: [
+                    `${process.env.NEXT_PUBLIC_ZEMBED_CDN_URL}/modules/AnalyticsDashboard/v1/AnalyticsDashboard.js`,
+                ],
+            },
+        },
+    },
 ];
 
 export default withAuthAndLogging(

@@ -1,4 +1,4 @@
-import { Label, Toggle } from '@zinnia/bloom/components';
+import { Label, Toggle, FieldDateRange } from '@zinnia/bloom/components';
 import dayjs from 'dayjs';
 import {
     useCallback,
@@ -10,7 +10,6 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { CustomDateRange } from '@deps/components/dashboard/filters/time-filter/custom-date-range';
 import EventsLoader from '@deps/components/events-loader/events-loader';
 import { FindAllKeyValuesTransactionSidesheet } from '@deps/components/find-key-values-sidesheet/find-all-key-values-transaction-sidesheet';
 import { TransactionStatusTabGroup } from '@deps/components/history/filters/transaction-status-tab-group';
@@ -204,19 +203,25 @@ export const TransactionsWrapper = () => {
                         onClick={() => setHideDailyInterest((prev) => !prev)}
                     />
                 </div>
-                <CustomDateRange
-                    handleTimerangeChange={(dates) =>
-                        setHistoryFilters((prevState) => ({
-                            ...prevState,
-                            datesFilter: {
-                                from: dayjs(dates.from).utc(),
-                                to: dayjs(dates.to).utc(),
-                            },
-                        }))
-                    }
-                    timerange={selectedDateRange}
-                    disableFutureDates={false}
-                />
+                <div className={styles.filterItem}>
+                    <FieldDateRange
+                        name="transactionsDateRange"
+                        showApplyButtons
+                        showResetButton={false}
+                        onApply={(startDate, endDate) =>
+                            setHistoryFilters((prevState) => ({
+                                ...prevState,
+                                datesFilter: {
+                                    from: dayjs(startDate).utc(),
+                                    to: dayjs(endDate).utc(),
+                                },
+                            }))
+                        }
+                        defaultStartDate={selectedDateRange.from}
+                        defaultEndDate={selectedDateRange.to}
+                        label={<Label>{t('allFields.effectiveDates')}</Label>}
+                    />
+                </div>
             </div>
             <div aria-live="polite" aria-atomic="true" className="sr-only">
                 {liveResultsMessage}
