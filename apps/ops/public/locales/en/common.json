@@ -7713,7 +7713,10 @@
             "label": "Additional Actions",
             "createAsIsIllustration": "Create as-is illustration PDF",
             "serviceRequestForm": "Raise a Service Request",
-            "downloadingPdf": "Preparing as-is illustration PDF..."
+            "downloadIllustrationPdf": "Preparing as-is illustration PDF...",
+            "downloadIllustrationPdfError": "Something went wrong while creating the illustration PDF",
+            "close": "Close",
+            "retryIllustrationPdf": "Retry illustration"
         },
         "transactions": {
             "label": "Transactions",

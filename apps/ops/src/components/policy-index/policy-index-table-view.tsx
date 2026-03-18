@@ -345,7 +345,7 @@ export const PolicyIndexTableView = ({
                     <Modal
                         open={isModalOpen}
                         closeIcon="X"
-                        delayCloseIconMs={5}
+                        delayCloseIconMs={10}
                         onCancel={() => {
                             setIsModalOpen(false);
                         }}

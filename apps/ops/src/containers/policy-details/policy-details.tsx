@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { Modal } from '@deps/components/modal/modal';
 import PolicyDetailsHeaderCard from '@deps/containers/page-header/policy-details-header';
@@ -23,7 +22,6 @@ import { PolicyDetailsCard } from '../policy-summary-card/policy-details-card';
 
 const AnnuityPolicyDetailsContainer = () => {
     const { policy, policyDetails } = useContext(PolicyData);
-    const { t } = useTranslation();
     const { isModalOpen, setIsModalOpen, modalContent } = useModalContext();
 
     return (
@@ -49,7 +47,7 @@ const AnnuityPolicyDetailsContainer = () => {
                 <Modal
                     open={isModalOpen}
                     closeIcon="X"
-                    delayCloseIconMs={5}
+                    delayCloseIconMs={10}
                     onCancel={() => {
                         setIsModalOpen(false);
                     }}
@@ -62,7 +60,6 @@ const AnnuityPolicyDetailsContainer = () => {
 
 const LifePolicyDetailsContainer = () => {
     const { policyDetails } = useContext(PolicyData);
-    const { t } = useTranslation();
     const { isModalOpen, setIsModalOpen, modalContent } = useModalContext();
 
     return (
@@ -87,7 +84,7 @@ const LifePolicyDetailsContainer = () => {
                 <Modal
                     open={isModalOpen}
                     closeIcon="X"
-                    delayCloseIconMs={5}
+                    delayCloseIconMs={10}
                     onCancel={() => {
                         setIsModalOpen(false);
                     }}
