@@ -7708,7 +7708,7 @@
         "additionalActions": {
             "label": "Additional Actions",
             "createAsIsIllustration": "Create as-is illustration PDF",
-            "serviceRequestForm": "Raise a Service Request",
+            "serviceRequestForm": "Presentar una solicitud de servicio",
             "downloadIllustrationPdf": "Preparing as-is illustration PDF...",
             "downloadIllustrationPdfError": "Something went wrong while creating the illustration PDF",
             "close": "Close",
