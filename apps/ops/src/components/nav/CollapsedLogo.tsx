@@ -33,7 +33,7 @@ export const CollapsedLogo = ({
                 }}
                 aria-label={isExpanded ? `${activeCarrier} Logo` : expandText}
                 disabled={isExpanded}
-                tabIndex={isExpanded ? -1 : 0}
+                tabIndex={0}
                 onMouseEnter={() => setIsInteractive(true)}
                 onMouseLeave={() => setIsInteractive(false)}
                 onFocus={() => setIsInteractive(true)}

@@ -43,6 +43,7 @@ export const ZinniaLogo = ({
                 handleLogoClick();
                 setIsInteractive(false);
             }}
+            tabIndex={0}
             aria-label={isInteractive ? expandText : 'Zinnia Logo'}
             onMouseEnter={() => setIsInteractive(true)}
             onMouseLeave={() => setIsInteractive(false)}

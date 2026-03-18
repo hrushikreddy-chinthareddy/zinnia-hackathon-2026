@@ -138,7 +138,7 @@ export const Nav = ({
                         className={styles.toggleButton}
                         onClick={handleNavToggle}
                         aria-label={isExpanded ? collapseText : expandText}
-                        tabIndex={isExpanded ? undefined : -1}
+                        tabIndex={0}
                     >
                         <Icon
                             type={IconType.NAV_DISPLAY_CONTROL}
