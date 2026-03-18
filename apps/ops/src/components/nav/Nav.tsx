@@ -209,6 +209,7 @@ export const Nav = ({
                                                     placement={
                                                         TooltipPlacement.CenterRight
                                                     }
+                                                    asChild
                                                     delayDuration={0}
                                                     tooltipClassName={clsx(
                                                         styles.tooltip,
