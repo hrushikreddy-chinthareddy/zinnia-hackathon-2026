@@ -181,19 +181,19 @@ interface TermQuickQuoteBaseDataItem {
 
 interface TermQuickQuoteAvailableDataItem extends TermQuickQuoteBaseDataItem {
     range: NumberOrRange;
-    inegilibilityReasonField: undefined;
+    ineligibilityReasonField: undefined;
     error: undefined;
 }
 
 interface TermQuickQuoteIneligibleItem extends TermQuickQuoteBaseDataItem {
     range: number | NumberOrRange | undefined;
-    inegilibilityReasonField: IneligibleReasonByClass[] | undefined;
+    ineligibilityReasonField: IneligibleReasonByClass[] | undefined;
     error: undefined;
 }
 
 interface TermQuickQuoteErrorItem extends TermQuickQuoteBaseDataItem {
     range: undefined;
-    inegilibilityReasonField: undefined;
+    ineligibilityReasonField: undefined;
     error: Error;
 }
 
@@ -209,7 +209,7 @@ export type TermQuickQuoteRiderIneligibleItem = {
 
 export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;
-    inegilibilityReasonField?: TermQuickQuoteRiderIneligibleItem[];
+    ineligibilityReasonField?: TermQuickQuoteRiderIneligibleItem[];
 };
 
 export interface TermQuickQuoteResultData {

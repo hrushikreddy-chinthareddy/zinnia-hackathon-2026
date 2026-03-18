@@ -38,7 +38,7 @@ export type SingleTermProductQuickQuoteParams = {
     termLength: TermFixedCostPeriod;
     classCode: UnderwritingClass | undefined;
     available: boolean;
-    inegilibilityReasonField: IneligibleReasonByClass[];
+    ineligibilityReasonField: IneligibleReasonByClass[];
     riders: ProductClassResultRiders;
 };
 
@@ -212,7 +212,7 @@ export const expandQuickQuoteVariants = (
             planCode,
             termLength,
             classCodes,
-            inegilibilityReasonField,
+            ineligibilityReasonField,
             riders,
         }) =>
             classCodes?.length
@@ -222,7 +222,7 @@ export const expandQuickQuoteVariants = (
                           termLength,
                           classCode,
                           available: true,
-                          inegilibilityReasonField,
+                          ineligibilityReasonField,
                           riders,
                       };
                   })
@@ -231,7 +231,7 @@ export const expandQuickQuoteVariants = (
                       termLength,
                       classCode: undefined,
                       available: false,
-                      inegilibilityReasonField,
+                      ineligibilityReasonField,
                       riders,
                   } as SingleTermProductQuickQuoteParams)
     );
@@ -381,15 +381,15 @@ export const placeholderData = [
             riders: {
                 accidentalDeathBenefit: {
                     range: undefined,
-                    inegilibilityReasonField: undefined,
+                    ineligibilityReasonField: undefined,
                 },
                 acceleratedDeathBenefitForTerminalIllness: {
                     range: true,
-                    inegilibilityReasonField: undefined,
+                    ineligibilityReasonField: undefined,
                 },
                 charitableGiving: {
                     range: true,
-                    inegilibilityReasonField: undefined,
+                    ineligibilityReasonField: undefined,
                 },
             },
         },
@@ -430,15 +430,15 @@ export const placeholderData = [
             riders: {
                 accidentalDeathBenefit: {
                     range: undefined,
-                    inegilibilityReasonField: undefined,
+                    ineligibilityReasonField: undefined,
                 },
                 acceleratedDeathBenefitForTerminalIllness: {
                     range: true,
-                    inegilibilityReasonField: undefined,
+                    ineligibilityReasonField: undefined,
                 },
                 charitableGiving: {
                     range: true,
-                    inegilibilityReasonField: undefined,
+                    ineligibilityReasonField: undefined,
                 },
             },
         },

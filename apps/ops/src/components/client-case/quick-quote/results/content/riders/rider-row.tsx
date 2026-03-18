@@ -36,8 +36,8 @@ export const QuickQuoteRiderRow = (props: QuickQuoteRiderRowProps) => {
         (result): RiderDataItem => ({
             period: 'mo.',
             value: result.data.riders?.[riderName]?.range as NumberOrRange,
-            inegilibilityReasons:
-                result.data.riders?.[riderName]?.inegilibilityReasonField,
+            ineligibilityReasons:
+                result.data.riders?.[riderName]?.ineligibilityReasonField,
         })
     );
 

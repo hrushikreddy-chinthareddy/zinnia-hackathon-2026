@@ -23,10 +23,10 @@ const createParams = (
     } as QuickQuoteParams);
 
 const determineIneligibilityClassReason = (
-    inegilibilityReasons: IneligibleReasonByClass[],
+    ineligibilityReasons: IneligibleReasonByClass[],
     reasonField: string
 ) => {
-    return inegilibilityReasons.find((reasonObj) =>
+    return ineligibilityReasons.find((reasonObj) =>
         reasonObj.reasons.find((reason) => reason.field === reasonField)
     );
 };
@@ -62,7 +62,7 @@ describe('QuickQuoteProducts', () => {
         ]);
     });
 
-    it('sets inegilibilityReasonField to "age" when age is out of range for all classes', () => {
+    it('sets ineligibilityReasonField to "age" when age is out of range for all classes', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 80,
@@ -74,14 +74,14 @@ describe('QuickQuoteProducts', () => {
         for (const productResult of result) {
             expect(productResult.classCodes).toEqual([]);
             const inilegibilityReason = determineIneligibilityClassReason(
-                productResult.inegilibilityReasonField,
+                productResult.ineligibilityReasonField,
                 'age'
             );
             expect(inilegibilityReason).toBeDefined();
         }
     });
 
-    it('sets some of inegilibilityReasonField to "face" when face amount is out of range but age is valid', () => {
+    it('sets some of ineligibilityReasonField to "face" when face amount is out of range but age is valid', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 35,
@@ -93,11 +93,11 @@ describe('QuickQuoteProducts', () => {
         for (const productResult of result) {
             expect(productResult.classCodes).toEqual([]);
             const faceIneligibilityReason = determineIneligibilityClassReason(
-                productResult.inegilibilityReasonField,
+                productResult.ineligibilityReasonField,
                 'face'
             );
             const ageIneligibilityReason = determineIneligibilityClassReason(
-                productResult.inegilibilityReasonField,
+                productResult.ineligibilityReasonField,
                 'age'
             );
             expect(faceIneligibilityReason).toBeDefined();

@@ -83,7 +83,7 @@ export class QuickQuoteProducts {
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [minClass, maxClass],
-                    inegilibilityReasonField: ineligibleReasonByClass,
+                    ineligibilityReasonField: ineligibleReasonByClass,
                     riders: {
                         ...resultRiders,
                     },
@@ -98,7 +98,7 @@ export class QuickQuoteProducts {
                     planCode: product.planCode,
                     termLength: product.termLength,
                     classCodes: [],
-                    inegilibilityReasonField: ineligibleReasonByClass,
+                    ineligibilityReasonField: ineligibleReasonByClass,
                     riders: {
                         ...resultRiders,
                     },

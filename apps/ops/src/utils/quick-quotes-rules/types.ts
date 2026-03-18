@@ -15,7 +15,7 @@ export type ProductName =
 
 export type PlanCode = 'TL0101' | 'TR0101';
 
-export type InegilibilityReasonField =
+export type IneligibilityReasonField =
     | 'age'
     | 'state'
     | 'face'
@@ -132,7 +132,7 @@ export type ProductClassResult = {
     planCode: PlanCode;
     termLength: TermFixedCostPeriod;
     classCodes: UnderwritingClass[];
-    inegilibilityReasonField: IneligibleReasonByClass[];
+    ineligibilityReasonField: IneligibleReasonByClass[];
     riders: ProductClassResultRiders;
 };
 
@@ -191,17 +191,17 @@ export type DataItem = {
     value: NumberOrRange | undefined;
     hasApiError: boolean;
     hasRiderErrors?: boolean;
-    inegilibilityReasons?: IneligibilityReason[];
+    ineligibilityReasons?: IneligibilityReason[];
 };
 
-export type RiderInegilibilityReason = {
+export type RiderIneligibilityReason = {
     termLengths: number[];
     reasons?: IneligibilityReason[] | undefined;
 };
 
 export type RiderDataItem = Omit<
     DataItem,
-    'inegilibilityReasons' | 'termLength' | 'fieldName' | 'hasApiError'
+    'ineligibilityReasons' | 'termLength' | 'fieldName' | 'hasApiError'
 > & {
-    inegilibilityReasons?: RiderInegilibilityReason[];
+    ineligibilityReasons?: RiderIneligibilityReason[];
 };

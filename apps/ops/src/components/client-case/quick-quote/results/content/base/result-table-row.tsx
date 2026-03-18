@@ -24,19 +24,19 @@ export const QuickQuoteResultTableRow = ({
     const hasNoApiErrors = data?.every(
         (datum) => 'hasApiError' in datum && datum.hasApiError === null
     );
-    const inegilibilityReasons = data?.map(({ inegilibilityReasons }) => {
-        return inegilibilityReasons;
+    const ineligibilityReasons = data?.map(({ ineligibilityReasons }) => {
+        return ineligibilityReasons;
     });
     const hasSameIneligibilityReason =
         isAllDataUnavailable &&
         hasNoApiErrors &&
-        new Set(inegilibilityReasons).size === 1;
+        new Set(ineligibilityReasons).size === 1;
 
     const cells =
         data && isAllDataUnavailable && hasSameIneligibilityReason ? (
             <QuickQuoteIneligibilityReasonCell
                 className={styles.fullDataCell}
-                reasons={data[0]?.inegilibilityReasons}
+                reasons={data[0]?.ineligibilityReasons}
             />
         ) : (
             data?.map((datum, idx) => (

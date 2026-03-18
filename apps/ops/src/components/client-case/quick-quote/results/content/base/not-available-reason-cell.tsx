@@ -9,14 +9,14 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getRiderNameFromRiderCode } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
-    RiderInegilibilityReason,
+    RiderIneligibilityReason,
 } from '@deps/utils/quick-quotes-rules/types';
 
 import styles from '../content.module.css';
 
 type QuickQuoteIneligibilityReasonCellProps = {
     className?: string;
-    reasons?: IneligibilityReason[] | RiderInegilibilityReason[];
+    reasons?: IneligibilityReason[] | RiderIneligibilityReason[];
 };
 
 const IneligibleLabel = ({ termLength }: { termLength?: string }) => {
@@ -142,8 +142,8 @@ export const QuickQuoteIneligibilityReasonCell = ({
     reasons,
 }: QuickQuoteIneligibilityReasonCellProps) => {
     const isRiderReason = (
-        reasons: IneligibilityReason[] | RiderInegilibilityReason[] | undefined
-    ): reasons is RiderInegilibilityReason[] => {
+        reasons: IneligibilityReason[] | RiderIneligibilityReason[] | undefined
+    ): reasons is RiderIneligibilityReason[] => {
         if (reasons === undefined) return false;
 
         const result =

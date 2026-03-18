@@ -14,7 +14,7 @@ export const QuickQuoteResultTableCell = ({
     data,
     variant,
 }: QuickQuoteResultTableCellProps) => {
-    const { value, period, hasRiderErrors, inegilibilityReasons } = data;
+    const { value, period, hasRiderErrors, ineligibilityReasons } = data;
 
     if ('fieldName' in data && data.hasApiError) {
         const { termLength, fieldName } = data;
@@ -25,7 +25,7 @@ export const QuickQuoteResultTableCell = ({
 
     if (value == null) {
         return (
-            <QuickQuoteIneligibilityReasonCell reasons={inegilibilityReasons} />
+            <QuickQuoteIneligibilityReasonCell reasons={ineligibilityReasons} />
         );
     }
 
@@ -37,9 +37,9 @@ export const QuickQuoteResultTableCell = ({
                 variant={variant}
                 hasRiderErrors={hasRiderErrors}
             />
-            {inegilibilityReasons && (
+            {ineligibilityReasons && (
                 <QuickQuoteIneligibilityReasonCell
-                    reasons={inegilibilityReasons}
+                    reasons={ineligibilityReasons}
                 />
             )}
         </div>

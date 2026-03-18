@@ -27,8 +27,8 @@ export const QuickQuotePremiumFreeRidersSection = () => {
             (result): RiderDataItem => ({
                 period: 'mo.',
                 value: 0,
-                inegilibilityReasons:
-                    result.data.riders?.[riderName]?.inegilibilityReasonField,
+                ineligibilityReasons:
+                    result.data.riders?.[riderName]?.ineligibilityReasonField,
             })
         );
 

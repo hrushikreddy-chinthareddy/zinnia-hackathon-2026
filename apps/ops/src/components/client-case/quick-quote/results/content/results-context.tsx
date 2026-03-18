@@ -150,7 +150,7 @@ export const QuickQuoteResultsProvider = ({
             termLength: number
         ): boolean => {
             return Object.entries(riders).some(([_, data]) =>
-                data.inegilibilityReasonField?.some(
+                data.ineligibilityReasonField?.some(
                     (reasons) =>
                         reasons.termLengths &&
                         reasons.termLengths.findIndex(
@@ -354,7 +354,7 @@ export const QuickQuoteResultsProvider = ({
                                         item
                                     ): item is WrappedErrorIllustrationResult =>
                                         item.error == null
-                                )?.variant?.inegilibilityReasonField;
+                                )?.variant?.ineligibilityReasonField;
 
                             const extractRiderIneligibilityReason = (
                                 data: WrappedIllustrationResult[],
@@ -399,7 +399,7 @@ export const QuickQuoteResultsProvider = ({
                                                 )
                                         );
 
-                                        const inegilibilityReasonField =
+                                        const ineligibilityReasonField =
                                             extractIneligibilityReason(data);
 
                                         const error = data.find(
@@ -415,12 +415,12 @@ export const QuickQuoteResultsProvider = ({
                                             };
                                         }
 
-                                        if (inegilibilityReasonField) {
+                                        if (ineligibilityReasonField) {
                                             return {
                                                 termLength,
                                                 range,
                                                 available: false,
-                                                inegilibilityReasonField,
+                                                ineligibilityReasonField,
                                                 error: undefined,
                                             };
                                         }
@@ -448,7 +448,7 @@ export const QuickQuoteResultsProvider = ({
                                                 )
                                         );
 
-                                        const inegilibilityReasonField =
+                                        const ineligibilityReasonField =
                                             extractIneligibilityReason(data);
 
                                         const error = data.find(
@@ -464,12 +464,12 @@ export const QuickQuoteResultsProvider = ({
                                             };
                                         }
 
-                                        if (inegilibilityReasonField) {
+                                        if (ineligibilityReasonField) {
                                             return {
                                                 termLength,
                                                 range,
                                                 available: false,
-                                                inegilibilityReasonField,
+                                                ineligibilityReasonField,
                                                 error: undefined,
                                             };
                                         }
@@ -555,7 +555,7 @@ export const QuickQuoteResultsProvider = ({
                                                         range: values.some(
                                                             (v) => v != null
                                                         ),
-                                                        inegilibilityReasonField:
+                                                        ineligibilityReasonField:
                                                             reasonsByTermLength.length >
                                                             0
                                                                 ? reasonsByTermLength
@@ -570,7 +570,7 @@ export const QuickQuoteResultsProvider = ({
                                                     range: asNumberOrRange(
                                                         values
                                                     ),
-                                                    inegilibilityReasonField:
+                                                    ineligibilityReasonField:
                                                         reasonsByTermLength.length >
                                                         0
                                                             ? reasonsByTermLength
