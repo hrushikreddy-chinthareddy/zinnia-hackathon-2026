@@ -17,13 +17,12 @@ export const ZinniaLogo = ({
     expandText: string;
 }) => {
     const [isInteractive, setIsInteractive] = useState(false);
-
     if (isExpanded) {
         return (
             <>
                 <Image
                     src={zinniaLogo}
-                    alt="Zinnia Logo"
+                    alt="Zinnia Logomark"
                     height={24}
                     width={24}
                 />
@@ -44,7 +43,7 @@ export const ZinniaLogo = ({
                 handleLogoClick();
                 setIsInteractive(false);
             }}
-            //aria-label={isExpanded ? `${activeCarrier} Logo` : expandText}
+            aria-label={isInteractive ? expandText : 'Zinnia Logo'}
             disabled={isExpanded}
             tabIndex={isExpanded ? -1 : 0}
             onMouseEnter={() => setIsInteractive(true)}
