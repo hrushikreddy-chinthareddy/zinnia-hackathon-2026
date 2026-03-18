@@ -49,9 +49,6 @@ export default function IllustrationDocumentsTable({
                         {t('policy.documents.created')}
                     </TableHeaderCell>
                     <TableHeaderCell>
-                        {t('policy.documents.createdBy')}
-                    </TableHeaderCell>
-                    <TableHeaderCell>
                         {t('policy.documents.actions')}
                     </TableHeaderCell>
                 </TableRow>
@@ -73,12 +70,6 @@ export default function IllustrationDocumentsTable({
                                     {convertKebabedDateString(
                                         document.createDate
                                     ) || DEFAULT_ERROR_STRING}
-                                </span>
-                            </TableCell>
-                            <TableCell>
-                                <span>
-                                    {/* // TODO: use the identifiers to get creator name */}
-                                    {document.createdBy || DEFAULT_ERROR_STRING}
                                 </span>
                             </TableCell>
                             <TableCell>
