@@ -7716,7 +7716,7 @@
             "downloadIllustrationPdf": "Preparing as-is illustration PDF...",
             "downloadIllustrationPdfError": "Something went wrong while creating the illustration PDF",
             "close": "Close",
-            "retryIllustrationPdf": "Retry illustration"
+            "retryIllustrationPdf": "Retry illustration PDF"
         },
         "transactions": {
             "label": "Transactions",

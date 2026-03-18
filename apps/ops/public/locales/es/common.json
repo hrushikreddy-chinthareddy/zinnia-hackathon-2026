@@ -7621,11 +7621,11 @@
         "additionalActions": {
             "label": "Acciones adicionales",
             "createAsIsIllustration": "Crear el PDF de la ilustración as-is",
-            "serviceRequestForm": "Soumettre une demande de service",
+            "serviceRequestForm": "Presentar una solicitud de servicio",
             "downloadIllustrationPdf": "Preparando PDF como ilustración...",
             "downloadIllustrationPdfError": "Ocurrió un error al crear el PDF de Iustración",
             "close": "Cerrar",
-            "retryIllustrationPdf": "Reintentar ilustración"
+            "retryIllustrationPdf": "Reintentar el PDF de ilustración"
         },
         "transactions": {
             "label": "Transacciones",

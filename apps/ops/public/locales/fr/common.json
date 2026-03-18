@@ -7593,7 +7593,7 @@
             "downloadingPdf": "Préparation du PDF d'illustration tel quel...",
             "downloadIllustrationPdfError": "Une erreur s'est produite lors de la création du PDF d'illustration",
             "close": "Fermer",
-            "retryIllustrationPdf": "Illustration du réessai"
+            "retryIllustrationPdf": "Réessayer le PDF d'illustration"
         },
         "transactions": {
             "label": "Transactions",
