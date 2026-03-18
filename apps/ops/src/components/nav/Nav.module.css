@@ -1,10 +1,7 @@
 .navContainer {
     --nav-expanded-width: 240px;
     background-color: var(--color-base-surface-carrier);
-    /* for the sake of the animation hiding text properly we're using a border instead of padding */
-    /* that way whatever is overflowing behind the border is hidden */
-    border: var(--measure-dimension-z-space-2) solid
-        var(--color-base-surface-carrier);
+    padding: var(--measure-dimension-z-space-2);
     height: 100vh;
     position: sticky;
     transition: 300ms ease-in-out;
@@ -15,6 +12,7 @@
 
     &.collapsed {
         width: 48px;
+        overflow-x: hidden;
     }
 }
 
@@ -24,7 +22,6 @@
     display: flex;
     height: 100%;
     flex-direction: column;
-    overflow: hidden;
 }
 
 .toggleTarget {
@@ -36,17 +33,25 @@
 }
 
 .toggleButton {
-    justify-content: flex-end;
     transform: rotate(180deg);
-    &:hover:not(:disabled):after {
-        content: none;
+    padding: var(--measure-dimension-z-space-1);
+
+    &:hover,
+    &:focus {
+        background-color: var(--color-grayscale-color-white);
+        border-radius: var(--measure-dimension-z-space-1);
+    }
+
+    @container (max-width: 32px) {
+        display: none;
     }
 }
 
 .logoRow {
     align-items: center;
-    display: flex;
-    justify-content: space-between;
+    container-type: inline-size;
+    display: grid;
+    grid-template-columns: minmax(32px, 1fr) auto;
     margin-block-end: var(--measure-dimension-z-space-2);
     padding-inline: var(--measure-dimension-z-space-1-5);
     padding-block: var(--measure-dimension-z-space-2);
@@ -59,6 +64,19 @@
     min-width: 90px;
     & img {
         height: 24px;
+    }
+}
+
+.logoButton:not(:disabled) {
+    &:hover,
+    &:focus {
+        background-color: var(--color-grayscale-color-white);
+        border-radius: var(--measure-dimension-z-space-1);
+        padding: var(--measure-dimension-z-space-1);
+    }
+
+    svg {
+        color: var(--color-grayscale-color-600-gray);
     }
 }
 
@@ -140,11 +158,6 @@ div:has(> .searchInput)::before {
     &:last-of-type {
         margin-top: auto;
     }
-
-    /* &:not(.expanded) {
-        display: inline-flex;
-        justify-content: center;
-    } */
 }
 
 .navSection__heading {
@@ -157,7 +170,7 @@ div:has(> .searchInput)::before {
     width: 100%; /* Fallback for unsupported browsers */
     width: -moz-available;
     width: -webkit-fill-available;
-    width: stretch; /* Standard value */
+    width: stretch;
 }
 
 .navSection__heading {
@@ -235,12 +248,8 @@ div:has(> .searchInput)::before {
     }
 }
 
-.zinniaLogo {
-    display: grid;
-    place-items: center;
-
-    &:hover {
-        background-color: var(--color-grayscale-color-white);
-        border-radius: var(--measure-dimension-z-space-1);
+.logoText {
+    @container (max-width: 32px) {
+        display: none;
     }
 }

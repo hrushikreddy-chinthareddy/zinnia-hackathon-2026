@@ -7,7 +7,7 @@
     width: 100%; /* Fallback for unsupported browsers */
     width: -moz-available;
     width: -webkit-fill-available;
-    width: stretch; /* Standard value */
+    width: stretch;
 }
 
 .contextTrigger:hover,

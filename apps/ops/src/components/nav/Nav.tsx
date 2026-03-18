@@ -103,7 +103,7 @@ export const Nav = ({
             )}
         >
             <div className={styles.navOverflowContainer}>
-                <button
+                {/* <button
                     className={clsx(styles.toggleTarget)}
                     aria-label={isExpanded ? collapseText : expandText}
                     onClick={handleNavToggle}
@@ -112,14 +112,14 @@ export const Nav = ({
                             ? { cursor: 'w-resize' }
                             : { cursor: 'e-resize' }
                     }
-                ></button>
+                ></button> */}
                 <div className={styles.logoRow}>
                     <div className={styles.logo}>
                         {/* If the theme is Zinnia - just load in the logo component */}
                         {carrierName === CarrierName.ZINNIA ? (
                             <ZinniaLogo
                                 handleLogoClick={handleLogoClick}
-                                isExpanded={false}
+                                isExpanded={isExpanded}
                                 expandText=""
                             />
                         ) : // Otherwise check for expanded state to toggle between the two types of logos
