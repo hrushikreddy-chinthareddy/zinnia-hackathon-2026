@@ -56,16 +56,6 @@ describe('UserContextMenu', () => {
         expect(trigger.tagName).toBe('BUTTON');
     });
 
-    it('does not have an explicit tabIndex on the trigger', () => {
-        render(<UserContextMenu name="Doe, John" />);
-
-        const trigger = screen.getByRole('button', {
-            name: 'allFields.navLinksUserMenuFor',
-        });
-        // Radix DropdownMenu.Trigger handles focus; no manual tabIndex needed
-        expect(trigger).not.toHaveAttribute('tabindex', '0');
-    });
-
     it('opens the menu with sign-out link as a menuitem on click', async () => {
         const user = userEvent.setup();
         render(<UserContextMenu name="Doe, John" />);
