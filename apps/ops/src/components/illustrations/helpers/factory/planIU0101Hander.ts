@@ -201,8 +201,10 @@ const farmersEntitiesSchema = t.object(
     t.property('paymentMode', t.string),
     t.property('discountIndicator', t.union(t.array(t.string), t.undefined)), // multiple-policy-owner
     t.property('paymentMethod', t.string),
-    t.property('premiumDuration', t.union(t.number, t.undefined)),
+    t.optionalProperty('premiumDuration', t.union(t.number, t.undefined)),
     t.optionalProperty('premiumDurationOption', t.string),
+    t.optionalProperty('premiumDurationAge', t.union(t.number, t.undefined)),
+    t.optionalProperty('premiumDurationYears', t.union(t.number, t.undefined)),
     t.optionalProperty('modalPremiumValue', t.union(t.number, t.undefined)),
 
     t.optionalProperty(
@@ -560,7 +562,14 @@ function createIllustrationPayload(
         })
     );
 
+    // TODO: this is not set in the form -> determine the necessity of this field
+    // after "Solve for" -> "Premium" was refactored to use premiumDurationOption (years, age)
     const premiumDuration = values.premiumDuration || 0;
+
+    const premiumDurationForPremiumSolve =
+        values.premiumDurationOption === 'AGE'
+            ? values.premiumDurationAge || 0
+            : values.premiumDurationYears || 0;
 
     const underWritingClass = getUnderWritingClass(values.premiumClass);
 
@@ -644,8 +653,8 @@ function createIllustrationPayload(
                 paymentMode: values.paymentMode,
                 discountIndicator: values.discountIndicator?.[0] || 'NON',
                 paymentMethod: values.paymentMethod,
-                premiumDuration: premiumDuration,
-                premiumDurationOption: 'YEARS',
+                premiumDuration: premiumDurationForPremiumSolve,
+                premiumDurationOption: values.premiumDurationOption || 'YEARS',
                 faceAmount: {
                     frequency: FARMERS_HARDCODED_DATA.solveForFrequency,
                     basis: FARMERS_HARDCODED_DATA.premiumBasis,
@@ -663,7 +672,7 @@ function createIllustrationPayload(
                     sequence: [
                         {
                             from: FARMERS_HARDCODED_DATA.premiumFrom,
-                            through: premiumDuration,
+                            through: premiumDurationForPremiumSolve,
                             value: values.solveForPremiumType,
                         },
                     ],

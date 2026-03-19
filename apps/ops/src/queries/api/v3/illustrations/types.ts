@@ -99,8 +99,10 @@ export type Options = {
     paymentMode: string;
     discountIndicator: string;
     paymentMethod: string;
-    premiumDuration: number;
+    premiumDuration?: number;
     premiumDurationOption: string;
+    premiumDurationAge?: number;
+    premiumDurationYears?: number;
     faceAmount: {
         basis: string;
         frequency: string;
