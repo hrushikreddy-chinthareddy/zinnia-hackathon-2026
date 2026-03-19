@@ -24,6 +24,6 @@
 /* conditionally render name if the sidebar nav is expanded */
 @container (max-width: 32px) {
     .name {
-        display: none; /* Hides the text when container is 300px or less */
+        display: none; /* Hides the text when container is 32px or less */
     }
 }
