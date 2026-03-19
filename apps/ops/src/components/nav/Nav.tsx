@@ -181,10 +181,7 @@ export const Nav = ({
 
                             return (
                                 <div
-                                    className={clsx(
-                                        styles.navSection
-                                        // isExpanded && styles.expanded
-                                    )}
+                                    className={styles.navSection}
                                     key={`navSection-${index}`}
                                 >
                                     {group.heading && (
@@ -226,9 +223,9 @@ export const Nav = ({
                                                         // Yes, this not the best solution but it works until all the circular excessive
                                                         // navlink stuff is fixed between here and ops.
                                                         <li
-                                                            className={clsx(
+                                                            className={
                                                                 styles.listItem
-                                                            )}
+                                                            }
                                                             key={navItem.id}
                                                             tabIndex={-1}
                                                         >
