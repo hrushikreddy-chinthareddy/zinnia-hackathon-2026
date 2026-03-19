@@ -64,7 +64,7 @@ export const IllustrationCaseSumary = ({
     const insuranceDetails = `${capitalize(
         clientCase?.insuredDetails?.sexAtBirth
     )}, Age ${calculateAge(
-        clientCase?.insuredDetails?.dateOfBirth?.toString(),
+        clientCase?.insuredDetails?.dateOfBirth,
         ''
     )}, ${getStateName(clientCase?.insuredDetails?.state)}`;
     const insurredFullName =
