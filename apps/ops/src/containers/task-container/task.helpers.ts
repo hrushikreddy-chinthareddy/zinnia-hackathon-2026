@@ -168,7 +168,7 @@ export const getFormattedPhoneNumber = (phone: Phone) => {
         phone?.countryCode ??
         (rawDialNumber.length > 10
             ? rawDialNumber.slice(0, rawDialNumber.length - 10)
-            : '1');
+            : null);
 
     const formattedNumber = `${countryCode}${areaCode}${dialNumber}`;
     return formattedNumber.trim() || null;

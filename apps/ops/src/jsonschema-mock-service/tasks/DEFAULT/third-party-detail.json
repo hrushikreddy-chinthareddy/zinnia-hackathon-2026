@@ -198,7 +198,7 @@
                                         ],
                                         "phones": [
                                             {
-                                                "dialNumber": "1",
+                                                "dialNumber": null,
                                                 "phoneType": "MOBILE",
                                                 "isPreferred": true
                                             }
@@ -393,7 +393,7 @@
                                                 "items": {
                                                     "type": "object",
                                                     "default": {
-                                                        "dialNumber": "1",
+                                                        "dialNumber": null,
                                                         "phoneType": "MOBILE",
                                                         "isPreferred": false
                                                     },

@@ -4,6 +4,7 @@ import { TFunction } from 'next-i18next';
 import { TimeZoneAbbreviations } from '@deps/data/time-zones';
 import { isEndDated } from '@deps/helpers/date.helpers';
 import { ZAHARA_API_DATE_FORMAT } from '@deps/types/constants';
+import { DEFAULT_ERROR_STRING } from '@deps/utils/strings';
 
 export const ENTERPRISE_PHONE_TYPE = {
     FAX: 'FAX',
@@ -218,5 +219,5 @@ export function formatPhoneNumberWithCountryCode(
             3
         )}-${phone.dialNumber.substring(3, 8)}`;
     }
-    return formattedNumber;
+    return formattedNumber || DEFAULT_ERROR_STRING;
 }

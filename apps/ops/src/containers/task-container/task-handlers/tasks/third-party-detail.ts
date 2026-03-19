@@ -91,7 +91,7 @@ const formatPhone = (phone?: Partial<Phone>): Phone => {
             phone?.countryCode ??
             (dialNumber.length > 10
                 ? dialNumber.slice(0, dialNumber.length - 10)
-                : '1'),
+                : undefined),
         endDate: (phone?.endDate as string) ?? null,
         isPreferred: Boolean(phone?.isPreferred),
         startDate: (phone?.startDate as string) ?? null,

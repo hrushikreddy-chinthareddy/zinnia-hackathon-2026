@@ -70,7 +70,7 @@ export function cleanPhones(arr: any[] = []) {
         const dialNumber =
             phone.dialNumber.length === 7
                 ? phone.dialNumber
-                : phone?.dialNumber.slice(-7) ?? '';
+                : phone?.dialNumber.slice(-7) ?? null;
         const areaCode =
             phone.dialNumber.length > 7
                 ? phone.dialNumber.slice(-10, -7)
@@ -78,7 +78,7 @@ export function cleanPhones(arr: any[] = []) {
         const countryCode =
             phone?.dialNumber && phone.dialNumber.length > 10
                 ? phone.dialNumber.slice(0, -10)
-                : phone?.countryCode ?? '1';
+                : phone?.countryCode ?? null;
 
         phone.dialNumber = dialNumber;
         phone.areaCode = areaCode;

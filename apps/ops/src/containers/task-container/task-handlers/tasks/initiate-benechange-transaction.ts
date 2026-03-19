@@ -167,7 +167,7 @@ export const formatContractInfo = (policyResponse: PolicyResponse) => {
                               phone?.countryCode ??
                               (dialNumber.length > 10
                                   ? dialNumber.slice(0, dialNumber.length - 10)
-                                  : '1'),
+                                  : null),
                           dialNumber:
                               dialNumber.length > 0
                                   ? getFormattedPhoneNumber(phone) ?? null
@@ -187,7 +187,7 @@ export const formatContractInfo = (policyResponse: PolicyResponse) => {
                       {
                           areaCode: null,
                           bestTime: null,
-                          countryCode: '1',
+                          countryCode: null,
                           dialNumber: null,
                           endDate: null,
                           extension: null,
@@ -335,7 +335,7 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                                         0,
                                                         dialNumber.length - 10
                                                     )
-                                                  : '1'),
+                                                  : null),
                                           dialNumber:
                                               dialNumber.length > 0
                                                   ? getFormattedPhoneNumber(
@@ -360,7 +360,7 @@ export const formatBeneficiaries = (policyResponse: PolicyResponse) => {
                                           phoneType: PhoneType.HOME,
                                           areaCode: null,
                                           bestTime: null,
-                                          countryCode: '1',
+                                          countryCode: null,
                                           dialNumber: null,
                                           endDate: null,
                                           extension: null,
@@ -538,7 +538,7 @@ export const formatParties = (policyResponse: PolicyResponse) => {
                                                         0,
                                                         dialNumber.length - 10
                                                     )
-                                                  : '1'),
+                                                  : null),
                                           dialNumber:
                                               dialNumber.length > 0
                                                   ? getFormattedPhoneNumber(
@@ -561,7 +561,7 @@ export const formatParties = (policyResponse: PolicyResponse) => {
                                           phoneType: PhoneType.HOME,
                                           areaCode: null,
                                           bestTime: null,
-                                          countryCode: '1',
+                                          countryCode: null,
                                           dialNumber: null,
                                           endDate: null,
                                           extension: null,

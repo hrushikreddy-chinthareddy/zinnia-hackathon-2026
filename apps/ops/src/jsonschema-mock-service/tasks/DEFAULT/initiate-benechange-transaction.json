@@ -1103,7 +1103,7 @@
                                         "phones": [
                                             {
                                                 "phoneType": "MOBILE",
-                                                "dialNumber": "1",
+                                                "dialNumber": null,
                                                 "isPreferred": true
                                             }
                                         ],
@@ -1350,7 +1350,7 @@
                                                     },
                                                     "default": {
                                                         "phoneType": "MOBILE",
-                                                        "dialNumber": "1",
+                                                        "dialNumber": null,
                                                         "isPreferred": false
                                                     }
                                                 }
