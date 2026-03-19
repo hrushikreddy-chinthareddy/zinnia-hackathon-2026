@@ -67,13 +67,14 @@ export const transformPomAgentDataToParty = (
                       },
                   ]
                 : []),
-            ...(agentData?.alternateIds.map((id) => ({
+            ...(agentData?.alternateIds?.map((id) => ({
                 identificationType: IdentificationTypeEnum.EXTERNAL,
                 identificationKey: id.key?.toUpperCase(),
                 identificationValue: id.value,
             })) || []),
         ],
     };
+
     return party;
 };
 
