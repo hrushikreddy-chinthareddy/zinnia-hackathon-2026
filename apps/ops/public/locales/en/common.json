@@ -9485,7 +9485,7 @@
                 "hint": "",
                 "nYearTerm": "{{years}} year term"
             },
-            "notAvailableReason": {
+            "ineligibilityReason": {
                 "maxAge": "Max issue age: {{age}}",
                 "minAge": "Min issue age: {{age}}",
                 "state": "Not available in this state",

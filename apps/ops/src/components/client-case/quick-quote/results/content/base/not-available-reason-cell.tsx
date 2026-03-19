@@ -9,17 +9,17 @@ import { numberFormatify } from '@deps/helpers/numbers.helpers';
 import { getRiderNameFromRiderCode } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
-    RiderInegilibilityReason,
+    RiderIneligibilityReason,
 } from '@deps/utils/quick-quotes-rules/types';
 
 import styles from '../content.module.css';
 
-type QuickQuoteNotAvailableReasonCellProps = {
+type QuickQuoteIneligibilityReasonCellProps = {
     className?: string;
-    reasons?: IneligibilityReason[] | RiderInegilibilityReason[];
+    reasons?: IneligibilityReason[] | RiderIneligibilityReason[];
 };
 
-const NotAvailableLabel = ({ termLength }: { termLength?: string }) => {
+const IneligibleLabel = ({ termLength }: { termLength?: string }) => {
     const { t } = useTranslation();
 
     return (
@@ -53,7 +53,7 @@ const formatToCurrency = (value: number) =>
         maximumFractionDigits: 0,
     });
 
-const NotAvailabilityReasonLabel = ({
+const IneligibilityReasonLabel = ({
     reason,
 }: {
     reason: IneligibilityReason;
@@ -66,14 +66,14 @@ const NotAvailabilityReasonLabel = ({
         const minAge = reason.expected[0];
         if (reason.actual > maxAge) {
             message = t(
-                'clientCase.quickQuoteResults.notAvailableReason.maxAge',
+                'clientCase.quickQuoteResults.ineligibilityReason.maxAge',
                 {
                     age: maxAge,
                 }
             );
         } else {
             message = t(
-                'clientCase.quickQuoteResults.notAvailableReason.minAge',
+                'clientCase.quickQuoteResults.ineligibilityReason.minAge',
                 {
                     age: minAge,
                 }
@@ -84,31 +84,31 @@ const NotAvailabilityReasonLabel = ({
         const minFaceAmount = reason.expected[0];
         if (reason.actual > maxFaceAmount) {
             message = t(
-                'clientCase.quickQuoteResults.notAvailableReason.maxFaceAm',
+                'clientCase.quickQuoteResults.ineligibilityReason.maxFaceAm',
                 {
                     amount: formatToCurrency(maxFaceAmount),
                 }
             );
         } else {
             message = t(
-                'clientCase.quickQuoteResults.notAvailableReason.minFaceAm',
+                'clientCase.quickQuoteResults.ineligibilityReason.minFaceAm',
                 {
                     amount: formatToCurrency(minFaceAmount),
                 }
             );
         }
     } else if (reason.reason === 'stateNotEligible') {
-        message = t('clientCase.quickQuoteResults.notAvailableReason.state');
+        message = t('clientCase.quickQuoteResults.ineligibilityReason.state');
     } else if (reason.reason === 'underMinimumPolicyFaceAmount') {
         message = t(
-            'clientCase.quickQuoteResults.notAvailableReason.minimumPolicyFaceAmount',
+            'clientCase.quickQuoteResults.ineligibilityReason.minimumPolicyFaceAmount',
             {
                 amount: formatToCurrency(reason.expected),
             }
         );
     } else if (reason.reason === 'requiredRiderNotSelected') {
         message = t(
-            'clientCase.quickQuoteResults.notAvailableReason.requiredRiderNotSelected',
+            'clientCase.quickQuoteResults.ineligibilityReason.requiredRiderNotSelected',
             {
                 riders: reason.notSelectedRider
                     .map((e) =>
@@ -123,7 +123,7 @@ const NotAvailabilityReasonLabel = ({
         );
     } else if (reason.reason === 'riderIsGreaterThanPolicyFaceAmount') {
         message = t(
-            'clientCase.quickQuoteResults.notAvailableReason.riderFaceAmount'
+            'clientCase.quickQuoteResults.ineligibilityReason.riderFaceAmount'
         );
     }
 
@@ -137,13 +137,13 @@ const NotAvailabilityReasonLabel = ({
     );
 };
 
-export const QuickQuoteNotAvailableReasonCell = ({
+export const QuickQuoteIneligibilityReasonCell = ({
     className,
     reasons,
-}: QuickQuoteNotAvailableReasonCellProps) => {
+}: QuickQuoteIneligibilityReasonCellProps) => {
     const isRiderReason = (
-        reasons: IneligibilityReason[] | RiderInegilibilityReason[] | undefined
-    ): reasons is RiderInegilibilityReason[] => {
+        reasons: IneligibilityReason[] | RiderIneligibilityReason[] | undefined
+    ): reasons is RiderIneligibilityReason[] => {
         if (reasons === undefined) return false;
 
         const result =
@@ -156,17 +156,15 @@ export const QuickQuoteNotAvailableReasonCell = ({
     };
 
     return (
-        <div className={clsx(styles.notAvailableReasonCell, className)}>
+        <div className={clsx(styles.ineligibilityReasonCell, className)}>
             {!isRiderReason(reasons) ? (
                 <div>
-                    <NotAvailableLabel />
+                    <IneligibleLabel />
                     <ul className={styles.reasonList}>
                         {reasons?.map((reason) => {
                             return (
                                 <li key={`${reason.field}`}>
-                                    <NotAvailabilityReasonLabel
-                                        reason={reason}
-                                    />
+                                    <IneligibilityReasonLabel reason={reason} />
                                 </li>
                             );
                         })}
@@ -177,14 +175,14 @@ export const QuickQuoteNotAvailableReasonCell = ({
                     const concatenatedTermLengths = termLengths?.join(', ');
                     return (
                         <div key={`${idx}`}>
-                            <NotAvailableLabel
+                            <IneligibleLabel
                                 termLength={concatenatedTermLengths}
                             />
                             <ul className={styles.reasonList}>
                                 {reasons &&
                                     reasons.map((reason) => (
                                         <li key={`${reason.field}`}>
-                                            <NotAvailabilityReasonLabel
+                                            <IneligibilityReasonLabel
                                                 reason={reason}
                                             />
                                         </li>
@@ -194,7 +192,7 @@ export const QuickQuoteNotAvailableReasonCell = ({
                     );
                 })
             ) : (
-                <NotAvailableLabel />
+                <IneligibleLabel />
             )}
         </div>
     );

@@ -3,7 +3,7 @@ import type { QuickQuoteParams } from '@deps/types/quickQuote';
 
 import { QuickQuoteProducts } from './evaluate-quick-quote';
 import { RULES_MODEL } from './rules';
-import { nonEligibleReasonByClass, RiderEligibilityResult } from './types';
+import { IneligibleReasonByClass, RiderEligibilityResult } from './types';
 
 const createParams = (
     overrides: Partial<QuickQuoteParams> = {}
@@ -22,16 +22,16 @@ const createParams = (
         ...overrides,
     } as QuickQuoteParams);
 
-const determineNotAvailabilityClassReason = (
-    notAvailabilityReasons: nonEligibleReasonByClass[],
+const determineIneligibilityClassReason = (
+    ineligibilityReasons: IneligibleReasonByClass[],
     reasonField: string
 ) => {
-    return notAvailabilityReasons.find((reasonObj) =>
+    return ineligibilityReasons.find((reasonObj) =>
         reasonObj.reasons.find((reason) => reason.field === reasonField)
     );
 };
 
-const determineNotAvailabilityRiderReason = (
+const determineIneligibilityRiderReason = (
     rider: RiderEligibilityResult,
     reasonField: string
 ) => {
@@ -62,7 +62,7 @@ describe('QuickQuoteProducts', () => {
         ]);
     });
 
-    it('sets notAvailabilityReasonField to "age" when age is out of range for all classes', () => {
+    it('sets ineligibilityReasonField to "age" when age is out of range for all classes', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 80,
@@ -73,15 +73,15 @@ describe('QuickQuoteProducts', () => {
 
         for (const productResult of result) {
             expect(productResult.classCodes).toEqual([]);
-            const notAvailabilityReason = determineNotAvailabilityClassReason(
-                productResult.notAvailabilityReasonField,
+            const inilegibilityReason = determineIneligibilityClassReason(
+                productResult.ineligibilityReasonField,
                 'age'
             );
-            expect(notAvailabilityReason).toBeDefined();
+            expect(inilegibilityReason).toBeDefined();
         }
     });
 
-    it('sets some of notAvailabilityReasonField to "face" when face amount is out of range but age is valid', () => {
+    it('sets some of ineligibilityReasonField to "face" when face amount is out of range but age is valid', () => {
         const engine = new QuickQuoteProducts(RULES_MODEL);
         const params = createParams({
             insuredAge: 35,
@@ -92,18 +92,16 @@ describe('QuickQuoteProducts', () => {
 
         for (const productResult of result) {
             expect(productResult.classCodes).toEqual([]);
-            const faceNotAvailabilityReason =
-                determineNotAvailabilityClassReason(
-                    productResult.notAvailabilityReasonField,
-                    'face'
-                );
-            const ageNotAvailabilityReason =
-                determineNotAvailabilityClassReason(
-                    productResult.notAvailabilityReasonField,
-                    'age'
-                );
-            expect(faceNotAvailabilityReason).toBeDefined();
-            expect(ageNotAvailabilityReason).toBeUndefined();
+            const faceIneligibilityReason = determineIneligibilityClassReason(
+                productResult.ineligibilityReasonField,
+                'face'
+            );
+            const ageIneligibilityReason = determineIneligibilityClassReason(
+                productResult.ineligibilityReasonField,
+                'age'
+            );
+            expect(faceIneligibilityReason).toBeDefined();
+            expect(ageIneligibilityReason).toBeUndefined();
         }
     });
 
@@ -129,12 +127,12 @@ describe('QuickQuoteProducts', () => {
         expect(tl10).toBeDefined();
         expect(tl10?.classCodes.length).toBeGreaterThan(0);
         const isRiderEligible = tl10?.riders.Rider_ADR.eligible;
-        const ageNotAvailabilityReason = determineNotAvailabilityRiderReason(
+        const ageIneligibilityReason = determineIneligibilityRiderReason(
             tl10!.riders.Rider_ADR!,
             'age'
         );
         expect(isRiderEligible).toBe(false);
-        expect(ageNotAvailabilityReason).toBeDefined();
+        expect(ageIneligibilityReason).toBeDefined();
 
         // todo determine age reason for rider
     });
@@ -159,13 +157,13 @@ describe('QuickQuoteProducts', () => {
             (p) => p.planCode === 'TL0101' && p.termLength === 10
         );
         expect(tl10).toBeDefined();
-        const faceNotAvailabilityReason = determineNotAvailabilityRiderReason(
+        const faceIneligibilityReason = determineIneligibilityRiderReason(
             tl10!.riders.Rider_ADR!,
             'adrMaxFace'
         );
         const isRiderEligible = tl10?.riders.Rider_ADR.eligible;
         expect(isRiderEligible).toBe(false);
-        expect(faceNotAvailabilityReason).toBeDefined();
+        expect(faceIneligibilityReason).toBeDefined();
     });
 
     it('returns not eligible for a rider that is not selected', () => {

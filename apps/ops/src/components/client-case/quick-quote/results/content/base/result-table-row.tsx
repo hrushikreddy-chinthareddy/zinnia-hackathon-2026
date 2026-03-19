@@ -4,7 +4,7 @@ import { TypographyVariant } from '@deps/components/typography/typography';
 import { DataItem, RiderDataItem } from '@deps/utils/quick-quotes-rules/types';
 
 import styles from '../content.module.css';
-import { QuickQuoteNotAvailableReasonCell } from './not-available-reason-cell';
+import { QuickQuoteIneligibilityReasonCell } from './not-available-reason-cell';
 import { QuickQuoteResultTableCell } from './result-table-cell';
 
 type QuickQuoteResultTableRowProps = {
@@ -20,24 +20,23 @@ export const QuickQuoteResultTableRow = ({
     children,
     cellsVariant,
 }: QuickQuoteResultTableRowProps) => {
-    const isAllDataUnAvailable = data?.every(({ value }) => value == null);
+    const isAllDataUnavailable = data?.every(({ value }) => value === null);
     const hasNoApiErrors = data?.every(
-        (datum) => 'hasApiError' in datum && datum.hasApiError == null
+        (datum) => 'hasApiError' in datum && datum.hasApiError === null
     );
-    const notAvailabilityReasons = data?.map(({ notAvailabilityReasons }) => {
-        return notAvailabilityReasons;
+    const ineligibilityReasons = data?.map(({ ineligibilityReasons }) => {
+        return ineligibilityReasons;
     });
-    const hasSameNotAvailabilityReason =
-        isAllDataUnAvailable &&
+    const hasSameIneligibilityReason =
+        isAllDataUnavailable &&
         hasNoApiErrors &&
-        new Set(notAvailabilityReasons).size === 1;
+        new Set(ineligibilityReasons).size === 1;
 
     const cells =
-        data == null ? null : isAllDataUnAvailable &&
-          hasSameNotAvailabilityReason ? (
-            <QuickQuoteNotAvailableReasonCell
+        data && isAllDataUnavailable && hasSameIneligibilityReason ? (
+            <QuickQuoteIneligibilityReasonCell
                 className={styles.fullDataCell}
-                reasons={data[0]?.notAvailabilityReasons}
+                reasons={data[0]?.ineligibilityReasons}
             />
         ) : (
             data?.map((datum, idx) => (

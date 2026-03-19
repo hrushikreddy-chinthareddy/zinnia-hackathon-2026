@@ -21,11 +21,11 @@ import {
     QuickQuoteParams,
     TermQuickQuoteRiderDataItem,
     RIDER_CODE_MAP,
-    TermQuickQuoteRiderNotAvailableItem,
+    TermQuickQuoteRiderIneligibleItem,
 } from '@deps/types/quickQuote';
 import {
     IneligibilityReason,
-    nonEligibleReasonByClass,
+    IneligibleReasonByClass,
     RiderCode,
 } from '@deps/utils/quick-quotes-rules/types';
 
@@ -47,7 +47,7 @@ type QuickQuoteResultsContextState = {
     isPending: boolean;
     results: QuickQuoteResult[] | undefined;
     filterIneligibilityReasons: (
-        reasons: nonEligibleReasonByClass[] | undefined
+        reasons: IneligibleReasonByClass[] | undefined
     ) => IneligibilityReason[];
     hasRiderErrorsByTermLength: (
         riders: Partial<Record<RiderName, TermQuickQuoteRiderDataItem>>,
@@ -118,7 +118,7 @@ export const QuickQuoteResultsProvider = ({
      */
     const filterIneligibilityReasons = useCallback(
         (
-            reasons: nonEligibleReasonByClass[] | undefined
+            reasons: IneligibleReasonByClass[] | undefined
         ): IneligibilityReason[] => {
             if (!reasons || reasons.length === 0) return [];
 
@@ -150,7 +150,7 @@ export const QuickQuoteResultsProvider = ({
             termLength: number
         ): boolean => {
             return Object.entries(riders).some(([_, data]) =>
-                data.notAvailabilityReasonField?.some(
+                data.ineligibilityReasonField?.some(
                     (reasons) =>
                         reasons.termLengths &&
                         reasons.termLengths.findIndex(
@@ -199,8 +199,8 @@ export const QuickQuoteResultsProvider = ({
 
     const groupRiderErrors = useCallback(
         (
-            reasons: TermQuickQuoteRiderNotAvailableItem[]
-        ): TermQuickQuoteRiderNotAvailableItem[] => {
+            reasons: TermQuickQuoteRiderIneligibleItem[]
+        ): TermQuickQuoteRiderIneligibleItem[] => {
             // Group reasons to their corresponding termLengths
             const reasonMap: Map<
                 string,
@@ -279,9 +279,7 @@ export const QuickQuoteResultsProvider = ({
                 const items = zip(results, variants).map(
                     ([result, variant]): WrappedIllustrationResult => {
                         if (!result || !variant) {
-                            // Only for type narrowing
-                            // `results` and `variants` should always have
-                            // the same length
+                            // Only for type narrowing `results` and `variants` should always have the same length
                             throw new Error('Array length mismatch');
                         }
 
@@ -348,7 +346,7 @@ export const QuickQuoteResultsProvider = ({
                                     return item.variant.termLength;
                                 }
                             );
-                            const extractNotAvailabilityReason = (
+                            const extractIneligibilityReason = (
                                 data: WrappedIllustrationResult[]
                             ) =>
                                 data.find(
@@ -356,9 +354,9 @@ export const QuickQuoteResultsProvider = ({
                                         item
                                     ): item is WrappedErrorIllustrationResult =>
                                         item.error == null
-                                )?.variant?.notAvailabilityReasonField;
+                                )?.variant?.ineligibilityReasonField;
 
-                            const extractRiderNotAvailabilityReason = (
+                            const extractRiderIneligibilityReason = (
                                 data: WrappedIllustrationResult[],
                                 riderCode: RiderCode
                             ) =>
@@ -401,8 +399,8 @@ export const QuickQuoteResultsProvider = ({
                                                 )
                                         );
 
-                                        const notAvailabilityReasonField =
-                                            extractNotAvailabilityReason(data);
+                                        const ineligibilityReasonField =
+                                            extractIneligibilityReason(data);
 
                                         const error = data.find(
                                             ({ error }) => error
@@ -417,12 +415,12 @@ export const QuickQuoteResultsProvider = ({
                                             };
                                         }
 
-                                        if (notAvailabilityReasonField) {
+                                        if (ineligibilityReasonField) {
                                             return {
                                                 termLength,
                                                 range,
                                                 available: false,
-                                                notAvailabilityReasonField,
+                                                ineligibilityReasonField,
                                                 error: undefined,
                                             };
                                         }
@@ -450,8 +448,8 @@ export const QuickQuoteResultsProvider = ({
                                                 )
                                         );
 
-                                        const notAvailabilityReasonField =
-                                            extractNotAvailabilityReason(data);
+                                        const ineligibilityReasonField =
+                                            extractIneligibilityReason(data);
 
                                         const error = data.find(
                                             ({ error }) => error
@@ -466,12 +464,12 @@ export const QuickQuoteResultsProvider = ({
                                             };
                                         }
 
-                                        if (notAvailabilityReasonField) {
+                                        if (ineligibilityReasonField) {
                                             return {
                                                 termLength,
                                                 range,
                                                 available: false,
-                                                notAvailabilityReasonField,
+                                                ineligibilityReasonField,
                                                 error: undefined,
                                             };
                                         }
@@ -515,16 +513,35 @@ export const QuickQuoteResultsProvider = ({
                                                                     ),
                                                                 ],
                                                                 reasons:
-                                                                    extractRiderNotAvailabilityReason(
+                                                                    extractRiderIneligibilityReason(
                                                                         data,
                                                                         RIDER_CODE_MAP[
                                                                             riderName
                                                                         ]
                                                                     ),
-                                                            } as TermQuickQuoteRiderNotAvailableItem;
+                                                            } as TermQuickQuoteRiderIneligibleItem;
                                                         }
                                                     )
-                                                );
+                                                ).sort((a, b) => {
+                                                    if (
+                                                        b.termLengths.length !==
+                                                        a.termLengths.length
+                                                    ) {
+                                                        return (
+                                                            b.termLengths
+                                                                .length -
+                                                            a.termLengths.length
+                                                        );
+                                                    }
+                                                    return (
+                                                        Math.min(
+                                                            ...a.termLengths
+                                                        ) -
+                                                        Math.min(
+                                                            ...b.termLengths
+                                                        )
+                                                    );
+                                                });
 
                                             if (
                                                 includes(
@@ -538,7 +555,7 @@ export const QuickQuoteResultsProvider = ({
                                                         range: values.some(
                                                             (v) => v != null
                                                         ),
-                                                        notAvailabilityReasonField:
+                                                        ineligibilityReasonField:
                                                             reasonsByTermLength.length >
                                                             0
                                                                 ? reasonsByTermLength
@@ -553,7 +570,7 @@ export const QuickQuoteResultsProvider = ({
                                                     range: asNumberOrRange(
                                                         values
                                                     ),
-                                                    notAvailabilityReasonField:
+                                                    ineligibilityReasonField:
                                                         reasonsByTermLength.length >
                                                         0
                                                             ? reasonsByTermLength

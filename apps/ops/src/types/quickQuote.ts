@@ -6,7 +6,7 @@ import { RIDER_NAMES, RiderName } from '@deps/types/illustrations';
 import { Product, ProductTypes } from '@deps/types/product';
 import {
     IneligibilityReason,
-    nonEligibleReasonByClass,
+    IneligibleReasonByClass,
     RiderCode,
 } from '@deps/utils/quick-quotes-rules/types';
 
@@ -181,35 +181,35 @@ interface TermQuickQuoteBaseDataItem {
 
 interface TermQuickQuoteAvailableDataItem extends TermQuickQuoteBaseDataItem {
     range: NumberOrRange;
-    notAvailabilityReasonField: undefined;
+    ineligibilityReasonField: undefined;
     error: undefined;
 }
 
-interface TermQuickQuoteNotAvailableItem extends TermQuickQuoteBaseDataItem {
+interface TermQuickQuoteIneligibleItem extends TermQuickQuoteBaseDataItem {
     range: number | NumberOrRange | undefined;
-    notAvailabilityReasonField: nonEligibleReasonByClass[] | undefined;
+    ineligibilityReasonField: IneligibleReasonByClass[] | undefined;
     error: undefined;
 }
 
 interface TermQuickQuoteErrorItem extends TermQuickQuoteBaseDataItem {
     range: undefined;
-    notAvailabilityReasonField: undefined;
+    ineligibilityReasonField: undefined;
     error: Error;
 }
 
 type TermQuickQuoteDataItem =
     | TermQuickQuoteAvailableDataItem
-    | TermQuickQuoteNotAvailableItem
+    | TermQuickQuoteIneligibleItem
     | TermQuickQuoteErrorItem;
 
-export type TermQuickQuoteRiderNotAvailableItem = {
+export type TermQuickQuoteRiderIneligibleItem = {
     termLengths: number[];
     reasons?: IneligibilityReason[] | undefined;
 };
 
 export type TermQuickQuoteRiderDataItem = {
     range?: NumberOrRange | boolean;
-    notAvailabilityReasonField?: TermQuickQuoteRiderNotAvailableItem[];
+    ineligibilityReasonField?: TermQuickQuoteRiderIneligibleItem[];
 };
 
 export interface TermQuickQuoteResultData {
@@ -223,8 +223,3 @@ export type QuickQuoteResult = TermQuickQuoteResult;
 export const isTermResult = (
     result: QuickQuoteResult
 ): result is TermQuickQuoteResult => result.productType === ProductTypes.TERM;
-
-export type PlainTermQuickQuoteRiderNotAvailableItem = {
-    termLength: number;
-    reason: IneligibilityReason;
-};

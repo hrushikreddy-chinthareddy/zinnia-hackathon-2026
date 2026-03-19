@@ -9446,7 +9446,7 @@
                 "nYearTerm": "{{years}} año plazo",
                 "title": "Cobertura y resumen"
             },
-            "notAvailableReason": {
+            "ineligibilityReason": {
                 "maxAge": "Edad máxima de emisión: {{age}}",
                 "minAge": "Edad mínima de emisión: {{age}}",
                 "maxFaceAm": "Monto nominal máximo: {{amount}}",
