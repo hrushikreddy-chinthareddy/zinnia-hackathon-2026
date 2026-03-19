@@ -65,6 +65,7 @@ export default function FormDisbursementV2({
         isLC,
         bankDetails,
         setBankDetails,
+        initialForm,
     } = useContext(FormDataContext);
 
     const [defaultDisbursementInfo, setDefaultDisbursementInfo] = useState<any>(
@@ -106,10 +107,25 @@ export default function FormDisbursementV2({
                 }));
         }
         if (isBankUpdateForm) {
+            const formUpdateData =
+                initialForm?.data?.formRequest?.formUpdateData;
+            const prefillBankUpdateValues =
+                isFormStateReadOnly && formUpdateData
+                    ? {
+                          ...defaultBankUpdateValues,
+                          bank:
+                              formUpdateData.bank ??
+                              defaultBankUpdateValues.bank,
+                          bankVerification:
+                              formUpdateData.bankVerification ??
+                              defaultBankUpdateValues.bankVerification,
+                      }
+                    : defaultBankUpdateValues;
+
             setDefaultDisbursementInfo({
-                [PaymentMethod.EFT]: defaultBankUpdateValues,
+                [PaymentMethod.EFT]: prefillBankUpdateValues,
             });
-            setFormDisbursement(defaultBankUpdateValues as FormDisbursement);
+            setFormDisbursement(prefillBankUpdateValues as FormDisbursement);
             setBankDetails &&
                 setBankDetails((pv) => ({
                     ...pv,

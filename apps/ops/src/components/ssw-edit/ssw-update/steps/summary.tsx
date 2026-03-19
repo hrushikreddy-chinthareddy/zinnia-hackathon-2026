@@ -37,12 +37,14 @@ type SummaryProps = {
         formSign: FormSignature,
         formCmnt: FormComment | null
     ) => void;
+    isFormStateReadOnly?: boolean;
 };
 
 const Summary = ({
     currentProgram,
     updatedProgram,
     onContinue,
+    isFormStateReadOnly = false,
 }: SummaryProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'sswUpdate.tabs.summary',
@@ -69,13 +71,15 @@ const Summary = ({
         <WorkflowCard
             title={t('tabTitle')}
             footerContent={
-                <TransactionNavigationButtons
-                    className="mt-10"
-                    disableContinue={false}
-                    handleContinue={handleSubmitSswUpdate}
-                    parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink="/create-case"
-                />
+                !isFormStateReadOnly ? (
+                    <TransactionNavigationButtons
+                        className="mt-10"
+                        disableContinue={false}
+                        handleContinue={handleSubmitSswUpdate}
+                        parentPage={ParentPage.CreateCase}
+                        leaveTransactionLink="/create-case"
+                    />
+                ) : undefined
             }
         >
             <p className="mb-3 font-primary text-sm">{t('reviewMessage')}</p>

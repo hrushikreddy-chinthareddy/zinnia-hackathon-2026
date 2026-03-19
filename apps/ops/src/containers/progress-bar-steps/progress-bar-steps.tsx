@@ -18,6 +18,8 @@ interface ProgressBarStepsProps {
     classNames?: string;
     // this is fixed width from Figma of each step
     stepWidth?: number;
+    /** When true, all steps are clickable (no disabling by index). Used for read-only flow. */
+    allowStepNavigation?: boolean;
 }
 
 const ProgressBarSteps = ({
@@ -26,6 +28,7 @@ const ProgressBarSteps = ({
     onClick,
     classNames,
     stepWidth = DEFAULT_STEP_WIDTH,
+    allowStepNavigation = false,
 }: ProgressBarStepsProps) => {
     const { t } = useTranslation();
 
@@ -82,8 +85,9 @@ const ProgressBarSteps = ({
             >
                 {steps.map((step, index) => {
                     const isActive = step.index === currentStepIndex;
-                    const isDisabled =
-                        step.isDisabled || step.index > currentStepIndex;
+                    const isDisabled = allowStepNavigation
+                        ? step.isDisabled
+                        : step.isDisabled || step.index > currentStepIndex;
                     const isCompleted =
                         step.isCompleted || step.index < currentStepIndex;
 

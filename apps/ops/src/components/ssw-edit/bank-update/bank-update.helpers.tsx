@@ -539,6 +539,9 @@ export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
                         'accountNumber',
                         t('formValidation.accountNumberDoesNotMatch')
                     ),
+                    shouldDisplay: ({
+                        isFormStateReadOnly,
+                    }: OtpWithdrawalFormState) => !isFormStateReadOnly,
                 },
                 {
                     fieldName: BankingFields.BankRoutingNumber,
@@ -561,6 +564,9 @@ export const BankUpdateFieldConfigs = (t: TFunction, clientCode: string) => {
                         'bankRoutingNumber',
                         t('formValidation.routingNumberDoesNotMatch')
                     ),
+                    shouldDisplay: ({
+                        isFormStateReadOnly,
+                    }: OtpWithdrawalFormState) => !isFormStateReadOnly,
                 },
                 {
                     fieldName: BankingFields.BankName,

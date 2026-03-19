@@ -37,7 +37,13 @@ import {
 import Failed from '../Failed';
 import Success from '../Success';
 
-const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
+const WithholdingUpdateForm = ({
+    document,
+    isFormStateReadOnly,
+}: {
+    document: DocumentData;
+    isFormStateReadOnly: boolean;
+}) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'caseWithdrawal.request.withholdingUpdate',
     });
@@ -101,7 +107,6 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
         }
         requestTaxWithholdingUpdate(formSignature, formTaxWithholding);
     };
-
     return (
         <>
             {isLoading && (
@@ -123,13 +128,13 @@ const WithholdingUpdateForm = ({ document }: { document: DocumentData }) => {
                         </div>
                     </NavElement>
                     <TaxWithholdings
-                        isFormStateReadOnly={false}
+                        isFormStateReadOnly={isFormStateReadOnly}
                         ownerStateOfResidence={ownerStateOfResidence}
                     />
                     <div>
                         {source !== ChannelType.Phone && formSignature && (
                             <SignatureValidations
-                                isFormStateReadOnly={false}
+                                isFormStateReadOnly={isFormStateReadOnly}
                                 config={signaturesConfig}
                             />
                         )}

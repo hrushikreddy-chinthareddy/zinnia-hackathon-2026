@@ -26,7 +26,8 @@ const EditProgram = ({
     onEdit,
     programIndex,
 }: EditProgramProps) => {
-    const { formSignature, formComment } = useContext(FormDataContext);
+    const { formSignature, formComment, isFormStateReadOnly } =
+        useContext(FormDataContext);
     return (
         <div>
             <div className="mx-8">
@@ -34,40 +35,42 @@ const EditProgram = ({
                     <div className="my-2 grid grid-cols-auto-2 gap-2">
                         <Program
                             program={program}
-                            isFormStateReadOnly={false}
+                            isFormStateReadOnly={isFormStateReadOnly ?? false}
                         />
                     </div>
-                    <div className="mt-2 p-8 text-primary flex">
-                        <IconButton
-                            className="mx-2 "
-                            aria-describedby="edit-program"
-                            onClick={() => onEdit(programIndex)}
-                        >
-                            <Icon
-                                type={IconType.EDIT_ALT}
-                                height={20}
-                                width={20}
-                            />
-                        </IconButton>
-                        <IconButton
-                            className="mx-2"
-                            aria-describedby="delete-program"
-                            onClick={() =>
-                                onTerminate(
-                                    program,
-                                    SswUpdateType.PROGRAM_TERMINATE,
-                                    formSignature,
-                                    formComment ?? { comment: null }
-                                )
-                            }
-                        >
-                            <Icon
-                                type={IconType.TRASH}
-                                height={20}
-                                width={20}
-                            />
-                        </IconButton>
-                    </div>
+                    {!isFormStateReadOnly && (
+                        <div className="mt-2 p-8 text-primary flex">
+                            <IconButton
+                                className="mx-2 "
+                                aria-describedby="edit-program"
+                                onClick={() => onEdit(programIndex)}
+                            >
+                                <Icon
+                                    type={IconType.EDIT_ALT}
+                                    height={20}
+                                    width={20}
+                                />
+                            </IconButton>
+                            <IconButton
+                                className="mx-2"
+                                aria-describedby="delete-program"
+                                onClick={() =>
+                                    onTerminate(
+                                        program,
+                                        SswUpdateType.PROGRAM_TERMINATE,
+                                        formSignature,
+                                        formComment ?? { comment: null }
+                                    )
+                                }
+                            >
+                                <Icon
+                                    type={IconType.TRASH}
+                                    height={20}
+                                    width={20}
+                                />
+                            </IconButton>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

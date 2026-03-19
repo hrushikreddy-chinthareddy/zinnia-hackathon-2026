@@ -4218,6 +4218,7 @@
                 "close": "Fermer",
                 "back": "Retour à la création de tâche",
                 "terminate": "Terminer",
+                "terminated": "Résilié",
                 "tryAgain": "Réessayer",
                 "bankUpdateTitle": "Détails bancaires",
                 "cancel": "Annuler",
@@ -8180,7 +8181,8 @@
         "SSW": "Programme SSW existant",
         "RMD": "Programme RMD existant",
         "EFT": "Programme EFT existant",
-        "noProgramFound": "Aucun programme existant trouvé"
+        "noProgramFound": "Aucun programme existant trouvé",
+        "programTerminated": "Programme résilié"
     },
     "suitabilityDataEntry": {
         "tabs": {

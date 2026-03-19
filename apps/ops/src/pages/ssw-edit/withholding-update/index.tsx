@@ -1,4 +1,5 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
+import { useSearchParams } from 'next/navigation';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 
 import WithholdingUpdateContainer from '@deps/components/ssw-edit/withholding-update/withholding-update-container';
@@ -39,6 +40,8 @@ interface WithholdingUpdateProps {
 
 const WithholdingUpdate = (props: WithholdingUpdateProps) => {
     const { form, clientCode, policy, document } = props;
+    const searchParams = useSearchParams();
+    const isFormStateReadOnly = searchParams.get('action') === 'readonly';
 
     return (
         <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
@@ -47,12 +50,14 @@ const WithholdingUpdate = (props: WithholdingUpdateProps) => {
                 initialForm={form}
                 issueState={''}
                 isOpenNigo={false}
+                isFormStateReadOnly={isFormStateReadOnly}
             >
                 <div className="bg-gray-100 flex justify-center my-2">
                     <WithholdingUpdateContainer
                         policy={policy}
                         clientCode={clientCode}
                         document={document}
+                        isFormStateReadOnly={isFormStateReadOnly}
                     />
                 </div>
             </FormProvider>

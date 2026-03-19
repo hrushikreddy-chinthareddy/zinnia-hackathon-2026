@@ -12,6 +12,8 @@ import { getCaseTaskByIdSSR, updateTask } from '@deps/queries/api/v2/task';
 import { isProd } from '@deps/utils/environment.helpers';
 import { logError, LoggingContext, logInfo } from '@deps/utils/server-logging';
 
+import { getUpdateType } from './task-type-helpers';
+
 interface TaskItem {
     id: string;
     status: string;
@@ -66,6 +68,7 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
                 createdDate: task.createdAt,
                 updatedDate: task.updatedAt,
                 taskType: task.taskType,
+                updateType: getUpdateType(task),
             };
         });
     } else {
@@ -83,6 +86,7 @@ export const fetchTasks = async (caseId: string, caseType: CaseType) => {
                 createdDate: task.createdDate,
                 updatedDate: task.updatedDate,
                 taskType: task.taskType,
+                updateType: getUpdateType(task),
             };
         });
         formattedList.sort((a: TaskItem, b: TaskItem) =>

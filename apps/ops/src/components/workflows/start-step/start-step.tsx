@@ -54,6 +54,7 @@ interface StartStepProps extends TransactionClickProps {
     processSubType?: string[];
     type?: SourceType;
     correlationId?: string;
+    isFormStateReadOnly?: boolean;
 }
 
 const StartStep = ({
@@ -71,6 +72,7 @@ const StartStep = ({
     processSubType,
     type = SourceType.Document,
     correlationId,
+    isFormStateReadOnly = false,
 }: StartStepProps) => {
     const { t } = useTranslation();
     const { featureFlags } = useOptimizely();
@@ -248,35 +250,43 @@ const StartStep = ({
                 title={title}
                 subtitle={subtitle}
                 footerContent={
-                    <TransactionNavigationButtons
-                        handleContinue={handleContinue}
-                        planCode={product?.planCode}
-                        policyNumber={policyNumber}
-                        parentPage={parentPage}
-                        disableContinue={isContinueDisabled}
-                        trackEventProps={trackEventProps}
-                        leaveTransactionLink={leaveTransactionLink}
-                    />
+                    !isFormStateReadOnly ? (
+                        <TransactionNavigationButtons
+                            handleContinue={handleContinue}
+                            planCode={product?.planCode}
+                            policyNumber={policyNumber}
+                            parentPage={parentPage}
+                            disableContinue={isContinueDisabled}
+                            trackEventProps={trackEventProps}
+                            leaveTransactionLink={leaveTransactionLink}
+                        />
+                    ) : undefined
                 }
             >
                 <div className="flex flex-col gap-4">
                     <div className="flex flex-col">
-                        <Label
-                            className="mb-4"
-                            label={
-                                type == 'case'
-                                    ? t('workflows.start.caseSelectionLabel')
-                                    : t(
-                                          'workflows.start.documentSelectionLabel'
-                                      )
-                            }
-                            sentenceCase={false}
-                            variant={LabelVariant.LabelLg}
-                        />
+                        {!isFormStateReadOnly && (
+                            <Label
+                                className="mb-4"
+                                label={
+                                    type == 'case'
+                                        ? t(
+                                              'workflows.start.caseSelectionLabel'
+                                          )
+                                        : t(
+                                              'workflows.start.documentSelectionLabel'
+                                          )
+                                }
+                                sentenceCase={false}
+                                variant={LabelVariant.LabelLg}
+                            />
+                        )}
                         <div
                             className={`grid max-w-[436px] gap-2 ${
-                                correlationId &&
-                                state?.correlationId == correlationId
+                                isFormStateReadOnly
+                                    ? 'pointer-events-none'
+                                    : correlationId &&
+                                      state?.correlationId == correlationId
                                     ? 'opacity-50 pointer-events-none'
                                     : ''
                             }`}
@@ -334,7 +344,7 @@ const StartStep = ({
                                 )}
                             </div>
                         )}
-                        {selectedCaseId && (
+                        {selectedCaseId && !isFormStateReadOnly && (
                             <AssistiveText
                                 variant={AssistiveTextVariant.Info}
                                 text={t(

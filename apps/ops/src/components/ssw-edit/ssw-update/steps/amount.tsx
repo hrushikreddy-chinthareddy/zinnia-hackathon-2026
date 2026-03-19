@@ -48,13 +48,13 @@ const frequencyOptions = (t: TFunction) => [
 type AmountProps = {
     updateProgram: UpdatedProgram;
     onProgramUpdate: React.Dispatch<any>;
-    isReadOnly: boolean;
+    isFormStateReadOnly: boolean;
 };
 
 const Amount = ({
     updateProgram,
     onProgramUpdate,
-    isReadOnly,
+    isFormStateReadOnly,
 }: AmountProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'sswUpdate.tabs.amount',
@@ -87,13 +87,18 @@ const Amount = ({
         <WorkflowCard
             title={t('tabTitle')}
             footerContent={
-                <TransactionNavigationButtons
-                    className="mt-10"
-                    disableContinue={false}
-                    handleContinue={() => goToNext()}
-                    parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink="/create-case"
-                />
+                !isFormStateReadOnly ? (
+                    <TransactionNavigationButtons
+                        readonly={isFormStateReadOnly}
+                        className="mt-10"
+                        disableContinue={false}
+                        handleContinue={() => goToNext()}
+                        parentPage={ParentPage.CreateCase}
+                        leaveTransactionLink="/create-case"
+                    />
+                ) : (
+                    <></>
+                )
             }
         >
             <div className="grid grid-cols-4 gap-4">
@@ -108,7 +113,7 @@ const Amount = ({
                         leading={<div>$</div>}
                         type={FieldType.BaseActive}
                         variant={
-                            isReadOnly
+                            isFormStateReadOnly
                                 ? FieldVariant.Inactive
                                 : FieldVariant.Default
                         }
@@ -122,7 +127,7 @@ const Amount = ({
                     />
 
                     <SelectSimple
-                        disabled={isReadOnly}
+                        disabled={isFormStateReadOnly}
                         className="max-w-lg my-2"
                         label={t('programFrequency') as string}
                         options={frequencyOptions(t)}
@@ -137,7 +142,7 @@ const Amount = ({
 
                     <Field
                         variant={
-                            isReadOnly
+                            isFormStateReadOnly
                                 ? FieldVariant.Inactive
                                 : FieldVariant.Default
                         }
@@ -159,7 +164,7 @@ const Amount = ({
 
                     <FieldDateSelect
                         variant={
-                            isReadOnly
+                            isFormStateReadOnly
                                 ? FieldVariant.Inactive
                                 : FieldVariant.Default
                         }

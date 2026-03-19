@@ -4289,6 +4289,7 @@
                 "close": "Close",
                 "back": "Back to create task",
                 "terminate": "Terminate",
+                "terminated": "Terminated",
                 "tryAgain": "Try Again",
                 "bankUpdateTitle": "Bank Details",
                 "cancel": "Cancel",
@@ -8312,7 +8313,8 @@
         "SSW": "Existing SSW Program",
         "RMD": "Existing RMD Program",
         "EFT": "Existing EFT Program",
-        "noProgramFound": "No Existing Program Found"
+        "noProgramFound": "No Existing Program Found",
+        "programTerminated": "Program Terminated"
     },
     "task": {
         "documentPanel": {

@@ -28,6 +28,7 @@ export enum SswUpdateOption {
     EFT_DRAW_UPDATE = 'EFT Draw Update',
     NEW = 'New',
     WITHHOLDING_UPDATE = 'Withholding Update',
+    PROGRAM_TERMINATE = 'ProgramTerminate',
 }
 export enum ContributionType {
     Contribution = 'Contribution',

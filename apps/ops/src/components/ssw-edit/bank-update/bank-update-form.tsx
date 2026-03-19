@@ -53,23 +53,47 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
         keyPrefix: 'caseWithdrawal.request',
     });
 
-    const DEFAULT_DISBURSEMENT_DATA: any = getDefaultFormDisbursementValues();
-
-    const [bankUpdateDetails, setBankUpdateDetails] = useState(
-        DEFAULT_DISBURSEMENT_DATA
-    );
-    const [isLoading, setIsLoading] = useState(false);
-    const [formSubmitted, setFormSubmitted] = useState(false);
-    const [submitFailed, setSubmitFailed] = useState(false);
-    const source = getDocumentSource(document.documentNumber);
-
     const {
         initialForm,
         formSignature,
         formDisbursement,
         setFormErrors,
         formComment,
+        isFormStateReadOnly,
     } = useContext(FormDataContext);
+
+    const DEFAULT_DISBURSEMENT_DATA: any = getDefaultFormDisbursementValues();
+
+    type BankApiEntry = {
+        accountNumber?: string;
+        accountType?: { text?: string } | string;
+        bankName?: string;
+        routingNumber?: string;
+        nameOnBankAccount?: string;
+    };
+
+    const bankEntry = initialForm?.data?.formRequest?.formUpdateData
+        ?.bank?.[0] as BankApiEntry | undefined;
+
+    const [bankUpdateDetails, setBankUpdateDetails] = useState(
+        isFormStateReadOnly && bankEntry
+            ? {
+                  ...DEFAULT_DISBURSEMENT_DATA,
+                  accountNumber: bankEntry.accountNumber ?? '',
+                  accountType:
+                      typeof bankEntry.accountType === 'object'
+                          ? bankEntry.accountType?.text ?? ''
+                          : bankEntry.accountType ?? '',
+                  bankName: bankEntry.bankName ?? '',
+                  bankRoutingNumber: bankEntry.routingNumber ?? '',
+                  accountHolder: bankEntry.nameOnBankAccount ?? '',
+              }
+            : DEFAULT_DISBURSEMENT_DATA
+    );
+    const [isLoading, setIsLoading] = useState(false);
+    const [formSubmitted, setFormSubmitted] = useState(false);
+    const [submitFailed, setSubmitFailed] = useState(false);
+    const source = getDocumentSource(document.documentNumber);
 
     const requestBankUpdate = async (bankUpdateType: BankUpdateType) => {
         setIsLoading(true);
@@ -170,10 +194,14 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                             }
                             size={ButtonSize.Small}
                             variant={ButtonVariant.Default}
-                            disabled={false}
+                            disabled={isFormStateReadOnly}
                             type={ButtonType.Contrast}
                         >
-                            {t('distributionMethod.terminate')}
+                            {isFormStateReadOnly &&
+                            initialForm?.data?.formRequest?.formUpdateData
+                                ?.updateType === BankUpdateType.BankTerminate
+                                ? t('distributionMethod.terminated')
+                                : t('distributionMethod.terminate')}
                         </Button>
                     </div>
                 </>
@@ -184,7 +212,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                     <div className=" mx-6">
                         <div className="my-4 grid w-full grid-cols-3 gap-4">
                             <SelectSimple
-                                disabled={false}
+                                disabled={isFormStateReadOnly}
                                 className="max-w-lg"
                                 label={t('distributionMethod.type') || ''}
                                 options={typeOptions(t)}
@@ -205,7 +233,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                         {carrierId === Carrier.SBGC ? (
                             <div>
                                 <FormDisbursementV2
-                                    isFormStateReadOnly={false}
+                                    isFormStateReadOnly={isFormStateReadOnly}
                                     options={bankingFieldsConfigV2}
                                     isBankUpdateForm={true}
                                 />
@@ -213,7 +241,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                         ) : (
                             <div>
                                 <FormDisbursementSection
-                                    isFormStateReadOnly={false}
+                                    isFormStateReadOnly={isFormStateReadOnly}
                                     fields={bankingFieldsConfig}
                                     disbursementInformation={bankUpdateDetails}
                                     onDataChange={setBankUpdateDetails}
@@ -225,7 +253,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                     <div>
                         {source !== ChannelType.Phone && formSignature && (
                             <SignatureValidations
-                                isFormStateReadOnly={false}
+                                isFormStateReadOnly={isFormStateReadOnly}
                                 config={signaturesConfig}
                             />
                         )}
@@ -241,7 +269,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                                     }
                                     size={ButtonSize.Small}
                                     variant={ButtonVariant.Default}
-                                    disabled={isLoading}
+                                    disabled={isFormStateReadOnly}
                                     type={ButtonType.Primary}
                                 >
                                     {t('distributionMethod.submit')}
@@ -252,7 +280,7 @@ const BankUpdateForm = ({ document, carrierId }: BankUpdateFormProps) => {
                                     size={NavElementSize.Small}
                                     type={NavElementType.Button}
                                     variant={NavElementVariant.Default}
-                                    disabled={false}
+                                    disabled={isFormStateReadOnly}
                                 >
                                     {t('distributionMethod.cancel')}
                                 </NavElement>

@@ -14,10 +14,6 @@ import { FormComment, FormSignature } from '@deps/models/case/withdrawal/case';
 import { updateTask } from '@deps/queries/api/v2/task';
 import { Policy } from '@zinnia/api-types/types/sor';
 
-import Amount from './steps/amount';
-import Start from './steps/start';
-import Summary from './steps/summary';
-import TabGroupContainer from './tab-group-container';
 import {
     buildSSWFormData,
     getDocumentSource,
@@ -25,7 +21,11 @@ import {
     SswUpdateType,
     UpdatedProgram,
 } from '../ssw-edit-helpers';
+import Amount from './steps/amount';
 import Signature from './steps/signature';
+import Start from './steps/start';
+import Summary from './steps/summary';
+import TabGroupContainer from './tab-group-container';
 
 type SswUpdateContainerProps = {
     policy: Policy;
@@ -43,7 +43,8 @@ const SswUpdate = ({
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
     const router = useRouter();
     const [updateProgram, setUpdateProgram] = useState<UpdatedProgram>({});
-    const { initialForm, setFormErrors } = useContext(FormDataContext);
+    const { initialForm, setFormErrors, isFormStateReadOnly } =
+        useContext(FormDataContext);
     const [isLoading, setIsLoading] = useState(false);
     const [isFormSubmitted, setIsFormSubmitted] = useState(false);
     const [submitError, setSubmitError] = useState(false);
@@ -63,6 +64,7 @@ const SswUpdate = ({
         formSign: FormSignature,
         formCmnt: FormComment | null
     ) => {
+        if (isFormStateReadOnly) return;
         if (source !== ChannelType.Phone) {
             const formErr = sswEditFormValidator(formSign, t);
             if (Object.keys(formErr).length > 0) {
@@ -120,7 +122,11 @@ const SswUpdate = ({
         () => [
             {
                 component: (
-                    <Start parentPage={ParentPage.CreateCase} policy={policy} />
+                    <Start
+                        parentPage={ParentPage.CreateCase}
+                        policy={policy}
+                        isFormStateReadOnly={isFormStateReadOnly ?? false}
+                    />
                 ),
                 screenReaderLabel: t('tabs.start.tabTitle'),
                 index: 0,
@@ -132,7 +138,7 @@ const SswUpdate = ({
                     <Amount
                         updateProgram={updateProgram}
                         onProgramUpdate={setUpdateProgram}
-                        isReadOnly={false}
+                        isFormStateReadOnly={isFormStateReadOnly ?? false}
                     />
                 ),
                 screenReaderLabel: t('tabs.amount.tabTitle'),
@@ -141,7 +147,11 @@ const SswUpdate = ({
                 isVisible: () => true,
             },
             {
-                component: <Signature />,
+                component: (
+                    <Signature
+                        isFormStateReadOnly={isFormStateReadOnly ?? false}
+                    />
+                ),
                 screenReaderLabel: t('signTabTitle'),
                 isVisible: () => source !== ChannelType.Phone,
                 text: t('signTabTitle'),
@@ -152,22 +162,23 @@ const SswUpdate = ({
                         currentProgram={oldProgram?.[0]}
                         updatedProgram={updateProgram}
                         onContinue={handleFormAction}
+                        isFormStateReadOnly={isFormStateReadOnly ?? false}
                     />
                 ),
                 screenReaderLabel: t('tabs.summary.tabTitle'),
                 index: 3,
                 text: t('tabs.summary.tabTitle'),
-                isVisible: () => true,
+                isVisible: () => !(isFormStateReadOnly ?? false),
             },
             {
                 component: <>{<div></div>}</>,
                 screenReaderLabel: t('tabs.confirm.tabTitle'),
                 index: 4,
                 text: t('tabs.confirm.tabTitle'),
-                isVisible: () => true,
+                isVisible: () => !(isFormStateReadOnly ?? false),
             },
         ],
-        [t, updateProgram]
+        [t, updateProgram, isFormStateReadOnly, oldProgram]
     );
 
     const filteredSteps: Step[] = useMemo(

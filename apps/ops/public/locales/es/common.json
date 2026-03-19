@@ -4261,6 +4261,7 @@
                 "close": "Cerrar",
                 "back": "Volver a crear tarea",
                 "terminate": "Terminar",
+                "terminated": "Terminado",
                 "tryAgain": "Intentar de nuevo",
                 "bankUpdateTitle": "Detalles Bancarios",
                 "cancel": "Cancelar",
@@ -8212,7 +8213,8 @@
         "SSW": "Programa SSW Existente",
         "RMD": "Programa RMD Existente",
         "EFT": "Programa EFT Existente",
-        "noProgramFound": "No se encontró ningún programa existente"
+        "noProgramFound": "No se encontró ningún programa existente",
+        "programTerminated": "Programa terminado"
     },
     "task": {
         "documentPanel": {

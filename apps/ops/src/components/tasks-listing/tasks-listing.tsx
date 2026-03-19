@@ -5,7 +5,9 @@ import NavElement, {
     NavElementSize,
     NavElementVariant,
 } from '@deps/components/nav-element/nav-element';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { getSlug } from '@deps/helpers/string.helpers';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import NoTasksFound from './no-tasks-found';
 import { toFormattedTask } from './task-listing.helpers';
@@ -23,6 +25,11 @@ export default function TasksListing({
     isTaskCreationSupported,
     isHeaderHidden = true,
 }: TasksListingProps) {
+    const { featureFlags } = useOptimizely();
+
+    const sswUpdateReadonlyEnabled =
+        featureFlags[FEATURE_FLAGS.SSW_UPDATE_READONLY];
+
     const taskTableRows: TaskTableRow[] =
         (tasks &&
             tasks?.map((task) =>
@@ -32,7 +39,8 @@ export default function TasksListing({
                     caseId,
                     caseType,
                     documentNumber,
-                    clientId
+                    clientId,
+                    sswUpdateReadonlyEnabled
                 )
             )) ||
         [];

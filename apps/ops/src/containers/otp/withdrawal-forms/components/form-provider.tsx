@@ -46,6 +46,7 @@ type FormProviderProps = {
     partyRoles?: PolicyPartyRoles[];
     systematicPrograms?: SystematicSpecialPrograms[] | [];
     isLC?: boolean;
+    isFormStateReadOnly?: boolean;
     /** Remaining RMD amount from policy (for One-Time RMD prepopulation) */
     remainingRmdAmount?: number | null;
 };
@@ -104,6 +105,7 @@ export const FormProvider = ({
     partyRoles,
     systematicPrograms,
     isLC = false,
+    isFormStateReadOnly: isFormStateReadOnlyProp = false,
     remainingRmdAmount,
 }: FormProviderProps) => {
     const searchParams = useSearchParams();
@@ -165,12 +167,14 @@ export const FormProvider = ({
     );
     const shouldShowNewExperience =
         featureFlagDecisions?.[FEATURE_FLAGS.NEW_EXP];
-    const isFormStateReadOnly = shouldShowNewExperience
+    const computedIsFormStateReadOnly = shouldShowNewExperience
         ? searchParams.get('action') === 'readonly' ||
           (!StatusesForSaveAsDraftAction.includes(currentFormState) &&
               searchParams.get('action') !== 'duplicate') ||
           isOpenNigo === true
         : false;
+    const isFormStateReadOnly =
+        isFormStateReadOnlyProp || computedIsFormStateReadOnly;
 
     const [formSpecialInstruction, setFormSpecialInstruction] = useState(
         form.data.formRequest.formSpecialInstruction

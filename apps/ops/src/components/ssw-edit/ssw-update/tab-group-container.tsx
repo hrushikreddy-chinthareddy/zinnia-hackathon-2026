@@ -1,6 +1,6 @@
 import router from 'next/router';
 import { useTranslation } from 'next-i18next';
-import { useMemo, useState } from 'react';
+import { useContext, useEffect, useMemo, useState } from 'react';
 
 import CardInfo from '@deps/components/card/card-info/card-info';
 import GlobalValuesBar from '@deps/components/global-values/global-values-bar/global-values-bar';
@@ -14,6 +14,7 @@ import PageLoader, {
 } from '@deps/components/page-loader/page-loader';
 import ProgressBarSteps from '@deps/containers/progress-bar-steps/progress-bar-steps';
 import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import {
     WorkflowProvider,
     useWorkflow,
@@ -59,8 +60,18 @@ const TabGroupContent = ({
     setIsLoading,
 }: TabGroupContainerProps) => {
     const { t } = useTranslation();
-    const [isSswUpdateView, setSswUpdateView] = useState(false);
+    const { isFormStateReadOnly } = useContext(FormDataContext);
+    const [isSswUpdateView, setSswUpdateView] = useState(
+        isFormStateReadOnly ?? false
+    );
     const { currentStepIndex, setCurrentStepIndex } = useWorkflow();
+
+    // In read-only mode, auto-select the program so its data is shown instead of an empty state.
+    useEffect(() => {
+        if (isFormStateReadOnly && programs?.length > 0) {
+            setSelectedProgram(programs[0]);
+        }
+    }, [isFormStateReadOnly, programs, setSelectedProgram]);
     const globalValuesData = useMemo(
         () => policyDataToGlobalValues(new PolicyDetails(policy), t),
         [policy, t]
@@ -76,7 +87,8 @@ const TabGroupContent = ({
     } = globalValuesData;
     const handleClick = (step: Step) => {
         if (step.isDisabled || currentStepIndex === step.index) return;
-        if (currentStepIndex === steps.length - 1) return;
+        if (!isFormStateReadOnly && currentStepIndex === steps.length - 1)
+            return;
         setCurrentStepIndex(step.index);
     };
     const policyOwnerId = policy?.partyRoles?.find(
@@ -105,6 +117,7 @@ const TabGroupContent = ({
                     currentStepIndex={Number(currentStepIndex)}
                     onClick={handleClick}
                     steps={steps}
+                    allowStepNavigation={isFormStateReadOnly ?? false}
                 />
             )}
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04">
@@ -114,7 +127,7 @@ const TabGroupContent = ({
                     </div>
                 ) : (
                     <>
-                        {!isFormSubmitted && (
+                        {!isFormSubmitted && !isFormStateReadOnly && (
                             <NavElement
                                 type={NavElementType.Link}
                                 className="flex items-center my-4 mx-2 relative"

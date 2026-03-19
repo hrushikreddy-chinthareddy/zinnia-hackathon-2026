@@ -1,11 +1,12 @@
 import { useTranslation } from 'next-i18next';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
 import StartStep, {
     StartStepSetState,
 } from '@deps/components/workflows/start-step/start-step';
 import { TranslationFiles } from '@deps/config/translations';
+import { FormDataContext } from '@deps/contexts/OtpWithdrawalFormContext';
 import { Processes } from '@deps/models/case/case';
 
 const INITIAL_FORM_DATA: any = {
@@ -15,22 +16,37 @@ const INITIAL_FORM_DATA: any = {
     isContingentBeneInfoOnFile: false,
 };
 
-const Start = ({ policy }: any) => {
+type StartProps = {
+    policy: any;
+    parentPage?: ParentPage;
+    isFormStateReadOnly?: boolean;
+};
+
+const Start = ({
+    policy,
+    parentPage = ParentPage.CreateCase,
+    isFormStateReadOnly = false,
+}: StartProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'sswUpdate.tabs.start',
     });
-    const [formData, setFormData] = useState(INITIAL_FORM_DATA);
+    const { initialForm } = useContext(FormDataContext);
+    const [formData, setFormData] = useState(() => ({
+        ...INITIAL_FORM_DATA,
+        ...(initialForm?.caseId ? { caseId: initialForm.caseId } : {}),
+    }));
 
     return (
         <>
             <StartStep
-                parentPage={ParentPage.CreateCase}
+                parentPage={parentPage}
                 policy={policy}
                 setState={setFormData as StartStepSetState}
                 state={formData}
                 title={t('title')}
-                subtitle={t('subTitle') as string}
+                subtitle={isFormStateReadOnly ? '' : (t('subTitle') as string)}
                 processType={Processes.SSW}
+                isFormStateReadOnly={isFormStateReadOnly}
             />
         </>
     );

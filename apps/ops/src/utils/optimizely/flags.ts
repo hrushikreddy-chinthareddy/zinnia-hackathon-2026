@@ -13,6 +13,7 @@ export enum FEATURE_FLAGS {
     SHOW_HOME_NAV_BTN = 'show-home-nav-btn',
     ILLUSTRATIONS_EXPERIENCE = 'illustration-experience',
     READ_ONLY_VIEW_TASK_MANAGEMENT = 'read-only-view-task-management',
+    SSW_UPDATE_READONLY = 'ssw_update_readonly',
     CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS = 'can-view-case-technical-exceptions',
     CAN_VIEW_ACTIVITY_FEED = 'can_view_activity_feed',
     CAN_VIEW_RELATED_CASES = 'can-view-related-cases',

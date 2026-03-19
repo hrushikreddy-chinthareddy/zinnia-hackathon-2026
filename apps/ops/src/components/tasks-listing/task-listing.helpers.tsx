@@ -6,21 +6,57 @@ import {
     getSlug,
     toTitleCase,
 } from '@deps/helpers/string.helpers';
+import { SswUpdateOption } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
 
 import { Task } from './task-listing.types';
+
+/** Maps each SSW update type to its readonly (ssw-edit) link builder when the feature flag is on. */
+const SSW_READONLY_LINK_BUILDERS: Partial<
+    Record<SswUpdateOption, (taskId: string) => string>
+> = {
+    [SswUpdateOption.BANK_UPDATE]: (taskId) =>
+        `/ssw-edit/bank-update?taskId=${taskId}`,
+    [SswUpdateOption.SSW_UPDATE]: (taskId) =>
+        `/ssw-edit/ssw-update?taskId=${taskId}&programType=SSW`,
+    [SswUpdateOption.PROGRAM_TERMINATE]: (taskId) =>
+        `/ssw-edit/ssw-update?taskId=${taskId}&programType=SSW_TERMINATE`,
+    [SswUpdateOption.RMD_UPDATE]: (taskId) =>
+        `/ssw-edit/ssw-update?taskId=${taskId}&programType=RMD`,
+    [SswUpdateOption.EFT_DRAW_UPDATE]: (taskId) =>
+        `/ssw-edit/ssw-update?taskId=${taskId}&programType=EFT_DRAW`,
+    [SswUpdateOption.WITHHOLDING_UPDATE]: (taskId) =>
+        `/ssw-edit/withholding-update?taskId=${taskId}`,
+};
 
 export const buildTaskLink = (
     taskId: string,
     caseId: string,
     caseType: string,
     documentNumber: string,
-    clientId: string
+    clientId: string,
+    updateType?: string | null,
+    sswUpdateReadonlyEnabled: boolean = false
 ) => {
-    const caseSlug = getSlug(caseType);
-    const link = `/create-case/${caseSlug}/${caseId}?taskId=${taskId}&doc=${documentNumber}&clientId=${clientId}`;
-    return link;
+    const createCaseLink = `/create-case/${getSlug(
+        caseType
+    )}/${caseId}?taskId=${taskId}&doc=${documentNumber}&clientId=${clientId}`;
+
+    const useReadonlyLink =
+        sswUpdateReadonlyEnabled &&
+        updateType &&
+        updateType in SSW_READONLY_LINK_BUILDERS;
+
+    if (useReadonlyLink) {
+        const buildReadonlyLink =
+            SSW_READONLY_LINK_BUILDERS[updateType as SswUpdateOption];
+        if (buildReadonlyLink) {
+            return buildReadonlyLink(taskId);
+        }
+    }
+
+    return createCaseLink;
 };
 
 export const buildCaseLink = (caseId: string) => {
@@ -100,7 +136,8 @@ export const toFormattedTask = (
     caseId: string,
     caseType: string,
     documentNumber: string,
-    clientId: string
+    clientId: string,
+    sswUpdateReadonlyEnabled: boolean = false
 ) => {
     return {
         status: task.status,
@@ -110,7 +147,9 @@ export const toFormattedTask = (
             caseId,
             caseType,
             documentNumber,
-            clientId
+            clientId,
+            task.updateType,
+            sswUpdateReadonlyEnabled
         ),
         taskStatus: getTaskStatusText(t, task.status),
         taskName: task.taskName || '-',
@@ -122,6 +161,7 @@ export const toFormattedTask = (
             : '-',
         userId: task.userId || '-',
         taskType: task.taskType || '-',
+        updateType: task.updateType ?? null,
     };
 };
 

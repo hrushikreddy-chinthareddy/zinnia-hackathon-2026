@@ -14,12 +14,14 @@ type TaxWithholdingUpdateProps = {
     clientCode: string;
     policy: Policy;
     document: DocumentData;
+    isFormStateReadOnly: boolean;
 };
 
 const WithholdingUpdateContainer = ({
     clientCode,
     policy,
     document,
+    isFormStateReadOnly,
 }: TaxWithholdingUpdateProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
@@ -65,7 +67,10 @@ const WithholdingUpdateContainer = ({
             </div>
 
             <div className="my-2 flex w-full grow flex-col rounded bg-white shadow-elevation-light-04 p-4">
-                <WithholdingUpdateForm document={document} />
+                <WithholdingUpdateForm
+                    document={document}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                />
             </div>
         </div>
     );

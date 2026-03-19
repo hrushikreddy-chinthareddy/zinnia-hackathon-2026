@@ -9,6 +9,8 @@ export interface Task {
     createdDate: string;
     updatedDate: string;
     taskType: string;
+    /** Set by fetchTasks from getUpdateType(task); e.g. SswUpdateOption for SSW Update flow. */
+    updateType?: string | null;
 }
 
 export interface TaskTableRow {
@@ -21,6 +23,7 @@ export interface TaskTableRow {
     taskDate: string;
     userId: string;
     taskType: string;
+    updateType?: string | null;
 }
 
 export interface NoTaskFoundLabels {

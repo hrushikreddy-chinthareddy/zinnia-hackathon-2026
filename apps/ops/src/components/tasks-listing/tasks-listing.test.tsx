@@ -1,9 +1,18 @@
 import { render } from '@testing-library/react';
 
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
+import { SswUpdateOption } from '@deps/models/case/enums';
 import { TaskStatus } from '@deps/models/case/task-instance';
 import { CaseStatus } from '@deps/models/case/withdrawal/case';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import TasksListing from './tasks-listing';
+
+jest.mock('@deps/contexts/OptimizelyContext', () => ({
+    useOptimizely: jest.fn(() => ({
+        featureFlags: {},
+    })),
+}));
 
 jest.mock('next/router', () => ({
     useRouter: jest.fn(() => ({
@@ -13,6 +22,8 @@ jest.mock('next/router', () => ({
 }));
 
 describe('#TasksListing', () => {
+    const mockedUseOptimizely = useOptimizely as jest.Mock;
+
     const mockProps = {
         t: jest.fn((id) => id),
         isHeaderHidden: true,
@@ -63,5 +74,49 @@ describe('#TasksListing', () => {
             <TasksListing {...mockProps} tasks={mockTask} />
         );
         expect(queryByText('TA000000012645')).toBeInTheDocument();
+    });
+
+    it('should render when featureFlags has SSW_UPDATE_READONLY true and task has updateType (FF on)', () => {
+        mockedUseOptimizely.mockReturnValue({
+            featureFlags: { [FEATURE_FLAGS.SSW_UPDATE_READONLY]: true },
+        });
+        const mockTask = [
+            {
+                id: 'TA000000074601',
+                status: 'COMPLETED',
+                taskName: 'Data entry',
+                userId: 'User One',
+                createdDate: '2026-02-06T07:47:14Z',
+                updatedDate: '2026-02-06T07:55:15Z',
+                taskType: 'SSWFormInputTask',
+                updateType: SswUpdateOption.SSW_UPDATE,
+            },
+        ];
+        const { queryByText } = render(
+            <TasksListing {...mockProps} tasks={mockTask} />
+        );
+        expect(queryByText('TA000000074601')).toBeInTheDocument();
+    });
+
+    it('should render when featureFlags has SSW_UPDATE_READONLY false (FF off)', () => {
+        mockedUseOptimizely.mockReturnValue({
+            featureFlags: { [FEATURE_FLAGS.SSW_UPDATE_READONLY]: false },
+        });
+        const mockTask = [
+            {
+                id: 'TA000000074601',
+                status: 'COMPLETED',
+                taskName: 'Data entry',
+                userId: 'User One',
+                createdDate: '2026-02-06T07:47:14Z',
+                updatedDate: '2026-02-06T07:55:15Z',
+                taskType: 'SSWFormInputTask',
+                updateType: SswUpdateOption.SSW_UPDATE,
+            },
+        ];
+        const { queryByText } = render(
+            <TasksListing {...mockProps} tasks={mockTask} />
+        );
+        expect(queryByText('TA000000074601')).toBeInTheDocument();
     });
 });

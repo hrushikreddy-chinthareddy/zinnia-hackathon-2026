@@ -36,7 +36,7 @@ const SswOperations = ({
     setSelectedProgram,
 }: SswOperationsProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON);
-    const { formSignature } = useContext(FormDataContext);
+    const { formSignature, isFormStateReadOnly } = useContext(FormDataContext);
     const source = getDocumentSource(document.documentNumber);
 
     const handleEditProgram = (index: number): undefined => {
@@ -60,7 +60,7 @@ const SswOperations = ({
             ))}
             {source !== ChannelType.Phone && formSignature && (
                 <SignatureValidations
-                    isFormStateReadOnly={false}
+                    isFormStateReadOnly={isFormStateReadOnly ?? false}
                     config={signaturesConfig}
                 />
             )}

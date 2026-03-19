@@ -73,6 +73,12 @@ export enum IrsFormType {
     W4R = 'W4R',
     W4P = 'W4P',
 }
+export interface FormUpdateData {
+    updateType?: string | null;
+    bank?: unknown[] | null;
+    [key: string]: unknown;
+}
+
 export interface FormParts {
     formSource: FormSource;
     formData: FormData;
@@ -88,6 +94,7 @@ export interface FormParts {
     formSurrenderingCompany: FormSurrenderingSignature | null;
     formTaxWithholding: FormTaxWithholding;
     formAdditionalWaivers: FormAdditionalWaiver[];
+    formUpdateData?: FormUpdateData | null;
     formTaxIdCertificate?: {
         //-- Not required  set complete object as null
         signatures: [

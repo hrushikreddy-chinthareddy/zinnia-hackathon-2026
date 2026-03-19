@@ -13,7 +13,11 @@ import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { signaturesConfig } from '../../bank-update/bank-update.helpers';
 import { sswEditFormValidator } from '../../ssw-edit-helpers';
 
-const Signature = () => {
+type SignatureProps = {
+    isFormStateReadOnly?: boolean;
+};
+
+const Signature = ({ isFormStateReadOnly = false }: SignatureProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
 
     const { goToNext } = useWorkflow();
@@ -34,18 +38,20 @@ const Signature = () => {
         <WorkflowCard
             title={t('signTabTitle')}
             footerContent={
-                <TransactionNavigationButtons
-                    className="mt-10"
-                    disableContinue={false}
-                    handleContinue={handleContinue}
-                    parentPage={ParentPage.CreateCase}
-                    leaveTransactionLink="/create-case"
-                />
+                !isFormStateReadOnly ? (
+                    <TransactionNavigationButtons
+                        className="mt-10"
+                        disableContinue={false}
+                        handleContinue={handleContinue}
+                        parentPage={ParentPage.CreateCase}
+                        leaveTransactionLink="/create-case"
+                    />
+                ) : undefined
             }
         >
             <div className="mx-[-30px]">
                 <SignatureValidations
-                    isFormStateReadOnly={false}
+                    isFormStateReadOnly={isFormStateReadOnly}
                     config={signaturesConfig}
                 />
                 <NoteSection />

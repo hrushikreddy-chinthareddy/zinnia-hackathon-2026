@@ -1,5 +1,6 @@
 import { getAccessToken } from '@auth0/nextjs-auth0';
 import dayjs from 'dayjs';
+import { useSearchParams } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useTranslation } from 'next-i18next';
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
@@ -21,6 +22,7 @@ import {
     ActiveWithdrawalCase,
     Carrier,
     RMDProgramType,
+    SpecialProgram,
 } from '@deps/models/case/withdrawal/case';
 import { mapTaskToActiveWithdrawalCaseTask } from '@deps/operations/tasks/v2/helpers';
 import { ERROR_CODES } from '@deps/pages/create-case/error';
@@ -45,16 +47,126 @@ import {
 import { Policy } from '@zinnia/api-types/types/sor';
 import nextI18nextConfig from 'next-i18next.config';
 
+const PROGRAM_CODE = {
+    PremiumDefault: 0,
+    SSW: 2,
+    RMD: 4,
+    SSWNet: 6,
+    EFTDraw: 5,
+} as const;
+
+function mapAllocationToProgram(
+    program: SpecialProgram,
+    programType: string,
+    programCode: typeof PROGRAM_CODE
+): Program | null {
+    const frequencyMapping = getFullFrequency(program.mode);
+    const baseProgram = {
+        startDate: program.startDate,
+        nextDate: program.nextDate,
+        amount: program.dbAmount.toString(),
+        duration: program.duration.toString(),
+        status: RMDProgramType.Active,
+        allocationId: program.allocationId,
+    };
+
+    if (programType === SpecialProgramType.SSW) {
+        if (
+            program.typeOfAlloc === programCode.SSW ||
+            program.typeOfAlloc === programCode.SSWNet
+        ) {
+            return {
+                ...baseProgram,
+                programType: 'SSW',
+                frequency: frequencyMapping,
+            };
+        }
+    } else if (programType === SpecialProgramType.RMD) {
+        if (program.typeOfAlloc === programCode.RMD) {
+            return {
+                ...baseProgram,
+                programType: 'RMD',
+                frequency: frequencyMapping,
+            };
+        }
+    } else if (programType === SpecialProgramType.EFT) {
+        if (program.typeOfAlloc === programCode.EFTDraw) {
+            return {
+                ...baseProgram,
+                programType: 'EFT Draw',
+                frequency: program.mode,
+            };
+        }
+    }
+    return null;
+}
+
+function getProgramsFromActiveAllocations(
+    activeProg: SpecialProgram[] | null,
+    programType: string,
+    programCode: typeof PROGRAM_CODE
+): Program[] {
+    if (!activeProg) return [];
+    const result: Program[] = [];
+    activeProg.forEach((allocation) => {
+        const program = mapAllocationToProgram(
+            allocation,
+            programType,
+            programCode
+        );
+        if (program) result.push(program);
+    });
+    return result;
+}
+
+type FormProgramDateValue = string | { text?: string };
+
+type FormProgram = Omit<Program, 'startDate' | 'nextDate'> & {
+    startDate?: FormProgramDateValue;
+    nextDate?: FormProgramDateValue;
+};
+
+function getProgramsFromFormData(form: ActiveWithdrawalCase): Program[] {
+    const prog = form?.data?.formRequest?.formUpdateData?.programs as
+        | FormProgram[]
+        | undefined;
+    if (!prog) return [];
+    return prog.map((program) => {
+        const startDate =
+            program.startDate != null && typeof program.startDate === 'object'
+                ? (program.startDate as { text?: string }).text ?? ''
+                : (program.startDate as string) ?? '';
+        const nextDate =
+            program.nextDate != null && typeof program.nextDate === 'object'
+                ? (program.nextDate as { text?: string }).text ?? ''
+                : (program.nextDate as string) ?? '';
+        return {
+            programType: program.programType,
+            startDate,
+            nextDate,
+            frequency: program.frequency,
+            duration: program.duration,
+            amount: program.amount,
+            allocationId: program.allocationId,
+            status: program?.status ?? '',
+        };
+    });
+}
+
 type SswUpdateProps = {
     policy: Policy;
     featureFlagDecisions: FeatureFlags;
     form: ActiveWithdrawalCase;
     document: DocumentData;
-    specialProgramdetails: any;
+    specialProgramdetails: SpecialProgram | null;
 };
 
 const SswEdit = (props: SswUpdateProps) => {
     const { t } = useTranslation(undefined, { keyPrefix: 'sswUpdate' });
+    const searchParams = useSearchParams();
+    const isFormStateReadOnly = searchParams.get('action') === 'readonly';
+    const isProgramTerminate =
+        searchParams.get('programType') === 'SSW_TERMINATE';
 
     const router = useRouter();
     const {
@@ -64,81 +176,35 @@ const SswEdit = (props: SswUpdateProps) => {
         featureFlagDecisions,
         specialProgramdetails,
     } = props;
+
     const { programType } = router.query;
     const [program, setProgram] = useState<Program[]>([]);
 
-    const ProgramCode = {
-        PremiumDefault: 0,
-        SSW: 2,
-        RMD: 4,
-        SSWNet: 6,
-        EFTDraw: 5,
-    };
-
+    const activeAllocationCodes: number[] = [
+        PROGRAM_CODE.PremiumDefault,
+        PROGRAM_CODE.RMD,
+        PROGRAM_CODE.SSW,
+        PROGRAM_CODE.SSWNet,
+        PROGRAM_CODE.EFTDraw,
+    ];
     const activeProg =
         specialProgramdetails?.allocationDetails?.filter(
-            (program: any) =>
-                [
-                    ProgramCode.PremiumDefault,
-                    ProgramCode.RMD,
-                    ProgramCode.SSW,
-                    ProgramCode.SSWNet,
-                    ProgramCode.EFTDraw,
-                ].includes(program.typeOfAlloc) &&
-                (program.termDate === '' || dayjs().isBefore(program.termDate))
-        ) || null;
+            (allocation: SpecialProgram) =>
+                activeAllocationCodes.includes(allocation.typeOfAlloc) &&
+                (allocation.termDate === '' ||
+                    dayjs().isBefore(allocation.termDate))
+        ) ?? null;
 
     useEffect(() => {
-        const specialProg: Program[] = [];
-        activeProg?.forEach((program: any) => {
-            const freqencyMapping = getFullFrequency(program.mode);
-            if (programType === SpecialProgramType.SSW) {
-                if (
-                    [ProgramCode.SSW, ProgramCode.SSWNet].includes(
-                        program.typeOfAlloc
-                    )
-                ) {
-                    specialProg.push({
-                        programType: 'SSW',
-                        startDate: program.startDate,
-                        nextDate: program.nextDate,
-                        amount: program.dbAmount.toString(),
-                        frequency: freqencyMapping,
-                        duration: program.duration.toString(),
-                        status: RMDProgramType.Active,
-                        allocationId: program.allocationId,
-                    });
-                }
-            } else if (programType === SpecialProgramType.RMD) {
-                if (program.typeOfAlloc === ProgramCode.RMD) {
-                    specialProg.push({
-                        programType: 'RMD',
-                        startDate: program.startDate,
-                        nextDate: program.nextDate,
-                        amount: program.dbAmount.toString(),
-                        frequency: freqencyMapping,
-                        duration: program.duration.toString(),
-                        status: RMDProgramType.Active,
-                        allocationId: program.allocationId,
-                    });
-                }
-            } else if (programType === SpecialProgramType.EFT) {
-                if (program.typeOfAlloc === ProgramCode.EFTDraw) {
-                    specialProg.push({
-                        programType: 'EFT Draw',
-                        startDate: program.startDate,
-                        nextDate: program.nextDate,
-                        amount: program.dbAmount.toString(),
-                        frequency: program.mode,
-                        duration: program.duration.toString(),
-                        status: RMDProgramType.Active,
-                        allocationId: program.allocationId,
-                    });
-                }
-            }
-        });
-        setProgram(specialProg);
-    }, []);
+        const programs = isFormStateReadOnly
+            ? getProgramsFromFormData(form)
+            : getProgramsFromActiveAllocations(
+                  activeProg,
+                  programType as string,
+                  PROGRAM_CODE
+              );
+        setProgram(programs);
+    }, [isFormStateReadOnly]);
 
     if (program?.length === 0)
         return (
@@ -159,26 +225,34 @@ const SswEdit = (props: SswUpdateProps) => {
         );
 
     return (
-        <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
-            <FormProvider
-                form={form}
-                initialForm={form}
-                isOpenNigo={false}
-                issueState=""
-                featureFlagDecisions={featureFlagDecisions}
-            >
-                <div className="bg-gray-100 flex justify-center my-2 pb-4">
-                    <WorkflowProvider>
-                        <SswUpdate
-                            policy={policy}
-                            document={document}
-                            programs={program}
-                            programType={programType as string}
-                        />
-                    </WorkflowProvider>
+        <>
+            {isProgramTerminate && (
+                <div className="flex flex-row-reverse items-center justify-start rounded-lg border border-[#FA7625]  bg-[#FFF7E3] p-4 shadow-md">
+                    <p className="text-bold m-auto">{t('programTerminated')}</p>
                 </div>
-            </FormProvider>
-        </div>
+            )}
+            <div className="flex w-full flex-col overflow-auto px-4 py-6 md:px-6 md:py-8 lg:px-8 lg:py-10  bg-white h-screen">
+                <FormProvider
+                    form={form}
+                    initialForm={form}
+                    isOpenNigo={false}
+                    issueState=""
+                    featureFlagDecisions={featureFlagDecisions}
+                    isFormStateReadOnly={isFormStateReadOnly}
+                >
+                    <div className="bg-gray-100 flex justify-center my-2 pb-4">
+                        <WorkflowProvider>
+                            <SswUpdate
+                                policy={policy}
+                                document={document}
+                                programs={program}
+                                programType={programType as string}
+                            />
+                        </WorkflowProvider>
+                    </div>
+                </FormProvider>
+            </div>
+        </>
     );
 };
 
