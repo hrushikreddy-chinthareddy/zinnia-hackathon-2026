@@ -36,16 +36,28 @@ const stringifyDate = (date: Date) => {
     return dayjs(date).tz('UTC').format('MM/DD/YYYY');
 };
 
-const sanitizeDateString = (rawInput: string) => {
+const sanitizeDateString = (rawInput: string, currentValue: string) => {
     let cleanedInput = rawInput.replace(/[^0-9/-]/g, '');
     cleanedInput = cleanedInput.replace(/-+/g, '/');
 
+    if (currentValue.length > cleanedInput.length) {
+        cleanedInput = cleanedInput.replace(/\/$/, '');
+        return cleanedInput;
+    }
+
     if (
         (cleanedInput.length === 2 || cleanedInput.length === 5) &&
-        rawInput.length < cleanedInput.length &&
+        rawInput.length <= cleanedInput.length &&
         !cleanedInput.endsWith('/')
     ) {
         cleanedInput += '/';
+    } else if (cleanedInput.length === 8 && !cleanedInput.includes('/')) {
+        cleanedInput =
+            cleanedInput.slice(0, 2) +
+            '/' +
+            cleanedInput.slice(2, 4) +
+            '/' +
+            cleanedInput.slice(4);
     }
 
     return cleanedInput;
@@ -98,7 +110,7 @@ const DateInput = ({
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value: dateString } = e.target;
-        const newValue = sanitizeDateString(dateString);
+        const newValue = sanitizeDateString(dateString, value);
 
         setValue(newValue);
 
