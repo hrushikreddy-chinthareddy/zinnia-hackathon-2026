@@ -36,31 +36,19 @@ const stringifyDate = (date: Date) => {
     return dayjs(date).tz('UTC').format('MM/DD/YYYY');
 };
 
-const sanitizeDateString = (rawInput: string, currentValue: string) => {
+const sanitizeDateString = (rawInput: string) => {
     let cleanedInput = rawInput.replace(/[^0-9/-]/g, '');
-    cleanedInput = cleanedInput.replace(/-+/g, '/');
+    cleanedInput = cleanedInput.replace(/-+/g, '').replace(/\//g, '');
 
-    if (currentValue.length > cleanedInput.length) {
-        cleanedInput = cleanedInput.replace(/\/$/, '');
-        return cleanedInput;
+    let formattedDate = '';
+    for (let i = 0; i < cleanedInput.length && i < 8; i++) {
+        if (i === 2 || i === 4) {
+            formattedDate += '/';
+        }
+        formattedDate += cleanedInput[i];
     }
 
-    if (
-        (cleanedInput.length === 2 || cleanedInput.length === 5) &&
-        rawInput.length <= cleanedInput.length &&
-        !cleanedInput.endsWith('/')
-    ) {
-        cleanedInput += '/';
-    } else if (cleanedInput.length === 8 && !cleanedInput.includes('/')) {
-        cleanedInput =
-            cleanedInput.slice(0, 2) +
-            '/' +
-            cleanedInput.slice(2, 4) +
-            '/' +
-            cleanedInput.slice(4);
-    }
-
-    return cleanedInput;
+    return formattedDate;
 };
 
 const parseDateString = (dateString: string) => {
@@ -110,7 +98,7 @@ const DateInput = ({
 
     const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
         const { value: dateString } = e.target;
-        const newValue = sanitizeDateString(dateString, value);
+        const newValue = sanitizeDateString(dateString);
 
         setValue(newValue);
 
