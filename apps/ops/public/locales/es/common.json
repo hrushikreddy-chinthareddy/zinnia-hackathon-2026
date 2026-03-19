@@ -6362,7 +6362,8 @@
                     "email": "Correo electrónico",
                     "removeEmail": "Eliminar este correo electrónico",
                     "type": "Tipo",
-                    "preferredEmail": "Correo electrónico preferido"
+                    "preferredEmail": "Correo electrónico de contacto preferido",
+                    "setAsPreferredEmail": "Establecer como dirección de correo electrónico preferida"
                 },
                 "mainCta": {
                     "add": "Guardar correo electrónico de {{type}}",

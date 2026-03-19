@@ -1,3 +1,4 @@
+import { AssistiveText, AssistiveTextVariant } from '@zinnia/bloom/components';
 import clsx from 'clsx';
 import { useTranslation } from 'next-i18next';
 import { v4 as uuid4 } from 'uuid';
@@ -50,6 +51,7 @@ export const Emails = ({
                     emailId,
                     emailType = EmailType.PERSONAL,
                     isPending,
+                    isPreferred,
                 } = email as EmailWithPending;
                 const emailIdKey = emailId ?? uuid4();
                 const emailTypeKey =
@@ -101,6 +103,16 @@ export const Emails = ({
                             truncate={true}
                             variant={ContentVariant.BodySm}
                         />
+
+                        {isPreferred && (
+                            <AssistiveText
+                                className="mt-1"
+                                text={t(
+                                    'people.sideSheet.email.labels.preferredEmail'
+                                )}
+                                variant={AssistiveTextVariant.Success}
+                            />
+                        )}
                     </div>
                 );
             })}

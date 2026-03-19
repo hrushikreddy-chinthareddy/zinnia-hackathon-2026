@@ -6328,7 +6328,8 @@
                     "email": "Email",
                     "removeEmail": "Supprimer cet e-mail",
                     "type": "Type",
-                    "preferredEmail": "E-mail préféré"
+                    "preferredEmail": "Adresse e-mail de contact préférée",
+                    "setAsPreferredEmail": "Définir comme adresse e-mail préférée"
                 },
                 "mainCta": {
                     "add": "Enregistrer l'email {{type}}",

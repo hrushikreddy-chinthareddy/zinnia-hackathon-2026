@@ -172,6 +172,7 @@ const SideSheetEmail = ({
         requestSubType: [Processes.EmailChange],
     });
     const hasAnyCaseResult = hasAnyCase(casesResponse);
+    const isPreferredEmail = email.isPreferred ?? false;
 
     const handleDelete = async () => {
         const response = await editNonFinancialTransaction({
@@ -419,6 +420,18 @@ const SideSheetEmail = ({
                     }
                 />
             </div>
+
+            <CheckboxText
+                checked={isPreferredEmail}
+                isDisabled={isDelete}
+                label={t('labels.setAsPreferredEmail')}
+                onChange={(e) => {
+                    setEmail((prevState) => ({
+                        ...prevState,
+                        preferredEmailIndicator: e || null,
+                    }));
+                }}
+            />
 
             {!isAdd && (
                 <CheckboxText

@@ -6430,7 +6430,8 @@
                     "removeEmail": "Remove this email",
                     "remove": "Remove email",
                     "type": "Type",
-                    "preferredEmail": "Preferred email"
+                    "preferredEmail": "Preferred contact email",
+                    "setAsPreferredEmail": "Set as preferred email address"
                 },
                 "mainCta": {
                     "add": "Save {{type}} email",
