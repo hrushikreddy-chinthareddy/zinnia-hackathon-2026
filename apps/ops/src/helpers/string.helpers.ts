@@ -335,14 +335,9 @@ export const trimStringByCharacterCount = (
 };
 
 export const calculateAge = (
-    birthday: string | undefined,
+    birthday: string | Date | undefined | null,
     yearString: string
 ): string => {
-    if (
-        isNullEmptyOrUndefined(birthday) ||
-        !dayjs(birthday, ZAHARA_API_DATE_FORMAT).isValid()
-    )
-        return DEFAULT_ERROR_STRING;
     const age = calculateAgeNumber(birthday);
     if (age === undefined) {
         return DEFAULT_ERROR_STRING;
