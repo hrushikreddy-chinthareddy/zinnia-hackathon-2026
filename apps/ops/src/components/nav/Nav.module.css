@@ -12,7 +12,7 @@
 
     &.collapsed {
         width: 48px;
-        overflow-x: hidden;
+        overflow: hidden;
     }
 }
 
@@ -67,16 +67,27 @@
     }
 }
 
-.logoButton:not(:disabled) {
-    &:hover,
-    &:focus {
-        background-color: var(--color-grayscale-color-white);
-        border-radius: var(--measure-dimension-z-space-1);
-        padding: var(--measure-dimension-z-space-1);
+.logoButton {
+    .logoButton__expandIcon {
+        display: none;
     }
 
-    svg {
-        color: var(--color-grayscale-color-600-gray);
+    &:not(:disabled) {
+        &:hover,
+        &:focus-visible {
+            background-color: var(--color-grayscale-color-white);
+            border-radius: var(--measure-dimension-z-space-1);
+            padding: var(--measure-dimension-z-space-1);
+
+            .logoButton__expandIcon {
+                display: block;
+                color: var(--color-grayscale-color-600-gray);
+            }
+
+            .logoButton__logo {
+                display: none;
+            }
+        }
     }
 }
 
