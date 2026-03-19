@@ -212,5 +212,5 @@
         "playwright:ui": "playwright test --ui",
         "playwright:debug": "playwright test --debug"
     },
-    "version": "2.34.0"
+    "version": "2.35.0"
 }
