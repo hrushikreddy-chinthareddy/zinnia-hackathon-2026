@@ -275,3 +275,46 @@ export const formatFeedTime = (isoString: string) => {
 export const formatFeedDate = (isoString: string) => {
     return dayjs.utc(isoString).format(DEFAULT_DATE_DISPLAY_FORMAT);
 };
+
+/**
+ * Converts a Date or date string to a Date object at noon UTC.
+ * This prevents timezone shift issues where midnight UTC becomes the previous day
+ * when displayed in timezones west of UTC (e.g., EST, PST).
+ *
+ * For strings: extracts the YYYY-MM-DD portion and creates a Date at noon UTC.
+ * For Date objects: formats to YYYY-MM-DD in UTC, then creates a Date at noon UTC.
+ *
+ * @param date - A Date object or date string (YYYY-MM-DD or ISO format)
+ * @returns A Date object set to noon UTC on the same calendar day, or undefined if invalid
+ */
+export const toNoonUtc = (date: Date | string): Date | undefined => {
+    if (!date) {
+        return undefined;
+    }
+
+    let dateString: string;
+
+    if (typeof date === 'string') {
+        // Extract YYYY-MM-DD from the string, preserving the date as written
+        const dateMatch = date.match(/^(\d{4}-\d{2}-\d{2})/);
+        if (!dateMatch) {
+            return undefined;
+        }
+        dateString = dateMatch[1];
+    } else {
+        // For Date objects, format to YYYY-MM-DD in UTC
+        const parsed = dayjs(date).utc();
+        if (!parsed.isValid()) {
+            return undefined;
+        }
+        dateString = parsed.format('YYYY-MM-DD');
+    }
+
+    const noonUtc = new Date(`${dateString}T12:00:00Z`);
+
+    if (isNaN(noonUtc.getTime())) {
+        return undefined;
+    }
+
+    return noonUtc;
+};

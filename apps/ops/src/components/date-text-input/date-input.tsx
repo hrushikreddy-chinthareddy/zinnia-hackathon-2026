@@ -4,7 +4,7 @@ import { isEqual } from 'lodash';
 import { ChangeEvent, useMemo, useRef, useState } from 'react';
 
 import { parseAndFormatDate } from '@deps/helpers/string.helpers';
-import { isValidDate } from '@deps/utils/dates';
+import { isValidDate, toNoonUtc } from '@deps/utils/dates';
 
 import { DateInputPopover } from './date-input-popover';
 import styles from './date-input.module.css';
@@ -33,7 +33,7 @@ const isValidDateString = (dateString: string) => {
 };
 
 const stringifyDate = (date: Date) => {
-    return dayjs(date).tz('UTC').format('MM/DD/YYYY');
+    return dayjs(date).utc().format('MM/DD/YYYY');
 };
 
 const sanitizeDateString = (rawInput: string) => {
@@ -61,13 +61,8 @@ const parseDateString = (dateString: string) => {
     if (!formatedDate) {
         return;
     }
-    // We manually build a custom ISO date string to ensure that the
-    // local timezone offset is ignored
-    const date = new Date(`${formatedDate}T12:00:00Z`);
 
-    if (!isNaN(date.getTime())) {
-        return date;
-    }
+    return toNoonUtc(formatedDate);
 };
 
 const DateInput = ({
@@ -116,16 +111,12 @@ const DateInput = ({
     };
 
     const handleSelect = (date: Date) => {
-        const isValid = !isNaN(date.getTime());
-
-        if (!isValid) {
+        const normalizedDate = toNoonUtc(date);
+        if (!normalizedDate) {
             return;
         }
-        const newValue = stringifyDate(date);
-
-        setValue(newValue);
-
-        onChange(date);
+        setValue(stringifyDate(normalizedDate));
+        onChange(normalizedDate);
     };
 
     const handleBlur = () => {
