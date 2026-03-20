@@ -11,7 +11,7 @@
     z-index: 20;
 
     &.collapsed {
-        width: 48px;
+        width: var(--nav-collapsed-width);
         overflow: hidden;
     }
 }
@@ -41,14 +41,11 @@
         background-color: var(--color-grayscale-color-white);
         border-radius: var(--measure-dimension-z-space-1);
     }
-
-    @container (max-width: 32px) {
-        display: none;
-    }
 }
 
 .logoRow {
     align-items: center;
+    background: var(--color-grayscale-color-50-gray);
     container-type: inline-size;
     display: grid;
     grid-template-columns: minmax(32px, 1fr) auto;
@@ -68,10 +65,6 @@
 }
 
 .logoButton {
-    .logoButton__expandIcon {
-        display: none;
-    }
-
     &:not(:disabled) {
         &:hover,
         &:focus-visible {
@@ -80,12 +73,7 @@
             padding: var(--measure-dimension-z-space-1);
 
             .logoButton__expandIcon {
-                display: block;
                 color: var(--color-grayscale-color-600-gray);
-            }
-
-            .logoButton__logo {
-                display: none;
             }
         }
     }
@@ -147,6 +135,43 @@ div:has(> .searchInput)::before {
     width: 100%;
     transition: width 1ms;
     transition-delay: 300ms;
+}
+
+.navContainer.collapsed {
+    .logoRow {
+        display: inline-flex;
+        position: relative;
+
+        &:hover {
+            .logo {
+                visibility: hidden;
+            }
+
+            .toggleButton {
+                z-index: 2;
+            }
+        }
+    }
+
+    .logo {
+        background: var(--color-grayscale-color-50-gray);
+        visibility: visible;
+        z-index: 1;
+    }
+
+    .toggleButton {
+        position: absolute;
+        top: 8px;
+        right: 3px;
+        transform: rotate(0deg);
+        z-index: 0;
+
+        &:hover,
+        &:focus,
+        &:focus-visible {
+            z-index: 2;
+        }
+    }
 }
 
 .navList {

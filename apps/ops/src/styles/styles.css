@@ -28,6 +28,7 @@
     --breakpoint-lg: 1024px;
     --order-entry-left-column-padding: 0;
     --order-entry-center-column-bottom-padding-offset: 40px;
+    --nav-collapsed-width: 48px;
 }
 
 @layer base {
