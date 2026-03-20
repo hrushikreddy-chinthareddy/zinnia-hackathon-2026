@@ -117,7 +117,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
                     ? 'Nicotine'
                     : 'Non-Nicotine',
                 ...(dateOfBirth && {
-                    insuredAge,
+                    issueAge: insuredAge,
                 }),
                 ...(clientCase?.insuredDetails?.sexAtBirth && {
                     gender: clientCase.insuredDetails.sexAtBirth.toUpperCase(),
