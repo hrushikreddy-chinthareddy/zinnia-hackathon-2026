@@ -3,6 +3,7 @@
     background-color: var(--color-base-surface-carrier);
     padding: var(--measure-dimension-z-space-2);
     height: 100vh;
+    overflow: hidden;
     position: sticky;
     transition: 300ms ease-in-out;
     text-wrap: nowrap;
@@ -12,7 +13,6 @@
 
     &.collapsed {
         width: var(--nav-collapsed-width);
-        overflow: hidden;
     }
 }
 
