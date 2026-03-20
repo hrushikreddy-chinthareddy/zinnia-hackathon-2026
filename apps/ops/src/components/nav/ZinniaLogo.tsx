@@ -14,6 +14,7 @@ export const ZinniaLogo = ({ isExpanded }: { isExpanded: boolean }) => {
                     alt="Zinnia Logomark"
                     height={24}
                     width={24}
+                    aria-hidden="true"
                 />
                 <Image
                     className={styles.logoText}
