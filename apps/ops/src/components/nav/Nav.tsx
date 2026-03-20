@@ -89,11 +89,6 @@ export const Nav = ({
         }
     };
 
-    const handleLogoClick = () => {
-        setExpanded(true);
-        onNavigationToggle?.(true);
-    };
-
     return (
         <section
             className={clsx(
