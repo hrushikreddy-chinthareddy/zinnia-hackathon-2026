@@ -107,31 +107,18 @@ export const Nav = ({
                     <div className={styles.logo}>
                         {/* If the theme is Zinnia - just load in the logo component */}
                         {carrierName === CarrierName.ZINNIA ? (
-                            <ZinniaLogo
-                                handleLogoClick={handleLogoClick}
-                                isExpanded={isExpanded}
-                                expandText={expandText}
-                            />
+                            <ZinniaLogo isExpanded={isExpanded} />
                         ) : // Otherwise check for expanded state to toggle between the two types of logos
                         isExpanded ? (
                             <ExpandedLogo
                                 activeCarrier={carrierName}
-                                handleLogoClick={handleLogoClick}
                                 isExpanded={isExpanded}
-                                expandText={expandText}
                             />
                         ) : (
-                            <button
-                                onClick={handleLogoClick}
-                                aria-label={expandText}
-                            >
-                                <CollapsedLogo
-                                    activeCarrier={carrierName}
-                                    handleLogoClick={handleLogoClick}
-                                    isExpanded={isExpanded}
-                                    expandText={expandText}
-                                />
-                            </button>
+                            <CollapsedLogo
+                                activeCarrier={carrierName}
+                                isExpanded={isExpanded}
+                            />
                         )}
                     </div>
                     <button

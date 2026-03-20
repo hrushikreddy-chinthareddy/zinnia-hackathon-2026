@@ -7,9 +7,7 @@ export const ExpandedLogo = ({
     isExpanded,
 }: {
     activeCarrier: CarrierName;
-    handleLogoClick: () => void;
     isExpanded: boolean;
-    expandText: string;
 }) => {
     if (activeCarrier && activeCarrier !== CarrierName.ZINNIA) {
         return (
