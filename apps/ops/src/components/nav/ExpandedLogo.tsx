@@ -4,9 +4,7 @@ import { ZinniaLogo } from './ZinniaLogo';
 
 export const ExpandedLogo = ({
     activeCarrier,
-    handleLogoClick,
     isExpanded,
-    expandText,
 }: {
     activeCarrier: CarrierName;
     handleLogoClick: () => void;
@@ -26,11 +24,5 @@ export const ExpandedLogo = ({
         );
     }
 
-    return (
-        <ZinniaLogo
-            handleLogoClick={handleLogoClick}
-            isExpanded={isExpanded}
-            expandText={expandText}
-        />
-    );
+    return <ZinniaLogo isExpanded={isExpanded} />;
 };
