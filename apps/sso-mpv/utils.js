@@ -11,5 +11,10 @@ export const getConnectionConfig = (connection) => {
         loginSuccessUrl: process.env.MYPOLICYVIEW_BASE_URL,
         scope: 'openid profile email',
       };
+    case 'Security-Benefit-Okta':
+      return {
+        loginSuccessUrl: `securitybenefit.${process.env.MYPOLICYVIEW_BASE_URL}`,
+        scope: 'email offline_access openid profile',
+      };
   }
 };

@@ -157,7 +157,8 @@ app.get('/health', (_, res) => {
 });
 
 // Global error handling middleware
-app.use((err, res) => {
+// All four parameters are required for Express to recognize this as an error-handling middleware
+app.use((err, req, res, next) => {
   logger.error(err.message);
   res.status(500).sendFile('error.html', htmlFiles);
 });
