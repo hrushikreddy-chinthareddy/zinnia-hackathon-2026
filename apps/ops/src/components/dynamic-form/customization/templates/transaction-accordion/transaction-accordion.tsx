@@ -1,6 +1,7 @@
 import { ArrayFieldTemplateProps, getUiOptions } from '@rjsf/utils';
 import { Icon, IconType } from '@zinnia/bloom/components';
 import clsx from 'clsx';
+import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import CheckboxText from '@deps/components/checkbox/checkbox-text/checkbox-text';
@@ -9,6 +10,7 @@ import {
     Party,
     Signatures,
 } from '@deps/containers/task-container/task-handlers/types';
+import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { ReactComponent as ChevronDown } from '@deps/styles/elements/icons/arrow/chevron-down.svg';
 import { ReactComponent as ChevronRightIcon } from '@deps/styles/elements/icons/icons_outlined/chevron-right.svg';
 
@@ -28,6 +30,7 @@ export const TransactionAccordionTemplate = (
         formContext,
         formData,
     } = props;
+
     const ui = getUiOptions(uiSchema);
     const { setCustomData } = formContext;
     const { t } = useTranslation();
@@ -46,14 +49,22 @@ export const TransactionAccordionTemplate = (
         isSinglePartyTransaction = false,
         isMultiPartyTransaction = false,
         isEditable = true,
+        maxParties,
+        minPerRole,
+        maxPerRole,
+        validationMessage,
     } = ui;
     const isSimpleAccordion =
         !isSinglePartyTransaction && !isMultiPartyTransaction;
 
+    const { currentStepIndex } = useWorkflow();
+
     const { disableAddButton, onToggleDelete } = useTransactionActions({
         setCustomData,
         isSingleParty: isSinglePartyTransaction as boolean,
+        isMultiParty: isMultiPartyTransaction as boolean,
         formData,
+        maxParties: maxParties as number | undefined,
     });
     const { activeIndex, setActiveIndex } = useAccordionState(
         templateId as string,
@@ -116,6 +127,53 @@ export const TransactionAccordionTemplate = (
     }
 
     formContext.parentActionData = formData;
+
+    if (!formContext.customData) {
+        formContext.customData = {};
+    }
+    formContext.customData.minPerRole = minPerRole;
+    formContext.customData.maxPerRole = maxPerRole;
+    formContext.customData.validationMessage = validationMessage;
+
+    useEffect(() => {
+        const { setSubmitEnabled, setSubmitDisabledStepIndex } = formContext;
+        if (!setSubmitEnabled || !minPerRole) return;
+
+        const activeByRole: Record<string, number> = {};
+        (formData || []).forEach((item: any) => {
+            if (item.action !== Action.DELETE) {
+                const role = item.partyRole || '';
+                activeByRole[role] = (activeByRole[role] || 0) + 1;
+            }
+        });
+
+        let isValid = true;
+
+        for (const [role, minCount] of Object.entries(
+            minPerRole as Record<string, number>
+        )) {
+            if (minCount > 0 && (activeByRole[role] || 0) < minCount) {
+                isValid = false;
+                break;
+            }
+        }
+
+        if (isValid && maxPerRole) {
+            for (const [role, maxCount] of Object.entries(
+                maxPerRole as Record<string, number>
+            )) {
+                if ((activeByRole[role] || 0) > maxCount) {
+                    isValid = false;
+                    break;
+                }
+            }
+        }
+
+        setSubmitEnabled(isValid);
+        if (setSubmitDisabledStepIndex) {
+            setSubmitDisabledStepIndex(currentStepIndex);
+        }
+    }, [formData, minPerRole, maxPerRole, formContext, currentStepIndex]);
 
     return (
         <div>

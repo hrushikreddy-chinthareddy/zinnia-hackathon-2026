@@ -7,6 +7,7 @@ import {
     getStandardDocumentPayload,
     getAssigneeChangePayload,
     getBeneficiaryChangePayload,
+    getAnnuitantChangePayload,
     getBeneAddressVerificationPayload,
 } from './task-payload-formatter';
 
@@ -25,6 +26,8 @@ export const buildTaskPayload = (
             return getAssigneeChangePayload(task);
         case TaskType.Initiate_BeneChange_Transaction:
             return getBeneficiaryChangePayload(task);
+        case TaskType.Initiate_AnnuitantChange_Transaction:
+            return getAnnuitantChangePayload(task);
         case TaskType.Bene_Address_Verification:
             return getBeneAddressVerificationPayload(task);
         default:

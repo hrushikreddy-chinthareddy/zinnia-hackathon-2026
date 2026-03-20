@@ -19,6 +19,7 @@ import IssueResolvedRadioWidget, {
 } from './issue-resolved-widget/issue-resolved-widget';
 import NotesWidget from './notes-widget/notes-widget';
 import NumbersWidget from './numbers/numbers';
+import PartyRoleWidget from './party-role-widget/party-role-widget';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
 import TextWidget from './text-widget/text-widget';
@@ -50,6 +51,7 @@ export function generateWidgets(): RegistryWidgetsType {
         NumbersWidget,
         DateWidgetV2,
         TitleWidget,
+        PartyRoleWidget,
         IssueResolvedDisplayWidget,
         IssueResolvedRadioWidget,
     };

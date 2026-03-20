@@ -4,6 +4,7 @@ import { TaskType } from '@deps/models/case/task';
 import { getAgentChangeSteps } from './agent-change-steps';
 import { getAgentNigoSteps } from './agent-nigo';
 import { getAgentReviewSteps } from './agent-review';
+import { getAnnuitantChangeSteps } from './annuitant-change-steps';
 import { getAssigneeChangeSteps } from './assignee-change-steps';
 import { getBeneAddressVerificationSteps } from './bene-address-verification';
 import { getBeneCallSteps } from './bene-call-steps';
@@ -119,6 +120,9 @@ export const getFormSteps = (
             break;
         case TaskType.Initiate_BeneChange_Transaction:
             steps = getBeneChangeSteps(props);
+            break;
+        case TaskType.Initiate_AnnuitantChange_Transaction:
+            steps = getAnnuitantChangeSteps(props);
             break;
         case TaskType.Initiate_AssigneeChange_Transaction:
             steps = getAssigneeChangeSteps(props);

@@ -134,6 +134,7 @@ export enum PartyRoleType {
     THIRDPARTYDESIGNEE = 'THIRDPARTYDESIGNEE',
     ASSIGNEE = 'ASSIGNEE',
     ANNUITANT = 'ANNUITANT',
+    JOINTANNUITANT = 'JOINTANNUITANT',
     INSURED = 'INSURED',
 }
 
@@ -204,6 +205,7 @@ export const normalizeTaskPayloadAddressType = (
         SorAddressType.BUSINESS,
         SorAddressType.SEASONAL,
         SorAddressType.POBOX,
+        SorAddressType.MAILING,
     ]) as string[];
     return allowed.includes(upper) ? value : 'OTHER';
 };
@@ -240,6 +242,7 @@ export const normalizeTaskPayloadEmailType = (
 export type ActionDataItem = {
     action: Action;
     supportingDocumentAttached: boolean | null;
+    partyRole?: string | null;
     party: {
         partyId: string | null;
         partyType: string | null;

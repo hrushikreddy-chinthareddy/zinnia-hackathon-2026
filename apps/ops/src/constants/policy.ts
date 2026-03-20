@@ -42,6 +42,7 @@ export enum PolicyRole {
     THIRDPARTYDESIGNEE = 'ThirdPartyDesignee',
     BENEFICIARY = 'Beneficiary',
     ASSIGNEE = 'Assignee',
+    ANNUITANT = 'Annuitant',
     AGENT = 'multi-agent',
 }
 

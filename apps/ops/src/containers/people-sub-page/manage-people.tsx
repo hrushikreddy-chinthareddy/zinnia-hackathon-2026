@@ -45,6 +45,8 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         featureFlags[FEATURE_FLAGS.BENEFICIARY_CHANGE_TRANSACTION];
     const shouldShowAssigneeChange =
         featureFlags[FEATURE_FLAGS.ASSIGNEE_CHANGE_TRANSACTION];
+    const shouldShowAnnuitantChange =
+        featureFlags[FEATURE_FLAGS.ANNUITANT_CHANGE_TRANSACTION];
 
     const useRoleManagementEligibility = (
         policy: { planCode?: string; policyNumber?: string },
@@ -108,6 +110,10 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
     const { data: manageAssigneeEligibilty } = useRoleManagementEligibility(
         policy,
         PolicyRole.ASSIGNEE
+    );
+    const { data: manageAnnuitantEligibility } = useRoleManagementEligibility(
+        policy,
+        PolicyRole.ANNUITANT
     );
     const withCorrelationId = (href: string) => {
         if (!correlationId) return href;
@@ -189,6 +195,16 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
             hideLabel: false,
             isEligible: manageAssigneeEligibilty?.isEligibleManageAssignee,
             shouldShow: shouldShowAssigneeChange,
+        },
+        {
+            href: t('site.navLinks.annuitant.link', {
+                id: policy.policyNumber,
+                planCode: policy.planCode,
+            }),
+            name: t('site.navLinks.annuitant.text'),
+            hideLabel: false,
+            isEligible: manageAnnuitantEligibility?.isEligibleManageAnnuitant,
+            shouldShow: shouldShowAnnuitantChange,
         },
     ];
 

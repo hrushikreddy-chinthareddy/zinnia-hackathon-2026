@@ -166,6 +166,10 @@ export const getNewAddressTypeOptions = ({ t }: GetAddressTypeOptions) => {
             value: AddressType.POBOX,
         },
         {
+            label: t('people.card.address.addressOptions.mailing') as string,
+            value: AddressType.MAILING,
+        },
+        {
             label: t('people.card.address.addressOptions.other') as string,
             value: AddressType.OTHER,
         },

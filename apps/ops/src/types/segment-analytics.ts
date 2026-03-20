@@ -274,6 +274,7 @@ export enum SegmentTransactionType {
     PAYOR = 'payor',
     THIRD_PARTY = 'third_party',
     ASSIGNEE = 'assignee',
+    ANNUITANT = 'annuitant',
 }
 
 export enum TransactionMode {
@@ -359,6 +360,7 @@ export enum TransactionSubmittedEventType {
     ADD_THIRD_PARTY = 'add_third_party',
     REMOVE_THIRD_PARTY = 'remove_third_party',
     ADD_ASSIGNEE = 'add_assignee',
+    ADD_ANNUITANT = 'add_annuitant',
 }
 
 export type TransactionSuccessfulEvent = BaseSegmentEventProps & {

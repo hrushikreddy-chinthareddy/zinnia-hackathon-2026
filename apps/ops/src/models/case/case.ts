@@ -162,6 +162,7 @@ export enum Processes {
     Reconciliation = 'Reconciliation',
     OperationsReview = 'Operations Review',
     AssigneeChange = 'Assignee Change',
+    AnnuitantChange = 'Annuitant Change',
 }
 
 export enum Actions {

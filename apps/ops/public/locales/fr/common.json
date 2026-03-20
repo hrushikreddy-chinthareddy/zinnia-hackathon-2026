@@ -1771,6 +1771,10 @@
                 "text": "Gestionar asignado",
                 "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
+            "annuitant": {
+                "text": "Gérer les anuitants",
+                "link": "/policies/{{planCode}}/{{id}}/people/annuitantchange"
+            },
             "userMenu": {
                 "text": "Menu Utilisateur"
             }
@@ -2687,6 +2691,13 @@
             "title": "Gérer les bénéficiaires",
             "subTitle": "Vous pouvez gérer vos bénéficiaires ici",
             "confirmSubTitle": "Les bénéficiaires ont été mis à jour"
+        },
+        "annuitantChange": {
+            "title": "Gérer les anuitants",
+            "subTitle": "Ici, vous pouvez gérer les anuitants",
+            "confirmSubTitle": "Les mises à jour du changement d’anuitant ont été envoyées.",
+            "placeholder": "Sélectionnez un rôle",
+            "validationMessage": "Impossible d'ajouter un autre {{selectedRole}}. Maximum {{maxAllowed}} autorisé(s)."
         }
     },
     "welcome": {
@@ -8745,6 +8756,15 @@
             "subTitle": "Tâche : La transaction non encaissée inversée a été soumise.",
             "cta": "Aller à la demande de décès",
             "secondaryCta": "Retour à la maison",
+            "submitTask": "Soumettre"
+        }
+    },
+    "initiateAnnuitantchangeTransaction": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "Tâche : Saisie des données de changement de rentier a été soumise.",
+            "cta": "Aller au dossier",
+            "secondaryCta": "Retour à l'accueil",
             "submitTask": "Soumettre"
         }
     },

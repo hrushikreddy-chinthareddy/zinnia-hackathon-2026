@@ -39,5 +39,6 @@ export const allowedTaskTypes = new Set<TaskType>([
     TaskType.Ownerchange_Data_Entry,
     TaskType.Giact_Call_Out,
     TaskType.Initiate_AssigneeChange_Transaction,
+    TaskType.Initiate_AnnuitantChange_Transaction,
     TaskType.Bankchange_Data_Entry,
 ]);

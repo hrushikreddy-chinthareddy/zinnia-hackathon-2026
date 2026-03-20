@@ -10,6 +10,10 @@ import { browserLogInfo } from '@deps/utils/browser-logging';
 import { Policy } from '@zinnia/api-types/types/sor';
 
 import {
+    annuitantChangeSubmitHandler,
+    buildInitialAnnuitantChangeFormData,
+} from './transactions/annuitant-change-transaction';
+import {
     assigneeChangeSubmitHandler,
     buildInitialAssigneeChangeFormData,
 } from './transactions/assignee-change-transaction';
@@ -125,6 +129,33 @@ export const getSelfServeTransactionData = async (
                 startStepSubtitle: 'beneChange.subTitle',
                 confirmStepSubtitle: 'beneChange.confirmSubTitle',
                 submitResponseHandler: beneChangeSubmitHandler,
+            };
+        }
+        case SelfServeTransaction.ANNUITANT_CHANGE: {
+            const metadata = await getTransactionMetadata(
+                TaskType.Initiate_AnnuitantChange_Transaction,
+                policy,
+                planCode
+            );
+            return {
+                metaData: JSON.parse(JSON.stringify(metadata ?? {})),
+                initialCustomData: {
+                    policyNumber: policy.policyNumber,
+                    planCode,
+                    taskType: TaskType.Initiate_AnnuitantChange_Transaction,
+                    issueResolved: true,
+                    carrier: policy.carrierId,
+                },
+                initialFormData: buildInitialAnnuitantChangeFormData(policy),
+                transactionType: SelfServeTransaction.ANNUITANT_CHANGE,
+                processType: Processes.PolicyUpdate,
+                processSubType: [Processes.AnnuitantChange],
+                parentPage: ParentPage.CreateCase,
+                leaveTransactionLink: '/',
+                startStepTitle: 'annuitantChange.title',
+                startStepSubtitle: 'annuitantChange.subTitle',
+                confirmStepSubtitle: 'annuitantChange.confirmSubTitle',
+                submitResponseHandler: annuitantChangeSubmitHandler,
             };
         }
     }

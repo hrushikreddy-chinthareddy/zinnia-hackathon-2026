@@ -1791,6 +1791,10 @@
                 "text": "Gestionar asignado",
                 "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
+            "annuitant": {
+                "text": "Gestionar al anuitante",
+                "link": "/policies/{{planCode}}/{{id}}/people/annuitantchange"
+            },
             "userMenu": {
                 "text": "Menú de Usuario"
             }
@@ -2633,6 +2637,13 @@
             "title": "Administrar beneficiarios",
             "subTitle": "Aquí puede administrar sus beneficiarios",
             "confirmSubTitle": "Los beneficiarios se han actualizado"
+        },
+        "annuitantChange": {
+            "title": "Gestionar anuitantes",
+            "subTitle": "Aquí puedes gestionar anuitantes",
+            "confirmSubTitle": "Las actualizaciones del cambio de anuitante se enviaron.",
+            "placeholder": "Seleccione un rol",
+            "validationMessage": "No se puede agregar otro {{selectedRole}}. Se permiten un máximo de {{maxAllowed}}."
         }
     },
     "welcome": {
@@ -8778,6 +8789,15 @@
             "subTitle": "Tarea: Entrada de Datos de Nuevos Negocios fue enviada.",
             "cta": "Ir a transferencia entrante",
             "secondaryCta": "Atrás",
+            "submitTask": "Enviar"
+        }
+    },
+    "initiateAnnuitantchangeTransaction": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Tarea: Entrada de Datos de Cambio de Rentista fue enviada.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Volver al inicio",
             "submitTask": "Enviar"
         }
     },

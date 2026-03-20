@@ -1820,6 +1820,10 @@
                 "text": "Manage assignee",
                 "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
+            "annuitant": {
+                "text": "Manage annuitant",
+                "link": "/policies/{{planCode}}/{{id}}/people/annuitantchange"
+            },
             "userMenu": {
                 "text": "User Menu"
             }
@@ -2642,6 +2646,13 @@
             "title": "Manage Beneficiaries",
             "subTitle": "Here you can manage your beneficiaries",
             "confirmSubTitle": "Beneficiaries have been updated"
+        },
+        "annuitantChange": {
+            "title": "Manage Annuitants",
+            "subTitle": "Here you can manage annuitants",
+            "confirmSubTitle": "Annuitant Change updates were submitted.",
+            "placeholder":"Select a role",
+            "validationMessage":"Cannot add another {{selectedRole}}. Maximum {{maxAllowed}} allowed."
         }
     },
     "welcome": {
@@ -8875,6 +8886,15 @@
         "confirmStep": {
             "title": "Got It!",
             "subTitle": "Task: Assignee Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "initiateAnnuitantchangeTransaction": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Annuitant Change Data Entry was submitted.",
             "cta": "Go to Case",
             "secondaryCta": "Back to home",
             "submitTask": "Submit"

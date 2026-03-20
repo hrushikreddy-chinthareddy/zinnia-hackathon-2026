@@ -34,6 +34,7 @@ import {
     getTransactionPartyDisplayValue,
     formatAgentType,
     formatTypeLabel,
+    formatSummaryValue,
     getPartyMeta,
     formattedAddress,
     formattedPhone,
@@ -357,6 +358,11 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                     beneficiaryPercentage: () => allocation,
                     allocation: () => allocation,
                     relationshipToParty: () => relationshipToParty,
+                    preferredCommunicationType: ({ item }) =>
+                        formatSummaryValue(
+                            item.party?.preferredCommunicationType ??
+                                item.preferredCommunicationType
+                        ),
                     isPerStirpes: () => isPerStirpes,
                     isIrrevocable: () => isIrrevocable,
                 };

@@ -417,4 +417,13 @@ export const EventConfig: {
         type: SegmentTransactionType.ASSIGNEE,
         ui_surface: UI_SURFACE.FLOW,
     },
+    [TransactionSubmittedEventType.ADD_ANNUITANT]: {
+        area: TransactionArea.PEOPLE,
+        category: TransactionCategory.POLICY_UPDATE,
+        environment: process.env.NODE_ENV,
+        mode: TransactionMode.ADD,
+        transaction_key: `${TransactionCategory.POLICY_UPDATE}:${SegmentTransactionType.ANNUITANT}:${TransactionMode.ADD}`,
+        type: SegmentTransactionType.ANNUITANT,
+        ui_surface: UI_SURFACE.FLOW,
+    },
 };

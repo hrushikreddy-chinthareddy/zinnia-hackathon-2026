@@ -20,6 +20,7 @@ import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
     validateThirdPartyDesigneeChange,
+    validateAnnuitantChange,
 } from '@deps/queries/api/web-non-financial';
 import {
     PROCESS_WITHOUT_DOCUMENT,
@@ -43,6 +44,14 @@ export const formatTypeLabel = (
     fallback = 'Address'
 ): string => (type ? toTitleCase(type.replace(/_/g, ' ')) : fallback);
 
+export const formatSummaryValue = (
+    value: string | null | undefined,
+    fallback = DEFAULT_ERROR_STRING
+): string => {
+    if (value == null || value === '') return fallback;
+    return toTitleCase(String(value).replace(/_/g, ' '));
+};
+
 export function getPartyMeta(item: SummaryItem, t: (key: string) => string) {
     const party = item.party || {};
     const identifications = party.identifications;
@@ -61,11 +70,19 @@ export function getPartyMeta(item: SummaryItem, t: (key: string) => string) {
         emailStr: formatAllEmails(t, party.emails),
         emails: party.emails ?? [],
         ssn: formatIdentification(identifications ?? []),
-        gender: party.gender || DEFAULT_ERROR_STRING,
+        gender:
+            formatSummaryValue(party.gender, DEFAULT_ERROR_STRING) ||
+            DEFAULT_ERROR_STRING,
         dob: party.dateOfBirth || DEFAULT_ERROR_STRING,
         trustDate: party.trustDate || DEFAULT_ERROR_STRING,
         relationshipToParty:
-            item.partyRole?.relationshipToParty || DEFAULT_ERROR_STRING,
+            formatSummaryValue(
+                item.relationshipToParty ??
+                    (typeof item.partyRole === 'object'
+                        ? item.partyRole?.relationshipToParty
+                        : undefined),
+                DEFAULT_ERROR_STRING
+            ) || DEFAULT_ERROR_STRING,
     };
 }
 
@@ -136,6 +153,10 @@ export async function fetchValidationSummary(
             requestBody?.requestType,
             requestBody?.query
         );
+    } else if (
+        customData.taskType === TaskType.Initiate_AnnuitantChange_Transaction
+    ) {
+        return await validateAnnuitantChange(requestBody);
     } else {
         browserLogInfo(
             '[fetchValidationSummary] Unknown taskType, no validation method called:',
@@ -213,6 +234,67 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
             isPrimaryBeneInfoOnFile: false,
             isContingentBeneInfoOnFile: false,
             requestSource: requestSource,
+        };
+    },
+    INITIATE_ANNUITANTCHANGE_TRANSACTION: (customData) => {
+        let actionData =
+            customData?.actionData || customData?.task?.data?.actionData || [];
+
+        actionData = actionData.map((item: any) => {
+            const { endDate, ...partyWithoutEndDate } = item.party;
+            return {
+                ...item,
+                party: {
+                    ...partyWithoutEndDate,
+                },
+            };
+        });
+
+        const partyUpdates = actionData.map((item: any) => {
+            const { endDate, ...partyWithoutEndDate } = item.party || {};
+            return {
+                action: item.action,
+                partyRole: item.partyRole,
+                relationshipToParty: item.relationshipToParty || null,
+                party: {
+                    ...partyWithoutEndDate,
+                    fullName: getFullName(item.party),
+                    addresses: cleanAddresses(item.party.addresses) || [],
+                    emails: cleanEmails(item.party.emails) || [],
+                    phones: cleanPhones(item.party.phones) || [],
+                    identifications: (item.party.identifications || []).filter(
+                        (id: any) =>
+                            id.identificationValue != null &&
+                            id.identificationValue !== ''
+                    ),
+                    preferredCommunicationType:
+                        item.party.preferredCommunicationType === 'null'
+                            ? null
+                            : item.party.preferredCommunicationType,
+                    usCitizen: item.party.usCitizen ?? 'Yes',
+                    gender: item.party.gender ?? null,
+                    dateOfBirth: item.party.dateOfBirth ?? null,
+                    countryOfCitizenship:
+                        item.party.countryOfCitizenship ?? 'US',
+                    startDate:
+                        item.action === Action.ADD ||
+                        item.action === Action.UPDATE
+                            ? dayjs().format(ZAHARA_API_DATE_FORMAT)
+                            : null,
+                },
+            };
+        });
+
+        return {
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            correlationid: customData.correlationId ?? uuidv4(),
+            carrierId: customData?.carrier,
+            planCode: customData?.planCode,
+            policyNumber: customData?.policyNumber,
+            signatures: customData?.signatureData?.signatures || [],
+            supportingDocumentAttached: customData?.supportingDocumentAttached,
+            partyUpdates,
+            actionData,
         };
     },
     INITIATE_ASSIGNEECHANGE_TRANSACTION: (customData) => {
@@ -377,6 +459,11 @@ export function buildValidationRequestBody(customData: any): any {
     }
     if (customData.taskType === TaskType.Initiate_AssigneeChange_Transaction) {
         return requestBodyBuilders.INITIATE_ASSIGNEECHANGE_TRANSACTION(
+            customData
+        );
+    }
+    if (customData.taskType === TaskType.Initiate_AnnuitantChange_Transaction) {
+        return requestBodyBuilders.INITIATE_ANNUITANTCHANGE_TRANSACTION(
             customData
         );
     }

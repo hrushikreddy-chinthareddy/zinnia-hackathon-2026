@@ -7,6 +7,7 @@ export enum TabTitle {
     BeneficiaryDetails = 'Beneficiary Details',
     Signature = 'Signature',
     AssigneeDetails = 'Assignee Details',
+    AnnuitantDetails = 'Annuitant Details',
     ReviewFormData = 'Review Form Data',
     FormReview = 'Form Review',
     NIGOSummary = 'NIGO Summary',
@@ -19,4 +20,9 @@ export enum BeneficiaryRole {
     PRIMARYBENEFICIARY = 'Primary Beneficiary',
     CONTINGENTBENEFICIARY = 'Contingent Beneficiary',
     IRREVOCABLEBENEFICIARY = 'Irrevocable Beneficiary',
+}
+
+export enum AnnuitantRole {
+    ANNUITANT = 'Annuitant',
+    JOINTANNUITANT = 'Joint Annuitant',
 }

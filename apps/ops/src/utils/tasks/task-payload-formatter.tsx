@@ -343,3 +343,51 @@ export const getBeneAddressVerificationPayload = (task: ManagementTask) => {
         },
     };
 };
+
+export const getAnnuitantChangePayload = (task: ManagementTask) => {
+    const partyUpdates = (task?.data?.actionData || []).map((update: any) => {
+        if (update.party) {
+            const { endDate, ...partyWithoutEndDate } = update.party;
+            return {
+                ...update,
+                party: {
+                    ...partyWithoutEndDate,
+                    fullName: getFullName(partyWithoutEndDate),
+                    usCitizen: partyWithoutEndDate.usCitizen ?? 'Yes',
+                    countryOfCitizenship:
+                        partyWithoutEndDate.countryOfCitizenship ?? 'US',
+                    preferredCommunicationType:
+                        partyWithoutEndDate.preferredCommunicationType ===
+                        'null'
+                            ? null
+                            : partyWithoutEndDate.preferredCommunicationType,
+                },
+            };
+        }
+        return update;
+    });
+    const signatureData = task?.data?.signatureData || [];
+
+    const { addedItem, deletedItem } =
+        detectRoleChangeRequestType(partyUpdates);
+
+    const src = addedItem?.party ?? deletedItem?.party ?? {};
+
+    return {
+        ...task,
+        data: {
+            ...task.data,
+            partyUpdates,
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            transactionName: 'AnnuitantChange',
+            carrierId: task.carrier,
+            caseId: task.caseId,
+            planCode: task.data.planCode,
+            policyNumber: task.data.policyNumber,
+            signatures: signatureData?.signatures ?? [],
+            partyRole: 'Annuitant',
+            documents: src?.documents,
+            supportingDocumentAttached: task.data.supportingDocumentAttached,
+        },
+    };
+};

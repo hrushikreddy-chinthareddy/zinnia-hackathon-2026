@@ -1,6 +1,6 @@
 import { PartyRole } from '@zinnia/api-types/types/sor';
 
-import { BeneficiaryRole, TabTitle } from './types';
+import { AnnuitantRole, BeneficiaryRole, TabTitle } from './types';
 
 export const getTitle = (
     item: any,
@@ -41,6 +41,11 @@ export const getTitle = (
             item?.signTypeForUI ?? item?.signType ?? `Signature ${index + 1}`;
     } else if (tabTitle === TabTitle.AssigneeDetails) {
         header = item?.party?.fullName || 'Assignees';
+    } else if (tabTitle === TabTitle.AnnuitantDetails) {
+        header =
+            item?.partyRole === PartyRole.ANNUITANT
+                ? AnnuitantRole.ANNUITANT
+                : AnnuitantRole.JOINTANNUITANT;
     }
     return header;
 };

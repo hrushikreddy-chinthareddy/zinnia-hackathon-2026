@@ -157,6 +157,34 @@ export const validateAgentTransaction = async (body: any): Promise<any> => {
     }
 };
 
+export const validateAnnuitantChange = async (body: any): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
+
+    const validateAnnuitantUrl = `${baseAppUrl}/api/bpm/v1/policies/${planCode}/${policyNumber}/parties/Annuitant/validation`;
+    try {
+        browserLogInfo('AnnuitantChange::Validating a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAnnuitantUrl,
+            function: 'webnonfinancial.validateAnnuitantChange',
+        });
+        const { data } = await client.post<any, AxiosResponse>(
+            validateAnnuitantUrl,
+            body
+        );
+
+        return data;
+    } catch (error: any) {
+        browserLogError('AnnuitantChange::Failed to validate transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validateAnnuitantUrl,
+            function: 'webnonfinancial.validateAnnuitantChange',
+        });
+        return error?.data;
+    }
+};
+
 export const validateAssigneeChangeTransaction = async (
     body: any
 ): Promise<any> => {
