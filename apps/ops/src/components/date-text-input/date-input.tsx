@@ -9,7 +9,7 @@ import { isValidDate } from '@deps/utils/dates';
 import { DateInputPopover } from './date-input-popover';
 import styles from './date-input.module.css';
 
-interface DateInputProps {
+export interface DateInputProps {
     onChange: (date: Date | undefined) => void;
     onBlur?: () => void;
     defaultDate?: Date | undefined;
@@ -143,6 +143,7 @@ const DateInput = ({
                 className={clsx(styles.inputContainer, {
                     [styles.error]: value && !isValidDateFormat,
                 })}
+                data-testid="date-input-container-id"
             >
                 <input
                     ref={inputRef}
@@ -155,6 +156,7 @@ const DateInput = ({
                     placeholder="mm/dd/yyyy"
                     disabled={disabled}
                     onBlur={handleBlur}
+                    data-testid="date-input-id"
                 />
                 <DateInputPopover
                     title={popOverTitle}
