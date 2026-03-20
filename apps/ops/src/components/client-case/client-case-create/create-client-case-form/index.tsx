@@ -21,6 +21,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
+import { calculateAgeNumber } from '@deps/helpers/age.helpers';
 import { getStateCodesForSelectInput } from '@deps/helpers/states.helpers';
 import {
     IllustrationAgentDetails,
@@ -66,13 +67,6 @@ const clientCaseInitialState: Partial<IllustrationsClientCase> = {
         state: undefined,
     },
 };
-
-function calculateIssueAge(dateOfBirth: Date | null): number {
-    if (!dateOfBirth) return 0;
-
-    const today = dayjs();
-    return today.diff(dateOfBirth, 'year');
-}
 
 const buildAgentOptionFromAgentDetails = (
     agentDetails: IllustrationAgentDetails | undefined
@@ -146,12 +140,11 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
     });
 
     const currentAge = useMemo(
-        () => calculateIssueAge(dateOfBirth ?? null) ?? 0,
+        () => calculateAgeNumber(dateOfBirth ?? null) ?? 0,
         [dateOfBirth]
     );
 
-    //Need to have currentAge > 0 cause it's computed to be 0 initially
-    const displayNicotineSection = !(currentAge > 0 && currentAge < 18);
+    const displayNicotineSection = !(currentAge >= 0 && currentAge < 18);
 
     const isFetchingAgencies =
         useIsFetching({
@@ -594,7 +587,10 @@ const CreateClientCaseForm: React.FC<CreateClientCaseFormProps> = ({
                                     <Typography
                                         variant={TypographyVariant.BodySm}
                                     >
-                                        Current age: {currentAge}
+                                        {t(
+                                            'clientCase.createClientCaseForm.ageLabel'
+                                        )}
+                                        : {currentAge}
                                     </Typography>
                                 </div>
                             )}

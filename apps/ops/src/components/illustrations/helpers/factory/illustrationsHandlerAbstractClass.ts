@@ -65,6 +65,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
         const clientCase = this.clientCase;
         const dateOfBirth = clientCase.insuredDetails?.dateOfBirth;
         const insuredAge = calculateAgeNumber(dateOfBirth);
+        const insuredAgeTag = calculateAge(dateOfBirth, '');
 
         function getPremiumClass(
             age: number | undefined,
@@ -116,7 +117,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
                     ? 'Nicotine'
                     : 'Non-Nicotine',
                 ...(dateOfBirth && {
-                    issueAge: calculateAgeNumber(dateOfBirth),
+                    insuredAge,
                 }),
                 ...(clientCase?.insuredDetails?.sexAtBirth && {
                     gender: clientCase.insuredDetails.sexAtBirth.toUpperCase(),
@@ -141,7 +142,7 @@ export abstract class IllustrationHandler<TOutputEntities> {
                     lastName: clientCase.agentDetails.lastName,
                 }),
             },
-            insuredAgeTag: calculateAge(dateOfBirth, ''),
+            insuredAgeTag,
         };
     }
 }

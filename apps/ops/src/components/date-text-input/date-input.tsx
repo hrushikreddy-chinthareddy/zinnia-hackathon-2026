@@ -63,7 +63,7 @@ const parseDateString = (dateString: string) => {
     }
     // We manually build a custom ISO date string to ensure that the
     // local timezone offset is ignored
-    const date = new Date(`${formatedDate}T00:00:00Z`);
+    const date = new Date(`${formatedDate}T12:00:00Z`);
 
     if (!isNaN(date.getTime())) {
         return date;
