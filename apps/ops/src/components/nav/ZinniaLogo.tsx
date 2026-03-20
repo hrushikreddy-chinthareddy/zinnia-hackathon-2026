@@ -27,6 +27,12 @@ export const ZinniaLogo = ({ isExpanded }: { isExpanded: boolean }) => {
         );
     }
     return (
-        <Image src={zinniaLogo} alt="Zinnia Logomark" height={24} width={24} />
+        <Image
+            src={zinniaLogo}
+            alt="Zinnia Logomark"
+            height={24}
+            width={24}
+            aria-hidden="true"
+        />
     );
 };
