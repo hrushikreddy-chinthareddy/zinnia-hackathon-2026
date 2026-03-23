@@ -1,0 +1,17 @@
+# Dockerfile for Datadog Agent
+# This configuration matches the ECS task definition for local development
+
+FROM public.ecr.aws/datadog/agent:latest
+
+# Set environment variables matching the ECS task definition
+ENV ECS_FARGATE=false \
+    DD_APM_ENABLED=true \
+    DD_APM_NON_LOCAL_TRAFFIC=true \
+    DD_LOG_LEVEL=ERROR \
+    DD_DOGSTATSD_NON_LOCAL_TRAFFIC=true
+
+# Expose the APM trace agent port
+EXPOSE 8126
+
+# The DD_API_KEY should be provided at runtime via environment variable
+# Example: docker run -e DD_API_KEY=your_api_key ...

@@ -25,6 +25,9 @@ const nextConfig = {
                 : './tsconfig.json',
     },
     output: 'standalone',
+    experimental: {
+        instrumentationHook: true,
+    },
     async rewrites() {
         return [
             {
@@ -99,7 +102,12 @@ const nextConfig = {
 
 module.exports = {
     ...nextConfig,
-    webpack(config) {
+    webpack(config, { isServer = false }) {
+        // Exclude dd-trace from webpack bundling to avoid initialization issues
+        if (isServer) {
+            config.externals = config.externals || [];
+            config.externals.push('dd-trace');
+        }
         // This will allow Bloom to be installed from a workspace without introducing
         // a conflicting React instance
         config.resolve.alias = {
