@@ -43,7 +43,7 @@
         "ag-grid-community": "29.2.0",
         "ag-grid-react": "29.2.0",
         "autoprefixer": "^10.4.14",
-        "axios": "^1.2.5",
+        "axios": "^1.13.5",
         "change-case": "^5.4.4",
         "classnames": "^2.3.2",
         "clsx": "^1.2.1",
