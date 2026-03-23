@@ -15,12 +15,10 @@ import DynamicForm from '@deps/components/dynamic-form/dynamic-form';
 import { TranslationFiles } from '@deps/config/translations';
 import { getIdentifierValue } from '@deps/containers/case-sub-page/case-helpers';
 import {
-    ClaimActionTypes,
-    ClaimCommunicationTypes,
-} from '@deps/containers/death-claim-container/death-claim.types';
-import {
     getUpdatedTaskFromFormData,
     extractFormData,
+    getBeneAddressVerificationUpdatedData,
+    getDay150ReviewUpdatedData,
 } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
@@ -307,55 +305,10 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             return updatedFormData;
         },
         [TaskType.Bene_Address_Verification]: (formData: any) => {
-            let updatedFormData = formData;
-
-            if (!formData.details?.beneAddress?.beneficiaryChangeDetail) {
-                updatedFormData.details.beneAddress.beneficiaryChangeDetail =
-                    {};
-            }
-
-            if (
-                formData.details.beneAddress?.beneficiary
-                    ?.notificationPreferences
-            ) {
-                updatedFormData.details.beneAddress.beneficiaryChangeDetail.notificationPreferences =
-                    formData.details.beneAddress?.beneficiary
-                        ?.notificationPreferences || {};
-            }
-
-            if (
-                formData.details.beneAddress?.beneficiary
-                    ?.notificationPreferences?.address?.action ===
-                ClaimActionTypes.UPDATE
-            ) {
-                updatedFormData = {
-                    ...formData,
-                    details: {
-                        ...formData.details,
-                        beneAddress: {
-                            ...formData.details.beneAddress,
-                            beneficiaryChangeDetail: {
-                                ...formData.details.beneAddress
-                                    .beneficiaryChangeDetail,
-                                notificationPreferences: {
-                                    ...formData.details.beneAddress
-                                        .beneficiaryChangeDetail
-                                        .notificationPreferences,
-                                    address: {
-                                        ...formData.details.beneAddress
-                                            .beneficiary.notificationPreferences
-                                            .address,
-                                    },
-                                    notificationMethod: {
-                                        method: ClaimCommunicationTypes.Mail,
-                                    },
-                                },
-                            },
-                        },
-                    },
-                };
-            }
-            return updatedFormData;
+            return getBeneAddressVerificationUpdatedData({ formData });
+        },
+        [TaskType.Day_150_Review]: (formData: any) => {
+            return getDay150ReviewUpdatedData({ formData });
         },
     };
 

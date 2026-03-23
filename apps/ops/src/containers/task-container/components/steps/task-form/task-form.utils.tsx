@@ -1,5 +1,9 @@
 import { UiSchema } from '@rjsf/utils';
 
+import {
+    ClaimActionTypes,
+    ClaimCommunicationTypes,
+} from '@deps/containers/death-claim-container/death-claim.types';
 import { browserLogWarn } from '@deps/utils/browser-logging';
 
 const getRefByPath = (root: any, path: string[]) => {
@@ -75,4 +79,78 @@ export const extractFormData = (data: any, uiSchema: UiSchema, schema: any) => {
         return data;
     }
     return formData;
+};
+
+export const getBeneAddressVerificationUpdatedData = ({ formData }: any) => {
+    let updatedFormData = formData;
+    if (
+        formData.details.beneAddress?.beneficiary?.notificationPreferences
+            ?.address?.action === ClaimActionTypes.UPDATE
+    ) {
+        updatedFormData = {
+            ...formData,
+            details: {
+                ...formData.details,
+                beneAddress: {
+                    ...formData.details.beneAddress,
+                    beneficiaryChangeDetail: {
+                        ...formData.details.beneAddress.beneficiaryChangeDetail,
+                        notificationPreferences: {
+                            ...formData.details.beneAddress
+                                .beneficiaryChangeDetail
+                                .notificationPreferences,
+                            address: {
+                                ...formData.details.beneAddress.beneficiary
+                                    .notificationPreferences.address,
+                            },
+                            notificationMethod: {
+                                method: ClaimCommunicationTypes.Mail,
+                            },
+                        },
+                    },
+                },
+            },
+        };
+    }
+    return updatedFormData;
+};
+
+export const getDay150ReviewUpdatedData = ({ formData }: any) => {
+    let updatedFormData = formData;
+    if (
+        formData.details.benefinalcontactattempt?.beneficiary
+            ?.notificationPreferences?.address?.action ===
+        ClaimActionTypes.UPDATE
+    ) {
+        updatedFormData = {
+            ...formData,
+            details: {
+                ...formData.details,
+                benefinalcontactattempt: {
+                    ...formData.details.benefinalcontactattempt,
+                    subTaskBeneAddressChangeRequire: true,
+                    beneficiaryChangeDetail: {
+                        ...formData.details.benefinalcontactattempt
+                            .beneficiaryChangeDetail,
+                        changeType: 'BENEFICIARY_ADDRESS_CHANGE',
+                        changeRequire: true,
+                        notificationPreferences: {
+                            ...formData.details.benefinalcontactattempt
+                                .beneficiaryChangeDetail
+                                .notificationPreferences,
+                            address: {
+                                ...formData.details.benefinalcontactattempt
+                                    .beneficiary.notificationPreferences
+                                    .address,
+                            },
+                            notificationMethod: {
+                                method: ClaimCommunicationTypes.Mail,
+                            },
+                        },
+                    },
+                },
+            },
+        };
+    }
+    return updatedFormData;
 };
