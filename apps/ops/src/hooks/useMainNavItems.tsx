@@ -259,7 +259,6 @@ export const useMainNavItems = (): NavGroup[] => {
                 ...(showTestHarness ? [testHarnessLink] : []),
                 userContextMenu,
             ],
-            alignEnd: true,
         },
     ];
 

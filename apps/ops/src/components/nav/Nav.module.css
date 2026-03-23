@@ -1,11 +1,9 @@
 .navContainer {
     --nav-expanded-width: 240px;
     background-color: var(--color-base-surface-carrier);
-    /* for the sake of the animation hiding text properly we're using a border instead of padding */
-    /* that way whatever is overflowing behind the border is hidden */
-    border: var(--measure-dimension-z-space-2) solid
-        var(--color-base-surface-carrier);
+    padding: var(--measure-dimension-z-space-2);
     height: 100vh;
+    overflow: hidden;
     position: sticky;
     transition: 300ms ease-in-out;
     text-wrap: nowrap;
@@ -14,7 +12,7 @@
     z-index: 20;
 
     &.collapsed {
-        width: 48px;
+        width: var(--nav-collapsed-width);
     }
 }
 
@@ -24,7 +22,6 @@
     display: flex;
     height: 100%;
     flex-direction: column;
-    overflow: hidden;
 }
 
 .toggleTarget {
@@ -36,17 +33,22 @@
 }
 
 .toggleButton {
-    justify-content: flex-end;
-    transform: rotate(90deg);
-    &:hover:not(:disabled):after {
-        content: none;
+    transform: rotate(180deg);
+    padding: var(--measure-dimension-z-space-1);
+
+    &:hover,
+    &:focus {
+        background-color: var(--color-grayscale-color-white);
+        border-radius: var(--measure-dimension-z-space-1);
     }
 }
 
 .logoRow {
     align-items: center;
-    display: flex;
-    justify-content: space-between;
+    background: var(--color-base-surface-carrier);
+    container-type: inline-size;
+    display: grid;
+    grid-template-columns: minmax(32px, 1fr) auto;
     margin-block-end: var(--measure-dimension-z-space-2);
     padding-inline: var(--measure-dimension-z-space-1-5);
     padding-block: var(--measure-dimension-z-space-2);
@@ -57,6 +59,9 @@
     display: flex;
     height: 24px;
     min-width: 90px;
+    background: var(--color-base-surface-carrier);
+    opacity: 1;
+    transition: opacity 200ms ease-out;
     & img {
         height: 24px;
     }
@@ -120,6 +125,40 @@ div:has(> .searchInput)::before {
     transition-delay: 300ms;
 }
 
+.navContainer.collapsed {
+    .logoRow {
+        display: inline-flex;
+        position: relative;
+
+        &:hover {
+            .logo {
+                opacity: 0;
+            }
+
+            .toggleButton {
+                z-index: 2;
+            }
+        }
+    }
+
+    .logo {
+        z-index: 1;
+    }
+
+    .toggleButton {
+        position: absolute;
+        top: 8px;
+        right: 3px;
+        transform: rotate(0deg);
+
+        &:hover,
+        &:focus,
+        &:focus-visible {
+            z-index: 2;
+        }
+    }
+}
+
 .navList {
     color: var(--color-base-text-secondary);
     display: flex;
@@ -137,27 +176,23 @@ div:has(> .searchInput)::before {
         padding-block-end: var(--measure-dimension-z-space-2);
     }
 
-    &.alignEnd {
+    &:last-of-type {
         margin-top: auto;
     }
 }
 
-/* remove the separation border from the second to last nav section if the last one is aligned to the end */
-.navList:has(.alignEnd) .navSection:nth-last-child(2) {
-    border-bottom: none;
-}
-
-.navSection__heading {
-    padding-block: var(--measure-dimension-z-space-1);
-    padding-inline: var(--measure-dimension-z-space-2);
-}
-
 .listItem {
     list-style: none;
+    width: 100%; /* Fallback for unsupported browsers */
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: stretch;
 }
 
 .navSection__heading {
     transition: opacity 300ms ease-in-out;
+    padding-block: var(--measure-dimension-z-space-1);
+    padding-inline: var(--measure-dimension-z-space-2);
 
     &.hidden {
         opacity: 0;
@@ -185,6 +220,7 @@ div:has(> .searchInput)::before {
 
 .listItem__link {
     display: flex;
+    container-type: inline-size;
     align-items: center;
     border: var(--measure-dimension-stroke-xs) solid transparent;
     gap: var(--measure-dimension-z-space-2);
@@ -217,9 +253,21 @@ div:has(> .searchInput)::before {
     padding-left: 1px; /* This aligns the icon correctly in collapsed state */
 }
 
+.listItem__text {
+    @container (max-width: 32px) {
+        display: none;
+    }
+}
+
 /* Since we're using max width it needs to be the change value (1024px) minus 1 */
 @media (max-width: 1023px) {
     .toggleTarget {
+        display: none;
+    }
+}
+
+.logoText {
+    @container (max-width: 32px) {
         display: none;
     }
 }

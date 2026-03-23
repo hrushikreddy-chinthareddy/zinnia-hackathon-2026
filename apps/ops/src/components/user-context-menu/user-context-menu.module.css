@@ -1,12 +1,17 @@
 .contextTrigger {
     display: flex;
+    container-type: inline-size;
     align-items: center;
     gap: var(--measure-dimension-z-space-2);
-    padding: var(--measure-dimension-z-space-1);
-    width: 100%;
+    margin: var(--measure-dimension-z-space-1);
+    width: 100%; /* Fallback for unsupported browsers */
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: stretch;
 }
 
-.contextTrigger:hover {
+.contextTrigger:hover,
+.contextTrigger:focus {
     background-color: var(--color-grayscale-color-white);
     border-radius: var(--measure-dimension-z-space-1);
 }
@@ -14,4 +19,11 @@
 .icon {
     padding: var(--measure-dimension-z-space-0);
     flex-shrink: 0;
+}
+
+/* conditionally render name if the sidebar nav is expanded */
+@container (max-width: 32px) {
+    .name {
+        display: none; /* Hides the text when container is 32px or less */
+    }
 }

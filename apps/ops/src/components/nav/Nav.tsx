@@ -31,7 +31,6 @@ export interface NavProps {
 export interface NavGroup {
     heading?: string;
     items: NavItem[];
-    alignEnd?: boolean;
 }
 
 export type NavItem =
@@ -90,11 +89,6 @@ export const Nav = ({
         }
     };
 
-    const handleLogoClick = () => {
-        setExpanded(true);
-        onNavigationToggle?.(true);
-    };
-
     return (
         <section
             className={clsx(
@@ -104,55 +98,32 @@ export const Nav = ({
             )}
         >
             <div className={styles.navOverflowContainer}>
-                <button
-                    className={clsx(styles.toggleTarget)}
-                    aria-label={isExpanded ? collapseText : expandText}
-                    onClick={handleNavToggle}
-                    style={
-                        isExpanded
-                            ? { cursor: 'w-resize' }
-                            : { cursor: 'e-resize' }
-                    }
-                ></button>
                 <div className={styles.logoRow}>
                     <div className={styles.logo}>
                         {/* If the theme is Zinnia - just load in the logo component */}
                         {carrierName === CarrierName.ZINNIA ? (
-                            <ZinniaLogo
-                                handleLogoClick={handleLogoClick}
-                                isExpanded={false}
-                                expandText=""
-                            />
+                            <ZinniaLogo isExpanded={isExpanded} />
                         ) : // Otherwise check for expanded state to toggle between the two types of logos
                         isExpanded ? (
                             <ExpandedLogo
                                 activeCarrier={carrierName}
-                                handleLogoClick={handleLogoClick}
                                 isExpanded={isExpanded}
-                                expandText={expandText}
                             />
                         ) : (
-                            <button
-                                onClick={handleLogoClick}
-                                aria-label={expandText}
-                            >
-                                <CollapsedLogo
-                                    activeCarrier={carrierName}
-                                    handleLogoClick={handleLogoClick}
-                                    isExpanded={isExpanded}
-                                    expandText={expandText}
-                                />
-                            </button>
+                            <CollapsedLogo
+                                activeCarrier={carrierName}
+                                isExpanded={isExpanded}
+                            />
                         )}
                     </div>
                     <button
                         className={styles.toggleButton}
                         onClick={handleNavToggle}
                         aria-label={isExpanded ? collapseText : expandText}
-                        tabIndex={isExpanded ? undefined : -1}
+                        tabIndex={0}
                     >
                         <Icon
-                            type={IconType.CHEVRON_DOUBLE}
+                            type={IconType.NAV_DISPLAY_CONTROL}
                             height={16}
                             width={16}
                             color="#676767"
@@ -192,10 +163,7 @@ export const Nav = ({
 
                             return (
                                 <div
-                                    className={clsx(
-                                        styles.navSection,
-                                        group.alignEnd && styles.alignEnd
-                                    )}
+                                    className={styles.navSection}
                                     key={`navSection-${index}`}
                                 >
                                     {group.heading && (
@@ -220,6 +188,7 @@ export const Nav = ({
                                                     placement={
                                                         TooltipPlacement.CenterRight
                                                     }
+                                                    asChild
                                                     delayDuration={0}
                                                     tooltipClassName={clsx(
                                                         styles.tooltip,
@@ -229,16 +198,18 @@ export const Nav = ({
                                                     triggerClassName={
                                                         styles.tooltipTrigger
                                                     }
+                                                    tabIndex={-1}
                                                     trigger={
                                                         // NavLink is not an actual element so we have to wrap it in this li
                                                         // so that the tooltip will have an element to attach to for proper location.
                                                         // Yes, this not the best solution but it works until all the circular excessive
                                                         // navlink stuff is fixed between here and ops.
                                                         <li
-                                                            className={clsx(
+                                                            className={
                                                                 styles.listItem
-                                                            )}
+                                                            }
                                                             key={navItem.id}
+                                                            tabIndex={-1}
                                                         >
                                                             <NavLink
                                                                 renderComponent={
@@ -263,6 +234,7 @@ export const Nav = ({
                                                                     styles.listItem__link,
                                                                     'typography-content-body color-base-text-secondary'
                                                                 )}
+                                                                tabIndex={0}
                                                             >
                                                                 <>
                                                                     {navItem?.icon && (
@@ -284,7 +256,12 @@ export const Nav = ({
                                                                             />
                                                                         </div>
                                                                     )}
-                                                                    <span>
+
+                                                                    <span
+                                                                        className={
+                                                                            styles.listItem__text
+                                                                        }
+                                                                    >
                                                                         {
                                                                             navItem.display
                                                                         }
