@@ -149,25 +149,7 @@ const ridersSchema = t.object(
     )
 );
 
-const distributionAmountTableSchema = t.optionalProperty(
-    'distributionAmountTable',
-    t.union(
-        t.array(
-            t.object(
-                t.property('id', t.string),
-                t.optionalProperty(
-                    'firstColumn',
-                    t.union(t.number, t.undefined)
-                ),
-                t.property('fromYear', t.number),
-                t.property('through', t.number)
-            )
-        ),
-        t.undefined
-    )
-);
-
-const farmersEntitiesSchema = t.object(
+const insuredInfoSchema = t.object(
     t.property('illustrationType', t.string),
     t.property('illustrationRequestDate', t.string), // effective-date currently hard coded to today
     t.property('jurisdiction', t.string), // state-of-issue
@@ -197,16 +179,21 @@ const farmersEntitiesSchema = t.object(
         )
     ),
     t.optionalProperty('riders', ridersSchema),
+    t.optionalProperty('isConversion', t.union(t.boolean, t.undefined)),
+    t.optionalProperty('isMec', t.union(t.boolean, t.undefined))
+);
+
+const coverageOptionsSchema = t.object(
     t.property('solveFor', t.string), // solve-for
+    t.optionalProperty('solveForPremiumType', t.union(t.string, t.undefined)),
     t.property('paymentMode', t.string),
-    t.property('discountIndicator', t.union(t.array(t.string), t.undefined)), // multiple-policy-owner
     t.property('paymentMethod', t.string),
+    t.property('discountIndicator', t.union(t.array(t.string), t.undefined)), // multiple-policy-owner
     t.optionalProperty('premiumDuration', t.union(t.number, t.undefined)),
     t.optionalProperty('premiumDurationOption', t.string),
     t.optionalProperty('premiumDurationAge', t.union(t.number, t.undefined)),
     t.optionalProperty('premiumDurationYears', t.union(t.number, t.undefined)),
     t.optionalProperty('modalPremiumValue', t.union(t.number, t.undefined)),
-
     t.optionalProperty(
         'modalPremiumTable',
         t.union(
@@ -225,7 +212,6 @@ const farmersEntitiesSchema = t.object(
         )
     ),
     t.optionalProperty('preventMec', t.boolean),
-    t.optionalProperty('non1035LumpSumAmount', t.union(t.number, t.undefined)),
     t.optionalProperty(
         'scheduleDeathBenefitOption',
         t.union(t.string, t.undefined)
@@ -245,8 +231,6 @@ const farmersEntitiesSchema = t.object(
         )
     ),
     t.optionalProperty('deathBenefitOption', t.union(t.string, t.undefined)),
-    t.optionalProperty('solveForPremiumType', t.union(t.string, t.undefined)),
-
     t.optionalProperty('targetCashValueOption', t.union(t.string, t.undefined)),
     t.optionalProperty(
         'targetCashValueAtOption',
@@ -254,7 +238,24 @@ const farmersEntitiesSchema = t.object(
     ),
     t.optionalProperty('targetCashValueAge', t.union(t.number, t.undefined)),
     t.optionalProperty('targetCashValueYear', t.union(t.number, t.undefined)),
-    t.optionalProperty('targetCashValueAmount', t.union(t.number, t.undefined)),
+    t.optionalProperty('targetCashValueAmount', t.union(t.number, t.undefined))
+);
+
+const exchangeAndLumpSumSchema = t.object(
+    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined)),
+    t.optionalProperty(
+        'external1035ExchangeAmount',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty(
+        'internal1035ExchangeAmount',
+        t.union(t.number, t.undefined)
+    ),
+    t.optionalProperty('non1035LumpSumAmount', t.union(t.number, t.undefined)),
+    t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined))
+);
+
+const allocationsSchema = t.object(
     t.optionalProperty(
         'longTermFixedAccountAllocation',
         t.union(t.number, t.undefined)
@@ -278,31 +279,48 @@ const farmersEntitiesSchema = t.object(
     t.optionalProperty(
         'spMarc5PercentErIndexedAccountCurrentIllustratedRate',
         t.union(t.number, t.undefined)
-    ),
-    t.optionalProperty(
-        'external1035ExchangeAmount',
-        t.union(t.number, t.undefined)
-    ),
-    t.optionalProperty(
-        'internal1035ExchangeAmount',
-        t.union(t.number, t.undefined)
-    ),
+    )
+);
 
+const distributionsSchema = t.object(
     t.optionalProperty('scheduleDistributions', t.union(t.string, t.undefined)),
-    distributionAmountTableSchema,
-
+    t.optionalProperty(
+        'distributionAmountTable',
+        t.union(
+            t.array(
+                t.object(
+                    t.property('id', t.string),
+                    t.optionalProperty(
+                        'firstColumn',
+                        t.union(t.number, t.undefined)
+                    ),
+                    t.property('fromYear', t.number),
+                    t.property('through', t.number)
+                )
+            ),
+            t.undefined
+        )
+    ),
     t.optionalProperty('distributionOptions', t.union(t.string, t.undefined)),
     t.optionalProperty(
         'nonNicotineConversionAtAge18',
         t.union(t.array(t.string), t.undefined)
-    ),
-    t.optionalProperty('loanInterestOption', t.union(t.string, t.undefined)),
-    t.optionalProperty('illustrate1035', t.union(t.string, t.undefined)),
-    t.optionalProperty('isConversion', t.union(t.boolean, t.undefined)),
-    t.optionalProperty('isMec', t.union(t.boolean, t.undefined))
+    )
 );
 
-export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
+const farmersEntitiesSchema = t.intersection(
+    t.intersection(insuredInfoSchema, coverageOptionsSchema),
+    t.intersection(
+        t.intersection(exchangeAndLumpSumSchema, allocationsSchema),
+        distributionsSchema
+    )
+);
+
+export type FarmersIU0101Entities = Infer<typeof insuredInfoSchema> &
+    Infer<typeof coverageOptionsSchema> &
+    Infer<typeof exchangeAndLumpSumSchema> &
+    Infer<typeof allocationsSchema> &
+    Infer<typeof distributionsSchema>;
 
 const FARMERS_HARDCODED_DATA = {
     source: 'zinnia-live',
