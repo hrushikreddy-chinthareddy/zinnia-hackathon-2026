@@ -9,7 +9,7 @@ import { isValidDate } from '@deps/utils/dates';
 import { DateInputPopover } from './date-input-popover';
 import styles from './date-input.module.css';
 
-interface DateInputProps {
+export interface DateInputProps {
     onChange: (date: Date | undefined) => void;
     onBlur?: () => void;
     defaultDate?: Date | undefined;
@@ -38,17 +38,17 @@ const stringifyDate = (date: Date) => {
 
 const sanitizeDateString = (rawInput: string) => {
     let cleanedInput = rawInput.replace(/[^0-9/-]/g, '');
-    cleanedInput = cleanedInput.replace(/-+/g, '/');
+    cleanedInput = cleanedInput.replace(/-+/g, '').replace(/\//g, '');
 
-    if (
-        (cleanedInput.length === 2 || cleanedInput.length === 5) &&
-        rawInput.length < cleanedInput.length &&
-        !cleanedInput.endsWith('/')
-    ) {
-        cleanedInput += '/';
+    let formattedDate = '';
+    for (let i = 0; i < cleanedInput.length && i < 8; i++) {
+        if (i === 2 || i === 4) {
+            formattedDate += '/';
+        }
+        formattedDate += cleanedInput[i];
     }
 
-    return cleanedInput;
+    return formattedDate;
 };
 
 const parseDateString = (dateString: string) => {
@@ -143,6 +143,7 @@ const DateInput = ({
                 className={clsx(styles.inputContainer, {
                     [styles.error]: value && !isValidDateFormat,
                 })}
+                data-testid="date-input-container-id"
             >
                 <input
                     ref={inputRef}
@@ -155,6 +156,7 @@ const DateInput = ({
                     placeholder="mm/dd/yyyy"
                     disabled={disabled}
                     onBlur={handleBlur}
+                    data-testid="date-input-id"
                 />
                 <DateInputPopover
                     title={popOverTitle}
