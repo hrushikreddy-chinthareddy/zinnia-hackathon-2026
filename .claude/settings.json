@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''version:'''', d.get\\(''''version''''\\)\\)\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\(''''version:'''', d.get\\(''''version''''\\)\\); print\\(''''peerDeps:'''', json.dumps\\(d.get\\(''''peerDependencies'''',{}\\), indent=2\\)\\)\")",
+      "Bash(ls /Users/roccosangenllino/Projects/digital-experience-monorepo/apps/ops/*.json)",
+      "Bash(find /Users/roccosangenllino/Projects/digital-experience-monorepo/apps/ops/src/pages/api -type f \\\\\\(-name *.ts -o -name *.js \\\\\\))",
+      "Bash(ls /Users/roccosangenllino/Projects/digital-experience-monorepo/apps/ops/*.js)",
+      "Bash(grep -l \"getServerSideProps\\\\|getStaticProps\" /Users/roccosangenllino/Projects/digital-experience-monorepo/apps/ops/src/pages/*.tsx)",
+      "Bash(grep -n cache: /Users/roccosangenllino/Projects/digital-experience-monorepo/apps/ops/src/pages/api/**/*.ts*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm turbo:*)",
+      "Bash(pnpm --filter ops check-types)",
+      "Bash(pnpm --filter ops lint)",
+      "Bash(pnpm --filter ops test)"
+    ]
+  }
+}

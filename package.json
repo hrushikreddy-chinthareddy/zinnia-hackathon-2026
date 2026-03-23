@@ -26,6 +26,11 @@
   "pnpm": {
     "overrides": {
       "canvas": "npm:empty-npm-package@1.0.0"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@storybook/nextjs>next": "15"
+      }
     }
   }
 }
