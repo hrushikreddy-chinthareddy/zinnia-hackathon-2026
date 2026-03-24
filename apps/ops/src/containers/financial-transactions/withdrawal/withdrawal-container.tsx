@@ -89,6 +89,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
     const processSubType = [
         Processes.PartialWithdrawal,
         Processes.FullSurrender,
+        Processes.Withdrawal,
     ];
     const { data: casesResponse, isLoading } = useCasesQuery({
         policyNumber: policy.policyNumber,
@@ -118,6 +119,7 @@ const WithdrawalContainer = ({ policy }: WithdrawalContainerProps) => {
                         processSubType={[
                             Processes.PartialWithdrawal,
                             Processes.FullSurrender,
+                            Processes.Withdrawal,
                         ]}
                     />
                 ),
