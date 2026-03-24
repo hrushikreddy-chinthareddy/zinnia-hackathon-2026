@@ -169,10 +169,6 @@ export default handleAuth({
 
     async logout(req, res) {
         deleteCookie('role', { req, res });
-
-        const baseUrl = process.env.AUTH0_BASE_URL;
-        const returnTo = baseUrl?.endsWith('/') ? baseUrl : `${baseUrl}/`;
-
-        await handleLogout(req, res, { returnTo });
+        await handleLogout(req, res);
     },
 });
