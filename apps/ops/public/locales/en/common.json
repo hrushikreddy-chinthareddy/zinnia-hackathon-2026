@@ -2651,8 +2651,8 @@
             "title": "Manage Annuitants",
             "subTitle": "Here you can manage annuitants",
             "confirmSubTitle": "Annuitant Change updates were submitted.",
-            "placeholder":"Select a role",
-            "validationMessage":"Cannot add another {{selectedRole}}. Maximum {{maxAllowed}} allowed."
+            "placeholder": "Select a role",
+            "validationMessage": "Cannot add another {{selectedRole}}. Maximum {{maxAllowed}} allowed."
         }
     },
     "welcome": {
@@ -9539,7 +9539,7 @@
             "femaleButton": "Female",
             "dateLabel": "Date of birth",
             "dateErrorMessage": "DOB format is mm/dd/yyyy",
-            "ageLabel": "Current Age",
+            "ageLabel": "Current age",
             "riskLabel": "Risk class",
             "nicotineUserLabel": "Nicotine user",
             "nicotine": "Nicotine",
