@@ -36,6 +36,11 @@ export interface SideSheetContextLegacyProps {
         header: string | React.ReactNode,
         body?: React.ReactNode
     ) => void;
+    changeSecondarySideSheetContent?: (
+        header: string | React.ReactNode,
+        body?: React.ReactNode
+    ) => void;
+    closeSecondarySideSheet: () => void;
     onClose: () => void;
 }
 
@@ -156,8 +161,20 @@ export const SideSheetProviderLegacy = ({
         }
 
         if (body) {
-            setContentComponent(body);
+            setContentComponent(() => body);
         }
+    };
+
+    const changeSecondarySideSheetContent = (
+        header: string | React.ReactNode,
+        body?: React.ReactNode
+    ) => {
+        setSecondarySideSheetHeader(header);
+        if (body !== undefined) setSecondarySideSheetContent(body);
+    };
+
+    const closeSecondarySideSheet = () => {
+        secondaryOnClose();
     };
 
     const openSecondarySideSheet = (
@@ -183,6 +200,8 @@ export const SideSheetProviderLegacy = ({
                 handleLocation,
                 changeSideSheetContent: handleComponentChange,
                 openSecondarySideSheet,
+                changeSecondarySideSheetContent,
+                closeSecondarySideSheet,
                 onClose,
             }}
         >
@@ -196,7 +215,7 @@ export const SideSheetProviderLegacy = ({
                 location={location}
                 width={width}
             >
-                {ComponentToRender || <></>}
+                {ComponentToRender ? ComponentToRender : null}
             </SideSheet>
             <SideSheet
                 open={secondarySideSheetOpen}

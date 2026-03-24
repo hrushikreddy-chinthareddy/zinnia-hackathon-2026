@@ -1,0 +1,164 @@
+{
+    "formId": "8b75146c-0de0-487f-9aa6-ef46b0a59168",
+    "taskType": "TASK_EXTERNAL_REVIEW_TASK",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "External Review Task",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "properties": {
+                        "sectionHeader": {
+                            "type": "object",
+                            "title": "Processing Instructions",
+                            "description": "Review the supporting information and document. Respond to the request and determine the solution."
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "processorNotes": {
+                                    "type": "string",
+                                    "title": "Processor Note"
+                                },
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Documents",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string"
+                                            },
+                                            "urlLabel": {
+                                                "type": "string",
+                                                "default": "{{documentName}}"
+                                            },
+                                            "urlValue": {
+                                                "type": "string",
+                                                "default": "/documents/{{documentId}}?carrierCode={{customData.carrier}}"
+                                            },
+                                            "documentName": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responseHeader": {
+                            "type": "object",
+                            "title": "Response Instructions"
+                        },
+                        "result": {
+                            "type": "string",
+                            "title": "Select a review outcome",
+                            "enum": ["APPROVED", "REJECTED"]
+                        },
+                        "comments": {
+                            "type": "string",
+                            "title": "Additional Comment"
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "title": "Link or upload document",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "documentId": {
+                                        "title": "Document Id",
+                                        "type": "string"
+                                    },
+                                    "documentName": {
+                                        "title": "Document Name",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": ["result"]
+                },
+                "uiSchema": {
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "sectionHeader": {
+                        "ui:options": {
+                            "label": true,
+                            "ObjectFieldTemplate": "InstructionsTemplate"
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "processorNotes": {
+                            "ui:widget": "ProcessorNotesWidget",
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true,
+                                "type": "link"
+                            },
+                            "ui:widget": "HyperLinkWidget",
+                            "items": {
+                                "urlLabel": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                },
+                                "urlValue": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "result": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true,
+                            "enumNames": ["Approve", "Reject"]
+                        },
+                        "ui:hideError": true
+                    },
+                    "attachments": {
+                        "inline": true,
+                        "ui:widget": "AttachmentWidget",
+                        "ui:options": {
+                            "label": true
+                        }
+                    },
+                    "comments": {
+                        "ui:hideError": true,
+                        "ui:widget": "textarea",
+                        "type": "string",
+                        "ui:options": {
+                            "classNames": "w-1/2"
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

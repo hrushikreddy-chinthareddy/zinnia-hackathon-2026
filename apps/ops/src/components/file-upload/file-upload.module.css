@@ -1,0 +1,15 @@
+.selectButton {
+    @apply px-6 py-2 border-2 border-black rounded-full font-semibold transition
+    hover:bg-black hover:text-white;
+    outline: none;
+}
+
+.selectButton:focus-visible {
+    outline: 2px solid var(--color-primary, #2563eb); /* Tailwind’s blue-600 default */
+    outline-offset: 3px;
+}
+
+.selectButton[data-programmatic-focus] {
+    outline: 2px solid var(--color-primary, #2563eb);
+    outline-offset: 3px;
+}

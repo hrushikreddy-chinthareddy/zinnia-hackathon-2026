@@ -74,6 +74,7 @@ export type ManagementTask<T = TaskStatus> = {
     cancellationReason?: string;
     taskDetails?: string;
     createdByPartyId?: string;
+    externalId?: string;
     ciamaccess?: boolean;
 };
 
@@ -85,6 +86,7 @@ export type TaskDocument = {
     docCategory?: string;
     documentExt?: string;
     documentType?: string;
+    documentCategory?: string;
 };
 
 export enum DocumentSource {
@@ -155,10 +157,14 @@ export interface TaskSideSheetProps {
     taskDescription?: string;
     taskName?: string;
     mappedDocuments?: TaskDocument[];
+    attachments?: any;
+    readonly?: boolean;
     queue?: string;
     carrier?: string;
     onTaskClaimSuccess?: () => void;
     onTaskUpdated?: (updatedTask: Task) => void;
+    // Opens the side sheet on this tab
+    initialTab?: string;
 }
 
 export interface TaskQueueDrawerProps {
@@ -194,6 +200,13 @@ export type UnassignedTask<T = TaskStatus> = {
     scheduledDate?: string;
 };
 
+export interface Note {
+    commentedOn: string;
+    taskType: 'EXTERNAL' | 'INTERNAL';
+    result?: string;
+    comments?: string;
+    attachments?: { documentId: string; documentName: string }[];
+}
 export enum ColSpanConfig {
     OpsManager = 10,
     Default = 8,

@@ -1,6 +1,6 @@
 import { Button } from '@zinnia/bloom/components';
 import { useTranslation } from 'next-i18next';
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { ButtonSize } from '@deps/components/button/button';
 import CustomLoader from '@deps/components/loader/customLoader';
@@ -13,6 +13,7 @@ export type FileAttachmentComponentProps = {
     onClose: () => void;
     onSubmit: (data: EDSDocumentRequestBody) => void;
     loader: boolean;
+    initialMetaData?: Partial<EDSDocumentRequestBody>;
 };
 
 const FileAttachmentComponent = ({
@@ -20,21 +21,26 @@ const FileAttachmentComponent = ({
     onSubmit,
     onClose,
     loader,
+    initialMetaData,
 }: FileAttachmentComponentProps) => {
     const { t } = useTranslation(undefined, {
         keyPrefix: 'general.fileUpload',
     });
     const [currentMetaData, setCurrentMetaData] =
-        useState<EDSDocumentRequestBody>({} as EDSDocumentRequestBody);
-    const [localLoading, setLocalLoading] = useState<boolean>(loader);
+        useState<EDSDocumentRequestBody>(
+            () =>
+                ({
+                    ...(initialMetaData as Partial<EDSDocumentRequestBody>),
+                } as EDSDocumentRequestBody)
+        );
 
-    // Sync local loading state with the prop from parent
     useEffect(() => {
-        setLocalLoading(loader);
-    }, [loader]);
+        if (initialMetaData) {
+            setCurrentMetaData((prev) => ({ ...prev, ...initialMetaData }));
+        }
+    }, [initialMetaData]);
 
     const onSubmitHandler = () => {
-        setLocalLoading(true); // Set loading immediately on button click
         onSubmit(currentMetaData);
     };
 
@@ -55,17 +61,19 @@ const FileAttachmentComponent = ({
                     disabled={
                         !currentMetaData?.docCategory ||
                         !currentMetaData?.documentType ||
-                        localLoading ||
                         loader
                     }
                     mode="primary"
                     size={ButtonSize.Small}
-                    type="submit"
-                    onClick={onSubmitHandler}
+                    type="button"
+                    onClick={(e) => {
+                        e.preventDefault();
+                        onSubmitHandler();
+                    }}
                 >
-                    {localLoading || loader ? (
+                    {loader ? (
                         <>
-                            <CustomLoader /> {t('upload')}
+                            <CustomLoader size="small" /> {t('upload')}
                         </>
                     ) : (
                         <>{t('upload')}</>

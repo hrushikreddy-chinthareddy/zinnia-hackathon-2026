@@ -48,6 +48,14 @@
     },
     "allFields": {
         "account": "Acct",
+        "carrierNotes": "Carrier note",
+        "processorNotes": "Processor note",
+        "seePreviousNotes": "See previous notes",
+        "carrierResponse": "Carrier response",
+        "createCarrierTask": "Create Carrier Task",
+        "selectIssues": "Select the issue(s)",
+        "addComments": "Add comments",
+
         "createdOn": "Created on",
         "resolvedOn": "Resolved on",
         "accountValue": "Account value",
@@ -297,7 +305,8 @@
         "financialTransactionSetUpRequest": "request to set up a systematic ",
         "financialTransactionProgram": " program. ",
         "financialTransactionTrack": "You can track the progress by viewing the case.",
-        "findExistingDocuments": "Find existing documents.. .",
+        "findExistingDocuments": "Find existing documents...",
+        "alreadyLinked": "Already linked",
         "firmNameSearchError": "Enter a firm name to return search results",
         "firstName": "First Name",
         "firstNameRequired": "First name is required.",
@@ -6045,10 +6054,12 @@
         "task": {
             "tabs": {
                 "details": "Details",
+                "notes": "Notes",
                 "history": "History",
                 "documents": "Documents",
                 "comments": "Comments"
             },
+            "bannerAlert": "The task status will be changed to pending or marked complete and a carrier task, Carrier {{taskName}}, will be created on the case.",
             "status": {
                 "label": "Status",
                 "open": "Open",
@@ -8171,6 +8182,7 @@
             "documentId": "Document ID",
             "noFormAvailable": "No form available.",
             "taskTitle": "Task details",
+            "createCarrierTask": "Create Carrier Task",
             "noDocumentAvailable": "Currently document is not available for this task. Please check here to try again."
         },
         "CaseDetailsContent": {
@@ -9810,6 +9822,24 @@
         "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
         "internalServerError": "Internal Server Error",
         "failedToFetch": "Failed to fetch validation summary"
+    },
+    "externalDataRequestTask": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "External Data Request was submitted.",
+            "cta": "Go to External Data Request",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "taskExternalReviewTask": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "External Review was submitted.",
+            "cta": "Go to External Review",
+            "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
     },
     "thirdPartyDetail": {
         "confirmStep": {

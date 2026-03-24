@@ -3,7 +3,7 @@ import { FieldProps } from '@rjsf/utils';
 import { useAttachments } from '@deps/hooks/useAttachments';
 
 import FileListing from '../../components/file-listing/file-listing';
-import { FileSearchField } from '../../components/file-search-field/file-search-field';
+import { RJSFFileSearchField } from '../../components/file-search-field/rjsf-file-search-field';
 
 const AutoCompleteField = (props: FieldProps) => {
     const { onChange, formData, uiSchema, formContext, schema } = props;
@@ -33,7 +33,7 @@ const AutoCompleteField = (props: FieldProps) => {
 
     return (
         <>
-            <FileSearchField
+            <RJSFFileSearchField
                 attachments={attachments}
                 setAttachments={handleSetAttachments}
                 widgetProps={widgetProps}

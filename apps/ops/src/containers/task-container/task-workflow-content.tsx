@@ -1,12 +1,18 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { useTranslation } from 'next-i18next';
 import { useContext, useMemo } from 'react';
 
 import GlobalValuesNbBar from '@deps/components/global-values/global-values-bar/global-values-nb-bar';
+import CreateCarrierTaskSideSheet from '@deps/components/side-sheet/create-carrier-task/create-carrier-task';
 import { TranslationFiles } from '@deps/config/translations';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { TaskType } from '@deps/models/case/task';
+import { TaskStatus } from '@deps/models/case/task-instance';
 import { ReactComponent as ClipboardListIcon } from '@deps/styles/elements/icons/content/clipboard-list.svg';
+import { ReactComponent as ClipboardStarIcon } from '@deps/styles/elements/icons/content/clipboard-star.svg';
+import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import { TaskDataContext } from './task-context';
 import GlobalTaskSideSheet from '../../components/side-sheet/task-details-sidesheet/global-task-sidesheet-content';
@@ -61,8 +67,23 @@ export const TaskWorkflowContent = ({
         sideSheet.handleOpen(true);
     };
 
+    const openCreateTaskSideSheet = () => {
+        const content = (
+            <CreateCarrierTaskSideSheet task={task} readonly={false} />
+        );
+        sideSheet.changeSideSheetContent(
+            `${t('allFields.createCarrierTask')}`,
+            content
+        );
+        sideSheet.handleOpen(true);
+    };
+
     const showDocumentPanel = () => {
         openSideSheet();
+    };
+
+    const showCreateCarrierTaskPanel = () => {
+        openCreateTaskSideSheet();
     };
 
     const filteredSteps: Step[] = useMemo(
@@ -83,6 +104,24 @@ export const TaskWorkflowContent = ({
                 return false;
         }
     };
+
+    const { user } = useUser();
+    const { featureFlags } = useOptimizely();
+    const isExternalTask =
+        task.taskType === TaskType.External_Review_Task ||
+        task.taskType === TaskType.External_Data_Request_Task;
+
+    const isTaskOwner = task?.assigneePartyId === user?.partyId;
+
+    const isCreateCarrierExternalTaskEnabled =
+        featureFlags?.[FEATURE_FLAGS.CREATE_CARRIER_EXTERNAL_TASK] ?? false;
+
+    const shouldShowCreateCarrierTask =
+        isCreateCarrierExternalTaskEnabled &&
+        !isExternalTask &&
+        isTaskOwner &&
+        task.status !== TaskStatus.Completed;
+
     return (
         <div className="workflow-height-adjusted flex w-full max-w-[1130px] flex-col self-center">
             <div className="flex">
@@ -91,6 +130,25 @@ export const TaskWorkflowContent = ({
                     showLink={false}
                     caseId={caseId}
                 />
+                {shouldShowCreateCarrierTask && (
+                    <button
+                        className="my-2 ml-auto mr-4"
+                        onClick={showCreateCarrierTaskPanel}
+                    >
+                        <div className="flex font-semibold whitespace-nowrap text-secondary cursor-pointer">
+                            <ClipboardStarIcon
+                                role="img"
+                                aria-label="Create carrier task"
+                                height={24}
+                                width={24}
+                                className="text-secondary"
+                            />
+                            <div>
+                                {t('nigoEntry.documentPanel.createCarrierTask')}
+                            </div>
+                        </div>
+                    </button>
+                )}
                 <button
                     className="my-2 ml-auto cursor:pointer"
                     onClick={showDocumentPanel}

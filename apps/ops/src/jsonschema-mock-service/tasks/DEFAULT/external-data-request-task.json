@@ -1,0 +1,304 @@
+{
+    "formId": "ad2e14c3-3db0-4e1a-bd36-70b5847ae833",
+    "taskType": "EXTERNAL_DATA_REQUEST_TASK",
+    "formSchema": {
+        "type": "object"
+    },
+    "uiSchema": {
+        "type": "object"
+    },
+    "schemaContent": {
+        "tabSchemas": [
+            {
+                "title": "External Data Request",
+                "formSchema": {
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "type": "object",
+                    "properties": {
+                        "issuesList": {
+                            "type": "array",
+                            "title": "",
+                            "items": {
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                    "processingInstruction": {
+                                        "type": "string",
+                                        "title": "Processing Resolution"
+                                    },
+                                    "resolved": {
+                                        "type": "boolean",
+                                        "title": "Resolved"
+                                    }
+                                }
+                            }
+                        },
+                        "details": {
+                            "type": "object",
+                            "title": "Details",
+                            "properties": {
+                                "processorNotes": {
+                                    "type": "string",
+                                    "title": "Processor Note"
+                                },
+                                "documents": {
+                                    "type": "array",
+                                    "title": "Documents",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string"
+                                            },
+                                            "urlLabel": {
+                                                "type": "string",
+                                                "default": "{{documentName}}"
+                                            },
+                                            "urlValue": {
+                                                "type": "string",
+                                                "default": "/documents/{{documentId}}?carrierCode={{customData.carrier}}"
+                                            },
+                                            "documentName": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "supportingInformation": {
+                            "type": "object",
+                            "title": "Supporting Information",
+                            "properties": {
+                                "documents": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "documentId": {
+                                                "type": "string",
+                                                "ui:field": "subTitle",
+                                                "ui:placeholder": "Documemt ID: "
+                                            },
+                                            "documentType": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentName": {
+                                                "type": "string",
+                                                "ui:field": "title",
+                                                "ui:separator": " - "
+                                            },
+                                            "documentSource": {
+                                                "type": "string"
+                                            },
+                                            "documentExt": {
+                                                "type": "string"
+                                            },
+                                            "carrier": {
+                                                "type": "string",
+                                                "default": "{{carrier}}"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "responseHeader": {
+                            "type": "object",
+                            "title": "Response Instructions"
+                        },
+                        "result": {
+                            "type": "boolean",
+                            "title": "Required Information Available?"
+                        },
+                        "comments": {
+                            "type": "string",
+                            "title": "Add Comments"
+                        },
+                        "attachments": {
+                            "type": "array",
+                            "title": "Link or upload document",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "documentId": {
+                                        "title": "Document Id",
+                                        "type": "string"
+                                    },
+                                    "documentName": {
+                                        "title": "Document Name",
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "dependencies": {
+                        "result": {
+                            "oneOf": [
+                                {
+                                    "properties": {
+                                        "result": {
+                                            "const": true
+                                        },
+                                        "applicationIgoDate": {
+                                            "type": "string",
+                                            "title": "Application IGO Date"
+                                        }
+                                    },
+                                    "required": ["applicationIgoDate"]
+                                },
+                                {
+                                    "properties": {
+                                        "result": {
+                                            "const": false
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "required": ["result"]
+                },
+                "uiSchema": {
+                    "ui:order": [
+                        "issuesList",
+                        "details",
+                        "supportingInformation",
+                        "responseHeader",
+                        "result",
+                        "applicationIgoDate",
+                        "comments",
+                        "attachments"
+                    ],
+                    "ui:globalOptions": {
+                        "duplicateKeySuffixSeparator": "_",
+                        "orderable": false,
+                        "copyable": false
+                    },
+                    "$schema": "http://json-schema.org/draft-07/schema#",
+                    "ui:submitButtonOptions": {
+                        "norender": true
+                    },
+                    "issuesList": {
+                        "ui:options": {
+                            "label": false
+                        },
+                        "items": {
+                            "ui:options": {
+                                "canAdd": false,
+                                "templateType": "table",
+                                "ObjectFieldTemplate": "ObjectRowFieldTemplate"
+                            },
+                            "processingInstruction": {
+                                "ui:readonly": true,
+                                "ui-widget": "ValueWidget",
+                                "ui:options": {
+                                    "label": false
+                                }
+                            },
+                            "resolved": {
+                                "ui:options": {
+                                    "label": false
+                                }
+                            }
+                        }
+                    },
+                    "supportingInformation": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "documents": {
+                            "items": {
+                                "ui:options": {
+                                    "ObjectFieldTemplate": "CardTemplate",
+                                    "cardType": "Document",
+                                    "icon": "DOCUMENT_TEXT",
+                                    "nobackground": true
+                                },
+                                "documentId": {
+                                    "ui:widget": "text"
+                                },
+                                "documentName": {
+                                    "ui:widget": "text"
+                                },
+                                "documentSource": {
+                                    "ui:widget": "text"
+                                },
+                                "documentType": {
+                                    "ui:widget": "text"
+                                }
+                            },
+                            "ui:options": {
+                                "label": false,
+                                "addable": false
+                            }
+                        }
+                    },
+                    "details": {
+                        "ui:options": {
+                            "label": true
+                        },
+                        "processorNotes": {
+                            "ui:widget": "ProcessorNotesWidget",
+                            "ui:options": {
+                                "label": false,
+                                "inline": true
+                            }
+                        },
+                        "documents": {
+                            "ui:options": {
+                                "label": false,
+                                "inline": true,
+                                "type": "link"
+                            },
+                            "ui:widget": "HyperLinkWidget",
+                            "items": {
+                                "urlLabel": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                },
+                                "urlValue": {
+                                    "ui:options": {
+                                        "omitValue": true
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "result": {
+                        "ui:widget": "radio",
+                        "ui:options": {
+                            "label": true,
+                            "enumNames": ["Yes", "No"]
+                        },
+                        "ui:hideError": true
+                    },
+                    "applicationIgoDate": {
+                        "ui:widget": "date",
+                        "ui:options": {
+                            "label": true
+                        }
+                    },
+                    "comments": {
+                        "ui:hideError": true,
+                        "ui:widget": "textarea",
+                        "ui:options": {
+                            "classNames": "w-1/2"
+                        }
+                    },
+                    "attachments": {
+                        "inline": true,
+                        "ui:widget": "AttachmentWidget",
+                        "ui:options": {
+                            "label": true
+                        }
+                    }
+                }
+            }
+        ]
+    }
+}

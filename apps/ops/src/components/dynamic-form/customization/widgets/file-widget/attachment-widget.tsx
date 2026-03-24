@@ -4,10 +4,10 @@ import { useTranslation } from 'react-i18next';
 import { TranslationFiles } from '@deps/config/translations';
 import { useAttachments } from '@deps/hooks/useAttachments';
 
-import { FileUploadComponent } from './file-widget';
+import FileUploadComponent from './file-upload-component';
 import style from './file-widget.module.css';
 import FileListing from '../../components/file-listing/file-listing';
-import { FileSearchField } from '../../components/file-search-field/file-search-field';
+import { RJSFFileSearchField } from '../../components/file-search-field/rjsf-file-search-field';
 
 function AttachmentWidget(widgetProps: WidgetProps) {
     const { t } = useTranslation(TranslationFiles.COMMON, {
@@ -29,7 +29,7 @@ function AttachmentWidget(widgetProps: WidgetProps) {
                 role="group"
                 aria-label={t('uploadDocument') as string}
             >
-                <FileSearchField
+                <RJSFFileSearchField
                     attachments={attachments}
                     setAttachments={handleSetAttachments}
                     widgetProps={widgetProps}

@@ -13,7 +13,7 @@ export function FileListing({
     setAttachments,
     widgetProps = {} as WidgetProps,
 }: FileAttachmentProps) {
-    const { readonly } = widgetProps;
+    const readonly = widgetProps?.readonly ?? false;
 
     const removeAttachment = async (attachment: TaskDocument) => {
         if (readonly) {

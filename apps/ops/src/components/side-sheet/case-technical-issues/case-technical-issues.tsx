@@ -135,8 +135,8 @@ const CaseTechnicalIssues = ({
 
                 setExceptionDetailsMap(detailsMap);
                 setLoading(false);
-            } catch {
-                browserLogError(`Error in fetch exception details`);
+            } catch (error) {
+                browserLogError(`Error in fetch exception details`, { error });
                 setLoading(false);
             }
         };

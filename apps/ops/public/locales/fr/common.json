@@ -48,6 +48,13 @@
     },
     "allFields": {
         "account": "Cpt",
+        "carrierNotes": "Note du transporteur",
+        "processorNotes": "Remarque sur le processeur",
+        "seePreviousNotes": "Voir les notes précédentes",
+        "carrierResponse": "Réponse du transporteur",
+        "createCarrierTask": "Créer une tâche transporteur",
+        "selectIssues": "Sélectionner le(s) problème(s)",
+        "addComments": "Ajouter des commentaires",
         "accountValue": "Valeur du compte",
         "viewDetailsException": "Afficher les détails des exceptions",
         "createdOn": "Créer sur",
@@ -303,7 +310,8 @@
         "financialTransactionSetUpRequest": "visant à mettre en place un programme de ",
         "financialTransactionProgram": " systématiques. ",
         "financialTransactionTrack": "Vous pouvez suivre la progression de la demande en consultant le dossier.",
-        "findExistingDocuments": "Trouver des documents existants.. .",
+        "findExistingDocuments": "Trouver des documents existants...",
+        "alreadyLinked": "Déjà lié",
         "firmNameSearchError": "Entrez le nom d'une entreprise pour obtenir les résultats de recherche",
         "firstName": "Prénom",
         "firstNameRequired": "Le prénom est obligatoire.",
@@ -5945,6 +5953,7 @@
         "task": {
             "tabs": {
                 "details": "Détails",
+                "notes": "Notes",
                 "history": "Histoire",
                 "documents": "Documents",
                 "comments": "Commentaires"
@@ -9674,6 +9683,24 @@
         "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
         "internalServerError": "Erreur interne du serveur",
         "failedToFetch": "Impossible de récupérer le résumé de validation"
+    },
+    "externalDataRequestTask": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "La demande de données externes a été soumise.",
+            "cta": "Aller à la demande de données externes",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "taskExternalReviewTask": {
+        "confirmStep": {
+            "title": "Compris !",
+            "subTitle": "L'examen externe a été soumis.",
+            "cta": "Aller à l'examen externe",
+            "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
     },
     "thirdPartyDetail": {
         "confirmStep": {

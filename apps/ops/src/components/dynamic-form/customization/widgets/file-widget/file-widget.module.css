@@ -90,6 +90,12 @@
         width: 100%;
     }
 }
+
+.resultsContainer {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
 .orText {
     font-size: 0.875rem;
     text-align: center;

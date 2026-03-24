@@ -49,6 +49,13 @@
     "allFields": {
         "all": "Todo",
         "account": "Cuenta",
+        "carrierNotes": "Nota del transportista",
+        "processorNotes": "Nota del procesador",
+        "seePreviousNotes": "Ver notas anteriores",
+        "carrierResponse": "Respuesta del transportista",
+        "createCarrierTask": "Crear tarea de transportista",
+        "selectIssues": "Seleccionar problema(s)",
+        "addComments": "Agregar comentarios",
         "createdOn": "Creado el",
         "viewDetailsException": "Ver detalles de excepciones",
         "resolvedOn": "Resuelto el",
@@ -301,7 +308,8 @@
         "financialTransactionSetUpRequest": "para crear un programa de ",
         "financialTransactionProgram": " sistemáticas. ",
         "financialTransactionTrack": "Puede seguir el progreso consultando el caso.",
-        "findExistingDocuments": "Encuentra documentos existentes.. .",
+        "findExistingDocuments": "Encuentra documentos existentes...",
+        "alreadyLinked": "Ya vinculado",
         "firmNameSearchError": "Ingrese el nombre de una firma para mostrar resultados de búsqueda",
         "firstName": "Nombre",
         "firstNameRequired": "Se requiere el nombre.",
@@ -5991,6 +5999,7 @@
         "task": {
             "tabs": {
                 "details": "Detalles",
+                "notes": "Notas",
                 "history": "Historial",
                 "documents": "Documentos",
                 "comments": "Comentarios"
@@ -6027,8 +6036,8 @@
             "goToCase": "Ir al caso",
             "claimTask": "Reclamar tarea",
             "claimTaskError": "No tienes los permisos necesarios para acceder a esta función. Comunícate con el administrador para obtener ayuda.",
-            "noAccessToTask": "No tienes acceso a esta tarea.",
-            "taskHeading": "Tarea"
+            "taskHeading": "Tarea",
+            "noAccessToTask": "No tienes acceso a esta tarea."
         },
         "suitability": {
             "header": "Completar revisión de idoneidad",
@@ -9705,6 +9714,24 @@
         "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
         "internalServerError": "Error Interno del Servidor",
         "failedToFetch": "No se pudo obtener el resumen de validación"
+    },
+    "externalDataRequestTask": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "Se envió la solicitud de datos externos.",
+            "cta": "Ir a la solicitud de datos externos",
+            "secondaryCta": "Volver a inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "taskExternalReviewTask": {
+        "confirmStep": {
+            "title": "¡Entendido!",
+            "subTitle": "La revisión externa fue enviada.",
+            "cta": "Ir a la revisión externa",
+            "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
     },
     "thirdPartyDetail": {
         "confirmStep": {

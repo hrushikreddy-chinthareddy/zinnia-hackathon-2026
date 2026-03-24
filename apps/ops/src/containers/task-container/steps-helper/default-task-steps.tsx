@@ -1,13 +1,15 @@
+import { Step } from '@deps/containers/progress-bar-steps/progress-bar-steps-item/progress-bar-steps-item';
+
 import { GetStepsProps } from './types';
 import ConfirmStep from '../components/steps/confirm/confirm-step';
 import { MemoizedTaskFormStep as TaskFormStep } from '../components/steps/task-form/task-form-step';
 
 const getDefaultTaskSteps = ({
     taskInfoLink,
+    taskType,
+    t,
     taskMetadata,
     readOnly,
-    task,
-    t,
 }: GetStepsProps) => {
     const steps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
@@ -28,23 +30,23 @@ const getDefaultTaskSteps = ({
         screenReaderLabel: metadata?.title || '',
     }));
 
-    const confirmStep = {
-        ariaLabel: t('confirm'),
-        isVisible: () => Boolean(true),
-        component: (
-            <ConfirmStep
-                taskType={task?.taskType}
-                taskInfoLink={taskInfoLink}
-            ></ConfirmStep>
-        ),
-        text: t('confirm'),
-        index: taskMetadata.length,
-        screenReaderLabel: t('confirm'),
-        isSubmit: true,
-        isCompleted: true,
-    };
+    const staticSteps: Step[] = [
+        {
+            isVisible: () => true,
+            component: (
+                <ConfirmStep
+                    taskType={taskType}
+                    taskInfoLink={taskInfoLink}
+                    isCta={true}
+                ></ConfirmStep>
+            ),
+            text: t('confirm'),
+            index: steps.length,
+            screenReaderLabel: t('confirm'),
+        },
+    ];
 
-    return [...steps, confirmStep];
+    return [...steps, ...staticSteps];
 };
 
 export default getDefaultTaskSteps;

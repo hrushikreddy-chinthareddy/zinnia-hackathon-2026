@@ -36,6 +36,7 @@ import { createViewDownloadAction } from '@deps/containers/subpages/documents-su
 import { AssigneePopoverPositionMode } from '@deps/containers/task-management-queue/table-elements/assignee-popover';
 import TaskQueueDrawer from '@deps/containers/task-management-queue/task-queue-drawer';
 import { OPS_MANAGER_VIEW_TASK } from '@deps/containers/task-management-queue/task-queue-table-row';
+import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { useSideSheetContextLegacy } from '@deps/contexts/SideSheetContext';
 import { getCaseIdentifierValue } from '@deps/helpers/case-management';
@@ -98,6 +99,7 @@ import {
 } from '@zinnia/api-types/types/documents-v3';
 
 import styles from './global-task-side-sheet-content.module.css';
+import NotesTab from './notes-tab';
 import SidesheetButtons from './sidesheet-buttons';
 import {
     isAPIErrorInformation,
@@ -109,6 +111,7 @@ export enum TabOptions {
     Details = 'Details',
     Documents = 'Documents',
     Comments = 'Comments',
+    Notes = 'Notes',
 }
 
 export interface DocumentItemProps {
@@ -227,10 +230,13 @@ export default function GlobalTaskSideSheet({
     onTaskClaimSuccess,
     onTaskUpdated,
     mappedDocuments,
+    initialTab,
 }: TaskSideSheetProps) {
     const { t } = useTranslation();
     const queryClient = useQueryClient();
-    const [activeTab, setActiveTab] = useState(TabOptions.Details);
+    const [activeTab, setActiveTab] = useState(
+        initialTab ?? TabOptions.Details
+    );
     const [claimTaskLoader, setClaimTaskLoader] = useState(false);
     const [showAdditionalDocuments, setShowAdditionalDocuments] =
         useState(false);
@@ -243,8 +249,20 @@ export default function GlobalTaskSideSheet({
     const [assignLoader, setAssignLoader] = useState(false);
     const [isAssigneePopoverOpen, setIsAssigneePopoverOpen] = useState(false);
 
-    const handleTabChange = (value: string) =>
-        setActiveTab(value as TabOptions);
+    const handleTabChange = (value: string) => setActiveTab(value);
+
+    const { featureFlags: optimizelyFeatureFlags } = useOptimizely();
+    const resolvedFeatureFlags = featureFlagDecisions ?? optimizelyFeatureFlags;
+    const isCarrierExternalTaskFeatureEnabled =
+        resolvedFeatureFlags?.[FEATURE_FLAGS.CREATE_CARRIER_EXTERNAL_TASK] ??
+        false;
+
+    useEffect(() => {
+        if (initialTab) {
+            setActiveTab(initialTab);
+        }
+    }, [initialTab]);
+
     const { isZinniaInternalProcessor } = usePermissionsContext();
     const limit = 25;
     const offset = 0;
@@ -1227,6 +1245,14 @@ export default function GlobalTaskSideSheet({
             >
                 {renderDocuments}
             </TabContent>
+            {isCarrierExternalTaskFeatureEnabled && (
+                <TabContent
+                    className="flex px-10  w-full flex-col items-center"
+                    value={TabOptions.Notes}
+                >
+                    <NotesTab task={task} />
+                </TabContent>
+            )}
             {!noCommentsAvailable && (
                 <TabContent
                     className="flex px-10  w-full flex-col items-center"
@@ -1254,6 +1280,12 @@ export default function GlobalTaskSideSheet({
                     <TabTrigger value={TabOptions.Documents}>
                         {t('sideSheet.task.tabs.documents') ?? ''}
                     </TabTrigger>
+
+                    {isCarrierExternalTaskFeatureEnabled && (
+                        <TabTrigger value={TabOptions.Notes}>
+                            {t('sideSheet.task.tabs.notes') ?? ''}
+                        </TabTrigger>
+                    )}
 
                     {!noCommentsAvailable && (
                         <TabTrigger value={TabOptions.Comments}>

@@ -1,0 +1,67 @@
+{
+    "id": "TA000000021593",
+    "caseId": "CA0000399995",
+    "source": "BPM.AppProcessing",
+    "templateId": "671cc41f-74a1-4cc2-80fd-1d338e19af3e",
+    "process": "New Business",
+    "carrier": "WELB",
+    "taskType": "TASK_EXTERNAL_REVIEW_TASK",
+    "taskName": "External Task",
+    "status": "NEW",
+    "data": {
+        "details": {
+            "processorNotes": "Notes",
+            "documents": [
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac69",
+                    "documentName": "WELB_080094943_R_20250228_00001.pdf",
+                    "documentExt": "pdf",
+                    "documentType": "LI APPOINTMENT"
+                },
+                {
+                    "documentId": "67c1b9655c3f6536d7f2ac6a",
+                    "documentName": "WELB_080094943_R_20250228_00002.pdf",
+                    "documentExt": "pdf",
+                    "documentType": "LI APPOINTMENT"
+                }
+            ]
+        }
+    },
+    "mappedExceptions": [],
+    "mappedDocuments": [],
+    "queue": "new_business",
+    "escalated": false,
+    "createdBy": "SYSTEM",
+    "createdByPartyId": "SYSTEM",
+    "createdAt": "2025-03-17T11:37:21Z",
+    "updatedBy": "SYSTEM",
+    "updatedByPartyId": "SYSTEM",
+    "updatedAt": "2025-03-17T11:37:21Z",
+    "identifiers": [
+        {
+            "identifier": "policyNumber",
+            "value": "ADA2502542"
+        },
+        {
+            "identifier": "documentID",
+            "value": "67d7fc835134020b1b4d2d8a"
+        },
+        {
+            "identifier": "zlCaseId",
+            "value": "CA0000399995"
+        },
+        {
+            "identifier": "applicationId",
+            "value": "WELLANI011280282025031703"
+        },
+        {
+            "identifier": "businessKey",
+            "value": "413566"
+        },
+        {
+            "identifier": "contractNumber",
+            "value": "ADA2502542"
+        }
+    ],
+    "externalId": "1be6ba99-59aa-4ca6-98b4-b35f41dec48f"
+}

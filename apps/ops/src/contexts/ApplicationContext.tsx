@@ -11,6 +11,7 @@ import ErrorBoundary from '@deps/components/error-boundary/error-boundary';
 import { LayoutWrapper } from '@deps/containers/layout-wrapper/layout-wrapper';
 import { storage } from '@deps/helpers/sessionStorage.helpers';
 
+import { FormBridgeContextProvider } from './FormBridgeContext';
 import ModalProvider from './ModalContext';
 import { OptimizelyProvider } from './OptimizelyContext';
 import { PermissionsProvider } from './PermissionsContext';
@@ -126,19 +127,21 @@ export const ApplicationDataProvider: React.FC<
             <OptimizelyProvider>
                 <PermissionsProvider>
                     <ErrorBoundary>
-                        <SideSheetProviderLegacy>
-                            <SearchBarProvider>
-                                <PolicySearchFiltersProvider>
-                                    <ModalProvider>
-                                        <ApplicationComponentWrapper>
-                                            <LayoutWrapper>
-                                                {children}
-                                            </LayoutWrapper>
-                                        </ApplicationComponentWrapper>
-                                    </ModalProvider>
-                                </PolicySearchFiltersProvider>
-                            </SearchBarProvider>
-                        </SideSheetProviderLegacy>
+                        <FormBridgeContextProvider>
+                            <SideSheetProviderLegacy>
+                                <SearchBarProvider>
+                                    <PolicySearchFiltersProvider>
+                                        <ModalProvider>
+                                            <ApplicationComponentWrapper>
+                                                <LayoutWrapper>
+                                                    {children}
+                                                </LayoutWrapper>
+                                            </ApplicationComponentWrapper>
+                                        </ModalProvider>
+                                    </PolicySearchFiltersProvider>
+                                </SearchBarProvider>
+                            </SideSheetProviderLegacy>
+                        </FormBridgeContextProvider>
                     </ErrorBoundary>
                 </PermissionsProvider>
             </OptimizelyProvider>

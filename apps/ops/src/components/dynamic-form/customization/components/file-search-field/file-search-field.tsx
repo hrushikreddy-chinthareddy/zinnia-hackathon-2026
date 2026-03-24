@@ -39,7 +39,7 @@ export const FileSearchField = ({
         formContext,
         Placeholder,
         readonly,
-    } = widgetProps;
+    } = widgetProps ?? {};
     const limit = 25;
     const offset = 0;
 
@@ -159,7 +159,9 @@ export const FileSearchField = ({
             <Icon type={IconType.SEARCH} className={inputStyles.icon} />
             <input
                 aria-labelledby="case-search-label"
-                placeholder={Placeholder || 'Find existing documents...'}
+                placeholder={
+                    Placeholder || t('allFields.findExistingDocuments') || ''
+                }
                 className={clsx(
                     inputStyles.input,
                     style.iconInput,

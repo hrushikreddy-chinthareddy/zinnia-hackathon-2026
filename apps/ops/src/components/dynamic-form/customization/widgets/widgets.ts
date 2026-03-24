@@ -11,8 +11,8 @@ import CheckboxesWidget from './checkboxes-widget/checkboxes-widget';
 import DateWidget from './date-widget/date-widget';
 import DateWidgetV2 from './date-widget/date-widget-v2';
 import EmailWidget from './email-widget/email-widget';
+import { RJSFFileWidget } from './file-widget';
 import AttachmentWidget from './file-widget/attachment-widget';
-import FileWidget from './file-widget/file-widget';
 import HyperLinkWidget from './hyper-link-widget/hyper-link-widget';
 import IssueResolvedRadioWidget, {
     IssueResolvedDisplayWidget,
@@ -20,6 +20,7 @@ import IssueResolvedRadioWidget, {
 import NotesWidget from './notes-widget/notes-widget';
 import NumbersWidget from './numbers/numbers';
 import PartyRoleWidget from './party-role-widget/party-role-widget';
+import ProcessorNotesWidget from './processor-notes-widget/processor-notes-widget';
 import RadioWidget from './radio-widget/radio-widget';
 import SelectWidget from './select-widget/select-widget';
 import TextWidget from './text-widget/text-widget';
@@ -38,7 +39,7 @@ export function generateWidgets(): RegistryWidgetsType {
         DateWidget,
         RadioWidget,
         ValueWidget,
-        FileWidget,
+        FileWidget: RJSFFileWidget,
         HyperLinkWidget,
         NotesWidget,
         AttachmentWidget,
@@ -51,6 +52,7 @@ export function generateWidgets(): RegistryWidgetsType {
         NumbersWidget,
         DateWidgetV2,
         TitleWidget,
+        ProcessorNotesWidget,
         PartyRoleWidget,
         IssueResolvedDisplayWidget,
         IssueResolvedRadioWidget,

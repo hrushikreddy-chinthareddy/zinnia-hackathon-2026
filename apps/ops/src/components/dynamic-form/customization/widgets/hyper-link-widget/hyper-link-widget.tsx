@@ -33,8 +33,8 @@ const HyperLinkWidget = (props: WidgetProps) => {
     if (uiOptions.inline) {
         const itemProperties = (schema?.items as any)?.properties;
         return (
-            <div className="grid grid-cols-2 text-md max-w-screen-sm">
-                <div className="font-medium text-gray-500">
+            <div className="grid grid-cols-[200px_auto] text-md gap-2">
+                <div className="font-medium text-gray-500 ">
                     {schema.title || defaultLabel}
                 </div>
                 <div className="flex flex-col">

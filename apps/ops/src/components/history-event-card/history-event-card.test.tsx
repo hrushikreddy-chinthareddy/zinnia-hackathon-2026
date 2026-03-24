@@ -69,6 +69,7 @@ describe.skip('HistoryEventCard Component', () => {
         render(
             <SideSheetContextLegacy.Provider
                 value={{
+                    closeSecondarySideSheet: () => {},
                     changeSideSheetContent: () => {},
                     handleLocation: () => {},
                     handleOpen: () => {},

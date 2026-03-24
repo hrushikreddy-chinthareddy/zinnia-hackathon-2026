@@ -22,6 +22,7 @@ import {
 } from '@deps/containers/task-container/components/steps/task-form/task-form.utils';
 import { TaskDataContext } from '@deps/containers/task-container/task-context';
 import { updateTask } from '@deps/containers/task-container/task.helpers';
+import { FormBridgeContext } from '@deps/contexts/FormBridgeContext';
 import { CaseIdentifier } from '@deps/models/case/case';
 import { FormMetadata, TaskType } from '@deps/models/case/task';
 import {
@@ -29,7 +30,11 @@ import {
     MatchingCase,
     TransactionData,
 } from '@deps/models/case/task/doc-matching-payment';
-import { ManagementTask, TaskDocument } from '@deps/models/case/task-instance';
+import {
+    ManagementTask,
+    TaskDocument,
+    TaskStatus,
+} from '@deps/models/case/task-instance';
 import { getCaseDetails } from '@deps/queries/api/cases';
 import { getTransactionsByCorrelationId } from '@deps/queries/api/transactions';
 import { browserLogError, browserLogWarn } from '@deps/utils/browser-logging';
@@ -272,6 +277,12 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
                     { ...taskPayload, mappedDocuments },
                     correlationId
                 );
+                if (success) {
+                    setTask((prev) => ({
+                        ...prev,
+                        status: TaskStatus.Completed,
+                    }));
+                }
                 removeFromCache('getTaskInstance', { taskId: task.id });
                 setSubmitFailed(!success);
             }
@@ -467,6 +478,11 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             setValidationSummary,
         ]
     );
+
+    const bridge = useContext(FormBridgeContext);
+    useEffect(() => {
+        bridge?.setFormContext(mergedFormContext);
+    }, []);
 
     return (
         <DynamicForm

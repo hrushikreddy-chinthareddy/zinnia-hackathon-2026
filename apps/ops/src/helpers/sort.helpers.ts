@@ -1,3 +1,5 @@
+import dayjs from 'dayjs';
+
 import { DataDefinition } from '@deps/types/data';
 
 export const sort = <T extends object>(
@@ -87,6 +89,14 @@ export const sortByAndThenBy = <T>(objects: T[], ...keys: (keyof T)[]): T[] =>
             const bValue = b[key];
 
             if (aValue === bValue) continue; // If values are the same, move to the next key
+            if (
+                typeof aValue === 'string' &&
+                typeof bValue === 'string' &&
+                dayjs(aValue).isValid() &&
+                dayjs(bValue).isValid()
+            ) {
+                return dayjs(aValue).valueOf() - dayjs(bValue).valueOf();
+            }
 
             if (typeof aValue === 'string' && typeof bValue === 'string') {
                 return aValue.localeCompare(bValue);
