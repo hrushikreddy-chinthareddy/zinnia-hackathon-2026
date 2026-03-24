@@ -30,10 +30,10 @@ export interface TableProps extends AgGridReactProps {
 
 export default function DepTable(props: TableProps): JSX.Element {
     useStylesheet(
-        'https://cdn.jsdelivr.net/npm/ag-grid-community@29.2.0/styles/ag-grid.css'
+        'https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.4/styles/ag-grid.css'
     );
     useStylesheet(
-        'https://cdn.jsdelivr.net/npm/ag-grid-community@29.2.0/styles/ag-theme-alpine.css'
+        'https://cdn.jsdelivr.net/npm/ag-grid-community@31.3.4/styles/ag-theme-alpine.css'
     );
 
     const [, setGridApi] = useState<GridApi | null>(null);
@@ -77,6 +77,12 @@ export default function DepTable(props: TableProps): JSX.Element {
                 <AgGridReact
                     {...props}
                     columnDefs={cols}
+                    defaultColDef={{
+                        sortable: false,
+                        resizable: false,
+                        ...props.defaultColDef,
+                    }}
+                    animateRows={false}
                     domLayout={automaticHeight ? 'autoHeight' : 'normal'}
                     onGridReady={handleGridReady}
                     onRowClicked={onRowClicked}
