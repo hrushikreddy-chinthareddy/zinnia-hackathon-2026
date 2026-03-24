@@ -188,7 +188,7 @@ export type DataItem = {
     fieldName: QuickQuoteResultTableFieldName;
     termLength: number;
     period?: string;
-    value: NumberOrRange | undefined;
+    value: NumberOrRange | null | undefined;
     hasApiError: boolean;
     hasRiderErrors?: boolean;
     ineligibilityReasons?: IneligibilityReason[];
