@@ -18,6 +18,7 @@ import { getClaimStopUncashTxnSteps } from './claims-stop-uncashed-transactions'
 import { getClaimsTaskSteps } from './claims-task-steps';
 import getDefaultTaskSteps from './default-task-steps';
 import { getMatchDocumentPaymentReviewSteps } from './match-payment-document-review';
+import { getPayeeChangeSteps } from './payee-change-steps';
 import { getQualityAuditSteps } from './quality-audit-steps';
 import { getSuitabilityReviewSteps } from './suitability-review-steps';
 import { getSuitabilitySteps } from './suitability-steps';
@@ -126,6 +127,9 @@ export const getFormSteps = (
             break;
         case TaskType.Initiate_AssigneeChange_Transaction:
             steps = getAssigneeChangeSteps(props);
+            break;
+        case TaskType.payeechange_data_entry:
+            steps = getPayeeChangeSteps(props);
             break;
         case TaskType.Agent_Change_Detail:
             steps = getAgentChangeSteps(props);

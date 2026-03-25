@@ -172,6 +172,7 @@ export enum FEATURE_FLAGS {
     PAYOR_CHANGE_TRANSACTION = 'payor_change_transaction',
     THIRD_PARTY_DESIGNEE_TRANSACTION = 'third_party_designee_transaction',
     ASSIGNEE_CHANGE_TRANSACTION = 'assignee_change_transaction',
+    PAYEE_CHANGE_TRANSACTION = 'payee_change_transaction',
     ANNUITANT_CHANGE_TRANSACTION = 'annuitant_change_transaction',
     PAYMENTUS_FEATURE = 'paymentus-feature',
     SHOW_RAW_DATA = 'show-raw-data',

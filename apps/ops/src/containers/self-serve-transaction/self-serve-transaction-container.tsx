@@ -88,6 +88,7 @@ const SelfServeTransactionContainer = ({
         (transactionType: string, t: TFunction) => {
             const partyRoleMap: Record<string, string> = {
                 ASSIGNEE_CHANGE: 'Assignees',
+                PAYEE_CHANGE: 'Payees',
                 BENE_CHANGE: 'Beneficiaries',
             };
             const partyRole = partyRoleMap[transactionType] || '';

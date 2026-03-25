@@ -137,7 +137,7 @@ export const TaskForm = React.forwardRef(function TaskFormComponent(
             return {
                 ...prev,
                 ...safeTaskData,
-                actionData: prev.actionData,
+                actionData: task.data?.actionData ?? prev.actionData,
             };
         });
     }, [task.data]);

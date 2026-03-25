@@ -9,6 +9,7 @@ import {
     getBeneficiaryChangePayload,
     getAnnuitantChangePayload,
     getBeneAddressVerificationPayload,
+    getPayeeChangePayload,
 } from './task-payload-formatter';
 
 export const buildTaskPayload = (
@@ -30,6 +31,8 @@ export const buildTaskPayload = (
             return getAnnuitantChangePayload(task);
         case TaskType.Bene_Address_Verification:
             return getBeneAddressVerificationPayload(task);
+        case TaskType.payeechange_data_entry:
+            return getPayeeChangePayload(task);
         default:
             return task;
     }

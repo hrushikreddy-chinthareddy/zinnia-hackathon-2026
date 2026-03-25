@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 
 import { ParentPage } from '@deps/components/transaction-navigation-buttons/transaction-navigation-buttons';
+import payeeChangeSchema from '@deps/jsonschema-mock-service/tasks/DEFAULT/payeechange-data-entry.json';
 import { Processes } from '@deps/models/case/case';
 import { ProcessType } from '@deps/models/case/enums';
 import { TaskType } from '@deps/models/case/task';
@@ -21,6 +22,10 @@ import {
     beneChangeSubmitHandler,
     buildInitialBeneChangeFormData,
 } from './transactions/bene-change-transaction';
+import {
+    payeeChangeSubmitHandler,
+    buildInitialPayeeChangeFormData,
+} from './transactions/payee-change-transaction';
 import { SelfServeTransaction } from './types';
 
 const removeFirstTabSchema = (metadata: any, taskType: TaskType) => {
@@ -29,17 +34,33 @@ const removeFirstTabSchema = (metadata: any, taskType: TaskType) => {
     }
 
     const benechangeDiscardedTabIndexes = [0, 1, 5];
+    const payeechangeDiscardedTabIndexes = [0, 1, 2, 5];
+
+    const getFilteredTabs = (taskType: TaskType, tabs: any[]) => {
+        switch (taskType) {
+            case TaskType.Initiate_BeneChange_Transaction:
+                return tabs.filter(
+                    (_: any, i: number) =>
+                        !benechangeDiscardedTabIndexes.includes(i)
+                );
+            case TaskType.payeechange_data_entry:
+                return tabs.filter(
+                    (_: any, i: number) =>
+                        !payeechangeDiscardedTabIndexes.includes(i)
+                );
+            default:
+                return tabs.slice(1);
+        }
+    };
+
     return {
         ...metadata,
         schemaContent: {
             ...metadata.schemaContent,
-            tabSchemas:
-                taskType === TaskType.Initiate_BeneChange_Transaction
-                    ? metadata.schemaContent?.tabSchemas?.filter(
-                          (_: any, index: number) =>
-                              !benechangeDiscardedTabIndexes.includes(index)
-                      )
-                    : metadata.schemaContent?.tabSchemas?.slice(1),
+            tabSchemas: getFilteredTabs(
+                taskType,
+                metadata.schemaContent.tabSchemas
+            ),
         },
     };
 };
@@ -97,6 +118,33 @@ export const getSelfServeTransactionData = async (
                 startStepSubtitle: 'assigneeChange.start.subTitle',
                 confirmStepSubtitle: 'assigneeChange.confirm.subTitle',
                 submitResponseHandler: assigneeChangeSubmitHandler,
+            };
+        }
+        case SelfServeTransaction.PAYEE_CHANGE: {
+            const payeeMetadata = removeFirstTabSchema(
+                payeeChangeSchema,
+                TaskType.payeechange_data_entry
+            );
+            return {
+                metaData: JSON.parse(JSON.stringify(payeeMetadata ?? {})),
+                initialCustomData: {
+                    policyNumber: policy.policyNumber,
+                    planCode,
+                    effectiveDate: dayjs.utc().format(ZAHARA_API_DATE_FORMAT),
+                    taskType: TaskType.payeechange_data_entry,
+                    issueResolved: true,
+                    carrier: policy.carrierId,
+                },
+                initialFormData: buildInitialPayeeChangeFormData(policy),
+                transactionType: SelfServeTransaction.PAYEE_CHANGE,
+                processType: Processes.PolicyUpdate,
+                processSubType: [Processes.PayeeChange],
+                parentPage: ParentPage.CreateCase,
+                leaveTransactionLink: '/',
+                startStepTitle: 'payeeChange.start.title',
+                startStepSubtitle: 'payeeChange.start.subTitle',
+                confirmStepSubtitle: 'payeeChange.confirm.subTitle',
+                submitResponseHandler: payeeChangeSubmitHandler,
             };
         }
         case SelfServeTransaction.BENE_CHANGE: {

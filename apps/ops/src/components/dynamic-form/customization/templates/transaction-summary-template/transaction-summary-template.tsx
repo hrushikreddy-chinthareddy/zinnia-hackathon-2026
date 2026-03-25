@@ -21,6 +21,7 @@ import Typography, {
     TypographyVariant,
 } from '@deps/components/typography/typography';
 import { TranslationFiles } from '@deps/config/translations';
+import { getRelationshipLabel } from '@deps/constants/role';
 import { getTagVariant } from '@deps/containers/bene-change/components/steps/summary/summary-step.helpers';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { TaskType } from '@deps/models/case/task';
@@ -118,6 +119,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: 'transactionSummary',
     });
+    const { t: commonT } = useTranslation(TranslationFiles.COMMON);
     const { formContext = {}, uiSchema = {}, schema = {}, readonly } = props;
     const url = formContext?.customData?.validationUrl;
     const { issueResolved } = formContext?.customData || {};
@@ -292,6 +294,11 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                         party.beneficiaryPercentage != null
                             ? `${party.beneficiaryPercentage}%`
                             : '-';
+                } else if (taskType === TaskType.payeechange_data_entry) {
+                    allocation =
+                        party.payeePercentage != null
+                            ? `${party.payeePercentage}%`
+                            : '-';
                 } else if (taskType === TaskType.Agent_Change_Detail) {
                     if (item.action === 'UPDATE' || item.action === 'ADD') {
                         allocation =
@@ -356,8 +363,12 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                     dateOfBirth: () => dob,
                     trustDate: () => trustDate,
                     beneficiaryPercentage: () => allocation,
+                    payeePercentage: () => allocation,
                     allocation: () => allocation,
-                    relationshipToParty: () => relationshipToParty,
+                    relationshipToParty: () =>
+                        relationshipToParty !== '-'
+                            ? getRelationshipLabel(relationshipToParty, commonT)
+                            : relationshipToParty,
                     preferredCommunicationType: ({ item }) =>
                         formatSummaryValue(
                             item.party?.preferredCommunicationType ??
@@ -509,6 +520,9 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                                                                 }
                                                                 label={
                                                                     field.label
+                                                                }
+                                                                sentenceCase={
+                                                                    false
                                                                 }
                                                                 variant={
                                                                     LabelVariant.FieldLabel

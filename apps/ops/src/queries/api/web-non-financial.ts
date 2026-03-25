@@ -215,6 +215,41 @@ export const validateAssigneeChangeTransaction = async (
     }
 };
 
+export const validatePayeeChangeTransaction = async (
+    body: any
+): Promise<any> => {
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
+
+    const validatePayeeUrl = `${baseAppUrl}/api/nonfinancial/payeeChangeTransaction`;
+    try {
+        browserLogInfo('PayeeChange::Validating a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validatePayeeUrl,
+            function: 'webnonfinancial.validatePayeeChangeTransaction',
+        });
+        const { data } = await client.post<any, AxiosResponse>(
+            validatePayeeUrl,
+            {
+                operation: 'validatePayee',
+                planCode,
+                policyNumber,
+                body,
+            }
+        );
+
+        return data;
+    } catch (error: any) {
+        browserLogError('PayeeChange::Failed to validate transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: validatePayeeUrl,
+            function: 'webnonfinancial.validatePayeeChangeTransaction',
+        });
+        return error?.data;
+    }
+};
+
 export const initialDeathClaimExists = async (
     contractNumber: string | undefined,
     clientId: string | undefined
@@ -441,6 +476,41 @@ export const validateThirdPartyDesigneeChange = async (
                 payload: JSON.stringify(query),
             }
         );
+        return error?.data;
+    }
+};
+
+export const addPayeeChangeTransaction = async (
+    body: any
+): Promise<TransactionSubmitResponse> => {
+    const { businessKey, correlationid, carrierId, policyNumber, planCode } =
+        body || {};
+
+    const addPayeeUrl = `${baseAppUrl}/api/nonfinancial/payeeChangeTransaction`;
+    try {
+        browserLogInfo('PayeeChange::Adding a transaction', {
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: addPayeeUrl,
+            function: 'webnonfinancial.addPayeeChangeTransaction',
+        });
+        const response = await client.post<any, AxiosResponse>(addPayeeUrl, {
+            operation: 'addPayeeChangeTransaction',
+            planCode,
+            policyNumber,
+            body,
+        });
+
+        return {
+            ...(response.data ?? {}),
+            status: response.status,
+        };
+    } catch (error: any) {
+        browserLogError('PayeeChange::Failed to add transaction', {
+            ...parseErrorInformation(error),
+            payload: { businessKey, correlationid, carrierId, policyNumber },
+            url: addPayeeUrl,
+            function: 'webnonfinancial.addPayeeChangeTransaction',
+        });
         return error?.data;
     }
 };

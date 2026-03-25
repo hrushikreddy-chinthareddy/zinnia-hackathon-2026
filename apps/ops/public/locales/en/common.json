@@ -1829,6 +1829,10 @@
                 "text": "Manage assignee",
                 "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
+            "payee": {
+                "text": "Manage payee",
+                "link": "/policies/{{planCode}}/{{id}}/people/payeechange"
+            },
             "annuitant": {
                 "text": "Manage annuitant",
                 "link": "/policies/{{planCode}}/{{id}}/people/annuitantchange"
@@ -2147,6 +2151,7 @@
                 "firstNames": "Please make sure first and last or company or trustee name is updated while adding / updating beneficiaries",
                 "primaryBeneficiaryAllocationsSum": "The sum of all primary beneficiary allocations should be 100%",
                 "contingentBeneficiaryAllocationsSum": "The sum of all contingent beneficiary allocations should be 100%",
+                "payeeAllocationsSum": "The sum of all active payee allocations must be exactly 100%",
                 "addressDetails": "Please make sure address details are filled properly while adding / updating beneficiary",
                 "allocationRequired": "Please make sure allocation is greater than 0% while adding / updating beneficiary",
                 "relationshipToParty": "Please make sure relationship to party is selected while adding / updating beneficiary"
@@ -2649,6 +2654,15 @@
             },
             "confirm": {
                 "subTitle": "Assignee Change updates were submitted."
+            }
+        },
+        "payeeChange": {
+            "start": {
+                "title": "Manage Payees",
+                "subTitle": "Here you can manage payees"
+            },
+            "confirm": {
+                "subTitle": "Payee Change updates were submitted."
             }
         },
         "beneChange": {
@@ -8935,7 +8949,7 @@
                 "removed": "Removed",
                 "updated": "Updated"
             },
-            "validation": "Validation API is Running...."
+            "validation": "Validation in progress…"
         },
         "agentDetails": {
             "allocationErr": "Allocations must equal 100%"
@@ -9816,7 +9830,7 @@
         "jointOwner": "Joint owner",
         "insured": "Insured",
         "annuitant": "Annuitant",
-        "loading": "Validation API is Running....",
+        "loading": "Validation in progress…",
         "successMessage": "Looking good! Be sure to review your entries before submitting",
         "errorMessage": "We found an issue when checking the rules for this transaction. Try to resolve the indicated errors before submitting.",
         "submitWithErrorsText": "Submit with errors. (Checking this box and continuing will initiate the workflow to notify the owner(s) the transaction failed.)",
@@ -9883,6 +9897,15 @@
             "subTitle": "Task: Bank Change Data Entry was submitted.",
             "cta": "Go to case ",
             "secondaryCta": "Back to home",
+            "submitTask": "Submit"
+        }
+    },
+    "payeechangeDataEntry": {
+        "confirmStep": {
+            "title": "Got It!",
+            "subTitle": "Task: Payee Change Data Entry was submitted.",
+            "cta": "Go to Case",
+            "secondaryCta": "Back",
             "submitTask": "Submit"
         }
     }

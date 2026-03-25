@@ -274,6 +274,7 @@ export enum SegmentTransactionType {
     PAYOR = 'payor',
     THIRD_PARTY = 'third_party',
     ASSIGNEE = 'assignee',
+    PAYEE = 'payee',
     ANNUITANT = 'annuitant',
 }
 
@@ -360,6 +361,7 @@ export enum TransactionSubmittedEventType {
     ADD_THIRD_PARTY = 'add_third_party',
     REMOVE_THIRD_PARTY = 'remove_third_party',
     ADD_ASSIGNEE = 'add_assignee',
+    ADD_PAYEE = 'add_payee',
     ADD_ANNUITANT = 'add_annuitant',
 }
 

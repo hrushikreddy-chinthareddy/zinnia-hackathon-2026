@@ -3,12 +3,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 import { Action, PolicyRole } from '@deps/constants/policy';
 import {
+    formatPrefix,
+    formatSuffix,
+} from '@deps/containers/bene-change/components/beneficiary-details/bene-identification/bene-identification.helpers';
+import {
     EnterprisePhone,
     formatPhoneNumberWithCountryCode,
 } from '@deps/containers/bene-change/components/beneficiary-details/phone-details/phone-details.helpers';
 import { REQUEST_SOURCE } from '@deps/containers/bene-change/components/steps/confirm/confirm-step.helpers';
 import { getFullName } from '@deps/helpers/party-info-helpers';
 import {
+    formatSSN,
     isNullEmptyOrUndefined,
     toTitleCase,
 } from '@deps/helpers/string.helpers';
@@ -20,6 +25,7 @@ import {
     validateBeneChangeTransaction,
     validateAgentTransaction,
     validateThirdPartyDesigneeChange,
+    validatePayeeChangeTransaction,
     validateAnnuitantChange,
 } from '@deps/queries/api/web-non-financial';
 import {
@@ -42,7 +48,38 @@ import { PartyType } from '@zinnia/api-types/types/sor';
 export const formatTypeLabel = (
     type: string | undefined | null,
     fallback = 'Address'
-): string => (type ? toTitleCase(type.replace(/_/g, ' ')) : fallback);
+): string => {
+    if (!type) return fallback;
+
+    const normalizedType = type.replace(/_/g, ' ').toUpperCase();
+    const acronymLabels: Record<string, string> = {
+        SSN: 'SSN',
+        TIN: 'TIN',
+        NPN: 'NPN',
+    };
+
+    return (
+        acronymLabels[normalizedType] ?? toTitleCase(type.replace(/_/g, ' '))
+    );
+};
+
+const getPartyHeading = (party: any): string => {
+    if (party?.partyType === PartyType.INDIVIDUAL) {
+        const prefix = formatPrefix(party?.prefix);
+        const suffix = formatSuffix(party?.suffix);
+        const name = [party?.firstName, party?.middleName, party?.lastName]
+            .filter(Boolean)
+            .join(' ');
+
+        return (
+            [prefix, name || party?.fullName, suffix]
+                .filter(Boolean)
+                .join(' ') || DEFAULT_ERROR_STRING
+        );
+    }
+
+    return party?.fullName || party?.lastName || DEFAULT_ERROR_STRING;
+};
 
 export const formatSummaryValue = (
     value: string | null | undefined,
@@ -58,11 +95,7 @@ export function getPartyMeta(item: SummaryItem, t: (key: string) => string) {
 
     return {
         party,
-        fullName:
-            party.fullName ||
-            [party.firstName, party.middleName, party.lastName]
-                .filter(Boolean)
-                .join(' '),
+        fullName: getPartyHeading(party),
         addressStr: formatAllAddresses(party.addresses),
         addresses: party.addresses ?? [],
         phoneStr: formatAllPhones(t, party.phones),
@@ -135,6 +168,8 @@ export async function fetchValidationSummary(
         );
     } else if (customData.taskType === TaskType.Agent_Change_Detail) {
         return await validateAgentTransaction(requestBody);
+    } else if (customData.taskType === TaskType.payeechange_data_entry) {
+        return await validatePayeeChangeTransaction(requestBody);
     } else if (
         customData.taskType === TaskType.Initiate_AssigneeChange_Transaction
     ) {
@@ -367,6 +402,89 @@ const requestBodyBuilders: Record<string, RequestBodyBuilder> = {
         };
     },
 
+    PAYEECHANGE_DATA_ENTRY: (customData) => {
+        const { task } = customData;
+
+        const isBusinessKeyMissing = customData.businessKey === undefined;
+        const isCaseIdMissing = customData.caseId === undefined;
+
+        const isSelfServe =
+            customData.businessKey === PROCESS_WITHOUT_DOCUMENT ||
+            (isBusinessKeyMissing && isCaseIdMissing);
+
+        const requestSource = isSelfServe
+            ? REQUEST_SOURCE.SELF_SERVE
+            : REQUEST_SOURCE.DATA_ENTRY;
+
+        const actionData = Array.isArray(customData?.actionData)
+            ? customData.actionData.map((item: any) => {
+                  const uiParty = item?.party;
+                  const relationshipToParty =
+                      uiParty?.relationshipToParty ??
+                      item?.relationshipToParty ??
+                      null;
+                  const {
+                      relationshipToParty: _relationshipToParty,
+                      ...uiPartyWithoutRelationship
+                  } = uiParty ?? {};
+                  return {
+                      ...item,
+                      partyRole: 'payee',
+                      relationshipToParty,
+                      party: uiParty
+                          ? {
+                                ...uiPartyWithoutRelationship,
+                                firstName: uiParty.firstName ?? null,
+                                middleName: uiParty.middleName ?? null,
+                                lastName:
+                                    uiParty.lastName ??
+                                    (uiParty.partyType !== PartyType.INDIVIDUAL
+                                        ? uiParty.fullName ?? null
+                                        : null),
+                                fullName: toFullName(uiParty),
+                                partyPercentage: uiParty.payeePercentage,
+                                addresses: cleanAddresses(uiParty.addresses),
+                                emails: cleanEmails(uiParty.emails),
+                                phones: cleanPhones(uiParty.phones),
+                                identifications: mergeIdentifications(
+                                    uiParty.identifications
+                                ),
+                            }
+                          : uiParty,
+                  };
+              })
+            : customData?.actionData;
+
+        return {
+            correlationId: customData?.correlationId ?? uuidv4(),
+            role: PolicyRole.PAYEE,
+            effectiveDate: dayjs().format(ZAHARA_API_DATE_FORMAT),
+            carrierId: task ? task.carrier : customData?.carrier,
+            planCode: task ? task.data?.planCode : customData?.planCode,
+            policyNumber: task
+                ? task.data?.policyNumber
+                : customData?.policyNumber,
+            partyUpdates: actionData,
+            policyStatus: customData?.policyStatus,
+            caseId: customData?.caseId ?? '',
+            sorSystem: SorSystem.Zahara,
+            sourceSystem: 'ONBASE',
+            channel: 'Phone',
+            documentDate: null,
+            type: 'reRegProcessRequest',
+            transactionType: 'Payee Change',
+            isPrimaryBeneInfoOnFile: false,
+            isContingentBeneInfoOnFile: false,
+            requestSource: requestSource,
+            processSubType: 'Payee Change',
+            transactionName: 'PayeeChange',
+            signatures: customData?.signatureData?.signatures,
+            documents: customData?.documents,
+            supportingDocumentAttached:
+                customData?.supportingDocumentAttached || null,
+        };
+    },
+
     AGENT_CHANGE_DETAIL: (customData) => {
         return {
             planCode: customData?.planCode,
@@ -462,6 +580,9 @@ export function buildValidationRequestBody(customData: any): any {
             customData
         );
     }
+    if (customData.taskType === TaskType.payeechange_data_entry) {
+        return requestBodyBuilders.PAYEECHANGE_DATA_ENTRY(customData);
+    }
     if (customData.taskType === TaskType.Initiate_AnnuitantChange_Transaction) {
         return requestBodyBuilders.INITIATE_ANNUITANTCHANGE_TRANSACTION(
             customData
@@ -546,9 +667,11 @@ export const formatIdentification = (
     const ssn = identifications.find(
         (id: any) => id.identificationType === 'SSN'
     );
-    return ssn
-        ? ssn.identificationValue
-        : identifications[0].identificationValue;
+    if (ssn?.identificationValue) {
+        return formatSSN(ssn.identificationValue);
+    }
+    const firstId = identifications[0];
+    return firstId?.identificationValue ?? '-';
 };
 
 export const formattedAddress = (address?: Address): string => {
@@ -665,6 +788,20 @@ export const getRoleLabel = (
 
 export type SummaryItemWithRoles = SummaryItem & { roles: string[] };
 
+const mergeDefinedValues = (
+    current: Record<string, any> = {},
+    next: Record<string, any> = {}
+) =>
+    Object.entries(next).reduce<Record<string, any>>(
+        (acc, [key, value]) => {
+            if (value !== undefined && value !== null && value !== '') {
+                acc[key] = value;
+            }
+            return acc;
+        },
+        { ...current }
+    );
+
 export const groupPartiesByPartyId = (
     items: SummaryItem[],
     t: (key: string) => string,
@@ -678,6 +815,17 @@ export const groupPartiesByPartyId = (
 
             if (!acc[key]) {
                 acc[key] = { ...item, roles: [] };
+            } else {
+                acc[key] = {
+                    ...acc[key],
+                    ...item,
+                    party: mergeDefinedValues(acc[key].party, item.party),
+                    partyRole: mergeDefinedValues(
+                        acc[key].partyRole,
+                        item.partyRole
+                    ),
+                    roles: acc[key].roles,
+                };
             }
 
             const role = item.partyRole

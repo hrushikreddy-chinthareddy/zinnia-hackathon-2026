@@ -1779,6 +1779,10 @@
                 "text": "Gestionar asignado",
                 "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
+            "payee": {
+                "text": "Gérer le bénéficiaire",
+                "link": "/policies/{{planCode}}/{{id}}/people/payeechange"
+            },
             "annuitant": {
                 "text": "Gérer les anuitants",
                 "link": "/policies/{{planCode}}/{{id}}/people/annuitantchange"
@@ -2203,6 +2207,7 @@
                 "firstNames": "Veuillez vous assurer que le prénom et le nom de famille ou le nom de l'entreprise ou du fiduciaire sont mis à jour lors de l'ajout/mise à jour des bénéficiaires",
                 "primaryBeneficiaryAllocationsSum": "La somme de toutes les allocations des principaux bénéficiaires doit être de 100 %",
                 "contingentBeneficiaryAllocationsSum": "La somme de toutes les allocations de bénéficiaires conditionnels doit être de 100 %",
+                "payeeAllocationsSum": "La somme de toutes les allocations actives du bénéficiaire doit être exactement de 100 %.",
                 "addressDetails": "Veuillez vous assurer que les détails de l'adresse sont correctement renseignés lors de l'ajout/mise à jour du bénéficiaire",
                 "allocationRequired": "Veuillez vous assurer que l'allocation est supérieure à 0 % lors de l'ajout/mise à jour d'un bénéficiaire",
                 "relationshipToParty": "Please make sure relationship to party is selected while adding / updating beneficiary"
@@ -2693,6 +2698,15 @@
             },
             "confirm": {
                 "subTitle": "Les mises à jour du changement d’assigné ont été envoyées."
+            }
+        },
+        "payeeChange": {
+            "start": {
+                "title": "Gérer les bénéficiaires",
+                "subTitle": "Vous pouvez gérer les bénéficiaires ici"
+            },
+            "confirm": {
+                "subTitle": "Les mises à jour des bénéficiaires ont été soumises."
             }
         },
         "beneChange": {
@@ -8800,7 +8814,7 @@
                 "removed": "Supprimé",
                 "updated": "Mis à jour"
             },
-            "validation": "L’API de validation est en cours d’exécution..."
+            "validation": "Validation en cours…"
         },
         "agentDetails": {
             "allocationErr": "Les allocations doivent être égales à 100 %"
@@ -9677,7 +9691,7 @@
         "jointOwner": "Cotitulaire",
         "insured": "Assuré",
         "annuitant": "Rentiér",
-        "loading": "L'API de validation est en cours d'exécution...",
+        "loading": "Validation en cours…",
         "successMessage": "Ça a l'air bien ! N'oubliez pas de relire vos candidatures avant de les soumettre.",
         "errorMessage": "Nous avons détecté un problème lors de la vérification des règles de cette transaction. Veuillez tenter de résoudre les erreurs indiquées avant de soumettre votre demande.",
         "submitWithErrorsText": "Soumettre avec erreurs. (Cocher cette case et continuer lancera le processus de notification au(x) propriétaire(s) de l'échec de la transaction.)",
@@ -9744,6 +9758,15 @@
             "subTitle": "La tâche : Entrée de données de changement de banque a été soumise.",
             "cta": "Aller au cas",
             "secondaryCta": "Retour à l'accueil",
+            "submitTask": "Soumettre"
+        }
+    },
+    "payeechangeDataEntry": {
+        "confirmStep": {
+            "title": "J'ai compris!",
+            "subTitle": "Tâche : La saisie des données de changement de bénéficiaire de paiement a été soumise.",
+            "cta": "Aller au cas",
+            "secondaryCta": "Retour",
             "submitTask": "Soumettre"
         }
     }

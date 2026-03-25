@@ -98,8 +98,9 @@ export interface TransactionResponse {
 
 export interface TransactionSubmitResponse {
     caseId?: string;
-    status?: string;
+    status?: string | number;
     correlationId?: string;
+    caseStatus?: string;
 }
 
 export interface TransactionRequest {

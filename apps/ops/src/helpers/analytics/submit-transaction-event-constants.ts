@@ -426,4 +426,13 @@ export const EventConfig: {
         type: SegmentTransactionType.ANNUITANT,
         ui_surface: UI_SURFACE.FLOW,
     },
+    [TransactionSubmittedEventType.ADD_PAYEE]: {
+        area: TransactionArea.PEOPLE,
+        category: TransactionCategory.POLICY_UPDATE,
+        environment: process.env.NODE_ENV,
+        mode: TransactionMode.ADD,
+        transaction_key: `${TransactionCategory.POLICY_UPDATE}:${SegmentTransactionType.PAYEE}:${TransactionMode.ADD}`,
+        type: SegmentTransactionType.PAYEE,
+        ui_surface: UI_SURFACE.FLOW,
+    },
 };

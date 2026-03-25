@@ -1799,6 +1799,10 @@
                 "text": "Gestionar asignado",
                 "link": "/policies/{{planCode}}/{{id}}/people/assigneechange"
             },
+            "payee": {
+                "text": "Gestionar beneficiario",
+                "link": "/policies/{{planCode}}/{{id}}/people/payeechange"
+            },
             "annuitant": {
                 "text": "Gestionar al anuitante",
                 "link": "/policies/{{planCode}}/{{id}}/people/annuitantchange"
@@ -2166,6 +2170,7 @@
                 "firstNames": "Por favor, asegúrese de que el nombre y el apellido o el nombre de la empresa o el nombre del fiduciario estén actualizados al agregar/actualizar beneficiarios",
                 "primaryBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios primarios debe ser del 100%",
                 "contingentBeneficiaryAllocationsSum": "La suma de todas las asignaciones de beneficiarios contingentes debe ser del 100%",
+                "payeeAllocationsSum": "La suma de todas las asignaciones activas del beneficiario debe ser exactamente del 100%.",
                 "addressDetails": "Asegúrese de que los detalles de la dirección estén correctamente llenados al agregar/actualizar beneficiarios",
                 "allocationRequired": "Asegúrese de que la asignación sea mayor a 0% al agregar/actualizar beneficiarios",
                 "relationshipToParty": "Asegúrese de que la relación con la parte esté seleccionada al agregar/actualizar beneficiarios"
@@ -2639,6 +2644,15 @@
             },
             "confirm": {
                 "subTitle": "Las actualizaciones del cambio de asignado se enviaron."
+            }
+        },
+        "payeeChange": {
+            "start": {
+                "title": "Gestionar beneficiarios",
+                "subTitle": "Aquí puedes gestionar a los beneficiarios"
+            },
+            "confirm": {
+                "subTitle": "Los cambios de beneficiarios fueron enviados."
             }
         },
         "beneChange": {
@@ -8833,7 +8847,7 @@
                 "removed": "Eliminado",
                 "updated": "Actualizado"
             },
-            "validation": "La API de validación está ejecutándose..."
+            "validation": "Validación en curso…"
         },
         "agentDetails": {
             "allocationErr": "Las asignaciones deben ser iguales al 100%"
@@ -9708,7 +9722,7 @@
         "jointOwner": "Copropietario",
         "insured": "Asegurado",
         "annuitant": "Rentista",
-        "loading": "La API de validación se está ejecutando...",
+        "loading": "Validación en curso…",
         "successMessage": "¡Se ve bien! Asegúrate de revisar tus participaciones antes de enviarlas.",
         "errorMessage": "Encontramos un problema al verificar las reglas de esta transacción. Intente resolver los errores indicados antes de enviar.",
         "submitWithErrorsText": "Enviar con errores. (Marcar esta casilla y continuar iniciará el flujo de trabajo para notificar al propietario o propietarios que la transacción falló).",
@@ -9775,6 +9789,15 @@
             "subTitle": "Tarea: Se envió la entrada de datos de cambio de banco.",
             "cta": "Ir al caso",
             "secondaryCta": "Volver al inicio",
+            "submitTask": "Enviar"
+        }
+    },
+    "payeechangeDataEntry": {
+        "confirmStep": {
+            "title": "¡Entiendo!",
+            "subTitle": "Tarea: Se envió la entrada de datos de cambio de beneficiario de pago.",
+            "cta": "Ir al caso",
+            "secondaryCta": "Atrás",
             "submitTask": "Enviar"
         }
     }

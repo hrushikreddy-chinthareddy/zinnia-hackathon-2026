@@ -1,5 +1,6 @@
 export const enum SelfServeTransaction {
     ASSIGNEE_CHANGE = 'ASSIGNEE_CHANGE',
+    PAYEE_CHANGE = 'PAYEE_CHANGE',
     BENE_CHANGE = 'BENE_CHANGE',
     ANNUITANT_CHANGE = 'ANNUITANT_CHANGE',
 }

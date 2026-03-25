@@ -65,6 +65,7 @@ export interface PolicyPageProps extends SegmentTrackedPageProps {
 
 const Slugs = {
     AssigneeChange: 'assigneechange',
+    PayeeChange: 'payeechange',
     BeneChange: 'benechange',
     AnnuitantChange: 'annuitantchange',
 };
@@ -73,6 +74,7 @@ const selfServeSlugsList = [
     Slugs.AssigneeChange,
     Slugs.BeneChange,
     Slugs.AnnuitantChange,
+    Slugs.PayeeChange,
 ];
 
 const PolicySlug: React.FC<PolicyPageProps> = ({
@@ -153,6 +155,9 @@ const PolicySlug: React.FC<PolicyPageProps> = ({
             switch (slug[1]) {
                 case Slugs.AssigneeChange:
                     transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
+                    break;
+                case Slugs.PayeeChange:
+                    transactionType = SelfServeTransaction.PAYEE_CHANGE;
                     break;
                 case Slugs.BeneChange:
                     transactionType = SelfServeTransaction.BENE_CHANGE;

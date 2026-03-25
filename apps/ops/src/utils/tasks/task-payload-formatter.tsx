@@ -309,6 +309,70 @@ export const getBeneficiaryChangePayload = (task: ManagementTask) => {
     };
 };
 
+export const getPayeeChangePayload = (task: ManagementTask) => {
+    const actionData = task?.data?.actionData || [];
+    const formattedActionData = [...actionData];
+
+    formattedActionData.map((data, index: number) => {
+        const relationshipToParty =
+            data?.relationshipToParty ??
+            data?.party?.relationshipToParty ??
+            null;
+        const {
+            relationshipToParty: _relationshipToParty,
+            ...partyWithoutRelationship
+        } = data.party;
+
+        formattedActionData[index] = {
+            ...data,
+            partyRole: 'payee',
+            relationshipToParty,
+            party: {
+                ...partyWithoutRelationship,
+                firstName: data.party.firstName ?? null,
+                middleName: data.party.middleName ?? null,
+                lastName:
+                    data.party.lastName ??
+                    (data.party.partyType !== PartyType.INDIVIDUAL
+                        ? data.party.fullName ?? null
+                        : null),
+                fullName: toFullName(data.party),
+                addresses: cleanAddresses(data.party.addresses),
+                emails: cleanEmails(data.party.emails),
+                phones: cleanPhones(data.party.phones),
+                partyPercentage: data.party.payeePercentage,
+                identifications: mergeIdentifications(
+                    data.party.identifications
+                ),
+            },
+        };
+    });
+
+    let issueResolved = task.data?.issueResolved;
+    if (Array.isArray(issueResolved)) {
+        if (issueResolved.includes('yes')) {
+            issueResolved = true;
+        } else if (
+            issueResolved.includes('no_missing') ||
+            issueResolved.includes('no_mismatched')
+        ) {
+            issueResolved = false;
+        } else {
+            issueResolved = undefined;
+        }
+    }
+
+    return {
+        ...task,
+        data: {
+            ...task.data,
+            partyUpdates: formattedActionData,
+            issueResolved,
+            signatures: task?.data?.signatureData?.signatures,
+        },
+    };
+};
+
 export const getBeneAddressVerificationPayload = (task: ManagementTask) => {
     if (
         task.data?.details?.beneAddress?.beneficiaryChangeDetail

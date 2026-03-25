@@ -5,6 +5,16 @@ type TransformErrorsProps = {
     t: TFunction;
 };
 
+const REQUIRED_STYLE_FIELDS = new Set(['trustType', 'trustDate', 'entityType']);
+
+const getErrorFieldName = (error: any) => {
+    if (error.name === 'required') {
+        return error.params?.missingProperty;
+    }
+
+    return error.property?.split('.')?.filter(Boolean)?.pop();
+};
+
 export enum ValidationMessage {
     OnlyDigits = '^[0-9]+$',
     CheckNumberStartWith82000 = '^82000[0-9]*$',
@@ -16,8 +26,37 @@ export enum ValidationMessage {
 }
 
 function transformErrors({ errors, t }: TransformErrorsProps) {
+    const fieldErrorNames = new Map<string, Set<string>>();
+
+    errors.forEach((error: any) => {
+        const fieldName = getErrorFieldName(error);
+
+        if (!fieldName) return;
+
+        if (!fieldErrorNames.has(fieldName)) {
+            fieldErrorNames.set(fieldName, new Set());
+        }
+
+        fieldErrorNames.get(fieldName)?.add(error.name);
+    });
+
     return errors.map((error: any) => {
-        if (error.name === 'required') {
+        const fieldName = getErrorFieldName(error);
+        const isRequiredStyleField =
+            fieldName && REQUIRED_STYLE_FIELDS.has(fieldName);
+
+        if (
+            isRequiredStyleField &&
+            error.name === 'enum' &&
+            fieldErrorNames.get(fieldName)?.has('type')
+        ) {
+            error.message = '';
+        } else if (
+            isRequiredStyleField &&
+            ['type', 'enum', 'minLength'].includes(error.name)
+        ) {
+            error.message = t('formValidations.required');
+        } else if (error.name === 'required') {
             error.message = t('formValidations.required');
         } else if (error.name === 'pattern') {
             const pattern = error.params.pattern;

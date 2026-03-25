@@ -3,6 +3,42 @@ import { toTitleCase } from '@deps/helpers/string.helpers';
 import { SignatureDesignation } from '@deps/models/case/renewal/signature-validation';
 import { PartyType } from '@zinnia/api-types/types/sor';
 
+const RELATIONSHIP_ENUM_LABELS: Record<string, string> = {
+    TRUSTEE: 'Trustee',
+    TRUSTEEOFMINOR: 'Trustee of Minor',
+    TRUSTEEOFINCOMPETENT: 'Trustee of Incompetent',
+    POWEROFATTORNEY: 'Power of Attorney',
+    CONTROLLINGPERSONOFENTITY: 'Controlling Person of Entity',
+    BROTHER: 'Brother',
+    CHILD: 'Child',
+    DAUGHTER: 'Daughter',
+    DOMESTICPARTNER: 'Domestic Partner',
+    EXECUTOR: 'Executor',
+    FATHER: 'Father',
+    FIANCE: 'Fiance',
+    GRANDCHILD: 'Grandchild',
+    LIFEPARTNER: 'Life Partner',
+    MOTHER: 'Mother',
+    SISTER: 'Sister',
+    SON: 'Son',
+    SPOUSE: 'Spouse',
+    STEPFATHER: 'Stepfather',
+    STEPMOTHER: 'Stepmother',
+    SELF: 'Self',
+    BUSINESS: 'Business',
+    BUSINESSASSOCIATE: 'Business Associate',
+    PARTNER: 'Partner',
+    EMPLOYER: 'Employer',
+    FORMERSPOUSE: 'Former Spouse',
+    GRANDPARENT: 'Grandparent',
+    PARENT: 'Parent',
+    OWNER: 'Owner',
+    SIBLING: 'Sibling',
+    STEPCHILD: 'Stepchild',
+    STEPPARENT: 'Stepparent',
+    OTHER: 'Other',
+};
+
 export const getRelationshipOptions = (t: (key: string) => string) => [
     {
         label: t('relationshipToParty.trustee'),
@@ -144,7 +180,13 @@ export const getRelationshipLabel = (
 ) => {
     const options = getRelationshipOptions(t);
     const relationship = options.find((option) => option.value === value);
-    return relationship ? relationship.label : toTitleCase(value);
+    if (!relationship) {
+        return RELATIONSHIP_ENUM_LABELS[value] ?? toTitleCase(value);
+    }
+
+    return relationship.label.startsWith('relationshipToParty.')
+        ? RELATIONSHIP_ENUM_LABELS[value] ?? toTitleCase(value)
+        : relationship.label;
 };
 
 export const getSignatureDesignationOptions = (t: (key: string) => string) => [

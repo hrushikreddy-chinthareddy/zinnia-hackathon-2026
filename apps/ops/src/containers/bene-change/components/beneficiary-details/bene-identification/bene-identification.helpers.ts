@@ -145,6 +145,69 @@ export const formatPrefix = (prefix: string | undefined | null): string => {
     return prefixMap[trimmedPrefix] || prefix;
 };
 
+export const normalizePrefix = (
+    prefix: string | undefined | null
+): Prefix | null => {
+    if (!prefix) return null;
+
+    const trimmedPrefix = prefix.trim().toUpperCase().replace(/\./g, '');
+
+    switch (trimmedPrefix) {
+        case Prefix.DR:
+            return Prefix.DR;
+        case Prefix.MR:
+            return Prefix.MR;
+        case Prefix.MRS:
+            return Prefix.MRS;
+        case Prefix.MS:
+            return Prefix.MS;
+        default:
+            return prefix as Prefix;
+    }
+};
+
+export const formatSuffix = (
+    suffix: SuffixEnum | string | undefined | null
+): string => {
+    if (!suffix) return '';
+
+    const trimmedSuffix = suffix.trim().toUpperCase().replace(/\./g, '');
+
+    const suffixMap: Record<string, string> = {
+        [SuffixEnum.JR]: 'JR',
+        [SuffixEnum.SN]: 'SN',
+        [SuffixEnum.I]: 'I',
+        [SuffixEnum.II]: 'II',
+        [SuffixEnum.III]: 'III',
+    };
+
+    return suffixMap[trimmedSuffix] || suffix;
+};
+
+export const normalizeSuffix = (
+    suffix: SuffixEnum | string | undefined | null
+): SuffixEnum | null => {
+    if (!suffix) return null;
+
+    const trimmedSuffix = suffix.trim().toUpperCase().replace(/\./g, '');
+
+    switch (trimmedSuffix) {
+        case SuffixEnum.JR:
+            return SuffixEnum.JR;
+        case 'SR':
+        case SuffixEnum.SN:
+            return SuffixEnum.SN;
+        case SuffixEnum.I:
+            return SuffixEnum.I;
+        case SuffixEnum.II:
+            return SuffixEnum.II;
+        case SuffixEnum.III:
+            return SuffixEnum.III;
+        default:
+            return suffix as SuffixEnum;
+    }
+};
+
 export const rolePartyCheck = (partyType: PartyType): boolean => {
     return (
         partyType === PartyType.TRUST || partyType === PartyType.ORGANIZATION

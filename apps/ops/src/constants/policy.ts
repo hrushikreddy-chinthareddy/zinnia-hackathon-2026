@@ -23,6 +23,7 @@ export enum Roles {
     THIRDPARTYDESIGNEE = 'THIRDPARTYDESIGNEE',
     NEWTHIRDPARTYDESIGNEE = 'NEWTHIRDPARTYDESIGNEE',
     ASSIGNEE = 'ASSIGNEE',
+    PAYEE = 'PAYEE',
     IRREVOCABLE_BENEFICIARY = 'IRREVOCABLE_BENEFICIARY',
 }
 
@@ -42,6 +43,7 @@ export enum PolicyRole {
     THIRDPARTYDESIGNEE = 'ThirdPartyDesignee',
     BENEFICIARY = 'Beneficiary',
     ASSIGNEE = 'Assignee',
+    PAYEE = 'payee',
     ANNUITANT = 'Annuitant',
     AGENT = 'multi-agent',
 }
