@@ -74,25 +74,6 @@ export default function NavLink({
         );
     }
 
-    if (href.startsWith('/api/auth/')) {
-        return (
-            <a
-                href={!disabled ? href : undefined}
-                target={target}
-                referrerPolicy={referrerPolicy}
-                rel={rel}
-                onClick={clickEvent}
-                onFocus={focusEvent}
-                onBlur={blurEvent}
-                aria-label={newPageAnnounce.current}
-                {...rest}
-            >
-                {startIcon}
-                {children}
-            </a>
-        );
-    }
-
     return (
         <NextLink
             href={!disabled ? href : '#'}
