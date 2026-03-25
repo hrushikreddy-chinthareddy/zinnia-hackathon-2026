@@ -1,4 +1,4 @@
-import { ICellRendererParams } from 'ag-grid-community/dist/lib/rendering/cellRenderers/iCellRenderer';
+import { ICellRendererParams } from 'ag-grid-community';
 
 import NavElement, {
     NavElementType,

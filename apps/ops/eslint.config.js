@@ -151,6 +151,20 @@ module.exports = [
                     ignore: ['^https?://'],
                 },
             ],
+
+            // Disable import/named for TypeScript files - official recommendation
+            // The TypeScript compiler already validates named imports more accurately than ESLint
+            //
+            // Official sources:
+            // - eslint-plugin-import maintainers disable this in their TypeScript config:
+            //   https://github.com/import-js/eslint-plugin-import/blob/fa36d4983c03f1e3a63c3cd555ea2fb34adc0a86/config/typescript.js#L31-L32
+            // - Issue #3135: "import/named does not have an advantage over errors thrown by the TypeScript compiler"
+            //   https://github.com/import-js/eslint-plugin-import/issues/3135
+            // - typescript-eslint team: "We've decided to disable this ESLint rule as TypeScript also provides similar functionality"
+            //   https://github.com/typescript-eslint/typescript-eslint/issues/10
+            //
+            // This prevents false positives with packages using complex module exports (e.g., ag-grid v31)
+            'import/named': 'off',
         },
     },
     {
