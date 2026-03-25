@@ -16,6 +16,7 @@ export interface MenuContextualItemProps {
     type?: NavElementType;
     disabled?: boolean;
     openInNewTab?: boolean;
+    isNewPage?: boolean;
     'data-testid'?: string;
 }
 
@@ -26,6 +27,7 @@ const MenuContextualItem = ({
     onClick,
     disabled,
     openInNewTab,
+    isNewPage,
     'data-testid': dataTestId,
 }: MenuContextualItemProps) => {
     const router = useRouter();
@@ -53,6 +55,7 @@ const MenuContextualItem = ({
                 href={href}
                 rel={openInNewTab ? 'noopener noreferrer' : undefined}
                 target={openInNewTab ? '_blank' : undefined}
+                isNewPage={isNewPage}
             >
                 {icon && <span className={styles.icon}>{icon}</span>}
                 <span>{content}</span>
