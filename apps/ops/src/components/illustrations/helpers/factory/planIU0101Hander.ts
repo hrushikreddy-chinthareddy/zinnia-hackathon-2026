@@ -316,11 +316,7 @@ const farmersEntitiesSchema = t.intersection(
     )
 );
 
-export type FarmersIU0101Entities = Infer<typeof insuredInfoSchema> &
-    Infer<typeof coverageOptionsSchema> &
-    Infer<typeof exchangeAndLumpSumSchema> &
-    Infer<typeof allocationsSchema> &
-    Infer<typeof distributionsSchema>;
+export type FarmersIU0101Entities = Infer<typeof farmersEntitiesSchema>;
 
 const FARMERS_HARDCODED_DATA = {
     source: 'zinnia-live',
