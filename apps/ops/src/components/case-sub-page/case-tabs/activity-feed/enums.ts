@@ -11,6 +11,7 @@ export enum FeedAction {
 
 export enum FeedStatus {
     IN_PROGRESS = 'IN_PROGRESS',
+    INPROGRESS = 'INPROGRESS',
     EXCEPTION = 'EXCEPTION',
     COMPLETED = 'COMPLETED',
     NEW = 'NEW',
@@ -34,13 +35,4 @@ export enum EntityLabel {
     STAGE = 'Stage',
     TASK = 'Task',
     EXCEPTION = 'Exception',
-}
-
-export enum StatusLabel {
-    IN_PROGRESS = 'In Progress',
-    EXCEPTION = 'Not in good order',
-    COMPLETED = 'Completed',
-    NEW = 'New',
-    RESOLVED = 'Resolved',
-    NOT_STARTED = 'Not Started',
 }

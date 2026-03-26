@@ -1,9 +1,10 @@
 import { IconType } from '@zinnia/bloom/components';
+import { TFunction } from 'i18next';
 import React from 'react';
 
 import { toSentenceCase } from '@deps/utils/strings';
 
-import { FeedAction } from './enums';
+import { EntityType, FeedAction } from './enums';
 import { getEntityLabel, getStatusLabel } from './utils';
 
 export type FeedIcon =
@@ -12,16 +13,30 @@ export type FeedIcon =
 
 export const renderFeedMessage = (
     feed: any,
-    getUserFullName: (partyId?: string) => string
+    getUserFullName: (partyId?: string) => string,
+    t: TFunction
 ): React.ReactNode => {
     const { entity, changes, normalizedAction } = feed;
 
     const entityType = entity?.type;
     const entityLabel = entity?.label;
+    const instanceInfo = entity?.instanceInfo;
+    const isMultiInstanceStep =
+        (entityType === EntityType.STEP || entityType === EntityType.TASK) &&
+        Boolean(instanceInfo);
 
     const fromValue = changes?.[0]?.from;
     const toValue = changes?.[0]?.to;
     const fieldName = changes?.[0]?.field;
+
+    if (isMultiInstanceStep && normalizedAction === FeedAction.STATUS_CHANGE) {
+        return (
+            <>
+                <b>{entityLabel}</b> for <b>{instanceInfo.label}</b> is{' '}
+                <b>{getStatusLabel(toValue, t)}</b>
+            </>
+        );
+    }
 
     switch (normalizedAction) {
         case FeedAction.ADDED:
@@ -35,20 +50,15 @@ export const renderFeedMessage = (
         case FeedAction.STATUS_CHANGE:
             return (
                 <>
-                    <b>{entityLabel}</b> is <b>{getStatusLabel(toValue)}</b>
+                    <b>{entityLabel}</b> is <b>{getStatusLabel(toValue, t)}</b>
                 </>
             );
 
         case FeedAction.CREATED:
             return (
                 <>
-                    <b>{entityLabel}</b>{' '}
-                    <b>
-                        {entityLabel
-                            ? getEntityLabel(entityType)?.toLowerCase()
-                            : getEntityLabel(entityType)}
-                    </b>{' '}
-                    is created.
+                    <b>{entityLabel}</b> <b>{getEntityLabel(entityType)}</b> is
+                    created.
                 </>
             );
 

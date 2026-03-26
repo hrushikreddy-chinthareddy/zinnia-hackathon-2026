@@ -293,7 +293,8 @@ export default function ActivityFeedTab({
                                                         >
                                                             {renderFeedMessage(
                                                                 feed,
-                                                                getUserFullName
+                                                                getUserFullName,
+                                                                t
                                                             )}
                                                         </Typography>
 

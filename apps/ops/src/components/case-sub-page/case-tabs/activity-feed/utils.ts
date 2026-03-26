@@ -1,15 +1,10 @@
 import { IconType } from '@zinnia/bloom/components';
+import { TFunction } from 'i18next';
 
 import { ReactComponent as Warning } from '@deps/styles/elements/icons/alert/warning.svg';
 
 import { Feed } from '.';
-import {
-    EntityLabel,
-    EntityType,
-    FeedAction,
-    FeedStatus,
-    StatusLabel,
-} from './enums';
+import { EntityLabel, EntityType, FeedAction, FeedStatus } from './enums';
 
 type FeedIcon = IconType | React.FC<React.SVGProps<SVGSVGElement>>;
 
@@ -118,7 +113,8 @@ export const getEntityLabel = (type?: string) =>
         ? EntityLabel[type as keyof typeof EntityLabel]
         : type;
 
-export const getStatusLabel = (status?: string) =>
-    status && StatusLabel[status as keyof typeof StatusLabel]
-        ? StatusLabel[status as keyof typeof StatusLabel]
-        : status;
+export const getStatusLabel = (status: string | undefined, t: TFunction) => {
+    if (!status) return '';
+
+    return t(`enums.${status}`).toLowerCase();
+};
