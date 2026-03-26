@@ -434,6 +434,11 @@ export function InnerField(props: FieldProps): ReactElement | null {
                 value: option.id,
             }));
 
+            const fieldStatus =
+                !field.value && !field.optional
+                    ? FieldStatus.ERROR
+                    : FieldStatus.DEFAULT;
+
             return (
                 <FieldContainer {...defaultContainerProps}>
                     <FieldLabel field={field} />
@@ -445,11 +450,7 @@ export function InnerField(props: FieldProps): ReactElement | null {
                         onValueChange={onAnswerChangeForFieldProps}
                         fieldSize={FieldSize.Small}
                         disabled={field.disabled}
-                        fieldStatus={
-                            field.optional
-                                ? FieldStatus.DEFAULT
-                                : FieldStatus.ERROR
-                        }
+                        fieldStatus={fieldStatus}
                     />
                 </FieldContainer>
             );
