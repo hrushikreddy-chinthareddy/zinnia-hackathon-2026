@@ -126,3 +126,19 @@
     justify-content: center;
     margin: var(-- --measure-dimension-margin-md);
 }
+
+.exceptionReasonContainer {
+    margin-top: var(--measure-dimension-gap-sm);
+    border-radius: var(--measure-dimension-radius-md);
+    background: var(--color-grayscale-color-50-gray);
+    padding: var(--measure-dimension-padding-sm)
+        var(--measure-dimension-padding-lg);
+}
+
+.exceptionReasonError {
+    color: var(--color-semantics-color-semantic-error);
+}
+
+.exceptionReasonSuccess {
+    color: var(--color-semantics-color-semantic-success);
+}

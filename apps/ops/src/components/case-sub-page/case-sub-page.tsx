@@ -58,12 +58,13 @@ export default function CaseSubPage({
     const canViewRawData =
         isZinniaInternalViewer && featureFlags[FEATURE_FLAGS.SHOW_RAW_DATA];
     const canViewCaseEvents = featureFlags[FEATURE_FLAGS.SHOW_CASE_EVENTS];
-    const canViewActivityFeed =
-        featureFlags[FEATURE_FLAGS.CAN_VIEW_ACTIVITY_FEED];
 
     const canViewTechnicalExceptions = String(
         featureFlags[FEATURE_FLAGS.CAN_VIEW_CASE_TECHNICAL_EXCEPTIONS]
     );
+
+    const canViewActivityFeed =
+        featureFlags[FEATURE_FLAGS.CAN_VIEW_ACTIVITY_FEED];
 
     if (!caseDetails?.additionalData?.canViewTechnicalExceptions) {
         caseDetails.additionalData = {
@@ -111,6 +112,7 @@ export default function CaseSubPage({
                             )}
                         </Typography>
                     </TabTrigger>
+
                     {canViewActivityFeed && (
                         <TabTrigger
                             value={CaseDetailsTabValues.activity}
@@ -127,6 +129,7 @@ export default function CaseSubPage({
                             </Typography>
                         </TabTrigger>
                     )}
+
                     <TabTrigger
                         value={CaseDetailsTabValues.documents}
                         onClick={trackTabClick('Documents')}
@@ -232,6 +235,7 @@ export default function CaseSubPage({
                 >
                     <ProgressTab caseDetails={caseDetails} />
                 </TabContent>
+
                 {canViewActivityFeed && (
                     <TabContent
                         className="w-full"
@@ -240,6 +244,7 @@ export default function CaseSubPage({
                         <ActivityFeedTab caseDetails={caseDetails} />
                     </TabContent>
                 )}
+
                 <TabContent
                     className="w-full"
                     value={CaseDetailsTabValues.documents}

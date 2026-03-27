@@ -53,11 +53,17 @@ export const getFeedIconConfig = (feed: any) => {
     const action = normalizedAction?.toUpperCase();
     const status = statusToValue?.toUpperCase();
 
+    // PRIORITIZED / DEPRIORITIZED
     if (
         (action === 'PRIORITIZED' || action === 'DEPRIORITIZED') &&
         STATUS_ICON_MAP[action]
     ) {
         return STATUS_ICON_MAP[action];
+    }
+
+    // EXCEPTION created
+    if (entityType === 'EXCEPTION' && action === 'CREATED') {
+        return STATUS_ICON_MAP.EXCEPTION;
     }
 
     // Status-based icon takes priority (except for TASK)
@@ -75,7 +81,6 @@ export const getFeedIconConfig = (feed: any) => {
         return ENTITY_ICON_MAP[entityType];
     }
 
-    // Default fallback
     return {
         icon: IconType.CLIPBOARD_LIST,
         color: 'var(--color-neutral-600)',

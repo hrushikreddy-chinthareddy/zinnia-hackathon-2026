@@ -227,6 +227,19 @@ export default function ActivityFeedTab({
                                     {feedsForDate.map(
                                         (rawFeed: any, index: number) => {
                                             const feed = transformFeed(rawFeed);
+
+                                            //resolve parent
+                                            const parentEntity =
+                                                feed?.entity
+                                                    ?.parentEntityDetails?.[0];
+                                            const parentStepId =
+                                                parentEntity?.entityId;
+                                            const parentItem = feeds.find(
+                                                (item) =>
+                                                    item?.entity?.id ===
+                                                    parentStepId
+                                            );
+
                                             const isLast =
                                                 index ===
                                                 feedsForDate.length - 1;
@@ -293,6 +306,7 @@ export default function ActivityFeedTab({
                                                         >
                                                             {renderFeedMessage(
                                                                 feed,
+                                                                parentItem,
                                                                 getUserFullName,
                                                                 t
                                                             )}

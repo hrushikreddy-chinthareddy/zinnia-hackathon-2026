@@ -2,8 +2,10 @@ import { IconType } from '@zinnia/bloom/components';
 import { TFunction } from 'i18next';
 import React from 'react';
 
+import Content, { ContentVariant } from '@deps/components/content/content';
 import { toSentenceCase } from '@deps/utils/strings';
 
+import activityFeedStyles from './activity-feed.module.css';
 import { EntityType, FeedAction } from './enums';
 import { getEntityLabel, getStatusLabel } from './utils';
 
@@ -13,6 +15,7 @@ export type FeedIcon =
 
 export const renderFeedMessage = (
     feed: any,
+    parentItem: any,
     getUserFullName: (partyId?: string) => string,
     t: TFunction
 ): React.ReactNode => {
@@ -42,23 +45,82 @@ export const renderFeedMessage = (
         case FeedAction.ADDED:
             return (
                 <>
-                    <b>{getEntityLabel(entityType)}</b> <b>{entityLabel}</b> is
-                    added to the case
+                    <b>{getEntityLabel(entityType)}</b> <b>{entityLabel}</b>{' '}
+                    {t('allFields.isAddedToTheCase')}
                 </>
             );
 
         case FeedAction.STATUS_CHANGE:
+            if (entityType === 'EXCEPTION') {
+                return (
+                    <>
+                        <b>{t('allFields.exceptions')}</b>{' '}
+                        {t('allFields.resolvedOn').toLowerCase()}
+                        {parentItem?.entity?.label && (
+                            <>
+                                {' '}
+                                <b>{parentItem.entity.label}</b>
+                            </>
+                        )}
+                        <br />
+                        <div
+                            className={
+                                activityFeedStyles.exceptionReasonContainer
+                            }
+                        >
+                            <Content
+                                details={entityLabel}
+                                variant={ContentVariant.Caption}
+                                contentClassName={
+                                    activityFeedStyles.exceptionReasonSuccess
+                                }
+                            />
+                        </div>
+                    </>
+                );
+            }
+
             return (
                 <>
-                    <b>{entityLabel}</b> is <b>{getStatusLabel(toValue, t)}</b>
+                    <b>{entityLabel}</b>
+                    {''} {t('allFields.is')} <b>{getStatusLabel(toValue, t)}</b>
                 </>
             );
 
         case FeedAction.CREATED:
+            if (entityType === 'EXCEPTION') {
+                return (
+                    <>
+                        <b>{t('allFields.exceptions')}</b>{' '}
+                        {t('allFields.occuredOn')}
+                        {parentItem?.entity?.label && (
+                            <>
+                                {' '}
+                                <b>{parentItem.entity.label}</b>
+                            </>
+                        )}
+                        <br />
+                        <div
+                            className={
+                                activityFeedStyles.exceptionReasonContainer
+                            }
+                        >
+                            <Content
+                                details={entityLabel}
+                                variant={ContentVariant.Caption}
+                                contentClassName={
+                                    activityFeedStyles.exceptionReasonError
+                                }
+                            />
+                        </div>
+                    </>
+                );
+            }
+
             return (
                 <>
-                    <b>{entityLabel}</b> <b>{getEntityLabel(entityType)}</b> is
-                    created.
+                    <b>{entityLabel}</b> <b>{getEntityLabel(entityType)}</b>
+                    {t('allFields.isCreated')}
                 </>
             );
 
@@ -69,7 +131,8 @@ export const renderFeedMessage = (
                     {entityLabel
                         ? getEntityLabel(entityType)?.toLowerCase()
                         : getEntityLabel(entityType)}{' '}
-                    is assigned to <b>{getUserFullName(changes?.[0]?.to)}</b>
+                    {t('allFields.isAssignedTo')}{' '}
+                    <b>{getUserFullName(changes?.[0]?.to)}</b>
                 </>
             );
 
@@ -80,14 +143,15 @@ export const renderFeedMessage = (
                     {entityLabel
                         ? getEntityLabel(entityType)?.toLowerCase()
                         : getEntityLabel(entityType)}{' '}
-                    is unassigned.
+                    {t('allFields.isUnassigned')}
                 </>
             );
 
         case FeedAction.PRIORITIZED:
             return (
                 <>
-                    <b>{getEntityLabel(entityType)}</b> is prioritized by{' '}
+                    <b>{getEntityLabel(entityType)}</b>{' '}
+                    {t('allFields.isPrioritizedBy')}{' '}
                     <b>{getUserFullName(feed?.source?.performedBy)}</b>
                 </>
             );
@@ -95,7 +159,8 @@ export const renderFeedMessage = (
         case FeedAction.DEPRIORITIZED:
             return (
                 <>
-                    <b>{getEntityLabel(entityType)}</b> is de-prioritized by{' '}
+                    <b>{getEntityLabel(entityType)}</b>{' '}
+                    {t('allFields.isDeprioritizedBy')}{' '}
                     <b>{toSentenceCase(toValue)}</b>
                 </>
             );
@@ -103,8 +168,8 @@ export const renderFeedMessage = (
         case FeedAction.UPDATED:
             return (
                 <>
-                    <b>{fieldName}</b> is updated from <b>{fromValue}</b> to{' '}
-                    <b>{toValue}</b>
+                    <b>{fieldName}</b> {t('allFields.isUpdatedFrom')}{' '}
+                    <b>{fromValue}</b> {t('allFields.to')} <b>{toValue}</b>
                 </>
             );
 
