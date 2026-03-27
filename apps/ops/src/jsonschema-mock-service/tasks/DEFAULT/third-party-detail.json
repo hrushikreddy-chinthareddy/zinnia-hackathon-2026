@@ -299,6 +299,7 @@
                                                                 "BUSINESS",
                                                                 "SEASONAL",
                                                                 "POBOX",
+                                                                "MAILING",
                                                                 "OTHER"
                                                             ]
                                                         },
@@ -1028,6 +1029,7 @@
                                                     "Business",
                                                     "Seasonal",
                                                     "PO Box",
+                                                    "Mailing",
                                                     "Other"
                                                 ]
                                             }
