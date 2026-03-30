@@ -61,6 +61,9 @@ export const useMainNavItems = (): NavGroup[] => {
         t('site.navLinks.marketingStorefront.link') || '';
     const illustrationsText = t('site.navLinks.illustrations.text');
     const aiAssistantText = t('site.navLinks.aiChatbot.text');
+    const transactionBuilderText = t('site.navLinks.transactionBuilder.text');
+    const transactionBuilderHref =
+        t('site.navLinks.transactionBuilder.link') || '/transaction-builder';
 
     const handleAnalytics = (linkText: string) => {
         segmentAnalyticsTrackEvent('navigation_clicked', {
@@ -130,7 +133,7 @@ export const useMainNavItems = (): NavGroup[] => {
 
     const illustrationsLink = {
         id: '/illustrations',
-        display: 'Illustrations',
+        display: illustrationsText,
         icon: IconType.DOCUMENT,
         renderComponent: (
             <NavLink
@@ -209,6 +212,19 @@ export const useMainNavItems = (): NavGroup[] => {
         ),
     };
 
+    const transactionBuilderLink = {
+        id: transactionBuilderHref,
+        display: transactionBuilderText,
+        icon: IconType.EDIT,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={transactionBuilderHref}
+                onClick={() => handleClick(transactionBuilderText)}
+            />
+        ),
+    };
+
     const accessManagementLink = {
         id: accessManagement,
         display: accessManagement,
@@ -254,7 +270,9 @@ export const useMainNavItems = (): NavGroup[] => {
         {
             items: [
                 ...(hasAiAssistantPermissions ? [aiAssistantLink] : []),
-                ...(isSuperAdmin ? [accessManagementLink] : []),
+                ...(isSuperAdmin
+                    ? [accessManagementLink, transactionBuilderLink]
+                    : []),
                 ...(showWelbSalesMaterials ? [toppanMerrillLink] : []),
                 ...(showTestHarness ? [testHarnessLink] : []),
                 userContextMenu,

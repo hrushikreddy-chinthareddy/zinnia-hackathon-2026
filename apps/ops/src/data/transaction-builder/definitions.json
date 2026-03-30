@@ -1,0 +1,448 @@
+{
+  "PAYEE_CHANGE": {
+    "id": "PAYEE_CHANGE",
+    "label": "Payee Change",
+    "description": "Update the designated payee on a policy.",
+    "taskType": "PAYEECHANGE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "currentPayee",
+        "label": "Current Payee",
+        "fields": [
+          {
+            "fieldId": "firstName",
+            "order": 0
+          },
+          {
+            "fieldId": "middleName",
+            "order": 1
+          },
+          {
+            "fieldId": "lastName",
+            "order": 2
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 3
+          },
+          {
+            "fieldId": "ssn",
+            "order": 4
+          },
+          {
+            "fieldId": "partyType",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "newPayeeDetails",
+        "label": "New Payee Details",
+        "fields": [
+          {
+            "fieldId": "partyType",
+            "order": 0
+          },
+          {
+            "fieldId": "firstName",
+            "order": 1
+          },
+          {
+            "fieldId": "middleName",
+            "order": 2
+          },
+          {
+            "fieldId": "lastName",
+            "order": 3
+          },
+          {
+            "fieldId": "trustName",
+            "order": 4,
+            "override": {
+              "hidden": false
+            }
+          },
+          {
+            "fieldId": "ssn",
+            "order": 5
+          },
+          {
+            "fieldId": "taxId",
+            "order": 6
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 7
+          },
+          {
+            "fieldId": "relationship",
+            "order": 8
+          }
+        ]
+      },
+      {
+        "id": "address",
+        "label": "Address",
+        "fields": [
+          {
+            "fieldId": "addressLine1",
+            "order": 0
+          },
+          {
+            "fieldId": "addressLine2",
+            "order": 1
+          },
+          {
+            "fieldId": "city",
+            "order": 2
+          },
+          {
+            "fieldId": "state",
+            "order": 3
+          },
+          {
+            "fieldId": "zipCode",
+            "order": 4
+          },
+          {
+            "fieldId": "country",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "attestation",
+            "order": 3
+          },
+          {
+            "fieldId": "signature",
+            "order": 4
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 5
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-assisted paper submission for payee change."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Customer-facing online form for payee change."
+      }
+    },
+    "carrierOverrides": {
+      "USAA": {
+        "carrierId": "USAA",
+        "hiddenFields": [
+          "middleName"
+        ],
+        "requiredFields": [
+          "relationship",
+          "dateOfBirth"
+        ]
+      },
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "trustName"
+        ],
+        "fieldOverrides": {
+          "reason": {
+            "label": "Reason for Payee Change",
+            "required": true
+          }
+        }
+      },
+      "MASS": {
+        "carrierId": "MASS",
+        "readOnlyFields": [
+          "effectiveDate"
+        ]
+      }
+    },
+    "createdAt": "2025-01-15T10:00:00.000Z",
+    "updatedAt": "2025-03-01T14:30:00.000Z"
+  },
+  "BENE_CHANGE": {
+    "id": "BENE_CHANGE",
+    "label": "Beneficiary Change",
+    "description": "Add, remove, or update primary and contingent beneficiaries.",
+    "taskType": "BENECHANGE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "primaryBeneficiary",
+        "label": "Primary Beneficiary",
+        "fields": [
+          {
+            "fieldId": "firstName",
+            "order": 0
+          },
+          {
+            "fieldId": "middleName",
+            "order": 1
+          },
+          {
+            "fieldId": "lastName",
+            "order": 2
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 3
+          },
+          {
+            "fieldId": "relationship",
+            "order": 4
+          },
+          {
+            "fieldId": "allocationPercentage",
+            "order": 5
+          },
+          {
+            "fieldId": "ssn",
+            "order": 6
+          },
+          {
+            "fieldId": "partyType",
+            "order": 7
+          }
+        ]
+      },
+      {
+        "id": "contingentBeneficiary",
+        "label": "Contingent Beneficiary",
+        "fields": [
+          {
+            "fieldId": "firstName",
+            "order": 0
+          },
+          {
+            "fieldId": "middleName",
+            "order": 1
+          },
+          {
+            "fieldId": "lastName",
+            "order": 2
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 3
+          },
+          {
+            "fieldId": "relationship",
+            "order": 4
+          },
+          {
+            "fieldId": "allocationPercentage",
+            "order": 5
+          },
+          {
+            "fieldId": "partyType",
+            "order": 6
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "notes",
+            "order": 1
+          },
+          {
+            "fieldId": "attestation",
+            "order": 2
+          },
+          {
+            "fieldId": "signature",
+            "order": 3
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 4
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-completed beneficiary change form."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Policyholder self-service beneficiary update."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "ssn",
+          "dateOfBirth"
+        ],
+        "personas": {
+          "selfServe": {
+            "requiredFields": [
+              "relationship"
+            ]
+          }
+        }
+      },
+      "SBGC": {
+        "carrierId": "SBGC",
+        "hiddenFields": [
+          "middleName"
+        ],
+        "fieldOverrides": {
+          "allocationPercentage": {
+            "required": true
+          }
+        }
+      }
+    },
+    "createdAt": "2025-01-15T10:00:00.000Z",
+    "updatedAt": "2025-02-20T09:00:00.000Z"
+  },
+  "ADDRESS_CHANGE": {
+    "id": "ADDRESS_CHANGE",
+    "label": "Address Change",
+    "description": "Update the mailing or residence address on a policy.",
+    "taskType": "ADDRESSCHANGE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "newAddress",
+        "label": "New Address",
+        "fields": [
+          {
+            "fieldId": "addressLine1",
+            "order": 0
+          },
+          {
+            "fieldId": "addressLine2",
+            "order": 1
+          },
+          {
+            "fieldId": "city",
+            "order": 2
+          },
+          {
+            "fieldId": "state",
+            "order": 3
+          },
+          {
+            "fieldId": "zipCode",
+            "order": 4
+          },
+          {
+            "fieldId": "country",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "attestation",
+            "order": 3
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent form for address update."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Customer online address update."
+      }
+    },
+    "carrierOverrides": {
+      "USAA": {
+        "carrierId": "USAA",
+        "requiredFields": [
+          "reason"
+        ]
+      },
+      "MASS": {
+        "carrierId": "MASS",
+        "readOnlyFields": [
+          "country"
+        ]
+      }
+    },
+    "createdAt": "2025-02-01T10:00:00.000Z",
+    "updatedAt": "2025-03-10T11:00:00.000Z"
+  },
+  "POA_CHANGE": {
+    "id": "POA_CHANGE",
+    "label": "POA change",
+    "description": "",
+    "taskType": "",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "tab_1",
+        "label": "Step 1",
+        "fields": []
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": ""
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": ""
+      }
+    },
+    "carrierOverrides": {},
+    "createdAt": "2026-03-30T08:37:29.746Z",
+    "updatedAt": "2026-03-30T08:37:29.746Z"
+  }
+}

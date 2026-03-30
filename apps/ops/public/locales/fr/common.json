@@ -1802,6 +1802,14 @@
             },
             "userMenu": {
                 "text": "Menu Utilisateur"
+            },
+            "illustrations": {
+                "text": "Illustrations",
+                "link": "/illustrations"
+            },
+            "transactionBuilder": {
+                "text": "Créateur de formulaires",
+                "link": "/transaction-builder"
             }
         },
         "loader": "Chargement..."

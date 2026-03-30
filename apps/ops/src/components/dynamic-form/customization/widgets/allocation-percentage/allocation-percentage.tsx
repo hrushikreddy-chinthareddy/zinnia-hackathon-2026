@@ -1,5 +1,5 @@
 import { WidgetProps, getUiOptions } from '@rjsf/utils';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 
 import Field, {
     FieldSize,
@@ -60,6 +60,29 @@ const validatePercentage = (actionData: any, widgetPartyRole?: string) => {
     return isPrimaryBeneValid && isContingentBeneValid;
 };
 
+/** Overlay this field's `value` onto `actionData` — RJSF updates `value` before `customData.actionData` catches up. */
+function mergeRowValueIntoActionData(
+    actionData: unknown,
+    rowIndex: number,
+    percentageField: string,
+    value: unknown
+): any {
+    if (!Array.isArray(actionData) || rowIndex < 0) {
+        return actionData;
+    }
+    return actionData.map((item, i) =>
+        i === rowIndex
+            ? {
+                  ...item,
+                  party: {
+                      ...item.party,
+                      [percentageField]: value,
+                  },
+              }
+            : item
+    );
+}
+
 const PercentageWidget = ({
     id,
     value,
@@ -74,47 +97,51 @@ const PercentageWidget = ({
     const actionData = formContext.customData.actionData;
     const uiOptions = getUiOptions(uiSchema);
     const widgetPartyRole = uiOptions.partyRole as string | undefined;
-    const validate = validatePercentage(actionData, widgetPartyRole);
     const { setSubmitEnabled, setSubmitDisabledStepIndex } = formContext;
     const { currentStepIndex } = useWorkflow();
     const indexMatch = id.match(/actionData_(\d+)_/);
-    const index = indexMatch ? Number(indexMatch[1]) : -1;
+    const rowIndex = indexMatch ? Number(indexMatch[1]) : -1;
 
     const percentageField =
         widgetPartyRole === PartyRole.PAYEE
             ? 'payeePercentage'
             : 'beneficiaryPercentage';
 
-    useEffect(() => {
-        if (Array.isArray(actionData)) {
-            const updatedActionData = actionData.map((item, i) => {
-                if (i === index) {
-                    if (setSubmitDisabledStepIndex) {
-                        setSubmitDisabledStepIndex(currentStepIndex);
-                    }
-                    return {
-                        ...item,
-                        party: {
-                            ...item.party,
-                            [percentageField]: value,
-                        },
-                    };
-                }
-                return item;
-            });
-            const isValid = validatePercentage(
-                updatedActionData,
-                widgetPartyRole
-            );
-            if (setSubmitEnabled) {
-                setSubmitEnabled(isValid);
-            }
-        }
-    }, [value, actionData, setSubmitEnabled]);
+    const actionDataForValidation = useMemo(
+        () =>
+            mergeRowValueIntoActionData(
+                actionData,
+                rowIndex,
+                percentageField,
+                value
+            ),
+        [actionData, rowIndex, percentageField, value]
+    );
 
-    return readonly ? (
-        value
-    ) : (
+    const isValid = useMemo(
+        () => validatePercentage(actionDataForValidation, widgetPartyRole),
+        [actionDataForValidation, widgetPartyRole]
+    );
+
+    useEffect(() => {
+        if (!Array.isArray(actionData)) {
+            return;
+        }
+        setSubmitDisabledStepIndex?.(currentStepIndex);
+        setSubmitEnabled?.(isValid);
+    }, [
+        actionData,
+        isValid,
+        currentStepIndex,
+        setSubmitEnabled,
+        setSubmitDisabledStepIndex,
+    ]);
+
+    if (readonly) {
+        return value;
+    }
+
+    return (
         <div className="max-w-sm flex w-full flex-col">
             <Field
                 name={id}
@@ -128,8 +155,8 @@ const PercentageWidget = ({
                 onChange={(e) => onChange(e.target.value)}
                 size={FieldSize.Small}
                 type={FieldType.BaseActive}
-                variant={!validate ? FieldVariant.Error : FieldVariant.Default}
-                message={!validate ? allocationPercentageValidationError : ''}
+                variant={isValid ? FieldVariant.Default : FieldVariant.Error}
+                message={isValid ? '' : allocationPercentageValidationError}
             />
         </div>
     );

@@ -55,7 +55,6 @@
         "createCarrierTask": "Create Carrier Task",
         "selectIssues": "Select the issue(s)",
         "addComments": "Add comments",
-
         "createdOn": "Created on",
         "resolvedOn": "Resolved on",
         "accountValue": "Account value",
@@ -1851,6 +1850,14 @@
             },
             "userMenu": {
                 "text": "User Menu"
+            },
+            "illustrations": {
+                "text": "Illustrations",
+                "link": "/illustrations"
+            },
+            "transactionBuilder": {
+                "text": "Form Builder",
+                "link": "/transaction-builder"
             }
         },
         "loader": "Loading..."
