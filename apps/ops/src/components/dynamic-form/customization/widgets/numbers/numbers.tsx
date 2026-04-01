@@ -41,12 +41,22 @@ function NumbersWidget<
     uiSchema,
     formContext,
 }: NumbersWidgetProps<T, S, F>) {
+    const rawOptions =
+        uiSchema && typeof uiSchema === 'object'
+            ? (uiSchema['ui:options'] as Record<string, unknown>) ?? {}
+            : {};
     const {
-        pattern,
-        format,
-        errorMessage = '',
-        isPhone = false,
+        pattern: patternRaw,
+        format: formatRaw,
+        errorMessage: errorMessageRaw,
+        isPhone: isPhoneRaw,
     } = uiSchema || {};
+    const pattern = (patternRaw ?? rawOptions.pattern) as string | undefined;
+    const format = (formatRaw ?? rawOptions.format) as string | undefined;
+    const errorMessage = (errorMessageRaw ??
+        rawOptions.errorMessage ??
+        '') as string;
+    const isPhone = Boolean(isPhoneRaw ?? rawOptions.isPhone ?? false);
     const [validate, setValidate] = useState(validatePattern(value, pattern));
     const masked = isMaskedSSN(value);
     const numberFormat =

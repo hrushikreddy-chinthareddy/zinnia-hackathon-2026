@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import path from 'path';
 import React, { useState } from 'react';
 
+import PdfInferencePanel from '@deps/components/transaction-builder/PdfInferencePanel';
 import type { TransactionDefinition } from '@deps/lib/transaction-builder/types';
 
 import type { GetServerSideProps } from 'next';
@@ -165,6 +166,9 @@ export default function TransactionBuilderDashboard({ transactions }: Props) {
 
                 {/* Transaction grid */}
                 <div className="max-w-6xl mx-auto px-8 py-8">
+                    <div className="mb-6">
+                        <PdfInferencePanel />
+                    </div>
                     {list.length === 0 ? (
                         <EmptyState onCreate={() => setShowCreateModal(true)} />
                     ) : (

@@ -51,7 +51,35 @@ export const UIfieldTemplateMap: Record<
 
 export const ApplyUITemplates = (uiSchema: UiSchema) => {
     Object.keys(uiSchema || {}).forEach((key) => {
-        if (isObject(uiSchema[key])) {
+        const currentValue = uiSchema[key];
+
+        // Backward-compat: support direct ui:* template keys when provided as strings.
+        if (
+            key === 'ui:ArrayFieldTemplate' &&
+            typeof currentValue === 'string' &&
+            UIArrayTemplateMap[currentValue] !== undefined
+        ) {
+            uiSchema[key] = UIArrayTemplateMap[currentValue];
+            return;
+        }
+        if (
+            key === 'ui:ObjectFieldTemplate' &&
+            typeof currentValue === 'string' &&
+            UIObjectTemplateMap[currentValue] !== undefined
+        ) {
+            uiSchema[key] = UIObjectTemplateMap[currentValue];
+            return;
+        }
+        if (
+            key === 'ui:FieldTemplate' &&
+            typeof currentValue === 'string' &&
+            UIfieldTemplateMap[currentValue] !== undefined
+        ) {
+            uiSchema[key] = UIfieldTemplateMap[currentValue];
+            return;
+        }
+
+        if (isObject(currentValue)) {
             if (key.indexOf('ui:options') !== -1) {
                 Object.keys(uiSchema[key]).forEach((optionKey) => {
                     if (

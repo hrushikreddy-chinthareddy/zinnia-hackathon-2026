@@ -74,6 +74,190 @@ interface SummarySection {
     fields: SummaryField[];
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function toFiniteNumber(value: unknown): number | undefined {
+    if (value == null || value === '') return undefined;
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : undefined;
+}
+
+function detectPartyRoleFromArrayKey(arrayKey: string): string | undefined {
+    const key = arrayKey.toLowerCase();
+    if (key.includes('primary') && key.includes('beneficiar')) {
+        return 'PRIMARYBENEFICIARY';
+    }
+    if (
+        (key.includes('contingent') || key.includes('secondary')) &&
+        key.includes('beneficiar')
+    ) {
+        return 'CONTINGENTBENEFICIARY';
+    }
+    if (key.includes('annuitant')) return 'ANNUITANT';
+    if (key.includes('assignee')) return 'ASSIGNEE';
+    if (key.includes('payee')) return 'PAYEE';
+    if (key.includes('owner')) return 'OWNER';
+    return undefined;
+}
+
+function rowLooksPartyLike(row: Record<string, unknown>): boolean {
+    const keys = Object.keys(row)
+        .map((entry) => entry.toLowerCase())
+        .join(' ');
+    return /(name|beneficiar|annuitant|assignee|payee|owner|phone|email|address|relationship|allocation|share|ssn|tax)/.test(
+        keys
+    );
+}
+
+function toSummaryItemFromGeneratedRow(
+    row: Record<string, unknown>,
+    sourceArrayKey: string
+): SummaryItem | null {
+    const party: Record<string, unknown> = {};
+
+    const fullName =
+        row.full_legal_name ??
+        row.full_name ??
+        row.name ??
+        row.entity_name ??
+        row.trust_name ??
+        row.organization_name;
+    if (typeof fullName === 'string' && fullName.trim().length > 0) {
+        party.fullName = fullName.trim();
+    }
+
+    const firstName =
+        typeof row.first_name === 'string' ? row.first_name.trim() : '';
+    const lastName =
+        typeof row.last_name === 'string' ? row.last_name.trim() : '';
+    if (firstName) party.firstName = firstName;
+    if (lastName) party.lastName = lastName;
+    if (!party.fullName && (firstName || lastName)) {
+        party.fullName = `${firstName} ${lastName}`.trim();
+    }
+
+    if (Array.isArray(row.addresses)) {
+        party.addresses = row.addresses;
+    } else if (isRecord(row.address)) {
+        party.addresses = [row.address];
+    }
+
+    if (Array.isArray(row.phones)) {
+        party.phones = row.phones;
+    } else {
+        const phone =
+            row.phone_number ?? row.phone ?? row.telephone ?? row.dial_number;
+        if (typeof phone === 'string' && phone.trim().length > 0) {
+            party.phones = [{ phoneType: 'MOBILE', dialNumber: phone.trim() }];
+        }
+    }
+
+    if (Array.isArray(row.emails)) {
+        party.emails = row.emails;
+    } else {
+        const email = row.email ?? row.email_address;
+        if (typeof email === 'string' && email.trim().length > 0) {
+            party.emails = [
+                { emailType: 'PERSONAL', emailAddress: email.trim() },
+            ];
+        }
+    }
+
+    const idValue =
+        row.us_tax_id_or_ssn ?? row.tax_id_or_ssn ?? row.tax_id_ssn ?? row.ssn;
+    if (typeof idValue === 'string' && idValue.trim().length > 0) {
+        party.identifications = [
+            {
+                identificationType: 'SSN',
+                identificationValue: idValue.trim(),
+            },
+        ];
+    }
+
+    const dob = row.date_of_birth ?? row.date_of_birth_or_trust;
+    if (typeof dob === 'string' && dob.trim().length > 0) {
+        party.dateOfBirth = dob.trim();
+    }
+    if (
+        typeof row.trust_date === 'string' &&
+        row.trust_date.trim().length > 0
+    ) {
+        party.trustDate = row.trust_date.trim();
+    }
+    if (typeof row.gender === 'string' && row.gender.trim().length > 0) {
+        party.gender = row.gender.trim();
+    }
+
+    const allocation = toFiniteNumber(
+        row.share_of_benefits ??
+            row.beneficiary_percentage ??
+            row.payee_percentage ??
+            row.allocation_percentage ??
+            row.allocation
+    );
+    if (allocation != null) {
+        if (sourceArrayKey.toLowerCase().includes('payee')) {
+            party.payeePercentage = allocation;
+        } else {
+            party.beneficiaryPercentage = allocation;
+        }
+    }
+
+    const relationship =
+        row.relationship_to_party ??
+        row.relationship_to_insured ??
+        row.relationship;
+    const relationshipToParty =
+        typeof relationship === 'string' && relationship.trim().length > 0
+            ? relationship.trim()
+            : undefined;
+
+    const partyRole = detectPartyRoleFromArrayKey(sourceArrayKey);
+    if (Object.keys(party).length === 0 && !relationshipToParty && !partyRole) {
+        return null;
+    }
+
+    return {
+        action: 'ADD',
+        party: party as any,
+        relationshipToParty,
+        partyRole: partyRole ? { partyRole } : undefined,
+    };
+}
+
+function deriveSummaryItemsFromGeneratedData(
+    customData: Record<string, unknown>
+): SummaryItem[] {
+    const out: SummaryItem[] = [];
+
+    for (const [key, value] of Object.entries(customData)) {
+        if (
+            key === 'actionData' ||
+            key === 'contractInfo' ||
+            key === 'signatureData' ||
+            key === 'summary' ||
+            key === 'validationUrl' ||
+            key === 'documents' ||
+            key === 'task'
+        ) {
+            continue;
+        }
+        if (!Array.isArray(value) || value.length === 0) continue;
+
+        const rows = value.filter(isRecord);
+        if (rows.length === 0 || !rows.some(rowLooksPartyLike)) continue;
+
+        for (const row of rows) {
+            const mapped = toSummaryItemFromGeneratedRow(row, key);
+            if (mapped) out.push(mapped);
+        }
+    }
+
+    return out;
+}
+
 export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
     const tabTitle = props.uiSchema?.['ui:options']?.title;
     const isFormReviewTab = tabTitle === TabTitle.FormReview;
@@ -224,6 +408,8 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
         () => validationResponse?.status === TransactionResponseStatus.Success,
         [validationResponse]
     );
+    const shouldShowValidationUi =
+        !readonly && !isFormReviewTab && issueResolved === true && !!url;
 
     const dataKey =
         uiSchema?.['ui:options']?.dataKey ||
@@ -242,8 +428,16 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
             resolveNestedKey(formContext.customData, dataKey) ||
             resolveNestedKey(formContext, dataKey) ||
             [];
-        return Array.isArray(data) && data.length > 0
-            ? groupPartiesByPartyId(data as SummaryItem[], t, taskType)
+        if (Array.isArray(data) && data.length > 0) {
+            return groupPartiesByPartyId(data as SummaryItem[], t, taskType);
+        }
+
+        const customDataRecord = isRecord(formContext.customData)
+            ? formContext.customData
+            : {};
+        const derived = deriveSummaryItemsFromGeneratedData(customDataRecord);
+        return derived.length > 0
+            ? groupPartiesByPartyId(derived, t, taskType)
             : [];
     }, [formContext, dataKey, t, taskType]);
 
@@ -265,7 +459,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                     {titleText}
                 </Typography>
             )}
-            {!readonly && !isFormReviewTab && (
+            {shouldShowValidationUi && (
                 <p className={styles.validationMessage}>
                     {validationSucceeded
                         ? t('successMessage')
@@ -311,6 +505,15 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                                 ? `${party.agentPercentage}%`
                                 : '-';
                     }
+                } else {
+                    allocation =
+                        party.beneficiaryPercentage != null
+                            ? `${party.beneficiaryPercentage}%`
+                            : party.payeePercentage != null
+                            ? `${party.payeePercentage}%`
+                            : party.partyPercentage != null
+                            ? `${party.partyPercentage}%`
+                            : '-';
                 }
                 const isPerStirpes = item.isPerStirpes === true ? 'Yes' : 'No';
                 const isIrrevocable =
@@ -687,8 +890,7 @@ export const TransactionSummaryTemplate = (props: FieldTemplateProps) => {
                 />
             )}
 
-            {!readonly &&
-                !isFormReviewTab &&
+            {shouldShowValidationUi &&
                 !validationSucceeded &&
                 renderValidationErrors()}
             {showSelectionError && !isChecked && (

@@ -444,5 +444,59 @@
     "carrierOverrides": {},
     "createdAt": "2026-03-30T08:37:29.746Z",
     "updatedAt": "2026-03-30T08:37:29.746Z"
+  },
+  "DUMMY_OWNER_CHANGE": {
+    "id": "DUMMY_OWNER_CHANGE",
+    "label": "dummy_owner_change",
+    "description": "",
+    "taskType": "",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "tab_1",
+        "label": "Step 1",
+        "fields": []
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": ""
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": ""
+      }
+    },
+    "carrierOverrides": {},
+    "createdAt": "2026-04-01T06:06:27.703Z",
+    "updatedAt": "2026-04-01T06:06:27.703Z"
+  },
+  "ANNUITANT_CHANGE": {
+    "id": "ANNUITANT_CHANGE",
+    "label": "annuitant_change",
+    "description": "",
+    "taskType": "",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "tab_1",
+        "label": "Step 1",
+        "fields": []
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": ""
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": ""
+      }
+    },
+    "carrierOverrides": {},
+    "createdAt": "2026-04-01T09:27:45.143Z",
+    "updatedAt": "2026-04-01T09:27:45.143Z"
   }
 }

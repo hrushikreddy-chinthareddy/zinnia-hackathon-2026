@@ -19,6 +19,13 @@ export const updateTask = async (
     correlationId: string,
     taskStatus?: TaskStatus
 ): Promise<boolean> => {
+    const isPreviewMockTask =
+        task.taskType === 'AI_PAPER_PREVIEW_TASK' ||
+        task.id.startsWith('mock-task-');
+    if (isPreviewMockTask) {
+        return true;
+    }
+
     browserLogInfo('updateTask::Updating task', {
         payload: {
             taskType: task.taskType,

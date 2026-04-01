@@ -36,6 +36,9 @@ const ConfirmStep = ({
     const { t } = useTranslation(TranslationFiles.COMMON, {
         keyPrefix: `${convertToCamelCase(taskType)}.confirmStep`,
     });
+    const { t: tTaskForm } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'taskManagement.taskForm',
+    });
     const router = useRouter();
     const formState = useContext(TaskDataContext);
 
@@ -49,6 +52,37 @@ const ConfirmStep = ({
         setSubmitFailed(!success);
         setIsLoading(false);
     }, [correlationId, setSubmitFailed, task]);
+
+    const confirmPrefix = `${convertToCamelCase(taskType)}.confirmStep.`;
+    const resolveConfirmText = (
+        key: 'title' | 'subTitle' | 'cta' | 'secondaryCta' | 'submitTask',
+        fallback: string
+    ) => {
+        const value = t(key);
+        if (
+            typeof value !== 'string' ||
+            value === key ||
+            value.startsWith(confirmPrefix)
+        ) {
+            return fallback;
+        }
+        return value;
+    };
+
+    const titleText = resolveConfirmText('title', 'Submitted!');
+    const subTitleText = resolveConfirmText(
+        'subTitle',
+        'Your request has been submitted.'
+    );
+    const ctaLabel = ctaText || resolveConfirmText('cta', tTaskForm('cases'));
+    const secondaryCtaLabel = resolveConfirmText(
+        'secondaryCta',
+        tTaskForm('cancel')
+    );
+    const submitTaskLabel = resolveConfirmText(
+        'submitTask',
+        tTaskForm('submit')
+    );
 
     if (isLoading) {
         return (
@@ -64,7 +98,7 @@ const ConfirmStep = ({
                 leaveRoute={taskInfoLink}
                 submit={{
                     action: submit,
-                    text: t('submitTask'),
+                    text: submitTaskLabel,
                 }}
             />
         );
@@ -80,27 +114,27 @@ const ConfirmStep = ({
                         width={50}
                     />
                 }
-                subtitle={t('subTitle')}
-                title={t('title')}
+                subtitle={subTitleText}
+                title={titleText}
                 cta={
                     isCta
                         ? {
                               action: () => {
                                   router.push(ctaLink || taskInfoLink);
                               },
-                              text: ctaText || t('cta'),
+                              text: ctaLabel,
                           }
                         : undefined
                 }
                 secondaryCta={
                     <NavElement
-                        aria-label={t('secondaryCta') as string}
+                        aria-label={secondaryCtaLabel}
                         onClick={() => router.push(taskInfoLink)}
                         size={NavElementSize.Small}
                         type={NavElementType.Button}
                         variant={NavElementVariant.Default}
                     >
-                        {t('secondaryCta')}
+                        {secondaryCtaLabel}
                     </NavElement>
                 }
             />

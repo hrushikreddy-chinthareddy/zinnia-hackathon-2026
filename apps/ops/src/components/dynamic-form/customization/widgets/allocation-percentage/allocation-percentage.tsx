@@ -16,6 +16,11 @@ const getActiveParties = (actionData: any) => {
     return actionData?.filter((item: any) => item.action !== 'DELETE') ?? [];
 };
 
+const toSafeNumber = (value: unknown) => {
+    const parsed = Number(value);
+    return Number.isFinite(parsed) ? parsed : 0;
+};
+
 const getFilteredByRole = (actionData: any, roleType: string) => {
     return actionData?.filter(
         (item: any) =>
@@ -25,7 +30,7 @@ const getFilteredByRole = (actionData: any, roleType: string) => {
 
 const getTotalAllocation = (parties: any, fieldName: string) => {
     return parties?.reduce(
-        (acc: number, item: any) => acc + Number(item.party?.[fieldName] || 0),
+        (acc: number, item: any) => acc + toSafeNumber(item.party?.[fieldName]),
         0
     );
 };
@@ -60,6 +65,20 @@ const validatePercentage = (actionData: any, widgetPartyRole?: string) => {
     return isPrimaryBeneValid && isContingentBeneValid;
 };
 
+const getTotalAllocationFromArrayRows = (rows: any, fieldName: string) => {
+    return rows?.reduce(
+        (acc: number, item: any) => acc + toSafeNumber(item?.[fieldName]),
+        0
+    );
+};
+
+const isArrayRowAllocationValid = (rows: any, fieldName: string) => {
+    return (
+        rows?.length === 0 ||
+        getTotalAllocationFromArrayRows(rows, fieldName) === 100
+    );
+};
+
 /** Overlay this field's `value` onto `actionData` — RJSF updates `value` before `customData.actionData` catches up. */
 function mergeRowValueIntoActionData(
     actionData: unknown,
@@ -83,6 +102,25 @@ function mergeRowValueIntoActionData(
     );
 }
 
+function mergeRowValueIntoParentArray(
+    rows: unknown,
+    rowIndex: number,
+    fieldKey: string | undefined,
+    value: unknown
+): any {
+    if (!Array.isArray(rows) || rowIndex < 0 || !fieldKey) {
+        return rows;
+    }
+    return rows.map((item, i) =>
+        i === rowIndex
+            ? {
+                  ...(item ?? {}),
+                  [fieldKey]: value,
+              }
+            : item
+    );
+}
+
 const PercentageWidget = ({
     id,
     value,
@@ -95,12 +133,15 @@ const PercentageWidget = ({
     uiSchema,
 }: WidgetProps) => {
     const actionData = formContext.customData.actionData;
+    const parentArrayData = formContext.parentActionData;
     const uiOptions = getUiOptions(uiSchema);
     const widgetPartyRole = uiOptions.partyRole as string | undefined;
     const { setSubmitEnabled, setSubmitDisabledStepIndex } = formContext;
     const { currentStepIndex } = useWorkflow();
-    const indexMatch = id.match(/actionData_(\d+)_/);
+    const indexMatch = id.match(/_(\d+)_/);
     const rowIndex = indexMatch ? Number(indexMatch[1]) : -1;
+    const fieldMatch = id.match(/_(\d+)_(.+)$/);
+    const rowFieldName = fieldMatch?.[2];
 
     const percentageField =
         widgetPartyRole === PartyRole.PAYEE
@@ -117,20 +158,45 @@ const PercentageWidget = ({
             ),
         [actionData, rowIndex, percentageField, value]
     );
-
-    const isValid = useMemo(
-        () => validatePercentage(actionDataForValidation, widgetPartyRole),
-        [actionDataForValidation, widgetPartyRole]
+    const parentArrayForValidation = useMemo(
+        () =>
+            mergeRowValueIntoParentArray(
+                parentArrayData,
+                rowIndex,
+                rowFieldName,
+                value
+            ),
+        [parentArrayData, rowIndex, rowFieldName, value]
     );
 
+    const isValid = useMemo(() => {
+        if (Array.isArray(actionDataForValidation)) {
+            return validatePercentage(actionDataForValidation, widgetPartyRole);
+        }
+        if (Array.isArray(parentArrayForValidation) && rowFieldName) {
+            const activeRows = getActiveParties(parentArrayForValidation);
+            return isArrayRowAllocationValid(activeRows, rowFieldName);
+        }
+        return true;
+    }, [
+        actionDataForValidation,
+        widgetPartyRole,
+        parentArrayForValidation,
+        rowFieldName,
+    ]);
+
     useEffect(() => {
-        if (!Array.isArray(actionData)) {
+        if (
+            !Array.isArray(actionData) &&
+            !Array.isArray(parentArrayForValidation)
+        ) {
             return;
         }
         setSubmitDisabledStepIndex?.(currentStepIndex);
         setSubmitEnabled?.(isValid);
     }, [
         actionData,
+        parentArrayForValidation,
         isValid,
         currentStepIndex,
         setSubmitEnabled,

@@ -10,6 +10,7 @@ const getDefaultTaskSteps = ({
     t,
     taskMetadata,
     readOnly,
+    isContinueButtonEnabled,
 }: GetStepsProps) => {
     const steps = taskMetadata.map((metadata, index) => ({
         ariaLabel: metadata?.title || '',
@@ -20,6 +21,7 @@ const getDefaultTaskSteps = ({
                 taskInfoLink={taskInfoLink}
                 isSubmit={!readOnly}
                 taskMetadata={metadata}
+                isContinueButtonEnabled={isContinueButtonEnabled}
                 key={`step_${index}`}
             ></TaskFormStep>
         ),
