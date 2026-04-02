@@ -139,7 +139,10 @@ function collectFieldStatsFromSchema(
 
     const requiredSet = new Set(asStringArray(schema.required));
 
-    for (const [key, child] of Object.entries(properties)) {
+    // Sort keys alphabetically for deterministic iteration order
+    const sortedKeys = Object.keys(properties).sort();
+    for (const key of sortedKeys) {
+        const child = properties[key];
         if (!isRecord(child)) continue;
         const pathKey = prefix ? `${prefix}.${key}` : key;
         const childType = asString(child.type) ?? 'unknown';
@@ -186,7 +189,10 @@ function collectUiHints(
 
     if (!isRecord(node)) return;
 
-    for (const [key, value] of Object.entries(node)) {
+    // Sort keys alphabetically for deterministic iteration order
+    const sortedKeys = Object.keys(node).sort();
+    for (const key of sortedKeys) {
+        const value = node[key];
         if (key === 'ui:widget' && typeof value === 'string') {
             incrementCount(widgets, value);
         }

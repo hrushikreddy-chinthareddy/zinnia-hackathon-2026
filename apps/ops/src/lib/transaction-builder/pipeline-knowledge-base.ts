@@ -128,6 +128,9 @@ Output rules:
 7) Keep legacy fields[] populated as well for compatibility (mirror rowFields when needed).
 8) Capture global constraints exactly when possible (e.g. "must equal 100", "at least one").
 9) Keep output compact and deterministic.
+10) When you detect party/entity change forms with variant sections (e.g., "New Owner", "Primary Beneficiary"), use compound prefixes in field keys like "new_owner_", "primary_beneficiary_", etc.
+11) For repeatable entities, provide row-level fields in rowFields and include variants when present (e.g. primary/contingent, current/new).
+12) CRITICAL: Create a separate "Signature" section for signature-related fields. Fields like "Date (Month/Day/Year)" when near signature language, "City & State where signed", "Witness Signature", "Signature Date", "Acknowledgement" should go in a dedicated signature section, NOT in party/entity sections. Use section id "signature" or "signature_acknowledgement".
 
 Return this exact JSON shape:
 {
@@ -196,6 +199,7 @@ Requirements:
 8) If an archetypeContextPack is provided, treat it as soft statistical guidance only.
 9) Never force historical priors when they conflict with canonical source signals.
 10) When canonical repeatableEntities include variants, prefer variant-level array field refs (e.g. primary_beneficiaries, contingent_beneficiaries) instead of flattening child row fields.
+11) IMPORTANT: Signature tab should contain signature-related fields like: signature date, date signed, city/state where signed, witness signature, acknowledgement. DO NOT put these in the dynamic middle tab. keep those in signature tab.
 
 Archetype defaults:
 ${TransactionArchetypeKnowledgeBase.map(
@@ -279,6 +283,10 @@ Widget/template mapping guidance:
 - Card-style item objects in repeatable lists: prefer items.ui:options.ObjectFieldTemplate = "PartyCardFieldTemplate".
 - Address-like objects (address/city/state/zip): prefer ui:options.ObjectFieldTemplate = "AddressFieldTemplate".
 - Allocation percentage fields for party change flows: prefer AllocationPercentageWidget when schema uses actionData.party.beneficiaryPercentage/payeePercentage style models.
+
+Repeatable entity handling:
+- When phase2Context.repeatableEntities contains entries, create array fields in formSchema with items.type=object and explicit items.properties.
+- Use appropriate array templates like TransactionAccordionTemplate for party lists.
 
 Available widgets:
 ${widgetNames}

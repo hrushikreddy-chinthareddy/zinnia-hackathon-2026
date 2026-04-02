@@ -40,6 +40,28 @@ export const config = {
 const MAX_BYTES = 15 * 1024 * 1024;
 const MAX_SOURCE_FORM_TEXT_CHARS = 50000;
 
+/**
+ * Deterministic JSON stringification that sorts object keys alphabetically
+ * to ensure consistent LLM input even with temperature=0
+ */
+function deterministicStringify(obj: unknown, space?: number): string {
+    return JSON.stringify(
+        obj,
+        (key, value) => {
+            if (value && typeof value === 'object' && !Array.isArray(value)) {
+                return Object.keys(value)
+                    .sort()
+                    .reduce((sorted: Record<string, unknown>, k) => {
+                        sorted[k] = value[k];
+                        return sorted;
+                    }, {});
+            }
+            return value;
+        },
+        space
+    );
+}
+
 type InferFromPdfResponse = {
     extraction: PdfTextLayoutResult;
     llmReadyPayload: LlmReadyExtractionPayload;
@@ -1403,6 +1425,55 @@ function isReservedFixedField(fieldKey: string): boolean {
     );
 }
 
+function isSignatureField(field: CanonicalField): boolean {
+    const keyLower = field.key.toLowerCase();
+    const labelLower = field.label.toLowerCase();
+    const combined = `${keyLower} ${labelLower}`;
+
+    // Exclude fields that are part of party information (these belong in party entities, not signature tab)
+    const isPartyField =
+        /new_owner_|current_owner_|new_beneficiary_|primary_beneficiary_|contingent_beneficiary_|new_annuitant_|current_annuitant_/.test(
+            keyLower
+        );
+    if (isPartyField) {
+        return false;
+    }
+
+    // Exclude fields that are clearly about other things despite containing "signature"
+    const isNonSignatureField =
+        /tax.*certification|taxpayer.*certification/i.test(combined) ||
+        /irrevocable.*beneficiary/i.test(combined) ||
+        /consultation/i.test(combined);
+    if (isNonSignatureField) {
+        return false;
+    }
+
+    // Check for actual signature-related patterns
+    return (
+        /\bowner.*signature\b/i.test(combined) ||
+        /\bsignature.*owner\b/i.test(combined) ||
+        /\bsignature.*date\b/i.test(combined) ||
+        /\bdate.*signed\b/i.test(combined) ||
+        /\bsigned.*date\b/i.test(combined) ||
+        /city.*state.*sign|where.*sign/i.test(combined) ||
+        /\bwitness.*signature\b/i.test(combined) ||
+        /\backnowledgement\b/i.test(combined) ||
+        /\bnotary\b/i.test(combined) ||
+        (/\bsignature\b/i.test(combined) &&
+            !/of\s+(irrevocable|beneficiary|party)/i.test(combined))
+    );
+}
+
+function pickSignatureFieldRefs(canonicalModel: CanonicalModel): string[] {
+    const allFields = canonicalModel.sections.flatMap(
+        (section) => section.fields
+    );
+    return allFields
+        .filter((field) => isSignatureField(field))
+        .map((field) => field.key)
+        .slice(0, 12);
+}
+
 type RepeatableArrayDescriptor = {
     arrayFieldKey: string;
     title: string;
@@ -1521,9 +1592,11 @@ function mapRepeatableDescriptorByFieldRef(
 
 function pickDynamicFieldRefsFromCanonical(
     canonicalModel: CanonicalModel,
-    ownerFieldRefs: string[]
+    ownerFieldRefs: string[],
+    signatureFieldRefs: string[]
 ): string[] {
     const ownerSet = new Set(ownerFieldRefs);
+    const signatureSet = new Set(signatureFieldRefs);
     const repeatableDescriptors =
         buildRepeatableArrayDescriptors(canonicalModel);
     const repeatableFieldRefs = repeatableDescriptors.map(
@@ -1549,6 +1622,7 @@ function pickDynamicFieldRefsFromCanonical(
     const candidates = canonicalModel.sections
         .flatMap((section) => section.fields)
         .filter((field) => !ownerSet.has(field.key))
+        .filter((field) => !signatureSet.has(field.key))
         .filter((field) => !isReservedFixedField(field.key))
         .filter((field) => !repeatableRowFieldSet.has(toMachineKey(field.key)))
         .filter((field) => !isSyntheticRepeatableFieldAlias(field.key))
@@ -1567,6 +1641,7 @@ function pickDynamicFieldRefsFromCanonical(
 
     const fallback = canonicalModel.sections
         .flatMap((section) => section.fields)
+        .filter((field) => !signatureSet.has(field.key))
         .filter((field) => !isReservedFixedField(field.key))
         .filter((field) => !repeatableRowFieldSet.has(toMachineKey(field.key)))
         .filter((field) => !isSyntheticRepeatableFieldAlias(field.key))
@@ -1589,9 +1664,11 @@ function enforceFixedTabSkeleton(
     }
 
     const ownerFieldRefs = pickOwnerFieldRefs(canonicalModel);
+    const signatureFieldRefs = pickSignatureFieldRefs(canonicalModel);
     const dynamicFieldRefs = pickDynamicFieldRefsFromCanonical(
         canonicalModel,
-        ownerFieldRefs
+        ownerFieldRefs,
+        signatureFieldRefs
     );
     const dynamicTitle = deriveDynamicMiddleTitle(canonicalModel, pdfFormName);
 
@@ -1620,7 +1697,10 @@ function enforceFixedTabSkeleton(
                 title: 'Signature',
                 purpose: 'Capture signature and acknowledgement details.',
                 sectionRefs: [],
-                fieldRefs: ['signatureData'],
+                fieldRefs:
+                    signatureFieldRefs.length > 0
+                        ? signatureFieldRefs
+                        : ['signatureData'],
                 required: true,
             },
             {
@@ -3339,7 +3419,7 @@ export default async function handler(
                 },
                 {
                     role: 'user',
-                    content: JSON.stringify(canonicalUserPayload, null, 2),
+                    content: deterministicStringify(canonicalUserPayload, 2),
                 },
             ],
         });
@@ -3370,7 +3450,7 @@ export default async function handler(
                         },
                         {
                             role: 'user',
-                            content: JSON.stringify(
+                            content: deterministicStringify(
                                 {
                                     ...canonicalUserPayload,
                                     retryInstruction:
@@ -3380,7 +3460,6 @@ export default async function handler(
                                         {}
                                     ),
                                 },
-                                null,
                                 2
                             ),
                         },
@@ -3427,13 +3506,12 @@ export default async function handler(
                     },
                     {
                         role: 'user',
-                        content: JSON.stringify(
+                        content: deterministicStringify(
                             {
                                 transactionHint: transactionHint || null,
                                 canonicalModel,
                                 archetypeContextPack,
                             },
-                            null,
                             2
                         ),
                     },
@@ -3484,7 +3562,7 @@ export default async function handler(
                 },
                 {
                     role: 'user',
-                    content: JSON.stringify(schemaUserPayload, null, 2),
+                    content: deterministicStringify(schemaUserPayload, 2),
                 },
             ],
         });
@@ -3506,7 +3584,7 @@ export default async function handler(
                     },
                     {
                         role: 'user',
-                        content: JSON.stringify(
+                        content: deterministicStringify(
                             {
                                 ...schemaUserPayload,
                                 retryInstruction:
@@ -3516,7 +3594,6 @@ export default async function handler(
                                     {}
                                 ),
                             },
-                            null,
                             2
                         ),
                     },
