@@ -1371,12 +1371,10 @@ function deriveDynamicMiddleTitle(
     return 'Transaction Details';
 }
 
+const FIXED_SKELETON_ARCHETYPES: Array<CanonicalModel['archetype']> = [];
+
 function isFixedArchetype(archetype: CanonicalModel['archetype']): boolean {
-    return (
-        archetype === 'party_change_complex' ||
-        archetype === 'party_change_standard' ||
-        archetype === 'non_financial_micro'
-    );
+    return FIXED_SKELETON_ARCHETYPES.includes(archetype);
 }
 
 function fieldLooksOwnerScoped(field: CanonicalField): boolean {
@@ -1728,6 +1726,82 @@ function enforceFixedTabSkeleton(
         notes: [
             ...tabInference.notes,
             'Fixed skeleton applied for party-change/non-financial archetype: Owner Details -> Dynamic Middle -> Signature -> Summary -> Confirm.',
+        ],
+    };
+}
+
+function isSummaryTab(tab: TabInference['tabSchemas'][number]): boolean {
+    const title = normalizeKey(tab.title);
+    return (
+        tab.id === 'summary' ||
+        title === 'summary' ||
+        title === 'review summary' ||
+        title === 'transaction summary' ||
+        /\bsummary\b/.test(title)
+    );
+}
+
+function isConfirmTab(tab: TabInference['tabSchemas'][number]): boolean {
+    const title = normalizeKey(tab.title);
+    return (
+        tab.id === 'confirm' ||
+        title === 'confirm' ||
+        title === 'confirmation' ||
+        title === 'final confirmation' ||
+        /\bconfirm(ation)?\b/.test(title)
+    );
+}
+
+function deterministicSummaryTab(): TabInference['tabSchemas'][number] {
+    return {
+        id: 'summary',
+        title: 'Summary',
+        purpose: 'Review all captured data before submission.',
+        sectionRefs: [],
+        fieldRefs: ['summary', 'validationUrl'],
+        required: true,
+    };
+}
+
+function deterministicConfirmTab(): TabInference['tabSchemas'][number] {
+    return {
+        id: 'confirm',
+        title: 'Confirm',
+        purpose: 'Final confirmation and submit.',
+        sectionRefs: [],
+        fieldRefs: ['confirmReady'],
+        required: true,
+    };
+}
+
+function isDeterministicTailTabId(tabId: string): boolean {
+    return tabId === 'summary' || tabId === 'confirm';
+}
+
+function enforceDeterministicTerminalTabs(
+    tabInference: TabInference
+): TabInference {
+    const tabs = Array.isArray(tabInference.tabSchemas)
+        ? tabInference.tabSchemas
+        : [];
+    const middleTabs = tabs.filter(
+        (tab) => !isSummaryTab(tab) && !isConfirmTab(tab)
+    );
+
+    return {
+        ...tabInference,
+        tabSchemas: [
+            ...middleTabs,
+            deterministicSummaryTab(),
+            deterministicConfirmTab(),
+        ],
+        gatingRules: {
+            ...tabInference.gatingRules,
+            includeSummary: true,
+        },
+        notes: [
+            ...tabInference.notes,
+            'Summary and Confirm tabs are deterministic and fixed at the tail of the flow (Summary before Confirm).',
         ],
     };
 }
@@ -2792,18 +2866,15 @@ function sanitizeGeneratedTabSchemas(
             generatedById.get(tabPlan.id) ??
             generatedByTitle.get(tabPlan.title.toLowerCase());
         const fallbackTab = fallback.tabSchemas[idx];
+        const sourceTab = fromLlm && isRecord(fromLlm) ? fromLlm : fallbackTab;
 
-        if (!fromLlm || !isRecord(fromLlm)) {
-            return fallbackTab;
-        }
-
-        const formSchema = isRecord(fromLlm.formSchema)
-            ? fromLlm.formSchema
+        const formSchema = isRecord(sourceTab.formSchema)
+            ? sourceTab.formSchema
             : isRecord(fallbackTab.formSchema)
             ? fallbackTab.formSchema
             : {};
-        const uiSchema = isRecord(fromLlm.uiSchema)
-            ? fromLlm.uiSchema
+        const uiSchema = isRecord(sourceTab.uiSchema)
+            ? sourceTab.uiSchema
             : isRecord(fallbackTab.uiSchema)
             ? fallbackTab.uiSchema
             : {};
@@ -2997,6 +3068,20 @@ function sanitizeGeneratedTabSchemas(
                     ? uiSchemaForCanonicalField(canonical)
                     : buildSchemaAndUiFromCanonical(key).ui;
             }
+            if (isRecord(finalUiSchema[key])) {
+                const fieldUi = finalUiSchema[key] as Record<string, unknown>;
+                if (
+                    !isDeterministicTailTabId(tabPlan.id) &&
+                    fieldUi['ui:dataPath'] == null
+                ) {
+                    fieldUi['ui:dataPath'] = [
+                        'generatedFormData',
+                        tabPlan.id,
+                        key,
+                    ];
+                }
+                finalUiSchema[key] = fieldUi;
+            }
             if (isRecord(properties[key]) && isRecord(finalUiSchema[key])) {
                 finalUiSchema[key] = repairSelectUiWithoutOptions(
                     key,
@@ -3028,17 +3113,17 @@ function sanitizeGeneratedTabSchemas(
             };
         }
 
-        const priorHintsApplied = Array.isArray(fromLlm.priorHintsApplied)
-            ? fromLlm.priorHintsApplied.filter(
+        const priorHintsApplied = Array.isArray(sourceTab.priorHintsApplied)
+            ? sourceTab.priorHintsApplied.filter(
                   (entry): entry is string => typeof entry === 'string'
               )
             : [];
 
         return {
-            id: typeof fromLlm.id === 'string' ? fromLlm.id : tabPlan.id,
+            id: typeof sourceTab.id === 'string' ? sourceTab.id : tabPlan.id,
             title:
-                typeof fromLlm.title === 'string'
-                    ? fromLlm.title
+                typeof sourceTab.title === 'string'
+                    ? sourceTab.title
                     : tabPlan.title,
             formSchema: {
                 type: 'object',
@@ -3110,19 +3195,45 @@ function shouldRetrySchemaGeneration(
     );
 }
 
+function toGeneratedSummaryUiSchema(
+    uiSchema: Record<string, unknown>
+): Record<string, unknown> {
+    const nextUiSchema: Record<string, unknown> = { ...uiSchema };
+    const summaryField = isRecord(nextUiSchema.summary)
+        ? (nextUiSchema.summary as Record<string, unknown>)
+        : {};
+    const summaryOptions = isRecord(summaryField['ui:options'])
+        ? (summaryField['ui:options'] as Record<string, unknown>)
+        : {};
+
+    nextUiSchema.summary = {
+        ...summaryField,
+        'ui:options': {
+            ...summaryOptions,
+            templateType: 'generatedSummaryCard',
+            dataKey: 'generatedFormData',
+        },
+    };
+
+    return nextUiSchema;
+}
+
 function applyFixedTabTemplates(
     schemaGeneration: SchemaGenerationResult,
     canonicalModel: CanonicalModel,
     templates: Awaited<ReturnType<typeof getFixedTabTemplates>>
 ): SchemaGenerationResult {
-    if (!isFixedArchetype(canonicalModel.archetype)) {
-        return schemaGeneration;
-    }
+    const shouldApplyOwnerAndSignature = isFixedArchetype(
+        canonicalModel.archetype
+    );
 
     const normalizedTabs = schemaGeneration.tabSchemas.map((tab) => {
         const name = normalizeKey(tab.title);
 
-        if (tab.id === 'owner_details' || name === 'owner details') {
+        if (
+            shouldApplyOwnerAndSignature &&
+            (tab.id === 'owner_details' || name === 'owner details')
+        ) {
             return {
                 ...tab,
                 title: templates.ownerDetails.title,
@@ -3140,15 +3251,20 @@ function applyFixedTabTemplates(
                 ...tab,
                 title: templates.summary.title,
                 formSchema: templates.summary.formSchema,
-                uiSchema: templates.summary.uiSchema,
+                uiSchema: toGeneratedSummaryUiSchema(
+                    templates.summary.uiSchema
+                ),
                 priorHintsApplied: [
                     ...(tab.priorHintsApplied ?? []),
-                    'Applied fixed Summary template from initiate-benechange-transaction.',
+                    'Applied generated summary template for transaction-builder preview.',
                 ],
             };
         }
 
-        if (tab.id === 'signature' || name === 'signature') {
+        if (
+            shouldApplyOwnerAndSignature &&
+            (tab.id === 'signature' || name === 'signature')
+        ) {
             return {
                 ...tab,
                 title: templates.signature.title,
@@ -3181,7 +3297,9 @@ function applyFixedTabTemplates(
         tabSchemas: normalizedTabs,
         notes: [
             ...schemaGeneration.notes,
-            'Fixed templates applied for Owner Details, Signature, Summary, and Confirm tabs.',
+            shouldApplyOwnerAndSignature
+                ? 'Deterministic templates applied for Owner Details, Signature, Summary, and Confirm tabs.'
+                : 'Deterministic templates applied for Summary and Confirm tabs.',
         ],
     };
 }
@@ -3532,15 +3650,16 @@ export default async function handler(
             canonicalModel.transactionName?.trim() ||
             transactionHint ||
             'Transaction Details';
-        const tabInference = enforceFixedTabSkeleton(
+        const tabInferenceWithFixedSkeleton = enforceFixedTabSkeleton(
             canonicalModel,
             rawTabInference,
             pdfFormName
         );
+        const tabInference = enforceDeterministicTerminalTabs(
+            tabInferenceWithFixedSkeleton
+        );
         const fixedSkeletonApplied = isFixedArchetype(canonicalModel.archetype);
-        const fixedTemplates = fixedSkeletonApplied
-            ? await getFixedTabTemplates()
-            : null;
+        const fixedTemplates = await getFixedTabTemplates();
         const phase2Context = buildPhase2Context(
             llmReadyPayload,
             canonicalModel,
@@ -3622,14 +3741,11 @@ export default async function handler(
             canonicalModel,
             tabInference
         );
-        const schemaWithFixedTabs =
-            fixedTemplates != null
-                ? applyFixedTabTemplates(
-                      schemaGeneration,
-                      canonicalModel,
-                      fixedTemplates
-                  )
-                : schemaGeneration;
+        const schemaWithFixedTabs = applyFixedTabTemplates(
+            schemaGeneration,
+            canonicalModel,
+            fixedTemplates
+        );
         const fullRjsfOutput = buildFullRjsfOutput(
             canonicalModel,
             schemaWithFixedTabs,

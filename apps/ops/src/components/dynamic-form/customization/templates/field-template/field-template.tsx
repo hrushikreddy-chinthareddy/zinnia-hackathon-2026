@@ -26,10 +26,12 @@ import { replacePlaceholders } from '@deps/helpers/value-placement.helpers';
 import { ReactComponent as CircleInfoIcon } from '@deps/styles/elements/icons/circles/circle-info.svg';
 
 import styles from './field-template.module.css';
+import { GeneratedSummaryTemplate } from '../generated-summary-template/generated-summary-template';
 import { TransactionSummaryTemplate } from '../transaction-summary-template/transaction-summary-template';
 
 export enum FieldTemplateType {
     SummaryCard = 'summaryCard',
+    GeneratedSummaryCard = 'generatedSummaryCard',
     Table = 'table',
     Address = 'address',
 }
@@ -115,6 +117,9 @@ export function FieldTemplate(props: FieldTemplateProps) {
     }
     if (templateType === FieldTemplateType.SummaryCard) {
         return <TransactionSummaryTemplate {...props} />;
+    }
+    if (templateType === FieldTemplateType.GeneratedSummaryCard) {
+        return <GeneratedSummaryTemplate {...props} />;
     }
 
     const modifiedLabel = isStringWithBrackets(label)

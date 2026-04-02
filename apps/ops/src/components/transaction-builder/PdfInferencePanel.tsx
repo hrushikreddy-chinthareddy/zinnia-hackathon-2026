@@ -1,6 +1,5 @@
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 
 import type {
     ArchetypeContextPack,
@@ -12,10 +11,6 @@ import type {
     SchemaGenerationResult,
     TabInference,
 } from '@deps/lib/transaction-builder/pipeline-types';
-import {
-    TASK_CONTAINER_PREVIEW_STORAGE_KEY,
-    type TaskContainerPreviewPayload,
-} from '@deps/lib/transaction-builder/preview-storage';
 import type { PdfTextLayoutResult } from '@deps/server/paper2flow/types';
 import { isProd } from '@deps/utils/environment.helpers';
 
@@ -43,12 +38,11 @@ type InferFromPdfResponse = {
     qualityReport: GenerationQualityReport;
 };
 
+const DEFAULT_MAX_PAGES = '3';
+const DEFAULT_ITEMS_MODE: 'text' | 'none' | 'full' = 'text';
+
 function prettyJson(value: unknown): string {
     return JSON.stringify(value, null, 2);
-}
-
-function isRecord(value: unknown): value is Record<string, unknown> {
-    return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 type PdfInferencePanelProps = {
@@ -62,13 +56,7 @@ export default function PdfInferencePanel({
     omitHeading = false,
     previewTaskInfoLink = '/transaction-builder/paper-forms-to-digital',
 }: PdfInferencePanelProps) {
-    const router = useRouter();
     const [file, setFile] = useState<File | null>(null);
-    const [transactionHint, setTransactionHint] = useState('');
-    const [maxPages, setMaxPages] = useState('3');
-    const [itemsMode, setItemsMode] = useState<'text' | 'none' | 'full'>(
-        'text'
-    );
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<InferFromPdfResponse | null>(null);
@@ -85,13 +73,8 @@ export default function PdfInferencePanel({
         try {
             const form = new FormData();
             form.append('file', file);
-            if (transactionHint.trim()) {
-                form.append('transactionHint', transactionHint.trim());
-            }
-            if (maxPages.trim()) {
-                form.append('maxPages', maxPages.trim());
-            }
-            form.append('itemsMode', itemsMode);
+            form.append('maxPages', DEFAULT_MAX_PAGES);
+            form.append('itemsMode', DEFAULT_ITEMS_MODE);
 
             const response = await fetch(
                 '/api/transaction-builder/infer-from-pdf',
@@ -125,65 +108,6 @@ export default function PdfInferencePanel({
             setLoading(false);
         }
     }
-
-    const extractionSummary = useMemo(() => {
-        if (!result) return null;
-        return {
-            mode: result.extraction.mode,
-            itemsMode: result.extraction.itemsMode,
-            pageCount: result.extraction.pageCount,
-            pagesProcessed: result.extraction.pagesProcessed,
-            inferredFormName: result.llmReadyPayload.inferredFormName ?? null,
-            warnings: result.extraction.warnings,
-        };
-    }, [result]);
-
-    function openTaskContainerPreview() {
-        if (!result) return;
-        if (typeof window === 'undefined') return;
-
-        const payload: TaskContainerPreviewPayload = {
-            fullRjsfOutput: result.fullRjsfOutput,
-            createdAt: new Date().toISOString(),
-        };
-
-        window.sessionStorage.setItem(
-            TASK_CONTAINER_PREVIEW_STORAGE_KEY,
-            JSON.stringify(payload)
-        );
-        void router.push('/transaction-builder/task-container-preview');
-    }
-
-    const fullRjsfPreview = useMemo(() => {
-        if (!result) return null;
-
-        const tabs = result.fullRjsfOutput.schemaContent.tabSchemas.map(
-            (tab) => {
-                const formSchema = isRecord(tab.formSchema)
-                    ? tab.formSchema
-                    : {};
-                const properties = isRecord(formSchema.properties)
-                    ? formSchema.properties
-                    : {};
-                const required = Array.isArray(formSchema.required)
-                    ? formSchema.required.filter(
-                          (entry): entry is string => typeof entry === 'string'
-                      )
-                    : [];
-
-                return {
-                    title: tab.title,
-                    fieldKeys: Object.keys(properties),
-                    requiredCount: required.length,
-                };
-            }
-        );
-
-        return {
-            tabCount: tabs.length,
-            tabs,
-        };
-    }, [result]);
 
     return (
         <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -250,74 +174,6 @@ export default function PdfInferencePanel({
                             disabled={disabledInProd}
                         />
                     </div>
-
-                    {/* Labels share row 1 and controls share row 2 on md+ so inputs align horizontally */}
-                    <div className="grid grid-cols-1 gap-x-4 gap-y-5 md:grid-cols-3 md:items-stretch md:gap-y-0">
-                        <div className="flex min-h-0 min-w-0 flex-col gap-1.5 md:h-full">
-                            <label
-                                htmlFor="pdf-inference-transaction-hint"
-                                className="shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-500"
-                            >
-                                Transaction hint (optional)
-                            </label>
-                            <input
-                                id="pdf-inference-transaction-hint"
-                                type="text"
-                                value={transactionHint}
-                                onChange={(event) =>
-                                    setTransactionHint(event.target.value)
-                                }
-                                placeholder="e.g. Beneficiary Change"
-                                className="mt-auto h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-sm text-gray-800 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-                                disabled={disabledInProd}
-                            />
-                        </div>
-                        <div className="flex min-h-0 min-w-0 flex-col gap-1.5 md:h-full">
-                            <label
-                                htmlFor="pdf-inference-max-pages"
-                                className="shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-500"
-                            >
-                                Max pages
-                            </label>
-                            <input
-                                id="pdf-inference-max-pages"
-                                type="number"
-                                min={1}
-                                value={maxPages}
-                                onChange={(event) =>
-                                    setMaxPages(event.target.value)
-                                }
-                                className="mt-auto h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-sm text-gray-800 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-                                disabled={disabledInProd}
-                            />
-                        </div>
-                        <div className="flex min-h-0 min-w-0 flex-col gap-1.5 md:h-full">
-                            <label
-                                htmlFor="pdf-inference-items-mode"
-                                className="shrink-0 text-xs font-semibold uppercase tracking-wide text-slate-500"
-                            >
-                                Items mode
-                            </label>
-                            <select
-                                id="pdf-inference-items-mode"
-                                value={itemsMode}
-                                onChange={(event) =>
-                                    setItemsMode(
-                                        event.target.value as
-                                            | 'text'
-                                            | 'none'
-                                            | 'full'
-                                    )
-                                }
-                                className="mt-auto h-10 w-full min-w-0 rounded-lg border border-slate-200 bg-white px-3 text-sm text-gray-800 shadow-sm focus:border-indigo-400 focus:outline-none focus:ring-2 focus:ring-indigo-100"
-                                disabled={disabledInProd}
-                            >
-                                <option value="text">text</option>
-                                <option value="none">none</option>
-                                <option value="full">full</option>
-                            </select>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="mt-5 flex flex-wrap items-center gap-3">
@@ -366,230 +222,10 @@ export default function PdfInferencePanel({
 
                         <div className="rounded-lg border border-gray-200 bg-white p-3">
                             <h3 className="text-sm font-semibold text-gray-900">
-                                Extraction Summary
-                            </h3>
-                            <pre className="mt-2 max-h-48 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
-                                {prettyJson(extractionSummary)}
-                            </pre>
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
-                                LLM-ready Payload
-                            </h3>
-                            <pre className="mt-2 max-h-72 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
-                                {prettyJson(result.llmReadyPayload)}
-                            </pre>
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
                                 Canonical Model
                             </h3>
                             <pre className="mt-2 max-h-72 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
                                 {prettyJson(result.canonicalModel)}
-                            </pre>
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
-                                Archetype Context Pack (soft priors)
-                            </h3>
-                            <pre className="mt-2 max-h-72 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
-                                {prettyJson(result.archetypeContextPack)}
-                            </pre>
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
-                                Tab Inference
-                            </h3>
-                            <pre className="mt-2 max-h-72 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
-                                {prettyJson(result.tabInference)}
-                            </pre>
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
-                                Phase 2 Context Used
-                            </h3>
-                            <pre className="mt-2 max-h-72 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
-                                {prettyJson(result.phase2Context)}
-                            </pre>
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
-                                Generated Tab Schemas (soft-prior aware)
-                            </h3>
-                            <pre className="mt-2 max-h-72 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
-                                {prettyJson(result.schemaGeneration)}
-                            </pre>
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
-                                Generated schema summary
-                            </h3>
-                            <p className="mt-1 text-xs text-gray-500">
-                                Tab and field overview. Interactive preview is
-                                in &quot;Live form preview&quot; above.
-                            </p>
-                            <div className="mt-2">
-                                <button
-                                    type="button"
-                                    onClick={openTaskContainerPreview}
-                                    className="rounded-md border border-indigo-200 bg-indigo-50 px-3 py-1.5 text-xs font-semibold text-indigo-700 hover:bg-indigo-100"
-                                >
-                                    Open full-page preview
-                                </button>
-                            </div>
-                            {fullRjsfPreview && (
-                                <>
-                                    <div className="mt-2 grid gap-2 md:grid-cols-2 lg:grid-cols-4">
-                                        <div className="rounded border border-gray-200 bg-gray-50 px-2.5 py-2">
-                                            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-                                                Task Type
-                                            </p>
-                                            <p className="text-xs font-medium text-gray-900">
-                                                {result.fullRjsfOutput.taskType}
-                                            </p>
-                                        </div>
-                                        <div className="rounded border border-gray-200 bg-gray-50 px-2.5 py-2">
-                                            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-                                                Process SubType
-                                            </p>
-                                            <p className="text-xs font-medium text-gray-900">
-                                                {
-                                                    result.fullRjsfOutput
-                                                        .processSubType
-                                                }
-                                            </p>
-                                        </div>
-                                        <div className="rounded border border-gray-200 bg-gray-50 px-2.5 py-2">
-                                            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-                                                Archetype
-                                            </p>
-                                            <p className="text-xs font-medium text-gray-900">
-                                                {
-                                                    result.fullRjsfOutput
-                                                        .generationMeta
-                                                        .archetype
-                                                }
-                                            </p>
-                                        </div>
-                                        <div className="rounded border border-gray-200 bg-gray-50 px-2.5 py-2">
-                                            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-                                                Tabs
-                                            </p>
-                                            <p className="text-xs font-medium text-gray-900">
-                                                {fullRjsfPreview.tabCount}
-                                            </p>
-                                        </div>
-                                        <div className="rounded border border-gray-200 bg-gray-50 px-2.5 py-2">
-                                            <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-500">
-                                                Fixed Skeleton
-                                            </p>
-                                            <p className="text-xs font-medium text-gray-900">
-                                                {result.fullRjsfOutput
-                                                    .generationMeta
-                                                    .fixedSkeletonApplied
-                                                    ? 'Applied'
-                                                    : 'Not applied'}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    {result.phase2Context.fixedSkeleton
-                                        ?.applied && (
-                                        <p className="mt-2 text-xs text-indigo-700">
-                                            Dynamic middle tab generated from
-                                            PDF:{' '}
-                                            <span className="font-semibold">
-                                                {
-                                                    result.phase2Context
-                                                        .fixedSkeleton
-                                                        .dynamicMiddleTitle
-                                                }
-                                            </span>
-                                        </p>
-                                    )}
-
-                                    <div className="mt-3 space-y-2">
-                                        {fullRjsfPreview.tabs.map(
-                                            (tab, tabIndex) => (
-                                                <div
-                                                    key={`${tab.title}-${tabIndex}`}
-                                                    className="rounded border border-gray-200 bg-gray-50 p-2.5"
-                                                >
-                                                    <div className="flex items-center justify-between gap-3">
-                                                        <p className="text-xs font-semibold text-gray-900">
-                                                            {tabIndex + 1}.{' '}
-                                                            {tab.title}
-                                                        </p>
-                                                        <p className="text-[11px] text-gray-600">
-                                                            {
-                                                                tab.fieldKeys
-                                                                    .length
-                                                            }{' '}
-                                                            fields ·{' '}
-                                                            {tab.requiredCount}{' '}
-                                                            required
-                                                        </p>
-                                                    </div>
-                                                    {tab.fieldKeys.length ===
-                                                    0 ? (
-                                                        <p className="mt-1.5 text-[11px] text-amber-700">
-                                                            No fields generated
-                                                            in this tab.
-                                                        </p>
-                                                    ) : (
-                                                        <div className="mt-2 flex flex-wrap gap-1.5">
-                                                            {tab.fieldKeys
-                                                                .slice(0, 20)
-                                                                .map(
-                                                                    (
-                                                                        fieldKey
-                                                                    ) => (
-                                                                        <span
-                                                                            key={
-                                                                                fieldKey
-                                                                            }
-                                                                            className="rounded-full border border-indigo-200 bg-indigo-50 px-2 py-0.5 text-[11px] text-indigo-700"
-                                                                        >
-                                                                            {
-                                                                                fieldKey
-                                                                            }
-                                                                        </span>
-                                                                    )
-                                                                )}
-                                                            {tab.fieldKeys
-                                                                .length >
-                                                                20 && (
-                                                                <span className="rounded-full border border-gray-200 bg-white px-2 py-0.5 text-[11px] text-gray-600">
-                                                                    +
-                                                                    {tab
-                                                                        .fieldKeys
-                                                                        .length -
-                                                                        20}{' '}
-                                                                    more
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            )
-                                        )}
-                                    </div>
-                                </>
-                            )}
-                        </div>
-
-                        <div className="rounded-lg border border-gray-200 bg-white p-3">
-                            <h3 className="text-sm font-semibold text-gray-900">
-                                Quality Report (vs priors/planned fields)
-                            </h3>
-                            <pre className="mt-2 max-h-72 overflow-auto rounded bg-gray-50 p-3 text-xs leading-relaxed text-gray-800">
-                                {prettyJson(result.qualityReport)}
                             </pre>
                         </div>
 
