@@ -418,63 +418,1404 @@
     "createdAt": "2025-02-01T10:00:00.000Z",
     "updatedAt": "2025-03-10T11:00:00.000Z"
   },
+  "PHONE_CHANGE": {
+    "id": "PHONE_CHANGE",
+    "label": "Phone Number Change",
+    "description": "Update the primary phone number and type on file for a policy.",
+    "taskType": "DEFAULT_CASE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "newPhone",
+        "label": "New Phone",
+        "fields": [
+          {
+            "fieldId": "phone",
+            "order": 0
+          },
+          {
+            "fieldId": "phoneType",
+            "order": 1
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "attestation",
+            "order": 3
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent form for phone number update."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Customer online phone number update."
+      }
+    },
+    "carrierOverrides": {},
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "EMAIL_CHANGE": {
+    "id": "EMAIL_CHANGE",
+    "label": "Email Change",
+    "description": "Update the email address on file for a policy.",
+    "taskType": "DEFAULT_CASE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "newEmail",
+        "label": "New Email",
+        "fields": [
+          {
+            "fieldId": "email",
+            "order": 0
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "attestation",
+            "order": 3
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent form for email address update."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Customer online email update."
+      }
+    },
+    "carrierOverrides": {},
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "BANK_CHANGE": {
+    "id": "BANK_CHANGE",
+    "label": "Bank Account Change",
+    "description": "Update the bank account used for premium payments or disbursements on a policy.",
+    "taskType": "BANKCHANGE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "newBankAccount",
+        "label": "New Bank Account",
+        "fields": [
+          {
+            "fieldId": "bankName",
+            "order": 0
+          },
+          {
+            "fieldId": "bankAccountType",
+            "order": 1
+          },
+          {
+            "fieldId": "bankRoutingNumber",
+            "order": 2
+          },
+          {
+            "fieldId": "bankAccountNumber",
+            "order": 3
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "attestation",
+            "order": 3
+          },
+          {
+            "fieldId": "signature",
+            "order": 4
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 5
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-assisted bank account update."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Customer self-service bank account update."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "bankName"
+        ]
+      },
+      "USAA": {
+        "carrierId": "USAA",
+        "personas": {
+          "selfServe": {
+            "requiredFields": [
+              "bankName"
+            ]
+          }
+        }
+      }
+    },
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "OWNER_CHANGE": {
+    "id": "OWNER_CHANGE",
+    "label": "Owner Change",
+    "description": "Transfer or update the primary owner of a policy.",
+    "taskType": "OWNERCHANGE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "currentOwner",
+        "label": "Current Owner",
+        "fields": [
+          {
+            "fieldId": "firstName",
+            "order": 0
+          },
+          {
+            "fieldId": "middleName",
+            "order": 1
+          },
+          {
+            "fieldId": "lastName",
+            "order": 2
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 3
+          },
+          {
+            "fieldId": "ssn",
+            "order": 4
+          }
+        ]
+      },
+      {
+        "id": "newOwner",
+        "label": "New Owner",
+        "fields": [
+          {
+            "fieldId": "partyType",
+            "order": 0
+          },
+          {
+            "fieldId": "firstName",
+            "order": 1
+          },
+          {
+            "fieldId": "middleName",
+            "order": 2
+          },
+          {
+            "fieldId": "lastName",
+            "order": 3
+          },
+          {
+            "fieldId": "trustName",
+            "order": 4,
+            "override": {
+              "hidden": false
+            }
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 5
+          },
+          {
+            "fieldId": "ssn",
+            "order": 6
+          },
+          {
+            "fieldId": "taxId",
+            "order": 7
+          },
+          {
+            "fieldId": "relationship",
+            "order": 8
+          }
+        ]
+      },
+      {
+        "id": "newOwnerAddress",
+        "label": "Address",
+        "fields": [
+          {
+            "fieldId": "addressLine1",
+            "order": 0
+          },
+          {
+            "fieldId": "addressLine2",
+            "order": 1
+          },
+          {
+            "fieldId": "city",
+            "order": 2
+          },
+          {
+            "fieldId": "state",
+            "order": 3
+          },
+          {
+            "fieldId": "zipCode",
+            "order": 4
+          },
+          {
+            "fieldId": "country",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "witnessName",
+            "order": 3
+          },
+          {
+            "fieldId": "attestation",
+            "order": 4
+          },
+          {
+            "fieldId": "signature",
+            "order": 5
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 6
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-assisted owner transfer form."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Online owner change request."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "ssn",
+          "dateOfBirth",
+          "relationship"
+        ],
+        "fieldOverrides": {
+          "reason": {
+            "label": "Reason for Owner Change",
+            "required": true
+          }
+        }
+      },
+      "USAA": {
+        "carrierId": "USAA",
+        "requiredFields": [
+          "dateOfBirth",
+          "relationship"
+        ]
+      }
+    },
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "JOINT_OWNER_CHANGE": {
+    "id": "JOINT_OWNER_CHANGE",
+    "label": "Joint Owner Change",
+    "description": "Add, remove, or replace a joint owner on a policy.",
+    "taskType": "OWNERCHANGE_DATA_ENTRY",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "currentJointOwner",
+        "label": "Current Joint Owner",
+        "fields": [
+          {
+            "fieldId": "firstName",
+            "order": 0
+          },
+          {
+            "fieldId": "lastName",
+            "order": 1
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 2
+          },
+          {
+            "fieldId": "ssn",
+            "order": 3
+          }
+        ]
+      },
+      {
+        "id": "newJointOwner",
+        "label": "New Joint Owner",
+        "fields": [
+          {
+            "fieldId": "partyType",
+            "order": 0
+          },
+          {
+            "fieldId": "firstName",
+            "order": 1
+          },
+          {
+            "fieldId": "middleName",
+            "order": 2
+          },
+          {
+            "fieldId": "lastName",
+            "order": 3
+          },
+          {
+            "fieldId": "trustName",
+            "order": 4,
+            "override": {
+              "hidden": false
+            }
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 5
+          },
+          {
+            "fieldId": "ssn",
+            "order": 6
+          },
+          {
+            "fieldId": "taxId",
+            "order": 7
+          },
+          {
+            "fieldId": "relationship",
+            "order": 8
+          }
+        ]
+      },
+      {
+        "id": "address",
+        "label": "Address",
+        "fields": [
+          {
+            "fieldId": "addressLine1",
+            "order": 0
+          },
+          {
+            "fieldId": "addressLine2",
+            "order": 1
+          },
+          {
+            "fieldId": "city",
+            "order": 2
+          },
+          {
+            "fieldId": "state",
+            "order": 3
+          },
+          {
+            "fieldId": "zipCode",
+            "order": 4
+          },
+          {
+            "fieldId": "country",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "witnessName",
+            "order": 3
+          },
+          {
+            "fieldId": "attestation",
+            "order": 4
+          },
+          {
+            "fieldId": "signature",
+            "order": 5
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 6
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-assisted joint owner change form."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Online joint owner change request."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "ssn",
+          "dateOfBirth",
+          "relationship"
+        ]
+      },
+      "USAA": {
+        "carrierId": "USAA",
+        "hiddenFields": [
+          "middleName"
+        ],
+        "requiredFields": [
+          "dateOfBirth",
+          "relationship"
+        ]
+      }
+    },
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "TPD_CHANGE": {
+    "id": "TPD_CHANGE",
+    "label": "Third Party Designee Change",
+    "description": "Designate or update the third party authorized to receive policy notices on behalf of the policyholder.",
+    "taskType": "THIRD_PARTY_DETAIL",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "currentTPD",
+        "label": "Current Designee",
+        "fields": [
+          {
+            "fieldId": "firstName",
+            "order": 0
+          },
+          {
+            "fieldId": "lastName",
+            "order": 1
+          },
+          {
+            "fieldId": "relationship",
+            "order": 2
+          }
+        ]
+      },
+      {
+        "id": "newTPD",
+        "label": "New Designee",
+        "fields": [
+          {
+            "fieldId": "partyType",
+            "order": 0
+          },
+          {
+            "fieldId": "firstName",
+            "order": 1
+          },
+          {
+            "fieldId": "middleName",
+            "order": 2
+          },
+          {
+            "fieldId": "lastName",
+            "order": 3
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 4
+          },
+          {
+            "fieldId": "relationship",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "contact",
+        "label": "Contact",
+        "fields": [
+          {
+            "fieldId": "phone",
+            "order": 0
+          },
+          {
+            "fieldId": "phoneType",
+            "order": 1
+          },
+          {
+            "fieldId": "email",
+            "order": 2
+          }
+        ]
+      },
+      {
+        "id": "address",
+        "label": "Address",
+        "fields": [
+          {
+            "fieldId": "addressLine1",
+            "order": 0
+          },
+          {
+            "fieldId": "addressLine2",
+            "order": 1
+          },
+          {
+            "fieldId": "city",
+            "order": 2
+          },
+          {
+            "fieldId": "state",
+            "order": 3
+          },
+          {
+            "fieldId": "zipCode",
+            "order": 4
+          },
+          {
+            "fieldId": "country",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 1
+          },
+          {
+            "fieldId": "attestation",
+            "order": 2
+          },
+          {
+            "fieldId": "signature",
+            "order": 3
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 4
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent form for third party designee change."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Online third party designee change."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "dateOfBirth",
+          "relationship",
+          "phone"
+        ]
+      }
+    },
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
   "POA_CHANGE": {
     "id": "POA_CHANGE",
-    "label": "POA change",
-    "description": "",
-    "taskType": "",
+    "label": "Power of Attorney Change",
+    "description": "Designate or update the power of attorney authorized to act on behalf of the policyholder.",
+    "taskType": "DEFAULT_CASE_DATA_ENTRY",
     "version": "1.0.0",
     "tabs": [
       {
-        "id": "tab_1",
-        "label": "Step 1",
-        "fields": []
+        "id": "agentInfo",
+        "label": "POA Agent Info",
+        "fields": [
+          {
+            "fieldId": "partyType",
+            "order": 0
+          },
+          {
+            "fieldId": "firstName",
+            "order": 1
+          },
+          {
+            "fieldId": "middleName",
+            "order": 2
+          },
+          {
+            "fieldId": "lastName",
+            "order": 3
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 4
+          },
+          {
+            "fieldId": "relationship",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "contact",
+        "label": "Contact",
+        "fields": [
+          {
+            "fieldId": "phone",
+            "order": 0
+          },
+          {
+            "fieldId": "phoneType",
+            "order": 1
+          },
+          {
+            "fieldId": "email",
+            "order": 2
+          }
+        ]
+      },
+      {
+        "id": "address",
+        "label": "Address",
+        "fields": [
+          {
+            "fieldId": "addressLine1",
+            "order": 0
+          },
+          {
+            "fieldId": "addressLine2",
+            "order": 1
+          },
+          {
+            "fieldId": "city",
+            "order": 2
+          },
+          {
+            "fieldId": "state",
+            "order": 3
+          },
+          {
+            "fieldId": "zipCode",
+            "order": 4
+          },
+          {
+            "fieldId": "country",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 1
+          },
+          {
+            "fieldId": "witnessName",
+            "order": 2
+          },
+          {
+            "fieldId": "attestation",
+            "order": 3
+          },
+          {
+            "fieldId": "signature",
+            "order": 4
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 5
+          }
+        ]
       }
     ],
     "personaConfig": {
       "paper": {
         "label": "Paper Form",
-        "description": ""
+        "description": "Agent form for power of attorney change."
       },
       "selfServe": {
         "label": "Self-Serve",
-        "description": ""
+        "description": "Online power of attorney change."
       }
     },
-    "carrierOverrides": {},
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "dateOfBirth",
+          "relationship",
+          "phone"
+        ]
+      },
+      "USAA": {
+        "carrierId": "USAA",
+        "requiredFields": [
+          "dateOfBirth"
+        ]
+      }
+    },
     "createdAt": "2026-03-30T08:37:29.746Z",
-    "updatedAt": "2026-03-30T08:37:29.746Z"
-  },
-  "DUMMY_OWNER_CHANGE": {
-    "id": "DUMMY_OWNER_CHANGE",
-    "label": "dummy_owner_change",
-    "description": "",
-    "taskType": "",
-    "version": "1.0.0",
-    "tabs": [
-      {
-        "id": "tab_1",
-        "label": "Step 1",
-        "fields": []
-      }
-    ],
-    "personaConfig": {
-      "paper": {
-        "label": "Paper Form",
-        "description": ""
-      },
-      "selfServe": {
-        "label": "Self-Serve",
-        "description": ""
-      }
-    },
-    "carrierOverrides": {},
-    "createdAt": "2026-04-01T06:06:27.703Z",
-    "updatedAt": "2026-04-01T06:06:27.703Z"
+    "updatedAt": "2026-04-01T00:00:00.000Z"
   },
   "ANNUITANT_CHANGE": {
     "id": "ANNUITANT_CHANGE",
-    "label": "annuitant_change",
+    "label": "Annuitant Change",
+    "description": "Update the designated annuitant on a policy.",
+    "taskType": "INITIATE_ANNUITANTCHANGE_TRANSACTION",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "currentAnnuitant",
+        "label": "Current Annuitant",
+        "fields": [
+          {
+            "fieldId": "firstName",
+            "order": 0
+          },
+          {
+            "fieldId": "middleName",
+            "order": 1
+          },
+          {
+            "fieldId": "lastName",
+            "order": 2
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 3
+          },
+          {
+            "fieldId": "ssn",
+            "order": 4
+          },
+          {
+            "fieldId": "gender",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "newAnnuitant",
+        "label": "New Annuitant",
+        "fields": [
+          {
+            "fieldId": "partyType",
+            "order": 0
+          },
+          {
+            "fieldId": "firstName",
+            "order": 1
+          },
+          {
+            "fieldId": "middleName",
+            "order": 2
+          },
+          {
+            "fieldId": "lastName",
+            "order": 3
+          },
+          {
+            "fieldId": "dateOfBirth",
+            "order": 4
+          },
+          {
+            "fieldId": "ssn",
+            "order": 5
+          },
+          {
+            "fieldId": "gender",
+            "order": 6
+          },
+          {
+            "fieldId": "relationship",
+            "order": 7
+          }
+        ]
+      },
+      {
+        "id": "address",
+        "label": "Address",
+        "fields": [
+          {
+            "fieldId": "addressLine1",
+            "order": 0
+          },
+          {
+            "fieldId": "addressLine2",
+            "order": 1
+          },
+          {
+            "fieldId": "city",
+            "order": 2
+          },
+          {
+            "fieldId": "state",
+            "order": 3
+          },
+          {
+            "fieldId": "zipCode",
+            "order": 4
+          },
+          {
+            "fieldId": "country",
+            "order": 5
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "effectiveDate",
+            "order": 0
+          },
+          {
+            "fieldId": "reason",
+            "order": 1
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 2
+          },
+          {
+            "fieldId": "attestation",
+            "order": 3
+          },
+          {
+            "fieldId": "signature",
+            "order": 4
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 5
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent form for annuitant change."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Online annuitant change request."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "ssn",
+          "dateOfBirth",
+          "gender",
+          "relationship"
+        ]
+      }
+    },
+    "createdAt": "2026-04-01T09:27:45.143Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "ONE_TIME_PREMIUM": {
+    "id": "ONE_TIME_PREMIUM",
+    "label": "One-Time Premium",
+    "description": "Submit a one-time premium payment to a policy. Money In — One Time.",
+    "taskType": "OFTFormInputTask",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "paymentDetails",
+        "label": "Payment Details",
+        "fields": [
+          {
+            "fieldId": "transactionAmount",
+            "order": 0
+          },
+          {
+            "fieldId": "paymentMethod",
+            "order": 1
+          },
+          {
+            "fieldId": "effectiveDate",
+            "order": 2
+          }
+        ]
+      },
+      {
+        "id": "bankInfo",
+        "label": "Bank Account",
+        "fields": [
+          {
+            "fieldId": "bankName",
+            "order": 0
+          },
+          {
+            "fieldId": "bankAccountType",
+            "order": 1
+          },
+          {
+            "fieldId": "bankRoutingNumber",
+            "order": 2
+          },
+          {
+            "fieldId": "bankAccountNumber",
+            "order": 3
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "agentNotes",
+            "order": 0
+          },
+          {
+            "fieldId": "attestation",
+            "order": 1
+          },
+          {
+            "fieldId": "signature",
+            "order": 2
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 3
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-submitted one-time premium."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Customer online one-time premium payment."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "bankName"
+        ],
+        "fieldOverrides": {
+          "transactionAmount": {
+            "required": true
+          }
+        }
+      },
+      "USAA": {
+        "carrierId": "USAA",
+        "requiredFields": [
+          "bankName",
+          "bankAccountType"
+        ]
+      }
+    },
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "PARTIAL_WITHDRAWAL": {
+    "id": "PARTIAL_WITHDRAWAL",
+    "label": "Partial Withdrawal (One-Time)",
+    "description": "Request a one-time partial withdrawal from a policy. Money Out — One Time.",
+    "taskType": "WithdrawalFormInputTask",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "withdrawalDetails",
+        "label": "Withdrawal Details",
+        "fields": [
+          {
+            "fieldId": "transactionAmount",
+            "order": 0
+          },
+          {
+            "fieldId": "withdrawalType",
+            "order": 1
+          },
+          {
+            "fieldId": "paymentMethod",
+            "order": 2
+          },
+          {
+            "fieldId": "effectiveDate",
+            "order": 3
+          }
+        ]
+      },
+      {
+        "id": "taxWithholding",
+        "label": "Tax Withholding",
+        "fields": [
+          {
+            "fieldId": "federalWithholdingPct",
+            "order": 0
+          },
+          {
+            "fieldId": "stateWithholdingPct",
+            "order": 1
+          }
+        ]
+      },
+      {
+        "id": "payeeInfo",
+        "label": "Payee / Bank",
+        "fields": [
+          {
+            "fieldId": "bankName",
+            "order": 0
+          },
+          {
+            "fieldId": "bankAccountType",
+            "order": 1
+          },
+          {
+            "fieldId": "bankRoutingNumber",
+            "order": 2
+          },
+          {
+            "fieldId": "bankAccountNumber",
+            "order": 3
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "reason",
+            "order": 0
+          },
+          {
+            "fieldId": "agentNotes",
+            "order": 1
+          },
+          {
+            "fieldId": "attestation",
+            "order": 2
+          },
+          {
+            "fieldId": "signature",
+            "order": 3
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 4
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-assisted partial withdrawal form."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Customer online partial withdrawal request."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "withdrawalType",
+          "federalWithholdingPct"
+        ],
+        "fieldOverrides": {
+          "reason": {
+            "label": "Reason for Withdrawal",
+            "required": true
+          }
+        }
+      },
+      "USAA": {
+        "carrierId": "USAA",
+        "requiredFields": [
+          "withdrawalType",
+          "bankName"
+        ]
+      },
+      "MASS": {
+        "carrierId": "MASS",
+        "readOnlyFields": [
+          "effectiveDate"
+        ]
+      }
+    },
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "FULL_SURRENDER": {
+    "id": "FULL_SURRENDER",
+    "label": "Full Surrender",
+    "description": "Request a full surrender of a policy, liquidating all accumulated value. Money Out — Full Surrender.",
+    "taskType": "WithdrawalFormInputTask",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "surrenderDetails",
+        "label": "Surrender Details",
+        "fields": [
+          {
+            "fieldId": "surrenderReason",
+            "order": 0
+          },
+          {
+            "fieldId": "paymentMethod",
+            "order": 1
+          },
+          {
+            "fieldId": "effectiveDate",
+            "order": 2
+          }
+        ]
+      },
+      {
+        "id": "taxWithholding",
+        "label": "Tax Withholding",
+        "fields": [
+          {
+            "fieldId": "federalWithholdingPct",
+            "order": 0
+          },
+          {
+            "fieldId": "stateWithholdingPct",
+            "order": 1
+          }
+        ]
+      },
+      {
+        "id": "payeeInfo",
+        "label": "Payee / Bank",
+        "fields": [
+          {
+            "fieldId": "partyType",
+            "order": 0
+          },
+          {
+            "fieldId": "firstName",
+            "order": 1
+          },
+          {
+            "fieldId": "lastName",
+            "order": 2
+          },
+          {
+            "fieldId": "bankName",
+            "order": 3
+          },
+          {
+            "fieldId": "bankAccountType",
+            "order": 4
+          },
+          {
+            "fieldId": "bankRoutingNumber",
+            "order": 5
+          },
+          {
+            "fieldId": "bankAccountNumber",
+            "order": 6
+          }
+        ]
+      },
+      {
+        "id": "confirmation",
+        "label": "Confirmation",
+        "fields": [
+          {
+            "fieldId": "agentNotes",
+            "order": 0
+          },
+          {
+            "fieldId": "witnessName",
+            "order": 1
+          },
+          {
+            "fieldId": "attestation",
+            "order": 2
+          },
+          {
+            "fieldId": "signature",
+            "order": 3
+          },
+          {
+            "fieldId": "signatureDate",
+            "order": 4
+          }
+        ]
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": "Agent-completed full surrender request."
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": "Online full surrender request."
+      }
+    },
+    "carrierOverrides": {
+      "FNWL": {
+        "carrierId": "FNWL",
+        "requiredFields": [
+          "surrenderReason",
+          "federalWithholdingPct",
+          "bankName"
+        ]
+      },
+      "USAA": {
+        "carrierId": "USAA",
+        "requiredFields": [
+          "surrenderReason",
+          "bankName",
+          "bankAccountType"
+        ]
+      },
+      "MASS": {
+        "carrierId": "MASS",
+        "readOnlyFields": [
+          "effectiveDate"
+        ],
+        "requiredFields": [
+          "witnessName"
+        ]
+      },
+      "SBGC": {
+        "carrierId": "SBGC",
+        "requiredFields": [
+          "federalWithholdingPct",
+          "stateWithholdingPct"
+        ]
+      }
+    },
+    "createdAt": "2026-04-01T00:00:00.000Z",
+    "updatedAt": "2026-04-01T00:00:00.000Z"
+  },
+  "TRUSTEE_CHANGE": {
+    "id": "TRUSTEE_CHANGE",
+    "label": "TRUSTEE_CHANGE",
     "description": "",
     "taskType": "",
     "version": "1.0.0",
@@ -496,7 +1837,61 @@
       }
     },
     "carrierOverrides": {},
-    "createdAt": "2026-04-01T09:27:45.143Z",
-    "updatedAt": "2026-04-01T09:27:45.143Z"
+    "createdAt": "2026-04-02T10:05:22.412Z",
+    "updatedAt": "2026-04-02T10:05:22.412Z"
+  },
+  "POA_CHANGE_EXTERNAL_REVIEW": {
+    "id": "POA_CHANGE_EXTERNAL_REVIEW",
+    "label": "Power of Attorney External Review",
+    "description": "",
+    "taskType": "",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "tab_1",
+        "label": "Step 1",
+        "fields": []
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": ""
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": ""
+      }
+    },
+    "carrierOverrides": {},
+    "createdAt": "2026-04-02T13:17:29.175Z",
+    "updatedAt": "2026-04-02T13:17:29.175Z"
+  },
+  "NAME_CHANGE": {
+    "id": "NAME_CHANGE",
+    "label": "Name change",
+    "description": "",
+    "taskType": "",
+    "version": "1.0.0",
+    "tabs": [
+      {
+        "id": "tab_1",
+        "label": "Step 1",
+        "fields": []
+      }
+    ],
+    "personaConfig": {
+      "paper": {
+        "label": "Paper Form",
+        "description": ""
+      },
+      "selfServe": {
+        "label": "Self-Serve",
+        "description": ""
+      }
+    },
+    "carrierOverrides": {},
+    "createdAt": "2026-04-02T13:17:53.866Z",
+    "updatedAt": "2026-04-02T13:17:53.866Z"
   }
 }

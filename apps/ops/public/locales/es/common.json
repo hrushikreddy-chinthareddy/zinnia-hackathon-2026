@@ -1830,6 +1830,10 @@
             "transactionBuilder": {
                 "text": "Constructor de formularios",
                 "link": "/transaction-builder"
+            },
+            "paperFormsToDigital": {
+                "text": "Papel → digital",
+                "link": "/transaction-builder/paper-forms-to-digital"
             }
         },
         "loader": "Cargando..."

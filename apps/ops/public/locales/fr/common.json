@@ -1810,6 +1810,10 @@
             "transactionBuilder": {
                 "text": "Créateur de formulaires",
                 "link": "/transaction-builder"
+            },
+            "paperFormsToDigital": {
+                "text": "Papier → numérique",
+                "link": "/transaction-builder/paper-forms-to-digital"
             }
         },
         "loader": "Chargement..."

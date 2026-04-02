@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 
 import type {
     FieldDefinition,
+    FieldDependency,
     FieldPersonaConfig,
     PersonaType,
     TabDefinition,
+    TabFieldConfig,
 } from '@deps/lib/transaction-builder/types';
 
 interface TabEditorProps {
@@ -27,6 +29,11 @@ interface TabEditorProps {
         fieldId: string,
         override: FieldPersonaConfig
     ) => void;
+    onUpdateFieldDependency: (
+        tabId: string,
+        fieldId: string,
+        dependency: FieldDependency | undefined
+    ) => void;
 }
 
 const TYPE_COLORS: Record<string, string> = {
@@ -38,6 +45,83 @@ const TYPE_COLORS: Record<string, string> = {
     email: 'text-pink-600 bg-pink-50',
     textarea: 'text-gray-600 bg-gray-100',
     default: 'text-gray-500 bg-gray-100',
+};
+
+const COMPATIBLE_WIDGETS: Partial<
+    Record<string, { widget: string; label: string }[]>
+> = {
+    string: [
+        { widget: 'TextWidget', label: 'Text Input' },
+        { widget: 'TextareaWidget', label: 'Text Area' },
+        { widget: 'EmailWidget', label: 'Email' },
+        { widget: 'ValueWidget', label: 'Read-only Value' },
+    ],
+    number: [
+        { widget: 'NumbersWidget', label: 'Number' },
+        { widget: 'AllocationPercentageWidget', label: 'Allocation %' },
+        { widget: 'AgentPercentageWidget', label: 'Agent %' },
+        { widget: 'ArithmeticOperationWidget', label: 'Calculated' },
+        { widget: 'ValueWidget', label: 'Read-only Value' },
+    ],
+    currency: [
+        { widget: 'CurrencyWidget', label: 'Currency ($)' },
+        { widget: 'NumbersWidget', label: 'Number Input' },
+    ],
+    percentage: [
+        { widget: 'AllocationPercentageWidget', label: 'Allocation %' },
+        { widget: 'AgentPercentageWidget', label: 'Agent %' },
+        { widget: 'NumbersWidget', label: 'Number Input' },
+    ],
+    boolean: [
+        { widget: 'CheckboxWidget', label: 'Checkbox' },
+        { widget: 'RadioWidget', label: 'Radio Buttons' },
+    ],
+    select: [
+        { widget: 'SelectWidget', label: 'Dropdown' },
+        { widget: 'RadioWidget', label: 'Radio Buttons' },
+        { widget: 'CheckboxesWidget', label: 'Checkboxes' },
+    ],
+    radio: [
+        { widget: 'RadioWidget', label: 'Radio Buttons' },
+        { widget: 'SelectWidget', label: 'Dropdown' },
+    ],
+    multiselect: [
+        { widget: 'CheckboxesWidget', label: 'Checkboxes' },
+        { widget: 'SelectWidget', label: 'Multi-select Dropdown' },
+    ],
+    date: [
+        { widget: 'DateWidgetV2', label: 'Date Picker V2 (recommended)' },
+        { widget: 'DateWidget', label: 'Date Picker' },
+    ],
+    textarea: [
+        { widget: 'TextareaWidget', label: 'Text Area' },
+        { widget: 'NotesWidget', label: 'Notes (timestamped)' },
+        { widget: 'ProcessorNotesWidget', label: 'Processor Notes' },
+    ],
+    file: [{ widget: 'FileWidget', label: 'File Upload' }],
+    attachment: [
+        { widget: 'AttachmentWidget', label: 'Attachment (search + upload)' },
+    ],
+    ssn: [{ widget: 'NumbersWidget', label: 'Masked Number Input' }],
+    email: [
+        { widget: 'EmailWidget', label: 'Email Input' },
+        { widget: 'TextWidget', label: 'Text Input' },
+    ],
+    phone: [{ widget: 'NumbersWidget', label: 'Phone Number Input' }],
+    display: [
+        { widget: 'ValueWidget', label: 'Read-only Value' },
+        { widget: 'TitleWidget', label: 'Section Title' },
+        { widget: 'HyperLinkWidget', label: 'Hyperlink' },
+        { widget: 'SummaryWidget', label: 'Summary Panel' },
+    ],
+    calculated: [
+        {
+            widget: 'ArithmeticOperationWidget',
+            label: 'Arithmetic Calculation',
+        },
+        { widget: 'ValueWidget', label: 'Read-only Value' },
+    ],
+    integer: [{ widget: 'NumbersWidget', label: 'Number Input' }],
 };
 
 function typeColor(type: string) {
@@ -56,6 +140,7 @@ export default function TabEditor({
     onRemoveField,
     onMoveField,
     onUpdateFieldOverride,
+    onUpdateFieldDependency,
 }: TabEditorProps) {
     const [editingTabId, setEditingTabId] = useState<string | null>(null);
     const [editingTabLabel, setEditingTabLabel] = useState('');
@@ -284,6 +369,11 @@ export default function TabEditor({
                                                         overridden
                                                     </span>
                                                 )}
+                                                {tabField.dependsOn && (
+                                                    <span className="rounded-full border border-amber-100 bg-amber-50 px-2 py-0.5 text-xs text-amber-600">
+                                                        conditional
+                                                    </span>
+                                                )}
                                             </div>
                                             <p className="mt-0.5 font-mono text-xs text-gray-400">
                                                 {field.id}
@@ -350,13 +440,35 @@ export default function TabEditor({
                                     {isExpanded && (
                                         <FieldOverridePanel
                                             override={tabField.override ?? {}}
+                                            dependsOn={tabField.dependsOn}
                                             persona={persona}
                                             field={field}
+                                            allFields={sortedFields
+                                                .filter(
+                                                    (f) =>
+                                                        f.fieldId !==
+                                                        tabField.fieldId
+                                                )
+                                                .map(
+                                                    (f) =>
+                                                        fieldRegistry[f.fieldId]
+                                                )
+                                                .filter(
+                                                    (f): f is FieldDefinition =>
+                                                        !!f
+                                                )}
                                             onChange={(ov) =>
                                                 onUpdateFieldOverride(
                                                     activeTabId,
                                                     tabField.fieldId,
                                                     ov
+                                                )
+                                            }
+                                            onDependencyChange={(dep) =>
+                                                onUpdateFieldDependency(
+                                                    activeTabId,
+                                                    tabField.fieldId,
+                                                    dep
                                                 )
                                             }
                                         />
@@ -392,16 +504,23 @@ export default function TabEditor({
 
 function FieldOverridePanel({
     override,
+    dependsOn,
     persona,
     field,
+    allFields,
     onChange,
+    onDependencyChange,
 }: {
     override: FieldPersonaConfig;
+    dependsOn?: FieldDependency;
     persona: PersonaType;
     field: FieldDefinition;
+    allFields: FieldDefinition[];
     onChange: (ov: FieldPersonaConfig) => void;
+    onDependencyChange: (dep: FieldDependency | undefined) => void;
 }) {
     const registryDefault = field.personas?.[persona] ?? {};
+    const compatibleWidgets = COMPATIBLE_WIDGETS[field.type] ?? [];
 
     function set(
         key: keyof FieldPersonaConfig,
@@ -416,57 +535,87 @@ function FieldOverridePanel({
         onChange(next);
     }
 
+    // Find available enum values for the chosen dependency source field
+    const depSourceField = allFields.find((f) => f.id === dependsOn?.fieldId);
+    const depSourceValues = depSourceField?.validation?.enum ?? [];
+
+    function handleDepFieldChange(fieldId: string) {
+        if (!fieldId) {
+            onDependencyChange(undefined);
+            return;
+        }
+        onDependencyChange({ fieldId, values: [] });
+    }
+
+    function handleDepValuesChange(value: string, checked: boolean) {
+        if (!dependsOn) return;
+        const next = checked
+            ? [...dependsOn.values, value]
+            : dependsOn.values.filter((v) => v !== value);
+        onDependencyChange(
+            next.length > 0
+                ? { ...dependsOn, values: next }
+                : { ...dependsOn, values: [] }
+        );
+    }
+
     return (
-        <div className="border-t border-indigo-100 rounded-b-xl bg-indigo-50/40 px-4 py-3">
-            <p className="mb-2.5 text-xs font-semibold text-indigo-700">
-                Override for {persona === 'paper' ? 'Paper Form' : 'Self-Serve'}
-            </p>
-            <div className="flex flex-wrap gap-4 text-xs mb-3">
-                {(
-                    [
-                        {
-                            key: 'hidden',
-                            label: 'Hidden',
-                            reg: registryDefault.hidden,
-                        },
-                        {
-                            key: 'required',
-                            label: 'Required',
-                            reg: registryDefault.required,
-                        },
-                        {
-                            key: 'readOnly',
-                            label: 'Read-only',
-                            reg: registryDefault.readOnly,
-                        },
-                    ] as const
-                ).map(({ key, label, reg }) => (
-                    <label
-                        key={key}
-                        className="flex cursor-pointer items-center gap-1.5 text-gray-700"
-                    >
-                        <input
-                            type="checkbox"
-                            checked={override[key] ?? reg ?? false}
-                            onChange={(e) =>
-                                set(key, e.target.checked || undefined)
-                            }
-                            className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                        />
-                        {label}
-                        {reg && (
-                            <span className="text-indigo-400 text-xs">
-                                (registry default)
-                            </span>
-                        )}
-                    </label>
-                ))}
-            </div>
+        <div className="border-t border-indigo-100 rounded-b-xl bg-indigo-50/40 px-4 py-3 space-y-4">
+            {/* ── Persona behaviour ─────────────────────────────────────────── */}
             <div>
-                <label className="block text-xs text-gray-500 mb-1">
-                    Label override{' '}
-                    <span className="text-gray-400">
-                        (leaves registry default if empty)
+                <p className="mb-2 text-xs font-semibold text-indigo-700">
+                    Behaviour —{' '}
+                    {persona === 'paper' ? 'Paper Form' : 'Self-Serve'}
+                </p>
+                <div className="flex flex-wrap gap-4 text-xs">
+                    {(
+                        [
+                            {
+                                key: 'hidden',
+                                label: 'Hidden',
+                                reg: registryDefault.hidden,
+                            },
+                            {
+                                key: 'required',
+                                label: 'Required',
+                                reg: registryDefault.required,
+                            },
+                            {
+                                key: 'readOnly',
+                                label: 'Read-only',
+                                reg: registryDefault.readOnly,
+                            },
+                        ] as const
+                    ).map(({ key, label, reg }) => (
+                        <label
+                            key={key}
+                            className="flex cursor-pointer items-center gap-1.5 text-gray-700"
+                        >
+                            <input
+                                type="checkbox"
+                                checked={override[key] ?? reg ?? false}
+                                onChange={(e) =>
+                                    set(key, e.target.checked || undefined)
+                                }
+                                className="rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                            />
+                            {label}
+                            {reg && (
+                                <span className="text-indigo-400">
+                                    (registry)
+                                </span>
+                            )}
+                        </label>
+                    ))}
+                </div>
+            </div>
+
+            {/* ── Label override ────────────────────────────────────────────── */}
+            <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Label override
+                    <span className="ml-1 font-normal text-gray-400">
+                        (leave empty to keep registry default)
                     </span>
                 </label>
                 <input
@@ -477,6 +626,175 @@ function FieldOverridePanel({
                     className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-100"
                 />
             </div>
+
+            {/* ── Widget picker ─────────────────────────────────────────────── */}
+            {compatibleWidgets.length > 1 && (
+                <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                        Widget
+                        <span className="ml-1 font-normal text-gray-400">
+                            (registry default: {field.widget ?? 'auto'})
+                        </span>
+                    </label>
+                    <select
+                        value={override.widget ?? ''}
+                        onChange={(e) =>
+                            set('widget', e.target.value || undefined)
+                        }
+                        className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-100"
+                    >
+                        <option value="">— use registry default —</option>
+                        {compatibleWidgets.map(({ widget, label }) => (
+                            <option key={widget} value={widget}>
+                                {label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
+
+            {/* ── Placeholder ───────────────────────────────────────────────── */}
+            <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Placeholder text
+                </label>
+                <input
+                    type="text"
+                    value={override.placeholder ?? ''}
+                    placeholder="e.g. Enter your street address…"
+                    onChange={(e) =>
+                        set('placeholder', e.target.value || undefined)
+                    }
+                    className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-100"
+                />
+            </div>
+
+            {/* ── Help text ─────────────────────────────────────────────────── */}
+            <div>
+                <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Help text
+                </label>
+                <input
+                    type="text"
+                    value={override.helpText ?? ''}
+                    placeholder="Shown below the field…"
+                    onChange={(e) =>
+                        set('helpText', e.target.value || undefined)
+                    }
+                    className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-100"
+                />
+            </div>
+
+            {/* ── Depends on ────────────────────────────────────────────────── */}
+            {allFields.length > 0 && (
+                <div className="rounded-lg border border-indigo-200 bg-white p-3">
+                    <p className="mb-2 text-xs font-semibold text-indigo-700">
+                        Conditional display (Depends on)
+                    </p>
+                    <label className="block text-xs text-gray-600 mb-1">
+                        Show this field only when
+                    </label>
+                    <select
+                        value={dependsOn?.fieldId ?? ''}
+                        onChange={(e) => handleDepFieldChange(e.target.value)}
+                        className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs focus:border-indigo-400 focus:outline-none focus:ring-1 focus:ring-indigo-100"
+                    >
+                        <option value="">— always show —</option>
+                        {allFields.map((f) => (
+                            <option key={f.id} value={f.id}>
+                                {f.label} ({f.id})
+                            </option>
+                        ))}
+                    </select>
+
+                    {dependsOn?.fieldId && (
+                        <div className="mt-2">
+                            <label className="block text-xs text-gray-600 mb-1">
+                                …equals
+                                {depSourceValues.length === 0 && (
+                                    <span className="ml-1 text-gray-400">
+                                        (type a value)
+                                    </span>
+                                )}
+                            </label>
+                            {depSourceValues.length > 0 ? (
+                                <div className="flex flex-wrap gap-2 mt-1">
+                                    {depSourceValues.map((v, i) => {
+                                        const label =
+                                            depSourceField?.validation
+                                                ?.enumNames?.[i] ?? v;
+                                        const checked =
+                                            dependsOn.values.includes(v);
+                                        return (
+                                            <label
+                                                key={v}
+                                                className="flex items-center gap-1 text-xs text-gray-700"
+                                            >
+                                                <input
+                                                    type="checkbox"
+                                                    checked={checked}
+                                                    onChange={(e) =>
+                                                        handleDepValuesChange(
+                                                            v,
+                                                            e.target.checked
+                                                        )
+                                                    }
+                                                    className="rounded border-gray-300 text-indigo-600"
+                                                />
+                                                {label}
+                                            </label>
+                                        );
+                                    })}
+                                </div>
+                            ) : (
+                                <input
+                                    type="text"
+                                    value={dependsOn.values.join(', ')}
+                                    placeholder="value1, value2, …"
+                                    onChange={(e) => {
+                                        const vals = e.target.value
+                                            .split(',')
+                                            .map((v) => v.trim())
+                                            .filter(Boolean);
+                                        onDependencyChange({
+                                            ...dependsOn,
+                                            values: vals,
+                                        });
+                                    }}
+                                    className="w-full rounded-lg border border-indigo-200 bg-white px-3 py-1.5 text-xs focus:border-indigo-400 focus:outline-none"
+                                />
+                            )}
+                            {dependsOn.values.length > 0 && (
+                                <p className="mt-1 text-xs text-gray-400">
+                                    Field shown when{' '}
+                                    <code className="text-indigo-600">
+                                        {dependsOn.fieldId}
+                                    </code>{' '}
+                                    ={' '}
+                                    {dependsOn.values.map((v) => (
+                                        <code
+                                            key={v}
+                                            className="ml-1 text-indigo-600"
+                                        >
+                                            {v}
+                                        </code>
+                                    ))}
+                                </p>
+                            )}
+                        </div>
+                    )}
+
+                    {dependsOn?.fieldId && (
+                        <button
+                            type="button"
+                            onClick={() => onDependencyChange(undefined)}
+                            className="mt-2 text-xs text-red-400 hover:text-red-600"
+                        >
+                            Remove dependency
+                        </button>
+                    )}
+                </div>
+            )}
         </div>
     );
 }

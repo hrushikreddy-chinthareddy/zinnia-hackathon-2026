@@ -2,11 +2,14 @@ import fs from 'fs';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import path from 'path';
 import React, { useState } from 'react';
 
-import PdfInferencePanel from '@deps/components/transaction-builder/PdfInferencePanel';
+import { TranslationFiles } from '@deps/config/translations';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import type { TransactionDefinition } from '@deps/lib/transaction-builder/types';
+import nextI18nextConfig from 'next-i18next.config';
 
 import type { GetServerSideProps } from 'next';
 
@@ -166,8 +169,45 @@ export default function TransactionBuilderDashboard({ transactions }: Props) {
 
                 {/* Transaction grid */}
                 <div className="max-w-6xl mx-auto px-8 py-8">
-                    <div className="mb-6">
-                        <PdfInferencePanel />
+                    <div className="mb-8 flex flex-col gap-4">
+                        <Link
+                            href="/transaction-builder/docs"
+                            className="group flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-indigo-200 hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+                        >
+                            <div>
+                                <h2 className="text-base font-semibold text-gray-900 group-hover:text-indigo-700">
+                                    Transactions UI Reference
+                                </h2>
+                                <p className="mt-1 max-w-2xl text-sm text-gray-600">
+                                    Field-by-field documentation for every
+                                    transaction type: tabs, personas, carrier
+                                    overrides, and the field registry.
+                                </p>
+                            </div>
+                            <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-indigo-600 group-hover:text-indigo-700">
+                                View docs
+                                <span aria-hidden>→</span>
+                            </span>
+                        </Link>
+                        <Link
+                            href="/transaction-builder/paper-forms-to-digital"
+                            className="group flex flex-col gap-2 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition hover:border-indigo-200 hover:shadow-md sm:flex-row sm:items-center sm:justify-between"
+                        >
+                            <div>
+                                <h2 className="text-base font-semibold text-gray-900 group-hover:text-indigo-700">
+                                    Paper forms to Digital transactions UI
+                                </h2>
+                                <p className="mt-1 max-w-2xl text-sm text-gray-600">
+                                    Upload a carrier PDF to extract structure
+                                    and preview a generated digital transaction
+                                    flow.
+                                </p>
+                            </div>
+                            <span className="inline-flex shrink-0 items-center gap-1 text-sm font-semibold text-indigo-600 group-hover:text-indigo-700">
+                                Open tool
+                                <span aria-hidden>→</span>
+                            </span>
+                        </Link>
                     </div>
                     {list.length === 0 ? (
                         <EmptyState onCreate={() => setShowCreateModal(true)} />
@@ -436,12 +476,20 @@ function CreateModal({
     );
 }
 
-export const getServerSideProps: GetServerSideProps<Props> = async () => {
+export const getServerSideProps: GetServerSideProps<Props> = async ({
+    locale = DEFAULT_LOCALE,
+}) => {
+    const translations = await serverSideTranslations(
+        locale,
+        [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+        nextI18nextConfig,
+        ALL_LOCALES
+    );
     const raw = fs.readFileSync(DEFINITIONS_PATH, 'utf-8');
     const definitions = JSON.parse(raw) as Record<
         string,
         TransactionDefinition
     >;
     const transactions = Object.values(definitions);
-    return { props: { transactions } };
+    return { props: { ...translations, transactions } };
 };

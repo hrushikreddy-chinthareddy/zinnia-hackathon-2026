@@ -3411,6 +3411,7 @@ export default async function handler(
         const canonicalCompletion = await openai.chat.completions.create({
             model: 'gpt-4o',
             temperature: 0,
+            seed: 42,
             response_format: { type: 'json_object' },
             messages: [
                 {
@@ -3442,6 +3443,7 @@ export default async function handler(
                 await openai.chat.completions.create({
                     model: 'gpt-4o',
                     temperature: 0,
+                    seed: 42,
                     response_format: { type: 'json_object' },
                     messages: [
                         {
@@ -3498,6 +3500,7 @@ export default async function handler(
             const tabCompletion = await openai.chat.completions.create({
                 model: 'gpt-4o',
                 temperature: 0,
+                seed: 42,
                 response_format: { type: 'json_object' },
                 messages: [
                     {
@@ -3554,6 +3557,7 @@ export default async function handler(
         const schemaCompletion = await openai.chat.completions.create({
             model: 'gpt-4o',
             temperature: 0,
+            seed: 42,
             response_format: { type: 'json_object' },
             messages: [
                 {
@@ -3576,6 +3580,7 @@ export default async function handler(
             const schemaRetryCompletion = await openai.chat.completions.create({
                 model: 'gpt-4o',
                 temperature: 0,
+                seed: 42,
                 response_format: { type: 'json_object' },
                 messages: [
                     {

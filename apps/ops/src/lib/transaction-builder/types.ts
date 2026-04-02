@@ -3,18 +3,30 @@
 // all transactions pick it up automatically.
 
 export type FieldType =
+    // ── Primitives ──────────────────────────────────────────────────────────
     | 'string'
     | 'number'
     | 'boolean'
     | 'integer'
+    // ── Formatted inputs ────────────────────────────────────────────────────
     | 'date'
     | 'email'
     | 'phone'
     | 'ssn'
+    | 'currency' // Numeric $ amount → NumbersWidget / CurrencyWidget
+    | 'percentage' // Numeric 0-100 % → NumbersWidget / AllocationPercentageWidget
+    // ── Selection ───────────────────────────────────────────────────────────
     | 'select'
     | 'multiselect'
+    | 'radio' // Visible radio buttons (vs. hidden dropdown for select)
+    // ── Long-form text ──────────────────────────────────────────────────────
     | 'textarea'
-    | 'file';
+    // ── File / Document ─────────────────────────────────────────────────────
+    | 'file' // Raw file upload → FileWidget
+    | 'attachment' // Managed document reference → AttachmentWidget
+    // ── Display-only ────────────────────────────────────────────────────────
+    | 'display' // Non-editable: ValueWidget, TitleWidget, HyperLinkWidget, SummaryWidget
+    | 'calculated'; // Computed read-only value → ArithmeticOperationWidget
 
 export type PersonaType = 'paper' | 'selfServe';
 
@@ -26,6 +38,14 @@ export interface FieldValidation {
     maximum?: number;
     enum?: string[];
     enumNames?: string[];
+}
+
+/** Conditional display rule: show this field when another field matches a value */
+export interface FieldDependency {
+    /** ID of the field whose value controls visibility */
+    fieldId: string;
+    /** Show this field when the source field's value equals one of these */
+    values: string[];
 }
 
 /** Per-persona overrides for a field in the registry */
@@ -68,6 +88,8 @@ export interface TabFieldConfig {
     order: number;
     /** Tab-level override — takes precedence over registry persona defaults */
     override?: FieldPersonaConfig;
+    /** If set, this field is only shown when the dependency condition is met */
+    dependsOn?: FieldDependency;
 }
 
 export interface TabDefinition {
@@ -150,6 +172,7 @@ export interface ComposedTabSchema {
         title: string;
         properties: Record<string, JSONSchemaProperty>;
         required: string[];
+        dependencies?: Record<string, unknown>;
     };
     uiSchema: Record<string, unknown>;
 }
@@ -169,6 +192,7 @@ export interface ComposedSchema {
         title: string;
         properties: Record<string, JSONSchemaProperty>;
         required: string[];
+        dependencies?: Record<string, unknown>;
     };
     uiSchema: Record<string, unknown>;
 }

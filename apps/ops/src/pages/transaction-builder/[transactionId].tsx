@@ -2,6 +2,7 @@ import fs from 'fs';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
 import path from 'path';
 import React, { useEffect, useReducer, useState } from 'react';
 
@@ -10,6 +11,8 @@ import FieldRegistryPanel from '@deps/components/transaction-builder/FieldRegist
 import PersonaToggle from '@deps/components/transaction-builder/PersonaToggle';
 import SchemaExport from '@deps/components/transaction-builder/SchemaExport';
 import TabEditor from '@deps/components/transaction-builder/TabEditor';
+import { TranslationFiles } from '@deps/config/translations';
+import { ALL_LOCALES, DEFAULT_LOCALE } from '@deps/helpers/routing.helpers';
 import {
     DEFAULT_FIELD_REGISTRY,
     getFieldGroups,
@@ -24,6 +27,7 @@ import type {
     TransactionDefinition,
 } from '@deps/lib/transaction-builder/types';
 import type { FieldsResponse } from '@deps/pages/api/transaction-builder/fields';
+import nextI18nextConfig from 'next-i18next.config';
 
 import type { GetServerSideProps } from 'next';
 
@@ -54,6 +58,14 @@ type BuilderAction =
           tabId: string;
           fieldId: string;
           override: FieldPersonaConfig;
+      }
+    | {
+          type: 'UPDATE_FIELD_DEPENDENCY';
+          tabId: string;
+          fieldId: string;
+          dependency:
+              | import('@deps/lib/transaction-builder/types').FieldDependency
+              | undefined;
       }
     | {
           type: 'UPDATE_CARRIER_OVERRIDES';
@@ -215,6 +227,33 @@ function reducer(state: BuilderState, action: BuilderAction): BuilderState {
                                           ? f
                                           : { ...f, override: action.override }
                                   ),
+                              }
+                    ),
+                },
+            };
+
+        case 'UPDATE_FIELD_DEPENDENCY':
+            return {
+                ...state,
+                isDirty: true,
+                definition: {
+                    ...definition,
+                    tabs: definition.tabs.map((t) =>
+                        t.id !== action.tabId
+                            ? t
+                            : {
+                                  ...t,
+                                  fields: t.fields.map((f) => {
+                                      if (f.fieldId !== action.fieldId)
+                                          return f;
+                                      const next = { ...f };
+                                      if (action.dependency) {
+                                          next.dependsOn = action.dependency;
+                                      } else {
+                                          delete next.dependsOn;
+                                      }
+                                      return next;
+                                  }),
                               }
                     ),
                 },
@@ -619,6 +658,18 @@ export default function TransactionBuilderEditor({
                                             override,
                                         })
                                     }
+                                    onUpdateFieldDependency={(
+                                        tabId,
+                                        fieldId,
+                                        dep
+                                    ) =>
+                                        dispatch({
+                                            type: 'UPDATE_FIELD_DEPENDENCY',
+                                            tabId,
+                                            fieldId,
+                                            dependency: dep,
+                                        })
+                                    }
                                 />
                             </main>
 
@@ -784,6 +835,131 @@ function PreviewControl({
     const base =
         'w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-xs text-gray-500 focus:outline-none disabled:bg-gray-50 disabled:text-gray-400';
 
+    // ── File / Attachment ──────────────────────────────────────────────────────
+    if (widget === 'FileWidget' || prop['format'] === 'data-url') {
+        return (
+            <div className="flex items-center gap-2">
+                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">
+                    <svg
+                        className="h-3.5 w-3.5 text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                        />
+                    </svg>
+                    Upload
+                    <input
+                        type="file"
+                        disabled={readOnly}
+                        className="sr-only"
+                    />
+                </label>
+                <span className="text-xs text-gray-400">No file chosen</span>
+            </div>
+        );
+    }
+
+    if (widget === 'AttachmentWidget') {
+        return (
+            <div className="flex items-center gap-2">
+                <input
+                    type="text"
+                    disabled={readOnly}
+                    placeholder="Search existing documents…"
+                    className="min-w-0 flex-1 rounded-lg border border-gray-200 bg-white px-3 py-1.5 text-xs text-gray-500 focus:outline-none"
+                />
+                <span className="text-xs text-gray-400">or</span>
+                <label className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50">
+                    <svg
+                        className="h-3.5 w-3.5 text-gray-400"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"
+                        />
+                    </svg>
+                    Upload
+                    <input
+                        type="file"
+                        disabled={readOnly}
+                        className="sr-only"
+                    />
+                </label>
+            </div>
+        );
+    }
+
+    // ── Display-only ──────────────────────────────────────────────────────────
+    if (
+        widget === 'ValueWidget' ||
+        widget === 'TitleWidget' ||
+        widget === 'SummaryWidget' ||
+        widget === 'HyperLinkWidget'
+    ) {
+        const displayMap: Record<string, string> = {
+            ValueWidget: '— display value —',
+            TitleWidget: String(prop['title'] ?? fieldId),
+            SummaryWidget: '[ Transaction Summary ]',
+            HyperLinkWidget: 'Link →',
+        };
+        const w = widget ?? 'ValueWidget';
+        return (
+            <div className="rounded-lg border border-dashed border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-400 italic">
+                {displayMap[w] ?? '— display —'}
+            </div>
+        );
+    }
+
+    if (widget === 'ArithmeticOperationWidget') {
+        return (
+            <div className="flex items-center gap-1.5">
+                <span className="text-xs text-gray-400">= </span>
+                <div className="flex-1 rounded-lg border border-dashed border-gray-200 bg-gray-50 px-3 py-2 text-xs text-gray-400 italic">
+                    auto-calculated
+                </div>
+            </div>
+        );
+    }
+
+    // ── Radio ─────────────────────────────────────────────────────────────────
+    if (widget === 'RadioWidget') {
+        const opts = prop['enum'] as string[] | undefined;
+        const labels =
+            (prop['enumNames'] as string[] | undefined) ?? opts ?? [];
+        if (opts?.length) {
+            return (
+                <div className="flex flex-wrap gap-3">
+                    {opts.map((v, i) => (
+                        <label
+                            key={v}
+                            className="flex items-center gap-1.5 text-xs text-gray-600"
+                        >
+                            <input
+                                type="radio"
+                                name={fieldId}
+                                disabled={readOnly}
+                                className="border-gray-300"
+                            />
+                            {labels[i] ?? v}
+                        </label>
+                    ))}
+                </div>
+            );
+        }
+    }
+
+    // ── Enum → select ─────────────────────────────────────────────────────────
     if (prop['enum']) {
         const opts = prop['enum'] as string[];
         const labels = (prop['enumNames'] as string[] | undefined) ?? opts;
@@ -798,6 +974,8 @@ function PreviewControl({
             </select>
         );
     }
+
+    // ── Boolean / Checkbox ────────────────────────────────────────────────────
     if (prop['type'] === 'boolean' || widget === 'CheckboxWidget') {
         return (
             <label className="flex items-center gap-2 text-xs text-gray-600">
@@ -810,26 +988,52 @@ function PreviewControl({
             </label>
         );
     }
+
+    // ── Date ──────────────────────────────────────────────────────────────────
     if (prop['format'] === 'date')
         return <input type="date" disabled={readOnly} className={base} />;
+
+    // ── Number / Currency / Percentage ────────────────────────────────────────
     if (prop['type'] === 'number' || prop['type'] === 'integer') {
+        const isCurrency = widget === 'CurrencyWidget';
+        const isPct =
+            widget === 'AllocationPercentageWidget' ||
+            widget === 'AgentPercentageWidget';
         return (
-            <input
-                type="number"
-                disabled={readOnly}
-                min={prop['minimum'] as number | undefined}
-                max={prop['maximum'] as number | undefined}
-                className={base}
-            />
+            <div className="relative flex items-center">
+                {isCurrency && (
+                    <span className="absolute left-3 text-xs text-gray-400">
+                        $
+                    </span>
+                )}
+                <input
+                    type="number"
+                    disabled={readOnly}
+                    min={prop['minimum'] as number | undefined}
+                    max={prop['maximum'] as number | undefined}
+                    className={`${base} ${isCurrency ? 'pl-6' : ''} ${
+                        isPct ? 'pr-6' : ''
+                    }`}
+                />
+                {isPct && (
+                    <span className="absolute right-3 text-xs text-gray-400">
+                        %
+                    </span>
+                )}
+            </div>
         );
     }
+
+    // ── Textarea / Notes ──────────────────────────────────────────────────────
     if (
-        widget === 'textarea' ||
+        widget === 'TextareaWidget' ||
         widget === 'NotesWidget' ||
         widget === 'ProcessorNotesWidget'
     ) {
         return <textarea disabled={readOnly} rows={2} className={base} />;
     }
+
+    // ── Default: text input ───────────────────────────────────────────────────
     return <input type="text" disabled={readOnly} className={base} />;
 }
 
@@ -853,6 +1057,13 @@ function buildFieldData(): FieldsResponse {
 }
 
 export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
+    const locale = ctx.locale ?? DEFAULT_LOCALE;
+    const translations = await serverSideTranslations(
+        locale,
+        [TranslationFiles.COMMON, TranslationFiles.COLDEFS],
+        nextI18nextConfig,
+        ALL_LOCALES
+    );
     const { transactionId } = ctx.params as { transactionId: string };
     const fieldData = buildFieldData();
 
@@ -860,6 +1071,7 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
         const now = new Date().toISOString();
         return {
             props: {
+                ...translations,
                 fieldData,
                 initialDefinition: {
                     id: `TXN_${Date.now()}`,
@@ -888,5 +1100,11 @@ export const getServerSideProps: GetServerSideProps<Props> = async (ctx) => {
     const initialDefinition = definitions[transactionId];
     if (!initialDefinition) return { notFound: true };
 
-    return { props: { initialDefinition, fieldData } };
+    return {
+        props: {
+            ...translations,
+            initialDefinition,
+            fieldData,
+        },
+    };
 };

@@ -13,6 +13,7 @@ import type {
     ComposedSchema,
     ComposedTabSchema,
     FieldDefinition,
+    FieldDependency,
     FieldPersonaConfig,
     FieldRegistry,
     JSONSchemaProperty,
@@ -29,6 +30,10 @@ function fieldTypeToJsonSchemaType(field: FieldDefinition): string {
         case 'number':
         case 'integer':
             return field.type;
+        case 'currency':
+        case 'percentage':
+        case 'calculated':
+            return 'number';
         case 'boolean':
             return 'boolean';
         default:
@@ -42,6 +47,8 @@ function fieldTypeToFormat(field: FieldDefinition): string | undefined {
             return 'date';
         case 'email':
             return 'email';
+        case 'file':
+            return 'data-url';
         default:
             return undefined;
     }
@@ -51,6 +58,95 @@ function mergePersonaConfig(
     ...configs: (FieldPersonaConfig | undefined)[]
 ): FieldPersonaConfig {
     return Object.assign({}, ...configs.filter(Boolean));
+}
+
+/**
+ * Build a JSON Schema `dependencies` block from fields that have `dependsOn` set.
+ * Produces oneOf branches so RJSF shows/hides dependent fields automatically.
+ */
+function buildDependencies(
+    dependentFields: Array<{
+        fieldId: string;
+        schema: JSONSchemaProperty;
+        uiEntry: Record<string, unknown>;
+        dep: FieldDependency;
+        required: boolean;
+    }>
+): Record<string, unknown> {
+    // Group by source field ID
+    const bySource = new Map<
+        string,
+        Array<{
+            fieldId: string;
+            schema: JSONSchemaProperty;
+            uiEntry: Record<string, unknown>;
+            dep: FieldDependency;
+            required: boolean;
+        }>
+    >();
+    for (const f of dependentFields) {
+        const key = f.dep.fieldId;
+        if (!bySource.has(key)) bySource.set(key, []);
+        bySource.get(key)!.push(f);
+    }
+
+    const dependencies: Record<string, unknown> = {};
+
+    for (const [sourceFieldId, fields] of Array.from(bySource)) {
+        // Group by the trigger values (sorted+joined as a stable key)
+        const byValueKey = new Map<
+            string,
+            Array<{
+                fieldId: string;
+                schema: JSONSchemaProperty;
+                uiEntry: Record<string, unknown>;
+                dep: FieldDependency;
+                required: boolean;
+            }>
+        >();
+        for (const f of fields) {
+            const key = [...f.dep.values].sort().join('|');
+            if (!byValueKey.has(key)) byValueKey.set(key, []);
+            byValueKey.get(key)!.push(f);
+        }
+
+        const allTriggerValues: string[] = [];
+        const branches: unknown[] = [];
+
+        for (const [valueKey, branchFields] of Array.from(byValueKey)) {
+            const triggerValues = valueKey.split('|').filter(Boolean);
+            allTriggerValues.push(...triggerValues);
+
+            const branchProperties: Record<string, unknown> = {
+                [sourceFieldId]: { enum: triggerValues },
+            };
+            const branchRequired: string[] = [];
+
+            for (const f of branchFields) {
+                branchProperties[f.fieldId] = f.schema;
+                if (f.required) branchRequired.push(f.fieldId);
+            }
+
+            const branch: Record<string, unknown> = {
+                properties: branchProperties,
+            };
+            if (branchRequired.length > 0) branch.required = branchRequired;
+            branches.push(branch);
+        }
+
+        // "else" branch — no trigger value matched
+        branches.push({
+            properties: {
+                [sourceFieldId]: {
+                    not: { enum: allTriggerValues },
+                },
+            },
+        });
+
+        dependencies[sourceFieldId] = { oneOf: branches };
+    }
+
+    return dependencies;
 }
 
 // ─── Core composer ────────────────────────────────────────────────────────────
@@ -119,13 +215,21 @@ function composeTab(
     const required: string[] = [];
     const uiSchema: Record<string, unknown> = {};
 
+    // Dependent fields are collected separately for the `dependencies` block
+    const dependentFields: Array<{
+        fieldId: string;
+        schema: JSONSchemaProperty;
+        uiEntry: Record<string, unknown>;
+        dep: FieldDependency;
+        required: boolean;
+    }> = [];
+
     const sortedFields = [...tab.fields].sort((a, b) => a.order - b.order);
 
     for (const tabField of sortedFields) {
         const fieldDef = registry[tabField.fieldId];
         if (!fieldDef) continue;
 
-        // Resolve effective config for this field+persona+carrier
         const effectiveConfig = resolveFieldConfig(
             fieldDef,
             tabField,
@@ -146,8 +250,6 @@ function composeTab(
         if (effectiveConfig.readOnly) prop.readOnly = true;
 
         const validation = fieldDef.validation ?? {};
-
-        // Apply carrier field-level enum overrides
         const carrierFieldOverride: CarrierFieldOverride | undefined =
             carrierOverride?.fieldOverrides?.[fieldDef.id];
 
@@ -172,37 +274,48 @@ function composeTab(
         if (validation.minimum !== undefined) prop.minimum = validation.minimum;
         if (validation.maximum !== undefined) prop.maximum = validation.maximum;
 
-        properties[fieldDef.id] = prop;
-
-        // Required resolution
-        if (effectiveConfig.required) {
-            required.push(fieldDef.id);
-        }
-
         // Build uiSchema entry
         const uiEntry: Record<string, unknown> = {};
         if (effectiveConfig.widget ?? fieldDef.widget) {
             uiEntry['ui:widget'] = effectiveConfig.widget ?? fieldDef.widget;
         }
-        if (effectiveConfig.readOnly) {
-            uiEntry['ui:readonly'] = true;
-        }
-        if (effectiveConfig.placeholder) {
+        if (effectiveConfig.readOnly) uiEntry['ui:readonly'] = true;
+        if (effectiveConfig.placeholder)
             uiEntry['ui:placeholder'] = effectiveConfig.placeholder;
-        }
-        if (effectiveConfig.helpText ?? fieldDef.helpText) {
+        if (effectiveConfig.helpText ?? fieldDef.helpText)
             uiEntry['ui:help'] = effectiveConfig.helpText ?? fieldDef.helpText;
-        }
-        if (fieldDef.uiOptions) {
-            uiEntry['ui:options'] = fieldDef.uiOptions;
-        }
-        if (fieldDef.type === 'textarea') {
+        if (fieldDef.uiOptions) uiEntry['ui:options'] = fieldDef.uiOptions;
+        if (fieldDef.type === 'textarea')
             uiEntry['ui:widget'] = fieldDef.widget ?? 'textarea';
-        }
-        if (Object.keys(uiEntry).length > 0) {
-            uiSchema[fieldDef.id] = uiEntry;
+
+        const isRequired = !!effectiveConfig.required;
+
+        // Route to dependencies block or direct properties
+        if (tabField.dependsOn) {
+            dependentFields.push({
+                fieldId: fieldDef.id,
+                schema: prop,
+                uiEntry,
+                dep: tabField.dependsOn,
+                required: isRequired,
+            });
+            // Still add uiSchema entry so the widget renders correctly when shown
+            if (Object.keys(uiEntry).length > 0) {
+                uiSchema[fieldDef.id] = uiEntry;
+            }
+        } else {
+            properties[fieldDef.id] = prop;
+            if (isRequired) required.push(fieldDef.id);
+            if (Object.keys(uiEntry).length > 0) {
+                uiSchema[fieldDef.id] = uiEntry;
+            }
         }
     }
+
+    const deps =
+        dependentFields.length > 0
+            ? buildDependencies(dependentFields)
+            : undefined;
 
     return {
         id: tab.id,
@@ -212,6 +325,7 @@ function composeTab(
             title: tab.label,
             properties,
             required,
+            ...(deps ? { dependencies: deps } : {}),
         },
         uiSchema,
     };

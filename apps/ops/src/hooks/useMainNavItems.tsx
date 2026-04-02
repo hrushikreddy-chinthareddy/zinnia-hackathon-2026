@@ -64,6 +64,10 @@ export const useMainNavItems = (): NavGroup[] => {
     const transactionBuilderText = t('site.navLinks.transactionBuilder.text');
     const transactionBuilderHref =
         t('site.navLinks.transactionBuilder.link') || '/transaction-builder';
+    const paperFormsToDigitalText = t('site.navLinks.paperFormsToDigital.text');
+    const paperFormsToDigitalHref =
+        t('site.navLinks.paperFormsToDigital.link') ||
+        '/transaction-builder/paper-forms-to-digital';
 
     const handleAnalytics = (linkText: string) => {
         segmentAnalyticsTrackEvent('navigation_clicked', {
@@ -225,6 +229,19 @@ export const useMainNavItems = (): NavGroup[] => {
         ),
     };
 
+    const paperFormsToDigitalLink = {
+        id: paperFormsToDigitalHref,
+        display: paperFormsToDigitalText,
+        icon: IconType.DOCUMENT,
+        renderComponent: (
+            <NavLink
+                type={NavElementType.Link}
+                href={paperFormsToDigitalHref}
+                onClick={() => handleClick(paperFormsToDigitalText)}
+            />
+        ),
+    };
+
     const accessManagementLink = {
         id: accessManagement,
         display: accessManagement,
@@ -271,7 +288,11 @@ export const useMainNavItems = (): NavGroup[] => {
             items: [
                 ...(hasAiAssistantPermissions ? [aiAssistantLink] : []),
                 ...(isSuperAdmin
-                    ? [accessManagementLink, transactionBuilderLink]
+                    ? [
+                          accessManagementLink,
+                          transactionBuilderLink,
+                          paperFormsToDigitalLink,
+                      ]
                     : []),
                 ...(showWelbSalesMaterials ? [toppanMerrillLink] : []),
                 ...(showTestHarness ? [testHarnessLink] : []),

@@ -20,6 +20,8 @@ type TaskContainerProps = {
     taskMetadata: FormMetadata[];
     isSaveAsDraftEnabled: boolean;
     isContinueButtonEnabled: boolean;
+    /** When true, data entry is editable without `?mode=edit` (e.g. embedded previews). */
+    forceEditMode?: boolean;
 };
 
 const TaskContainer = ({
@@ -29,6 +31,7 @@ const TaskContainer = ({
     taskMetadata,
     isSaveAsDraftEnabled,
     isContinueButtonEnabled,
+    forceEditMode = false,
 }: TaskContainerProps) => {
     const { task, isReadyForDataEntry } = useContext(TaskDataContext);
     const { carrier, caseId, id, taskType } = task;
@@ -37,7 +40,7 @@ const TaskContainer = ({
     });
     const searchParams = useSearchParams();
     const mode = searchParams.get('mode');
-    const isEditMode = mode === TASK_MODE_EDIT;
+    const isEditMode = forceEditMode || mode === TASK_MODE_EDIT;
     const readOnly = !isEditMode;
 
     const { featureFlags } = useOptimizely();

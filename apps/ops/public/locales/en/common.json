@@ -1858,6 +1858,10 @@
             "transactionBuilder": {
                 "text": "Form Builder",
                 "link": "/transaction-builder"
+            },
+            "paperFormsToDigital": {
+                "text": "Paper → Digital",
+                "link": "/transaction-builder/paper-forms-to-digital"
             }
         },
         "loader": "Loading..."
