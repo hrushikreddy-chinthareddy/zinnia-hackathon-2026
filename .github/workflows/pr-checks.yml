@@ -70,7 +70,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -94,7 +94,7 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           run_install: false
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v6
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
