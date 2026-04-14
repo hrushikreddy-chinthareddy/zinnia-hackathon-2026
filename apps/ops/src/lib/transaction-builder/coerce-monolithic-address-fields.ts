@@ -2,6 +2,8 @@ import {
     buildStandardUsAddressObjectSchema,
     buildStandardUsAddressUiSchema,
 } from '@deps/constants/us-address-schema-fragment';
+import { coerceFlatPartyTabToActionDataArrayInTabSchemas } from '@deps/lib/transaction-builder/coerce-ai-paper-flat-party-tab-to-action-data';
+import { injectRepeatablePartyArrayAddUiInTabSchemas } from '@deps/lib/transaction-builder/inject-ai-paper-repeatable-array-ui';
 import type { FullRjsfOutput } from '@deps/lib/transaction-builder/pipeline-types';
 import { relaxContactValidationsInTabSchemas } from '@deps/lib/transaction-builder/relax-ai-generated-contact-validations';
 
@@ -151,7 +153,11 @@ export function coerceFullRjsfOutputMonolithicAddresses(
     output: FullRjsfOutput
 ): FullRjsfOutput {
     const next = JSON.parse(JSON.stringify(output)) as FullRjsfOutput;
+    coerceFlatPartyTabToActionDataArrayInTabSchemas(
+        next.schemaContent.tabSchemas
+    );
     coerceMonolithicAddressFieldsInTabSchemas(next.schemaContent.tabSchemas);
     relaxContactValidationsInTabSchemas(next.schemaContent.tabSchemas);
+    injectRepeatablePartyArrayAddUiInTabSchemas(next.schemaContent.tabSchemas);
     return next;
 }

@@ -29,11 +29,104 @@ export function filterTabSchemasForSelfServe<T extends { title: string }>(
     );
 }
 
+type TabWithOptionalId = { title: string; id?: string };
+
+/**
+ * Must match `infer-from-pdf` tab ids: use API `tab.id` when present, else a stable fallback.
+ */
+export function tabStorageKey(tab: TabWithOptionalId, index: number): string {
+    if (typeof tab.id === 'string' && tab.id.trim().length > 0) {
+        return tab.id.trim();
+    }
+    const slug = normalizeTitle(tab.title)
+        .replace(/\s+/g, '_')
+        .replace(/[^a-z0-9_]/g, '');
+    return `tab_${index}_${slug || 'sheet'}`;
+}
+
+function seedSingleTabFormData(tab: {
+    formSchema?: unknown;
+}): Record<string, unknown> {
+    const seeded: Record<string, unknown> = {};
+    const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
+    const properties = isRecord(formSchema.properties)
+        ? formSchema.properties
+        : {};
+
+    for (const [fieldKey, propertySchema] of Object.entries(properties)) {
+        if (!isRecord(propertySchema)) {
+            continue;
+        }
+
+        const type =
+            typeof propertySchema.type === 'string' ? propertySchema.type : '';
+        if (Object.prototype.hasOwnProperty.call(propertySchema, 'default')) {
+            seeded[fieldKey] = propertySchema.default;
+            continue;
+        }
+
+        if (type === 'array') {
+            const itemsSchema = isRecord(propertySchema.items)
+                ? propertySchema.items
+                : null;
+            if (
+                itemsSchema &&
+                (itemsSchema.type === 'object' ||
+                    isRecord(itemsSchema.properties))
+            ) {
+                const minItems =
+                    typeof propertySchema.minItems === 'number' &&
+                    Number.isFinite(propertySchema.minItems)
+                        ? Math.max(0, Math.floor(propertySchema.minItems))
+                        : 0;
+                const rowCount = Math.max(1, minItems);
+                seeded[fieldKey] = Array.from({ length: rowCount }, () =>
+                    buildObjectTemplateFromSchema(itemsSchema)
+                );
+            } else if (
+                typeof propertySchema.minItems === 'number' &&
+                Number.isFinite(propertySchema.minItems) &&
+                propertySchema.minItems > 0
+            ) {
+                seeded[fieldKey] = Array.from(
+                    { length: Math.floor(propertySchema.minItems) },
+                    () => undefined
+                );
+            } else {
+                seeded[fieldKey] = [];
+            }
+            continue;
+        }
+
+        if (type === 'object') {
+            seeded[fieldKey] = buildObjectTemplateFromSchema(propertySchema);
+        } else {
+            seeded[fieldKey] = undefined;
+        }
+    }
+
+    return seeded;
+}
+
+/** Per-tab form slices for `generatedFormData` (AI paper self-serve hydration). */
+export function seedGeneratedFormDataFromOutput(
+    output: FullRjsfOutput
+): Record<string, Record<string, unknown>> {
+    const out: Record<string, Record<string, unknown>> = {};
+    const tabs = filterTabSchemasForSelfServe(output.schemaContent.tabSchemas);
+    tabs.forEach((tab, index) => {
+        const key = tabStorageKey(tab as TabWithOptionalId, index);
+        out[key] = seedSingleTabFormData(tab);
+    });
+    return out;
+}
+
 export function fullRjsfOutputToTaskMetadata(
     output: FullRjsfOutput
 ): FormMetadata[] {
     return filterTabSchemasForSelfServe(output.schemaContent.tabSchemas).map(
-        (tab) => ({
+        (tab, index) => ({
+            id: tabStorageKey(tab as TabWithOptionalId, index),
             title: tab.title,
             formSchema: isRecord(tab.formSchema)
                 ? tab.formSchema

@@ -1,11 +1,18 @@
+import { formatAnnuitants } from '@deps/containers/task-container/task-handlers/tasks/initiate-annuitantchange-transaction';
+import { formatPartyData as formatAssigneePartyData } from '@deps/containers/task-container/task-handlers/tasks/initiate-assigneechange-transaction';
 import { formatBeneficiaries } from '@deps/containers/task-container/task-handlers/tasks/initiate-benechange-transaction';
+import { formatPartyData as formatPayeePartyData } from '@deps/containers/task-container/task-handlers/tasks/payeechange-data-entry';
 import {
     PartyRoleType,
     PolicyResponse,
 } from '@deps/containers/task-container/task-handlers/types';
 import { isEndDated } from '@deps/helpers/date.helpers';
+import { contextHintsPartyRole } from '@deps/lib/transaction-builder/ai-paper-policy-tab-gates';
 import type { FullRjsfOutput } from '@deps/lib/transaction-builder/pipeline-types';
-import { filterTabSchemasForSelfServe } from '@deps/lib/transaction-builder/rjsf-output-task-preview';
+import {
+    filterTabSchemasForSelfServe,
+    tabStorageKey,
+} from '@deps/lib/transaction-builder/rjsf-output-task-preview';
 import { IdentificationType, PartyType } from '@deps/models/policy/sor-policy';
 import { Party, PartyRole, Policy } from '@zinnia/api-types/types/sor';
 
@@ -84,10 +91,12 @@ export function getInsuredOrOwnerDisplayName(policy: Policy): string {
 }
 
 function matchesInsuredNameField(context: string): boolean {
+    if (contextHintsPartyRole(context) != null) return false;
     if (/name of (the )?(insured|annuitant)/.test(context)) return true;
     if (/(insured|annuitant).*(name|full name)/.test(context)) return true;
     if (/(name|full name).*(insured|annuitant)/.test(context)) return true;
-    if (/(owner).*(name|full name)/.test(context)) return true;
+    // Avoid matching "joint_owner_full_name" / "Joint Owner Full Name" via a generic "owner … name".
+    if (/(?<!\w)owner(?!\w).*(name|full name)/.test(context)) return true;
     return false;
 }
 
@@ -97,12 +106,15 @@ function matchesPolicyNumberField(context: string): boolean {
     return false;
 }
 
-/** Party fields on “contract / owner / insured” tabs — not beneficiary rows or joint-owner blocks. */
+/**
+ * Party fields on “contract / owner / insured” tabs — not beneficiary rows and
+ * not labels that name another party role (joint owner, payee, assignee, …).
+ */
 function isPartyScopeForAiPrefill(propKey: string, title: string): boolean {
     const c = `${propKey} ${title}`.toLowerCase();
     if (c.includes('benefic')) return false;
     if (c.includes('contingent')) return false;
-    if (c.includes('joint')) return false;
+    if (contextHintsPartyRole(c) != null) return false;
     return true;
 }
 
@@ -164,6 +176,16 @@ function getInsuredOrOwnerParty(policy: Policy): Party | null {
     return null;
 }
 
+function phoneDigitsOnly(value: string): string {
+    return value.replace(/\D/g, '');
+}
+
+/**
+ * NumbersWidget stores and validates digit-only values, then formats for display.
+ * Prefilling a hyphenated local dial (e.g. "555-0128") becomes 7 digits and is
+ * mis-read as a partial +country number (+5 (550) 128). Always pass full NANP
+ * digits (e.g. 15125550128) when country/area are present.
+ */
 function extractPrimaryPhoneDisplay(party: Record<string, unknown>): string {
     const phones = party.phones;
     if (!Array.isArray(phones) || phones.length === 0) return '';
@@ -176,18 +198,49 @@ function extractPrimaryPhoneDisplay(party: Record<string, unknown>): string {
     }
     const p = chosen ?? (isRecord(phones[0]) ? phones[0] : null);
     if (!p) return '';
-    const dial =
+
+    const ccRaw =
+        p.countryCode != null && p.countryCode !== ''
+            ? String(p.countryCode)
+            : '';
+    const acRaw = typeof p.areaCode === 'string' ? p.areaCode : '';
+    const dialRaw =
         typeof p.dialNumber === 'string' && p.dialNumber.trim()
             ? p.dialNumber.trim()
             : '';
-    if (dial) return dial;
-    const ac = typeof p.areaCode === 'string' ? p.areaCode : '';
-    const num =
+    const numFallback =
         (typeof p.phoneNumber === 'string' && p.phoneNumber) ||
         (typeof p.number === 'string' && p.number) ||
         '';
-    const parts = [ac, num].filter(Boolean);
-    return parts.length ? parts.join('') : '';
+
+    const cc = phoneDigitsOnly(ccRaw);
+    const ac = phoneDigitsOnly(acRaw);
+    let dialDigits = phoneDigitsOnly(dialRaw);
+    const fallbackDigits = phoneDigitsOnly(numFallback);
+
+    if (!dialDigits && fallbackDigits) {
+        dialDigits = fallbackDigits;
+    }
+    if (!dialDigits) {
+        return '';
+    }
+
+    // Already a full national/international digit string in dialNumber only
+    if (!ac && !cc && dialDigits.length >= 10) {
+        return dialDigits.length === 10 ? `1${dialDigits}` : dialDigits;
+    }
+
+    let combined = `${cc}${ac}${dialDigits}`;
+
+    if (ac && dialDigits.length >= 10 && dialDigits.startsWith(ac)) {
+        combined = `${cc}${dialDigits}`;
+    }
+
+    if (!cc && combined.length === 10) {
+        combined = `1${combined}`;
+    }
+
+    return combined;
 }
 
 function extractPrimaryEmailAddress(party: Record<string, unknown>): string {
@@ -309,26 +362,22 @@ function applyPartyDetailPrefillToNode(
     }
 }
 
-function applyPartyDetailPrefillFromTabs(
+function applyPartyDetailPrefillForSingleTab(
     policy: Policy,
-    output: FullRjsfOutput,
+    tab: { formSchema?: unknown },
     formData: Record<string, unknown>
 ): void {
     const party = getInsuredOrOwnerParty(policy);
     if (!party) return;
     const asRecord = party as unknown as Record<string, unknown>;
 
-    for (const tab of filterTabSchemasForSelfServe(
-        output.schemaContent.tabSchemas
-    )) {
-        const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
-        const properties = isRecord(formSchema.properties)
-            ? formSchema.properties
-            : {};
-        for (const [key, schema] of Object.entries(properties)) {
-            if (isRecord(schema)) {
-                applyPartyDetailPrefillToNode(asRecord, formData, key, schema);
-            }
+    const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
+    const properties = isRecord(formSchema.properties)
+        ? formSchema.properties
+        : {};
+    for (const [key, schema] of Object.entries(properties)) {
+        if (isRecord(schema)) {
+            applyPartyDetailPrefillToNode(asRecord, formData, key, schema);
         }
     }
 }
@@ -380,31 +429,27 @@ function applySemanticStringPrefillToNode(
     }
 }
 
-function applySemanticFlatPrefillFromTabs(
+function applySemanticFlatPrefillForSingleTab(
     policy: Policy,
-    output: FullRjsfOutput,
+    tab: { formSchema?: unknown },
     formData: Record<string, unknown>
 ): void {
     const insuredName = getInsuredOrOwnerDisplayName(policy);
     const policyNumber = policy.policyNumber ?? '';
 
-    for (const tab of filterTabSchemasForSelfServe(
-        output.schemaContent.tabSchemas
-    )) {
-        const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
-        const properties = isRecord(formSchema.properties)
-            ? formSchema.properties
-            : {};
-        for (const [key, schema] of Object.entries(properties)) {
-            if (isRecord(schema)) {
-                applySemanticStringPrefillToNode(
-                    insuredName,
-                    policyNumber,
-                    formData,
-                    key,
-                    schema
-                );
-            }
+    const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
+    const properties = isRecord(formSchema.properties)
+        ? formSchema.properties
+        : {};
+    for (const [key, schema] of Object.entries(properties)) {
+        if (isRecord(schema)) {
+            applySemanticStringPrefillToNode(
+                insuredName,
+                policyNumber,
+                formData,
+                key,
+                schema
+            );
         }
     }
 }
@@ -571,6 +616,173 @@ function projectBeneRowOntoItemSchema(
     );
 }
 
+function projectPartyRowOntoItemSchema(
+    seedItem: Record<string, unknown>,
+    row: Record<string, unknown>,
+    itemsSchema: Record<string, unknown>
+): Record<string, unknown> {
+    const normalized = {
+        ...row,
+        partyRole: isRecord(row.partyRole)
+            ? row.partyRole
+            : {
+                  relationshipToParty:
+                      typeof row.relationshipToParty === 'string'
+                          ? row.relationshipToParty
+                          : 'SELF',
+              },
+    };
+    return projectBeneRowOntoItemSchema(seedItem, normalized, itemsSchema);
+}
+
+function mergePartyRowsOntoArraySchema(
+    seedArr: unknown[],
+    prefillRows: Record<string, unknown>[],
+    itemsSchema: Record<string, unknown> | null
+): unknown[] {
+    const canProject =
+        itemsSchema &&
+        itemsSchema.type === 'object' &&
+        isRecord(itemsSchema.properties) &&
+        Object.keys(itemsSchema.properties).length > 0;
+
+    const max = Math.max(seedArr.length, prefillRows.length);
+    const out: unknown[] = [];
+    for (let i = 0; i < max; i++) {
+        const seedEl = seedArr[i];
+        const seedItem = isPlainObject(seedEl)
+            ? { ...(seedEl as Record<string, unknown>) }
+            : {};
+        const row = prefillRows[i];
+        if (!isPlainObject(row)) {
+            out.push(seedEl ?? {});
+            continue;
+        }
+        if (canProject && itemsSchema) {
+            out.push(projectPartyRowOntoItemSchema(seedItem, row, itemsSchema));
+        } else {
+            out.push(deepMergeFormPrefill(seedItem, row));
+        }
+    }
+    return out;
+}
+
+function applyAnnuitantActionDataPrefillForSingleTab(
+    policy: Policy,
+    tab: { title: string; formSchema?: unknown },
+    formData: Record<string, unknown>
+): void {
+    const tabCtx = tab.title.toLowerCase();
+    if (!/annuitant/.test(tabCtx)) return;
+
+    const annuitantRows = formatAnnuitants(policy as PolicyResponse) as Record<
+        string,
+        unknown
+    >[];
+    if (annuitantRows.length === 0) return;
+
+    const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
+    const properties = isRecord(formSchema.properties)
+        ? formSchema.properties
+        : {};
+
+    let arrayKey: string | null = null;
+    if (
+        isRecord(properties.actionData) &&
+        properties.actionData.type === 'array'
+    ) {
+        arrayKey = 'actionData';
+    } else {
+        for (const [k, schema] of Object.entries(properties)) {
+            if (!isRecord(schema) || schema.type !== 'array') continue;
+            const title = typeof schema.title === 'string' ? schema.title : '';
+            const ctx = `${k} ${title}`.toLowerCase();
+            if (ctx.includes('annuitant')) {
+                arrayKey = k;
+                break;
+            }
+        }
+    }
+    if (!arrayKey) return;
+
+    const schema = properties[arrayKey];
+    if (!isRecord(schema) || schema.type !== 'array') return;
+
+    const itemsSchema = isRecord(schema.items)
+        ? (schema.items as Record<string, unknown>)
+        : null;
+    const existing = formData[arrayKey];
+    const seedArr = Array.isArray(existing) ? existing : [];
+
+    formData[arrayKey] = mergePartyRowsOntoArraySchema(
+        seedArr as unknown[],
+        annuitantRows,
+        itemsSchema
+    );
+}
+
+function applyAssigneeOrPayeeActionDataPrefillForSingleTab(
+    policy: Policy,
+    tab: { title: string; formSchema?: unknown },
+    formData: Record<string, unknown>
+): void {
+    const t = tab.title.toLowerCase();
+    const isAssignee = /assignee/.test(t);
+    const isPayee = /payee/.test(t);
+    if (!isAssignee && !isPayee) return;
+    if (/annuitant/.test(t)) return;
+
+    const rows = (
+        isAssignee
+            ? formatAssigneePartyData(policy as PolicyResponse)
+            : formatPayeePartyData(policy as PolicyResponse)
+    ) as Record<string, unknown>[];
+    if (rows.length === 0) return;
+
+    const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
+    const properties = isRecord(formSchema.properties)
+        ? formSchema.properties
+        : {};
+
+    let arrayKey: string | null = null;
+    if (
+        isRecord(properties.actionData) &&
+        properties.actionData.type === 'array'
+    ) {
+        arrayKey = 'actionData';
+    } else {
+        for (const [k, schema] of Object.entries(properties)) {
+            if (!isRecord(schema) || schema.type !== 'array') continue;
+            const title = typeof schema.title === 'string' ? schema.title : '';
+            const ctx = `${k} ${title}`.toLowerCase();
+            if (isAssignee && ctx.includes('assignee')) {
+                arrayKey = k;
+                break;
+            }
+            if (isPayee && ctx.includes('payee')) {
+                arrayKey = k;
+                break;
+            }
+        }
+    }
+    if (!arrayKey) return;
+
+    const schema = properties[arrayKey];
+    if (!isRecord(schema) || schema.type !== 'array') return;
+
+    const itemsSchema = isRecord(schema.items)
+        ? (schema.items as Record<string, unknown>)
+        : null;
+    const existing = formData[arrayKey];
+    const seedArr = Array.isArray(existing) ? existing : [];
+
+    formData[arrayKey] = mergePartyRowsOntoArraySchema(
+        seedArr as unknown[],
+        rows,
+        itemsSchema
+    );
+}
+
 function mergeBeneficiaryArrayWithSchema(
     seedArr: unknown[],
     prefillRows: Record<string, unknown>[],
@@ -619,78 +831,93 @@ function splitBeneficiaryRows(rows: Record<string, unknown>[]): {
     return { primary, contingent };
 }
 
-function applyBeneficiaryArrayPrefill(
+function applyBeneficiaryArrayPrefillForSingleTab(
     policy: Policy,
-    output: FullRjsfOutput,
+    tab: { title: string; formSchema?: unknown },
     formData: Record<string, unknown>
 ): void {
+    const tabCtx = tab.title.toLowerCase();
+    if (!tabCtx.includes('benefic')) return;
+
     const beneRows = formatBeneficiaries(policy as PolicyResponse) as Record<
         string,
         unknown
     >[];
     const { primary, contingent } = splitBeneficiaryRows(beneRows);
 
-    for (const tab of filterTabSchemasForSelfServe(
-        output.schemaContent.tabSchemas
-    )) {
-        const tabCtx = tab.title.toLowerCase();
-        if (!tabCtx.includes('benefic')) continue;
+    const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
+    const properties = isRecord(formSchema.properties)
+        ? formSchema.properties
+        : {};
 
-        const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
-        const properties = isRecord(formSchema.properties)
-            ? formSchema.properties
-            : {};
+    for (const [key, schema] of Object.entries(properties)) {
+        if (!isRecord(schema) || schema.type !== 'array') continue;
+        const title = typeof schema.title === 'string' ? schema.title : '';
+        const ctx = `${key} ${title}`.toLowerCase();
+        const existing = formData[key];
+        const seedArr = Array.isArray(existing) ? existing : [];
 
-        for (const [key, schema] of Object.entries(properties)) {
-            if (!isRecord(schema) || schema.type !== 'array') continue;
-            const title = typeof schema.title === 'string' ? schema.title : '';
-            const ctx = `${key} ${title}`.toLowerCase();
-            const existing = formData[key];
-            const seedArr = Array.isArray(existing) ? existing : [];
-
-            let prefill: Record<string, unknown>[] = [];
-            if (ctx.includes('contingent')) {
-                prefill = contingent;
-            } else if (ctx.includes('primary')) {
-                prefill = primary;
-            } else if (
-                ctx.includes('benefic') ||
-                Object.keys(properties).filter(
-                    (k) =>
-                        isRecord(properties[k]) &&
-                        properties[k].type === 'array'
-                ).length === 1
-            ) {
-                prefill = beneRows;
-            }
-
-            if (prefill.length === 0) continue;
-            const itemsSchema = isRecord(schema.items)
-                ? (schema.items as Record<string, unknown>)
-                : null;
-            formData[key] = mergeBeneficiaryArrayWithSchema(
-                seedArr as unknown[],
-                prefill,
-                itemsSchema
-            );
+        let prefill: Record<string, unknown>[] = [];
+        if (ctx.includes('contingent')) {
+            prefill = contingent;
+        } else if (ctx.includes('primary')) {
+            prefill = primary;
+        } else if (
+            ctx.includes('benefic') ||
+            Object.keys(properties).filter(
+                (k) => isRecord(properties[k]) && properties[k].type === 'array'
+            ).length === 1
+        ) {
+            prefill = beneRows;
         }
+
+        if (prefill.length === 0) continue;
+        const itemsSchema = isRecord(schema.items)
+            ? (schema.items as Record<string, unknown>)
+            : null;
+        formData[key] = mergeBeneficiaryArrayWithSchema(
+            seedArr as unknown[],
+            prefill,
+            itemsSchema
+        );
     }
 }
 
 /**
- * AI-generated RJSF uses flat/paper field keys; live self-serve uses contractInfo/actionData.
- * This layer maps policy data onto generated property keys and merges bene arrays by role.
+ * Hydrates `generatedFormData[tabId]` per tab so values align with `ui:dataPath` and
+ * duplicate field names on different tabs do not overwrite each other.
  */
-export function applyAiPaperSemanticPrefill(
+export function applyAiPaperSemanticPrefillGeneratedFormData(
     policy: Policy,
     output: FullRjsfOutput,
-    formData: Record<string, unknown>,
+    generatedFormData: Record<string, Record<string, unknown>>,
     useBeneficiaryPrefill: boolean
-): Record<string, unknown> {
-    applySemanticFlatPrefillFromTabs(policy, output, formData);
-    applyPartyDetailPrefillFromTabs(policy, output, formData);
-    if (useBeneficiaryPrefill) {
-        applyBeneficiaryArrayPrefill(policy, output, formData);
-    }
-    return formData;
+): void {
+    const tabs = filterTabSchemasForSelfServe(output.schemaContent.tabSchemas);
+    tabs.forEach((tab, index) => {
+        const key = tabStorageKey(tab as { title: string; id?: string }, index);
+        if (!isPlainObject(generatedFormData[key])) {
+            generatedFormData[key] = {};
+        }
+        const slice = generatedFormData[key] as Record<string, unknown>;
+        applySemanticFlatPrefillForSingleTab(policy, tab, slice);
+        applyPartyDetailPrefillForSingleTab(policy, tab, slice);
+        if (useBeneficiaryPrefill) {
+            applyBeneficiaryArrayPrefillForSingleTab(
+                policy,
+                tab as { title: string; formSchema?: unknown },
+                slice
+            );
+        }
+        applyAnnuitantActionDataPrefillForSingleTab(
+            policy,
+            tab as { title: string; formSchema?: unknown },
+            slice
+        );
+        applyAssigneeOrPayeeActionDataPrefillForSingleTab(
+            policy,
+            tab as { title: string; formSchema?: unknown },
+            slice
+        );
+    });
 }

@@ -3,6 +3,7 @@ import formidable from 'formidable';
 import { promises as fs } from 'fs';
 
 import { coerceMonolithicAddressStringFieldsInProperties } from '@deps/lib/transaction-builder/coerce-monolithic-address-fields';
+import { injectRepeatablePartyArrayAddUiInProperties } from '@deps/lib/transaction-builder/inject-ai-paper-repeatable-array-ui';
 import {
     buildCanonicalModelPrompt,
     buildTabSchemaGenerationPrompt,
@@ -3180,6 +3181,13 @@ function sanitizeGeneratedTabSchemas(
             required
         );
         relaxContactValidationsInProperties(properties);
+        injectRepeatablePartyArrayAddUiInProperties(
+            properties,
+            finalUiSchema,
+            typeof sourceTab.title === 'string'
+                ? sourceTab.title
+                : tabPlan.title
+        );
 
         const priorHintsApplied = Array.isArray(sourceTab.priorHintsApplied)
             ? sourceTab.priorHintsApplied.filter(

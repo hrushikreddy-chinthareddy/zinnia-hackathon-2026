@@ -299,6 +299,7 @@ export interface FullRjsfOutput {
     };
     schemaContent: {
         tabSchemas: Array<{
+            id?: string;
             title: string;
             formSchema: Record<string, unknown>;
             uiSchema: Record<string, unknown>;

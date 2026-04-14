@@ -24,6 +24,7 @@ import { TranslationFiles } from '@deps/config/translations';
 import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { useWorkflow } from '@deps/contexts/WorkflowContainerContext';
 import { useCasesQuery } from '@deps/hooks/useCasesQuery';
+import { tabStorageKey } from '@deps/lib/transaction-builder/rjsf-output-task-preview';
 import { Processes } from '@deps/models/case/case';
 import { FormMetadata } from '@deps/models/case/task';
 import { browserLogError } from '@deps/utils/browser-logging';
@@ -145,16 +146,49 @@ const SelfServeTransactionContainer = ({
         () => ({
             customData: formData,
             setCustomData: (patch: any) => {
-                setFormData((prev: any) => ({
-                    ...prev,
-                    ...patch,
-                }));
+                setFormData((prev: any) => {
+                    const next = { ...prev, ...patch };
+                    if (
+                        transactionType === SelfServeTransaction.AI_PAPER &&
+                        Array.isArray(patch?.actionData)
+                    ) {
+                        const schemaStepIndex = currentStepIndex - 1;
+                        if (
+                            schemaStepIndex >= 0 &&
+                            schemaStepIndex < steps.length
+                        ) {
+                            const tabId = tabStorageKey(
+                                steps[schemaStepIndex] as {
+                                    title: string;
+                                    id?: string;
+                                },
+                                schemaStepIndex
+                            );
+                            const prevTabSlice =
+                                (next.generatedFormData?.[tabId] as Record<
+                                    string,
+                                    unknown
+                                >) ?? {};
+                            next.generatedFormData = {
+                                ...(next.generatedFormData ?? {}),
+                                [tabId]: {
+                                    ...prevTabSlice,
+                                    actionData: patch.actionData,
+                                },
+                            };
+                        }
+                        if (Array.isArray(prev.partyUpdates)) {
+                            next.partyUpdates = patch.actionData;
+                        }
+                    }
+                    return next;
+                });
             },
             setValidationSummary,
             setSubmitEnabled,
             setSubmitDisabledStepIndex,
         }),
-        [formData, setFormData]
+        [formData, setFormData, transactionType, currentStepIndex, steps]
     );
 
     const handleStepContinue = (
@@ -183,13 +217,24 @@ const SelfServeTransactionContainer = ({
         }
     };
 
-    const handleFormChange = (
-        event: IChangeEvent<any, RJSFSchema, GenericObjectType>
+    const handleDynamicFormChange = (
+        event: IChangeEvent<any, RJSFSchema, GenericObjectType>,
+        aiPaperTabId: string | null
     ) => {
-        setFormData((formData: any) => ({
-            ...formData,
-            ...event.formData,
-        }));
+        if (aiPaperTabId != null) {
+            setFormData((prev: any) => ({
+                ...prev,
+                generatedFormData: {
+                    ...(prev.generatedFormData ?? {}),
+                    [aiPaperTabId]: event.formData ?? {},
+                },
+            }));
+        } else {
+            setFormData((prev: any) => ({
+                ...prev,
+                ...event.formData,
+            }));
+        }
         if (hasValidationErrors) {
             setHasValidationErrors(false);
         }
@@ -209,6 +254,10 @@ const SelfServeTransactionContainer = ({
 
     const dynamicSteps: Step[] = steps.map((step, index) => {
         const title = step?.title ?? '';
+        const aiPaperTabId =
+            transactionType === SelfServeTransaction.AI_PAPER
+                ? tabStorageKey(step as { title: string; id?: string }, index)
+                : null;
         return {
             isVisible: () => true,
             component: (
@@ -240,8 +289,15 @@ const SelfServeTransactionContainer = ({
                     <DynamicForm
                         ref={formRefs[currentStepIndex]}
                         taskMetadata={step}
-                        formData={formData}
-                        onChange={handleFormChange}
+                        formData={
+                            aiPaperTabId != null
+                                ? formData?.generatedFormData?.[aiPaperTabId] ??
+                                  {}
+                                : formData
+                        }
+                        onChange={(e) =>
+                            handleDynamicFormChange(e, aiPaperTabId)
+                        }
                         onSubmit={handleSubmit}
                         formContext={mergedFormContext}
                     />

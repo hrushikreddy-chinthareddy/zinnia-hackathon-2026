@@ -204,6 +204,8 @@ export interface renewalsFormParts {
     subsequentTargetFunds: TargetFundAllocation[] | null;
 }
 export type TabSchema = {
+    /** Stable tab id (AI paper flows align with `generatedFormData[id]` / `ui:dataPath`). */
+    id?: string;
     title?: string;
     tabTitle?: string;
     description?: string;
