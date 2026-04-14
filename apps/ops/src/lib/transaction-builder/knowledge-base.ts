@@ -637,7 +637,7 @@ export const PatternsKnowledgeBase: PatternMetadata[] = [
             addressLine2: { 'ui:widget': 'TextWidget' },
             city: { 'ui:widget': 'TextWidget' },
             state: { 'ui:widget': 'SelectWidget' },
-            zipCode: { 'ui:widget': 'TextWidget' },
+            zipCode: { 'ui:widget': 'ZipCodeWidget' },
             country: { 'ui:widget': 'TextWidget', 'ui:readonly': true },
         },
     },
@@ -1057,18 +1057,21 @@ export const ValidationKnowledgeBase: ValidationRule[] = [
 // Common validation patterns for specific field types
 export const CommonValidationPatterns = {
     ssn: {
-        description: 'Social Security Number (XXX-XX-XXXX)',
+        description:
+            'SSN / ITIN-style tax id — allow masked display (e.g. ***-**-1234) or full digits',
         schema: {
             type: 'string',
-            pattern: '^\\d{3}-?\\d{2}-?\\d{4}$',
-            maxLength: 11,
+            pattern:
+                '^(?:\\d{3}-?\\d{2}-?\\d{4}|[*•xX#]{3}-[*•xX#]{2}-\\d{4})$',
+            maxLength: 15,
         },
     },
     phoneUS: {
-        description: 'US Phone Number',
+        description:
+            'Phone — allow +country, spaces, parentheses (SOR display formats)',
         schema: {
             type: 'string',
-            pattern: '^\\(?\\d{3}\\)?[-\\s]?\\d{3}[-\\s]?\\d{4}$',
+            pattern: '^[+\\d\\s().\\-]{10,24}$',
         },
     },
     zipCodeUS: {
@@ -1314,7 +1317,7 @@ export const RepeatableFieldUiProfiles = [
             'ui:options.title': 'Address',
             'items.ui:options.ObjectFieldTemplate': 'PartyCardFieldTemplate',
             'items.state.ui:widget': 'SelectWidget',
-            'items.zipCode.ui:widget': 'NumbersWidget',
+            'items.zipCode.ui:widget': 'ZipCodeWidget',
         },
         notes: [
             'Use AddressFieldTemplate for embedded single address objects when not list-like.',

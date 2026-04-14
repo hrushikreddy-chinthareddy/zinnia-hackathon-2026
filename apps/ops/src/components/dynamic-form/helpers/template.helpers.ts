@@ -49,6 +49,39 @@ export const UIfieldTemplateMap: Record<
     ['TitleFieldTemplate']: TitleFieldTemplate,
 };
 
+/**
+ * Ensures address blocks use ZIP datalist widget and consistent transaction UX.
+ * Run before {@link ApplyUITemplates} so string template names are still present.
+ */
+export function injectTransactionAddressUi(
+    uiSchema: UiSchema | undefined
+): void {
+    if (!uiSchema || !isObject(uiSchema)) return;
+
+    const tmpl = uiSchema['ui:ObjectFieldTemplate'];
+    if (typeof tmpl === 'string' && tmpl === 'AddressFieldTemplate') {
+        const z = uiSchema.zipCode;
+        if (!isObject(z)) {
+            uiSchema.zipCode = { 'ui:widget': 'ZipCodeWidget' };
+        } else {
+            const widget = z['ui:widget'];
+            if (
+                widget === undefined ||
+                widget === 'TextWidget' ||
+                widget === 'NumbersWidget'
+            ) {
+                uiSchema.zipCode = { ...z, 'ui:widget': 'ZipCodeWidget' };
+            }
+        }
+    }
+
+    for (const val of Object.values(uiSchema)) {
+        if (isObject(val)) {
+            injectTransactionAddressUi(val as UiSchema);
+        }
+    }
+}
+
 export const ApplyUITemplates = (uiSchema: UiSchema) => {
     Object.keys(uiSchema || {}).forEach((key) => {
         const currentValue = uiSchema[key];

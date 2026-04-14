@@ -28,6 +28,8 @@ import {
 } from './transactions/payee-change-transaction';
 import { SelfServeTransaction } from './types';
 
+export { getAiPaperTransactionData } from './transactions/ai-paper-transaction';
+
 const removeFirstTabSchema = (metadata: any, taskType: TaskType) => {
     if (!metadata?.schemaContent?.tabSchemas) {
         return metadata;
@@ -206,5 +208,9 @@ export const getSelfServeTransactionData = async (
                 submitResponseHandler: annuitantChangeSubmitHandler,
             };
         }
+        case SelfServeTransaction.AI_PAPER:
+            throw new Error(
+                'AI_PAPER uses getAiPaperTransactionData with stored FullRjsfOutput, not getSelfServeTransactionData'
+            );
     }
 };

@@ -27,6 +27,7 @@ import TextWidget from './text-widget/text-widget';
 import ValueWidget from './text-widget/value-widget';
 import TextareaWidget from './textarea-widget/textarea-widget';
 import TitleWidget from './title-widget/titile-widget';
+import ZipCodeWidget from './zip-code-widget/zip-code-widget';
 
 export function generateWidgets(): RegistryWidgetsType {
     return {
@@ -56,6 +57,7 @@ export function generateWidgets(): RegistryWidgetsType {
         PartyRoleWidget,
         IssueResolvedDisplayWidget,
         IssueResolvedRadioWidget,
+        ZipCodeWidget,
     };
 }
 

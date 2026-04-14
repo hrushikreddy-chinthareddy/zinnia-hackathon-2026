@@ -2691,6 +2691,20 @@
             "confirmSubTitle": "Las actualizaciones del cambio de anuitante se enviaron.",
             "placeholder": "Seleccione un rol",
             "validationMessage": "No se puede agregar otro {{selectedRole}}. Se permiten un máximo de {{maxAllowed}}."
+        },
+        "aiPaper": {
+            "title": "Transacción de papel a digital",
+            "subTitle": "Complete el formulario generado usando los datos de la póliza cuando estén disponibles.",
+            "confirmSubTitle": "Su solicitud se registró (envío simulado).",
+            "openOnPolicy": "Abrir en la póliza",
+            "openOnPolicyHint": "Después de generar, abra el mismo flujo en una póliza con datos precargados.",
+            "planCodeLabel": "Código de plan",
+            "policyIdLabel": "Id de póliza / contrato",
+            "errors": {
+                "missingQuery": "Falta la clave de sesión en este enlace de transacción con IA. Ábralo desde Papel → Digital con «Abrir en la póliza», o añada ?aiPaperKey=… a la URL.",
+                "missingStorage": "No se encontró el formulario generado en esta sesión del navegador. Vuelva a generar desde Papel → Digital y abra en la póliza otra vez.",
+                "parse": "No se pudo leer la definición del formulario almacenado. Intente generar y abrir de nuevo."
+            }
         }
     },
     "welcome": {

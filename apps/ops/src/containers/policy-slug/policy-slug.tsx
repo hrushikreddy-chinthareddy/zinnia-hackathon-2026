@@ -20,7 +20,10 @@ import PremiumsSubPage from '@deps/containers/premiums-sub-page';
 import RidersAndFeaturesSubPage from '@deps/containers/riders-and-features-sub-page/riders-and-features-sub-page';
 import SelfServeTransactionContainer from '@deps/containers/self-serve-transaction/self-serve-transaction-container';
 import { SelfServeTransactionProvider } from '@deps/containers/self-serve-transaction/self-serve-transaction-provider';
-import { getSelfServeTransactionData } from '@deps/containers/self-serve-transaction/self-serve-transaction.helpers';
+import {
+    getAiPaperTransactionData,
+    getSelfServeTransactionData,
+} from '@deps/containers/self-serve-transaction/self-serve-transaction.helpers';
 import { SelfServeTransaction } from '@deps/containers/self-serve-transaction/types';
 import ActivitySubPage from '@deps/containers/subpages/activity-sub-page/activity-sub-page';
 import CallLogs from '@deps/containers/subpages/activity-sub-page/call-logs';
@@ -35,6 +38,11 @@ import { PolicyData } from '@deps/contexts/PolicyDataContext';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
 import { usePrefetchAgentData } from '@deps/hooks/usePrefetchAgentData';
 import { useSegmentPageTracker } from '@deps/hooks/useSegmentPageTracker';
+import {
+    AI_PAPER_RJSF_STORAGE_PREFIX,
+    isAiPaperSelfServeSlug,
+} from '@deps/lib/transaction-builder/ai-paper-slug';
+import type { FullRjsfOutput } from '@deps/lib/transaction-builder/pipeline-types';
 import { SorSystem } from '@deps/models/policy/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import Custom404Page from '@deps/pages/404s';
@@ -90,6 +98,9 @@ const PolicySlug: React.FC<PolicyPageProps> = ({
     const { partyId, sessionId } = usePermissionsContext();
     const { featureFlags } = useOptimizely();
     const [transactionData, setTransactionData] = useState<any | null>(null);
+    const [aiTransactionError, setAiTransactionError] = useState<string | null>(
+        null
+    );
     const [beneficiaryEligibility, setBeneficiaryEligibility] =
         useState<boolean>(false);
 
@@ -150,29 +161,79 @@ const PolicySlug: React.FC<PolicyPageProps> = ({
     );
 
     const getTransactionData = useCallback(async () => {
-        let transactionType;
-        if (slug && slug.length > 0) {
-            switch (slug[1]) {
-                case Slugs.AssigneeChange:
-                    transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
-                    break;
-                case Slugs.PayeeChange:
-                    transactionType = SelfServeTransaction.PAYEE_CHANGE;
-                    break;
-                case Slugs.BeneChange:
-                    transactionType = SelfServeTransaction.BENE_CHANGE;
-                    break;
-                case Slugs.AnnuitantChange:
-                    transactionType = SelfServeTransaction.ANNUITANT_CHANGE;
-            }
-            const transactionPayload = await getSelfServeTransactionData(
-                transactionType as SelfServeTransaction,
-                policy as Policy,
-                planCode as string
-            );
-            setTransactionData(transactionPayload);
+        setAiTransactionError(null);
+        if (!slug || slug.length < 2 || !policy || !planCode) {
+            return;
         }
-    }, [slug, policy, planCode]);
+
+        const peopleSlug = slug[1];
+        if (peopleSlug && isAiPaperSelfServeSlug(peopleSlug)) {
+            setTransactionData(null);
+            if (!router.isReady) {
+                return;
+            }
+            const keyParam = router.query.aiPaperKey;
+            const aiPaperKey =
+                typeof keyParam === 'string'
+                    ? keyParam
+                    : Array.isArray(keyParam)
+                    ? keyParam[0]
+                    : null;
+            if (!aiPaperKey) {
+                setTransactionData(null);
+                setAiTransactionError('aiPaper.errors.missingQuery');
+                return;
+            }
+            try {
+                const raw =
+                    typeof window !== 'undefined'
+                        ? sessionStorage.getItem(
+                              `${AI_PAPER_RJSF_STORAGE_PREFIX}${aiPaperKey}`
+                          )
+                        : null;
+                if (!raw) {
+                    setTransactionData(null);
+                    setAiTransactionError('aiPaper.errors.missingStorage');
+                    return;
+                }
+                const output = JSON.parse(raw) as FullRjsfOutput;
+                const transactionPayload = getAiPaperTransactionData(
+                    policy as Policy,
+                    planCode as string,
+                    output
+                );
+                setTransactionData(transactionPayload);
+            } catch {
+                setTransactionData(null);
+                setAiTransactionError('aiPaper.errors.parse');
+            }
+            return;
+        }
+
+        let transactionType: SelfServeTransaction | undefined;
+        switch (peopleSlug) {
+            case Slugs.AssigneeChange:
+                transactionType = SelfServeTransaction.ASSIGNEE_CHANGE;
+                break;
+            case Slugs.PayeeChange:
+                transactionType = SelfServeTransaction.PAYEE_CHANGE;
+                break;
+            case Slugs.BeneChange:
+                transactionType = SelfServeTransaction.BENE_CHANGE;
+                break;
+            case Slugs.AnnuitantChange:
+                transactionType = SelfServeTransaction.ANNUITANT_CHANGE;
+        }
+        if (!transactionType) {
+            return;
+        }
+        const transactionPayload = await getSelfServeTransactionData(
+            transactionType,
+            policy as Policy,
+            planCode as string
+        );
+        setTransactionData(transactionPayload);
+    }, [slug, policy, planCode, router.isReady, router.query.aiPaperKey]);
 
     const getBeneficiaryEligibility = useCallback(() => {
         if (!beneficiaryEligibilityData) return;
@@ -224,43 +285,64 @@ const PolicySlug: React.FC<PolicyPageProps> = ({
         switch (slug[0]) {
             case 'people':
                 subPageContent = slug[1] ? (
-                    selfServeSlugsList.includes(slug[1]) ? (
-                        transactionData && (
-                            <SelfServeTransactionProvider>
-                                <SelfServeTransactionContainer
-                                    initialCustomData={
-                                        transactionData.initialCustomData
-                                    }
-                                    initialFormData={
-                                        transactionData.initialFormData
-                                    }
-                                    transactionType={
-                                        transactionData.transactionType
-                                    }
-                                    policy={policy}
-                                    metaData={transactionData.metaData}
-                                    parentPage={transactionData.parentPage}
-                                    leaveTransactionLink={
-                                        transactionData.leaveTransactionLink
-                                    }
-                                    processType={transactionData.processType}
-                                    processSubType={
-                                        transactionData.processSubType
-                                    }
-                                    startStepSubtitle={
-                                        t(transactionData?.startStepSubtitle) ??
-                                        ''
-                                    }
-                                    submitResponseHandler={transactionData?.submitResponseHandler(
-                                        policy,
-                                        sessionId,
-                                        partyId
-                                    )}
-                                    confirmStepSubtitle={t(
-                                        transactionData?.confirmStepSubtitle
-                                    )}
+                    selfServeSlugsList.includes(slug[1]) ||
+                    isAiPaperSelfServeSlug(slug[1]) ? (
+                        aiTransactionError ? (
+                            <div className="responsive-padding mx-auto max-w-xl py-10">
+                                <p className="text-sm text-gray-800">
+                                    {t(aiTransactionError)}
+                                </p>
+                            </div>
+                        ) : slug[1] &&
+                          isAiPaperSelfServeSlug(slug[1]) &&
+                          (!router.isReady ||
+                              (!transactionData && !aiTransactionError)) ? (
+                            <div className="flex h-[400px] w-full items-center justify-center">
+                                <PageLoader
+                                    variant={PageLoaderVariant.Center}
                                 />
-                            </SelfServeTransactionProvider>
+                            </div>
+                        ) : (
+                            transactionData && (
+                                <SelfServeTransactionProvider>
+                                    <SelfServeTransactionContainer
+                                        initialCustomData={
+                                            transactionData.initialCustomData
+                                        }
+                                        initialFormData={
+                                            transactionData.initialFormData
+                                        }
+                                        transactionType={
+                                            transactionData.transactionType
+                                        }
+                                        policy={policy}
+                                        metaData={transactionData.metaData}
+                                        parentPage={transactionData.parentPage}
+                                        leaveTransactionLink={
+                                            transactionData.leaveTransactionLink
+                                        }
+                                        processType={
+                                            transactionData.processType
+                                        }
+                                        processSubType={
+                                            transactionData.processSubType
+                                        }
+                                        startStepSubtitle={
+                                            t(
+                                                transactionData?.startStepSubtitle
+                                            ) ?? ''
+                                        }
+                                        submitResponseHandler={transactionData?.submitResponseHandler(
+                                            policy,
+                                            sessionId,
+                                            partyId
+                                        )}
+                                        confirmStepSubtitle={t(
+                                            transactionData?.confirmStepSubtitle
+                                        )}
+                                    />
+                                </SelfServeTransactionProvider>
+                            )
                         )
                     ) : (
                         <PersonSubPage

@@ -86,6 +86,9 @@ const SelfServeTransactionContainer = ({
 
     const getStartStepTitle = useCallback(
         (transactionType: string, t: TFunction) => {
+            if (transactionType === SelfServeTransaction.AI_PAPER) {
+                return t('aiPaper.title');
+            }
             const partyRoleMap: Record<string, string> = {
                 ASSIGNEE_CHANGE: 'Assignees',
                 PAYEE_CHANGE: 'Payees',

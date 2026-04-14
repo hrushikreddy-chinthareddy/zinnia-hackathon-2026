@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto';
 import formidable from 'formidable';
 import { promises as fs } from 'fs';
 
+import { coerceMonolithicAddressStringFieldsInProperties } from '@deps/lib/transaction-builder/coerce-monolithic-address-fields';
 import {
     buildCanonicalModelPrompt,
     buildTabSchemaGenerationPrompt,
@@ -19,6 +20,11 @@ import type {
     SchemaGenerationResult,
     TabInference,
 } from '@deps/lib/transaction-builder/pipeline-types';
+import {
+    AI_PAPER_TOLERANT_PHONE_PATTERN,
+    AI_PAPER_TOLERANT_SSN_PATTERN,
+    relaxContactValidationsInProperties,
+} from '@deps/lib/transaction-builder/relax-ai-generated-contact-validations';
 import { extractPdfTextAndLayout } from '@deps/server/paper2flow/extract-pdf-text-layout';
 import type {
     PdfExtractItemsMode,
@@ -1906,8 +1912,7 @@ function extractNumberByPattern(
     return Number.isFinite(parsed) ? parsed : undefined;
 }
 
-const FLEX_PHONE_PATTERN =
-    '^(?:\\+\\d{1,3}[\\s-]?)?\\(?\\d{3}\\)?[-\\s]?\\d{3}[-\\s]?\\d{4}$';
+const FLEX_PHONE_PATTERN = AI_PAPER_TOLERANT_PHONE_PATTERN;
 
 function applyCanonicalValidationHints(
     schemaEntry: Record<string, unknown>,
@@ -1927,17 +1932,15 @@ function applyCanonicalValidationHints(
         schemaEntry.format = 'email';
     }
     if (canonical.type === 'ssn') {
-        if (typeof schemaEntry.pattern !== 'string') {
-            schemaEntry.pattern = '^\\d{3}-?\\d{2}-?\\d{4}$';
-        }
+        schemaEntry.pattern = AI_PAPER_TOLERANT_SSN_PATTERN;
         if (typeof schemaEntry.maxLength !== 'number') {
-            schemaEntry.maxLength = 11;
+            schemaEntry.maxLength = 15;
+        } else if (schemaEntry.maxLength < 15) {
+            schemaEntry.maxLength = 15;
         }
     }
     if (canonical.type === 'phone') {
-        if (typeof schemaEntry.pattern !== 'string') {
-            schemaEntry.pattern = FLEX_PHONE_PATTERN;
-        }
+        schemaEntry.pattern = FLEX_PHONE_PATTERN;
     }
 
     if (
@@ -2053,6 +2056,57 @@ function looksAddressObjectSchema(
         keySet.has(signal)
     ).length;
     return signalCount >= 3 || (keySet.has('city') && keySet.has('state'));
+}
+
+/**
+ * When the LLM marks joint-owner address/phone/SSN as required but not the
+ * joint-owner name, treat the whole joint block as optional so UX matches intent.
+ */
+function alignJointOwnerTabRequirements(
+    tabTitle: string,
+    properties: Record<string, unknown>,
+    required: string[]
+): string[] {
+    const t = tabTitle.toLowerCase();
+    if (!t.includes('joint') || !t.includes('owner')) {
+        return required;
+    }
+
+    const reqSet = new Set(required.filter((k) => typeof k === 'string'));
+    const keys = Object.keys(properties);
+    const jointNameKeys = keys.filter((k) => {
+        const mk = toMachineKey(k);
+        return (
+            mk.includes('joint') &&
+            (mk.includes('name') || mk.includes('full')) &&
+            !mk.includes('business')
+        );
+    });
+    const anyJointNameRequired = jointNameKeys.some((k) => reqSet.has(k));
+    if (anyJointNameRequired) {
+        return Array.from(reqSet);
+    }
+
+    for (const key of keys) {
+        const mk = toMachineKey(key);
+        if (!mk.includes('joint')) continue;
+        if (jointNameKeys.includes(key)) continue;
+
+        reqSet.delete(key);
+        const node = properties[key];
+        if (!isRecord(node)) continue;
+        if (node.type === 'object') {
+            delete node.required;
+            const props = isRecord(node.properties) ? node.properties : {};
+            for (const sub of Object.values(props)) {
+                if (isRecord(sub) && sub.type === 'object') {
+                    delete sub.required;
+                }
+            }
+        }
+    }
+
+    return Array.from(reqSet);
 }
 
 function findSchemaPropertyKeyByMachineKey(
@@ -3055,7 +3109,7 @@ function sanitizeGeneratedTabSchemas(
             ? fallbackTab.formSchema.required
             : [];
 
-        const required = requiredRaw
+        let required = requiredRaw
             .filter((value): value is string => typeof value === 'string')
             .filter((value) =>
                 Object.prototype.hasOwnProperty.call(properties, value)
@@ -3091,6 +3145,11 @@ function sanitizeGeneratedTabSchemas(
             }
         }
 
+        coerceMonolithicAddressStringFieldsInProperties(
+            properties,
+            finalUiSchema
+        );
+
         for (const [key, value] of Object.entries(properties)) {
             if (!isRecord(value)) continue;
             if (!looksAddressObjectSchema(value)) continue;
@@ -3112,6 +3171,15 @@ function sanitizeGeneratedTabSchemas(
                 },
             };
         }
+
+        required = alignJointOwnerTabRequirements(
+            typeof sourceTab.title === 'string'
+                ? sourceTab.title
+                : tabPlan.title,
+            properties,
+            required
+        );
+        relaxContactValidationsInProperties(properties);
 
         const priorHintsApplied = Array.isArray(sourceTab.priorHintsApplied)
             ? sourceTab.priorHintsApplied.filter(

@@ -11,7 +11,10 @@ import { TaskDocument } from '@deps/models/case/task-instance';
 import fields from './customization/fields/fields';
 import templates from './customization/templates/templates';
 import widgets from './customization/widgets/widgets';
-import { ApplyUITemplates } from './helpers/template.helpers';
+import {
+    ApplyUITemplates,
+    injectTransactionAddressUi,
+} from './helpers/template.helpers';
 import transformErrors from './helpers/validator.helpers';
 
 type DynamicFormProps = {
@@ -54,6 +57,7 @@ const DynamicForm = React.forwardRef(function DynamicFormComponent(
 ) {
     const { t } = useTranslation(TranslationFiles.COMMON);
 
+    injectTransactionAddressUi(taskMetadata.uiSchema);
     ApplyUITemplates(taskMetadata.uiSchema);
 
     return (

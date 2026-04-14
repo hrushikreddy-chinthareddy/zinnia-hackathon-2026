@@ -13,12 +13,27 @@ function normalizeTitle(value: string): string {
     return value.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
+/** Tabs excluded from self-serve / policy People AI flows (and seeding). */
+export function shouldIncludeTabInSelfServeFlow(tabTitle: string): boolean {
+    const n = normalizeTitle(tabTitle);
+    if (n === 'confirm') return false;
+    if (n === 'review form data') return false;
+    return true;
+}
+
+export function filterTabSchemasForSelfServe<T extends { title: string }>(
+    tabSchemas: T[]
+): T[] {
+    return tabSchemas.filter((tab) =>
+        shouldIncludeTabInSelfServeFlow(tab.title)
+    );
+}
+
 export function fullRjsfOutputToTaskMetadata(
     output: FullRjsfOutput
 ): FormMetadata[] {
-    return output.schemaContent.tabSchemas
-        .filter((tab) => normalizeTitle(tab.title) !== 'confirm')
-        .map((tab) => ({
+    return filterTabSchemasForSelfServe(output.schemaContent.tabSchemas).map(
+        (tab) => ({
             title: tab.title,
             formSchema: isRecord(tab.formSchema)
                 ? tab.formSchema
@@ -26,7 +41,8 @@ export function fullRjsfOutputToTaskMetadata(
             uiSchema: isRecord(tab.uiSchema)
                 ? tab.uiSchema
                 : { 'ui:submitButtonOptions': { norender: true } },
-        }));
+        })
+    );
 }
 
 function buildObjectTemplateFromSchema(
@@ -65,7 +81,9 @@ export function seedPreviewTaskDataFromOutput(
 ): Record<string, unknown> {
     const seeded: Record<string, unknown> = {};
 
-    for (const tab of output.schemaContent.tabSchemas) {
+    for (const tab of filterTabSchemasForSelfServe(
+        output.schemaContent.tabSchemas
+    )) {
         const formSchema = isRecord(tab.formSchema) ? tab.formSchema : {};
         const properties = isRecord(formSchema.properties)
             ? formSchema.properties

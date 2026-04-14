@@ -1,6 +1,13 @@
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/router';
+import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
+import { TranslationFiles } from '@deps/config/translations';
+import {
+    AI_PAPER_RJSF_STORAGE_PREFIX,
+    buildDefaultAiPaperSlugFromOutput,
+} from '@deps/lib/transaction-builder/ai-paper-slug';
 import type {
     ArchetypeContextPack,
     CanonicalModel,
@@ -56,12 +63,45 @@ export default function PdfInferencePanel({
     omitHeading = false,
     previewTaskInfoLink = '/transaction-builder/paper-forms-to-digital',
 }: PdfInferencePanelProps) {
+    const router = useRouter();
+    const { t } = useTranslation(TranslationFiles.COMMON, {
+        keyPrefix: 'selfServeTransaction.aiPaper',
+    });
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<InferFromPdfResponse | null>(null);
+    const [openPlanCode, setOpenPlanCode] = useState('');
+    const [openPolicyId, setOpenPolicyId] = useState('');
 
     const disabledInProd = isProd();
+
+    function openGeneratedFlowOnPolicy() {
+        if (!result?.fullRjsfOutput || disabledInProd) return;
+        const plan = openPlanCode.trim();
+        const policyId = openPolicyId.trim();
+        if (!plan || !policyId || typeof window === 'undefined') return;
+
+        const storageId =
+            typeof crypto !== 'undefined' && 'randomUUID' in crypto
+                ? crypto.randomUUID()
+                : `ai-${Date.now()}`;
+        const aiSlug = buildDefaultAiPaperSlugFromOutput(result.fullRjsfOutput);
+        try {
+            sessionStorage.setItem(
+                `${AI_PAPER_RJSF_STORAGE_PREFIX}${storageId}`,
+                JSON.stringify(result.fullRjsfOutput)
+            );
+        } catch {
+            return;
+        }
+        const href = `/policies/${encodeURIComponent(
+            plan
+        )}/${encodeURIComponent(policyId)}/people/${encodeURIComponent(
+            aiSlug
+        )}?aiPaperKey=${encodeURIComponent(storageId)}`;
+        void router.push(href);
+    }
 
     async function runInference() {
         if (!file || loading || disabledInProd) return;
@@ -217,6 +257,60 @@ export default function PdfInferencePanel({
                                     fullRjsfOutput={result.fullRjsfOutput}
                                     taskInfoLink={previewTaskInfoLink}
                                 />
+                            </div>
+                        </div>
+
+                        <div className="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4">
+                            <h3 className="text-sm font-semibold text-gray-900">
+                                {t('openOnPolicy')}
+                            </h3>
+                            <p className="mt-1 text-xs text-gray-600">
+                                {t('openOnPolicyHint')} Slug:{' '}
+                                <code className="rounded bg-white/90 px-1 py-0.5 font-mono text-[11px] text-gray-800">
+                                    {buildDefaultAiPaperSlugFromOutput(
+                                        result.fullRjsfOutput
+                                    )}
+                                </code>
+                            </p>
+                            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
+                                <label className="flex min-w-0 flex-1 flex-col gap-1 text-xs font-medium text-gray-700">
+                                    {t('planCodeLabel')}
+                                    <input
+                                        type="text"
+                                        value={openPlanCode}
+                                        onChange={(e) =>
+                                            setOpenPlanCode(e.target.value)
+                                        }
+                                        className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-gray-900"
+                                        autoComplete="off"
+                                        disabled={disabledInProd}
+                                    />
+                                </label>
+                                <label className="flex min-w-0 flex-1 flex-col gap-1 text-xs font-medium text-gray-700">
+                                    {t('policyIdLabel')}
+                                    <input
+                                        type="text"
+                                        value={openPolicyId}
+                                        onChange={(e) =>
+                                            setOpenPolicyId(e.target.value)
+                                        }
+                                        className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-gray-900"
+                                        autoComplete="off"
+                                        disabled={disabledInProd}
+                                    />
+                                </label>
+                                <button
+                                    type="button"
+                                    onClick={() => openGeneratedFlowOnPolicy()}
+                                    disabled={
+                                        disabledInProd ||
+                                        !openPlanCode.trim() ||
+                                        !openPolicyId.trim()
+                                    }
+                                    className="shrink-0 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
+                                >
+                                    {t('openOnPolicy')}
+                                </button>
                             </div>
                         </div>
 

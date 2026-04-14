@@ -2699,6 +2699,20 @@
             "confirmSubTitle": "Annuitant Change updates were submitted.",
             "placeholder": "Select a role",
             "validationMessage": "Cannot add another {{selectedRole}}. Maximum {{maxAllowed}} allowed."
+        },
+        "aiPaper": {
+            "title": "Paper-to-digital transaction",
+            "subTitle": "Complete the generated form using policy data where available.",
+            "confirmSubTitle": "Your request was recorded (mock submission).",
+            "openOnPolicy": "Open on policy",
+            "openOnPolicyHint": "After generation, open the same flow on a policy with prefilled data.",
+            "planCodeLabel": "Plan code",
+            "policyIdLabel": "Policy / contract id",
+            "errors": {
+                "missingQuery": "This AI transaction link is missing a session key. Open it from Paper → Digital using “Open on policy”, or add ?aiPaperKey=… to the URL.",
+                "missingStorage": "The generated form was not found in this browser session. Regenerate from Paper → Digital and open on policy again.",
+                "parse": "Could not read the stored form definition. Try generating and opening again."
+            }
         }
     },
     "welcome": {

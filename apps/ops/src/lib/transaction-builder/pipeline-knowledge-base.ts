@@ -272,7 +272,7 @@ RJSF constraints:
 - For every array field, always include items.
 - Prefer known widgets/templates.
 - Date fields should use DateWidgetV2.
-- Use patterns when useful but do not force all patterns.
+- Use patterns when useful but do not force all patterns; SSN/Tax ID must allow masked values (***-**-1234) and phone must allow +country with spaces/parentheses.
 - Template references MUST be configured using ui:options keys (for example ui:options.ArrayFieldTemplate and ui:options.ObjectFieldTemplate).
 
 Widget/template mapping guidance:
