@@ -3,7 +3,10 @@ import formidable from 'formidable';
 import { promises as fs } from 'fs';
 
 import { coerceMonolithicAddressStringFieldsInProperties } from '@deps/lib/transaction-builder/coerce-monolithic-address-fields';
-import { injectRepeatablePartyArrayAddUiInProperties } from '@deps/lib/transaction-builder/inject-ai-paper-repeatable-array-ui';
+import {
+    getFirstSelfServeVisibleTabSchemaIndex,
+    injectRepeatablePartyArrayAddUiInProperties,
+} from '@deps/lib/transaction-builder/inject-ai-paper-repeatable-array-ui';
 import {
     buildCanonicalModelPrompt,
     buildTabSchemaGenerationPrompt,
@@ -2916,6 +2919,10 @@ function sanitizeGeneratedTabSchemas(
         }
     }
 
+    const firstSelfServeTabIdx = getFirstSelfServeVisibleTabSchemaIndex(
+        tabInference.tabSchemas
+    );
+
     const normalized = tabInference.tabSchemas.map((tabPlan, idx) => {
         const fromLlm =
             generatedById.get(tabPlan.id) ??
@@ -3186,7 +3193,8 @@ function sanitizeGeneratedTabSchemas(
             finalUiSchema,
             typeof sourceTab.title === 'string'
                 ? sourceTab.title
-                : tabPlan.title
+                : tabPlan.title,
+            firstSelfServeTabIdx !== null && idx === firstSelfServeTabIdx
         );
 
         const priorHintsApplied = Array.isArray(sourceTab.priorHintsApplied)

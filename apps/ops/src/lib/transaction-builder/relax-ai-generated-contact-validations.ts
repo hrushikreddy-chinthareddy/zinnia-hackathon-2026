@@ -32,7 +32,8 @@ function looksLikePhoneField(propKey: string, title: string): boolean {
     const c = `${propKey} ${title}`.toLowerCase();
     return (
         /(phone|telephone|mobile|cell)/.test(c) ||
-        (/fax/.test(c) && !/employer/.test(c))
+        (/fax/.test(c) && !/employer/.test(c)) ||
+        /\bdial|dialnumber|dial_number|countrycode|area_code|areacode/.test(c)
     );
 }
 
@@ -53,17 +54,9 @@ function relaxStringFieldValidation(
     }
 
     if (looksLikePhoneField(propKey, title)) {
-        schemaNode.pattern = AI_PAPER_TOLERANT_PHONE_PATTERN;
-        if (
-            typeof schemaNode.minLength === 'number' &&
-            schemaNode.minLength > 10
-        ) {
-            schemaNode.minLength = 10;
-        }
-        const xl = schemaNode.maxLength;
-        if (typeof xl === 'number' && xl < 24) {
-            schemaNode.maxLength = 24;
-        }
+        delete schemaNode.pattern;
+        delete schemaNode.minLength;
+        delete schemaNode.maxLength;
     }
 }
 

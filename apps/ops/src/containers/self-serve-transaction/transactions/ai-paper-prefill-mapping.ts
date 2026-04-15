@@ -126,7 +126,12 @@ function matchesTaxIdField(context: string): boolean {
 }
 
 function matchesPhoneField(context: string): boolean {
-    return /(phone|telephone|mobile|cell)/.test(context);
+    return (
+        /(phone|telephone|mobile|cell)/.test(context) ||
+        /\bdial|dialnumber|dial_number|countrycode|area_code|areacode/.test(
+            context
+        )
+    );
 }
 
 function matchesEmailField(context: string): boolean {
@@ -304,6 +309,31 @@ function applyPartyDetailPrefillToNode(
         typeof propSchema.type === 'string' ? propSchema.type : undefined;
     const context = `${propKey} ${title}`.toLowerCase();
 
+    if (type === 'array' && isRecord(propSchema.items)) {
+        const itemsSchema = propSchema.items as Record<string, unknown>;
+        const itemsType =
+            typeof itemsSchema.type === 'string' ? itemsSchema.type : '';
+        if (itemsType === 'object' && isRecord(itemsSchema.properties)) {
+            let arr = node[propKey];
+            if (!Array.isArray(arr) || arr.length === 0) {
+                arr = [{}];
+                node[propKey] = arr;
+            }
+            for (const raw of arr) {
+                if (!isPlainObject(raw)) continue;
+                const el = raw as Record<string, unknown>;
+                for (const [ik, ischema] of Object.entries(
+                    itemsSchema.properties
+                )) {
+                    if (isRecord(ischema)) {
+                        applyPartyDetailPrefillToNode(party, el, ik, ischema);
+                    }
+                }
+            }
+        }
+        return;
+    }
+
     if (
         type === 'array' ||
         type === 'boolean' ||
@@ -411,6 +441,37 @@ function applySemanticStringPrefillToNode(
                     ck,
                     cschema
                 );
+            }
+        }
+        return;
+    }
+
+    if (type === 'array' && isRecord(propSchema.items)) {
+        const itemsSchema = propSchema.items as Record<string, unknown>;
+        const itemsType =
+            typeof itemsSchema.type === 'string' ? itemsSchema.type : '';
+        if (itemsType === 'object' && isRecord(itemsSchema.properties)) {
+            let arr = node[propKey];
+            if (!Array.isArray(arr) || arr.length === 0) {
+                arr = [{}];
+                node[propKey] = arr;
+            }
+            for (const raw of arr) {
+                if (!isPlainObject(raw)) continue;
+                const el = raw as Record<string, unknown>;
+                for (const [ik, ischema] of Object.entries(
+                    itemsSchema.properties
+                )) {
+                    if (isRecord(ischema)) {
+                        applySemanticStringPrefillToNode(
+                            insuredName,
+                            policyNumber,
+                            el,
+                            ik,
+                            ischema
+                        );
+                    }
+                }
             }
         }
         return;

@@ -20,15 +20,41 @@ export type NumbersWidgetProps<
     F extends FormContextType = any
 > = WidgetProps<T, S, F>;
 
-const validatePattern = (value?: string, pattern?: string) => {
-    if (!pattern || !value) return false;
-    const patternRegex = new RegExp(pattern);
-    return !patternRegex.test(value);
-};
 const isMaskedSSN = (value?: string) =>
     !!value && /^\*{3}-\*{2}-\d{4}$/.test(value);
 
 const MAX_PHONE_DIGITS = 13;
+
+function digitsOnlyOrEmpty(v: unknown): string {
+    if (v == null || v === '') return '';
+    if (typeof v === 'string') return v.replace(/\D/g, '');
+    if (typeof v === 'number' && Number.isFinite(v)) {
+        return String(v).replace(/\D/g, '');
+    }
+    return '';
+}
+
+function shouldShowNumbersPatternError(
+    value: unknown,
+    pattern: string | undefined,
+    isPhone: boolean
+): boolean {
+    if (!pattern) return false;
+    if (isPhone) return false;
+    if (value == null || value === '') return false;
+    const s =
+        typeof value === 'string'
+            ? value
+            : typeof value === 'number' && Number.isFinite(value)
+            ? String(value)
+            : '';
+    if (!s) return false;
+    try {
+        return !new RegExp(pattern).test(s);
+    } catch {
+        return false;
+    }
+}
 
 function NumbersWidget<
     T = any,
@@ -57,7 +83,9 @@ function NumbersWidget<
         rawOptions.errorMessage ??
         '') as string;
     const isPhone = Boolean(isPhoneRaw ?? rawOptions.isPhone ?? false);
-    const [validate, setValidate] = useState(validatePattern(value, pattern));
+    const [validate, setValidate] = useState(
+        shouldShowNumbersPatternError(value, pattern, isPhone)
+    );
     const masked = isMaskedSSN(value);
     const numberFormat =
         !masked && format && !isPhone
@@ -65,32 +93,46 @@ function NumbersWidget<
             : undefined;
     const hasUserEditedRef = useRef<boolean>(false);
 
-    const getFullPhoneNumber = () => {
-        if (!isPhone || !value) return value;
-        if (hasUserEditedRef.current) return value;
+    const getFullPhoneNumber = (): string | undefined => {
+        if (!isPhone) {
+            if (value == null || value === '') return undefined;
+            if (typeof value === 'string') return value;
+            if (typeof value === 'number' && Number.isFinite(value)) {
+                return String(value);
+            }
+            return undefined;
+        }
+        if (value == null || value === '') return '';
+        if (typeof value === 'object') return '';
+        const strVal = String(value);
+        if (!strVal) return '';
+        if (hasUserEditedRef.current) return strVal;
 
-        if (value.length <= 7) {
+        if (strVal.length <= 7) {
             const phoneObject = formContext?.customData?.actionData
                 ?.flatMap((a: any) => a.party?.phones || [])
                 ?.find(
                     (phone: any) =>
                         phone?.dialNumber &&
-                        phone?.dialNumber?.slice(-7) === value.slice(-7)
+                        String(phone.dialNumber).slice(-7) === strVal.slice(-7)
                 );
 
             if (phoneObject) {
-                return (
-                    phoneObject.countryCode +
-                    phoneObject.areaCode +
-                    phoneObject.dialNumber
-                );
+                return `${phoneObject.countryCode ?? ''}${
+                    phoneObject.areaCode ?? ''
+                }${phoneObject.dialNumber ?? ''}`;
             }
         }
-        return value;
+        return strVal;
     };
 
     const fullPhoneNumber = getFullPhoneNumber();
-    const rawDigits = fullPhoneNumber ? fullPhoneNumber.replace(/\D/g, '') : '';
+    const rawDigits =
+        fullPhoneNumber != null && fullPhoneNumber !== ''
+            ? digitsOnlyOrEmpty(fullPhoneNumber)
+            : isPhone
+            ? ''
+            : digitsOnlyOrEmpty(value);
 
     const displayValue =
         isPhone && !masked ? formatPhoneNumber(rawDigits) : rawDigits;
@@ -110,8 +152,8 @@ function NumbersWidget<
     };
 
     useEffect(() => {
-        setValidate(validatePattern(value, pattern));
-    }, [value, pattern]);
+        setValidate(shouldShowNumbersPatternError(value, pattern, isPhone));
+    }, [value, pattern, isPhone]);
 
     return readonly ? (
         displayValue
