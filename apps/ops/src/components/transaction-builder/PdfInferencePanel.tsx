@@ -1,13 +1,6 @@
 import dynamic from 'next/dynamic';
-import { useRouter } from 'next/router';
-import { useTranslation } from 'next-i18next';
 import { useState } from 'react';
 
-import { TranslationFiles } from '@deps/config/translations';
-import {
-    AI_PAPER_RJSF_STORAGE_PREFIX,
-    buildDefaultAiPaperSlugFromOutput,
-} from '@deps/lib/transaction-builder/ai-paper-slug';
 import type {
     ArchetypeContextPack,
     CanonicalModel,
@@ -18,6 +11,10 @@ import type {
     SchemaGenerationResult,
     TabInference,
 } from '@deps/lib/transaction-builder/pipeline-types';
+import {
+    getRjsfDevStoreBaseUrl,
+    registerFullRjsfOnDevStore,
+} from '@deps/lib/transaction-builder/rjsf-dev-store';
 import type { PdfTextLayoutResult } from '@deps/server/paper2flow/types';
 import { isProd } from '@deps/utils/environment.helpers';
 
@@ -63,45 +60,14 @@ export default function PdfInferencePanel({
     omitHeading = false,
     previewTaskInfoLink = '/transaction-builder/paper-forms-to-digital',
 }: PdfInferencePanelProps) {
-    const router = useRouter();
-    const { t } = useTranslation(TranslationFiles.COMMON, {
-        keyPrefix: 'selfServeTransaction.aiPaper',
-    });
     const [file, setFile] = useState<File | null>(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [result, setResult] = useState<InferFromPdfResponse | null>(null);
-    const [openPlanCode, setOpenPlanCode] = useState('');
-    const [openPolicyId, setOpenPolicyId] = useState('');
+    const [devStoreMessage, setDevStoreMessage] = useState<string | null>(null);
+    const [devStoreError, setDevStoreError] = useState<string | null>(null);
 
     const disabledInProd = isProd();
-
-    function openGeneratedFlowOnPolicy() {
-        if (!result?.fullRjsfOutput || disabledInProd) return;
-        const plan = openPlanCode.trim();
-        const policyId = openPolicyId.trim();
-        if (!plan || !policyId || typeof window === 'undefined') return;
-
-        const storageId =
-            typeof crypto !== 'undefined' && 'randomUUID' in crypto
-                ? crypto.randomUUID()
-                : `ai-${Date.now()}`;
-        const aiSlug = buildDefaultAiPaperSlugFromOutput(result.fullRjsfOutput);
-        try {
-            sessionStorage.setItem(
-                `${AI_PAPER_RJSF_STORAGE_PREFIX}${storageId}`,
-                JSON.stringify(result.fullRjsfOutput)
-            );
-        } catch {
-            return;
-        }
-        const href = `/policies/${encodeURIComponent(
-            plan
-        )}/${encodeURIComponent(policyId)}/people/${encodeURIComponent(
-            aiSlug
-        )}?aiPaperKey=${encodeURIComponent(storageId)}`;
-        void router.push(href);
-    }
 
     async function runInference() {
         if (!file || loading || disabledInProd) return;
@@ -109,6 +75,8 @@ export default function PdfInferencePanel({
         setLoading(true);
         setError(null);
         setResult(null);
+        setDevStoreMessage(null);
+        setDevStoreError(null);
 
         try {
             const form = new FormData();
@@ -141,7 +109,31 @@ export default function PdfInferencePanel({
                 return;
             }
 
-            setResult(body as InferFromPdfResponse);
+            const payload = body as InferFromPdfResponse;
+            setResult(payload);
+
+            if (!getRjsfDevStoreBaseUrl()) {
+                setDevStoreMessage(
+                    'Set NEXT_PUBLIC_RJSF_DEV_STORE_URL (e.g. http://127.0.0.1:3847) and run `pnpm run rjsf-dev-store` to list this flow under Manage people.'
+                );
+            } else {
+                try {
+                    const reg = await registerFullRjsfOnDevStore(
+                        payload.fullRjsfOutput
+                    );
+                    if (reg) {
+                        setDevStoreMessage(
+                            `Saved to dev store as ${reg.id}. On a policy, open Manage people → ${reg.label} (${reg.id}) to run self-serve.`
+                        );
+                    }
+                } catch (e) {
+                    setDevStoreError(
+                        e instanceof Error
+                            ? e.message
+                            : 'Dev store request failed'
+                    );
+                }
+            }
         } catch (e) {
             setError(e instanceof Error ? e.message : 'Request failed');
         } finally {
@@ -238,6 +230,18 @@ export default function PdfInferencePanel({
                     </div>
                 )}
 
+                {devStoreError && (
+                    <div className="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-900">
+                        Dev store: {devStoreError}
+                    </div>
+                )}
+
+                {devStoreMessage && (
+                    <div className="mt-4 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800">
+                        {devStoreMessage}
+                    </div>
+                )}
+
                 {result && (
                     <div className="mt-6 space-y-6 border-t border-slate-100 pt-6">
                         <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -262,56 +266,19 @@ export default function PdfInferencePanel({
 
                         <div className="rounded-xl border border-indigo-100 bg-indigo-50/40 p-4">
                             <h3 className="text-sm font-semibold text-gray-900">
-                                {t('openOnPolicy')}
+                                Open on a policy
                             </h3>
                             <p className="mt-1 text-xs text-gray-600">
-                                {t('openOnPolicyHint')} Slug:{' '}
-                                <code className="rounded bg-white/90 px-1 py-0.5 font-mono text-[11px] text-gray-800">
-                                    {buildDefaultAiPaperSlugFromOutput(
-                                        result.fullRjsfOutput
-                                    )}
-                                </code>
+                                After the schema is saved to the dev store, use{' '}
+                                <strong>Manage people</strong> on any policy and
+                                choose the{' '}
+                                <code className="font-mono">ai_…</code>{' '}
+                                transaction. Stopping{' '}
+                                <code className="font-mono">
+                                    pnpm run rjsf-dev-store
+                                </code>{' '}
+                                clears the list.
                             </p>
-                            <div className="mt-3 flex flex-col gap-3 sm:flex-row sm:items-end">
-                                <label className="flex min-w-0 flex-1 flex-col gap-1 text-xs font-medium text-gray-700">
-                                    {t('planCodeLabel')}
-                                    <input
-                                        type="text"
-                                        value={openPlanCode}
-                                        onChange={(e) =>
-                                            setOpenPlanCode(e.target.value)
-                                        }
-                                        className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-gray-900"
-                                        autoComplete="off"
-                                        disabled={disabledInProd}
-                                    />
-                                </label>
-                                <label className="flex min-w-0 flex-1 flex-col gap-1 text-xs font-medium text-gray-700">
-                                    {t('policyIdLabel')}
-                                    <input
-                                        type="text"
-                                        value={openPolicyId}
-                                        onChange={(e) =>
-                                            setOpenPolicyId(e.target.value)
-                                        }
-                                        className="rounded-lg border border-slate-200 bg-white px-2 py-1.5 text-sm text-gray-900"
-                                        autoComplete="off"
-                                        disabled={disabledInProd}
-                                    />
-                                </label>
-                                <button
-                                    type="button"
-                                    onClick={() => openGeneratedFlowOnPolicy()}
-                                    disabled={
-                                        disabledInProd ||
-                                        !openPlanCode.trim() ||
-                                        !openPolicyId.trim()
-                                    }
-                                    className="shrink-0 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-gray-800 disabled:cursor-not-allowed disabled:opacity-40"
-                                >
-                                    {t('openOnPolicy')}
-                                </button>
-                            </div>
                         </div>
 
                         <div className="rounded-lg border border-gray-200 bg-white p-3">

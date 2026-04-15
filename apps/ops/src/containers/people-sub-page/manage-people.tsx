@@ -14,6 +14,10 @@ import { useOptimizely } from '@deps/contexts/OptimizelyContext';
 import { usePermissionsContext } from '@deps/contexts/PermissionsContext';
 import { segmentAnalyticsTrackEvent } from '@deps/helpers/analytics/segment-analytics';
 import { PolicyDetails } from '@deps/helpers/policy-sor/PolicyDetails';
+import {
+    getRjsfDevStoreBaseUrl,
+    listRjsfDevStore,
+} from '@deps/lib/transaction-builder/rjsf-dev-store';
 import { TransactionResponseStatus } from '@deps/queries/api/bpm';
 import {
     checkBeneficiaryEligibilityQuery,
@@ -26,6 +30,15 @@ import {
 import { FEATURE_FLAGS } from '@deps/utils/optimizely/flags';
 
 import styles from './manage-people.module.css';
+
+type ManagePeopleMenuLink = {
+    href: string;
+    name: string;
+    hideLabel: boolean;
+    isEligible: boolean | undefined;
+    shouldShow: boolean;
+    openInNewTab?: boolean;
+};
 
 const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
     const { t } = useTranslation();
@@ -129,6 +142,16 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
             correlationId
         )}`;
     };
+
+    const rjsfDevStoreBaseUrl = getRjsfDevStoreBaseUrl();
+    const { data: rjsfDevStoreItems = [] } = useQuery({
+        queryKey: ['rjsfDevStoreSchemas', rjsfDevStoreBaseUrl],
+        queryFn: listRjsfDevStore,
+        enabled: !!rjsfDevStoreBaseUrl,
+        staleTime: 5_000,
+        refetchOnWindowFocus: true,
+    });
+
     const links = [
         {
             href: withCorrelationId(
@@ -224,6 +247,33 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
         },
     ];
 
+    const plan = policy.planCode ?? '';
+    const policyNumber = policy.policyNumber ?? '';
+    const aiGeneratedLinks =
+        rjsfDevStoreBaseUrl && plan && policyNumber
+            ? rjsfDevStoreItems.map((item) => ({
+                  href: withCorrelationId(
+                      `/policies/${encodeURIComponent(
+                          plan
+                      )}/${encodeURIComponent(
+                          policyNumber
+                      )}/people/${encodeURIComponent(
+                          item.peopleSlug
+                      )}?aiPaperKey=${encodeURIComponent(item.id)}`
+                  ),
+                  name: `${item.label} · ${item.id}`,
+                  hideLabel: false,
+                  isEligible: true,
+                  shouldShow: true,
+                  openInNewTab: false as boolean,
+              }))
+            : [];
+
+    const visibleLinks: ManagePeopleMenuLink[] = [
+        ...links.filter((link) => link.shouldShow),
+        ...aiGeneratedLinks,
+    ];
+
     const trackClick = (linkName: string, linkUrl: string) => {
         segmentAnalyticsTrackEvent<PolicyClickedEvent>(
             SegmentTrackedEventName.DropdownClicked,
@@ -259,20 +309,22 @@ const ManagePeople = ({ policy }: { policy: PolicyDetails }) => {
             }
         >
             <MenuContextualLabel label={'Manage people'} hideLabel={true}>
-                {links
-                    .filter((link) => link.shouldShow)
-                    .map((link) => {
-                        return (
-                            <MenuContextualItem
-                                content={link.name}
-                                href={link.href}
-                                key={link.name}
-                                openInNewTab={link.isEligible}
-                                disabled={!link.isEligible}
-                                onClick={() => trackClick(link.name, link.href)}
-                            />
-                        );
-                    })}
+                {visibleLinks.map((link) => {
+                    return (
+                        <MenuContextualItem
+                            content={link.name}
+                            href={link.href}
+                            key={link.href}
+                            openInNewTab={
+                                link.openInNewTab !== undefined
+                                    ? link.openInNewTab
+                                    : !!link.isEligible
+                            }
+                            disabled={!link.isEligible}
+                            onClick={() => trackClick(link.name, link.href)}
+                        />
+                    );
+                })}
             </MenuContextualLabel>
         </MenuContextual>
     );

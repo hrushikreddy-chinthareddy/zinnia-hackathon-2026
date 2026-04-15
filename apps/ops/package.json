@@ -211,7 +211,8 @@
         "build-api-types-if-needed": "node ./scripts/build-api-types-if-needed.mjs",
         "playwright": "playwright test",
         "playwright:ui": "playwright test --ui",
-        "playwright:debug": "playwright test --debug"
+        "playwright:debug": "playwright test --debug",
+        "rjsf-dev-store": "node ./scripts/rjsf-dev-store-server.mjs"
     },
     "version": "2.36.0"
 }

@@ -43,6 +43,7 @@ import {
     isAiPaperSelfServeSlug,
 } from '@deps/lib/transaction-builder/ai-paper-slug';
 import type { FullRjsfOutput } from '@deps/lib/transaction-builder/pipeline-types';
+import { fetchFullRjsfFromDevStore } from '@deps/lib/transaction-builder/rjsf-dev-store';
 import { SorSystem } from '@deps/models/policy/enums';
 import { UserPermission } from '@deps/models/user-profile';
 import Custom404Page from '@deps/pages/404s';
@@ -185,18 +186,23 @@ const PolicySlug: React.FC<PolicyPageProps> = ({
                 return;
             }
             try {
-                const raw =
-                    typeof window !== 'undefined'
-                        ? sessionStorage.getItem(
-                              `${AI_PAPER_RJSF_STORAGE_PREFIX}${aiPaperKey}`
-                          )
-                        : null;
-                if (!raw) {
+                let output: FullRjsfOutput | null = null;
+                if (typeof window !== 'undefined') {
+                    output = await fetchFullRjsfFromDevStore(aiPaperKey);
+                    if (!output) {
+                        const raw = sessionStorage.getItem(
+                            `${AI_PAPER_RJSF_STORAGE_PREFIX}${aiPaperKey}`
+                        );
+                        if (raw) {
+                            output = JSON.parse(raw) as FullRjsfOutput;
+                        }
+                    }
+                }
+                if (!output) {
                     setTransactionData(null);
                     setAiTransactionError('aiPaper.errors.missingStorage');
                     return;
                 }
-                const output = JSON.parse(raw) as FullRjsfOutput;
                 const transactionPayload = getAiPaperTransactionData(
                     policy as Policy,
                     planCode as string,
