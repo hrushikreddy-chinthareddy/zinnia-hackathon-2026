@@ -2,6 +2,8 @@
  * LLMs and canonical hints often emit strict SSN / US-phone regexes that reject
  * real SOR values (masked SSN, +1 display phones). Normalize those patterns
  * after generation and when loading stored FullRjsfOutput.
+ * Also fixes beneficiary % fields declared as JSON Schema `number` while
+ * default widgets submit strings (e.g. share_of_benefits).
  */
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -35,6 +37,51 @@ function looksLikePhoneField(propKey: string, title: string): boolean {
         (/fax/.test(c) && !/employer/.test(c)) ||
         /\bdial|dialnumber|dial_number|countrycode|area_code|areacode/.test(c)
     );
+}
+
+/** Keys like share_of_benefits: schema often says number but TextWidget stores a string. */
+function looksLikeBeneficiarySharePercentField(
+    propKey: string,
+    title: string
+): boolean {
+    const k = propKey.toLowerCase();
+    const t = title.toLowerCase();
+    const c = `${k} ${t}`;
+    if (/employer/.test(c)) return false;
+    return (
+        k.includes('share') ||
+        k.includes('percentage') ||
+        k.includes('allocation') ||
+        /\bpercent(age)?\b/.test(t) ||
+        /share of/.test(t) ||
+        /\ballocation\b/.test(t)
+    );
+}
+
+function schemaTypeIncludesNumber(
+    schemaNode: Record<string, unknown>
+): boolean {
+    const t = schemaNode.type;
+    if (t === 'number' || t === 'integer') return true;
+    if (Array.isArray(t)) {
+        return (t as unknown[]).some((x) => x === 'number' || x === 'integer');
+    }
+    return false;
+}
+
+function relaxBeneficiaryShareNumericFieldToString(
+    propKey: string,
+    schemaNode: Record<string, unknown>
+): void {
+    if (!schemaTypeIncludesNumber(schemaNode)) return;
+    const title = typeof schemaNode.title === 'string' ? schemaNode.title : '';
+    if (!looksLikeBeneficiarySharePercentField(propKey, title)) return;
+    schemaNode.type = 'string';
+    delete schemaNode.minimum;
+    delete schemaNode.maximum;
+    delete schemaNode.multipleOf;
+    delete schemaNode.exclusiveMinimum;
+    delete schemaNode.exclusiveMaximum;
 }
 
 function relaxStringFieldValidation(
@@ -82,6 +129,7 @@ export function relaxContactValidationsInProperties(
             }
         }
 
+        relaxBeneficiaryShareNumericFieldToString(key, raw);
         relaxStringFieldValidation(key, raw);
     }
 }
